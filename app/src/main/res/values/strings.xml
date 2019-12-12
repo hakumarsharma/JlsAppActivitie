@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">JIO Device Tracker</string>
+    <string name="title_activity_maps">Jio Device Tracker</string>
+    <string name="map_name">Jio Device Tracking</string>
+    <string name="action_settings">Setting</string>
+    <string name="about_us">About Us</string>
+    <string name="loginLebel">Connected Worker</string>
+    <string name="title_activity_login">Login</string>
+</resources>

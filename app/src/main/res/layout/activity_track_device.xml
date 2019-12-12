@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewDeviceActivity">
+
+    <include
+        android:id="@+id/trackeeToolbar"
+        layout="@layout/toolbar" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/jioLogoLogin"
+        android:src="@drawable/jio_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/trackeeToolbar"
+        android:layout_marginLeft="120dp"/>
+
+
+    <EditText
+        android:id="@+id/trackeeDeviceNumber"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#00f"
+        android:inputType="text"
+        android:layout_below="@id/jioLogoLogin"
+        android:layout_marginTop="60dp"
+        android:hint="Enter Phone Number" />
+
+
+    <Button android:id="@+id/trackDevice"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="Track Device"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/selector"
+        android:layout_below="@id/trackeeDeviceNumber"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
