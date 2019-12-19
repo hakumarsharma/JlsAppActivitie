@@ -9,24 +9,45 @@
     card_view:cardCornerRadius="10dp"
     android:layout_margin="10dp"
     card_view:cardElevation="8dp"
-    android:orientation="horizontal"
     android:padding="16dp"
-    tools:context=".DashboardActivity">
+    tools:context=".view.DashboardActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:id="@+id/imageset"
+        android:background="#3DB5EA"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_contact"
+            android:id="@+id/contactImage"
+            />
+
+    </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
 
-            <ImageView
+            <!--<ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/contact_img"
                 android:id="@+id/contactImage"
-                />
+                />-->
 
             <TextView
                 android:id="@+id/phoneNumber"
@@ -80,4 +101,5 @@
                 android:layout_marginTop="5dp"
                 android:background="#c0c0c0" />-->
         </RelativeLayout>
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

@@ -4,13 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
+    android:background="@drawable/reliance_jio"
     tools:visibility="visible">
 
-    <ImageView
-        android:id="@+id/splashImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/reliance_jio"
-        android:visibility="visible"/>
 
 </RelativeLayout>

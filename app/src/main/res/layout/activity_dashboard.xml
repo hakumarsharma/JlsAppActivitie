@@ -4,40 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DashboardActivity">
+    android:background="#EBEBEB"
+    tools:context=".view.DashboardActivity">
 
     <include
         layout="@layout/toolbar"
         android:id="@+id/customToolbar"
         />
 
+    <TextView
+        android:id="@+id/devicePresent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250dp"
+        android:layout_marginBottom="250dp"
+        android:text="Click on + icon to add the devices"
+        android:layout_above="@+id/footer"
+        android:textSize="20dp"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/listView"
-        android:layout_above="@id/consent"
         android:divider="#806326"
         android:layout_below="@+id/customToolbar"
-        android:layout_marginBottom="20dp"
         android:dividerHeight="1dp"/>
 
-    <Button android:id="@+id/consent"
-        android:text="Consent"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:background="@drawable/selector"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_alignParentBottom="true"/>
-
-    <Button android:id="@+id/track"
-        android:text="Track"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:background="@drawable/selector"
-        android:layout_marginBottom="20dp"
-        android:layout_toRightOf="@+id/consent"
-        android:layout_marginLeft="10dp"
-        android:layout_alignParentBottom="true"/>
+    <!-- Footer-->
+    <include
+        layout="@layout/footer"
+        android:id="@+id/footer"
+        android:layout_height="60dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

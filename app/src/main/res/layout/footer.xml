@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbarlayout"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    card_view:elevation="10dp"
+    android:background="#F5F4F4"
+    card_view:cardCornerRadius="10dp"
+
+    >
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <Button
+            android:id="@+id/consent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_consent"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:id="@+id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/ic_home"
+            android:layout_centerVertical="true"
+            />
+        <Button
+            android:id="@+id/track"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/ic_tracker"
+            />
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

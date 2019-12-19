@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewDeviceActivity">
+    >
 
     <include
         android:id="@+id/loginToolbar"
@@ -72,7 +72,7 @@
                 android:layout_marginTop="25dp"
                 android:backgroundTint="@color/colorLogin"
                 android:hint="Jio Number"
-                android:inputType="text"
+                android:inputType="phone"
                 android:textColor="#000000"
                 android:textCursorDrawable="@color/colorLogin" />
 
