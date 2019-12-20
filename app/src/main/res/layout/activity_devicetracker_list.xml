@@ -20,7 +20,7 @@
 
         <TextView
             android:id="@+id/statusView"
-            android:layout_width="4dp"
+            android:layout_width="6dp"
             android:layout_height="match_parent"
             android:background="@color/colorConsentNotSent"
             />
@@ -28,10 +28,10 @@
 
         <ImageView
             android:id="@+id/contactImage"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/contact_img" />
 
         <TextView
@@ -42,7 +42,7 @@
             android:layout_marginLeft="10dp"
             android:layout_alignTop="@+id/contactImage"
             android:layout_marginRight="40dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:text="Name"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -63,14 +63,13 @@
 
         <Button
             android:id="@+id/consent"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignTop="@+id/relation"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/ic_message"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignTop="@+id/phoneNumber"
             android:layout_alignParentRight="true"
-            />
+            android:layout_marginTop="-18dp"
+            android:layout_marginRight="13dp"
+            android:background="@drawable/ic_message" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,10 +85,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="Consent not sent"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="20dp"
                 android:textSize="12sp"
                 android:layout_weight="1"
-
+                android:backgroundTint="@color/colorButtonBackground"
+                android:drawableLeft="@drawable/ic_notsent"
                 />
 
             <Button
@@ -98,18 +98,22 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:layout_weight="1"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="20dp"
                 android:text="Edit"
+                android:backgroundTint="@color/colorButtonBackground"
+                android:drawableLeft="@drawable/ic_edit"
                 />
             <Button
                 android:id="@+id/delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:text="Delete"
+                android:backgroundTint="@color/colorButtonBackground"
+                android:drawableLeft="@drawable/ic_delete"
                 />
 
         </LinearLayout>

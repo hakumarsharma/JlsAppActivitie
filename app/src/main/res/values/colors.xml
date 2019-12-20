@@ -10,4 +10,5 @@
     <color name="colorConsentPending">#E43A29</color>
     <color name="colorButtonText">#ffffff</color>
     <color name="colorsplash">#03007F</color>
+    <color name="colorButtonBackground">#E8E8E8</color>
 </resources>

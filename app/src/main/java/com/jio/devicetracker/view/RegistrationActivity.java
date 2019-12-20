@@ -153,7 +153,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             if (subscriptionInfos.get(i).getNumber() != null && subscriptionInfos.get(i).getNumber().equals(phoneNumber)) {
                 if (carrierName.contains("Jio")) {
                     JioUtilsToken.getSSOIdmaToken(RegistrationActivity.this);
-                    Toast.makeText(this, "SSO token is generated after checking operator", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "SSO token is generated after checking operator", Toast.LENGTH_SHORT).show();
                     mDbManager.insertAdminData(mName.getText().toString(),mJionmber.getText().toString());
                     gotoDashBoardActivity();
                     return;

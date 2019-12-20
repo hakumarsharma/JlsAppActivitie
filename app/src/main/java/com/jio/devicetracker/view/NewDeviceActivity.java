@@ -61,6 +61,11 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
             return;
         }
 
+        if (!isValidMobileNumber(number)) {
+            mDeviceNumber.setError("Enter the valid mobile number");
+            return;
+        }
+
         if (number.equals("") || name.equals("") || relation.equals("") ) {
             Toast.makeText(this, "Please Enter the details", Toast.LENGTH_SHORT).show();
         } else {
@@ -76,6 +81,12 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         String imeiNumber = "^\\d{15}$";
         Pattern pat = Pattern.compile(imeiNumber);
         return pat.matcher(imei).matches();
+    }
+
+    private boolean isValidMobileNumber(String mobile) {
+        String mobileNumber = "^[6-9][0-9]{9}$";
+        Pattern pat = Pattern.compile(mobileNumber);
+        return pat.matcher(mobile).matches();
     }
 
     private void matchMobileNumber(AddedDeviceData adddeviceData) {
