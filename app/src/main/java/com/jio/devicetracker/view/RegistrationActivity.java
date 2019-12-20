@@ -39,6 +39,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     private EditText mJionmber, mName;
     private List<SubscriptionInfo> subscriptionInfos;
     private DBManager mDbManager;
+    public static boolean isFMSFlow = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,6 +130,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         } else if (mJionmber.getText().toString().equals("")) {
             mJionmber.setError("Phone number cannot be left empty!");
         } else {
+            isFMSFlow = true;
             getssoToken();
         }
     }
@@ -153,8 +155,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             if (subscriptionInfos.get(i).getNumber() != null && subscriptionInfos.get(i).getNumber().equals(phoneNumber)) {
                 if (carrierName.contains("Jio")) {
                     JioUtilsToken.getSSOIdmaToken(RegistrationActivity.this);
-                    //Toast.makeText(this, "SSO token is generated after checking operator", Toast.LENGTH_SHORT).show();
-                    mDbManager.insertAdminData(mName.getText().toString(),mJionmber.getText().toString());
+                    mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
                     gotoDashBoardActivity();
                     return;
                 } else {
@@ -166,6 +167,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
     private void gotoLoginScreen() {
         JiotokenHandler.ssoToken = null;
+        isFMSFlow = false;
         Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
         startActivity(intent);
     }

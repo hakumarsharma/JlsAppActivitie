@@ -122,7 +122,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
 
-        if (JiotokenHandler.ssoToken == null) {
+        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
             showDatainList();
         } else {
             showDataFromFMS();
@@ -151,7 +151,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             @Override
             public void recyclerviewDeleteList(String phoneNumber,int position) {
 
-                if (JiotokenHandler.ssoToken == null) {
+                if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
                     mDbManager.deleteSelectedData(phoneNumber);
                 } else {
                     mDbManager.deleteSelectedDataformFMS(phoneNumber);
@@ -179,7 +179,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         DBManager dbManager = new DBManager(getApplicationContext());
         devicePresent = findViewById(R.id.devicePresent);
         List<AddedDeviceData> alldata = null;
-        if (JiotokenHandler.ssoToken == null) {
+        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
             alldata = dbManager.getAlldata();
             RecyclerView recyclerView = findViewById(R.id.listView);
 
@@ -260,7 +260,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
 
     private void trackDevice() {
-        if (JiotokenHandler.ssoToken == null) {
+        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
             List<AddedDeviceData> consentData = mDbManager.getAlldata();
             if (selectedData.size() == 0) {
                 Util.alertDilogBox("Please select the number for tracking", "Jio Alert", this);
@@ -451,7 +451,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
         if (viewHolder instanceof TrackerDeviceListAdapter.ViewHolder) {
             String phoneNumber = ((TrackerDeviceListAdapter.ViewHolder) viewHolder).phone.getText().toString();
-            if (JiotokenHandler.ssoToken == null) {
+            if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
                 mDbManager.deleteSelectedData(phoneNumber);
             } else {
                 mDbManager.deleteSelectedDataformFMS(phoneNumber);
