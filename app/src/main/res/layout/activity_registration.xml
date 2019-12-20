@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    tools:context=".view.NewDeviceActivity">
 
     <include
         android:id="@+id/loginToolbar"
@@ -26,12 +26,12 @@
 
             <ImageView
                 android:id="@+id/jioLogoLogin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="220dp"
+                android:layout_height="177dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="120dp"
                 android:layout_marginTop="5dp"
-                android:src="@drawable/jio_logo" />
+                android:src="@drawable/jio_locaiton" />
 
             <TextView
                 android:id="@+id/trackntrack"
@@ -39,7 +39,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/jioLogoLogin"
                 android:layout_centerHorizontal="true"
-                android:text="@string/loginLebel"
+                android:text="@string/loginLabel"
+                android:longClickable="false"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
@@ -50,29 +51,44 @@
                 android:layout_below="@id/trackntrack"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:text="Please enter your registered"
+                android:text="Track and Stay Connected"
                 android:textSize="20dp" />
 
-            <TextView
-                android:id="@+id/loginTextView2"
-                android:layout_width="wrap_content"
+            <!--            <TextView-->
+            <!--                android:id="@+id/loginTextView2"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@id/loginTextView"-->
+            <!--                android:layout_centerHorizontal="true"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:text="mobile number"-->
+            <!--                android:textSize="20dp" />-->
+
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/loginTextView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:text="mobile number"
-                android:textSize="20dp" />
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="25dp"
+                android:backgroundTint="@color/colorLogin"
+                android:hint="Name"
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textCursorDrawable="@color/colorLogin" />
+
+
 
             <EditText
                 android:id="@+id/jioNumber"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/loginTextView2"
+                android:layout_below="@+id/name"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="25dp"
                 android:backgroundTint="@color/colorLogin"
                 android:hint="Jio Number"
-                android:inputType="phone"
+                android:inputType="text"
                 android:textColor="#000000"
                 android:textCursorDrawable="@color/colorLogin" />
 
@@ -85,7 +101,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/selector"
-                android:text="Register" />
+                android:text="Register"
+                />
 
             <Button
                 android:id="@+id/borqs"

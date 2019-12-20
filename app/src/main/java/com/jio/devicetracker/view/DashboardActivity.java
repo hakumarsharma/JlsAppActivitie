@@ -88,7 +88,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         setContentView(R.layout.activity_dashboard);
         toolbar = findViewById(R.id.customToolbar);
         listView = findViewById(R.id.listView);
-        consent = findViewById(R.id.consent);
+       // consent = findViewById(R.id.consent);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         listView.setLayoutManager(linearLayoutManager);
         toolbar.setTitle("Dashboard");
@@ -98,7 +98,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         mAddData = (AddedDeviceData) intent.getSerializableExtra("AddDeviceData");
         addButton = toolbar.findViewById(R.id.addbtn);
         track = findViewById(R.id.track);
-        consent.setOnClickListener(this);
+       // consent.setOnClickListener(this);
         addButton.setVisibility(View.VISIBLE);
         TextView toolbar_title = findViewById(R.id.toolbar_title);
         toolbar_title.setText("Home");
@@ -137,11 +137,39 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                     }
                 }
             }
+
+            @Override
+            public void recyclerviewEditList(String relation,String phoneNumber) {
+                gotoEditScreen(relation,phoneNumber);
+            }
+
+            @Override
+            public void recyclerviewDeleteList(String phoneNumber,int position) {
+
+                if (JiotokenHandler.ssoToken == null) {
+                    mDbManager.deleteSelectedData(phoneNumber);
+                } else {
+                    mDbManager.deleteSelectedDataformFMS(phoneNumber);
+                }
+                //mDbManager.deleteSelectedData(phoneNumber);
+                adapter.removeItem(position);
+            }
+
+            @Override
+            public void consetClick(String phoneNumber) {
+                sendSMS(phoneNumber);
+            }
         });
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerviewSwipeController(0, ItemTouchHelper.LEFT, this, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(listView);
     }
 
+    private void gotoEditScreen(String relation,String phoneNumber) {
+        Intent intent = new Intent(DashboardActivity.this,EditActivity.class);
+        intent.putExtra("number",phoneNumber);
+        intent.putExtra("Relation",relation);
+        startActivity(intent);
+    }
     private void isDevicePresent() {
         DBManager dbManager = new DBManager(getApplicationContext());
         devicePresent = findViewById(R.id.devicePresent);
@@ -216,9 +244,9 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             case R.id.addbtn:
                 getServicecall(userToken);
                 break;
-            case R.id.consent:
-                sendSMS();
-                break;
+            /*case R.id.consent:
+                //sendSMS();
+                break;*/
             case R.id.track:
                 trackDevice();
                 break;
@@ -339,13 +367,16 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
 
-    private void sendSMS() {
-        if (selectedData.size() == 0) {
+    private void sendSMS(String phoneNumber) {
+        new SendSMSAsyncTask().execute(phoneNumber, "Do you want to be tracked, please reply in Yes or No !");
+       /* if (selectedData.size() == 0) {
             Util.alertDilogBox("Please select the number for Consent", "Jio Alert", this);
-        }
-        for (int i = 0; i < selectedData.size(); i++) {
+        }*/
+      /*  for (int i = 0; i < selectedData.size(); i++) {
             new SendSMSAsyncTask().execute(selectedData.get(i).getPhone(), "Do you want to be tracked, please reply in Yes or No !");
-        }
+        }*/
+        mDbManager.updatependingConsent(phoneNumber);
+        showDatainList();
     }
 
 
@@ -380,13 +411,16 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     @Override
     public void messageReceived(String message, String phoneNum) {
         Toast.makeText(getApplicationContext(), "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
-        for (int i = 0; i < selectedData.size(); i++) {
+        String phone = phoneNum.substring(3,phoneNum.length());
+        mDbManager.updateConsentInBors(phone,message);
+        showDatainList();
+        /*for (int i = 0; i < selectedData.size(); i++) {
             if (phoneNum.trim().equals("+91" + selectedData.get(i).getPhone().trim()) && message.equals("Yes")) {
                 consentListPhoneNumber.add(selectedData.get(i).getPhone());
             }
         }
 
-        mDbManager.updateConsentInBors(consentListPhoneNumber);
+        mDbManager.updateConsentInBors(consentListPhoneNumber);*/
     }
 
     public void showDatainList() {
@@ -426,8 +460,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         progressDialog.setCancelable(true);
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-    }
+    }*/
 }

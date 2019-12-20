@@ -49,9 +49,13 @@
             android:name=".view.NewdeviceFMSActivity"
             android:label="@string/map_name" />
         <activity
+            android:name=".view.EditActivity"
+            android:label="@string/map_name" />
+        <activity
             android:name=".view.SplashScreenActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/SplashScreen">
+            android:theme="@style/SplashScreen"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

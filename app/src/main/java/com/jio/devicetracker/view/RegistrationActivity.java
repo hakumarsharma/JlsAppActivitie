@@ -22,7 +22,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.jiotoken.JioUtilsToken;
+import com.jio.devicetracker.jiotoken.JiotokenHandler;
 import com.jio.devicetracker.util.Util;
 
 import java.util.List;
@@ -34,8 +36,9 @@ import static android.Manifest.permission.READ_SMS;
 public class RegistrationActivity extends Activity implements View.OnClickListener {
 
     private Button mRegistration, mBorqs;
-    private EditText mJionmber;
+    private EditText mJionmber, mName;
     private List<SubscriptionInfo> subscriptionInfos;
+    private DBManager mDbManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,9 +49,10 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         title.setText("Registration");
 
         mJionmber = findViewById(R.id.jioNumber);
+        mName = findViewById(R.id.name);
         mRegistration = findViewById(R.id.registration);
         mBorqs = findViewById(R.id.borqs);
-
+        mDbManager = new DBManager(this);
         mRegistration.setOnClickListener(this);
         mBorqs.setOnClickListener(this);
         mJionmber.setOnClickListener(this);
@@ -120,7 +124,9 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     }
 
     private void validateNumber() {
-        if (mJionmber.getText().toString().equals("")) {
+        if (mName.getText().toString().equals("")) {
+            mName.setError("Name can't left empty");
+        } else if (mJionmber.getText().toString().equals("")) {
             mJionmber.setError("Phone number cannot be left empty!");
         } else {
             getssoToken();
@@ -148,6 +154,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                 if (carrierName.contains("Jio")) {
                     JioUtilsToken.getSSOIdmaToken(RegistrationActivity.this);
                     Toast.makeText(this, "SSO token is generated after checking operator", Toast.LENGTH_SHORT).show();
+                    mDbManager.insertAdminData(mName.getText().toString(),mJionmber.getText().toString());
                     gotoDashBoardActivity();
                     return;
                 } else {
@@ -158,6 +165,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     }
 
     private void gotoLoginScreen() {
+        JiotokenHandler.ssoToken = null;
         Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
         startActivity(intent);
     }

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
+import com.jio.devicetracker.database.pojo.EditProfileData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.util.Util;
 
@@ -29,10 +30,11 @@ public class DBManager {
     public long insertInBorqsDB(AddedDeviceData deviceData) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.NAME, deviceData.getRelation());
+        contentValue.put(DatabaseHelper.NAME, deviceData.getName());
+        contentValue.put(DatabaseHelper.RELATION, deviceData.getRelation());
         contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
         contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
-        contentValue.put(DatabaseHelper.CONSENT_STATUS, "Pending");
+        contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
         contentValue.put(DatabaseHelper.LAT, Double.parseDouble(deviceData.getLat()));
         contentValue.put(DatabaseHelper.LON, Double.parseDouble(deviceData.getLng()));
         long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
@@ -40,13 +42,24 @@ public class DBManager {
         return rowInserted;
     }
 
+    public long insertAdminData(String name,String phoneNumber) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.NAME, name);
+        contentValue.put(DatabaseHelper.DEVICE_NUM, phoneNumber);
+        long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_NAME_USER, null, contentValue);
+
+        return rowInserted;
+    }
+
     public long insertInFMSDB(AddedDeviceData deviceData) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.NAME, deviceData.getRelation());
+        contentValue.put(DatabaseHelper.NAME, deviceData.getName());
+        contentValue.put(DatabaseHelper.RELATION, deviceData.getRelation());
         contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
         contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
-        contentValue.put(DatabaseHelper.CONSENT_STATUS, "Pending");
+        contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
         if(deviceData.getLat() != null && deviceData.getLng() != null) {
             contentValue.put(DatabaseHelper.LAT, Double.parseDouble(deviceData.getLat()));
             contentValue.put(DatabaseHelper.LON, Double.parseDouble(deviceData.getLng()));
@@ -64,7 +77,7 @@ public class DBManager {
             while (cursor.moveToNext()) {
                 AddedDeviceData data = new AddedDeviceData();
                 data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
-                data.setRelation(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
+                data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
                 data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)));
                 mlist.add(data);
             }
@@ -82,7 +95,8 @@ public class DBManager {
             while (cursor.moveToNext()) {
                 AddedDeviceData data = new AddedDeviceData();
                 data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
-                data.setRelation(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
+                data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
+                data.setRelation(cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATION)));
                 data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)));
                 mlist.add(data);
             }
@@ -102,6 +116,48 @@ public class DBManager {
             mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= ?", arg);
 
         }
+    }
+
+    public void updateConsentInBors(String phoneNumber,String message) {
+        //String number = "";
+        mDatabase = mDBHelper.getWritableDatabase();
+       /* for (int i = 0; i < phoneNumber.size(); i++) {
+            number = phoneNumber.get(i);*/
+        //String[] arg = new String[]{phoneNumber};
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.CONSENT_STATUS, message);
+        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= "+phoneNumber, null);
+
+        // }
+    }
+
+    public void updatependingConsent(String phoneNumber) {
+        //String number = "";
+        mDatabase = mDBHelper.getWritableDatabase();
+       /* for (int i = 0; i < phoneNumber.size(); i++) {
+            number = phoneNumber.get(i);*/
+        //String[] arg = new String[]{phoneNumber};
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.CONSENT_STATUS, "Pending");
+        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= "+phoneNumber, null);
+
+        // }
+    }
+
+    public void updateProfile(String priviousNumber,String name,String newNumber,String relation,String imei ) {
+        //String number = "";
+        mDatabase = mDBHelper.getWritableDatabase();
+       /* for (int i = 0; i < phoneNumber.size(); i++) {
+            number = phoneNumber.get(i);*/
+        //String[] arg = new String[]{phoneNumber};
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.DEVICE_NUM, newNumber);
+        values.put(DatabaseHelper.NAME, name);
+        values.put(DatabaseHelper.RELATION, relation);
+        values.put(DatabaseHelper.IMEI_NUM, imei);
+        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= "+priviousNumber, null);
+
+        // }
     }
 
     public void deleteSelectedDataformFMS(String phoneNumber) {
@@ -136,4 +192,25 @@ public class DBManager {
         return latLong;
 
     }
+
+    public EditProfileData getUserdataForEdit(String phoneNumber) {
+        EditProfileData data = null;
+        mDatabase = mDBHelper.getWritableDatabase();
+        String [] column = {DatabaseHelper.DEVICE_NUM,DatabaseHelper.RELATION,DatabaseHelper.NAME,DatabaseHelper.IMEI_NUM};
+        //String selectquery = "select " +DatabaseHelper.DEVICE_NUM +"  from " + DatabaseHelper.TABLE_NAME_BORQS+ " where "+ DatabaseHelper.DEVICE_NUM + " = " + phoneNumber;
+        //Cursor cursor = mDatabase.rawQuery(selectquery, null);
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS,column,DatabaseHelper.DEVICE_NUM +"="+phoneNumber,null,null,null,null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                data = new EditProfileData();
+                data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
+                data.setRelation(cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATION)));
+                data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
+            }
+
+        }
+        return data;
+    }
+
 }

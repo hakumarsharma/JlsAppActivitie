@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3EB5EA</color>
-    <color name="colorPrimaryDark">#11B7F0</color>
+    <color name="colorPrimary">#375587</color>
+    <color name="colorPrimaryDark">#375587</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorLogin">#A9A9A9</color>
     <color name="splashScreenBackground">#3868c2</color>
+    <color name="colorConsentApproved">#008000</color>
+    <color name="colorConsentNotSent">#0099CF</color>
+    <color name="colorConsentPending">#E43A29</color>
+    <color name="colorButtonText">#ffffff</color>
+    <color name="colorsplash">#03007F</color>
 </resources>

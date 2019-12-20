@@ -7,6 +7,7 @@ public class AddedDeviceData implements Serializable {
 
     private String phoneNumber;
     private String relation;
+    private String name;
     private String imeiNumber;
     private String lat;
     private String lng;
@@ -67,5 +68,13 @@ public class AddedDeviceData implements Serializable {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -4,6 +4,6 @@
     <string name="map_name">Jio Tracking</string>
     <string name="action_settings">Setting</string>
     <string name="about_us">About Us</string>
-    <string name="loginLebel">Connected Worker</string>
+    <string name="loginLabel">JIO Tracker</string>
     <string name="title_activity_login">Login</string>
 </resources>

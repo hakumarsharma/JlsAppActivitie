@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,7 +49,41 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         //count=position;
         AddedDeviceData data = mData.get(position);
         holder.phone.setText(mData.get(position).getPhoneNumber());
-        holder.relation.setText(mData.get(position).getRelation());
+        holder.name.setText(mData.get(position).getName());
+        holder.mDelete.setTransformationMethod(null);
+        holder.mEdit.setTransformationMethod(null);
+        holder.mConsentStatus.setTransformationMethod(null);
+        if(mData.get(position).getConsentStaus().equals("Yes"))
+        {
+            holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
+            holder.mConsentStatus.setText("Consent Approved");
+        } else if(mData.get(position).getConsentStaus().equals("Pending"))
+        {
+            holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
+            holder.mConsentStatus.setText("Consent Pending");
+        } else {
+            holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentNotSent));
+        }
+        holder.mConsent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemListener.consetClick(mData.get(position).getPhoneNumber());
+            }
+        });
+
+        holder.mEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemListener.recyclerviewEditList(mData.get(position).getRelation(),mData.get(position).getPhoneNumber());
+            }
+        });
+        holder.mDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemListener.recyclerviewDeleteList(mData.get(position).getPhoneNumber(),position);
+            }
+        });
+
 
         holder.mListlayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,20 +113,29 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView phone, relation, title, status;
+        public TextView phone,name, relation,status;
         public CardView mListlayout;
+        public Button mDelete,mEdit,mConsent,mConsentStatus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             phone = itemView.findViewById(R.id.phoneNumber);
-            relation = itemView.findViewById(R.id.relation);
+            name = itemView.findViewById(R.id.name);
             mListlayout = itemView.findViewById(R.id.listLayout);
+            mDelete = itemView.findViewById(R.id.delete);
+            mEdit = itemView.findViewById(R.id.edit);
+            mConsent = itemView.findViewById(R.id.consent);
+            mConsentStatus = itemView.findViewById(R.id.consentstatus);
+            status = itemView.findViewById(R.id.statusView);
 
         }
     }
 
     public interface RecyclerViewClickListener {
         public void recyclerViewListClicked(View v, int position, MultipleselectData data,boolean val);
+        public void recyclerviewEditList(String relation,String phoneNumber);
+        public void recyclerviewDeleteList(String phoneNuber,int position);
+        public void consetClick(String phoneNumber);
     }
 
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {

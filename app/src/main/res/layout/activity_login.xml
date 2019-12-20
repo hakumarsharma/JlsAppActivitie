@@ -26,12 +26,12 @@
 
             <ImageView
                 android:id="@+id/jioLogoLogin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="220dp"
+                android:layout_height="177dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="120dp"
                 android:layout_marginTop="5dp"
-                android:src="@drawable/jio_logo" />
+                android:src="@drawable/jio_locaiton" />
 
             <TextView
                 android:id="@+id/trackntrack"
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/jioLogoLogin"
                 android:layout_centerHorizontal="true"
-                android:text="@string/loginLebel"
+                android:text="@string/loginLabel"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 

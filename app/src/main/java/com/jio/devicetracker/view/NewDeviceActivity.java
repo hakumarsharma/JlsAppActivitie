@@ -26,9 +26,9 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
     Intent intent = null;
     private long insertRowid;
     private List<TrackerdeviceResponse.Data> mDatalist;
-    private EditText mDeviceNumber, mName, mDeviceImeiNumber;
+    private EditText mDeviceNumber, mName, mDeviceImeiNumber,mRelation;
     private Button mAdd;
-    private String number, name, imeiNumber;
+    private String number, name,imeiNumber,relation;
     private AddedDeviceData data = null;
     private DBManager mDbManager;
 
@@ -43,6 +43,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         mDeviceNumber = findViewById(R.id.deviceName);
         mName = findViewById(R.id.memberName);
         mDeviceImeiNumber = findViewById(R.id.deviceIMEINumber);
+        mRelation = findViewById(R.id.relation);
         mAdd = findViewById(R.id.save);
         mDbManager = new DBManager(this);
         mAdd.setOnClickListener(this);
@@ -53,18 +54,20 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         data = new AddedDeviceData();
         number = mDeviceNumber.getText().toString();
         name = mName.getText().toString();
+        relation = mRelation.getText().toString();
         imeiNumber = mDeviceImeiNumber.getText().toString();
         if (!isValidIMEINumber(imeiNumber)) {
             mDeviceImeiNumber.setError("Enter the 15 digit IMEI number");
             return;
         }
 
-        if (number.equals("") || name.equals("") || imeiNumber.equals("")) {
+        if (number.equals("") || name.equals("") || relation.equals("") ) {
             Toast.makeText(this, "Please Enter the details", Toast.LENGTH_SHORT).show();
         } else {
-            data.setImeiNumber(imeiNumber);
+           // data.setImeiNumber(imeiNumber);
             data.setPhoneNumber(number);
-            data.setRelation(name);
+            data.setName(name);
+            data.setRelation(relation);
             matchMobileNumber(data);
         }
     }
