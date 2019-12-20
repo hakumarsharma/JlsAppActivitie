@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jio.devicetracker.R;
 
 import android.Manifest;
@@ -69,7 +70,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     Intent intent = null;
     private String userToken = null;
     List<MultipleselectData> selectedData;
-    private Button removeBtn, addButton, track, consent;
+    private Button removeBtn, addButton, trackBtn, consent;
     public static List<TrackerdeviceResponse.Data> data;
     private AddedDeviceData mAddData;
     private TrackerDeviceListAdapter adapter;
@@ -81,6 +82,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private DBManager mDbManager;
     private TextView devicePresent = null;
     private ProgressDialog progressDialog = null;
+    private FloatingActionButton mActionbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         setContentView(R.layout.activity_dashboard);
         toolbar = findViewById(R.id.customToolbar);
         listView = findViewById(R.id.listView);
+        mActionbtn = findViewById(R.id.fab);
        // consent = findViewById(R.id.consent);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         listView.setLayoutManager(linearLayoutManager);
@@ -96,14 +99,16 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         userToken = Util.getUserToken();
         mDbManager = new DBManager(this);
         mAddData = (AddedDeviceData) intent.getSerializableExtra("AddDeviceData");
-        addButton = toolbar.findViewById(R.id.addbtn);
-        track = findViewById(R.id.track);
+        trackBtn = toolbar.findViewById(R.id.track);
+        trackBtn.setVisibility(View.VISIBLE);
+        //track = findViewById(R.id.track);
        // consent.setOnClickListener(this);
-        addButton.setVisibility(View.VISIBLE);
+        //addButton.setVisibility(View.VISIBLE);
         TextView toolbar_title = findViewById(R.id.toolbar_title);
         toolbar_title.setText("Home");
-        addButton.setOnClickListener(this);
-        track.setOnClickListener(this);
+        trackBtn.setOnClickListener(this);
+        //track.setOnClickListener(this);
+        mActionbtn.setOnClickListener(this);
         setSupportActionBar(toolbar);
         MessageReceiver.bindListener(DashboardActivity.this);
         selectedData = new ArrayList<>();
@@ -241,12 +246,12 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.addbtn:
+           /* case R.id.addbtn:
+                getServicecall(userToken);
+                break;*/
+            case R.id.fab:
                 getServicecall(userToken);
                 break;
-            /*case R.id.consent:
-                //sendSMS();
-                break;*/
             case R.id.track:
                 trackDevice();
                 break;
@@ -368,7 +373,9 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
 
     private void sendSMS(String phoneNumber) {
-        new SendSMSAsyncTask().execute(phoneNumber, "Do you want to be tracked, please reply in Yes or No !");
+
+       String userName= mDbManager.getAdminDetail();
+        new SendSMSAsyncTask().execute(phoneNumber, "Do you want to be tracked, please reply in Yes or No !\n"+userName);
        /* if (selectedData.size() == 0) {
             Util.alertDilogBox("Please select the number for Consent", "Jio Alert", this);
         }*/

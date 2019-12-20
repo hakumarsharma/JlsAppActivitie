@@ -69,7 +69,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         if (number.equals("") || name.equals("") || relation.equals("") ) {
             Toast.makeText(this, "Please Enter the details", Toast.LENGTH_SHORT).show();
         } else {
-           // data.setImeiNumber(imeiNumber);
+            data.setImeiNumber(imeiNumber);
             data.setPhoneNumber(number);
             data.setName(name);
             data.setRelation(relation);

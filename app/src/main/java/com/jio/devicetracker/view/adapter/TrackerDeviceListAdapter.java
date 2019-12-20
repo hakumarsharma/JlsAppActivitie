@@ -57,10 +57,13 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
             holder.mConsentStatus.setText("Consent Approved");
+            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved,0,0,0);
         } else if(mData.get(position).getConsentStaus().equals("Pending"))
         {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
             holder.mConsentStatus.setText("Consent Pending");
+            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending,0,0,0);
+
         } else {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentNotSent));
         }
@@ -85,10 +88,10 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         });
 
 
-        holder.mListlayout.setOnClickListener(new View.OnClickListener() {
+        holder.mListlayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                //int pos=0;
+            public boolean onLongClick(View v) {
+
                 data.setSelected(!data.isSelected());
                 if (data.isSelected()) {
                     holder.mListlayout.setBackground(mContext.getResources().getDrawable(R.drawable.selector));
@@ -101,6 +104,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                     holder.mListlayout.setBackground(mContext.getResources().getDrawable(R.drawable.unselect_list));
                     itemListener.recyclerViewListClicked(v, position, mSelectData,false);
                 }
+                return true;
             }
         });
     }

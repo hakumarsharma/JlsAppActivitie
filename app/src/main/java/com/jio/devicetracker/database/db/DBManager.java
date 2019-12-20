@@ -155,6 +155,10 @@ public class DBManager {
         values.put(DatabaseHelper.NAME, name);
         values.put(DatabaseHelper.RELATION, relation);
         values.put(DatabaseHelper.IMEI_NUM, imei);
+        if(!priviousNumber.equals(newNumber))
+        {
+            values.put(DatabaseHelper.CONSENT_STATUS,"Consent not sent");
+        }
         mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= "+priviousNumber, null);
 
         // }
@@ -212,5 +216,23 @@ public class DBManager {
         }
         return data;
     }
+
+    public String getAdminDetail() {
+        mDatabase = mDBHelper.getWritableDatabase();
+        String userName = "";
+        String [] column = {DatabaseHelper.NAME};
+        //String selectquery = "select " +DatabaseHelper.DEVICE_NUM +"  from " + DatabaseHelper.TABLE_NAME_BORQS+ " where "+ DatabaseHelper.DEVICE_NUM + " = " + phoneNumber;
+        //Cursor cursor = mDatabase.rawQuery(selectquery, null);
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_USER,column,null,null,null,null,null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                 userName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM));
+            }
+
+        }
+        return userName;
+    }
+
+
 
 }

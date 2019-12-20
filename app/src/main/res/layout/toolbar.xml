@@ -18,12 +18,13 @@
             android:id="@+id/toolbar_title"/>
 
         <Button
-            android:id="@+id/addbtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="5dp"
+            android:id="@+id/track"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_add_btn"
+            android:background="@drawable/ic_tracker"
             android:visibility="invisible" />
     </RelativeLayout>
 
