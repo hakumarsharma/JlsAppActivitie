@@ -376,14 +376,15 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
        String userName= mDbManager.getAdminDetail();
         new SendSMSAsyncTask().execute(phoneNumber, "Do you want to be tracked, please reply in Yes or No !\n"+userName);
-       /* if (selectedData.size() == 0) {
-            Util.alertDilogBox("Please select the number for Consent", "Jio Alert", this);
-        }*/
-      /*  for (int i = 0; i < selectedData.size(); i++) {
-            new SendSMSAsyncTask().execute(selectedData.get(i).getPhone(), "Do you want to be tracked, please reply in Yes or No !");
-        }*/
-        mDbManager.updatependingConsent(phoneNumber);
-        showDatainList();
+        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+            mDbManager.updatependingConsent(phoneNumber);
+            showDatainList();
+        } else {
+            mDbManager.updatependingConsentFMS(phoneNumber);
+            showDataFromFMS();
+        }
+       /* mDbManager.updatependingConsent(phoneNumber);
+        showDatainList();*/
     }
 
 
@@ -419,8 +420,15 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public void messageReceived(String message, String phoneNum) {
         Toast.makeText(getApplicationContext(), "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
         String phone = phoneNum.substring(3,phoneNum.length());
-        mDbManager.updateConsentInBors(phone,message);
-        showDatainList();
+        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+            mDbManager.updateConsentInBors(phone,message);
+            showDatainList();
+        } else {
+            mDbManager.updateConsentInFMS(phone,message);
+            showDataFromFMS();
+        }
+        /*mDbManager.updateConsentInBors(phone,message);
+        showDatainList();*/
         /*for (int i = 0; i < selectedData.size(); i++) {
             if (phoneNum.trim().equals("+91" + selectedData.get(i).getPhone().trim()) && message.equals("Yes")) {
                 consentListPhoneNumber.add(selectedData.get(i).getPhone());

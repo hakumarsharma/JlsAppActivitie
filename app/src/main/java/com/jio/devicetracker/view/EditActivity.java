@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.EditProfileData;
+import com.jio.devicetracker.jiotoken.JiotokenHandler;
 
 public class EditActivity extends Activity implements View.OnClickListener {
 
@@ -37,7 +38,11 @@ public class EditActivity extends Activity implements View.OnClickListener {
         mUpdate.setOnClickListener(this);
         Intent intent = getIntent();
         number = intent.getStringExtra("number");
-        editData = mDBmanager.getUserdataForEdit(number);
+        if(JiotokenHandler.ssoToken == null) {
+            editData = mDBmanager.getUserdataForEdit(number);
+        }else {
+            editData = mDBmanager.getUserdataForEditFMS(number);
+        }
         //relation = intent.getStringExtra("Relation");
         mName.setText(editData.getName());
         mNumber.setText(editData.getPhoneNumber());
@@ -49,7 +54,12 @@ public class EditActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        mDBmanager.updateProfile(number,mName.getText().toString(),mNumber.getText().toString(),mRelation.getText().toString(),mIMEI.getText().toString());
+        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+            mDBmanager.updateProfile(number,mName.getText().toString(),mNumber.getText().toString(),mRelation.getText().toString(),mIMEI.getText().toString());
+        } else {
+            mDBmanager.updateProfileFMS(number,mName.getText().toString(),mNumber.getText().toString(),mRelation.getText().toString(),mIMEI.getText().toString());
+        }
+
         gotoDashboard();
     }
 

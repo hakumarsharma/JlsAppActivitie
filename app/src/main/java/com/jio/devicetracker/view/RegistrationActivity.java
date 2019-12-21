@@ -64,8 +64,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
-                if (keyCode == KeyEvent.KEYCODE_ENTER)
-                {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
                     // Perform action on Enter key press
                     showDialog(subscriptionInfos);
                     return true;
@@ -158,8 +157,6 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         boolean isAvailable = Util.isMobileNetworkAvailable(RegistrationActivity.this);
         if (isAvailable) {
             checkJiooperator();
-            //JioUtilsToken.getSSOIdmaToken(RegistrationActivity.this);
-            //Toast.makeText(this,"SSO token is generated",Toast.LENGTH_SHORT).show();
 
         } else {
             Util.alertDilogBox("Please use your mobile data", "Jio Alert", this);
