@@ -6,12 +6,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,6 +60,20 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         mBorqs.setOnClickListener(this);
         mJionmber.setOnClickListener(this);
 
+        mName.setOnKeyListener(new View.OnKeyListener() {
+
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if (keyCode == KeyEvent.KEYCODE_ENTER)
+                {
+                    // Perform action on Enter key press
+                    showDialog(subscriptionInfos);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         mJionmber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -67,6 +83,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mRegistration.setBackground(getResources().getDrawable(R.drawable.login_selector));
+                mRegistration.setTextColor(Color.WHITE);
             }
 
             @Override
@@ -74,6 +91,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                 String number = mJionmber.getText().toString();
                 if (number.equals("")) {
                     mRegistration.setBackground(getResources().getDrawable(R.drawable.selector));
+                    mRegistration.setTextColor(Color.WHITE);
                 } else {
                     mJionmber.setError(null);
                 }
@@ -181,7 +199,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         final Dialog dialog = new Dialog(RegistrationActivity.this);
         dialog.setContentView(R.layout.number_display_dialog);
         dialog.setTitle("Title...");
-        dialog.getWindow().setLayout(1000, 1000);
+        dialog.getWindow().setLayout(1000, 400);
 
 
         // set the custom dialog components - text, image and button
