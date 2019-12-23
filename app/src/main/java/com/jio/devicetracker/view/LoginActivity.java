@@ -3,6 +3,7 @@ package com.jio.devicetracker.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
@@ -54,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!jioEmailEditText.getText().toString().equals("") || !jioPasswordEditText.getText().toString().equals("")) {
                     loginButton.setBackground(getResources().getDrawable(R.drawable.login_selector));
+                    loginButton.setTextColor(Color.WHITE);
                 }
             }
 
@@ -62,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                 String emailId = jioEmailEditText.getText().toString();
                 if (emailId.equals("")) {
                     loginButton.setBackground(getResources().getDrawable(R.drawable.selector));
+                    loginButton.setTextColor(Color.WHITE);
                 }
             }
         });

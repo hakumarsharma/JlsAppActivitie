@@ -50,6 +50,7 @@
         android:layout_marginBottom="50dp"
         android:src="@drawable/ic_add_btn"
         app:elevation="6dp"
+        app:backgroundTint="@color/colorPrimary"
         app:pressedTranslationZ="12dp" />
 
 </RelativeLayout>
