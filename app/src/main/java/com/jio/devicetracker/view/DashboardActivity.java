@@ -55,6 +55,7 @@ import com.jio.mqttclient.JiotMqttClient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,6 +86,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private TextView devicePresent = null;
     private ProgressDialog progressDialog = null;
     private FloatingActionButton mActionbtn;
+    public static Map<String, Map<Double, Double>> namingMap = null;
+    private Context context = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +116,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         addDeviceList = new ArrayList<AddedDeviceData>();
         latLngMap = new LinkedHashMap<>();
         consentListPhoneNumber = new LinkedList<>();
+        namingMap = new HashMap<>();
+        context = getApplicationContext();
         isDevicePresent();
 
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
@@ -149,7 +154,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             @Override
             public void recyclerviewDeleteList(String phoneNumber,int position) {
 
-                alertDilogBoxWithCancelbtn("Are you want to delete ?","Jio Alert",phoneNumber,position);
+                alertDilogBoxWithCancelbtn("Do you want to delete ?","Jio Alert",phoneNumber,position);
 
             }
 
@@ -232,7 +237,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         @Override
         public void onErrorResponse(VolleyError error) {
             progressDialog.dismiss();
-            Toast.makeText(getApplicationContext(), "Token is null", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Token is null", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -260,14 +265,15 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 if (selectedData.get(i).getPhone().equals(consentData.get(i).getPhoneNumber())) {
                     if (consentData.get(i).getConsentStaus().equals("Yes")) {
                         latLngMap = mDbManager.getLatLongForMap(selectedData);
-                        startTheScheduler();
-                        Intent map = new Intent(this, MapsActivity.class);
-                        startActivity(map);
+                        namingMap.put(selectedData.get(i).getName(), latLngMap);
                     } else {
                         Util.alertDilogBox("Consent is not apporoved for phone number " + consentData.get(i).getPhoneNumber(), "Jio Alert", this);
                     }
                 }
             }
+            startTheScheduler();
+            Intent map = new Intent(this, MapsActivity.class);
+            startActivity(map);
         }
         else {
             showProgressBarDialog();
@@ -305,21 +311,15 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     public void startTheScheduler() {
-        final Runnable beeper = new Runnable() {
-            public void run() {
-                Log.i("TAG", "Inside Scheduler");
-                DashboardActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        makeAPICall(Util.getUserToken());
-                        new MapsActivity().fetchLocationDetail();
-                    }
-                });
-            }
-        };
         final ScheduledExecutorService scheduler =
                 Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(beeper, 0, 300, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(() -> {
+            Log.i("TAG", "Inside Scheduler");
+            DashboardActivity.this.runOnUiThread(() -> {
+                makeAPICall(Util.getUserToken());
+                new MapsActivity().showMapOnTimeInterval();
+            });
+        }, 0, MapsActivity.refreshIntervalTime, TimeUnit.SECONDS);
     }
 
     public void makeAPICall(String token) {
@@ -331,7 +331,9 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         latlong.setTo(1542108865424L);
         data.setmSort(sort);
         data.setLatlong(latlong);
-        RequestHandler.getInstance(getApplicationContext()).handleRequest(new TrackdeviceRequest(new SuccessAPICall(), new UnSuccessfullAPICall(), token, data));
+        if(context != null) {
+            RequestHandler.getInstance(context).handleRequest(new TrackdeviceRequest(new SuccessAPICall(), new UnSuccessfullAPICall(), token, data));
+        }
     }
 
     private class SuccessAPICall implements Response.Listener {
@@ -441,22 +443,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         }
     }
 
-  /*  @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-
-        if (viewHolder instanceof TrackerDeviceListAdapter.ViewHolder) {
-            String phoneNumber = ((TrackerDeviceListAdapter.ViewHolder) viewHolder).phone.getText().toString();
-            if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
-                mDbManager.deleteSelectedData(phoneNumber);
-            } else {
-                mDbManager.deleteSelectedDataformFMS(phoneNumber);
-            }
-            adapter.removeItem(viewHolder.getAdapterPosition());
-            Toast.makeText(DashboardActivity.this, "Phone number is deleted", Toast.LENGTH_SHORT).show();
-        }
-        isDevicePresent();
-    }
-*/
     private void showProgressBarDialog() {
         progressDialog = ProgressDialog.show(DashboardActivity.this, "", "Please wait loading data...", true);
         progressDialog.setCancelable(true);

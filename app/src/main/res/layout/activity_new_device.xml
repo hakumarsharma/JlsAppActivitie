@@ -63,7 +63,6 @@
                 android:backgroundTint="@color/colorLogin"
                 android:hint="Name*"
                 android:inputType="text"
-                android:textColor="#00f"
                 android:textCursorDrawable="@color/colorLogin" />
 
             <EditText
@@ -77,7 +76,6 @@
                 android:backgroundTint="@color/colorLogin"
                 android:hint="Relation*"
                 android:inputType="text"
-                android:textColor="#00f"
                 android:textCursorDrawable="@color/colorLogin" />
 
             <EditText
@@ -91,7 +89,6 @@
                 android:backgroundTint="@color/colorLogin"
                 android:hint="Mobile Number*"
                 android:inputType="phone"
-                android:textColor="#00f"
                 android:textCursorDrawable="@color/colorLogin" />
 
             <EditText
@@ -105,7 +102,6 @@
                 android:backgroundTint="@color/colorLogin"
                 android:hint="Device IMEI*"
                 android:inputType="number"
-                android:textColor="#00f"
                 android:textCursorDrawable="@color/colorLogin" />
 
             <!--             <EditText-->

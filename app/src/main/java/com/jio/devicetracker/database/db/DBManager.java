@@ -220,7 +220,6 @@ public class DBManager {
                 while (cursor.moveToNext()) {
                     phoneNumner.add(mList.get(i).getPhone());
                     latLong.put(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LAT)),cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LON)));
-
                 }
             }
         }

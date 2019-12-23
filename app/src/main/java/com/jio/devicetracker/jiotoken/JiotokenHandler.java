@@ -28,6 +28,8 @@ public class JiotokenHandler extends Handler {
                 } else {
                     Bundle b = msg.getData();
                 }
+                Log.d("SSO Token --> ", ssoToken);
+                Log.d("Crm Id --> ", crmId);
                 break;
             case  JiotSSOConstants.JIOT_SSO_ERROR_RESP_MSG_CODE:
                 Bundle b = msg.getData();

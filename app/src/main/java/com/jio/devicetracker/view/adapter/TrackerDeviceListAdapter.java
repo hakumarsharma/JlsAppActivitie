@@ -99,6 +99,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                     mSelectData.setPhone(mData.get(position).getPhoneNumber());
                     mSelectData.setLat(mData.get(position).getLat());
                     mSelectData.setLng(mData.get(position).getLng());
+                    mSelectData.setName(mData.get(position).getName());
                     itemListener.recyclerViewListClicked(v, position, mSelectData,true);
                 } else {
                     holder.mListlayout.setBackground(mContext.getResources().getDrawable(R.drawable.unselect_list));

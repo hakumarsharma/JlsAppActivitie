@@ -5,6 +5,15 @@ public class MultipleselectData {
     private String phone;
     private String lat;
     private String lng;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getPhone() {
         return phone;

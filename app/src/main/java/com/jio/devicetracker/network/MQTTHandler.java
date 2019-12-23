@@ -114,8 +114,10 @@ public class MQTTHandler extends AppCompatActivity {
     public String getSessionId() {
         if(sessionID == null) {
             sessionID = UUID.randomUUID().toString();
+            Log.d("Session Id --> ", sessionID);
             return sessionID;
         }
+        Log.d("Session Id --> ", sessionID);
         return sessionID;
     }
 }

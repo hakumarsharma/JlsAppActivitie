@@ -11,6 +11,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
@@ -52,8 +53,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public Toolbar toolbar;
     private static StringBuilder strAddress = null;
     private static Map<Double, Double> latLongMap = null;
-    public static  int refreshIntervalTime = 300;
-
+    public static int refreshIntervalTime = 300;
+    private Context context = null;
+    Map<String, Map<Double, Double>> namingMap = null;
     @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +66,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         strAddress = new StringBuilder();
         TextView title = findViewById(R.id.toolbar_title);
         title.setText("      Location");
+        context = getApplicationContext();
 
         if(mMap != null) {
             mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this));
-            mMap.setOnInfoWindowClickListener(MapsActivity.this);
+           // mMap.setOnInfoWindowClickListener(MapsActivity.this);
         }
 
         if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -97,29 +100,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        DashboardActivity dashboardActivity = new DashboardActivity();
         switch (id){
             case R.id.oneminute:
                 Toast.makeText(getApplicationContext(),"Location will be updated after every 1 minute",Toast.LENGTH_LONG).show();
                 refreshIntervalTime = 60;
+                dashboardActivity.startTheScheduler();
                 return true;
             case R.id.twominute:
                 Toast.makeText(getApplicationContext(),"Location will be updated after every 2 minute",Toast.LENGTH_LONG).show();
                 refreshIntervalTime = 120;
+                dashboardActivity.startTheScheduler();
                 return true;
             case R.id.fiveminute:
                 Toast.makeText(getApplicationContext(),"Location will be updated after every 5 minute",Toast.LENGTH_LONG).show();
                 refreshIntervalTime = 300;
+                dashboardActivity.startTheScheduler();
                 return true;
             case R.id.tenminute:
                 Toast.makeText(getApplicationContext(),"Location will be updated after every 10 minute",Toast.LENGTH_LONG).show();
                 refreshIntervalTime = 600;
+                dashboardActivity.startTheScheduler();
                 return true;
             case R.id.fifminute:
                 Toast.makeText(getApplicationContext(),"Location will be updated after every 15 minute",Toast.LENGTH_LONG).show();
                 refreshIntervalTime = 900;
+                dashboardActivity.startTheScheduler();
                 return true;
             default:
                 refreshIntervalTime = 300;
+                dashboardActivity.startTheScheduler();
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -128,19 +138,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
-        latLongMap = DashboardActivity.latLngMap;
-        if (latLongMap.size() > 0 && strAddress != null) {
-            for (Map.Entry<Double, Double> entry : latLongMap.entrySet()) {
-                LatLng latLng = new LatLng(entry.getKey(), entry.getValue());
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title("Jio Marker");
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-                markerOptions.snippet(getAddressFromLocation(entry.getKey(), entry.getValue()));
-                mCurrLocationMarker = mMap.addMarker(markerOptions);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        namingMap = DashboardActivity.namingMap;
+        if (namingMap.size() > 0 && strAddress != null) {
+            for (Map.Entry<String, Map<Double, Double>> entry : namingMap.entrySet()) {
+                Map<Double, Double> latLongitudeMap = entry.getValue();
+                for (Map.Entry<Double, Double> mapEntry : latLongitudeMap.entrySet()) {
+                    LatLng latLng = new LatLng(mapEntry.getKey(), mapEntry.getValue());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    markerOptions.title(entry.getKey());
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    markerOptions.snippet(getAddressFromLocation(mapEntry.getKey(), mapEntry.getValue()));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+                    mMap.addMarker(markerOptions);
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    if(context != null) {
+                        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(context));
+                    }
+                }
             }
         }
     }
@@ -175,9 +191,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         public View getInfoContents(Marker marker) {
-            TextView tvTitle = ((TextView) myContentsView.findViewById(R.id.title));
+            TextView tvTitle = myContentsView.findViewById(R.id.title);
             tvTitle.setText(marker.getTitle());
-            TextView tvSnippet = ((TextView) myContentsView.findViewById(R.id.snippet));
+            TextView tvSnippet =  myContentsView.findViewById(R.id.snippet);
             tvSnippet.setText(marker.getSnippet());
             return myContentsView;
         }
@@ -188,8 +204,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void fetchLocationDetail() {
-        List<TrackerdeviceResponse.Data> data = DashboardActivity.data;
+    public void showMapOnTimeInterval() {
+        /*List<TrackerdeviceResponse.Data> data = DashboardActivity.data;
         List<String> phoneNumner = DBManager.phoneNumner;
         latLongMap = new HashMap<>();
         if (data != null) {
@@ -198,7 +214,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     latLongMap.put(data.get(i).getLocation().getLat(), data.get(i).getLocation().getLng());
                 }
             }
-        }
+        }*/
         if (mMap != null) {
             onMapReady(mMap);
         }
