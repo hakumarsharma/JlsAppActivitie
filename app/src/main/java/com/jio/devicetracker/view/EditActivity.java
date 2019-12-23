@@ -38,7 +38,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
         mUpdate.setOnClickListener(this);
         Intent intent = getIntent();
         number = intent.getStringExtra("number");
-        if(JiotokenHandler.ssoToken == null) {
+        if(JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
             editData = mDBmanager.getUserdataForEdit(number);
         }else {
             editData = mDBmanager.getUserdataForEditFMS(number);

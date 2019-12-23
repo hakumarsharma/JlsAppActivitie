@@ -61,7 +61,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class DashboardActivity extends AppCompatActivity implements MessageListener, View.OnClickListener, RecyclerviewSwipeController.RecyclerItemTouchHelperListener {
+public class DashboardActivity extends AppCompatActivity implements MessageListener, View.OnClickListener {
 
     Toolbar toolbar;
     private RecyclerView listView;
@@ -158,6 +158,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 }
                 //mDbManager.deleteSelectedData(phoneNumber);
                 adapter.removeItem(position);
+
+                isDevicePresent();
             }
 
             @Override
@@ -165,8 +167,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 sendSMS(phoneNumber);
             }
         });
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerviewSwipeController(0, ItemTouchHelper.LEFT, this, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(listView);
+        /*ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerviewSwipeController(0, ItemTouchHelper.LEFT, this, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(listView);*/
     }
 
     private void gotoEditScreen(String relation,String phoneNumber) {
@@ -204,7 +206,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     public void getServicecall(String token) {
-        if (JiotokenHandler.ssoToken != null) {
+        if (JiotokenHandler.ssoToken != null && RegistrationActivity.isFMSFlow == false) {
             gotoAddDeviceActivity();
         } else {
             showProgressBarDialog();
@@ -246,9 +248,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-           /* case R.id.addbtn:
-                getServicecall(userToken);
-                break;*/
             case R.id.fab:
                 getServicecall(userToken);
                 break;
@@ -383,8 +382,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             mDbManager.updatependingConsentFMS(phoneNumber);
             showDataFromFMS();
         }
-       /* mDbManager.updatependingConsent(phoneNumber);
-        showDatainList();*/
     }
 
 
@@ -427,15 +424,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             mDbManager.updateConsentInFMS(phone,message);
             showDataFromFMS();
         }
-        /*mDbManager.updateConsentInBors(phone,message);
-        showDatainList();*/
-        /*for (int i = 0; i < selectedData.size(); i++) {
-            if (phoneNum.trim().equals("+91" + selectedData.get(i).getPhone().trim()) && message.equals("Yes")) {
-                consentListPhoneNumber.add(selectedData.get(i).getPhone());
-            }
-        }
 
-        mDbManager.updateConsentInBors(consentListPhoneNumber);*/
     }
 
     public void showDatainList() {
@@ -454,7 +443,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         }
     }
 
-    @Override
+  /*  @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
 
         if (viewHolder instanceof TrackerDeviceListAdapter.ViewHolder) {
@@ -469,14 +458,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         }
         isDevicePresent();
     }
-
+*/
     private void showProgressBarDialog() {
         progressDialog = ProgressDialog.show(DashboardActivity.this, "", "Please wait loading data...", true);
         progressDialog.setCancelable(true);
     }
 
-    /*@Override
-    public void onBackPressed() {
-        startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-    }*/
 }
