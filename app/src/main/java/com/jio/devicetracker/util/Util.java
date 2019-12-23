@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.inputmethod.InputMethodManager;
+
 import com.google.gson.Gson;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 
@@ -15,62 +16,55 @@ import java.util.List;
 
 public class Util {
     private static Util mUtils;
-    private static  List<AddedDeviceData> list;
-    static SharedPreferences sharedpreferences =null;
-    public static final String MyPREFERENCES = "MyPrefs" ;
+    private static List<AddedDeviceData> list;
+    static SharedPreferences sharedpreferences = null;
+    public static final String MyPREFERENCES = "MyPrefs";
 
-    private Util()
-    {
+    private Util() {
 
     }
 
-    public static Util getInstance()
-    {
-        if(mUtils==null)
-        {
+    public static Util getInstance() {
+        if (mUtils == null) {
             mUtils = new Util();
         }
         return mUtils;
     }
-    public  String toJSON(Object pojo)
-    {
+
+    public String toJSON(Object pojo) {
         Gson gson = new Gson();
         String json = gson.toJson(pojo);
         return json;
     }
 
-    public <T> T getPojoObject(String response,Class<T> pojo)
-    {
+    public <T> T getPojoObject(String response, Class<T> pojo) {
         T t = null;
         Gson gson = new Gson();
-        t = gson.fromJson(response,pojo);
+        t = gson.fromJson(response, pojo);
         return t;
     }
 
-    public void setUserToken(Context mContext,String userToken)
-    {
+    public void setUserToken(Context mContext, String userToken) {
         sharedpreferences = mContext.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString("UserToken",userToken);
+        editor.putString("UserToken", userToken);
         editor.commit();
     }
 
-    public static String getUserToken()
-    {
-        if(sharedpreferences != null) {
+    public static String getUserToken() {
+        if (sharedpreferences != null) {
             String token = sharedpreferences.getString("UserToken", "");
             return token;
         }
         return "";
     }
 
-    public static void setListvalue(List<AddedDeviceData> mList)
-    {
+    public static void setListvalue(List<AddedDeviceData> mList) {
         list = mList;
 
     }
-    public static List<AddedDeviceData> getAddedDevicelist()
-    {
+
+    public static List<AddedDeviceData> getAddedDevicelist() {
         return list;
     }
 
@@ -85,20 +79,18 @@ public class Util {
     public static boolean isMobileNetworkAvailable(Context mContext) {
         ConnectivityManager connectivity = (ConnectivityManager) mContext
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null) {
-                for (int i = 0; i < info.length; i++) {
-                    if (info[i].getType() == ConnectivityManager.TYPE_MOBILE && info[i].isConnected() )
-                    {
-                        return true;
-                    }
+        NetworkInfo[] info = connectivity.getAllNetworkInfo();
+        if (info != null) {
+            for (int i = 0; i < info.length; i++) {
+                if (info[i].getType() == ConnectivityManager.TYPE_MOBILE && info[i].isConnected()) {
+                    return true;
                 }
             }
+        }
         return false;
     }
 
-    public static void alertDilogBox(String message,String title,Context context)
-    {
+    public static void alertDilogBox(String message, String title, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 context);
         builder.setTitle(title);
@@ -112,4 +104,5 @@ public class Util {
                 });
         builder.show();
     }
+
 }

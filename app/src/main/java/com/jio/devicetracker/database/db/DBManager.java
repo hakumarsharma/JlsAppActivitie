@@ -285,6 +285,23 @@ public class DBManager {
         return userName;
     }
 
+    public String getConsentStatusBorqs(String phoneNumber) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        String consentStatus = "";
+        String [] column = {DatabaseHelper.CONSENT_STATUS};
+        //String selectquery = "select " +DatabaseHelper.DEVICE_NUM +"  from " + DatabaseHelper.TABLE_NAME_BORQS+ " where "+ DatabaseHelper.DEVICE_NUM + " = " + phoneNumber;
+        //Cursor cursor = mDatabase.rawQuery(selectquery, null);
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS,column,DatabaseHelper.DEVICE_NUM +" = "+phoneNumber,null,null,null,null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                consentStatus = cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS));
+            }
+
+        }
+        return consentStatus;
+    }
+
+
 
 
 }

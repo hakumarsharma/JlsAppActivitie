@@ -32,13 +32,6 @@
         android:layout_below="@+id/customToolbar"
         android:dividerHeight="1dp"/>
 
-    <!-- Footer-->
-<!--    <include
-        layout="@layout/footer"
-        android:id="@+id/footer"
-        android:layout_height="60dp"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

@@ -12,8 +12,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jio.devicetracker.R;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -101,13 +103,9 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         mAddData = (AddedDeviceData) intent.getSerializableExtra("AddDeviceData");
         trackBtn = toolbar.findViewById(R.id.track);
         trackBtn.setVisibility(View.VISIBLE);
-        //track = findViewById(R.id.track);
-       // consent.setOnClickListener(this);
-        //addButton.setVisibility(View.VISIBLE);
         TextView toolbar_title = findViewById(R.id.toolbar_title);
         toolbar_title.setText("Home");
         trackBtn.setOnClickListener(this);
-        //track.setOnClickListener(this);
         mActionbtn.setOnClickListener(this);
         setSupportActionBar(toolbar);
         MessageReceiver.bindListener(DashboardActivity.this);
@@ -151,15 +149,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             @Override
             public void recyclerviewDeleteList(String phoneNumber,int position) {
 
-                if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
-                    mDbManager.deleteSelectedData(phoneNumber);
-                } else {
-                    mDbManager.deleteSelectedDataformFMS(phoneNumber);
-                }
-                //mDbManager.deleteSelectedData(phoneNumber);
-                adapter.removeItem(position);
+                alertDilogBoxWithCancelbtn("Are you want to delete ?","Jio Alert",phoneNumber,position);
 
-                isDevicePresent();
             }
 
             @Override
@@ -374,14 +365,21 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private void sendSMS(String phoneNumber) {
 
        String userName= mDbManager.getAdminDetail();
-        new SendSMSAsyncTask().execute(phoneNumber, "Do you want to be tracked, please reply in Yes or No !\n"+userName);
-        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
-            mDbManager.updatependingConsent(phoneNumber);
-            showDatainList();
-        } else {
-            mDbManager.updatependingConsentFMS(phoneNumber);
-            showDataFromFMS();
-        }
+       String consentStatus = mDbManager.getConsentStatusBorqs(phoneNumber);
+       if(consentStatus.equals("Yes"))
+       {
+           Util.alertDilogBox("Consent status is already approved for this number","Jio Alert",this);
+       } else {
+           new SendSMSAsyncTask().execute(phoneNumber, "Do you want to be tracked, please reply in Yes or No !\n"+userName);
+           if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+               mDbManager.updatependingConsent(phoneNumber);
+               showDatainList();
+           } else {
+               mDbManager.updatependingConsentFMS(phoneNumber);
+               showDataFromFMS();
+           }
+       }
+       
     }
 
 
@@ -464,4 +462,32 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         progressDialog.setCancelable(true);
     }
 
+    public void alertDilogBoxWithCancelbtn(String message, String title,String phoneNumber,int position) {
+
+        AlertDialog.Builder adb = new AlertDialog.Builder(DashboardActivity.this);
+        //adb.setView(alertDialogView);
+        adb.setTitle(title);
+        adb.setMessage(message);
+        adb.setIcon(android.R.drawable.ic_dialog_alert);
+        adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+                    mDbManager.deleteSelectedData(phoneNumber);
+                } else {
+                    mDbManager.deleteSelectedDataformFMS(phoneNumber);
+                }
+                //mDbManager.deleteSelectedData(phoneNumber);
+                adapter.removeItem(position);
+
+                isDevicePresent();
+            }
+        });
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        adb.show();
+    }
 }

@@ -1,27 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/empty"
-        android:title="Options"
-        android:orderInCategory="101"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/baseline_more_vert_black">
-        <menu>
-            <item
-                android:id="@+id/oneminute" app:showAsAction="always"   android:title="1 minute"/>
-            <item
-                android:id="@+id/twominute" app:showAsAction="always|withText" android:title="2 minute"/>
-            <item
-                android:id="@+id/fiveminute" app:showAsAction="never" android:title="5 minute">
-            </item>
-            <item
-                android:id="@+id/tenminute"  app:showAsAction="never" android:title="10 minute">
-            </item>
-            <item
-                android:id="@+id/fifminute"  app:showAsAction="never" android:title="15 minute">
-            </item>
-        </menu>
-    </item>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="1 minute" android:id="@+id/oneminute" />
+    <item  android:id="@+id/twominute" android:title="2 minute" />
+    <item android:id="@+id/fiveminute" android:title="5 minute" />
+    <item android:id="@+id/tenminute" android:title="10 minute" />
+    <item android:id="@+id/fifminute" android:title="15 minute" />
 </menu>
