@@ -13,7 +13,7 @@ import com.android.volley.toolbox.Volley;
 public class RequestHandler {
 
     private static final String URL = "https://stg.borqs.io";
-    private static final String FMS_BASE_URL = "http://10.162.0.62";
+    private static final String FMS_BASE_URL = "http://49.40.22.92:8080";
     private static RequestHandler mRequestHandler;
     private static Context mContext;
     private RequestQueue mRequestQueue;

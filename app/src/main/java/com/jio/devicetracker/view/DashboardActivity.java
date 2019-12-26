@@ -4,7 +4,6 @@ package com.jio.devicetracker.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +24,6 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +33,6 @@ import com.android.volley.VolleyError;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.FMSAPIData;
-import com.jio.devicetracker.database.pojo.FMSHeader;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.TrackerdeviceData;
 import com.jio.devicetracker.database.pojo.request.FMSTrackRequest;
@@ -43,14 +40,12 @@ import com.jio.devicetracker.database.pojo.request.TrackdeviceRequest;
 import com.jio.devicetracker.database.pojo.response.LocationApiResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.jiotoken.JiotokenHandler;
-import com.jio.devicetracker.network.MQTTHandler;
+import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.adapter.RecyclerviewSwipeController;
 import com.jio.devicetracker.view.adapter.TrackerDeviceListAdapter;
-import com.jio.mqttclient.JiotMqttClient;
 
 
 import java.io.Serializable;
@@ -125,7 +120,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
 
-        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+        if (RegistrationActivity.isFMSFlow == false) {
             showDatainList();
         } else {
             showDataFromFMS();
@@ -177,32 +172,29 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         DBManager dbManager = new DBManager(getApplicationContext());
         devicePresent = findViewById(R.id.devicePresent);
         List<AddedDeviceData> alldata = null;
-        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+        if (RegistrationActivity.isFMSFlow == false) {
             alldata = dbManager.getAlldata();
-            RecyclerView recyclerView = findViewById(R.id.listView);
-
             if (alldata.size() == 0) {
-                recyclerView.setVisibility(View.INVISIBLE);
+                listView.setVisibility(View.INVISIBLE);
                 devicePresent.setVisibility(View.VISIBLE);
             } else {
                 devicePresent.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+                listView.setVisibility(View.VISIBLE);
             }
         } else {
             alldata = dbManager.getAlldataFromFMS();
-            RecyclerView recyclerView = findViewById(R.id.listView);
             if (alldata.size() == 0) {
-                recyclerView.setVisibility(View.INVISIBLE);
+                listView.setVisibility(View.INVISIBLE);
                 devicePresent.setVisibility(View.VISIBLE);
             } else {
                 devicePresent.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+                listView.setVisibility(View.VISIBLE);
             }
         }
     }
 
     public void getServicecall(String token) {
-        if (JiotokenHandler.ssoToken != null && RegistrationActivity.isFMSFlow == false) {
+        if (JiotokenHandler.ssoToken != null || RegistrationActivity.isFMSFlow == true) {
             gotoAddDeviceActivity();
         } else {
             showProgressBarDialog();
@@ -255,7 +247,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
 
     private void trackDevice() {
-        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+        if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
             List<AddedDeviceData> consentData = mDbManager.getAlldata();
             if (selectedData.size() == 0) {
                 Util.alertDilogBox("Please select the number for tracking", "Jio Alert", this);
@@ -277,17 +269,17 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         }
         else {
             showProgressBarDialog();
-            MQTTHandler mqttHandler = new MQTTHandler();
-            mqttHandler.getSessionId();
-            mqttHandler.getMQTTClient(getApplicationContext());
-            mqttHandler.connetMQTT();
+            MQTTManager mqttManager = new MQTTManager();
+            mqttManager.getSessionId();
+            mqttManager.getMQTTClient(getApplicationContext());
+            mqttManager.connetMQTT();
             FMSAPIData fmsapiData = new FMSAPIData();
             fmsapiData.setEvt(new String[]{"GPS"});
-            fmsapiData.setDvt("JIOPHONE");
-            fmsapiData.setImi(new String[]{"40903"});
+            fmsapiData.setDvt("SIM");
+            fmsapiData.setImi(new String[]{"357170080534762"});
             fmsapiData.setEfd(14546957247L);
-            fmsapiData.setMob(new String[]{"8618799136"});
-            fmsapiData.setTid("456");
+            fmsapiData.setMob(new String[]{"9167773479"});
+            fmsapiData.setTid("1546957247");
             RequestHandler.getInstance(getApplicationContext()).handleFMSRequest(new FMSTrackRequest(new FMSSuccessListener(), new FMSErrorListener(), fmsapiData));
         }
     }
@@ -373,7 +365,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
            Util.alertDilogBox("Consent status is already approved for this number","Jio Alert",this);
        } else {
            new SendSMSAsyncTask().execute(phoneNumber, "Do you want to be tracked, please reply in Yes or No !\n"+userName);
-           if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+           if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
                mDbManager.updatependingConsent(phoneNumber);
                showDatainList();
            } else {
@@ -417,7 +409,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public void messageReceived(String message, String phoneNum) {
         Toast.makeText(getApplicationContext(), "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
         String phone = phoneNum.substring(3,phoneNum.length());
-        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+        if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
             mDbManager.updateConsentInBors(phone,message);
             showDatainList();
         } else {
@@ -458,7 +450,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
-                if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+                if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
                     mDbManager.deleteSelectedData(phoneNumber);
                 } else {
                     mDbManager.deleteSelectedDataformFMS(phoneNumber);

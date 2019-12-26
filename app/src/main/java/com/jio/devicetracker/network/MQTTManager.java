@@ -15,11 +15,11 @@ import com.jio.mqttclient.JiotMqttToken;
 
 import java.util.UUID;
 
-public class MQTTHandler extends AppCompatActivity {
+public class MQTTManager {
 
     private JiotMqttClient jiotMqttClient = null;
     private JiotMqttConnectOptions options = null;
-    private String sessionID = null;
+    private static String sessionID = null;
 
     public JiotMqttClient getMQTTClient(Context context) {
         if (jiotMqttClient == null) {
@@ -30,6 +30,12 @@ public class MQTTHandler extends AppCompatActivity {
                 @Override
                 public void onConnectComplete(JiotMqttToken jiotMqttToken) {
                     Log.d("TAG --> ", "Connection completed");
+                    String str = "jioiot/svckm/jiophone/"+"351550070014178"+"/uc/fwd/"+getSessionId();
+                    String  imei_global = "351550070014178";
+                    Log.d("Topic --> ", str);
+                    String message = "{\"reqId\":\"" +imei_global+ "\",\"trkId\":\"" +imei_global+ "\",\"sesId\":\"" +getSessionId()+ "\",\"trknr\":\"9167773479\",\"reqnr\":\"9372762615\"}";
+                    Log.d("Message --> ", message);
+                    publishMessage(str, message);
                 }
 
                 @Override
@@ -45,6 +51,7 @@ public class MQTTHandler extends AppCompatActivity {
                 @Override
                 public void onSubscribeCompleted(JiotMqttToken jiotMqttToken) {
                     Log.d("TAG --> ", "Subscription completed");
+
                 }
 
                 @Override

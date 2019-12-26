@@ -205,7 +205,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void showMapOnTimeInterval() {
-        /*List<TrackerdeviceResponse.Data> data = DashboardActivity.data;
+        List<TrackerdeviceResponse.Data> data = DashboardActivity.data;
         List<String> phoneNumner = DBManager.phoneNumner;
         latLongMap = new HashMap<>();
         if (data != null) {
@@ -214,7 +214,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     latLongMap.put(data.get(i).getLocation().getLat(), data.get(i).getLocation().getLng());
                 }
             }
-        }*/
+        }
         if (mMap != null) {
             onMapReady(mMap);
         }

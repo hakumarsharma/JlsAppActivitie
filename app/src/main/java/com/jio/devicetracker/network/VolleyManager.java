@@ -71,20 +71,20 @@ public class VolleyManager extends StringRequest {
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
-        if(JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+        if(JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
             Map<String, String> header = new HashMap<String, String>();
             header.put("Content-Type", "application/json; charset=utf-8");
             return header;
         }
         else {
             FMSHeader fmsHeader = new FMSHeader();
-            fmsHeader.setReqId("351550070014178");
-            fmsHeader.setTrkId("351550070014178");
+            fmsHeader.setReqId("357170080534762");
+            fmsHeader.setTrkId("357170080534762");
             fmsHeader.setCrmId(JiotokenHandler.crmId);
-            fmsHeader.setSesId(new String[]{new MQTTHandler().getSessionId()});
+            fmsHeader.setSesId(new String[]{new MQTTManager().getSessionId()});
             fmsHeader.setSesTyp(1);
-            fmsHeader.setSvc("km");
-            fmsHeader.setMode(3);
+            fmsHeader.setSvc("svckm");
+            fmsHeader.setMode(2);
             Map<String, String> header = new HashMap<>();
             header.put("Authorization ", "bearer "+ JiotokenHandler.ssoToken);
             Gson gson = new Gson();

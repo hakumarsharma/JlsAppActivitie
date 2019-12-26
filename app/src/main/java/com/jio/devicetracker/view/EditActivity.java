@@ -38,7 +38,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
         mUpdate.setOnClickListener(this);
         Intent intent = getIntent();
         number = intent.getStringExtra("number");
-        if(JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+        if(JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
             editData = mDBmanager.getUserdataForEdit(number);
         }else {
             editData = mDBmanager.getUserdataForEditFMS(number);
@@ -54,7 +54,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (JiotokenHandler.ssoToken == null && RegistrationActivity.isFMSFlow == false) {
+        if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
             mDBmanager.updateProfile(number,mName.getText().toString(),mNumber.getText().toString(),mRelation.getText().toString(),mIMEI.getText().toString());
         } else {
             mDBmanager.updateProfileFMS(number,mName.getText().toString(),mNumber.getText().toString(),mRelation.getText().toString(),mIMEI.getText().toString());
