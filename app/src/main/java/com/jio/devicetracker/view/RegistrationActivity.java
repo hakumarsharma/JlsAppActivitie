@@ -27,6 +27,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.jiotoken.JioUtilsToken;
 import com.jio.devicetracker.jiotoken.JiotokenHandler;
+import com.jio.devicetracker.util.AESEncrypt;
 import com.jio.devicetracker.util.Util;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
     private Button mRegistration, mBorqs;
     private EditText mJionmber, mName;
+    private AESEncrypt mAesEncryption = null;
     private List<SubscriptionInfo> subscriptionInfos;
     private DBManager mDbManager;
     public static boolean isFMSFlow = false;
@@ -59,19 +61,14 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         mRegistration.setOnClickListener(this);
         mBorqs.setOnClickListener(this);
         mJionmber.setOnClickListener(this);
+        try {
+            mAesEncryption = new AESEncrypt(Util.getProperty("key", this));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        mName.setOnKeyListener(new View.OnKeyListener() {
 
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // If the event is a key-down event on the "enter" button
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    // Perform action on Enter key press
-                    showDialog(subscriptionInfos);
-                    return true;
-                }
-                return false;
-            }
-        });
+
 
         mJionmber.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,6 +95,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         });
 
         requestPermission();
+
     }
 
     private void requestPermission() {
@@ -117,7 +115,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                     return;
                 }
                 subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-
+                checkJioSIMSlot1();
                 break;
         }
     }
@@ -134,8 +132,8 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                 gotoLoginScreen();
                 break;
 
-            case R.id.jioNumber:
-                showDialog(subscriptionInfos);
+          /*  case R.id.jioNumber:
+                showDialog(subscriptionInfos);*/
 
         }
 
@@ -165,7 +163,23 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
     private void checkJiooperator() {
         String phoneNumber = mJionmber.getText().toString();
-        for (int i = 0; i < subscriptionInfos.size(); i++) {
+        String carierName = subscriptionInfos.get(0).getCarrierName().toString();
+        String number = subscriptionInfos.get(0).getNumber();
+        if(number != null && number.equals(phoneNumber) || number !=null && number.equals("91"+ phoneNumber))
+        {
+            if (carierName.contains("Jio"))
+            {
+                JioUtilsToken.getSSOIdmaToken(RegistrationActivity.this);
+                mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
+                gotoDashBoardActivity();
+            } else {
+                Util.alertDilogBox("Please use Jio number", "Jio Alert", this);
+            }
+        } else {
+            Util.alertDilogBox("Entered phone number should be in SIM slot 1","Jio Alert",this);
+        }
+
+        /*for (int i = 0; i < subscriptionInfos.size(); i++) {
             String carrierName = subscriptionInfos.get(i).getCarrierName().toString();
             if (subscriptionInfos.get(i).getNumber() != null && subscriptionInfos.get(i).getNumber().equals(phoneNumber)) {
                 if (carrierName.contains("Jio")) {
@@ -177,7 +191,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                     Util.alertDilogBox("Please use Jio number", "Jio Alert", this);
                 }
             }
-        }
+        }*/
     }
 
     private void gotoLoginScreen() {
@@ -233,4 +247,17 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         dialog.show();
 
     }
+
+    public void checkJioSIMSlot1()
+    {
+        if(subscriptionInfos != null) {
+            String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
+            if (!carrierNameSlot1.contains("Jio")) {
+                Util.alertDilogBox("Please use Jio number in SIM slot 1", "Jio Alert", this);
+            } else {
+                mJionmber.setText(subscriptionInfos.get(0).getNumber().toString());
+            }
+        }
+    }
+
 }

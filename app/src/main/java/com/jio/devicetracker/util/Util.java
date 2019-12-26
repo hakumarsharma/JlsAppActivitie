@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -12,7 +13,10 @@ import android.view.inputmethod.InputMethodManager;
 import com.google.gson.Gson;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
 public class Util {
     private static Util mUtils;
@@ -105,4 +109,11 @@ public class Util {
         builder.show();
     }
 
+    public static String getProperty(String key, Context context) throws IOException {
+        Properties properties = new Properties();
+        AssetManager assetManager = context.getAssets();
+        InputStream inputStream = assetManager.open("config.properties");
+        properties.load(inputStream);
+        return properties.getProperty(key);
+    }
 }
