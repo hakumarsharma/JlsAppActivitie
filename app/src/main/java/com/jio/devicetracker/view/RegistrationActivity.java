@@ -27,8 +27,10 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.jiotoken.JioUtilsToken;
 import com.jio.devicetracker.jiotoken.JiotokenHandler;
+import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.AESEncrypt;
 import com.jio.devicetracker.util.Util;
+import com.jio.mqttclient.JiotMqttClient;
 
 import java.util.List;
 
@@ -44,6 +46,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     private List<SubscriptionInfo> subscriptionInfos;
     private DBManager mDbManager;
     public static boolean isFMSFlow = false;
+    public static String phoneNumber = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,6 +136,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.registration:
                 validateNumber();
+                makeMQTTConnection();
                 break;
 
             /*case R.id.borqs:
@@ -143,7 +147,12 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                 showDialog(subscriptionInfos);*/
 
         }
+    }
 
+    private void makeMQTTConnection() {
+        MQTTManager mqttManager = new MQTTManager();
+        JiotMqttClient jiotMqttClient = mqttManager.getMQTTClient(getApplicationContext());
+        jiotMqttClient.connect();
     }
 
     private void validateNumber() {
@@ -168,7 +177,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     }
 
     private void checkJiooperator() {
-        String phoneNumber = mJionmber.getText().toString();
+        phoneNumber = mJionmber.getText().toString();
         String carierName = subscriptionInfos.get(0).getCarrierName().toString();
         String number = subscriptionInfos.get(0).getNumber();
         //String number2 = subscriptionInfos.get(1).getNumber().toString();

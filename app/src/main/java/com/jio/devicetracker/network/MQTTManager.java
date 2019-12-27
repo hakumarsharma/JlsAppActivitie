@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 import com.jio.mqttclient.JiotMqttCallback;
 import com.jio.mqttclient.JiotMqttClient;
 import com.jio.mqttclient.JiotMqttConnectOptions;
@@ -17,25 +18,18 @@ import java.util.UUID;
 
 public class MQTTManager {
 
-    private JiotMqttClient jiotMqttClient = null;
+    private static JiotMqttClient jiotMqttClient = null;
     private JiotMqttConnectOptions options = null;
-    private static String sessionID = null;
 
     public JiotMqttClient getMQTTClient(Context context) {
         if (jiotMqttClient == null) {
-            JiotMqttCreateOptions jiotMqttCreateOptions = new JiotMqttCreateOptions(sessionID, Constant.MQTT_USER_NAME, Constant.MQTT_PASSWORD, Constant.MQTT_URL);
+            JiotMqttCreateOptions jiotMqttCreateOptions = new JiotMqttCreateOptions(Util.getInstance().getSessionId(), Constant.MQTT_USER_NAME, Constant.MQTT_PASSWORD, Constant.MQTT_URL);
             options = new JiotMqttConnectOptions();
             options.setAutoReconnect(false);
             jiotMqttClient = new JiotMqttClient(context, new JiotMqttCallback() {
                 @Override
                 public void onConnectComplete(JiotMqttToken jiotMqttToken) {
                     Log.d("TAG --> ", "Connection completed");
-                    String str = "jioiot/svckm/jiophone/"+"351550070014178"+"/uc/fwd/"+getSessionId();
-                    String  imei_global = "351550070014178";
-                    Log.d("Topic --> ", str);
-                    String message = "{\"reqId\":\"" +imei_global+ "\",\"trkId\":\"" +imei_global+ "\",\"sesId\":\"" +getSessionId()+ "\",\"trknr\":\"9167773479\",\"reqnr\":\"9372762615\"}";
-                    Log.d("Message --> ", message);
-                    publishMessage(str, message);
                 }
 
                 @Override
@@ -116,15 +110,5 @@ public class MQTTManager {
         if(jiotMqttClient != null) {
             jiotMqttClient.subscribe(topic);
         }
-    }
-
-    public String getSessionId() {
-        if(sessionID == null) {
-            sessionID = UUID.randomUUID().toString();
-            Log.d("Session Id --> ", sessionID);
-            return sessionID;
-        }
-        Log.d("Session Id --> ", sessionID);
-        return sessionID;
     }
 }

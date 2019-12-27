@@ -79,6 +79,7 @@ public class DBManager {
                 data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
                 data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
                 data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)));
+                data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
                 mlist.add(data);
             }
 

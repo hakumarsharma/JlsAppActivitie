@@ -1,0 +1,192 @@
+package com.jio.devicetracker.view;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.jio.devicetracker.R;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+public class FMSMapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+
+    private static StringBuilder strAddress = null;
+    private Context context = null;
+    public static GoogleMap mMap;
+    public LocationManager locationManager;
+    public static final int MY_PERMISSIONS_REQUEST_MAPS = 101;
+    public Toolbar toolbar;
+    public static int refreshIntervalTime = 300;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_fmsmap);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView title = findViewById(R.id.toolbar_title);
+        title.setText("      Location");
+        strAddress = new StringBuilder();
+        context = getApplicationContext();
+        if(mMap != null) {
+            mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this));
+        }
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fms_map);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        MapsInitializer.initialize(getApplicationContext());
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_MAPS);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.refresh_interval_configuration, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        DashboardActivity dashboardActivity = new DashboardActivity();
+        switch (id){
+            case R.id.oneminute:
+                Toast.makeText(getApplicationContext(),"Location will be updated after every 1 minute",Toast.LENGTH_LONG).show();
+                refreshIntervalTime = 60;
+                dashboardActivity.startTheScheduler();
+                return true;
+            case R.id.twominute:
+                Toast.makeText(getApplicationContext(),"Location will be updated after every 2 minute",Toast.LENGTH_LONG).show();
+                refreshIntervalTime = 120;
+                dashboardActivity.startTheScheduler();
+                return true;
+            case R.id.fiveminute:
+                Toast.makeText(getApplicationContext(),"Location will be updated after every 5 minute",Toast.LENGTH_LONG).show();
+                refreshIntervalTime = 300;
+                dashboardActivity.startTheScheduler();
+                return true;
+            case R.id.tenminute:
+                Toast.makeText(getApplicationContext(),"Location will be updated after every 10 minute",Toast.LENGTH_LONG).show();
+                refreshIntervalTime = 600;
+                dashboardActivity.startTheScheduler();
+                return true;
+            case R.id.fifminute:
+                Toast.makeText(getApplicationContext(),"Location will be updated after every 15 minute",Toast.LENGTH_LONG).show();
+                refreshIntervalTime = 900;
+                dashboardActivity.startTheScheduler();
+                return true;
+            default:
+                refreshIntervalTime = 300;
+                dashboardActivity.startTheScheduler();
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Toast.makeText(this, strAddress.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        googleMap.clear();
+        Map<String, Map<Double, Double>> namingMap = DashboardActivity.fmsNamingMap;
+        if (namingMap.size() > 0) {
+            for (Map.Entry<String, Map<Double, Double>> entry : namingMap.entrySet()) {
+                Map<Double, Double> latLongitudeMap = entry.getValue();
+                for (Map.Entry<Double, Double> mapEntry : latLongitudeMap.entrySet()) {
+                    LatLng latLng = new LatLng(mapEntry.getKey(), mapEntry.getValue());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    markerOptions.title(entry.getKey());
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    markerOptions.snippet(getAddressFromLocation(mapEntry.getKey(), mapEntry.getValue()));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    /*googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    googleMap.animateCamera(CameraUpdateFactory.zoomTo(18));*/
+                    googleMap.addMarker(markerOptions);
+                    if(context != null) {
+                        googleMap.setInfoWindowAdapter(new MyInfoWindowAdapter(context));
+                    }
+                }
+            }
+        }
+    }
+
+    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        private final View myContentsView;
+
+        MyInfoWindowAdapter(Context context) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+            myContentsView = inflater.inflate(R.layout.custom_info_contents, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            TextView tvTitle = myContentsView.findViewById(R.id.title);
+            tvTitle.setText(marker.getTitle());
+            TextView tvSnippet =  myContentsView.findViewById(R.id.snippet);
+            tvSnippet.setText(marker.getSnippet());
+            return myContentsView;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+    }
+
+    private String getAddressFromLocation(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                Address fetchedAddress = addresses.get(0);
+                strAddress.append(fetchedAddress.getAddressLine(0)).append(" ");
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return strAddress.toString();
+    }
+
+}

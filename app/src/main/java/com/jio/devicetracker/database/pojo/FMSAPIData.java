@@ -2,19 +2,37 @@ package com.jio.devicetracker.database.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class FMSAPIData {
     @SerializedName("evt")
     private String[] evt;
     @SerializedName("dvt")
     private String dvt;
     @SerializedName("imi")
-    private String[] imi;
+    private List<String> imi;
     @SerializedName("efd")
     private long efd;
     @SerializedName("mob")
-    private String[] mob;
+    private List<String> mob;
     @SerializedName("tid")
     private String tid;
+
+    public List<String> getImi() {
+        return imi;
+    }
+
+    public void setImi(List<String> imi) {
+        this.imi = imi;
+    }
+
+    public List<String> getMob() {
+        return mob;
+    }
+
+    public void setMob(List<String> mob) {
+        this.mob = mob;
+    }
 
     public String[] getEvt() {
         return evt;
@@ -32,14 +50,6 @@ public class FMSAPIData {
         this.dvt = dvt;
     }
 
-    public String[] getImi() {
-        return imi;
-    }
-
-    public void setImi(String[] imi) {
-        this.imi = imi;
-    }
-
     public long getEfd() {
         return efd;
     }
@@ -48,13 +58,6 @@ public class FMSAPIData {
         this.efd = efd;
     }
 
-    public String[] getMob() {
-        return mob;
-    }
-
-    public void setMob(String[] mob) {
-        this.mob = mob;
-    }
 
     public String getTid() {
         return tid;

@@ -1,13 +1,17 @@
 package com.jio.devicetracker.util;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.gson.Gson;
@@ -17,12 +21,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 public class Util {
     private static Util mUtils;
     private static List<AddedDeviceData> list;
     static SharedPreferences sharedpreferences = null;
     public static final String MyPREFERENCES = "MyPrefs";
+    private static String sessionID = null;
 
     private Util() {
 
@@ -117,5 +123,28 @@ public class Util {
         return properties.getProperty(key);
     }
 
+    public String getSessionId() {
+        if(sessionID == null) {
+            sessionID = UUID.randomUUID().toString();
+            Log.d("Session Id --> ", sessionID);
+            return sessionID;
+        }
+        Log.d("Session Id --> ", sessionID);
+        return sessionID;
+    }
+
+    public String getIMEI(Context context) {
+        if(context != null) {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return telephonyManager.getDeviceId();
+            }
+        }
+        return "IMEI permission is not granted!";
+    }
+
+    private int checkSelfPermission(String readPhoneState) {
+        return 1;
+    }
 
 }

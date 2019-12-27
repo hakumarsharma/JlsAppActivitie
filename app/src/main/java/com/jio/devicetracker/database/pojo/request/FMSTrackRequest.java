@@ -31,7 +31,7 @@ public class FMSTrackRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return "/cats-servces/v2.0/api/live/location";
+         return "/cats-services/v2.0/api/live";
     }
 
     @Override

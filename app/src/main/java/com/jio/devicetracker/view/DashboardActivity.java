@@ -85,6 +85,11 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private Context context = null;
     private boolean flagValue;
     private String number;
+    public static Map<Double, Double> fmsLatLngMap = null;
+    public static Map<String, Map<Double, Double>> fmsNamingMap = null;
+    public static String trackeeIMEI = null;
+    private String trackeeName = "";
+    private DashboardActivity dashboardActivity = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,11 +118,14 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         setSupportActionBar(toolbar);
         MessageReceiver.bindListener(DashboardActivity.this);
         selectedData = new ArrayList<>();
-        addDeviceList = new ArrayList<AddedDeviceData>();
+        addDeviceList = new ArrayList<>();
         latLngMap = new LinkedHashMap<>();
         consentListPhoneNumber = new LinkedList<>();
         namingMap = new HashMap<>();
+        fmsNamingMap = new HashMap<>();
         context = getApplicationContext();
+        fmsLatLngMap = new LinkedHashMap<>();
+
         isDevicePresent();
 
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
@@ -135,6 +143,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             public void recyclerViewListClicked(View v, int position, MultipleselectData data, boolean val) {
                 if (val) {
                     selectedData.add(data);
+                    checkConsentPublishMQTTMessage(data);
                     Log.d(TAG, "Value of data" + selectedData.size());
                 } else {
                     for (int i = 0; i < selectedData.size(); i++) {
@@ -163,8 +172,30 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 sendSMS(phoneNumber);
             }
         });
-        /*ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerviewSwipeController(0, ItemTouchHelper.LEFT, this, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(listView);*/
+    }
+
+    private void checkConsentPublishMQTTMessage(MultipleselectData multipleselectData) {
+        Util util = Util.getInstance();
+        MQTTManager mqttManager = new MQTTManager();
+        List<AddedDeviceData> consentData = mDbManager.getAlldataFromFMS();
+        for(int i = 0; i < consentData.size(); i++) {
+            if((consentData.get(i).getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone())) && consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("yes jiotracker")){
+                String topic = "jioiot/svckm/jiophone/"+util.getIMEI(getApplicationContext())+"/uc/fwd/sesid";
+                Log.d("Topic --> ", topic);
+                trackeeIMEI = consentData.get(i).getImeiNumber();
+                String message = "{\"reqId\":\"" +consentData.get(i).getImeiNumber()+ "\",\"trkId\":\"" +util.getIMEI(getApplicationContext())+ "\",\"sesId\":\"" + Util.getInstance().getSessionId()+ "\",\"trknr\":\""+ RegistrationActivity.phoneNumber.substring(2) +"\",\"reqnr\":\"" + consentData.get(i).getPhoneNumber() + "\"}";
+                Log.d("Message --> ", message);
+                mqttManager.publishMessage(topic, message);
+            }
+        }
+    }
+
+    public DashboardActivity getDashboardActivity() {
+        if(dashboardActivity == null) {
+            dashboardActivity = new DashboardActivity();
+            return dashboardActivity;
+        }
+        return dashboardActivity;
     }
 
     private void gotoEditScreen(String relation,String phoneNumber) {
@@ -252,7 +283,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
 
     private void trackDevice() {
-        if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
+        if (RegistrationActivity.isFMSFlow == false) {
             List<AddedDeviceData> consentData = mDbManager.getAlldata();
             if (selectedData.size() == 0) {
                 Util.alertDilogBox("Please select the number for tracking", "Jio Alert", this);
@@ -274,17 +305,32 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         }
         else {
             showProgressBarDialog();
-            MQTTManager mqttManager = new MQTTManager();
-            mqttManager.getSessionId();
-            mqttManager.getMQTTClient(getApplicationContext());
-            mqttManager.connetMQTT();
+            List<String> imeiNumbers = new ArrayList<>();
+            List<String> phoneNumbers = new ArrayList<>();
+            List<AddedDeviceData> consentData = mDbManager.getAlldataFromFMS();
+            if (selectedData.size() == 0) {
+                Util.alertDilogBox("Please select the number for tracking", "Jio Alert", this);
+                return;
+            }
+            for (int i = 0; i < consentData.size(); i++) {
+                if (selectedData.get(i).getPhone().equals(consentData.get(i).getPhoneNumber())) {
+                    if (consentData.get(i).getConsentStaus().toLowerCase().contains("yes jiotracker")) {
+                        imeiNumbers.add(consentData.get(i).getImeiNumber());
+                        phoneNumbers.add(consentData.get(i).getPhoneNumber());
+                        trackeeName = consentData.get(i).getName();
+                    } else {
+                        Util.alertDilogBox("Consent is not apporoved for phone number " + consentData.get(i).getPhoneNumber(), "Jio Alert", this);
+                    }
+                }
+            }
+
             FMSAPIData fmsapiData = new FMSAPIData();
             fmsapiData.setEvt(new String[]{"GPS"});
             fmsapiData.setDvt("SIM");
-            fmsapiData.setImi(new String[]{"357170080534762"});
+            fmsapiData.setImi(imeiNumbers);
             fmsapiData.setEfd(14546957247L);
-            fmsapiData.setMob(new String[]{"9167773479"});
-            fmsapiData.setTid("1546957247");
+            fmsapiData.setMob(phoneNumbers);
+            fmsapiData.setTid("456");
             RequestHandler.getInstance(getApplicationContext()).handleFMSRequest(new FMSTrackRequest(new FMSSuccessListener(), new FMSErrorListener(), fmsapiData));
         }
     }
@@ -294,15 +340,21 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         @Override
         public void onResponse(Object response) {
             LocationApiResponse fmsAPIResponse = Util.getInstance().getPojoObject(String.valueOf(response), LocationApiResponse.class);
-            latLngMap.put(Double.parseDouble(fmsAPIResponse.new Event().getLatitute()), Double.parseDouble(fmsAPIResponse.new Event().getLongnitute()));
+            fmsLatLngMap.put(Double.parseDouble(fmsAPIResponse.new Event().getLatitute()), Double.parseDouble(fmsAPIResponse.new Event().getLongnitute()));
+            fmsNamingMap.put(trackeeName, fmsLatLngMap);
             progressDialog.dismiss();
+            startActivity(new Intent(DashboardActivity.this, FMSMapActivity.class));
         }
     }
 
     private class FMSErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Map<Double, Double> hashMap = new HashMap<>();
+            hashMap.put(12.976786, 77.593926);
+            fmsNamingMap.put("JIO Location", hashMap);
             progressDialog.dismiss();
+            startActivity(new Intent(DashboardActivity.this, FMSMapActivity.class));
             Toast.makeText(getApplicationContext(), "FMS server is down please call back after some time", Toast.LENGTH_SHORT).show();
         }
     }
@@ -413,15 +465,35 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     @Override
     public void messageReceived(String message, String phoneNum) {
         Toast.makeText(getApplicationContext(), "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
-        String phone = phoneNum.substring(3,phoneNum.length());
+        String phone = phoneNum.substring(3);
         /*if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
             mDbManager.updateConsentInBors(phone,message);
             showDatainList();
-        } else {*/
+        } else {
             mDbManager.updateConsentInFMS(phone,message);
             showDataFromFMS();
-       // }
+        }*/
+        if(message.toLowerCase().contains("yes jiotracker")) {
+            publishMQTTMessage(phone);
+        }
+        mDbManager.updateConsentInFMS(phone,message);
+        showDataFromFMS();
+    }
 
+    private void publishMQTTMessage(String phoneNumber) {
+        Util util = Util.getInstance();
+        MQTTManager mqttManager = new MQTTManager();
+        if(addDeviceList != null) {
+            for(int i = 0; i < addDeviceList.size(); i ++) {
+                if(addDeviceList.get(i).getPhoneNumber().equalsIgnoreCase(phoneNumber)) {
+                    String topic = "jioiot/svckm/jiophone/"+util.getIMEI(getApplicationContext())+"/uc/fwd/sesid";
+                    Log.d("Topic --> ", topic);
+                    String message = "{\"reqId\":\"" +addDeviceList.get(i).getImeiNumber()+ "\",\"trkId\":\"" +util.getIMEI(getApplicationContext())+ "\",\"sesId\":\"" + Util.getInstance().getSessionId()+ "\",\"trknr\":\""+ RegistrationActivity.phoneNumber.substring(2) +"\",\"reqnr\":\"" + addDeviceList.get(i).getPhoneNumber() + "\"}";
+                    Log.d("Message --> ", message);
+                    mqttManager.publishMessage(topic, message);
+                }
+            }
+        }
     }
 
     public void showDatainList() {

@@ -149,10 +149,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     markerOptions.title(entry.getKey());
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                     markerOptions.snippet(getAddressFromLocation(mapEntry.getKey(), mapEntry.getValue()));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
-                    mMap.addMarker(markerOptions);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                     mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    mMap.addMarker(markerOptions);
                     if(context != null) {
                         mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(context));
                     }
