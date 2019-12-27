@@ -83,6 +83,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private FloatingActionButton mActionbtn;
     public static Map<String, Map<Double, Double>> namingMap = null;
     private Context context = null;
+    private boolean flagValue;
+    private String number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +100,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         intent = getIntent();
         userToken = Util.getUserToken();
         mDbManager = new DBManager(this);
-        mAddData = (AddedDeviceData) intent.getSerializableExtra("AddDeviceData");
+        //mAddData = (AddedDeviceData) intent.getSerializableExtra("AddDeviceData");
+        number = intent.getStringExtra("phone");
+        flagValue = intent.getBooleanExtra("flag",false);
+        consentRequestBox(flagValue,number);
         trackBtn = toolbar.findViewById(R.id.track);
         trackBtn.setVisibility(View.VISIBLE);
         TextView toolbar_title = findViewById(R.id.toolbar_title);
@@ -120,11 +125,11 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
 
-        if (RegistrationActivity.isFMSFlow == false) {
+       /* if (RegistrationActivity.isFMSFlow == false) {
             showDatainList();
-        } else {
+        } else {*/
             showDataFromFMS();
-        }
+       // }
         adapter.setOnItemClickPagerListener(new TrackerDeviceListAdapter.RecyclerViewClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position, MultipleselectData data, boolean val) {
@@ -255,7 +260,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             }
             for (int i = 0; i < consentData.size(); i++) {
                 if (selectedData.get(i).getPhone().equals(consentData.get(i).getPhoneNumber())) {
-                    if (consentData.get(i).getConsentStaus().equals("Yes")) {
+                    if (consentData.get(i).getConsentStaus().equalsIgnoreCase("Yes JioTracker")) {
                         latLngMap = mDbManager.getLatLongForMap(selectedData);
                         namingMap.put(selectedData.get(i).getName(), latLngMap);
                     } else {
@@ -360,18 +365,18 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
        String userName= mDbManager.getAdminDetail();
        String consentStatus = mDbManager.getConsentStatusBorqs(phoneNumber);
-       if(consentStatus.equals("Yes"))
+       if(consentStatus.equalsIgnoreCase("Yes JioTracker"))
        {
            Util.alertDilogBox("Consent status is already approved for this number","Jio Alert",this);
        } else {
-           new SendSMSAsyncTask().execute(phoneNumber, "Do you want to be tracked, please reply in Yes or No !\n"+userName);
-           if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
+           new SendSMSAsyncTask().execute(phoneNumber, userName+" From JIOTracker application wants to track your location, please reply in Yes JioTracker or No JioTracker !");
+          /* if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
                mDbManager.updatependingConsent(phoneNumber);
                showDatainList();
-           } else {
+           } else { */
                mDbManager.updatependingConsentFMS(phoneNumber);
                showDataFromFMS();
-           }
+           //}
        }
        
     }
@@ -409,13 +414,13 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public void messageReceived(String message, String phoneNum) {
         Toast.makeText(getApplicationContext(), "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
         String phone = phoneNum.substring(3,phoneNum.length());
-        if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
+        /*if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
             mDbManager.updateConsentInBors(phone,message);
             showDatainList();
-        } else {
+        } else {*/
             mDbManager.updateConsentInFMS(phone,message);
             showDataFromFMS();
-        }
+       // }
 
     }
 
@@ -450,11 +455,11 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
-                if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
+              /*  if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
                     mDbManager.deleteSelectedData(phoneNumber);
-                } else {
+                } else {*/
                     mDbManager.deleteSelectedDataformFMS(phoneNumber);
-                }
+             //   }
                 //mDbManager.deleteSelectedData(phoneNumber);
                 adapter.removeItem(position);
 
@@ -467,5 +472,14 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             }
         });
         adb.show();
+    }
+
+    public void consentRequestBox(boolean flag,String phoneNumber)
+    {
+        if(flag)
+        {
+            Util.alertDilogBox("Request consent for device "+phoneNumber,"Jio Alert",this);
+            flag = false;
+        }
     }
 }

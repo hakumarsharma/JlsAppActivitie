@@ -66,7 +66,7 @@
                 android:textColor="#00f"
                 android:textCursorDrawable="@color/colorLogin" />
 
-            <EditText
+           <!-- <EditText
                 android:id="@+id/relation"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -78,13 +78,13 @@
                 android:hint="Relation*"
                 android:inputType="text"
                 android:textColor="#00f"
-                android:textCursorDrawable="@color/colorLogin" />
+                android:textCursorDrawable="@color/colorLogin" />-->
 
             <EditText
                 android:id="@+id/deviceName"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/relation"
+                android:layout_below="@id/memberName"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"

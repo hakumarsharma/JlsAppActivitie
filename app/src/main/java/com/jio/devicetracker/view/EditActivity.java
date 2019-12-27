@@ -14,6 +14,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.EditProfileData;
 import com.jio.devicetracker.jiotoken.JiotokenHandler;
+import com.jio.devicetracker.util.Util;
 
 public class EditActivity extends Activity implements View.OnClickListener {
 
@@ -23,6 +24,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
     private DBManager mDBmanager;
     private EditProfileData editData;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +32,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
         TextView toolbar_title = findViewById(R.id.toolbar_title);
         toolbar_title.setText("Edit");
         mName = findViewById(R.id.memberName);
-        mRelation = findViewById(R.id.relation);
+        //mRelation = findViewById(R.id.relation);
         mNumber = findViewById(R.id.deviceName);
         mIMEI = findViewById(R.id.deviceIMEINumber);
         mUpdate = findViewById(R.id.update);
@@ -38,15 +40,15 @@ public class EditActivity extends Activity implements View.OnClickListener {
         mUpdate.setOnClickListener(this);
         Intent intent = getIntent();
         number = intent.getStringExtra("number");
-        if(JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
+       /* if(JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
             editData = mDBmanager.getUserdataForEdit(number);
-        }else {
+        }else {*/
             editData = mDBmanager.getUserdataForEditFMS(number);
-        }
+        //}
         //relation = intent.getStringExtra("Relation");
         mName.setText(editData.getName());
         mNumber.setText(editData.getPhoneNumber());
-        mRelation.setText(editData.getRelation());
+        //mRelation.setText(editData.getRelation());
         mIMEI.setText(editData.getImeiNumber());
 
 
@@ -54,11 +56,18 @@ public class EditActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
+        String phoneNumber=mDBmanager.getAdminphoneNumber();
+       /* if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
             mDBmanager.updateProfile(number,mName.getText().toString(),mNumber.getText().toString(),mRelation.getText().toString(),mIMEI.getText().toString());
-        } else {
-            mDBmanager.updateProfileFMS(number,mName.getText().toString(),mNumber.getText().toString(),mRelation.getText().toString(),mIMEI.getText().toString());
+        } else {*/
+
+        if(phoneNumber.equals("91"+mNumber.getText().toString()))
+        {
+            Util.alertDilogBox("You can't add registered mobile number","Jio Alert",this);
+            return;
         }
+            mDBmanager.updateProfileFMS(number,mName.getText().toString(),mNumber.getText().toString(),mIMEI.getText().toString());
+        //}
 
         gotoDashboard();
     }

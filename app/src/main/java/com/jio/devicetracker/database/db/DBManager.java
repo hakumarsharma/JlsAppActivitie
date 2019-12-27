@@ -119,42 +119,27 @@ public class DBManager {
     }
 
     public void updateConsentInBors(String phoneNumber,String message) {
-        //String number = "";
         mDatabase = mDBHelper.getWritableDatabase();
-       /* for (int i = 0; i < phoneNumber.size(); i++) {
-            number = phoneNumber.get(i);*/
-        //String[] arg = new String[]{phoneNumber};
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.CONSENT_STATUS, message);
         mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= "+phoneNumber, null);
 
-        // }
     }
 
     public void updateConsentInFMS(String phoneNumber,String message) {
-        //String number = "";
         mDatabase = mDBHelper.getWritableDatabase();
-       /* for (int i = 0; i < phoneNumber.size(); i++) {
-            number = phoneNumber.get(i);*/
-        //String[] arg = new String[]{phoneNumber};
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.CONSENT_STATUS, message);
         mDatabase.update(DatabaseHelper.TABLE_NAME_FMS, values, DatabaseHelper.DEVICE_NUM + "= "+phoneNumber, null);
 
-        // }
     }
 
     public void updatependingConsent(String phoneNumber) {
-        //String number = "";
         mDatabase = mDBHelper.getWritableDatabase();
-       /* for (int i = 0; i < phoneNumber.size(); i++) {
-            number = phoneNumber.get(i);*/
-        //String[] arg = new String[]{phoneNumber};
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.CONSENT_STATUS, "Pending");
         mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= "+phoneNumber, null);
 
-        // }
     }
     public void updatependingConsentFMS(String phoneNumber) {
         mDatabase = mDBHelper.getWritableDatabase();
@@ -180,12 +165,12 @@ public class DBManager {
 
     }
 
-    public void updateProfileFMS(String priviousNumber,String name,String newNumber,String relation,String imei ) {
+    public void updateProfileFMS(String priviousNumber,String name,String newNumber,String imei ) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.DEVICE_NUM, newNumber);
         values.put(DatabaseHelper.NAME, name);
-        values.put(DatabaseHelper.RELATION, relation);
+        //values.put(DatabaseHelper.RELATION, relation);
         values.put(DatabaseHelper.IMEI_NUM, imei);
         if(!priviousNumber.equals(newNumber))
         {
@@ -232,8 +217,6 @@ public class DBManager {
         EditProfileData data = null;
         mDatabase = mDBHelper.getWritableDatabase();
         String [] column = {DatabaseHelper.DEVICE_NUM,DatabaseHelper.RELATION,DatabaseHelper.NAME,DatabaseHelper.IMEI_NUM};
-        //String selectquery = "select " +DatabaseHelper.DEVICE_NUM +"  from " + DatabaseHelper.TABLE_NAME_BORQS+ " where "+ DatabaseHelper.DEVICE_NUM + " = " + phoneNumber;
-        //Cursor cursor = mDatabase.rawQuery(selectquery, null);
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS,column,DatabaseHelper.DEVICE_NUM +"="+phoneNumber,null,null,null,null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -272,8 +255,6 @@ public class DBManager {
         mDatabase = mDBHelper.getWritableDatabase();
         String userName = "";
         String [] column = {DatabaseHelper.NAME};
-        //String selectquery = "select " +DatabaseHelper.DEVICE_NUM +"  from " + DatabaseHelper.TABLE_NAME_BORQS+ " where "+ DatabaseHelper.DEVICE_NUM + " = " + phoneNumber;
-        //Cursor cursor = mDatabase.rawQuery(selectquery, null);
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_USER,column,null,null,null,null,null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -284,12 +265,24 @@ public class DBManager {
         return userName;
     }
 
+    public String getAdminphoneNumber() {
+        mDatabase = mDBHelper.getWritableDatabase();
+        String phoneNumber = "";
+        String [] column = {DatabaseHelper.DEVICE_NUM};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_USER,column,null,null,null,null,null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                phoneNumber = cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM));
+            }
+
+        }
+        return phoneNumber;
+    }
+
     public String getConsentStatusBorqs(String phoneNumber) {
         mDatabase = mDBHelper.getWritableDatabase();
         String consentStatus = "";
         String [] column = {DatabaseHelper.CONSENT_STATUS};
-        //String selectquery = "select " +DatabaseHelper.DEVICE_NUM +"  from " + DatabaseHelper.TABLE_NAME_BORQS+ " where "+ DatabaseHelper.DEVICE_NUM + " = " + phoneNumber;
-        //Cursor cursor = mDatabase.rawQuery(selectquery, null);
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS,column,DatabaseHelper.DEVICE_NUM +" = "+phoneNumber,null,null,null,null);
         if (cursor != null) {
             while (cursor.moveToNext()) {

@@ -56,10 +56,10 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         mJionmber = findViewById(R.id.jioNumber);
         mName = findViewById(R.id.name);
         mRegistration = findViewById(R.id.registration);
-        mBorqs = findViewById(R.id.borqs);
+       // mBorqs = findViewById(R.id.borqs);
         mDbManager = new DBManager(this);
         mRegistration.setOnClickListener(this);
-        mBorqs.setOnClickListener(this);
+        //mBorqs.setOnClickListener(this);
         mJionmber.setOnClickListener(this);
         try {
             mAesEncryption = new AESEncrypt(Util.getProperty("key", this));
@@ -96,6 +96,13 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
         requestPermission();
 
+      /*  mJionmber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Util.hideSoftKeyboard(RegistrationActivity.this);
+            }
+        });
+*/
     }
 
     private void requestPermission() {
@@ -128,9 +135,9 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                 validateNumber();
                 break;
 
-            case R.id.borqs:
+            /*case R.id.borqs:
                 gotoLoginScreen();
-                break;
+                break;*/
 
           /*  case R.id.jioNumber:
                 showDialog(subscriptionInfos);*/
@@ -151,7 +158,6 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     }
 
     private void getssoToken() {
-
         boolean isAvailable = Util.isMobileNetworkAvailable(RegistrationActivity.this);
         if (isAvailable) {
             checkJiooperator();
@@ -165,7 +171,8 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         String phoneNumber = mJionmber.getText().toString();
         String carierName = subscriptionInfos.get(0).getCarrierName().toString();
         String number = subscriptionInfos.get(0).getNumber();
-        if(number != null && number.equals(phoneNumber) || number !=null && number.equals("91"+ phoneNumber))
+        //String number2 = subscriptionInfos.get(1).getNumber().toString();
+        if((number != null && number.equals(phoneNumber)) || (number !=null && number.equals("91"+ phoneNumber)) )
         {
             if (carierName.contains("Jio"))
             {
@@ -173,10 +180,16 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                 mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
                 gotoDashBoardActivity();
             } else {
-                Util.alertDilogBox("Please use Jio number", "Jio Alert", this);
+                Util.alertDilogBox("Entered phone number should be in SIM slot 1", "Jio Alert", this);
             }
+        } else if(subscriptionInfos.size()==2 && subscriptionInfos.get(1).getNumber().toString() != null ){
+             if(subscriptionInfos.get(1).getNumber().toString().equals("91"+phoneNumber)|| subscriptionInfos.get(1).getNumber().toString().equals(phoneNumber)) {
+                 Util.alertDilogBox("Entered phone number should be in SIM slot 1", "Jio Alert", this);
+             } else {
+                 Util.alertDilogBox("Enter the valid jio number present in device","Jio Alert",this);
+             }
         } else {
-            Util.alertDilogBox("Entered phone number should be in SIM slot 1","Jio Alert",this);
+            Util.alertDilogBox("Enter the valid jio number present in device","Jio Alert",this);
         }
 
         /*for (int i = 0; i < subscriptionInfos.size(); i++) {
@@ -230,7 +243,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 mJionmber.setText(sim1.getText().toString());
-                mJionmber.setFocusable(false);
+
                 dialog.dismiss();
             }
         });
@@ -239,7 +252,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 mJionmber.setText(sim2.getText().toString());
-                mJionmber.setFocusable(false);
+
                 dialog.dismiss();
             }
         });

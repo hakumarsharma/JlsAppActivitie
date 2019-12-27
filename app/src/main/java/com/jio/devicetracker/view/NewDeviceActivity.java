@@ -43,7 +43,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         mDeviceNumber = findViewById(R.id.deviceName);
         mName = findViewById(R.id.memberName);
         mDeviceImeiNumber = findViewById(R.id.deviceIMEINumber);
-        mRelation = findViewById(R.id.relation);
+        //mRelation = findViewById(R.id.relation);
         mAdd = findViewById(R.id.save);
         mDbManager = new DBManager(this);
         mAdd.setOnClickListener(this);
@@ -54,7 +54,8 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         data = new AddedDeviceData();
         number = mDeviceNumber.getText().toString();
         name = mName.getText().toString();
-        relation = mRelation.getText().toString();
+         String phoneNumber=mDbManager.getAdminphoneNumber();
+        //relation = mRelation.getText().toString();
         imeiNumber = mDeviceImeiNumber.getText().toString();
         if (!isValidIMEINumber(imeiNumber)) {
             mDeviceImeiNumber.setError("Enter the 15 digit IMEI number");
@@ -65,14 +66,18 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
             mDeviceNumber.setError("Enter the valid mobile number");
             return;
         }
-
-        if (number.equals("") || name.equals("") || relation.equals("") ) {
+        if(phoneNumber.equals("91"+number))
+        {
+            Util.alertDilogBox("You can't add registered mobile number","Jio Alert",this);
+            return;
+        }
+        if (number.equals("") || name.equals("") ) {
             Toast.makeText(this, "Please Enter the details", Toast.LENGTH_SHORT).show();
         } else {
             data.setImeiNumber(imeiNumber);
             data.setPhoneNumber(number);
             data.setName(name);
-            data.setRelation(relation);
+            //data.setRelation(relation);
             matchMobileNumber(data);
         }
     }
@@ -91,7 +96,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
 
     private void matchMobileNumber(AddedDeviceData adddeviceData) {
         boolean isLatLngFound = false;
-        if((JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) && mDatalist != null) {
+       /* if((JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) && mDatalist != null) {
             for (int i = 0; i < mDatalist.size(); i++) {
                 String phoneNumber = adddeviceData.getPhoneNumber().trim();
                 if (phoneNumber.equals(mDatalist.get(i).getmDevice().getPhoneNumber())) {
@@ -115,18 +120,20 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         }
-        else {
+        else {*/
             insertRowid = mDbManager.insertInFMSDB(adddeviceData);
             checkRow(insertRowid);
-        }
+       // }
         if (!isLatLngFound && JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
-            mDeviceNumber.setError("Enter the correct number, this number is not found on server");
+            //mDeviceNumber.setError("Enter the correct number, this number is not found on server");
             return;
         }
     }
 
     private void gotoDashBoard() {
         Intent intent = new Intent(this, DashboardActivity.class);
+        intent.putExtra("phone",mDeviceNumber.getText().toString());
+        intent.putExtra("flag",true);
         startActivity(intent);
     }
 
@@ -134,7 +141,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
     {
         if(id == -1)
         {
-            Util.alertDilogBox("This number is already added","Jio Alert",this);
+            Util.alertDilogBox("This number or IMEI number is already added","Jio Alert",this);
         } else {
             gotoDashBoard();
         }
