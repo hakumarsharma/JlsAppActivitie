@@ -25,7 +25,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mWaitHandler.postDelayed(() -> {
             try {
-                Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
             } catch (Exception ex) {

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.EditProfileData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
+import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.util.Util;
 
 import java.util.ArrayList;
@@ -42,11 +43,16 @@ public class DBManager {
         return rowInserted;
     }
 
-    public long insertAdminData(String name,String phoneNumber) {
+    public long insertAdminData(RegisterData data) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.NAME, name);
-        contentValue.put(DatabaseHelper.DEVICE_NUM, phoneNumber);
+        contentValue.put(DatabaseHelper.NAME, data.getName());
+        contentValue.put(DatabaseHelper.EMAIL, data.getEmail());
+        contentValue.put(DatabaseHelper.DEVICE_NUM, data.getPhoneNumber());
+        contentValue.put(DatabaseHelper.DOB, data.getDob());
+        contentValue.put(DatabaseHelper.PASS, data.getPassword());
+        contentValue.put(DatabaseHelper.USER_ID,"");
+
         long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_NAME_USER, null, contentValue);
 
         return rowInserted;

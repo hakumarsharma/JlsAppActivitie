@@ -24,7 +24,7 @@ import com.jio.devicetracker.util.Util;
 import java.util.regex.Pattern;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String jioEmailIdText = null;
     private String jioPasswordText = null;
@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText jioPasswordEditText = null;
     public static LogindetailResponse loginDetails = null;
     private ProgressDialog progressDialog = null;
-
+    private TextView mRegisterText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
         //jioEmailEditText.setText("shivakumar.jagalur@ril.com");
         jioPasswordEditText = findViewById(R.id.jioPassword);
         //jioPasswordEditText.setText("Jio@1234");
+        mRegisterText = findViewById(R.id.registedHere);
+        mRegisterText.setOnClickListener(this);
 
         jioEmailEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -114,6 +116,12 @@ public class LoginActivity extends AppCompatActivity {
         return pat.matcher(email).matches();
     }
 
+    @Override
+    public void onClick(View v) {
+
+        gotoRegisterScreen();
+    }
+
     private class SuccessListener implements Response.Listener {
 
         @Override
@@ -147,6 +155,12 @@ public class LoginActivity extends AppCompatActivity {
     private void showProgressBarDialog() {
         progressDialog = ProgressDialog.show(LoginActivity.this, "", "Please wait login...", true);
         progressDialog.setCancelable(true);
+    }
+
+    private void gotoRegisterScreen()
+    {
+        Intent intent = new Intent(LoginActivity.this,RegistrationDetailActivity.class);
+        startActivity(intent);
     }
 
 }

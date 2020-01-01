@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class Util {
     private static Util mUtils;
@@ -145,6 +146,18 @@ public class Util {
 
     private int checkSelfPermission(String readPhoneState) {
         return 1;
+    }
+
+    public static boolean isValidEmailId(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 
 }

@@ -22,6 +22,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static  final String CONSENT_STATUS = "consentStatus";
     public static final String LAT = "latitude";
     public static final String LON = "longnitude";
+    public static final String EMAIL = "email";
+    public static final String DOB = "dob";
+    public static final String PASS = "password";
+    public static final String USER_ID = "userid";
+
+
 
     //DB Information
     public static final String DB_NAME = "AddDevice.db";
@@ -34,7 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_FMS = "create table " + TABLE_NAME_FMS + "(" + IMEI_NUM
             + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + RELATION + " TEXT, " +CONSENT_STATUS+ " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ," +"PRIMARY KEY" +"(" +DEVICE_NUM +" ," +IMEI_NUM +"))";
 
-    private static final String CREATE_TABLE_USER = "create table " + TABLE_NAME_USER + "("+ DEVICE_NUM + " TEXT, " + NAME + " TEXT, " +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
+    private static final String CREATE_TABLE_USER = "create table " + TABLE_NAME_USER + "("+ NAME + " TEXT, " + EMAIL + " TEXT, " + DEVICE_NUM + " TEXT ," + DOB + " TEXT ," + PASS + " TEXT ," + USER_ID + " TEXT ,"+"PRIMARY KEY" +"("+DEVICE_NUM +" ," +EMAIL +"))";
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);

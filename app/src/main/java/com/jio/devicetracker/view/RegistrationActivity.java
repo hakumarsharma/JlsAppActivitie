@@ -186,7 +186,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             if (carierName.contains("Jio"))
             {
                 JioUtilsToken.getSSOIdmaToken(RegistrationActivity.this);
-                mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
+                //mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
                 gotoDashBoardActivity();
             } else {
                 Util.alertDilogBox("Entered phone number should be in SIM slot 1", "Jio Alert", this);

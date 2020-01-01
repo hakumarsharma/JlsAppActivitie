@@ -52,6 +52,9 @@
             android:name=".view.NewdeviceFMSActivity"
             android:label="@string/map_name" />
         <activity
+            android:name=".view.RegistrationDetailActivity"
+            android:label="@string/map_name" />
+        <activity
             android:name=".view.EditActivity"
             android:label="@string/map_name" />
         <activity

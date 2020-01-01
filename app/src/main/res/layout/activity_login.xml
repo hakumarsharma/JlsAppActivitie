@@ -102,6 +102,30 @@
                 android:background="@drawable/selector"
                 android:text="Login" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New user ?"
+                android:id="@+id/newUserText"
+                android:layout_below="@+id/login"
+                android:layout_marginTop="15dp"
+                android:layout_alignLeft="@id/login"
+                android:textSize="18sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register_here"
+                android:id="@+id/registedHere"
+                android:layout_below="@+id/login"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_toRightOf="@+id/newUserText"
+                android:textSize="20sp"
+                />
+
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
