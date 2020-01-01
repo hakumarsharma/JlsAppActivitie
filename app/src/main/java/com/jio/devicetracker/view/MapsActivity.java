@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
+import com.jio.devicetracker.util.Constant;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -101,37 +102,41 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         DashboardActivity dashboardActivity = new DashboardActivity();
-        switch (id){
-            case R.id.oneminute:
-                Toast.makeText(getApplicationContext(),"Location will be updated after every 1 minute",Toast.LENGTH_LONG).show();
-                refreshIntervalTime = 60;
-                dashboardActivity.startTheScheduler();
-                return true;
-            case R.id.twominute:
-                Toast.makeText(getApplicationContext(),"Location will be updated after every 2 minute",Toast.LENGTH_LONG).show();
-                refreshIntervalTime = 120;
-                dashboardActivity.startTheScheduler();
-                return true;
-            case R.id.fiveminute:
-                Toast.makeText(getApplicationContext(),"Location will be updated after every 5 minute",Toast.LENGTH_LONG).show();
-                refreshIntervalTime = 300;
-                dashboardActivity.startTheScheduler();
-                return true;
-            case R.id.tenminute:
-                Toast.makeText(getApplicationContext(),"Location will be updated after every 10 minute",Toast.LENGTH_LONG).show();
-                refreshIntervalTime = 600;
-                dashboardActivity.startTheScheduler();
-                return true;
-            case R.id.fifminute:
-                Toast.makeText(getApplicationContext(),"Location will be updated after every 15 minute",Toast.LENGTH_LONG).show();
-                refreshIntervalTime = 900;
-                dashboardActivity.startTheScheduler();
-                return true;
-            default:
-                refreshIntervalTime = 300;
-                dashboardActivity.startTheScheduler();
-                return super.onOptionsItemSelected(item);
-        }
+        Toast.makeText(getApplicationContext(), Constant.LOCATION_UPDATE + item.getTitle(),Toast.LENGTH_LONG).show();
+        refreshIntervalTime = 60 * id;
+        dashboardActivity.startTheScheduler();
+        return true;
+//        switch (id){
+//            case R.id.oneminute:
+//                Toast.makeText(getApplicationContext(), "Location will be updated after every 1 minute",Toast.LENGTH_LONG).show();
+//                refreshIntervalTime = 60;
+//                dashboardActivity.startTheScheduler();
+//                return true;
+//            case R.id.twominute:
+//                Toast.makeText(getApplicationContext(),"Location will be updated after every 2 minutes",Toast.LENGTH_LONG).show();
+//                refreshIntervalTime = 120;
+//                dashboardActivity.startTheScheduler();
+//                return true;
+//            case R.id.fiveminute:
+//                Toast.makeText(getApplicationContext(),"Location will be updated after every 5 minutes",Toast.LENGTH_LONG).show();
+//                refreshIntervalTime = 300;
+//                dashboardActivity.startTheScheduler();
+//                return true;
+//            case R.id.tenminute:
+//                Toast.makeText(getApplicationContext(),"Location will be updated after every 10 minutes",Toast.LENGTH_LONG).show();
+//                refreshIntervalTime = 600;
+//                dashboardActivity.startTheScheduler();
+//                return true;
+//            case R.id.fifminute:
+//                Toast.makeText(getApplicationContext(),"Location will be updated after every 15 minutes",Toast.LENGTH_LONG).show();
+//                refreshIntervalTime = 900;
+//                dashboardActivity.startTheScheduler();
+//                return true;
+//            default:
+//                refreshIntervalTime = 300;
+//                dashboardActivity.startTheScheduler();
+//                return super.onOptionsItemSelected(item);
+//        }
     }
 
     @Override

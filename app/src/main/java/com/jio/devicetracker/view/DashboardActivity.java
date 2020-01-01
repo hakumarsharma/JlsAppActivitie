@@ -44,6 +44,7 @@ import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
+import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.TrackerDeviceListAdapter;
 
@@ -101,7 +102,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
        // consent = findViewById(R.id.consent);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         listView.setLayoutManager(linearLayoutManager);
-        toolbar.setTitle("Dashboard");
         intent = getIntent();
         userToken = Util.getUserToken();
         mDbManager = new DBManager(this);
@@ -112,7 +112,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         trackBtn = toolbar.findViewById(R.id.track);
         trackBtn.setVisibility(View.VISIBLE);
         TextView toolbar_title = findViewById(R.id.toolbar_title);
-        toolbar_title.setText("Home");
+        toolbar_title.setText(Constant.DASHBOARD_TITLE);
         trackBtn.setOnClickListener(this);
         mActionbtn.setOnClickListener(this);
         setSupportActionBar(toolbar);
@@ -148,9 +148,9 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 } else {
                     for (int i = 0; i < selectedData.size(); i++) {
                         if (selectedData.get(i).getPhone() == data.getPhone()) {
-                            selectedData.remove(i);
+                            selectedData.remove(i); // TODO include break after this if you want to stop loop once the device is deleted
                         }
-                        Log.d(TAG, "unselect the item from list");
+                        //Log.d(TAG, "unselect the item from list");
                     }
                 }
             }
@@ -163,7 +163,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             @Override
             public void recyclerviewDeleteList(String phoneNumber,int position) {
 
-                alertDilogBoxWithCancelbtn("Do you want to delete ?","Jio Alert",phoneNumber,position);
+                alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE,Constant.ALERT_TITLE,phoneNumber,position);
 
             }
 
@@ -286,7 +286,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         if (RegistrationActivity.isFMSFlow == false) {
             List<AddedDeviceData> consentData = mDbManager.getAlldata();
             if (selectedData.size() == 0) {
-                Util.alertDilogBox("Please select the number for tracking", "Jio Alert", this);
+                Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
                 return;
             }
             for (int i = 0; i < consentData.size(); i++) {
@@ -295,7 +295,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                         latLngMap = mDbManager.getLatLongForMap(selectedData);
                         namingMap.put(selectedData.get(i).getName(), latLngMap);
                     } else {
-                        Util.alertDilogBox("Consent is not apporoved for phone number " + consentData.get(i).getPhoneNumber(), "Jio Alert", this);
+                        Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED + consentData.get(i).getPhoneNumber(), Constant.ALERT_TITLE, this);
                     }
                 }
             }
@@ -355,7 +355,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             fmsNamingMap.put("JIO Location", hashMap);
             progressDialog.dismiss();
             startActivity(new Intent(DashboardActivity.this, FMSMapActivity.class));
-            Toast.makeText(getApplicationContext(), "FMS server is down please call back after some time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), Constant.FMS_SERVERISSUE, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -398,7 +398,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private class UnSuccessfullAPICall implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Toast.makeText(getApplicationContext(), "Token is null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), Constant.TOKEN_NULL, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -419,7 +419,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
        String consentStatus = mDbManager.getConsentStatusBorqs(phoneNumber);
        if(consentStatus.equalsIgnoreCase("Yes JioTracker"))
        {
-           Util.alertDilogBox("Consent status is already approved for this number","Jio Alert",this);
+           Util.alertDilogBox(Constant.CONSENT_APPROVED,Constant.ALERT_TITLE,this);
        } else {
            new SendSMSAsyncTask().execute(phoneNumber, userName+" From JIOTracker application wants to track your location, please reply in Yes JioTracker or No JioTracker !");
           /* if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
@@ -513,7 +513,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     private void showProgressBarDialog() {
-        progressDialog = ProgressDialog.show(DashboardActivity.this, "", "Please wait loading data...", true);
+        progressDialog = ProgressDialog.show(DashboardActivity.this, "", Constant.LOADING_DATA, true);
         progressDialog.setCancelable(true);
     }
 

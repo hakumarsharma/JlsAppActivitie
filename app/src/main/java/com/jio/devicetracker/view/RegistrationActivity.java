@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
@@ -29,6 +30,7 @@ import com.jio.devicetracker.jiotoken.JioUtilsToken;
 import com.jio.devicetracker.jiotoken.JiotokenHandler;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.AESEncrypt;
+import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.mqttclient.JiotMqttClient;
 
@@ -54,7 +56,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
         setContentView(R.layout.activity_registration);
         TextView title = findViewById(R.id.toolbar_title);
-        title.setText("Registration");
+        title.setText(Constant.REGISTRATION_TITLE);
 
         mJionmber = findViewById(R.id.jioNumber);
         mName = findViewById(R.id.name);
@@ -71,8 +73,6 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         }
 
 
-
-
         mJionmber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -81,7 +81,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mRegistration.setBackground(getResources().getDrawable(R.drawable.login_selector));
+                mRegistration.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.login_selector,null));
                 mRegistration.setTextColor(Color.WHITE);
             }
 
@@ -89,7 +89,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             public void afterTextChanged(Editable s) {
                 String number = mJionmber.getText().toString();
                 if (number.equals("")) {
-                    mRegistration.setBackground(getResources().getDrawable(R.drawable.selector));
+                    mRegistration.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
                     mRegistration.setTextColor(Color.WHITE);
                 } else {
                     mJionmber.setError(null);
@@ -108,6 +108,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 */
     }
 
+    // Request for SMS and Phone Permissions
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{READ_SMS, READ_PHONE_NUMBERS, READ_PHONE_STATE}, 100);
@@ -115,6 +116,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        // TODO change switch to if condition, if you are not handlig multiple cases
         switch (requestCode) {
             case 100:
 
@@ -157,9 +159,9 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
     private void validateNumber() {
         if (mName.getText().toString().equals("")) {
-            mName.setError("Name can't left empty");
+            mName.setError(Constant.NAME_VALIDATION);
         } else if (mJionmber.getText().toString().equals("")) {
-            mJionmber.setError("Phone number cannot be left empty!");
+            mJionmber.setError(Constant.PHONE_VALIDATION);
         } else {
             isFMSFlow = true;
             getssoToken();
@@ -172,7 +174,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             checkJiooperator();
 
         } else {
-            Util.alertDilogBox("Please use your mobile data", "Jio Alert", this);
+            Util.alertDilogBox(Constant.MOBILE_NETWORKCHECK, Constant.ALERT_TITLE, this);
         }
     }
 
@@ -189,16 +191,17 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                 //mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
                 gotoDashBoardActivity();
             } else {
-                Util.alertDilogBox("Entered phone number should be in SIM slot 1", "Jio Alert", this);
+                Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
             }
         } else if(subscriptionInfos.size()==2 && subscriptionInfos.get(1).getNumber().toString() != null ){
              if(subscriptionInfos.get(1).getNumber().toString().equals("91"+phoneNumber)|| subscriptionInfos.get(1).getNumber().toString().equals(phoneNumber)) {
-                 Util.alertDilogBox("Entered phone number should be in SIM slot 1", "Jio Alert", this);
+                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
              } else {
-                 Util.alertDilogBox("Enter the valid jio number present in device","Jio Alert",this);
+                 Util.alertDilogBox(Constant.DEVICE_JIONUMBER,Constant.ALERT_TITLE,this);
              }
         } else {
-            Util.alertDilogBox("Enter the valid jio number present in device","Jio Alert",this);
+            Util.alertDilogBox(Constant.DEVICE_JIONUMBER,Constant.ALERT_TITLE,this);
+
         }
 
         /*for (int i = 0; i < subscriptionInfos.size(); i++) {
@@ -275,7 +278,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         if(subscriptionInfos != null) {
             String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
             if (!carrierNameSlot1.contains("Jio")) {
-                Util.alertDilogBox("Please use Jio number in SIM slot 1", "Jio Alert", this);
+                Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
             } else {
                 mJionmber.setText(subscriptionInfos.get(0).getNumber().toString());
             }

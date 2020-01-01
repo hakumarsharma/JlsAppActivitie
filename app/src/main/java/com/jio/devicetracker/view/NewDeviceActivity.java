@@ -16,6 +16,7 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.jiotoken.JiotokenHandler;
+import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 import java.util.List;
@@ -58,21 +59,22 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         //relation = mRelation.getText().toString();
         imeiNumber = mDeviceImeiNumber.getText().toString();
         if (!isValidIMEINumber(imeiNumber)) {
-            mDeviceImeiNumber.setError("Enter the 15 digit IMEI number");
+            mDeviceImeiNumber.setError(Constant.IMEI_VALIDATION);
             return;
         }
 
         if (!isValidMobileNumber(number)) {
-            mDeviceNumber.setError("Enter the valid mobile number");
+            mDeviceNumber.setError(Constant.MOBILENUMBER_VALIDATION);
             return;
         }
         if(phoneNumber.equals("91"+number))
         {
-            Util.alertDilogBox("You can't add registered mobile number","Jio Alert",this);
+            Util.alertDilogBox(Constant.REGMOBILENUMBER_VALIDATION,Constant.ALERT_TITLE,this);
             return;
         }
-        if (number.equals("") || name.equals("") ) {
-            Toast.makeText(this, "Please Enter the details", Toast.LENGTH_SHORT).show();
+
+        if (number.equals("") || name.equals("") || relation.equals("") ) {
+            Toast.makeText(this, Constant.CHECK_DETAILS, Toast.LENGTH_SHORT).show();
         } else {
             data.setImeiNumber(imeiNumber);
             data.setPhoneNumber(number);
@@ -82,12 +84,14 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    // TODO move to Utils
     private boolean isValidIMEINumber(String imei) {
         String imeiNumber = "^\\d{15}$";
         Pattern pat = Pattern.compile(imeiNumber);
         return pat.matcher(imei).matches();
     }
 
+    // TODO move to Utils
     private boolean isValidMobileNumber(String mobile) {
         String mobileNumber = "^[6-9][0-9]{9}$";
         Pattern pat = Pattern.compile(mobileNumber);
@@ -141,7 +145,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
     {
         if(id == -1)
         {
-            Util.alertDilogBox("This number or IMEI number is already added","Jio Alert",this);
+            Util.alertDilogBox(Constant.DUPLICATE_NUMBER,Constant.ALERT_TITLE,this);
         } else {
             gotoDashBoard();
         }

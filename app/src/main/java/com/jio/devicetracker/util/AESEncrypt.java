@@ -29,6 +29,7 @@ public class AESEncrypt {
      * @throws Exception
      */
     public AESEncrypt(String passwordKey) throws Exception {
+        // TODO move key to properties file
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
         KeySpec spec = new PBEKeySpec(passwordKey.toCharArray(), SALT, ITERATION_COUNT, KEY_LENGTH);
         SecretKey tempKey = factory.generateSecret(spec);

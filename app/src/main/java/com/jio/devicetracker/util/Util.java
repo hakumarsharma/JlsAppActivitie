@@ -87,6 +87,7 @@ public class Util {
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
 
+    // Method to check Mobile network
     public static boolean isMobileNetworkAvailable(Context mContext) {
         ConnectivityManager connectivity = (ConnectivityManager) mContext
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

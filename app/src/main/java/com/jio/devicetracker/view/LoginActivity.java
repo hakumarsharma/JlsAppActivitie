@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -56,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!jioEmailEditText.getText().toString().equals("") || !jioPasswordEditText.getText().toString().equals("")) {
-                    loginButton.setBackground(getResources().getDrawable(R.drawable.login_selector));
+                    loginButton.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.login_selector,null));
                     loginButton.setTextColor(Color.WHITE);
                 }
             }
@@ -65,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void afterTextChanged(Editable s) {
                 String emailId = jioEmailEditText.getText().toString();
                 if (emailId.equals("")) {
-                    loginButton.setBackground(getResources().getDrawable(R.drawable.selector));
+                    loginButton.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
                     loginButton.setTextColor(Color.WHITE);
                 }
             }
@@ -77,13 +79,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 jioEmailIdText = jioEmailEditText.getText().toString().trim();
                 jioPasswordText = jioPasswordEditText.getText().toString().trim();
-                String emailIdRegEx = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4})(\\]?)$";
                 if (jioEmailEditText.length() == 0) {
-                    jioEmailEditText.setError("Email id cannot be left blank.");
+                    jioEmailEditText.setError(Constant.EMAILID_VALIDATION);
                     return;
                 }
                 if (jioPasswordText.length() == 0) {
-                    jioPasswordEditText.setError("Password cannot be left blank.");
+                    jioPasswordEditText.setError(Constant.PASSWORD_VALIDATION);
                     return;
                 }
 
@@ -95,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         data.setType("supervisor");
                         RequestHandler.getInstance(getApplicationContext()).handleRequest(new LoginDataRequest(new SuccessListener(), new ErrorListener(), data));
                     } else {
-                        jioEmailEditText.setError("Please provide the correct Email Id!");
+                        jioEmailEditText.setError(Constant.EMAIL_VALIDATION);
                         return;
                     }
                 }
@@ -103,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
-
+    // TODO move this to Util class
     public static boolean isValidEmailId(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
@@ -142,18 +143,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == Constant.INVALID_USER) {
-                Util.alertDilogBox("Please enter correct email and password", "Jio Alert", LoginActivity.this);
+                Util.alertDilogBox(Constant.LOGIN_VALIDATION, Constant.ALERT_TITLE, LoginActivity.this);
             } else if (error.networkResponse.statusCode == Constant.ACCOUNT_LOCK) {
-                Util.alertDilogBox("Account is locked", "Jio Alert", LoginActivity.this);
+                Util.alertDilogBox(Constant.EMAIL_LOCKED, Constant.ALERT_TITLE, LoginActivity.this);
             } else {
-                Util.alertDilogBox("Please enter valid user", "Jio Alert", LoginActivity.this);
+                Util.alertDilogBox(Constant.VALID_USER, Constant.ALERT_TITLE, LoginActivity.this);
             }
             progressDialog.dismiss();
         }
     }
 
     private void showProgressBarDialog() {
-        progressDialog = ProgressDialog.show(LoginActivity.this, "", "Please wait login...", true);
+        progressDialog = ProgressDialog.show(LoginActivity.this, "", Constant.WAIT_LOADER, true);
         progressDialog.setCancelable(true);
     }
 
