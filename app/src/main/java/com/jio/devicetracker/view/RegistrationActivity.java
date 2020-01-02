@@ -182,7 +182,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         phoneNumber = mJionmber.getText().toString();
         String carierName = subscriptionInfos.get(0).getCarrierName().toString();
         String number = subscriptionInfos.get(0).getNumber();
-        //String number2 = subscriptionInfos.get(1).getNumber().toString();
+
         if((number != null && number.equals(phoneNumber)) || (number !=null && number.equals("91"+ phoneNumber)) )
         {
             if (carierName.contains("Jio"))
@@ -204,19 +204,6 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
         }
 
-        /*for (int i = 0; i < subscriptionInfos.size(); i++) {
-            String carrierName = subscriptionInfos.get(i).getCarrierName().toString();
-            if (subscriptionInfos.get(i).getNumber() != null && subscriptionInfos.get(i).getNumber().equals(phoneNumber)) {
-                if (carrierName.contains("Jio")) {
-                    JioUtilsToken.getSSOIdmaToken(RegistrationActivity.this);
-                    mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
-                    gotoDashBoardActivity();
-                    return;
-                } else {
-                    Util.alertDilogBox("Please use Jio number", "Jio Alert", this);
-                }
-            }
-        }*/
     }
 
     private void gotoLoginScreen() {

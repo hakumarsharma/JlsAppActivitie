@@ -127,9 +127,9 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
             FMSRegistrationTokenResponse fmsRegistrationTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), FMSRegistrationTokenResponse.class);
             util.dismissProgressBarDialog();
             if(fmsRegistrationTokenResponse.getCode() == 200) {
-                //updateTheDatabase();
+                goToLoginActivity();
+                Toast.makeText(getApplicationContext(), "Registration successfull!", Toast.LENGTH_SHORT).show();
             }
-            goToLoginActivity();
         }
     }
 

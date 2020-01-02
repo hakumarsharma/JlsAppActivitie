@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.EditProfileData;
+import com.jio.devicetracker.database.pojo.Logindata;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.util.Util;
@@ -54,6 +55,15 @@ public class DBManager {
         contentValue.put(DatabaseHelper.USER_ID,"");
 
         long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_NAME_USER, null, contentValue);
+
+        return rowInserted;
+    }
+
+    public long insertLoginData(Logindata data) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.USER_TOKEN, data.getUgsToken());
+        long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
 
         return rowInserted;
     }

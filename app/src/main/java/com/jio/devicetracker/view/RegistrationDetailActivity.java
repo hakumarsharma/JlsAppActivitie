@@ -1,10 +1,15 @@
 package com.jio.devicetracker.view;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -12,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -22,12 +28,17 @@ import com.jio.devicetracker.database.pojo.RegisterRequestData;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.request.RegistrationTokenrequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
+import com.jio.devicetracker.jiotoken.JioUtilsToken;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import static android.Manifest.permission.READ_PHONE_NUMBERS;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.READ_SMS;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class RegistrationDetailActivity extends Activity implements View.OnClickListener {
 
@@ -39,6 +50,8 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     private DBManager mDbmanager;
     private Util util = null;
     public static String randomNumber = "";
+    private List<SubscriptionInfo> subscriptionInfos;
+    public static String phoneNumber = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +71,8 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         mRegister.setOnClickListener(this);
         mDob.setOnClickListener(this);
         util = Util.getInstance();
+
+        requestPermission();
     }
 
     @Override
@@ -105,6 +120,13 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             return;
         }
 
+        if(mEmail.getText().toString().length() != 0 && !Util.isValidEmailId(mEmail.getText().toString().trim()))
+        {
+            mEmail.setError(Constant.EMAIL_VALIDATION);
+            return;
+        }
+        getssoToken();
+
         getServicecall();
 
     }
@@ -122,10 +144,10 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         public void onResponse(Object response) {
 
             RegisterData data = new RegisterData();
-            data.setName(mName.getText().toString());
-            data.setEmail(mEmail.getText().toString());
-            data.setPhoneNumber(mPhone.getText().toString());
-            data.setDob(mDob.getText().toString());
+            data.setName(mName.getText().toString().trim());
+            data.setEmail(mEmail.getText().toString().trim());
+            data.setPhoneNumber(mPhone.getText().toString().trim());
+            data.setDob(mDob.getText().toString().trim());
             data.setPassword(mPass.getText().toString());
             mDbmanager.insertAdminData(data);
             sendOTP();
@@ -187,5 +209,66 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     private void sendOTP() {
         randomNumber = util.getFourDigitRandomNumber();
         new SendSMSTask().execute(mPhone.getText().toString(), randomNumber);
+    }
+
+    private void getssoToken() {
+        boolean isAvailable = Util.isMobileNetworkAvailable(RegistrationDetailActivity.this);
+        if (isAvailable) {
+            checkJiooperator();
+
+        } else {
+            Util.alertDilogBox(Constant.MOBILE_NETWORKCHECK, Constant.ALERT_TITLE, this);
+        }
+    }
+
+    private void checkJiooperator() {
+        phoneNumber = mPhone.getText().toString();
+        String carierName = subscriptionInfos.get(0).getCarrierName().toString();
+        String number = subscriptionInfos.get(0).getNumber();
+
+        if((number != null && number.equals(phoneNumber)) || (number !=null && number.equals("91"+ phoneNumber)) )
+        {
+            if (carierName.contains("Jio"))
+            {
+                JioUtilsToken.getSSOIdmaToken(RegistrationDetailActivity.this);
+                //mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
+                //gotoDashBoardActivity();
+            } else {
+                Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+            }
+        } else if(subscriptionInfos.size()==2 && subscriptionInfos.get(1).getNumber().toString() != null ){
+            if(subscriptionInfos.get(1).getNumber().toString().equals("91"+phoneNumber)|| subscriptionInfos.get(1).getNumber().toString().equals(phoneNumber)) {
+                Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+            } else {
+                Util.alertDilogBox(Constant.DEVICE_JIONUMBER,Constant.ALERT_TITLE,this);
+            }
+        } else {
+            Util.alertDilogBox(Constant.DEVICE_JIONUMBER,Constant.ALERT_TITLE,this);
+
+        }
+
+    }
+
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{READ_SMS, READ_PHONE_NUMBERS, READ_PHONE_STATE}, 100);
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        // TODO change switch to if condition, if you are not handlig multiple cases
+        switch (requestCode) {
+            case 100:
+
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+                        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
+                //checkJioSIMSlot1();
+                break;
+        }
     }
 }

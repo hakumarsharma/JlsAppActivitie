@@ -13,6 +13,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME_BORQS = "BorqsDevicedata";
     public static final String TABLE_NAME_FMS = "FmsDevicedata";
     public static final String TABLE_NAME_USER = "UserData";
+    public static final String TABLE_USER_LOGIN = "UserloginData";
 
     //Table Columns
     public static final String IMEI_NUM = "imei";
@@ -26,6 +27,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DOB = "dob";
     public static final String PASS = "password";
     public static final String USER_ID = "userid";
+    public static final String USER_TOKEN = "userToken";
+    public static final String TOKEN_EXPIRY_TIME = "Tokenexpirytime";
+
 
 
 
@@ -42,6 +46,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_USER = "create table " + TABLE_NAME_USER + "("+ NAME + " TEXT, " + EMAIL + " TEXT, " + DEVICE_NUM + " TEXT ," + DOB + " TEXT ," + PASS + " TEXT ," + USER_ID + " TEXT ,"+"PRIMARY KEY" +"("+DEVICE_NUM +" ," +EMAIL +"))";
 
+    private static final String CREATE_TABLE_USER_LOGIN = "create table " + TABLE_USER_LOGIN + "("+ USER_TOKEN + " TEXT, " + TOKEN_EXPIRY_TIME + " TEXT, " + USER_ID + " TEXT, " + EMAIL + " TEXT, "+ "PRIMARY KEY" +"(" + USER_ID+"))";
+
+
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -51,6 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_BORQS);
         db.execSQL(CREATE_TABLE_FMS);
         db.execSQL(CREATE_TABLE_USER);
+        db.execSQL(CREATE_TABLE_USER_LOGIN);
     }
 
     @Override
@@ -58,6 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_BORQS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_FMS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LOGIN);
         onCreate(db);
     }
 }
