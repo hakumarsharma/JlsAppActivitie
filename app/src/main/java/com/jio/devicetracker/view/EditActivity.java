@@ -18,9 +18,9 @@ import com.jio.devicetracker.util.Util;
 
 public class EditActivity extends Activity implements View.OnClickListener {
 
-    private EditText mName, mRelation, mNumber,mIMEI;
+    private EditText mName, mNumber, mIMEI;
     private Button mUpdate;
-    private String number, relation;
+    private String number;
     private DBManager mDBmanager;
     private EditProfileData editData;
 
@@ -40,11 +40,11 @@ public class EditActivity extends Activity implements View.OnClickListener {
         mUpdate.setOnClickListener(this);
         Intent intent = getIntent();
         number = intent.getStringExtra("number");
-       /* if(JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
+        if (RegistrationActivity.isFMSFlow == false) {
             editData = mDBmanager.getUserdataForEdit(number);
-        }else {*/
+        } else {
             editData = mDBmanager.getUserdataForEditFMS(number);
-        //}
+        }
         //relation = intent.getStringExtra("Relation");
         mName.setText(editData.getName());
         mNumber.setText(editData.getPhoneNumber());
@@ -56,25 +56,22 @@ public class EditActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        String phoneNumber=mDBmanager.getAdminphoneNumber();
-       /* if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
-            mDBmanager.updateProfile(number,mName.getText().toString(),mNumber.getText().toString(),mRelation.getText().toString(),mIMEI.getText().toString());
-        } else {*/
-
-        if(phoneNumber.equals("91"+mNumber.getText().toString()))
-        {
-            Util.alertDilogBox("You can't add registered mobile number","Jio Alert",this);
-            return;
+        String phoneNumber = mDBmanager.getAdminphoneNumber();
+        if (RegistrationActivity.isFMSFlow == false) {
+            mDBmanager.updateProfile(number, mName.getText().toString(), mNumber.getText().toString(), mIMEI.getText().toString());
+        } else {
+            if (phoneNumber.equals("91" + mNumber.getText().toString())) {
+                Util.alertDilogBox("You can't add registered mobile number", "Jio Alert", this);
+                return;
+            }
+            mDBmanager.updateProfileFMS(number, mName.getText().toString(), mNumber.getText().toString(), mIMEI.getText().toString());
+            }
+            gotoDashboard();
         }
-            mDBmanager.updateProfileFMS(number,mName.getText().toString(),mNumber.getText().toString(),mIMEI.getText().toString());
-        //}
 
-        gotoDashboard();
+        private void gotoDashboard () {
+
+            Intent intent = new Intent(EditActivity.this, DashboardActivity.class);
+            startActivity(intent);
+        }
     }
-
-    private void gotoDashboard() {
-
-        Intent intent = new Intent(EditActivity.this, DashboardActivity.class);
-        startActivity(intent);
-    }
-}

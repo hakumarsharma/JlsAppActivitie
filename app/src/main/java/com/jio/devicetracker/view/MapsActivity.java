@@ -210,11 +210,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void showMapOnTimeInterval() {
         List<TrackerdeviceResponse.Data> data = DashboardActivity.data;
-        List<String> phoneNumner = DBManager.phoneNumner;
+        List<String> phoneNumber = DBManager.phoneNumner;
         latLongMap = new HashMap<>();
         if (data != null) {
             for (int i = 0; i < data.size(); i++) {
-                if (phoneNumner.contains(data.get(i).getmDevice().getPhoneNumber())) {
+                if (phoneNumber.contains(data.get(i).getmDevice().getPhoneNumber())) {
                     latLongMap.put(data.get(i).getLocation().getLat(), data.get(i).getLocation().getLng());
                 }
             }

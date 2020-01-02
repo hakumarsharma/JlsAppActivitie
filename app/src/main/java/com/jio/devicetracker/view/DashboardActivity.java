@@ -130,7 +130,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         getAdminDetail();
         isDevicePresent();
 
-        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
+        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE};
         if (!hasPermissions(getApplicationContext(), permissions)) {
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
@@ -295,7 +295,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             }
             for (int i = 0; i < consentData.size(); i++) {
                 if (selectedData.get(i).getPhone().equals(consentData.get(i).getPhoneNumber())) {
-                    if (consentData.get(i).getConsentStaus().equalsIgnoreCase("Yes JioTracker")) {
+                    if (consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")) {
                         latLngMap = mDbManager.getLatLongForMap(selectedData);
                         namingMap.put(selectedData.get(i).getName(), latLngMap);
                     } else {
@@ -417,7 +417,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     private void sendSMS(String phoneNumber) {
-
        String userName= mDbManager.getAdminDetail();
        String consentStatus = mDbManager.getConsentStatusBorqs(phoneNumber);
        if(consentStatus.equalsIgnoreCase("Yes JioTracker"))
@@ -426,15 +425,14 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
        } else {
            new SendSMSTask().execute(phoneNumber, userName+" From JIOTracker application wants to track your location, please reply in Yes JioTracker or No JioTracker !");
            Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
-          /* if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
+           if (RegistrationActivity.isFMSFlow == false) {
                mDbManager.updatependingConsent(phoneNumber);
                showDatainList();
-           } else { */
+           } else {
                mDbManager.updatependingConsentFMS(phoneNumber);
                showDataFromFMS();
-           //}
+           }
        }
-       
     }
 
 
@@ -470,18 +468,18 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public void messageReceived(String message, String phoneNum) {
         Toast.makeText(getApplicationContext(), "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
         String phone = phoneNum.substring(3);
-        /*if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
+        if (RegistrationActivity.isFMSFlow == false) {
             mDbManager.updateConsentInBors(phone,message);
             showDatainList();
         } else {
             mDbManager.updateConsentInFMS(phone,message);
             showDataFromFMS();
-        }*/
-        if(message.toLowerCase().contains("yes jiotracker")) {
-            publishMQTTMessage(phone);
         }
-        mDbManager.updateConsentInFMS(phone,message);
-        showDataFromFMS();
+       /* if(message.toLowerCase().contains("yes jiotracker")) {
+           // publishMQTTMessage(phone);
+        }*/
+       /* mDbManager.updateConsentInFMS(phone,message);
+        showDataFromFMS();*/
     }
 
     private void publishMQTTMessage(String phoneNumber) {
@@ -490,7 +488,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         if(addDeviceList != null) {
             for(int i = 0; i < addDeviceList.size(); i ++) {
                 if(addDeviceList.get(i).getPhoneNumber().equalsIgnoreCase(phoneNumber)) {
-                    String topic = "jioiot/svckm/jiophone/"+util.getIMEI(getApplicationContext())+"/uc/fwd/sesid";
+                    String topic = "jioiot/svckm/jiophone/"+util.getIMEI(this)+"/uc/fwd/sesid";
                     Log.d("Topic --> ", topic);
                     String message = "{\"reqId\":\"" +addDeviceList.get(i).getImeiNumber()+ "\",\"trkId\":\"" +util.getIMEI(getApplicationContext())+ "\",\"sesId\":\"" + Util.getInstance().getSessionId()+ "\",\"trknr\":\""+ RegistrationActivity.phoneNumber.substring(2) +"\",\"reqnr\":\"" + addDeviceList.get(i).getPhoneNumber() + "\"}";
                     Log.d("Message --> ", message);
@@ -530,15 +528,13 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         adb.setIcon(android.R.drawable.ic_dialog_alert);
         adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
-              /*  if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
+                if (RegistrationActivity.isFMSFlow == false) {
                     mDbManager.deleteSelectedData(phoneNumber);
-                } else {*/
+                } else {
                     mDbManager.deleteSelectedDataformFMS(phoneNumber);
-             //   }
+               }
                 //mDbManager.deleteSelectedData(phoneNumber);
                 adapter.removeItem(position);
-
                 isDevicePresent();
             }
         });

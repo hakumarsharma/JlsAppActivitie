@@ -131,7 +131,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
             insertRowid = mDbManager.insertInFMSDB(adddeviceData);
             checkRow(insertRowid);
         }
-        if (!isLatLngFound|| RegistrationActivity.isFMSFlow == false) {
+        if (!isLatLngFound) {
             mDeviceNumber.setError("Enter the correct number, this number is not found on server");
             return;
         }
