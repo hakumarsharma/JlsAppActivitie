@@ -65,13 +65,13 @@ public class TrackDeviceActivity extends AppCompatActivity implements View.OnCli
 
     private void getServicecall() {
         TrackerdeviceData data =new TrackerdeviceData();
-        TrackerdeviceData.Sort sort = data.new Sort();
+        /*TrackerdeviceData.Sort sort = data.new Sort();
         sort.setLatestLocation(-1);
         TrackerdeviceData.Latlong latlong = data.new Latlong();
         latlong.setFrom(1542022465424L);
         latlong.setTo(1542108865424L);
         data.setmSort(sort);
-        data.setLatlong(latlong);
+        data.setLatlong(latlong);*/
 
         RequestHandler.getInstance(getApplicationContext()).handleRequest(new TrackdeviceRequest(new SuccessListener(), new ErrorListener(),userToken,data));
     }

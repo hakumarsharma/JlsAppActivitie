@@ -29,7 +29,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
     private List<TrackerdeviceResponse.Data> mDatalist;
     private EditText mDeviceNumber, mName, mDeviceImeiNumber,mRelation;
     private Button mAdd;
-    private String number, name,imeiNumber,relation;
+    private String number, name,imeiNumber;
     private AddedDeviceData data = null;
     private DBManager mDbManager;
 
@@ -44,7 +44,6 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         mDeviceNumber = findViewById(R.id.deviceName);
         mName = findViewById(R.id.memberName);
         mDeviceImeiNumber = findViewById(R.id.deviceIMEINumber);
-        //mRelation = findViewById(R.id.relation);
         mAdd = findViewById(R.id.save);
         mDbManager = new DBManager(this);
         mAdd.setOnClickListener(this);
@@ -73,7 +72,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
             return;
         }
 
-        if (number.equals("") || name.equals("") || relation.equals("") ) {
+        if (number.equals("") || name.equals("")) {
             Toast.makeText(this, Constant.CHECK_DETAILS, Toast.LENGTH_SHORT).show();
         } else {
             data.setImeiNumber(imeiNumber);
@@ -100,7 +99,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
 
     private void matchMobileNumber(AddedDeviceData adddeviceData) {
         boolean isLatLngFound = false;
-        if((JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) && mDatalist != null) {
+        if((RegistrationActivity.isFMSFlow == false) && mDatalist != null) {
             for (int i = 0; i < mDatalist.size(); i++) {
                 String phoneNumber = adddeviceData.getPhoneNumber().trim();
                 if (phoneNumber.equals(mDatalist.get(i).getmDevice().getPhoneNumber())) {
@@ -128,8 +127,8 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
             insertRowid = mDbManager.insertInFMSDB(adddeviceData);
             checkRow(insertRowid);
         }
-        if (!isLatLngFound && JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
-            //mDeviceNumber.setError("Enter the correct number, this number is not found on server");
+        if (!isLatLngFound|| RegistrationActivity.isFMSFlow == false) {
+            mDeviceNumber.setError("Enter the correct number, this number is not found on server");
             return;
         }
     }

@@ -31,7 +31,7 @@ public class LoginDataRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return "/accounts/api/users/login";
+        return "/accounts/api/users/login?isResponseDataAsUser=true&isPopulateGroup=true&isPopulateGroupUsers=true&isPopulateUserDevices=true&isPopulateUserDevicesAsWearableUsers=true";
     }
 
     @Override

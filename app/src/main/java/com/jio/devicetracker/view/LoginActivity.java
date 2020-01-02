@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
@@ -37,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String jioPasswordText = null;
     private EditText jioEmailEditText = null;
     private EditText jioPasswordEditText = null;
-    public static LogindetailResponse loginDetails = null;
+    public static LogindetailResponse logindetailResponse = null;
     private ProgressDialog progressDialog = null;
     private TextView mRegisterText;
     private static final int PERMIT_ALL = 1;
@@ -151,11 +152,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         public void onResponse(Object response) {
-            loginDetails = Util.getInstance().getPojoObject(String.valueOf(response), LogindetailResponse.class);
-            if (loginDetails.getLogindata().getUgsToken() != null) {
-                Util.getInstance().setUserToken(getApplicationContext(), loginDetails.getLogindata().getUgsToken().toString());
+            logindetailResponse = Util.getInstance().getPojoObject(String.valueOf(response), LogindetailResponse.class);
+            if (logindetailResponse.getUgs_token() != null) {
+                new DBManager(LoginActivity.this).insertLoginData(logindetailResponse);
                 Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                intent.putExtra("UserToken", loginDetails.getLogindata().getUgsToken());
                 startActivity(intent);
             }
             progressDialog.dismiss();

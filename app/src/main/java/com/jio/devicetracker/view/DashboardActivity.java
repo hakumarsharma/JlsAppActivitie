@@ -32,6 +32,7 @@ import com.android.volley.VolleyError;
 
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.FMSAPIData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.TrackerdeviceData;
@@ -104,7 +105,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         listView.setLayoutManager(linearLayoutManager);
         intent = getIntent();
-        userToken = Util.getUserToken();
         mDbManager = new DBManager(this);
         //mAddData = (AddedDeviceData) intent.getSerializableExtra("AddDeviceData");
         number = intent.getStringExtra("phone");
@@ -134,11 +134,12 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
 
-       /* if (RegistrationActivity.isFMSFlow == false) {
+        if (RegistrationActivity.isFMSFlow == false) {
+            getAdminDetail();
             showDatainList();
-        } else {*/
+        } else {
             showDataFromFMS();
-       // }
+        }
         adapter.setOnItemClickPagerListener(new TrackerDeviceListAdapter.RecyclerViewClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position, MultipleselectData data, boolean val) {
@@ -173,6 +174,11 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 sendSMS(phoneNumber);
             }
         });
+    }
+
+    private void getAdminDetail(){
+        AdminLoginData adminLoginData = new DBManager(this).getAdminLoginDetail();
+        userToken = adminLoginData.getUser_token();
     }
 
     private void checkConsentPublishMQTTMessage(MultipleselectData multipleselectData) {
@@ -231,18 +237,14 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     public void getServicecall(String token) {
-        if (JiotokenHandler.ssoToken != null || RegistrationActivity.isFMSFlow == true) {
+        if (RegistrationActivity.isFMSFlow == true) {
             gotoAddDeviceActivity();
         } else {
             showProgressBarDialog();
             TrackerdeviceData data = new TrackerdeviceData();
-            TrackerdeviceData.Sort sort = data.new Sort();
-            sort.setLatestLocation(-1);
-            TrackerdeviceData.Latlong latlong = data.new Latlong();
-            latlong.setFrom(1542022465424L);
-            latlong.setTo(1542108865424L);
-            data.setmSort(sort);
-            data.setLatlong(latlong);
+            TrackerdeviceData.StartsWith startsWith = data.new StartsWith();
+            startsWith.setCurrentDat("jamnagar1tiq9s");
+            data.setStartsWith(startsWith);
             devicePresent.setVisibility(View.GONE);
             RequestHandler.getInstance(getApplicationContext()).handleRequest(new TrackdeviceRequest(new SuccessListener(), new ErrorListener(), token, data));
         }
@@ -373,7 +375,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     public void makeAPICall(String token) {
-        TrackerdeviceData data = new TrackerdeviceData();
+        /*TrackerdeviceData data = new TrackerdeviceData();
         TrackerdeviceData.Sort sort = data.new Sort();
         sort.setLatestLocation(-1);
         TrackerdeviceData.Latlong latlong = data.new Latlong();
@@ -383,7 +385,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         data.setLatlong(latlong);
         if(context != null) {
             RequestHandler.getInstance(context).handleRequest(new TrackdeviceRequest(new SuccessAPICall(), new UnSuccessfullAPICall(), token, data));
-        }
+        }*/
     }
 
     private class SuccessAPICall implements Response.Listener {
@@ -412,7 +414,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         intent.putExtra("DeviceData", (Serializable) mData);
         startActivity(intent);
     }
-
 
     private void sendSMS(String phoneNumber) {
 

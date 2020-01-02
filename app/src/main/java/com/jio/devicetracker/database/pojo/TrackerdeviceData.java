@@ -3,63 +3,31 @@ package com.jio.devicetracker.database.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
-public class TrackerdeviceData {
+import java.io.Serializable;
 
-    @SerializedName("location")
-    private Latlong latlong;
-    @SerializedName("sort")
-    private Sort mSort;
+public class TrackerdeviceData implements Serializable {
 
-    public Latlong getLatlong() {
-        return latlong;
+    @SerializedName("startsWith")
+    private StartsWith startsWith;
+
+    public StartsWith getStartsWith() {
+        return startsWith;
     }
 
-    public void setLatlong(Latlong latlong) {
-        this.latlong = latlong;
+    public void setStartsWith(StartsWith startsWith) {
+        this.startsWith = startsWith;
     }
 
-    public Sort getmSort() {
-        return mSort;
-    }
+    public class StartsWith implements Serializable {
+        @SerializedName("currentDat")
+        private String currentDat;
 
-    public void setmSort(Sort mSort) {
-        this.mSort = mSort;
-    }
-
-    public class Sort{
-        @SerializedName("latest.location")
-        private int latestLocation;
-
-        public int getLatestLocation() {
-            return latestLocation;
+        public String getCurrentDat() {
+            return currentDat;
         }
 
-        public void setLatestLocation(int latestLocation) {
-            this.latestLocation = latestLocation;
-        }
-    }
-
-    public class Latlong{
-
-        @SerializedName("from")
-        private long from;
-        @SerializedName("to")
-        private long to;
-
-        public long getFrom() {
-            return from;
-        }
-
-        public void setFrom(long from) {
-            this.from = from;
-        }
-
-        public long getTo() {
-            return to;
-        }
-
-        public void setTo(long to) {
-            this.to = to;
+        public void setCurrentDat(String currentDat) {
+            this.currentDat = currentDat;
         }
     }
 }

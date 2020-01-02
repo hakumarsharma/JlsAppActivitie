@@ -163,7 +163,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         } else if (mJionmber.getText().toString().equals("")) {
             mJionmber.setError(Constant.PHONE_VALIDATION);
         } else {
-            isFMSFlow = true;
+            //isFMSFlow = true;
             getssoToken();
         }
     }

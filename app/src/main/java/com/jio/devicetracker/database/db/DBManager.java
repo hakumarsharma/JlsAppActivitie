@@ -9,9 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.EditProfileData;
-import com.jio.devicetracker.database.pojo.Logindata;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.RegisterData;
+import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.util.Util;
 
 import java.util.ArrayList;
@@ -60,12 +60,14 @@ public class DBManager {
         return rowInserted;
     }
 
-    public long insertLoginData(Logindata data) {
+    public long insertLoginData(LogindetailResponse data) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.USER_TOKEN, data.getUgsToken());
+        contentValue.put(DatabaseHelper.USER_TOKEN, data.getUgs_token());
+        contentValue.put(DatabaseHelper.USER_ID, data.getUser().get_id());
+        contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, data.getUgs_token_expiry());
+        contentValue.put(DatabaseHelper.EMAIL, data.getUser().getEmail());
         long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
-
         return rowInserted;
     }
 
@@ -296,9 +298,7 @@ public class DBManager {
                 adminData.setUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_ID)));
                 adminData.setUser_token(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_TOKEN)));
                 adminData.setToken_expirtime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TOKEN_EXPIRY_TIME)));
-
             }
-
         }
         return adminData;
     }
