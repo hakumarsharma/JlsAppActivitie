@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +39,9 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_borqs_otp);
+
+        TextView title = findViewById(R.id.toolbar_title);
+        title.setText("OTP Verification");
         emailOTP = findViewById(R.id.emailOTP);
         phoneOTP = findViewById(R.id.phoneOTP);
         verify = findViewById(R.id.verify);
@@ -70,7 +74,7 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
 
         } else {
             Log.d("TAG", "OTP is not verified");
-            Util.alertDilogBox("Please enter the correct OTP!", "OTP verification", getApplicationContext());
+            Util.alertDilogBox("Please enter the correct OTP!", "OTP verification", this);
         }
     }
 

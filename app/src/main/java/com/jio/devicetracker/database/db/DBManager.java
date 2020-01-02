@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.EditProfileData;
 import com.jio.devicetracker.database.pojo.Logindata;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
@@ -33,7 +34,7 @@ public class DBManager {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
         contentValue.put(DatabaseHelper.NAME, deviceData.getName());
-        contentValue.put(DatabaseHelper.RELATION, deviceData.getRelation());
+        contentValue.put(DatabaseHelper.EMAIL, deviceData.getRelation());
         contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
         contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
         contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
@@ -280,6 +281,26 @@ public class DBManager {
 
         }
         return userName;
+    }
+
+    public AdminLoginData getAdminLoginDetail() {
+        mDatabase = mDBHelper.getWritableDatabase();
+        AdminLoginData adminData = null;
+        String userName = "";
+        String [] column = {DatabaseHelper.EMAIL,DatabaseHelper.USER_TOKEN,DatabaseHelper.USER_ID,DatabaseHelper.TOKEN_EXPIRY_TIME};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_USER_LOGIN,column,null,null,null,null,null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                adminData = new AdminLoginData();
+                adminData.setEmail(cursor.getString(cursor.getColumnIndex(DatabaseHelper.EMAIL)));
+                adminData.setUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_ID)));
+                adminData.setUser_token(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_TOKEN)));
+                adminData.setToken_expirtime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TOKEN_EXPIRY_TIME)));
+
+            }
+
+        }
+        return adminData;
     }
 
     public String getAdminphoneNumber() {

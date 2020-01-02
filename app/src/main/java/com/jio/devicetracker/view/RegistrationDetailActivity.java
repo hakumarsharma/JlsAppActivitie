@@ -33,6 +33,7 @@ import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+
 import static android.Manifest.permission.READ_PHONE_NUMBERS;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.READ_SMS;
@@ -42,9 +43,9 @@ import java.util.List;
 
 public class RegistrationDetailActivity extends Activity implements View.OnClickListener {
 
-    private EditText mName,mEmail,mPhone,mDob,mPass,mRepass;
+    private EditText mName, mEmail, mPhone, mDob, mPass, mRepass;
     private Button mRegister;
-    private int month,year,day;
+    private int month, year, day;
     private int DATE_PICKER_ID = 100;
     private RegisterRequestData data = null;
     private DBManager mDbmanager;
@@ -78,8 +79,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     @Override
     public void onClick(View v) {
 
-        switch(v.getId())
-        {
+        switch (v.getId()) {
             case R.id.register:
                 validate();
                 break;
@@ -115,19 +115,22 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             mPass.setError("Password cannot be left blank.");
             return;
         }
-        if (mRepass.getText().toString().length() == 0 || (! mRepass.getText().toString().equals(mPass.getText().toString()))) {
+        if (mRepass.getText().toString().length() == 0 || (!mRepass.getText().toString().equals(mPass.getText().toString()))) {
             mRepass.setError("Password did not match, please try again");
             return;
         }
 
-        if(mEmail.getText().toString().length() != 0 && !Util.isValidEmailId(mEmail.getText().toString().trim()))
-        {
+        if (mEmail.getText().toString().length() != 0 && !Util.isValidEmailId(mEmail.getText().toString().trim())) {
             mEmail.setError(Constant.EMAIL_VALIDATION);
             return;
         }
-        getssoToken();
+        boolean jioCheck =getssoToken();
+        if(jioCheck)
+        {
+            getServicecall();
+        }
 
-        getServicecall();
+
 
     }
 
@@ -174,29 +177,25 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
-        final DatePickerDialog   mDatePicker =new DatePickerDialog(RegistrationDetailActivity.this, new DatePickerDialog.OnDateSetListener()
-        {
+        final DatePickerDialog mDatePicker = new DatePickerDialog(RegistrationDetailActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday)
-            {
-                String  monthselect, dayselect;
+            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                String monthselect, dayselect;
                 selectedmonth = selectedmonth + 1;
-                if(selectedmonth < 10)
-                {
+                if (selectedmonth < 10) {
                     monthselect = ("0" + selectedmonth);
                 } else {
                     monthselect = String.valueOf(selectedmonth);
                 }
-                if(selectedday < 10)
-                {
-                    dayselect = ("0" +selectedday);
+                if (selectedday < 10) {
+                    dayselect = ("0" + selectedday);
                 } else {
                     dayselect = String.valueOf(selectedday);
                 }
                 mDob.setText(new StringBuilder().append(selectedyear).append("-").append(monthselect).append("-").append(dayselect));
 
             }
-        },year, month, day);
+        }, year, month, day);
         mDatePicker.setTitle("Please select date");
         // TODO Hide Future Date Here
         mDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
@@ -211,42 +210,46 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         new SendSMSTask().execute(mPhone.getText().toString(), randomNumber);
     }
 
-    private void getssoToken() {
+    private boolean getssoToken() {
         boolean isAvailable = Util.isMobileNetworkAvailable(RegistrationDetailActivity.this);
         if (isAvailable) {
-            checkJiooperator();
+            boolean flag = checkJiooperator();
+            return flag;
 
         } else {
             Util.alertDilogBox(Constant.MOBILE_NETWORKCHECK, Constant.ALERT_TITLE, this);
+            return false;
         }
     }
 
-    private void checkJiooperator() {
+    private boolean checkJiooperator() {
         phoneNumber = mPhone.getText().toString();
         String carierName = subscriptionInfos.get(0).getCarrierName().toString();
         String number = subscriptionInfos.get(0).getNumber();
 
-        if((number != null && number.equals(phoneNumber)) || (number !=null && number.equals("91"+ phoneNumber)) )
-        {
-            if (carierName.contains("Jio"))
-            {
+        if ((number != null && number.equals(phoneNumber)) || (number != null && number.equals("91" + phoneNumber))) {
+            if (carierName.contains("Jio")) {
                 JioUtilsToken.getSSOIdmaToken(RegistrationDetailActivity.this);
                 //mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
                 //gotoDashBoardActivity();
+                return true;
             } else {
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+                return false;
             }
-        } else if(subscriptionInfos.size()==2 && subscriptionInfos.get(1).getNumber().toString() != null ){
-            if(subscriptionInfos.get(1).getNumber().toString().equals("91"+phoneNumber)|| subscriptionInfos.get(1).getNumber().toString().equals(phoneNumber)) {
+        } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber().toString() != null) {
+            if (subscriptionInfos.get(1).getNumber().toString().equals("91" + phoneNumber) || subscriptionInfos.get(1).getNumber().toString().equals(phoneNumber)) {
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+                return false;
             } else {
-                Util.alertDilogBox(Constant.DEVICE_JIONUMBER,Constant.ALERT_TITLE,this);
+                Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
+                return false;
             }
         } else {
-            Util.alertDilogBox(Constant.DEVICE_JIONUMBER,Constant.ALERT_TITLE,this);
+            Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
+            return false;
 
         }
-
     }
 
     private void requestPermission() {

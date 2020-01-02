@@ -100,7 +100,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
 
     private void matchMobileNumber(AddedDeviceData adddeviceData) {
         boolean isLatLngFound = false;
-       /* if((JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) && mDatalist != null) {
+        if((JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) && mDatalist != null) {
             for (int i = 0; i < mDatalist.size(); i++) {
                 String phoneNumber = adddeviceData.getPhoneNumber().trim();
                 if (phoneNumber.equals(mDatalist.get(i).getmDevice().getPhoneNumber())) {
@@ -124,10 +124,10 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         }
-        else {*/
+        else {
             insertRowid = mDbManager.insertInFMSDB(adddeviceData);
             checkRow(insertRowid);
-       // }
+        }
         if (!isLatLngFound && JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
             //mDeviceNumber.setError("Enter the correct number, this number is not found on server");
             return;
