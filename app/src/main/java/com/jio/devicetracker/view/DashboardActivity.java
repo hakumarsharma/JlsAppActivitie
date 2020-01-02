@@ -127,7 +127,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         fmsNamingMap = new HashMap<>();
         context = getApplicationContext();
         fmsLatLngMap = new LinkedHashMap<>();
-
+        getAdminDetail();
         isDevicePresent();
 
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
@@ -136,7 +136,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         }
 
         if (RegistrationActivity.isFMSFlow == false) {
-            getAdminDetail();
             showDatainList();
         } else {
             showDataFromFMS();
