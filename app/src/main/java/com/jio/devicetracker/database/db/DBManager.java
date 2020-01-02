@@ -300,7 +300,24 @@ public class DBManager {
         return consentStatus;
     }
 
+    public RegisterData getAdminRegistrationDetail() {
+        mDatabase = mDBHelper.getWritableDatabase();
+        RegisterData data = new RegisterData();
 
+        String [] column = {DatabaseHelper.NAME,DatabaseHelper.EMAIL,DatabaseHelper.DEVICE_NUM,DatabaseHelper.PASS,DatabaseHelper.DOB};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_USER,column,null,null,null,null,null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
+                data.setPassword(cursor.getString(cursor.getColumnIndex(DatabaseHelper.PASS)));
+                data.setEmail(cursor.getString(cursor.getColumnIndex(DatabaseHelper.EMAIL)));
+                data.setDob(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DOB)));
+                data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+
+            }
+        }
+        return data;
+    }
 
 
 }

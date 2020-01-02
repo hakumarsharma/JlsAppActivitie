@@ -19,7 +19,7 @@ public class MessageReceiver extends BroadcastReceiver {
         Object[] pdus = (Object[]) data.get("pdus");
         for (Object o : pdus) {
             SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) o);
-            if(smsMessage != null) {
+            if(smsMessage != null && mListener != null) {
                 String message = "Sender : " + smsMessage.getDisplayOriginatingAddress()
                         + "Email From: " + smsMessage.getEmailFrom()
                         + "Emal Body: " + smsMessage.getEmailBody()

@@ -44,6 +44,7 @@ import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
+import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.TrackerDeviceListAdapter;
@@ -421,7 +422,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
        {
            Util.alertDilogBox(Constant.CONSENT_APPROVED,Constant.ALERT_TITLE,this);
        } else {
-           new SendSMSAsyncTask().execute(phoneNumber, userName+" From JIOTracker application wants to track your location, please reply in Yes JioTracker or No JioTracker !");
+           new SendSMSTask().execute(phoneNumber, userName+" From JIOTracker application wants to track your location, please reply in Yes JioTracker or No JioTracker !");
+           Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
           /* if (JiotokenHandler.ssoToken == null || RegistrationActivity.isFMSFlow == false) {
                mDbManager.updatependingConsent(phoneNumber);
                showDatainList();
@@ -446,7 +448,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         return true;
     }
 
-    public class SendSMSAsyncTask extends AsyncTask<String, String, Void> {
+    /*public class SendSMSAsyncTask extends AsyncTask<String, String, Void> {
 
         @Override
         protected Void doInBackground(String... strings) {
@@ -460,7 +462,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             super.onPostExecute(aVoid);
             Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
     @Override
     public void messageReceived(String message, String phoneNum) {

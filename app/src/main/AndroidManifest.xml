@@ -22,6 +22,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
         <activity android:name=".view.FMSMapActivity"></activity>
+        <activity android:name=".view.BorqsOTPActivity"></activity>
         <activity android:name=".view.TrackDeviceActivity"
             android:label="Track device"/>
         <activity

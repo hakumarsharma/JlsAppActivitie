@@ -23,6 +23,7 @@ import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.request.RegistrationTokenrequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.network.RequestHandler;
+import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
@@ -36,6 +37,8 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     private int DATE_PICKER_ID = 100;
     private RegisterRequestData data = null;
     private DBManager mDbmanager;
+    private Util util = null;
+    public static String randomNumber = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,12 +55,9 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         mRepass = findViewById(R.id.repassword);
         mRegister = findViewById(R.id.register);
         mDbmanager = new DBManager(this);
-
         mRegister.setOnClickListener(this);
         mDob.setOnClickListener(this);
-
-
-
+        util = Util.getInstance();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             return;
         }
         if (mRepass.getText().toString().length() == 0 || (! mRepass.getText().toString().equals(mPass.getText().toString()))) {
-            mRepass.setError("Password cannot be left blank.");
+            mRepass.setError("Password did not match, please try again");
             return;
         }
 
@@ -128,8 +128,13 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             data.setDob(mDob.getText().toString());
             data.setPassword(mPass.getText().toString());
             mDbmanager.insertAdminData(data);
-
+            sendOTP();
+            goToBorqsOTPActivity();
         }
+    }
+
+    private void goToBorqsOTPActivity() {
+        startActivity(new Intent(this, BorqsOTPActivity.class));
     }
 
     private class ErrorListener implements Response.ErrorListener {
@@ -152,8 +157,21 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             @Override
             public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday)
             {
-                mDob.setText(new StringBuilder().append(selectedyear).append("-").append(selectedmonth+1).append("-").append(selectedday));
-                int month_k=selectedmonth+1;
+                String  monthselect, dayselect;
+                selectedmonth = selectedmonth + 1;
+                if(selectedmonth < 10)
+                {
+                    monthselect = ("0" + selectedmonth);
+                } else {
+                    monthselect = String.valueOf(selectedmonth);
+                }
+                if(selectedday < 10)
+                {
+                    dayselect = ("0" +selectedday);
+                } else {
+                    dayselect = String.valueOf(selectedday);
+                }
+                mDob.setText(new StringBuilder().append(selectedyear).append("-").append(monthselect).append("-").append(dayselect));
 
             }
         },year, month, day);
@@ -166,4 +184,8 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         mDatePicker.show();
     }
 
+    private void sendOTP() {
+        randomNumber = util.getFourDigitRandomNumber();
+        new SendSMSTask().execute(mPhone.getText().toString(), randomNumber);
+    }
 }

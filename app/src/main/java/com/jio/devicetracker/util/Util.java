@@ -3,6 +3,7 @@ package com.jio.devicetracker.util;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -30,6 +32,7 @@ public class Util {
     static SharedPreferences sharedpreferences = null;
     public static final String MyPREFERENCES = "MyPrefs";
     private static String sessionID = null;
+    ProgressDialog progressDialog = null;
 
     private Util() {
 
@@ -161,4 +164,19 @@ public class Util {
         return pat.matcher(email).matches();
     }
 
+    public String getFourDigitRandomNumber(){
+        Random random = new Random();
+        return String.format("%04d", random.nextInt(10000));
+    }
+
+    public void showProgressBarDialog(Context context, String message) {
+        progressDialog = ProgressDialog.show(context, "", message, true);
+        progressDialog.setCancelable(true);
+    }
+
+    public void dismissProgressBarDialog() {
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
 }

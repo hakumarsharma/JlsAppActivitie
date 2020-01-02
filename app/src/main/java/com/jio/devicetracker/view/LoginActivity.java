@@ -1,11 +1,16 @@
 // (c) Copyright 2019 by Reliance JIO. All rights reserved.
 package com.jio.devicetracker.view;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.text.Editable;
@@ -35,6 +40,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static LogindetailResponse loginDetails = null;
     private ProgressDialog progressDialog = null;
     private TextView mRegisterText;
+    private static final int PERMIT_ALL = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +55,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //jioPasswordEditText.setText("Jio@1234");
         mRegisterText = findViewById(R.id.registedHere);
         mRegisterText.setOnClickListener(this);
+
+        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
+        if (!hasPermissions(getApplicationContext(), permissions)) {
+            ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
+        }
 
         jioEmailEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -104,6 +115,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+
+    public boolean hasPermissions(Context context, String[] permissions) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     // TODO move this to Util class
     public static boolean isValidEmailId(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
