@@ -93,6 +93,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public static String trackeeIMEI = null;
     private String trackeeName = "";
     private DashboardActivity dashboardActivity = null;
+    private String adminEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +180,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private void getAdminDetail(){
         AdminLoginData adminLoginData = new DBManager(this).getAdminLoginDetail();
         userToken = adminLoginData.getUser_token();
+        adminEmail = adminLoginData.getEmail();
     }
 
     private void checkConsentPublishMQTTMessage(MultipleselectData multipleselectData) {
@@ -216,7 +218,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         devicePresent = findViewById(R.id.devicePresent);
         List<AddedDeviceData> alldata = null;
         if (RegistrationActivity.isFMSFlow == false) {
-            alldata = dbManager.getAlldata();
+            alldata = dbManager.getAlldata(adminEmail);
             if (alldata.size() == 0) {
                 listView.setVisibility(View.INVISIBLE);
                 devicePresent.setVisibility(View.VISIBLE);
@@ -287,7 +289,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
     private void trackDevice() {
         if (RegistrationActivity.isFMSFlow == false) {
-            List<AddedDeviceData> consentData = mDbManager.getAlldata();
+            List<AddedDeviceData> consentData = mDbManager.getAlldata(adminEmail);
             if (selectedData.size() == 0) {
                 Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
                 return;
@@ -500,7 +502,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     public void showDatainList() {
-        addDeviceList = mDbManager.getAlldata();
+        addDeviceList = mDbManager.getAlldata(adminEmail);
         if (addDeviceList != null) {
             adapter = new TrackerDeviceListAdapter(this, addDeviceList);
             listView.setAdapter(adapter);

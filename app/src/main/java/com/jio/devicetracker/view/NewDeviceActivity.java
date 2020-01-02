@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.jiotoken.JiotokenHandler;
 import com.jio.devicetracker.util.Constant;
@@ -32,6 +33,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
     private String number, name,imeiNumber;
     private AddedDeviceData data = null;
     private DBManager mDbManager;
+    private AdminLoginData adminData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         TextView title = findViewById(R.id.toolbar_title);
         title.setText("Add");
         intent = getIntent();
+        adminData = new AdminLoginData();
         mDatalist = (List<TrackerdeviceResponse.Data>) intent.getSerializableExtra("DeviceData");
         mDeviceNumber = findViewById(R.id.deviceName);
         mName = findViewById(R.id.memberName);
@@ -98,6 +101,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void matchMobileNumber(AddedDeviceData adddeviceData) {
+        adminData = mDbManager.getAdminLoginDetail();
         boolean isLatLngFound = false;
         if((RegistrationActivity.isFMSFlow == false) && mDatalist != null) {
             for (int i = 0; i < mDatalist.size(); i++) {
@@ -107,7 +111,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
                         isLatLngFound = true;
                         adddeviceData.setLat(mDatalist.get(i).getEvent().getLocation().getLatLocation().getLatitu());
                         adddeviceData.setLng(mDatalist.get(i).getEvent().getLocation().getLatLocation().getLongni());
-                        insertRowid = mDbManager.insertInBorqsDB(adddeviceData);
+                        insertRowid = mDbManager.insertInBorqsDB(adddeviceData,adminData.getEmail().toString());
                         //gotoDashBoard();
                         checkRow(insertRowid);
                         break;
@@ -115,7 +119,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
                         isLatLngFound = true;
                         adddeviceData.setLat(mDatalist.get(i).getLocation().getLat().toString().trim());
                         adddeviceData.setLng(mDatalist.get(i).getLocation().getLng().toString().trim());
-                        insertRowid = mDbManager.insertInBorqsDB(adddeviceData);
+                        insertRowid = mDbManager.insertInBorqsDB(adddeviceData,adminData.getEmail().toString());
                         checkRow(insertRowid);
                         //gotoDashBoard();
                         break;

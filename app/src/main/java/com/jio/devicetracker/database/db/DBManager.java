@@ -30,11 +30,11 @@ public class DBManager {
         mDBHelper = new DatabaseHelper(context);
     }
 
-    public long insertInBorqsDB(AddedDeviceData deviceData) {
+    public long insertInBorqsDB(AddedDeviceData deviceData ,String email) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
         contentValue.put(DatabaseHelper.NAME, deviceData.getName());
-        contentValue.put(DatabaseHelper.EMAIL, deviceData.getRelation());
+        contentValue.put(DatabaseHelper.EMAIL, email);
         contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
         contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
         contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
@@ -106,10 +106,10 @@ public class DBManager {
         return mlist;
     }
 
-    public List<AddedDeviceData> getAlldata() {
+    public List<AddedDeviceData> getAlldata(String email) {
         List<AddedDeviceData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
-        String selectquery = "select * from " + DatabaseHelper.TABLE_NAME_BORQS;
+        String selectquery = "select * from " + DatabaseHelper.TABLE_NAME_BORQS + " where" +DatabaseHelper.EMAIL + " = " +email;
         Cursor cursor = mDatabase.rawQuery(selectquery, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
