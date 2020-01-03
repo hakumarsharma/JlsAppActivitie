@@ -19,15 +19,15 @@ public class TrackerdeviceData implements Serializable {
     }
 
     public class StartsWith implements Serializable {
-        @SerializedName("currentDat")
-        private String currentDat;
+        @SerializedName("currentDate")
+        private Long currentDate;
 
-        public String getCurrentDat() {
-            return currentDat;
+        public Long getCurrentDate() {
+            return currentDate;
         }
 
-        public void setCurrentDat(String currentDat) {
-            this.currentDat = currentDat;
+        public void setCurrentDate(Long currentDate) {
+            this.currentDate = currentDate;
         }
     }
 }

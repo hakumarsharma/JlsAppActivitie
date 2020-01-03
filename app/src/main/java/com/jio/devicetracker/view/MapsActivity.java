@@ -35,8 +35,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -57,6 +59,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static int refreshIntervalTime = 300;
     private Context context = null;
     Map<String, Map<Double, Double>> namingMap = null;
+
     @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +72,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         title.setText("      Location");
         context = getApplicationContext();
 
-        if(mMap != null) {
+        if (mMap != null) {
             mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this));
-           // mMap.setOnInfoWindowClickListener(MapsActivity.this);
+            // mMap.setOnInfoWindowClickListener(MapsActivity.this);
         }
 
         if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -100,43 +103,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
         DashboardActivity dashboardActivity = new DashboardActivity();
-        Toast.makeText(getApplicationContext(), Constant.LOCATION_UPDATE + item.getTitle(),Toast.LENGTH_LONG).show();
-        refreshIntervalTime = 60 * id;
-        dashboardActivity.startTheScheduler();
-        return true;
-//        switch (id){
-//            case R.id.oneminute:
-//                Toast.makeText(getApplicationContext(), "Location will be updated after every 1 minute",Toast.LENGTH_LONG).show();
-//                refreshIntervalTime = 60;
-//                dashboardActivity.startTheScheduler();
-//                return true;
-//            case R.id.twominute:
-//                Toast.makeText(getApplicationContext(),"Location will be updated after every 2 minutes",Toast.LENGTH_LONG).show();
-//                refreshIntervalTime = 120;
-//                dashboardActivity.startTheScheduler();
-//                return true;
-//            case R.id.fiveminute:
-//                Toast.makeText(getApplicationContext(),"Location will be updated after every 5 minutes",Toast.LENGTH_LONG).show();
-//                refreshIntervalTime = 300;
-//                dashboardActivity.startTheScheduler();
-//                return true;
-//            case R.id.tenminute:
-//                Toast.makeText(getApplicationContext(),"Location will be updated after every 10 minutes",Toast.LENGTH_LONG).show();
-//                refreshIntervalTime = 600;
-//                dashboardActivity.startTheScheduler();
-//                return true;
-//            case R.id.fifminute:
-//                Toast.makeText(getApplicationContext(),"Location will be updated after every 15 minutes",Toast.LENGTH_LONG).show();
-//                refreshIntervalTime = 900;
-//                dashboardActivity.startTheScheduler();
-//                return true;
-//            default:
-//                refreshIntervalTime = 300;
-//                dashboardActivity.startTheScheduler();
-//                return super.onOptionsItemSelected(item);
-//        }
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.oneminute:
+                Toast.makeText(getApplicationContext(), "Location will be updated after every 1 minute", Toast.LENGTH_LONG).show();
+                refreshIntervalTime = 60;
+                dashboardActivity.startTheScheduler();
+                return true;
+            case R.id.twominute:
+                Toast.makeText(getApplicationContext(), "Location will be updated after every 2 minutes", Toast.LENGTH_LONG).show();
+                refreshIntervalTime = 120;
+                dashboardActivity.startTheScheduler();
+                return true;
+            case R.id.fiveminute:
+                Toast.makeText(getApplicationContext(), "Location will be updated after every 5 minutes", Toast.LENGTH_LONG).show();
+                refreshIntervalTime = 300;
+                dashboardActivity.startTheScheduler();
+                return true;
+            case R.id.tenminute:
+                Toast.makeText(getApplicationContext(), "Location will be updated after every 10 minutes", Toast.LENGTH_LONG).show();
+                refreshIntervalTime = 600;
+                dashboardActivity.startTheScheduler();
+                return true;
+            case R.id.fifminute:
+                Toast.makeText(getApplicationContext(), "Location will be updated after every 15 minutes", Toast.LENGTH_LONG).show();
+                refreshIntervalTime = 900;
+                dashboardActivity.startTheScheduler();
+                return true;
+            default:
+                refreshIntervalTime = 300;
+                dashboardActivity.startTheScheduler();
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -157,7 +156,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                     mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                     mMap.addMarker(markerOptions);
-                    if(context != null) {
+                    if (context != null) {
                         mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(context));
                     }
                 }
@@ -171,6 +170,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
                 Address fetchedAddress = addresses.get(0);
+                strAddress.setLength(0);
                 strAddress.append(fetchedAddress.getAddressLine(0)).append(" ");
             }
         } catch (IOException ex) {
@@ -189,7 +189,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         private final View myContentsView;
 
         MyInfoWindowAdapter(Context context) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             myContentsView = inflater.inflate(R.layout.custom_info_contents, null);
         }
 
@@ -197,7 +197,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         public View getInfoContents(Marker marker) {
             TextView tvTitle = myContentsView.findViewById(R.id.title);
             tvTitle.setText(marker.getTitle());
-            TextView tvSnippet =  myContentsView.findViewById(R.id.snippet);
+            TextView tvSnippet = myContentsView.findViewById(R.id.snippet);
             tvSnippet.setText(marker.getSnippet());
             return myContentsView;
         }
@@ -209,18 +209,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void showMapOnTimeInterval() {
-        List<TrackerdeviceResponse.Data> data = DashboardActivity.data;
-        List<String> phoneNumber = DBManager.phoneNumner;
-        latLongMap = new HashMap<>();
-        if (data != null) {
-            for (int i = 0; i < data.size(); i++) {
-                if (phoneNumber.contains(data.get(i).getmDevice().getPhoneNumber())) {
-                    latLongMap.put(data.get(i).getLocation().getLat(), data.get(i).getLocation().getLng());
+        if(context != null) {
+            DBManager mDbManager = new DBManager(context);
+            List<AddedDeviceData> consentData = mDbManager.getAlldata(DashboardActivity.adminEmail);
+            for (int i = 0; i < consentData.size(); i++) {
+                if (DashboardActivity.selectedData.get(i).getPhone().equals(consentData.get(i).getPhoneNumber())) {
+                    if (consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")) {
+                        DashboardActivity.latLngMap = mDbManager.getLatLongForMap(DashboardActivity.selectedData);
+                        DashboardActivity.namingMap.put(DashboardActivity.selectedData.get(i).getName(), DashboardActivity.latLngMap);
+                    } else {
+                        Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED + consentData.get(i).getPhoneNumber(), Constant.ALERT_TITLE, this);
+                    }
                 }
             }
-        }
-        if (mMap != null) {
-            onMapReady(mMap);
+            if (mMap != null) {
+                onMapReady(mMap);
+            }
         }
     }
 }

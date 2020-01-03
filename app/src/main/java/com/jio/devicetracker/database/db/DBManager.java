@@ -12,6 +12,7 @@ import com.jio.devicetracker.database.pojo.EditProfileData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
+import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.util.Util;
 
 import java.util.ArrayList;
@@ -138,6 +139,19 @@ public class DBManager {
             values.put(DatabaseHelper.CONSENT_STATUS, "Yes jiotracker");
             mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= ?", arg);
 
+        }
+    }
+
+    public void updateBorqsData(List<TrackerdeviceResponse.Data> data){
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        for(int i = 0; i < data.size(); i ++){
+            String[] arg = new String[]{data.get(i).getmDevice().getPhoneNumber()};
+            if(data.get(i).getEvent() != null) {
+                contentValue.put(DatabaseHelper.LAT, Double.parseDouble(data.get(i).getEvent().getLocation().getLatLocation().getLatitu()));
+                contentValue.put(DatabaseHelper.LON, Double.parseDouble(data.get(i).getEvent().getLocation().getLatLocation().getLongni()));
+                mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, contentValue, DatabaseHelper.DEVICE_NUM + "= ?", arg);
+            }
         }
     }
 

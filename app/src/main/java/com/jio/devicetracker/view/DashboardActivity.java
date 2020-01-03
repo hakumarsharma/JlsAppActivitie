@@ -69,8 +69,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private String TAG = "DashboardActivity";
     private TrackerdeviceResponse mtrackerresponse;
     Intent intent = null;
-    private String userToken = null;
-    List<MultipleselectData> selectedData;
+    private static String userToken = null;
+    public static List<MultipleselectData> selectedData;
     private Button removeBtn, addButton, trackBtn, consent;
     public static List<TrackerdeviceResponse.Data> data;
     private AddedDeviceData mAddData;
@@ -80,12 +80,12 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private static final int PERMIT_ALL = 1;
     public static List<String> consentListPhoneNumber = null;
     public static Map<Double, Double> latLngMap = null;
-    private DBManager mDbManager;
+    private static DBManager mDbManager;
     private TextView devicePresent = null;
     private ProgressDialog progressDialog = null;
     private FloatingActionButton mActionbtn;
     public static Map<String, Map<Double, Double>> namingMap = null;
-    private Context context = null;
+    private static Context context = null;
     private boolean flagValue;
     private String number;
     public static Map<Double, Double> fmsLatLngMap = null;
@@ -93,7 +93,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public static String trackeeIMEI = null;
     private String trackeeName = "";
     private DashboardActivity dashboardActivity = null;
-    private String adminEmail;
+    public static String adminEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,15 +102,15 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         toolbar = findViewById(R.id.customToolbar);
         listView = findViewById(R.id.listView);
         mActionbtn = findViewById(R.id.fab);
-       // consent = findViewById(R.id.consent);
+        // consent = findViewById(R.id.consent);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         listView.setLayoutManager(linearLayoutManager);
         intent = getIntent();
         mDbManager = new DBManager(this);
         //mAddData = (AddedDeviceData) intent.getSerializableExtra("AddDeviceData");
         number = intent.getStringExtra("phone");
-        flagValue = intent.getBooleanExtra("flag",false);
-        consentRequestBox(flagValue,number);
+        flagValue = intent.getBooleanExtra("flag", false);
+        consentRequestBox(flagValue, number);
         trackBtn = toolbar.findViewById(R.id.track);
         trackBtn.setVisibility(View.VISIBLE);
         TextView toolbar_title = findViewById(R.id.toolbar_title);
@@ -158,14 +158,14 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             }
 
             @Override
-            public void recyclerviewEditList(String relation,String phoneNumber) {
-                gotoEditScreen(relation,phoneNumber);
+            public void recyclerviewEditList(String relation, String phoneNumber) {
+                gotoEditScreen(relation, phoneNumber);
             }
 
             @Override
-            public void recyclerviewDeleteList(String phoneNumber,int position) {
+            public void recyclerviewDeleteList(String phoneNumber, int position) {
 
-                alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE,Constant.ALERT_TITLE,phoneNumber,position);
+                alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, phoneNumber, position);
 
             }
 
@@ -176,7 +176,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         });
     }
 
-    private void getAdminDetail(){
+    private void getAdminDetail() {
         AdminLoginData adminLoginData = new DBManager(this).getAdminLoginDetail();
         userToken = adminLoginData.getUser_token();
         adminEmail = adminLoginData.getEmail();
@@ -186,12 +186,12 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         Util util = Util.getInstance();
         MQTTManager mqttManager = new MQTTManager();
         List<AddedDeviceData> consentData = mDbManager.getAlldataFromFMS();
-        for(int i = 0; i < consentData.size(); i++) {
-            if((consentData.get(i).getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone())) && consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("yes jiotracker")){
-                String topic = "jioiot/svckm/jiophone/"+util.getIMEI(getApplicationContext())+"/uc/fwd/sesid";
+        for (int i = 0; i < consentData.size(); i++) {
+            if ((consentData.get(i).getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone())) && consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("yes jiotracker")) {
+                String topic = "jioiot/svckm/jiophone/" + util.getIMEI(getApplicationContext()) + "/uc/fwd/sesid";
                 Log.d("Topic --> ", topic);
                 trackeeIMEI = consentData.get(i).getImeiNumber();
-                String message = "{\"reqId\":\"" +consentData.get(i).getImeiNumber()+ "\",\"trkId\":\"" +util.getIMEI(getApplicationContext())+ "\",\"sesId\":\"" + Util.getInstance().getSessionId()+ "\",\"trknr\":\""+ RegistrationActivity.phoneNumber.substring(2) +"\",\"reqnr\":\"" + consentData.get(i).getPhoneNumber() + "\"}";
+                String message = "{\"reqId\":\"" + consentData.get(i).getImeiNumber() + "\",\"trkId\":\"" + util.getIMEI(getApplicationContext()) + "\",\"sesId\":\"" + Util.getInstance().getSessionId() + "\",\"trknr\":\"" + RegistrationActivity.phoneNumber.substring(2) + "\",\"reqnr\":\"" + consentData.get(i).getPhoneNumber() + "\"}";
                 Log.d("Message --> ", message);
                 mqttManager.publishMessage(topic, message);
             }
@@ -199,19 +199,20 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     public DashboardActivity getDashboardActivity() {
-        if(dashboardActivity == null) {
+        if (dashboardActivity == null) {
             dashboardActivity = new DashboardActivity();
             return dashboardActivity;
         }
         return dashboardActivity;
     }
 
-    private void gotoEditScreen(String relation,String phoneNumber) {
-        Intent intent = new Intent(DashboardActivity.this,EditActivity.class);
-        intent.putExtra("number",phoneNumber);
-        intent.putExtra("Relation",relation);
+    private void gotoEditScreen(String relation, String phoneNumber) {
+        Intent intent = new Intent(DashboardActivity.this, EditActivity.class);
+        intent.putExtra("number", phoneNumber);
+        intent.putExtra("Relation", relation);
         startActivity(intent);
     }
+
     private void isDevicePresent() {
         DBManager dbManager = new DBManager(getApplicationContext());
         devicePresent = findViewById(R.id.devicePresent);
@@ -244,7 +245,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             showProgressBarDialog();
             TrackerdeviceData data = new TrackerdeviceData();
             TrackerdeviceData.StartsWith startsWith = data.new StartsWith();
-            startsWith.setCurrentDat("jamnagar1tiq9s");
+            startsWith.setCurrentDate(Util.ConvertTimeToEpochtime());
             data.setStartsWith(startsWith);
             devicePresent.setVisibility(View.GONE);
             RequestHandler.getInstance(getApplicationContext()).handleRequest(new TrackdeviceRequest(new SuccessListener(), new ErrorListener(), token, data));
@@ -306,8 +307,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             startTheScheduler();
             Intent map = new Intent(this, MapsActivity.class);
             startActivity(map);
-        }
-        else {
+        } else {
             showProgressBarDialog();
             List<String> imeiNumbers = new ArrayList<>();
             List<String> phoneNumbers = new ArrayList<>();
@@ -369,24 +369,20 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         scheduler.scheduleAtFixedRate(() -> {
             Log.i("TAG", "Inside Scheduler");
             DashboardActivity.this.runOnUiThread(() -> {
-                makeAPICall(Util.getUserToken());
+                makeAPICall(userToken);
                 new MapsActivity().showMapOnTimeInterval();
             });
         }, 0, MapsActivity.refreshIntervalTime, TimeUnit.SECONDS);
     }
 
     public void makeAPICall(String token) {
-        /*TrackerdeviceData data = new TrackerdeviceData();
-        TrackerdeviceData.Sort sort = data.new Sort();
-        sort.setLatestLocation(-1);
-        TrackerdeviceData.Latlong latlong = data.new Latlong();
-        latlong.setFrom(1542022465424L);
-        latlong.setTo(1542108865424L);
-        data.setmSort(sort);
-        data.setLatlong(latlong);
-        if(context != null) {
+        TrackerdeviceData data = new TrackerdeviceData();
+        TrackerdeviceData.StartsWith startsWith = data.new StartsWith();
+        startsWith.setCurrentDate(Util.ConvertTimeToEpochtime());
+        data.setStartsWith(startsWith);
+        if (context != null) {
             RequestHandler.getInstance(context).handleRequest(new TrackdeviceRequest(new SuccessAPICall(), new UnSuccessfullAPICall(), token, data));
-        }*/
+        }
     }
 
     private class SuccessAPICall implements Response.Listener {
@@ -396,13 +392,16 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             mtrackerresponse = Util.getInstance().getPojoObject(String.valueOf(response), TrackerdeviceResponse.class);
             data = mtrackerresponse.getmData();
             Log.d(TAG, "Response print" + response);
+            if(mDbManager != null) {
+                mDbManager.updateBorqsData(data);
+            }
         }
     }
 
     private class UnSuccessfullAPICall implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Toast.makeText(getApplicationContext(), Constant.TOKEN_NULL, Toast.LENGTH_SHORT).show();
+            Toast.makeText(DashboardActivity.this, Constant.TOKEN_NULL, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -417,22 +416,21 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     private void sendSMS(String phoneNumber) {
-       String userName= mDbManager.getAdminDetail();
-       String consentStatus = mDbManager.getConsentStatusBorqs(phoneNumber);
-       if(consentStatus.equalsIgnoreCase("Yes JioTracker"))
-       {
-           Util.alertDilogBox(Constant.CONSENT_APPROVED,Constant.ALERT_TITLE,this);
-       } else {
-           new SendSMSTask().execute(phoneNumber, userName+" From JIOTracker application wants to track your location, please reply in Yes JioTracker or No JioTracker !");
-           Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
-           if (RegistrationActivity.isFMSFlow == false) {
-               mDbManager.updatependingConsent(phoneNumber);
-               showDatainList();
-           } else {
-               mDbManager.updatependingConsentFMS(phoneNumber);
-               showDataFromFMS();
-           }
-       }
+        String userName = mDbManager.getAdminDetail();
+        String consentStatus = mDbManager.getConsentStatusBorqs(phoneNumber);
+        if (consentStatus.equalsIgnoreCase("Yes JioTracker")) {
+            Util.alertDilogBox(Constant.CONSENT_APPROVED, Constant.ALERT_TITLE, this);
+        } else {
+            new SendSMSTask().execute(phoneNumber, userName + " From JIOTracker application wants to track your location, please reply in Yes JioTracker or No JioTracker !");
+            Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
+            if (RegistrationActivity.isFMSFlow == false) {
+                mDbManager.updatependingConsent(phoneNumber);
+                showDatainList();
+            } else {
+                mDbManager.updatependingConsentFMS(phoneNumber);
+                showDataFromFMS();
+            }
+        }
     }
 
 
@@ -469,10 +467,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         Toast.makeText(getApplicationContext(), "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
         String phone = phoneNum.substring(3);
         if (RegistrationActivity.isFMSFlow == false) {
-            mDbManager.updateConsentInBors(phone,message);
+            mDbManager.updateConsentInBors(phone, message);
             showDatainList();
         } else {
-            mDbManager.updateConsentInFMS(phone,message);
+            mDbManager.updateConsentInFMS(phone, message);
             showDataFromFMS();
         }
        /* if(message.toLowerCase().contains("yes jiotracker")) {
@@ -485,12 +483,12 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private void publishMQTTMessage(String phoneNumber) {
         Util util = Util.getInstance();
         MQTTManager mqttManager = new MQTTManager();
-        if(addDeviceList != null) {
-            for(int i = 0; i < addDeviceList.size(); i ++) {
-                if(addDeviceList.get(i).getPhoneNumber().equalsIgnoreCase(phoneNumber)) {
-                    String topic = "jioiot/svckm/jiophone/"+util.getIMEI(this)+"/uc/fwd/sesid";
+        if (addDeviceList != null) {
+            for (int i = 0; i < addDeviceList.size(); i++) {
+                if (addDeviceList.get(i).getPhoneNumber().equalsIgnoreCase(phoneNumber)) {
+                    String topic = "jioiot/svckm/jiophone/" + util.getIMEI(this) + "/uc/fwd/sesid";
                     Log.d("Topic --> ", topic);
-                    String message = "{\"reqId\":\"" +addDeviceList.get(i).getImeiNumber()+ "\",\"trkId\":\"" +util.getIMEI(getApplicationContext())+ "\",\"sesId\":\"" + Util.getInstance().getSessionId()+ "\",\"trknr\":\""+ RegistrationActivity.phoneNumber.substring(2) +"\",\"reqnr\":\"" + addDeviceList.get(i).getPhoneNumber() + "\"}";
+                    String message = "{\"reqId\":\"" + addDeviceList.get(i).getImeiNumber() + "\",\"trkId\":\"" + util.getIMEI(getApplicationContext()) + "\",\"sesId\":\"" + Util.getInstance().getSessionId() + "\",\"trknr\":\"" + RegistrationActivity.phoneNumber.substring(2) + "\",\"reqnr\":\"" + addDeviceList.get(i).getPhoneNumber() + "\"}";
                     Log.d("Message --> ", message);
                     mqttManager.publishMessage(topic, message);
                 }
@@ -519,7 +517,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         progressDialog.setCancelable(true);
     }
 
-    public void alertDilogBoxWithCancelbtn(String message, String title,String phoneNumber,int position) {
+    public void alertDilogBoxWithCancelbtn(String message, String title, String phoneNumber, int position) {
 
         AlertDialog.Builder adb = new AlertDialog.Builder(DashboardActivity.this);
         //adb.setView(alertDialogView);
@@ -532,7 +530,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                     mDbManager.deleteSelectedData(phoneNumber);
                 } else {
                     mDbManager.deleteSelectedDataformFMS(phoneNumber);
-               }
+                }
                 //mDbManager.deleteSelectedData(phoneNumber);
                 adapter.removeItem(position);
                 isDevicePresent();
@@ -546,11 +544,9 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         adb.show();
     }
 
-    public void consentRequestBox(boolean flag,String phoneNumber)
-    {
-        if(flag)
-        {
-            Util.alertDilogBox("Request consent for device "+phoneNumber,"Jio Alert",this);
+    public void consentRequestBox(boolean flag, String phoneNumber) {
+        if (flag) {
+            Util.alertDilogBox("Request consent for device " + phoneNumber, "Jio Alert", this);
             flag = false;
         }
     }

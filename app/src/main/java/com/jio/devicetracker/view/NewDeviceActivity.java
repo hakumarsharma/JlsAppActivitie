@@ -100,26 +100,26 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         return pat.matcher(mobile).matches();
     }
 
-    private void matchMobileNumber(AddedDeviceData adddeviceData) {
+    private void matchMobileNumber(AddedDeviceData addedDeviceData) {
         adminData = mDbManager.getAdminLoginDetail();
         boolean isLatLngFound = false;
         if((RegistrationActivity.isFMSFlow == false) && mDatalist != null) {
             for (int i = 0; i < mDatalist.size(); i++) {
-                String phoneNumber = adddeviceData.getPhoneNumber().trim();
+                String phoneNumber = addedDeviceData.getPhoneNumber().trim();
                 if (phoneNumber.equals(mDatalist.get(i).getmDevice().getPhoneNumber())) {
                     if (mDatalist.get(i).getEvent() != null) {
                         isLatLngFound = true;
-                        adddeviceData.setLat(mDatalist.get(i).getEvent().getLocation().getLatLocation().getLatitu());
-                        adddeviceData.setLng(mDatalist.get(i).getEvent().getLocation().getLatLocation().getLongni());
-                        insertRowid = mDbManager.insertInBorqsDB(adddeviceData,adminData.getEmail().toString());
+                        addedDeviceData.setLat(mDatalist.get(i).getEvent().getLocation().getLatLocation().getLatitu());
+                        addedDeviceData.setLng(mDatalist.get(i).getEvent().getLocation().getLatLocation().getLongni());
+                        insertRowid = mDbManager.insertInBorqsDB(addedDeviceData,adminData.getEmail().toString());
                         //gotoDashBoard();
                         checkRow(insertRowid);
                         break;
                     } else if (mDatalist.get(i).getLocation() != null) {
                         isLatLngFound = true;
-                        adddeviceData.setLat(mDatalist.get(i).getLocation().getLat().toString().trim());
-                        adddeviceData.setLng(mDatalist.get(i).getLocation().getLng().toString().trim());
-                        insertRowid = mDbManager.insertInBorqsDB(adddeviceData,adminData.getEmail().toString());
+                        addedDeviceData.setLat(mDatalist.get(i).getLocation().getLat().toString().trim());
+                        addedDeviceData.setLng(mDatalist.get(i).getLocation().getLng().toString().trim());
+                        insertRowid = mDbManager.insertInBorqsDB(addedDeviceData,adminData.getEmail().toString());
                         checkRow(insertRowid);
                         //gotoDashBoard();
                         break;
@@ -128,7 +128,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
             }
         }
         else {
-            insertRowid = mDbManager.insertInFMSDB(adddeviceData);
+            insertRowid = mDbManager.insertInFMSDB(addedDeviceData);
             checkRow(insertRowid);
         }
         if (!isLatLngFound) {
