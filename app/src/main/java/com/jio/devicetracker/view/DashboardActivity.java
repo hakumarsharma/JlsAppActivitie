@@ -94,6 +94,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private String trackeeName = "";
     private DashboardActivity dashboardActivity = null;
     public static String adminEmail;
+    public static String otpNumber = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -469,6 +470,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         if (RegistrationActivity.isFMSFlow == false) {
             mDbManager.updateConsentInBors(phone, message);
             showDatainList();
+            if(RegistrationDetailActivity.phoneNumber.equalsIgnoreCase(phoneNum) && message.length() == 4) {
+                otpNumber = message;
+                BorqsOTPActivity.phoneOTP.setText(otpNumber);
+            }
         } else {
             mDbManager.updateConsentInFMS(phone, message);
             showDataFromFMS();

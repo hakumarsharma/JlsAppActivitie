@@ -134,7 +134,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             mPass.setError(Constant.PASSWORD_VALIDATION2);
             return;
         }
-        boolean jioCheck =getssoToken();
+        boolean jioCheck = getssoToken();
         if(jioCheck)
         {
             getServicecall();

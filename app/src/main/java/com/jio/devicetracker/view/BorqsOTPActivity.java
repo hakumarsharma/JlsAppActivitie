@@ -30,7 +30,7 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
 
     private Button verify = null;
     private EditText emailOTP = null;
-    private EditText phoneOTP = null;
+    public static EditText phoneOTP = null;
     private Util util = null;
     private String emailOtp = "";
     RegisterData registerData = null;
@@ -44,6 +44,7 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
         title.setText("OTP Verification");
         emailOTP = findViewById(R.id.emailOTP);
         phoneOTP = findViewById(R.id.phoneOTP);
+        phoneOTP.setText(DashboardActivity.otpNumber);
         verify = findViewById(R.id.verify);
         verify.setOnClickListener(this);
         util = Util.getInstance();
