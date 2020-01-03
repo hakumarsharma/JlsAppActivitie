@@ -169,7 +169,7 @@ public class Util {
     }
 
     public static boolean isValidPassword(String pass) {
-        String passRegex = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,16})\n";
+        String passRegex = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,16})";
 
         Pattern pat = Pattern.compile(passRegex);
         if (pass == null)

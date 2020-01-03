@@ -120,6 +120,10 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             return;
         }
 
+        if(mPhone.getText().toString().length() < 10)
+        {
+            mPhone.setError("Enter the valid phone number");
+        }
         if (mEmail.getText().toString().length() != 0 && !Util.isValidEmailId(mEmail.getText().toString().trim())) {
             mEmail.setError(Constant.EMAIL_VALIDATION);
             return;
@@ -142,7 +146,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
 
     private void getServicecall() {
         data = new RegisterRequestData();
-        data.setEmail(mEmail.getText().toString());
+        data.setEmail(mEmail.getText().toString().trim());
         data.setType("registration");
         RequestHandler.getInstance(getApplicationContext()).handleRequest(new RegistrationTokenrequest(new SuccessListener(), new RegistrationDetailActivity.ErrorListener(), data));
     }
@@ -173,6 +177,12 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         @Override
         public void onErrorResponse(VolleyError error) {
 
+            if(error.networkResponse.statusCode == 409)
+            {
+                Util.alertDilogBox("User is already registered","Jio Alert",RegistrationDetailActivity.this);
+            } else {
+
+            }
         }
     }
 
