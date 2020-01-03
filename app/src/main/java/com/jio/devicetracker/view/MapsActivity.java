@@ -41,6 +41,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -143,6 +144,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         mMap.clear();
         namingMap = DashboardActivity.namingMap;
+        int i = 0;
+        List<Float> mapColorList = createColoredMapList();
         if (namingMap.size() > 0 && strAddress != null) {
             for (Map.Entry<String, Map<Double, Double>> entry : namingMap.entrySet()) {
                 Map<Double, Double> latLongitudeMap = entry.getValue();
@@ -151,7 +154,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latLng);
                     markerOptions.title(entry.getKey());
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(mapColorList.get(i)));
                     markerOptions.snippet(getAddressFromLocation(mapEntry.getKey(), mapEntry.getValue()));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                     mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -160,8 +163,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(context));
                     }
                 }
+                if(i < 10) {
+                    i++;
+                }else{
+                    i = 0;
+                }
             }
         }
+    }
+
+    private List<Float> createColoredMapList() {
+        List<Float> mapColorList = new ArrayList<>();
+        mapColorList.add(BitmapDescriptorFactory.HUE_BLUE);
+        mapColorList.add(BitmapDescriptorFactory.HUE_AZURE);
+        mapColorList.add(BitmapDescriptorFactory.HUE_ORANGE);
+        mapColorList.add(BitmapDescriptorFactory.HUE_ROSE);
+        mapColorList.add(BitmapDescriptorFactory.HUE_CYAN);
+        mapColorList.add(BitmapDescriptorFactory.HUE_GREEN);
+        mapColorList.add(BitmapDescriptorFactory.HUE_MAGENTA);
+        mapColorList.add(BitmapDescriptorFactory.HUE_RED);
+        mapColorList.add(BitmapDescriptorFactory.HUE_VIOLET);
+        mapColorList.add(BitmapDescriptorFactory.HUE_YELLOW);
+        return mapColorList;
     }
 
     private String getAddressFromLocation(double latitude, double longitude) {
