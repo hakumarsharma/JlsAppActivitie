@@ -48,6 +48,7 @@ public class Constant {
     public static final String LOGIN_VALIDATION = "Please enter correct email and password";
     public static final String EMAIL_LOCKED = "Account is locked";
     public static final String VALID_USER = "Please enter valid user";
+    public static final String PASSWORD_VALIDATION2 = "Password must have a minimum of 8 characters and a maximum of 16 characters. Also, must contain atleast one lowercase alphabet, one uppercase alphabet, one numeric and one special character";
 
     // New Device Activity Constants
     public static final String IMEI_VALIDATION = "Enter the 15 digit IMEI number";

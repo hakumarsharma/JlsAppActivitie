@@ -124,6 +124,12 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             mEmail.setError(Constant.EMAIL_VALIDATION);
             return;
         }
+
+        if(mPass.getText().toString().length() != 0 && !Util.isValidPassword(mPass.getText().toString()))
+        {
+            mPass.setError(Constant.PASSWORD_VALIDATION2);
+            return;
+        }
         boolean jioCheck =getssoToken();
         if(jioCheck)
         {

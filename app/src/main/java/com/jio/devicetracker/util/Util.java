@@ -168,6 +168,15 @@ public class Util {
         return pat.matcher(email).matches();
     }
 
+    public static boolean isValidPassword(String pass) {
+        String passRegex = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,16})\n";
+
+        Pattern pat = Pattern.compile(passRegex);
+        if (pass == null)
+            return false;
+        return pat.matcher(pass).matches();
+    }
+
     public String getFourDigitRandomNumber(){
         Random random = new Random();
         return String.format("%04d", random.nextInt(10000));

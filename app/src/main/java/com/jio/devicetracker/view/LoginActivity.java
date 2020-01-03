@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
 
                 if (jioEmailEditText.length() != 0) {
-                    if (isValidEmailId(jioEmailIdText)) {
+                    if (Util.isValidEmailId(jioEmailIdText)) {
                         Userdata data = new Userdata();
                         data.setEmailId(jioEmailIdText);
                         data.setPassword(jioPasswordText);
@@ -129,18 +129,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
-    // TODO move this to Util class
-    public static boolean isValidEmailId(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
 
-        Pattern pat = Pattern.compile(emailRegex);
-        if (email == null)
-            return false;
-        return pat.matcher(email).matches();
-    }
 
     @Override
     public void onClick(View v) {
