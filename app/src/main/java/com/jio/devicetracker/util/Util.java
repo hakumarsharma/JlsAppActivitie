@@ -20,6 +20,10 @@ import com.jio.devicetracker.database.pojo.AddedDeviceData;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
@@ -178,5 +182,23 @@ public class Util {
         if(progressDialog != null) {
             progressDialog.dismiss();
         }
+    }
+
+    public static long ConvertTimeToEpochtime()
+    {
+        long epochTime = 0;
+        Date today = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
+        String currentTime = simpleFormat.format(today);
+        try {
+            Date date = simpleFormat.parse(currentTime);
+            epochTime = date.getTime();
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return epochTime;
     }
 }
