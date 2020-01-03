@@ -555,4 +555,12 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             flag = false;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(DashboardActivity.this,LoginActivity.class);
+        startActivity(intent);
+    }
 }

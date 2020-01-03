@@ -84,6 +84,7 @@
                 android:backgroundTint="@color/colorLogin"
                 android:hint="Dob*"
                 android:textIsSelectable="true"
+                android:imeOptions="actionDone"
                 android:textCursorDrawable="@color/colorLogin" />
 
             <EditText

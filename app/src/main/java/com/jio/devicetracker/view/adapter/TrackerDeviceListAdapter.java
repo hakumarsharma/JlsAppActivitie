@@ -64,6 +64,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
             holder.mConsentStatus.setText("Consent Approved");
             holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved,0,0,0);
+            holder.mConsentStatus.setEnabled(false);
         } else if(mData.get(position).getConsentStaus().trim().equals("Pending"))
         {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
@@ -87,7 +88,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                     mSelectData.setName(mData.get(position).getName());
                     itemListener.recyclerViewListClicked(v, position, mSelectData,true);
                 } else {
-                    holder.mConsent.setBackgroundResource(R.drawable.ic_checkempty);
+                    holder.mConsent.setBackgroundResource(R.drawable.ic_checkboxempty);
                     itemListener.recyclerViewListClicked(v, position, mSelectData,false);
                 }
             }

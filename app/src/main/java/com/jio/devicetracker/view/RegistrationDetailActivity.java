@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -181,7 +183,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             {
                 Util.alertDilogBox("User is already registered","Jio Alert",RegistrationDetailActivity.this);
             } else {
-
+                Util.alertDilogBox("Register failed ,Please contact your admin","Jio Alert",RegistrationDetailActivity.this);
             }
         }
     }
@@ -290,4 +292,6 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
                 break;
         }
     }
+    
+
 }
