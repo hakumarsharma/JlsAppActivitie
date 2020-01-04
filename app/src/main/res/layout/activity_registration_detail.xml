@@ -82,7 +82,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/colorLogin"
-                android:hint="Dob*"
+                android:hint="Date of Birth"
                 android:textIsSelectable="true"
                 android:imeOptions="actionDone"
                 android:textCursorDrawable="@color/colorLogin" />

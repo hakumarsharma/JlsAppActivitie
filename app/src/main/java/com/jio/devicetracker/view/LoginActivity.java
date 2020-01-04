@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void messageReceived(String message, String phoneNum) {
-        Toast.makeText(LoginActivity.this, "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(LoginActivity.this, "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
         Log.d("Received Message --> ", message);
         String phone = phoneNum.substring(3);
         if (RegistrationActivity.isFMSFlow == false) {
