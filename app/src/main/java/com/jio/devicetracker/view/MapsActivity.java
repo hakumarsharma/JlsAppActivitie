@@ -17,6 +17,7 @@ import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,7 +72,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         strAddress = new StringBuilder();
         TextView title = findViewById(R.id.toolbar_title);
         title.setText("      Location");
-        context = getApplicationContext();
+        context = MapsActivity.this;
 
         if (mMap != null) {
             mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this));
@@ -148,12 +149,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         List<Float> mapColorList = createColoredMapList();
         if (namingMap.size() > 0 && strAddress != null) {
             for (Map.Entry<String, Map<Double, Double>> entry : namingMap.entrySet()) {
-                Map<Double, Double> latLongitudeMap = entry.getValue();
-                for (Map.Entry<Double, Double> mapEntry : latLongitudeMap.entrySet()) {
+                MarkerOptions markerOptions = new MarkerOptions();
+                for (Map.Entry<Double, Double> mapEntry : entry.getValue().entrySet()) {
                     LatLng latLng = new LatLng(mapEntry.getKey(), mapEntry.getValue());
-                    MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latLng);
                     markerOptions.title(entry.getKey());
+                    Log.d(entry.getKey() + " -->", "Value --> " + mapEntry.getKey() + " " + mapEntry.getValue());
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(mapColorList.get(i)));
                     markerOptions.snippet(getAddressFromLocation(mapEntry.getKey(), mapEntry.getValue()));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
@@ -175,11 +176,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Float> createColoredMapList() {
         List<Float> mapColorList = new ArrayList<>();
         mapColorList.add(BitmapDescriptorFactory.HUE_BLUE);
-        mapColorList.add(BitmapDescriptorFactory.HUE_AZURE);
+        mapColorList.add(BitmapDescriptorFactory.HUE_GREEN);
         mapColorList.add(BitmapDescriptorFactory.HUE_ORANGE);
+        mapColorList.add(BitmapDescriptorFactory.HUE_AZURE);
         mapColorList.add(BitmapDescriptorFactory.HUE_ROSE);
         mapColorList.add(BitmapDescriptorFactory.HUE_CYAN);
-        mapColorList.add(BitmapDescriptorFactory.HUE_GREEN);
         mapColorList.add(BitmapDescriptorFactory.HUE_MAGENTA);
         mapColorList.add(BitmapDescriptorFactory.HUE_RED);
         mapColorList.add(BitmapDescriptorFactory.HUE_VIOLET);
@@ -236,13 +237,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             DBManager mDbManager = new DBManager(context);
             List<AddedDeviceData> consentData = mDbManager.getAlldata(DashboardActivity.adminEmail);
             for (int i = 0; i < consentData.size(); i++) {
-                if (DashboardActivity.selectedData.get(i).getPhone().equals(consentData.get(i).getPhoneNumber())) {
-                    if (consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")) {
-                        DashboardActivity.latLngMap = mDbManager.getLatLongForMap(DashboardActivity.selectedData);
-                        DashboardActivity.namingMap.put(DashboardActivity.selectedData.get(i).getName(), DashboardActivity.latLngMap);
-                    } else {
-                        Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED + consentData.get(i).getPhoneNumber(), Constant.ALERT_TITLE, this);
-                    }
+                for (int j = 0; j < DashboardActivity.selectedData.size(); j++) {
+                    if (consentData.get(i).getPhoneNumber().equals(DashboardActivity.selectedData.get(j).getPhone())){
+                        if (consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker"))
+                            DashboardActivity.latLngMap = mDbManager.getLatLongForMap(DashboardActivity.selectedData, consentData.get(i).getPhoneNumber());
+                            DashboardActivity.namingMap.put(DashboardActivity.selectedData.get(i).getName(), DashboardActivity.latLngMap);
+                        } else {
+                            Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED + consentData.get(i).getPhoneNumber(), Constant.ALERT_TITLE, this);
+                        }
                 }
             }
             if (mMap != null) {

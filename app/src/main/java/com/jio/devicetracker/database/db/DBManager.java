@@ -136,7 +136,7 @@ public class DBManager {
             number = phoneNumber.get(i);
             String[] arg = new String[]{number};
             ContentValues values = new ContentValues();
-            values.put(DatabaseHelper.CONSENT_STATUS, "Yes jiotracker");
+            values.put(DatabaseHelper.CONSENT_STATUS, "yes jiotracker");
             mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= ?", arg);
 
         }
@@ -159,8 +159,7 @@ public class DBManager {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.CONSENT_STATUS, message);
-        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
-
+        int row = mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
     }
 
     public void updateConsentInFMS(String phoneNumber, String message) {
@@ -226,13 +225,13 @@ public class DBManager {
     }
 
 
-    public HashMap<Double, Double> getLatLongForMap(List<MultipleselectData> mList) {
+    public HashMap<Double, Double> getLatLongForMap(List<MultipleselectData> mList, String phoneNumber) {
         HashMap<Double, Double> latLong = new HashMap<>();
         phoneNumner = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
         for (int i = 0; i < mList.size(); i++) {
             String[] column = {DatabaseHelper.LAT, DatabaseHelper.LON};
-            String[] arg = {mList.get(i).getPhone(), "Yes jiotracker"};
+            String[] arg = {phoneNumber, "yes jiotracker"};
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.DEVICE_NUM + " =? AND " + DatabaseHelper.CONSENT_STATUS + "=?", arg, null, null, null);
             if (cursor != null) {
                 while (cursor.moveToNext()) {

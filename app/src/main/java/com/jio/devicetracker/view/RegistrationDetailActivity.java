@@ -256,8 +256,8 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
                 return false;
             }
-        } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber().toString() != null) {
-            if (subscriptionInfos.get(1).getNumber().toString().equals("91" + phoneNumber) || subscriptionInfos.get(1).getNumber().toString().equals(phoneNumber)) {
+        } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber() != null) {
+            if (subscriptionInfos.get(1).getNumber().equals("91" + phoneNumber) || subscriptionInfos.get(1).getNumber().equals(phoneNumber)) {
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
                 return false;
             } else {

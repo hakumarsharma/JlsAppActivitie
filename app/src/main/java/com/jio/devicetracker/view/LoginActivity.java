@@ -15,10 +15,13 @@ import androidx.core.content.res.ResourcesCompat;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
@@ -26,13 +29,15 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
+import com.jio.devicetracker.network.MessageListener;
+import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import java.util.regex.Pattern;
 
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
 
     private String jioEmailIdText = null;
     private String jioPasswordText = null;
@@ -55,10 +60,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         jioPasswordEditText = findViewById(R.id.jioPassword);
         //jioPasswordEditText.setText("Jio@1234");
         mRegisterText = findViewById(R.id.registedHere);
+        MessageReceiver.bindListener(LoginActivity.this);
         mRegisterText.setOnClickListener(this);
 
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
-        if (!hasPermissions(getApplicationContext(), permissions)) {
+        if (!hasPermissions(LoginActivity.this, permissions)) {
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
 
@@ -129,7 +135,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
-
+    @Override
+    public void messageReceived(String message, String phoneNum) {
+        Toast.makeText(LoginActivity.this, "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
+        Log.d("Received Message --> ", message);
+        String phone = phoneNum.substring(3);
+        if (RegistrationActivity.isFMSFlow == false) {
+            if(RegistrationDetailActivity.phoneNumber != null && message.length() == 4) {
+                BorqsOTPActivity.phoneOTP.setText(message);
+            }
+        }
+    }
 
     @Override
     public void onClick(View v) {

@@ -111,7 +111,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
                         isLatLngFound = true;
                         addedDeviceData.setLat(mDatalist.get(i).getEvent().getLocation().getLatLocation().getLatitu());
                         addedDeviceData.setLng(mDatalist.get(i).getEvent().getLocation().getLatLocation().getLongni());
-                        insertRowid = mDbManager.insertInBorqsDB(addedDeviceData,adminData.getEmail().toString());
+                        insertRowid = mDbManager.insertInBorqsDB(addedDeviceData,adminData.getEmail());
                         //gotoDashBoard();
                         checkRow(insertRowid);
                         break;

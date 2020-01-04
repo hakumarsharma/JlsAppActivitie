@@ -132,7 +132,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         isDevicePresent();
 
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE};
-        if (!hasPermissions(getApplicationContext(), permissions)) {
+        if (!hasPermissions(DashboardActivity.this, permissions)) {
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
 
@@ -289,6 +289,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
 
     private void trackDevice() {
+        boolean flag = false;
         if (RegistrationActivity.isFMSFlow == false) {
             List<AddedDeviceData> consentData = mDbManager.getAlldata(adminEmail);
             if (selectedData.size() == 0) {
@@ -296,18 +297,25 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 return;
             }
             for (int i = 0; i < consentData.size(); i++) {
-                if (selectedData.get(i).getPhone().equals(consentData.get(i).getPhoneNumber())) {
-                    if (consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")) {
-                        latLngMap = mDbManager.getLatLongForMap(selectedData);
-                        namingMap.put(selectedData.get(i).getName(), latLngMap);
-                    } else {
-                        Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED + consentData.get(i).getPhoneNumber(), Constant.ALERT_TITLE, this);
+                for (int j = 0; j < selectedData.size(); j++) {
+                    if (consentData.get(i).getPhoneNumber().equals(selectedData.get(j).getPhone())){
+                        if (consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")) {
+                            latLngMap = mDbManager.getLatLongForMap(selectedData, consentData.get(i).getPhoneNumber());
+                            namingMap.put(selectedData.get(i).getName(), latLngMap);
+                            flag = true;
+                        } else {
+                            Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED + consentData.get(i).getPhoneNumber(), Constant.ALERT_TITLE, this);
+                            flag = false;
+                            return;
+                        }
                     }
                 }
             }
-            startTheScheduler();
-            Intent map = new Intent(this, MapsActivity.class);
-            startActivity(map);
+            if (flag) {
+                startTheScheduler();
+                Intent map = new Intent(this, MapsActivity.class);
+                startActivity(map);
+            }
         } else {
             showProgressBarDialog();
             List<String> imeiNumbers = new ArrayList<>();
@@ -393,7 +401,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             mtrackerresponse = Util.getInstance().getPojoObject(String.valueOf(response), TrackerdeviceResponse.class);
             data = mtrackerresponse.getmData();
             Log.d(TAG, "Response print" + response);
-            if(mDbManager != null) {
+            if (mDbManager != null) {
                 mDbManager.updateBorqsData(data);
             }
         }
@@ -447,30 +455,15 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         return true;
     }
 
-    /*public class SendSMSAsyncTask extends AsyncTask<String, String, Void> {
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(strings[0], null, strings[1], null, null);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
-        }
-    }*/
-
     @Override
     public void messageReceived(String message, String phoneNum) {
-        Toast.makeText(getApplicationContext(), "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
+        Toast.makeText(DashboardActivity.this, "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
+        Log.d("Received Message --> ", message);
         String phone = phoneNum.substring(3);
         if (RegistrationActivity.isFMSFlow == false) {
-            mDbManager.updateConsentInBors(phone, message);
+            mDbManager.updateConsentInBors(phone, message.toLowerCase().trim());
             showDatainList();
-            if(RegistrationDetailActivity.phoneNumber.equalsIgnoreCase(phoneNum) && message.length() == 4) {
+            if (RegistrationDetailActivity.phoneNumber != null && message.length() == 4) {
                 otpNumber = message;
                 BorqsOTPActivity.phoneOTP.setText(otpNumber);
             }
@@ -478,11 +471,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             mDbManager.updateConsentInFMS(phone, message);
             showDataFromFMS();
         }
-       /* if(message.toLowerCase().contains("yes jiotracker")) {
-           // publishMQTTMessage(phone);
-        }*/
-       /* mDbManager.updateConsentInFMS(phone,message);
-        showDataFromFMS();*/
     }
 
     private void publishMQTTMessage(String phoneNumber) {
@@ -560,7 +548,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent intent = new Intent(DashboardActivity.this,LoginActivity.class);
+        Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 }

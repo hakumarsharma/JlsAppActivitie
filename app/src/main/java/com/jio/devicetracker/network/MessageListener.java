@@ -2,6 +2,5 @@
 package com.jio.devicetracker.network;
 
 public interface MessageListener {
-
     void messageReceived(String message, String phoneNum);
 }

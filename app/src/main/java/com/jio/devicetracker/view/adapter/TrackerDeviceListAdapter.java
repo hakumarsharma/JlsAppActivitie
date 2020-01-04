@@ -174,6 +174,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         // to perform recycler view delete animations
         // NOTE: don't call notifyDataSetChanged()
         notifyItemRemoved(adapterPosition);
-
+        notifyDataSetChanged();
     }
 }
