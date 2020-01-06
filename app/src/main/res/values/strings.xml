@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">JIO Tracker</string>
+    <string name="app_name">JioTracker</string>
     <string name="title_activity_maps">Jio Tracker</string>
     <string name="map_name">Jio Tracking</string>
     <string name="action_settings">Setting</string>
     <string name="about_us">About Us</string>
-    <string name="loginLabel">JIO Tracker</string>
+    <string name="loginLabel">JioTracker</string>
     <string name="title_activity_login">Login</string>
     <string name="register_here"> <b>Register Here</b></string>
 </resources>

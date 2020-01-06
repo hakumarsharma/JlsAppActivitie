@@ -33,24 +33,6 @@
                 android:text="Please enter device details"
                 android:textSize="20dp" />
 
-            <!--            <TextView-->
-            <!--                android:id="@+id/loginTextView2"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_below="@id/loginTextView"-->
-            <!--                android:layout_centerHorizontal="true"-->
-            <!--                android:layout_marginTop="10dp"-->
-            <!--                android:text="mobile number"-->
-            <!--                android:textSize="20dp" />-->
-
-            <!--<ImageView
-                android:id="@+id/jioLogo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="120dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/jio_logo" />-->
 
             <EditText
                 android:id="@+id/memberName"
@@ -63,22 +45,7 @@
                 android:backgroundTint="@color/colorLogin"
                 android:hint="Name*"
                 android:inputType="text"
-                android:textColor="#00f"
                 android:textCursorDrawable="@color/colorLogin" />
-
-           <!-- <EditText
-                android:id="@+id/relation"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/memberName"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="10dp"
-                android:backgroundTint="@color/colorLogin"
-                android:hint="Relation*"
-                android:inputType="text"
-                android:textColor="#00f"
-                android:textCursorDrawable="@color/colorLogin" />-->
 
             <EditText
                 android:id="@+id/deviceName"
@@ -91,7 +58,6 @@
                 android:backgroundTint="@color/colorLogin"
                 android:hint="Mobile Number*"
                 android:inputType="phone"
-                android:textColor="#00f"
                 android:textCursorDrawable="@color/colorLogin" />
 
             <EditText
@@ -105,22 +71,8 @@
                 android:backgroundTint="@color/colorLogin"
                 android:hint="Device IMEI*"
                 android:inputType="number"
-                android:textColor="#00f"
                 android:textCursorDrawable="@color/colorLogin" />
 
-            <!--             <EditText-->
-            <!--                 android:id="@+id/deviceLocation"-->
-            <!--                 android:layout_width="fill_parent"-->
-            <!--                 android:layout_height="wrap_content"-->
-            <!--                 android:layout_below="@id/deviceIMEINumber"-->
-            <!--                 android:textColor="#00f"-->
-            <!--                 android:inputType="textEmailAddress"-->
-            <!--                 android:layout_marginTop="15dp"-->
-            <!--                 android:backgroundTint="@color/colorLogin"-->
-            <!--                 android:textCursorDrawable="@color/colorLogin"-->
-            <!--                 android:layout_marginLeft="15dp"-->
-            <!--                 android:layout_marginRight="10dp"-->
-            <!--                 android:hint="Location*" />-->
 
             <Button
                 android:id="@+id/update"

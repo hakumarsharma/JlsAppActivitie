@@ -60,7 +60,7 @@
                 android:layout_below="@id/loginTextView"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:text="User details"
+                android:text="user details"
                 android:textSize="20dp" />
 
             <EditText
@@ -105,7 +105,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New user ?"
+                android:text="New User ?"
                 android:id="@+id/newUserText"
                 android:layout_below="@+id/login"
                 android:layout_marginTop="15dp"

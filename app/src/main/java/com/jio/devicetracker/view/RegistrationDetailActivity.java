@@ -7,10 +7,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -20,6 +23,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -74,6 +78,29 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         mRegister.setOnClickListener(this);
         mDob.setOnClickListener(this);
         util = Util.getInstance();
+
+        mName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!mName.getText().toString().equals("")) {
+                    mRegister.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.login_selector,null));
+                    mRegister.setTextColor(Color.WHITE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String emailId = mName.getText().toString();
+                if (emailId.equals("")) {
+                    mRegister.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
+                    mRegister.setTextColor(Color.WHITE);
+                }
+            }
+        });
 
         requestPermission();
     }

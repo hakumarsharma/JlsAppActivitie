@@ -82,7 +82,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/colorLogin"
-                android:hint="Date of Birth"
+                android:hint="Date of birth*"
                 android:textIsSelectable="true"
                 android:imeOptions="actionDone"
                 android:textCursorDrawable="@color/colorLogin" />
@@ -120,7 +120,7 @@
                 android:layout_below="@+id/repassword"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="40dp"
-                android:background="@drawable/login_selector"
+                android:background="@drawable/selector"
                 android:text="Register"
                 android:textColor="@color/colorButtonText" />
 

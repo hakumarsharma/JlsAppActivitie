@@ -129,8 +129,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         context = getApplicationContext();
         fmsLatLngMap = new LinkedHashMap<>();
         getAdminDetail();
-        isDevicePresent();
-
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE};
         if (!hasPermissions(DashboardActivity.this, permissions)) {
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
@@ -550,5 +548,11 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
         Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isDevicePresent();
     }
 }
