@@ -63,8 +63,8 @@
 
         <Button
             android:id="@+id/consent"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignTop="@+id/phoneNumber"
             android:layout_alignParentRight="true"
             android:layout_marginTop="-18dp"
