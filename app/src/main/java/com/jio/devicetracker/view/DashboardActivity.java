@@ -461,10 +461,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         if (RegistrationActivity.isFMSFlow == false) {
             mDbManager.updateConsentInBors(phone, message.toLowerCase().trim());
             showDatainList();
-            if (RegistrationDetailActivity.phoneNumber != null && message.length() == 4) {
+            /*if (RegistrationDetailActivity.phoneNumber != null && message.length() == 4) {
                 otpNumber = message;
                 BorqsOTPActivity.phoneOTP.setText(otpNumber);
-            }
+            }*/
         } else {
             mDbManager.updateConsentInFMS(phone, message);
             showDataFromFMS();

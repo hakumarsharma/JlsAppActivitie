@@ -18,7 +18,7 @@ public class Constant {
 
     //  Common Text
 
-    public static final String ALERT_TITLE = "Jio Alert";
+    public static final String ALERT_TITLE = "Alert";
     public static final String WAIT_LOADER = "Please wait...";
 
     // Registration Activity constants

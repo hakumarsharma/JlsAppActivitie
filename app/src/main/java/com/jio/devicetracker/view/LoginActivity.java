@@ -139,12 +139,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void messageReceived(String message, String phoneNum) {
        // Toast.makeText(LoginActivity.this, "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
         Log.d("Received Message --> ", message);
-        String phone = phoneNum.substring(3);
-        if (RegistrationActivity.isFMSFlow == false) {
+//        String phone = phoneNum.substring(3);
+        /*if (RegistrationActivity.isFMSFlow == false) {
             if(RegistrationDetailActivity.phoneNumber != null && message.length() == 4) {
                 BorqsOTPActivity.phoneOTP.setText(message);
             }
-        }
+        }*/
     }
 
     @Override

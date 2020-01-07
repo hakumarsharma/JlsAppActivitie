@@ -19,8 +19,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="250dp"
         android:layout_marginBottom="250dp"
-        android:text="Click on + icon to add device"
-        android:textSize="20dp"
+        android:text="Click on + icon to add device details to be tracked"
+        android:textSize="16dp"
         android:visibility="invisible"
         android:layout_centerInParent="true"/>
 

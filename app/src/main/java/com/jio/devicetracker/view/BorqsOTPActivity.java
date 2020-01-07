@@ -34,7 +34,7 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
 
     private Button verify = null;
     private EditText emailOTP = null;
-    public static EditText phoneOTP = null;
+//    public static EditText phoneOTP = null;
     private Util util = null;
     private String emailOtp = "";
     RegisterData registerData = null;
@@ -47,8 +47,8 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
         TextView title = findViewById(R.id.toolbar_title);
         title.setText("OTP Verification");
         emailOTP = findViewById(R.id.emailOTP);
-        phoneOTP = findViewById(R.id.phoneOTP);
-        phoneOTP.setText(DashboardActivity.otpNumber);
+       /* phoneOTP = findViewById(R.id.phoneOTP);
+        phoneOTP.setText(DashboardActivity.otpNumber);*/
         verify = findViewById(R.id.verify);
         verify.setOnClickListener(this);
         util = Util.getInstance();
@@ -98,11 +98,11 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
-        if(phoneOTP.getText().toString().equals(""))
+       /* if(phoneOTP.getText().toString().equals(""))
         {
             phoneOTP.setError("Please enter the phone otp");
             return;
-        }
+        }*/
 
         verifyPhoneOTP();
     }
@@ -113,15 +113,15 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void verifyPhoneOTP() {
-        String phoneOtp = phoneOTP.getText().toString();
+        /*String phoneOtp = phoneOTP.getText().toString();
         if (phoneOtp.equalsIgnoreCase(RegistrationDetailActivity.randomNumber)) {
-            Log.d("TAG", "OTP is verified");
+            Log.d("TAG", "OTP is verified");*/
 
             verifyEmailOTP();
-        } else {
+      /*  } else {
             Log.d("TAG", "OTP is not verified");
             Util.alertDilogBox("Please enter the correct OTP!", "OTP verification", this);
-        }
+        }*/
     }
 
     private void verifyEmailOTP() {

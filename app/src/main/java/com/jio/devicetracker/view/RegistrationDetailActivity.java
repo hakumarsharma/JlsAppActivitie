@@ -193,7 +193,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             data.setDob(mDob.getText().toString().trim());
             data.setPassword(mPass.getText().toString());
             mDbmanager.insertAdminData(data);
-            sendOTP();
+            //sendOTP();
             goToBorqsOTPActivity();
         }
     }
@@ -251,10 +251,10 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         mDatePicker.show();
     }
 
-    private void sendOTP() {
+    /*private void sendOTP() {
         randomNumber = util.getFourDigitRandomNumber();
         new SendSMSTask().execute(mPhone.getText().toString(), randomNumber);
-    }
+    }*/
 
     private boolean getssoToken() {
         boolean isAvailable = Util.isMobileNetworkAvailable(RegistrationDetailActivity.this);
