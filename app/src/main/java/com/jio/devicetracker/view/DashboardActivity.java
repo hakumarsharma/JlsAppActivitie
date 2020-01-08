@@ -1,13 +1,17 @@
 // (c) Copyright 2019 by Reliance JIO. All rights reserved.
 package com.jio.devicetracker.view;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.jio.devicetracker.R;
 
 import android.Manifest;
@@ -17,11 +21,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -40,7 +43,6 @@ import com.jio.devicetracker.database.pojo.request.FMSTrackRequest;
 import com.jio.devicetracker.database.pojo.request.TrackdeviceRequest;
 import com.jio.devicetracker.database.pojo.response.LocationApiResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
-import com.jio.devicetracker.jiotoken.JiotokenHandler;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
@@ -95,6 +97,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private DashboardActivity dashboardActivity = null;
     public static String adminEmail;
     public static String otpNumber = "";
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private NavigationView navigationView;
+    private TextView user_account_name = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +126,15 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         mActionbtn.setOnClickListener(this);
         setSupportActionBar(toolbar);
         MessageReceiver.bindListener(DashboardActivity.this);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.Open, R.string.Close);
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        navigationView = findViewById(R.id.nv);
+        View header = navigationView.getHeaderView(0);
+        user_account_name = header.findViewById(R.id.user_account_name);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         selectedData = new ArrayList<>();
         addDeviceList = new ArrayList<>();
         latLngMap = new LinkedHashMap<>();
@@ -173,6 +188,63 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 sendSMS(phoneNumber);
             }
         });
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.profile:
+                        Toast.makeText(DashboardActivity.this, "Profile", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.settings:
+                        Toast.makeText(DashboardActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.helpPrivacy:
+                        Toast.makeText(DashboardActivity.this, "Help & Support", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.logout:
+                        updateLogoutData();
+                        break;
+                    default:
+                        return true;
+                }
+                return true;
+            }
+        });
+    }
+
+    private void updateLogoutData() {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setTitle(Constant.ALERT_TITLE);
+        adb.setMessage(Constant.LOGOUT_CONFIRMATION_MESSAGE);
+        adb.setIcon(android.R.drawable.ic_dialog_alert);
+        adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                mDbManager.updateLogoutData();
+                goToLoginActivity();
+            }
+        });
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        adb.show();
+    }
+
+    private void goToLoginActivity() {
+        startActivity(new Intent(this, LoginActivity.class));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            AdminLoginData adminLoginData = mDbManager.getAdminLoginDetail();
+            user_account_name.setText(adminLoginData.getName().substring(0, 1).toUpperCase() + adminLoginData.getName().substring(1));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void getAdminDetail() {
@@ -296,7 +368,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             }
             for (int i = 0; i < consentData.size(); i++) {
                 for (int j = 0; j < selectedData.size(); j++) {
-                    if (consentData.get(i).getPhoneNumber().equals(selectedData.get(j).getPhone())){
+                    if (consentData.get(i).getPhoneNumber().equals(selectedData.get(j).getPhone())) {
                         if (consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")) {
                             latLngMap = mDbManager.getLatLongForMap(selectedData, consentData.get(i).getPhoneNumber());
                             namingMap.put(selectedData.get(i).getName(), latLngMap);
@@ -428,7 +500,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         if (consentStatus.equalsIgnoreCase("Yes JioTracker")) {
             Util.alertDilogBox(Constant.CONSENT_APPROVED, Constant.ALERT_TITLE, this);
         } else {
-            new SendSMSTask().execute(phoneNumber, userName + " From JIOTracker application wants to track your location, please reply in Yes JioTracker or No JioTracker !");
+            new SendSMSTask().execute(phoneNumber, userName + " from JioTracker application wants to track your location, please reply in \"Yes JioTracker\" or \"No JioTracker !");
             Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
             if (RegistrationActivity.isFMSFlow == false) {
                 mDbManager.updatependingConsent(phoneNumber);

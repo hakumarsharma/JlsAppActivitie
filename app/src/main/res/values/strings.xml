@@ -7,4 +7,6 @@
     <string name="loginLabel">JioTracker</string>
     <string name="title_activity_login">Login</string>
     <string name="register_here"> <b>Register Here</b></string>
+    <string name="Open">Open</string>
+    <string name="Close">Close</string>
 </resources>

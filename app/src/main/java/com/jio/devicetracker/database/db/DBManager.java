@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
@@ -68,6 +69,7 @@ public class DBManager {
         contentValue.put(DatabaseHelper.USER_ID, data.getUser().get_id());
         contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, data.getUgs_token_expiry());
         contentValue.put(DatabaseHelper.EMAIL, data.getUser().getEmail());
+        contentValue.put(DatabaseHelper.USER_NAME, data.getUser().getName());
         long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
         return rowInserted;
     }
@@ -155,11 +157,19 @@ public class DBManager {
         }
     }
 
+    public void updateLogoutData(){
+        mDatabase = mDBHelper.getWritableDatabase();
+        int row = mDatabase.delete(DatabaseHelper.TABLE_USER_LOGIN, null, null);
+        if(row == 1){
+            Log.d("Database Info --> ", "Logout data is updated");
+        }
+    }
+
     public void updateConsentInBors(String phoneNumber, String message) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.CONSENT_STATUS, message);
-        int row = mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
+        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
     }
 
     public void updateConsentInFMS(String phoneNumber, String message) {
@@ -297,8 +307,7 @@ public class DBManager {
     public AdminLoginData getAdminLoginDetail() {
         mDatabase = mDBHelper.getWritableDatabase();
         AdminLoginData adminData = null;
-        String userName = "";
-        String[] column = {DatabaseHelper.EMAIL, DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME};
+        String[] column = {DatabaseHelper.EMAIL, DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_USER_LOGIN, column, null, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -307,6 +316,7 @@ public class DBManager {
                 adminData.setUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_ID)));
                 adminData.setUser_token(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_TOKEN)));
                 adminData.setToken_expirtime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TOKEN_EXPIRY_TIME)));
+                adminData.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_NAME)));
             }
         }
         return adminData;

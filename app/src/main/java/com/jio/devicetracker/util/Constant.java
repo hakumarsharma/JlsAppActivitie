@@ -56,6 +56,7 @@ public class Constant {
     public static final String REGMOBILENUMBER_VALIDATION = "You can't add registered mobile number";
     public static final String CHECK_DETAILS ="Please Enter the details";
     public static final String DUPLICATE_NUMBER ="This number is already added";
+    public static final String LOGOUT_CONFIRMATION_MESSAGE = "Are you sure you want to logout ?";
 
     // MAPs Activity constants
     public static final String LOCATION_UPDATE = "Location will be updated after every";

@@ -57,6 +57,17 @@ public class LogindetailResponse implements Serializable {
         @SerializedName("email")
         private String email;
 
+        @SerializedName("name")
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
         public String getEmail() {
             return email;
         }
