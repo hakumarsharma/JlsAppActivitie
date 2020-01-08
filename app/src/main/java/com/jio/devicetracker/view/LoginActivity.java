@@ -26,7 +26,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.ForgetPassToken;
 import com.jio.devicetracker.database.pojo.Userdata;
+import com.jio.devicetracker.database.pojo.request.ForgetpasswordTokenRequest;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.network.MessageListener;
@@ -45,8 +47,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText jioPasswordEditText = null;
     public static LogindetailResponse logindetailResponse = null;
     private ProgressDialog progressDialog = null;
-    private TextView mRegisterText;
+    private TextView mRegisterText,mForgetPass;
     private static final int PERMIT_ALL = 1;
+    private ForgetPassToken data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +63,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         jioPasswordEditText = findViewById(R.id.jioPassword);
         //jioPasswordEditText.setText("Jio@1234");
         mRegisterText = findViewById(R.id.registedHere);
+        mForgetPass = findViewById(R.id.clickForget);
         MessageReceiver.bindListener(LoginActivity.this);
         mRegisterText.setOnClickListener(this);
+        mForgetPass.setOnClickListener(this);
 
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
         if (!hasPermissions(LoginActivity.this, permissions)) {
@@ -150,8 +155,54 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
 
-        gotoRegisterScreen();
+        switch(v.getId())
+        {
+            case R.id.registedHere:
+                gotoRegisterScreen();
+                break;
+
+            case R.id.clickForget:
+                gotoForgetPassTokenScreen();
+        }
+
     }
+
+    private void gotoForgetPassTokenScreen() {
+
+        Intent intent = new Intent(LoginActivity.this,ForgetpassTokenActivity.class);
+        intent.putExtra("Email",jioEmailEditText.getText().toString().trim());
+        startActivity(intent);
+    }
+
+   /* private void forgetpassTokenApi() {
+
+        if(jioEmailEditText.getText().length()!= 0 && Util.isValidEmailId(jioEmailEditText.getText().toString().trim()))
+        {
+            data = new ForgetPassToken();
+            data.setEmail(jioEmailEditText.getText().toString().trim());
+           RequestHandler.getInstance(getApplicationContext()).handleRequest(new ForgetpasswordTokenRequest(new SuccessForgetToken(), new ErrorToken(),data));
+        } else {
+            jioEmailEditText.setError(Constant.EMAIL_VALIDATION);
+            return;
+        }
+
+    }
+
+    private class SuccessForgetToken implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Toast.makeText(LoginActivity.this,"Token is sent to entered email",Toast.LENGTH_SHORT).show();
+            gotoForgetPassScreen();
+        }
+    }
+
+    private class ErrorToken implements Response.ErrorListener {
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+        }
+    }*/
 
     private class SuccessListener implements Response.Listener {
 

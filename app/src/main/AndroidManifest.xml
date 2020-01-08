@@ -59,6 +59,12 @@
             android:name=".view.EditActivity"
             android:label="@string/map_name" />
         <activity
+            android:name=".view.ForgetpassTokenActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.ForgotPasswordActivity"
+            android:label="@string/map_name" />
+        <activity
             android:name=".view.SplashScreenActivity"
             android:theme="@style/SplashScreen"
             >

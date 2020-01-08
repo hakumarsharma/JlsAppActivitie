@@ -186,10 +186,13 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         @Override
         public void onResponse(Object response) {
 
+            int length = mPhone.getText().toString().trim().length();
+            String phoneNumber = mPhone.getText().toString().trim().substring(2,length);
             RegisterData data = new RegisterData();
             data.setName(mName.getText().toString().trim());
             data.setEmail(mEmail.getText().toString().trim());
-            data.setPhoneNumber(mPhone.getText().toString().trim());
+            data.setPhoneNumber(phoneNumber);
+            //data.setPhoneNumber(mPhone.getText().toString().trim());
             data.setDob(mDob.getText().toString().trim());
             data.setPassword(mPass.getText().toString());
             mDbmanager.insertAdminData(data);
@@ -316,7 +319,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
                     return;
                 }
                 subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-                //checkJioSIMSlot1();
+                checkJioSIMSlot1();
                 break;
         }
     }
@@ -326,5 +329,18 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+
+    public void checkJioSIMSlot1()
+    {
+        if(subscriptionInfos != null) {
+            String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
+            if (!carrierNameSlot1.contains("Jio")) {
+                Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
+            } else {
+                mPhone.setText(subscriptionInfos.get(0).getNumber().toString());
+                mPhone.setEnabled(false);
+            }
+        }
+    }
 
 }

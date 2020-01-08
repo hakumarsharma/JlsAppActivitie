@@ -125,6 +125,30 @@
                 android:textSize="15sp"
                 />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forget Password ?"
+                android:id="@+id/forgetPass"
+                android:layout_below="@+id/newUserText"
+                android:layout_marginTop="15dp"
+                android:layout_alignLeft="@id/newUserText"
+                android:textSize="13sp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/forget_password"
+                android:id="@+id/clickForget"
+                android:layout_below="@+id/registedHere"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_toRightOf="@+id/forgetPass"
+                android:textSize="15sp"
+                />
+
 
         </RelativeLayout>
 
