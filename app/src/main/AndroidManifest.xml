@@ -21,8 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".view.FMSMapActivity"></activity>
-        <activity android:name=".view.BorqsOTPActivity"></activity>
+        <activity android:name=".view.ProfileActivity"/>
+        <activity android:name=".view.FMSMapActivity"/>
+        <activity android:name=".view.BorqsOTPActivity"/>
         <activity android:name=".view.TrackDeviceActivity"
             android:label="Track device"/>
         <activity

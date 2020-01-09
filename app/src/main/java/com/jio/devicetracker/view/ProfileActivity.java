@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.jio.devicetracker.R;
+
 public class ProfileActivity extends AppCompatActivity {
 
     @Override
