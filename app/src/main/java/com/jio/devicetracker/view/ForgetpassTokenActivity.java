@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -38,6 +39,8 @@ public class ForgetpassTokenActivity extends Activity implements View.OnClickLis
         mVerify = findViewById(R.id.tokenVerify);
         mEmail = findViewById(R.id.email);
         mVerify.setOnClickListener(this);
+        TextView toolbar_title = findViewById(R.id.toolbar_title);
+        toolbar_title.setText("Forget password");
 
         mEmail.addTextChangedListener(new TextWatcher() {
             @Override
@@ -96,7 +99,7 @@ public class ForgetpassTokenActivity extends Activity implements View.OnClickLis
 
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            progressDialog.dismiss();
             Toast.makeText(ForgetpassTokenActivity.this,"Token api failed",Toast.LENGTH_SHORT).show();
         }
     }

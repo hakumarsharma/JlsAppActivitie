@@ -49,7 +49,7 @@ import java.util.List;
 
 public class RegistrationDetailActivity extends Activity implements View.OnClickListener {
 
-    private EditText mName, mEmail, mPhone, mDob, mPass, mRepass;
+    private EditText mName, mEmail, mPhone, mPass, mRepass;
     private Button mRegister;
     private int month, year, day;
     private int DATE_PICKER_ID = 100;
@@ -70,13 +70,11 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         mName = findViewById(R.id.memberName);
         mEmail = findViewById(R.id.email);
         mPhone = findViewById(R.id.deviceNumber);
-        mDob = findViewById(R.id.dob);
         mPass = findViewById(R.id.password);
         mRepass = findViewById(R.id.repassword);
         mRegister = findViewById(R.id.register);
         mDbmanager = new DBManager(this);
         mRegister.setOnClickListener(this);
-        mDob.setOnClickListener(this);
         util = Util.getInstance();
 
         mName.addTextChangedListener(new TextWatcher() {
@@ -112,14 +110,10 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             case R.id.register:
                 validate();
                 break;
-
-            case R.id.dob:
-                hideKeyboard(mDob);
+           /* case R.id.dob:
                 SelectDate();
-                break;
-
+                break;*/
         }
-
     }
 
     private void validate() {
@@ -135,10 +129,6 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
 
         if (mPhone.getText().toString().length() == 0) {
             mPhone.setError("Mobile number cannot be left blank.");
-            return;
-        }
-        if (mDob.getText().toString().length() == 0) {
-            mDob.setError("Date of birth cannot be left blank.");
             return;
         }
         if (mPass.getText().toString().length() == 0) {
@@ -193,7 +183,6 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             data.setEmail(mEmail.getText().toString().trim());
             data.setPhoneNumber(phoneNumber);
             //data.setPhoneNumber(mPhone.getText().toString().trim());
-            data.setDob(mDob.getText().toString().trim());
             data.setPassword(mPass.getText().toString());
             mDbmanager.insertAdminData(data);
             //sendOTP();
@@ -220,7 +209,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     }
 
 
-    private void SelectDate() {
+    /*private void SelectDate() {
 
         final Calendar c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
@@ -241,7 +230,6 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
                 } else {
                     dayselect = String.valueOf(selectedday);
                 }
-                mDob.setText(new StringBuilder().append(selectedyear).append("-").append(monthselect).append("-").append(dayselect));
 
             }
         }, year, month, day);
@@ -252,7 +240,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         // TODO Hide Past Date Here
         //  mDatePicker.getDatePicker().setMinDate(System.currentTimeMillis());
         mDatePicker.show();
-    }
+    }*/
 
     /*private void sendOTP() {
         randomNumber = util.getFourDigitRandomNumber();
@@ -324,10 +312,10 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         }
     }
 
-    public void hideKeyboard(View view){
+   /* public void hideKeyboard(View view){
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+    }*/
 
 
     public void checkJioSIMSlot1()

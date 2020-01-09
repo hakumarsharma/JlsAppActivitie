@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -40,6 +41,8 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
         mToken = findViewById(R.id.emailToken);
         mSubmit = findViewById(R.id.submit);
         mSubmit.setOnClickListener(this);
+        TextView toolbar_title = findViewById(R.id.toolbar_title);
+        toolbar_title.setText("Reset password");
 
         Intent intent = getIntent();
         String email = intent.getStringExtra("Email");
@@ -150,7 +153,7 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
             } else {
                 Toast.makeText(ForgotPasswordActivity.this,"Resetpassword failed",Toast.LENGTH_SHORT).show();
             }
-
+            progressDialog.dismiss();
         }
     }
 

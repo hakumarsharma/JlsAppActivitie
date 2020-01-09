@@ -121,7 +121,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         trackBtn = toolbar.findViewById(R.id.track);
         trackBtn.setVisibility(View.VISIBLE);
         TextView toolbar_title = findViewById(R.id.toolbar_title);
-        toolbar_title.setText(Constant.DASHBOARD_TITLE);
+        toolbar_title.setText(Constant.DASHBOARD_TITLE + "               ");
         trackBtn.setOnClickListener(this);
         mActionbtn.setOnClickListener(this);
         setSupportActionBar(toolbar);
@@ -195,7 +195,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 int id = item.getItemId();
                 switch (id) {
                     case R.id.profile:
-                        Toast.makeText(DashboardActivity.this, "Profile", Toast.LENGTH_SHORT).show();
+                        gotoProfileActivity();
                         break;
                     case R.id.settings:
                         Toast.makeText(DashboardActivity.this, "Settings", Toast.LENGTH_SHORT).show();
@@ -212,6 +212,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 return true;
             }
         });
+    }
+
+    private void gotoProfileActivity(){
+        startActivity(new Intent(this, ProfileActivity.class));
     }
 
     private void updateLogoutData() {

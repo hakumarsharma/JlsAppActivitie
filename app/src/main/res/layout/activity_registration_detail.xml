@@ -69,11 +69,12 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/colorLogin"
+                android:textColor="#000000"
                 android:hint="Phone number*"
                 android:inputType="number"
                 android:textCursorDrawable="@color/colorLogin" />
 
-            <EditText
+           <!-- <EditText
                 android:id="@+id/dob"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -85,13 +86,13 @@
                 android:hint="Date of birth*"
                 android:textIsSelectable="true"
                 android:imeOptions="actionDone"
-                android:textCursorDrawable="@color/colorLogin" />
+                android:textCursorDrawable="@color/colorLogin" />-->
 
             <EditText
                 android:id="@+id/password"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/dob"
+                android:layout_below="@id/deviceNumber"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="10dp"

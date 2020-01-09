@@ -15,6 +15,7 @@
             android:textSize="25dp"
             android:textColor="#FFFFFF"
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:id="@+id/toolbar_title"/>
 
         <Button
