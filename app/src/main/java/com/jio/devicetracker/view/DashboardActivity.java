@@ -504,7 +504,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         if (consentStatus.equalsIgnoreCase("Yes JioTracker")) {
             Util.alertDilogBox(Constant.CONSENT_APPROVED, Constant.ALERT_TITLE, this);
         } else {
-            new SendSMSTask().execute(phoneNumber, userName + " from JioTracker application wants to track your location, please reply in \"Yes JioTracker\" or \"No JioTracker !");
+            new SendSMSTask().execute(phoneNumber, userName + " from JioTracker application wants to track your location, please reply with \"Yes JioTracker\" or \"No JioTracker !");
             Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
             if (RegistrationActivity.isFMSFlow == false) {
                 mDbManager.updatependingConsent(phoneNumber);

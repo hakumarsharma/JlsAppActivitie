@@ -10,4 +10,5 @@
     <string name="forget_password"> <b>Click Here</b></string>
     <string name="Open">Open</string>
     <string name="Close">Close</string>
+    <string name="instruction">* \t Click on + icon to add device details \n* \t Upon adding device request for consent \n* \t Once consent is approved,select the device \n \t \t and click on track.</string>
 </resources>

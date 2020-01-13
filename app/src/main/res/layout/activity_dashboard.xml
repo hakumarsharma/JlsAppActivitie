@@ -28,7 +28,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="250dp"
             android:layout_marginBottom="250dp"
-            android:text="Click on + icon to add device details to be tracked"
+            android:text="@string/instruction"
+            android:lineSpacingExtra="5dp"
             android:textSize="16dp"
             android:visibility="invisible" />
 

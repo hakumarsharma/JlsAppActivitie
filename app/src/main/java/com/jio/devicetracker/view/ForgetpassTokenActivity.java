@@ -40,7 +40,7 @@ public class ForgetpassTokenActivity extends Activity implements View.OnClickLis
         mEmail = findViewById(R.id.email);
         mVerify.setOnClickListener(this);
         TextView toolbar_title = findViewById(R.id.toolbar_title);
-        toolbar_title.setText("Forget password");
+        toolbar_title.setText("Forgot password");
 
         mEmail.addTextChangedListener(new TextWatcher() {
             @Override

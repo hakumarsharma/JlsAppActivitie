@@ -27,6 +27,7 @@
             android:background="@color/colorPrimary"
             android:layout_alignParentRight="true"
             android:text="Track"
+            android:textColor="#FFFFFF"
             android:visibility="invisible" />
     </RelativeLayout>
 
