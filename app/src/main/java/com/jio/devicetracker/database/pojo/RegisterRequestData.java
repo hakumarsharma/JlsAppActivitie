@@ -8,6 +8,16 @@ public class RegisterRequestData {
     private String email;
     @SerializedName("type")
     private String type;
+    @SerializedName("phone")
+    private String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getEmail() {
         return email;

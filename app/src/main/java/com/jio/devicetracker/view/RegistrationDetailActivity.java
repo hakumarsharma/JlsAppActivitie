@@ -168,6 +168,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         data = new RegisterRequestData();
         data.setEmail(mEmail.getText().toString().trim());
         data.setType("registration");
+        data.setPhone(mPhone.getText().toString().trim().substring(2));
         RequestHandler.getInstance(getApplicationContext()).handleRequest(new RegistrationTokenrequest(new SuccessListener(), new RegistrationDetailActivity.ErrorListener(), data));
     }
 
