@@ -42,7 +42,7 @@
                 android:layout_marginTop="60dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/colorLogin"
-                android:hint="Enter your email OTP"
+                android:hint="Enter your OTP"
                 android:inputType="phone"
                 android:textColor="#00f"
                 android:textCursorDrawable="@color/colorLogin" />

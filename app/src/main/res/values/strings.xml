@@ -10,5 +10,5 @@
     <string name="forget_password"> <b>Click Here</b></string>
     <string name="Open">Open</string>
     <string name="Close">Close</string>
-    <string name="instruction">* \t Click on + icon to add device details \n* \t Upon adding device request for consent \n* \t Once consent is approved,select the device \n \t \t and click on track.</string>
+    <string name="instruction">* \t Click on + icon to add details of the device to be \n \t \t tracked. \n* \t After adding the device, click on \"Request consent\" \n \t \t to obtain consent approval from the device owner. \n* \t After consent approval is received from the device \n \t \t owner over SMS, select the device from the  list \n \t \t and click on \"Track\" to start tracking.</string>
 </resources>
