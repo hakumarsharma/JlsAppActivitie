@@ -19,16 +19,15 @@ import com.jio.devicetracker.util.Util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DBManager {
 
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDatabase;
-    private Context mContext;
     public static List<String> phoneNumner;
 
     public DBManager(Context context) {
-        mContext = context;
         mDBHelper = new DatabaseHelper(context);
     }
 
@@ -42,9 +41,8 @@ public class DBManager {
         contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
         contentValue.put(DatabaseHelper.LAT, Double.parseDouble(deviceData.getLat()));
         contentValue.put(DatabaseHelper.LON, Double.parseDouble(deviceData.getLng()));
-        long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
+        return  mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
 
-        return rowInserted;
     }
 
     public long insertAdminData(RegisterData data) {
@@ -56,10 +54,7 @@ public class DBManager {
         contentValue.put(DatabaseHelper.DOB, data.getDob());
         contentValue.put(DatabaseHelper.PASS, data.getPassword());
         contentValue.put(DatabaseHelper.USER_ID, "");
-
-        long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_NAME_USER, null, contentValue);
-
-        return rowInserted;
+        return mDatabase.insert(DatabaseHelper.TABLE_NAME_USER, null, contentValue);
     }
 
     public long insertLoginData(LogindetailResponse data) {
@@ -70,8 +65,7 @@ public class DBManager {
         contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, data.getUgs_token_expiry());
         contentValue.put(DatabaseHelper.EMAIL, data.getUser().getEmail());
         contentValue.put(DatabaseHelper.USER_NAME, data.getUser().getName());
-        long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
-        return rowInserted;
+        return mDatabase.insert(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
     }
 
     public long insertInFMSDB(AddedDeviceData deviceData) {
@@ -86,8 +80,7 @@ public class DBManager {
             contentValue.put(DatabaseHelper.LAT, Double.parseDouble(deviceData.getLat()));
             contentValue.put(DatabaseHelper.LON, Double.parseDouble(deviceData.getLng()));
         }
-        long rowInserted = mDatabase.insert(DatabaseHelper.TABLE_NAME_FMS, null, contentValue);
-        return rowInserted;
+        return mDatabase.insert(DatabaseHelper.TABLE_NAME_FMS, null, contentValue);
     }
 
     public List<AddedDeviceData> getAlldataFromFMS() {
@@ -104,7 +97,7 @@ public class DBManager {
                 data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
                 mlist.add(data);
             }
-
+            cursor.close();
         }
         return mlist;
     }
@@ -126,28 +119,16 @@ public class DBManager {
                     data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
                     mlist.add(data);
                 }
+                cursor.close();
             }
         }
         return mlist;
     }
 
-    public void updateConsentInBors(List<String> phoneNumber) {
-        String number = "";
-        mDatabase = mDBHelper.getWritableDatabase();
-        for (int i = 0; i < phoneNumber.size(); i++) {
-            number = phoneNumber.get(i);
-            String[] arg = new String[]{number};
-            ContentValues values = new ContentValues();
-            values.put(DatabaseHelper.CONSENT_STATUS, "yes jiotracker");
-            mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= ?", arg);
-
-        }
-    }
-
     public void updateBorqsData(List<TrackerdeviceResponse.Data> data){
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        for(int i = 0; i < data.size(); i ++){
+        for(int i = 0; i < data.size(); i ++) {
             String[] arg = new String[]{data.get(i).getmDevice().getPhoneNumber()};
             if(data.get(i).getEvent() != null) {
                 contentValue.put(DatabaseHelper.LAT, Double.parseDouble(data.get(i).getEvent().getLocation().getLatLocation().getLatitu()));
@@ -235,8 +216,8 @@ public class DBManager {
     }
 
 
-    public HashMap<Double, Double> getLatLongForMap(List<MultipleselectData> mList, String phoneNumber) {
-        HashMap<Double, Double> latLong = new HashMap<>();
+    public Map<Double, Double> getLatLongForMap(List<MultipleselectData> mList, String phoneNumber) {
+        Map<Double, Double> latLong = new HashMap<>();
         phoneNumner = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
         for (int i = 0; i < mList.size(); i++) {
@@ -248,6 +229,7 @@ public class DBManager {
                     phoneNumner.add(mList.get(i).getPhone());
                     latLong.put(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LAT)), cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LON)));
                 }
+                cursor.close();
             }
         }
         return latLong;
@@ -263,9 +245,10 @@ public class DBManager {
                 data = new EditProfileData();
                 data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
                 data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
-               // data.setRelation(cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATION)));
+                // data.setRelation(cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATION)));
                 data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
             }
+            cursor.close();
         }
         return data;
     }
@@ -274,8 +257,6 @@ public class DBManager {
         EditProfileData data = null;
         mDatabase = mDBHelper.getWritableDatabase();
         String[] column = {DatabaseHelper.DEVICE_NUM, DatabaseHelper.RELATION, DatabaseHelper.NAME, DatabaseHelper.IMEI_NUM};
-        //String selectquery = "select " +DatabaseHelper.DEVICE_NUM +"  from " + DatabaseHelper.TABLE_NAME_BORQS+ " where "+ DatabaseHelper.DEVICE_NUM + " = " + phoneNumber;
-        //Cursor cursor = mDatabase.rawQuery(selectquery, null);
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_FMS, column, DatabaseHelper.DEVICE_NUM + "=" + phoneNumber, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -285,7 +266,7 @@ public class DBManager {
                 data.setRelation(cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATION)));
                 data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
             }
-
+            cursor.close();
         }
         return data;
     }
@@ -299,7 +280,7 @@ public class DBManager {
             while (cursor.moveToNext()) {
                 userName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME));
             }
-
+            cursor.close();
         }
         return userName;
     }
@@ -318,6 +299,7 @@ public class DBManager {
                 adminData.setToken_expirtime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TOKEN_EXPIRY_TIME)));
                 adminData.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_NAME)));
             }
+            cursor.close();
         }
         return adminData;
     }
@@ -331,7 +313,7 @@ public class DBManager {
             while (cursor.moveToNext()) {
                 phoneNumber = cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM));
             }
-
+            cursor.close();
         }
         return phoneNumber;
     }
@@ -345,7 +327,7 @@ public class DBManager {
             while (cursor.moveToNext()) {
                 consentStatus = cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS));
             }
-
+            cursor.close();
         }
         return consentStatus;
     }
@@ -353,7 +335,6 @@ public class DBManager {
     public RegisterData getAdminRegistrationDetail() {
         mDatabase = mDBHelper.getWritableDatabase();
         RegisterData data = new RegisterData();
-
         String[] column = {DatabaseHelper.NAME, DatabaseHelper.EMAIL, DatabaseHelper.DEVICE_NUM, DatabaseHelper.PASS, DatabaseHelper.DOB};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_USER, column, null, null, null, null, null);
         if (cursor != null) {
@@ -364,6 +345,7 @@ public class DBManager {
                 data.setDob(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DOB)));
                 data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
             }
+            cursor.close();
         }
         return data;
     }
