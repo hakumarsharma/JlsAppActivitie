@@ -3,8 +3,6 @@ package com.jio.devicetracker.database.pojo.request;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.jio.devicetracker.database.pojo.FMSAPIData;
-import com.jio.devicetracker.database.pojo.FMSHeader;
-import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Util;
 

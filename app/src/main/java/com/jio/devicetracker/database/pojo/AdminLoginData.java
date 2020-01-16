@@ -3,8 +3,8 @@ package com.jio.devicetracker.database.pojo;
 public class AdminLoginData {
 
     private String email;
-    private String user_token;
-    private String token_expirtime;
+    private String userToken;
+    private String tokenExpirytime;
     private String userId;
     private String name;
 
@@ -24,20 +24,20 @@ public class AdminLoginData {
         this.email = email;
     }
 
-    public String getUser_token() {
-        return user_token;
+    public String getUserToken() {
+        return userToken;
     }
 
-    public void setUser_token(String user_token) {
-        this.user_token = user_token;
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 
-    public String getToken_expirtime() {
-        return token_expirtime;
+    public String getTokenExpirytime() {
+        return tokenExpirytime;
     }
 
-    public void setToken_expirtime(String token_expirtime) {
-        this.token_expirtime = token_expirtime;
+    public void setTokenExpirytime(String tokenExpirytime) {
+        this.tokenExpirytime = tokenExpirytime;
     }
 
     public String getUserId() {

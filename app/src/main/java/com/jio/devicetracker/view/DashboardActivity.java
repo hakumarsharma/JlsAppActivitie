@@ -253,7 +253,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
     private void getAdminDetail() {
         AdminLoginData adminLoginData = new DBManager(this).getAdminLoginDetail();
-        userToken = adminLoginData.getUser_token();
+        userToken = adminLoginData.getUserToken();
         adminEmail = adminLoginData.getEmail();
     }
 

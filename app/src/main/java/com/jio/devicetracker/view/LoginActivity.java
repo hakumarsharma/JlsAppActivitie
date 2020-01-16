@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -28,7 +27,6 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.ForgetPassToken;
 import com.jio.devicetracker.database.pojo.Userdata;
-import com.jio.devicetracker.database.pojo.request.ForgetpasswordTokenRequest;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.network.MessageListener;
@@ -36,7 +34,6 @@ import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import java.util.regex.Pattern;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
@@ -209,7 +206,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onResponse(Object response) {
             logindetailResponse = Util.getInstance().getPojoObject(String.valueOf(response), LogindetailResponse.class);
-            if (logindetailResponse.getUgs_token() != null) {
+            if (logindetailResponse.getUgsToken() != null) {
                 new DBManager(LoginActivity.this).insertLoginData(logindetailResponse);
                 Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                 startActivity(intent);

@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class LogindetailResponse implements Serializable {
     @SerializedName("ugs_token")
-    private String ugs_token;
+    private String ugsToken;
 
     @SerializedName("message")
     private String message;
@@ -16,14 +16,14 @@ public class LogindetailResponse implements Serializable {
     private User user;
 
     @SerializedName("ugs_token_expiry")
-    private Long ugs_token_expiry;
+    private Long ugsTokenExpiry;
 
-    public String getUgs_token() {
-        return ugs_token;
+    public String getUgsToken() {
+        return ugsToken;
     }
 
-    public void setUgs_token(String ugs_token) {
-        this.ugs_token = ugs_token;
+    public void setUgsToken(String ugsToken) {
+        this.ugsToken = ugsToken;
     }
 
     public User getUser() {
@@ -34,12 +34,12 @@ public class LogindetailResponse implements Serializable {
         this.user = user;
     }
 
-    public Long getUgs_token_expiry() {
-        return ugs_token_expiry;
+    public Long getUgsTokenExpiry() {
+        return ugsTokenExpiry;
     }
 
-    public void setUgs_token_expiry(Long ugs_token_expiry) {
-        this.ugs_token_expiry = ugs_token_expiry;
+    public void setUgsTokenExpiry(Long ugsTokenExpiry) {
+        this.ugsTokenExpiry = ugsTokenExpiry;
     }
 
     public String getMessage() {
@@ -52,7 +52,7 @@ public class LogindetailResponse implements Serializable {
 
     public class User implements Serializable {
         @SerializedName("_id")
-        private String _id;
+        private String id;
 
         @SerializedName("email")
         private String email;
@@ -76,12 +76,12 @@ public class LogindetailResponse implements Serializable {
             this.email = email;
         }
 
-        public String get_id() {
-            return _id;
+        public String getId() {
+            return id;
         }
 
-        public void set_id(String _id) {
-            this._id = _id;
+        public void setId(String id) {
+            this.id = id;
         }
     }
 }

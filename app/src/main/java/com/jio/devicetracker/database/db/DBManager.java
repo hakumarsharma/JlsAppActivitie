@@ -14,7 +14,6 @@ import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
-import com.jio.devicetracker.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +59,7 @@ public class DBManager {
     public long insertLoginData(LogindetailResponse data) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.USER_TOKEN, data.getUgs_token());
+        contentValue.put(DatabaseHelper.USER_TOKEN, data.getUgsToken());
         contentValue.put(DatabaseHelper.USER_ID, data.getUser().get_id());
         contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, data.getUgs_token_expiry());
         contentValue.put(DatabaseHelper.EMAIL, data.getUser().getEmail());
@@ -295,8 +294,8 @@ public class DBManager {
                 adminData = new AdminLoginData();
                 adminData.setEmail(cursor.getString(cursor.getColumnIndex(DatabaseHelper.EMAIL)));
                 adminData.setUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_ID)));
-                adminData.setUser_token(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_TOKEN)));
-                adminData.setToken_expirtime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TOKEN_EXPIRY_TIME)));
+                adminData.setUserToken(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_TOKEN)));
+                adminData.setTokenExpirytime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TOKEN_EXPIRY_TIME)));
                 adminData.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_NAME)));
             }
             cursor.close();

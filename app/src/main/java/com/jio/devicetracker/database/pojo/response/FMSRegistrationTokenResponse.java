@@ -78,18 +78,18 @@ public class FMSRegistrationTokenResponse implements Serializable {
 
     public class Data implements Serializable {
         @SerializedName("_id")
-        private String _id;
+        private String id;
         @SerializedName("authType")
         private String authType;
         @SerializedName("registration")
         private Registration registration;
 
-        public String get_id() {
-            return _id;
+        public String getId() {
+            return id;
         }
 
-        public void set_id(String _id) {
-            this._id = _id;
+        public void setId(String id) {
+            this.id = id;
         }
 
         public String getAuthType() {
@@ -115,7 +115,7 @@ public class FMSRegistrationTokenResponse implements Serializable {
         @SerializedName("autoUnlock")
         private boolean autoUnlock;
         @SerializedName("_id")
-        private String _id;
+        private String id;
         @SerializedName("createdAt")
         private String createdAt;
         @SerializedName("token")
@@ -137,12 +137,12 @@ public class FMSRegistrationTokenResponse implements Serializable {
             this.autoUnlock = autoUnlock;
         }
 
-        public String get_id() {
-            return _id;
+        public String getId() {
+            return id;
         }
 
-        public void set_id(String _id) {
-            this._id = _id;
+        public void setId(String id) {
+            this.id = id;
         }
 
         public String getCreatedAt() {
