@@ -320,7 +320,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             showProgressBarDialog();
             TrackerdeviceData data = new TrackerdeviceData();
             TrackerdeviceData.StartsWith startsWith = data.new StartsWith();
-            startsWith.setCurrentDate(Util.ConvertTimeToEpochtime());
+            startsWith.setCurrentDate(Util.convertTimeToEpochtime());
             data.setStartsWith(startsWith);
             devicePresent.setVisibility(View.GONE);
             RequestHandler.getInstance(getApplicationContext()).handleRequest(new TrackdeviceRequest(new SuccessListener(), new ErrorListener(), token, data));
@@ -461,7 +461,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public void makeAPICall(String token) {
         TrackerdeviceData data = new TrackerdeviceData();
         TrackerdeviceData.StartsWith startsWith = data.new StartsWith();
-        startsWith.setCurrentDate(Util.ConvertTimeToEpochtime());
+        startsWith.setCurrentDate(Util.convertTimeToEpochtime());
         data.setStartsWith(startsWith);
         if (context != null) {
             RequestHandler.getInstance(context).handleRequest(new TrackdeviceRequest(new SuccessAPICall(), new UnSuccessfullAPICall(), token, data));

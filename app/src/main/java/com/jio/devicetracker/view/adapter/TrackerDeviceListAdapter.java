@@ -2,12 +2,10 @@
 package com.jio.devicetracker.view.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,8 +24,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
     private Context mContext;
     private List<AddedDeviceData> mData;
     private static RecyclerViewClickListener itemListener;
-    private int count;
-    private boolean isSelect;
     private MultipleselectData mSelectData;
 
     public TrackerDeviceListAdapter(Context mContext, List<AddedDeviceData> mData) {
@@ -46,7 +42,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        //count=position;
         AddedDeviceData data = mData.get(position);
         holder.phone.setText(mData.get(position).getPhoneNumber());
         holder.name.setText(mData.get(position).getName());
@@ -77,7 +72,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         holder.mConsent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //itemListener.consetClick(mData.get(position).getPhoneNumber());
                 data.setSelected(!data.isSelected());
                 if (data.isSelected()) {
                     holder.mConsent.setBackgroundResource(R.drawable.ic_checkmark);
@@ -112,19 +106,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             @Override
             public boolean onLongClick(View v) {
 
-              /*  data.setSelected(!data.isSelected());
-                if (data.isSelected()) {
-                    holder.mListlayout.setBackground(mContext.getResources().getDrawable(R.drawable.selector));
-                    mSelectData = new MultipleselectData();
-                    mSelectData.setPhone(mData.get(position).getPhoneNumber());
-                    mSelectData.setLat(mData.get(position).getLat());
-                    mSelectData.setLng(mData.get(position).getLng());
-                    mSelectData.setName(mData.get(position).getName());
-                    itemListener.recyclerViewListClicked(v, position, mSelectData,true);
-                } else {
-                    holder.mListlayout.setBackground(mContext.getResources().getDrawable(R.drawable.unselect_list));
-                    itemListener.recyclerViewListClicked(v, position, mSelectData,false);
-                }*/
                 return true;
             }
         });
@@ -138,9 +119,16 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView phone,name, relation,status;
+        public TextView phone;
+        public TextView name;
+        public TextView relation;
+        public TextView status;
         public CardView mListlayout;
-        public Button mDelete,mEdit,mConsent,mConsentStatus;
+        public Button mDelete;
+        public Button mEdit;
+        public Button mConsent;
+        public Button mConsentStatus;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -157,10 +145,10 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
     }
 
     public interface RecyclerViewClickListener {
-        public void recyclerViewListClicked(View v, int position, MultipleselectData data,boolean val);
-        public void recyclerviewEditList(String relation,String phoneNumber);
-        public void recyclerviewDeleteList(String phoneNuber,int position);
-        public void consetClick(String phoneNumber);
+        void recyclerViewListClicked(View v, int position, MultipleselectData data,boolean val);
+        void recyclerviewEditList(String relation,String phoneNumber);
+        void recyclerviewDeleteList(String phoneNuber,int position);
+        void consetClick(String phoneNumber);
     }
 
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {

@@ -60,8 +60,8 @@ public class DBManager {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
         contentValue.put(DatabaseHelper.USER_TOKEN, data.getUgsToken());
-        contentValue.put(DatabaseHelper.USER_ID, data.getUser().get_id());
-        contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, data.getUgs_token_expiry());
+        contentValue.put(DatabaseHelper.USER_ID, data.getUser().getId());
+        contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, data.getUgsTokenExpiry());
         contentValue.put(DatabaseHelper.EMAIL, data.getUser().getEmail());
         contentValue.put(DatabaseHelper.USER_NAME, data.getUser().getName());
         return mDatabase.insert(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
