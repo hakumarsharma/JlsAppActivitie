@@ -59,36 +59,10 @@ public final class Util {
         return gson.fromJson(response, pojo);
     }
 
-    public void setUserToken(Context mContext, String userToken) {
-        sharedpreferences = mContext.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString("UserToken", userToken);
-        editor.commit();
-    }
-
-    public static String getUserToken() {
-        if (sharedpreferences != null) {
-            return sharedpreferences.getString("UserToken", "");
-        }
-        return "";
-    }
-
-    public static void setListvalue(List<AddedDeviceData> mList) {
-        list = mList;
-
-    }
-
     public static List<AddedDeviceData> getAddedDevicelist() {
         return list;
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
-    }
 
     // Method to check Mobile network
     public static boolean isMobileNetworkAvailable(Context mContext) {
@@ -171,22 +145,6 @@ public final class Util {
         if (pass == null)
             return false;
         return pat.matcher(pass).matches();
-    }
-
-    public String getFourDigitRandomNumber(){
-        Random random = new Random();
-        return String.format("%04d", random.nextInt(10000));
-    }
-
-    public void showProgressBarDialog(Context context, String message) {
-        progressDialog = ProgressDialog.show(context, "", message, true);
-        progressDialog.setCancelable(true);
-    }
-
-    public void dismissProgressBarDialog() {
-        if(progressDialog != null) {
-            progressDialog.dismiss();
-        }
     }
 
     public static long convertTimeToEpochtime()
