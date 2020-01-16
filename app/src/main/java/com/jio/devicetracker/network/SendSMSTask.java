@@ -12,9 +12,4 @@ public class SendSMSTask extends AsyncTask<String, String, Void> {
         smsManager.sendTextMessage(strings[0], null, strings[1], null, null);
         return null;
     }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-    }
 }

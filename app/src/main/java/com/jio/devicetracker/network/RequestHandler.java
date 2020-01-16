@@ -18,10 +18,6 @@ public class RequestHandler {
     private static Context mContext;
     private RequestQueue mRequestQueue;
 
-    public RequestHandler() {
-
-    }
-
     public static synchronized RequestHandler getInstance(Context context) {
         RequestHandler.mContext = context;
         if (mRequestHandler == null) {

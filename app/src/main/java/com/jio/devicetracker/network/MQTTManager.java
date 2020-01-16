@@ -2,9 +2,6 @@ package com.jio.devicetracker.network;
 
 import android.content.Context;
 import android.util.Log;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.mqttclient.JiotMqttCallback;
@@ -13,8 +10,6 @@ import com.jio.mqttclient.JiotMqttConnectOptions;
 import com.jio.mqttclient.JiotMqttCreateOptions;
 import com.jio.mqttclient.JiotMqttDeliveryToken;
 import com.jio.mqttclient.JiotMqttToken;
-
-import java.util.UUID;
 
 public class MQTTManager {
 
@@ -55,12 +50,12 @@ public class MQTTManager {
 
                 @Override
                 public void onUnsubscribeCompleted(JiotMqttToken jiotMqttToken) {
-
+                    Log.d("TAG --> ", "On Unsubscribe completion");
                 }
 
                 @Override
                 public void onUnsubscribeFailed(JiotMqttToken jiotMqttToken, Throwable throwable) {
-
+                    Log.d("TAG --> ", "On Unsubscribe failure");
                 }
 
                 @Override
@@ -75,12 +70,12 @@ public class MQTTManager {
 
                 @Override
                 public void onMessageArrived(String s, String s1) {
-
+                    Log.d("TAG --> ", "On message arrival");
                 }
 
                 @Override
                 public void onConnectionLost(Throwable throwable) {
-
+                    Log.d("TAG --> ", "On Connection lost");
                 }
             }, jiotMqttCreateOptions);
             return jiotMqttClient;
