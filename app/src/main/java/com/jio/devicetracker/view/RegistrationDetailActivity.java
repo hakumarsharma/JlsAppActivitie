@@ -2,9 +2,6 @@ package com.jio.devicetracker.view;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -14,10 +11,9 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -31,12 +27,9 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.RegisterRequestData;
-import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.request.RegistrationTokenrequest;
-import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.jiotoken.JioUtilsToken;
 import com.jio.devicetracker.network.RequestHandler;
-import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
@@ -44,19 +37,14 @@ import static android.Manifest.permission.READ_PHONE_NUMBERS;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.READ_SMS;
 
-import java.util.Calendar;
 import java.util.List;
 
 public class RegistrationDetailActivity extends Activity implements View.OnClickListener {
 
     private EditText mName, mEmail, mPhone, mPass, mRepass;
     private Button mRegister;
-    private int month, year, day;
-    private int DATE_PICKER_ID = 100;
     private RegisterRequestData data = null;
     private DBManager mDbmanager;
-    private Util util = null;
-    public static String randomNumber = "";
     private List<SubscriptionInfo> subscriptionInfos;
     public static String phoneNumber = null;
 
@@ -64,6 +52,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_registration_detail);
         setContentView(R.layout.activity_registration_detail);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText("Registration");
@@ -75,17 +64,17 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         mRegister = findViewById(R.id.register);
         mDbmanager = new DBManager(this);
         mRegister.setOnClickListener(this);
-        util = Util.getInstance();
 
         mName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.d("TAG", "Before text changed");
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!mName.getText().toString().equals("")) {
-                    mRegister.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.login_selector,null));
+                    mRegister.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
                     mRegister.setTextColor(Color.WHITE);
                 }
             }
@@ -94,7 +83,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             public void afterTextChanged(Editable s) {
                 String emailId = mName.getText().toString();
                 if (emailId.equals("")) {
-                    mRegister.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
+                    mRegister.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
                     mRegister.setTextColor(Color.WHITE);
                 }
             }
@@ -110,9 +99,9 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             case R.id.register:
                 validate();
                 break;
-           /* case R.id.dob:
-                SelectDate();
-                break;*/
+            default:
+                Log.d("TAG", "Some other button is clicked");
+                break;
         }
     }
 
@@ -140,8 +129,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             return;
         }
 
-        if(mPhone.getText().toString().length() < 10)
-        {
+        if (mPhone.getText().toString().length() < 10) {
             mPhone.setError("Enter the valid phone number");
         }
         if (mEmail.getText().toString().length() != 0 && !Util.isValidEmailId(mEmail.getText().toString().trim())) {
@@ -149,19 +137,14 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             return;
         }
 
-        if(mPass.getText().toString().length() != 0 && !Util.isValidPassword(mPass.getText().toString()))
-        {
+        if (mPass.getText().toString().length() != 0 && !Util.isValidPassword(mPass.getText().toString())) {
             mPass.setError(Constant.PASSWORD_VALIDATION2);
             return;
         }
         boolean jioCheck = getssoToken();
-        if(jioCheck)
-        {
+        if (jioCheck) {
             getServicecall();
         }
-
-
-
     }
 
     private void getServicecall() {
@@ -176,17 +159,14 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
 
         @Override
         public void onResponse(Object response) {
-
             int length = mPhone.getText().toString().trim().length();
-            String phoneNumber = mPhone.getText().toString().trim().substring(2,length);
+            String phoneNumber = mPhone.getText().toString().trim().substring(2, length);
             RegisterData data = new RegisterData();
             data.setName(mName.getText().toString().trim());
             data.setEmail(mEmail.getText().toString().trim());
             data.setPhoneNumber(phoneNumber);
-            //data.setPhoneNumber(mPhone.getText().toString().trim());
             data.setPassword(mPass.getText().toString());
             mDbmanager.insertAdminData(data);
-            //sendOTP();
             goToBorqsOTPActivity();
         }
     }
@@ -196,57 +176,16 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     }
 
     private class ErrorListener implements Response.ErrorListener {
-
         @Override
         public void onErrorResponse(VolleyError error) {
 
-            if(error.networkResponse.statusCode == 409)
-            {
-                Util.alertDilogBox("User is already registered","Jio Alert",RegistrationDetailActivity.this);
+            if (error.networkResponse.statusCode == 409) {
+                Util.alertDilogBox("User is already registered", "Jio Alert", RegistrationDetailActivity.this);
             } else {
-                Util.alertDilogBox("Register failed ,Please contact your admin","Jio Alert",RegistrationDetailActivity.this);
+                Util.alertDilogBox("Register failed ,Please contact your admin", "Jio Alert", RegistrationDetailActivity.this);
             }
         }
     }
-
-
-    /*private void SelectDate() {
-
-        final Calendar c = Calendar.getInstance();
-        year = c.get(Calendar.YEAR);
-        month = c.get(Calendar.MONTH);
-        day = c.get(Calendar.DAY_OF_MONTH);
-        final DatePickerDialog mDatePicker = new DatePickerDialog(RegistrationDetailActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                String monthselect, dayselect;
-                selectedmonth = selectedmonth + 1;
-                if (selectedmonth < 10) {
-                    monthselect = ("0" + selectedmonth);
-                } else {
-                    monthselect = String.valueOf(selectedmonth);
-                }
-                if (selectedday < 10) {
-                    dayselect = ("0" + selectedday);
-                } else {
-                    dayselect = String.valueOf(selectedday);
-                }
-
-            }
-        }, year, month, day);
-        mDatePicker.setTitle("Please select date");
-        // TODO Hide Future Date Here
-        mDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
-
-        // TODO Hide Past Date Here
-        //  mDatePicker.getDatePicker().setMinDate(System.currentTimeMillis());
-        mDatePicker.show();
-    }*/
-
-    /*private void sendOTP() {
-        randomNumber = util.getFourDigitRandomNumber();
-        new SendSMSTask().execute(mPhone.getText().toString(), randomNumber);
-    }*/
 
     private boolean getssoToken() {
         boolean isAvailable = Util.isMobileNetworkAvailable(RegistrationDetailActivity.this);
@@ -268,8 +207,6 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         if ((number != null && number.equals(phoneNumber)) || (number != null && number.equals("91" + phoneNumber))) {
             if (carierName.contains("Jio")) {
                 JioUtilsToken.getSSOIdmaToken(RegistrationDetailActivity.this);
-                //mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
-                //gotoDashBoardActivity();
                 return true;
             } else {
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
@@ -300,28 +237,23 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         // TODO change switch to if condition, if you are not handlig multiple cases
         switch (requestCode) {
             case 100:
-
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+                if (ActivityCompat.checkSelfPermission(this, READ_SMS) !=
                         PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                        READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
                 subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
                 checkJioSIMSlot1();
                 break;
+            default:
+                Log.d("TAG", "Permission is not granted");
+                break;
         }
     }
 
-   /* public void hideKeyboard(View view){
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }*/
-
-
-    public void checkJioSIMSlot1()
-    {
-        if(subscriptionInfos != null) {
+    public void checkJioSIMSlot1() {
+        if (subscriptionInfos != null) {
             String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
             if (!carrierNameSlot1.contains("Jio")) {
                 Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);

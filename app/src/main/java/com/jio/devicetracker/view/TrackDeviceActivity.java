@@ -29,15 +29,10 @@ import java.util.List;
 
 public class TrackDeviceActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String phoneNumber = null;
-    private TrackdeviceRequest mTrackRequest;
     private String TAG = "TrackDeviceActivity";
     private TrackerdeviceResponse mtrackerresponse;
-    public RequestQueue mRequestQueue;
     private String userToken =null;
     private EditText phoneNumberEditText = null;
-    public static double latitude = 0.0;
-    public static double longitude = 0.0;
     public Toolbar toolbar;
 
     @Override
@@ -65,14 +60,6 @@ public class TrackDeviceActivity extends AppCompatActivity implements View.OnCli
 
     private void getServicecall() {
         TrackerdeviceData data =new TrackerdeviceData();
-        /*TrackerdeviceData.Sort sort = data.new Sort();
-        sort.setLatestLocation(-1);
-        TrackerdeviceData.Latlong latlong = data.new Latlong();
-        latlong.setFrom(1542022465424L);
-        latlong.setTo(1542108865424L);
-        data.setmSort(sort);
-        data.setLatlong(latlong);*/
-
         RequestHandler.getInstance(getApplicationContext()).handleRequest(new TrackdeviceRequest(new SuccessListener(), new ErrorListener(),userToken,data));
     }
 
@@ -82,10 +69,8 @@ public class TrackDeviceActivity extends AppCompatActivity implements View.OnCli
         public void onResponse(Object response) {
             mtrackerresponse = Util.getInstance().getPojoObject(String.valueOf(response), TrackerdeviceResponse.class);
             List<TrackerdeviceResponse.Data> data= mtrackerresponse.getmData();
-           //List<Data> phoneList = (List<Data>) data.getPhoneNumber();
             Log.d(TAG,"Response print"+response);
            gotoDashboard(data);
-
         }
     }
 
@@ -93,15 +78,12 @@ public class TrackDeviceActivity extends AppCompatActivity implements View.OnCli
        Intent intent = new Intent(this,DashboardActivity.class);
        intent.putExtra("PhoneList",(Serializable)phoneList);
        startActivity(intent);
-
     }
 
     private class ErrorListener implements Response.ErrorListener {
-
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            Log.d("Error --> ", error.getMessage());
         }
     }
-
 }

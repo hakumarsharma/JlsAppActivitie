@@ -1,22 +1,17 @@
 package com.jio.devicetracker.util;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 
 import com.google.gson.Gson;
-import com.jio.devicetracker.database.pojo.AddedDeviceData;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,9 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
-import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -133,8 +126,9 @@ public final class Util {
         String passRegex = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,16})";
 
         Pattern pat = Pattern.compile(passRegex);
-        if (pass == null)
+        if (pass == null) {
             return false;
+        }
         return pat.matcher(pass).matches();
     }
 
