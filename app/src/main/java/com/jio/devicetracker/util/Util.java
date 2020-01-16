@@ -17,7 +17,6 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.google.gson.Gson;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
-import com.jio.devicetracker.view.DashboardActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +30,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-public class Util {
+public final class Util {
     private static Util mUtils;
     private static List<AddedDeviceData> list;
     static SharedPreferences sharedpreferences = null;
@@ -52,15 +51,12 @@ public class Util {
 
     public String toJSON(Object pojo) {
         Gson gson = new Gson();
-        String json = gson.toJson(pojo);
-        return json;
+        return gson.toJson(pojo);
     }
 
     public <T> T getPojoObject(String response, Class<T> pojo) {
-        T t = null;
         Gson gson = new Gson();
-        t = gson.fromJson(response, pojo);
-        return t;
+        return gson.fromJson(response, pojo);
     }
 
     public void setUserToken(Context mContext, String userToken) {
@@ -72,8 +68,7 @@ public class Util {
 
     public static String getUserToken() {
         if (sharedpreferences != null) {
-            String token = sharedpreferences.getString("UserToken", "");
-            return token;
+            return sharedpreferences.getString("UserToken", "");
         }
         return "";
     }
@@ -194,7 +189,7 @@ public class Util {
         }
     }
 
-    public static long ConvertTimeToEpochtime()
+    public static long convertTimeToEpochtime()
     {
         long epochTime = 0;
         Date today = Calendar.getInstance().getTime();
