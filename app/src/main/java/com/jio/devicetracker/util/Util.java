@@ -32,11 +32,7 @@ import java.util.regex.Pattern;
 
 public final class Util {
     private static Util mUtils;
-    private static List<AddedDeviceData> list;
-    static SharedPreferences sharedpreferences = null;
-    public static final String MyPREFERENCES = "MyPrefs";
     private static String sessionID = null;
-    ProgressDialog progressDialog = null;
 
     private Util() {
 
@@ -58,11 +54,6 @@ public final class Util {
         Gson gson = new Gson();
         return gson.fromJson(response, pojo);
     }
-
-    public static List<AddedDeviceData> getAddedDevicelist() {
-        return list;
-    }
-
 
     // Method to check Mobile network
     public static boolean isMobileNetworkAvailable(Context mContext) {
