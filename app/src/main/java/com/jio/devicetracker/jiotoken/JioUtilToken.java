@@ -7,7 +7,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.iot.sso.JiotAuthenticationManager;
 import com.jio.iot.sso.JiotSSOApp;
 
-public class JioUtilsToken {
+public class JioUtilToken {
     private static JiotSSOApp jioSSo;
     private static JiotAuthenticationManager mJioAuth;
 

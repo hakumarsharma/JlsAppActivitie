@@ -31,7 +31,7 @@ public final class Util {
 
     }
 
-    public static Util getInstance() {
+    public synchronized static Util getInstance() {
         if (mUtils == null) {
             mUtils = new Util();
         }
@@ -54,8 +54,8 @@ public final class Util {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo[] info = connectivity.getAllNetworkInfo();
         if (info != null) {
-            for (int i = 0; i < info.length; i++) {
-                if (info[i].getType() == ConnectivityManager.TYPE_MOBILE && info[i].isConnected()) {
+            for (NetworkInfo networkInfo : info ) {
+                if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE && networkInfo.isConnected()) {
                     return true;
                 }
             }
@@ -107,6 +107,7 @@ public final class Util {
     }
 
     private int checkSelfPermission(String readPhoneState) {
+        Log.d("TAG", readPhoneState);
         return 1;
     }
 

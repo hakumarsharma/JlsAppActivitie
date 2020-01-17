@@ -1,6 +1,5 @@
 package com.jio.devicetracker.view;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,7 +27,7 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.RegisterRequestData;
 import com.jio.devicetracker.database.pojo.request.RegistrationTokenrequest;
-import com.jio.devicetracker.jiotoken.JioUtilsToken;
+import com.jio.devicetracker.jiotoken.JioUtilToken;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -207,7 +206,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
 
         if (number != null && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
             if (carierName.contains("Jio")) {
-                JioUtilsToken.getSSOIdmaToken(RegistrationDetailActivity.this);
+                JioUtilToken.getSSOIdmaToken(RegistrationDetailActivity.this);
                 return true;
             } else {
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);

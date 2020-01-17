@@ -233,7 +233,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public boolean onOptionsItemSelected(MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             AdminLoginData adminLoginData = mDbManager.getAdminLoginDetail();
-            user_account_name.setText(adminLoginData.getName().substring(0, 1).toUpperCase() + adminLoginData.getName().substring(1));
+            user_account_name.setText(adminLoginData.getName().substring(0, 1).toUpperCase(locale) + adminLoginData.getName().substring(1));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -250,7 +250,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         MQTTManager mqttManager = new MQTTManager();
         List<AddedDeviceData> consentData = mDbManager.getAlldataFromFMS();
         for (AddedDeviceData consent : consentData) {
-            if ((consent.getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone())) && consent.getConsentStaus().trim().equalsIgnoreCase("yes jiotracker")) {
+            if (consent.getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone()) && consent.getConsentStaus().trim().equalsIgnoreCase("yes jiotracker")) {
                 String topic = "jioiot/svckm/jiophone/" + util.getIMEI(getApplicationContext()) + "/uc/fwd/sesid";
                 Log.d("Topic --> ", topic);
                 trackeeIMEI = consent.getImeiNumber();
@@ -361,15 +361,15 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
                 return;
             }
-            for (int i = 0; i < consentData.size(); i++) {
-                for (int j = 0; j < selectedData.size(); j++) {
-                    if (consentData.get(i).getPhoneNumber().equals(selectedData.get(j).getPhone())) {
-                        if (consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")) {
-                            latLngMap = mDbManager.getLatLongForMap(selectedData, consentData.get(i).getPhoneNumber());
-                            namingMap.put(selectedData.get(i).getName(), latLngMap);
+            for(AddedDeviceData addedDeviceData : consentData) {
+                for(MultipleselectData multipleselectData : selectedData) {
+                    if(addedDeviceData.getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone())){
+                        if(addedDeviceData.getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")){
+                            latLngMap = mDbManager.getLatLongForMap(selectedData, addedDeviceData.getPhoneNumber());
+                            namingMap.put(multipleselectData.getName(), latLngMap);
                             flag = true;
                         } else {
-                            Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED + consentData.get(i).getPhoneNumber(), Constant.ALERT_TITLE, this);
+                            Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED + addedDeviceData.getPhoneNumber(), Constant.ALERT_TITLE, this);
                             flag = false;
                             return;
                         }
