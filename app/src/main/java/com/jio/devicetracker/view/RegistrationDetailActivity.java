@@ -41,7 +41,11 @@ import java.util.List;
 
 public class RegistrationDetailActivity extends Activity implements View.OnClickListener {
 
-    private EditText mName, mEmail, mPhone, mPass, mRepass;
+    private EditText mName;
+    private EditText mEmail;
+    private EditText mPhone;
+    private EditText mPass;
+    private EditText mRepass;
     private Button mRegister;
     private RegisterRequestData data = null;
     private DBManager mDbmanager;
@@ -52,7 +56,6 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_registration_detail);
         setContentView(R.layout.activity_registration_detail);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText("Registration");
@@ -68,7 +71,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         mName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.d("TAG", "Before text changed");
+                // Unused empty method
             }
 
             @Override
@@ -82,8 +85,8 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             @Override
             public void afterTextChanged(Editable s) {
                 String emailId = mName.getText().toString();
-                if (emailId.equals("")) {
-                    mRegister.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
+                if (emailId.isEmpty()) {
+                    mRegister.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
                     mRegister.setTextColor(Color.WHITE);
                 }
             }
@@ -124,7 +127,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
             mPass.setError("Password cannot be left blank.");
             return;
         }
-        if (mRepass.getText().toString().length() == 0 || (!mRepass.getText().toString().equals(mPass.getText().toString()))) {
+        if (mRepass.getText().toString().length() == 0 || !mRepass.getText().toString().equals(mPass.getText().toString())) {
             mRepass.setError("Password did not match, please try again");
             return;
         }
@@ -190,9 +193,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     private boolean getssoToken() {
         boolean isAvailable = Util.isMobileNetworkAvailable(RegistrationDetailActivity.this);
         if (isAvailable) {
-            boolean flag = checkJiooperator();
-            return flag;
-
+            return checkJiooperator();
         } else {
             Util.alertDilogBox(Constant.MOBILE_NETWORKCHECK, Constant.ALERT_TITLE, this);
             return false;
@@ -204,7 +205,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         String carierName = subscriptionInfos.get(0).getCarrierName().toString();
         String number = subscriptionInfos.get(0).getNumber();
 
-        if ((number != null && number.equals(phoneNumber)) || (number != null && number.equals("91" + phoneNumber))) {
+        if (number != null && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
             if (carierName.contains("Jio")) {
                 JioUtilsToken.getSSOIdmaToken(RegistrationDetailActivity.this);
                 return true;
@@ -234,21 +235,15 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        // TODO change switch to if condition, if you are not handlig multiple cases
-        switch (requestCode) {
-            case 100:
-                if (ActivityCompat.checkSelfPermission(this, READ_SMS) !=
-                        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                        READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-                checkJioSIMSlot1();
-                break;
-            default:
-                Log.d("TAG", "Permission is not granted");
-                break;
+        if (requestCode == 100) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
+            checkJioSIMSlot1();
         }
     }
 

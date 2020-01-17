@@ -129,7 +129,7 @@ public class FMSMapActivity extends AppCompatActivity implements OnMapReadyCallb
         mMap = googleMap;
         googleMap.clear();
         Map<String, Map<Double, Double>> namingMap = DashboardActivity.fmsNamingMap;
-        if (namingMap.size() > 0) {
+        if (!namingMap.isEmpty()) {
             for (Map.Entry<String, Map<Double, Double>> entry : namingMap.entrySet()) {
                 Map<Double, Double> latLongitudeMap = entry.getValue();
                 for (Map.Entry<Double, Double> mapEntry : latLongitudeMap.entrySet()) {
@@ -179,7 +179,7 @@ public class FMSMapActivity extends AppCompatActivity implements OnMapReadyCallb
         Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
+            if (!addresses.isEmpty()) {
                 Address fetchedAddress = addresses.get(0);
                 strAddress.append(fetchedAddress.getAddressLine(0)).append(" ");
             }

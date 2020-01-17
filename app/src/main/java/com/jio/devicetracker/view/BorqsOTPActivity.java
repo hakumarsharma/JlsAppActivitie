@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,7 +34,6 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
     private Button verify = null;
     private EditText emailOTP = null;
 //    public static EditText phoneOTP = null;
-    private Util util = null;
     private String emailOtp = "";
     RegisterData registerData = null;
 
@@ -51,12 +49,12 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
         phoneOTP.setText(DashboardActivity.otpNumber);*/
         verify = findViewById(R.id.verify);
         verify.setOnClickListener(this);
-        util = Util.getInstance();
         getAdminDetail();
 
         emailOTP.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Unused Method
             }
 
             @Override
@@ -70,7 +68,7 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void afterTextChanged(Editable s) {
                 String emailId = emailOTP.getText().toString();
-                if (emailId.equals("")) {
+                if (emailId.isEmpty()) {
                     verify.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
                     verify.setTextColor(Color.WHITE);
                 }
@@ -130,7 +128,6 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void makeEmailVerifyAPICall(String emailOTP) {
-        //util.showProgressBarDialog(this, "Please wait loading data...");
         FMSVerifyToken fmsVerifyToken = new FMSVerifyToken();
         fmsVerifyToken.setEmail(registerData.getEmail().trim());
         fmsVerifyToken.setToken(emailOTP.trim());
@@ -155,7 +152,6 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
                 fmsRegistrationToken.setToken(token);
                 RequestHandler.getInstance(getApplicationContext()).handleRequest(new FMSRegistrationTokenRequest(new BorqsOTPActivity.RegistrationTokenSuccessListener(), new BorqsOTPActivity.RegistrationTokenErrorListener(), fmsRegistrationToken));
             }else {
-                //util.dismissProgressBarDialog();
                 Toast.makeText(getApplicationContext(), "Verification failed!", Toast.LENGTH_SHORT).show();
             }
         }
@@ -165,7 +161,6 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            //util.dismissProgressBarDialog();
             Toast.makeText(getApplicationContext(), "Verification failed!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -175,7 +170,6 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
         @Override
         public void onResponse(Object response) {
             FMSRegistrationTokenResponse fmsRegistrationTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), FMSRegistrationTokenResponse.class);
-            //util.dismissProgressBarDialog();
             if(fmsRegistrationTokenResponse.getCode() == 200) {
                 goToLoginActivity();
                 Toast.makeText(getApplicationContext(), "Registration successfull!", Toast.LENGTH_SHORT).show();
@@ -187,7 +181,6 @@ public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            //util.dismissProgressBarDialog();
             Toast.makeText(getApplicationContext(), "Registration is failed!", Toast.LENGTH_SHORT).show();
         }
     }

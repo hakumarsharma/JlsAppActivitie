@@ -83,7 +83,7 @@ public class TrackDeviceActivity extends AppCompatActivity implements View.OnCli
     private class ErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d("Error --> ", error.getMessage());
+            // Unused empty method
         }
     }
 }

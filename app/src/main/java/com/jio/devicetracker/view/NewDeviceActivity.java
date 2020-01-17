@@ -16,7 +16,6 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
-import com.jio.devicetracker.jiotoken.JiotokenHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
@@ -26,12 +25,11 @@ import java.util.regex.Pattern;
 public class NewDeviceActivity extends AppCompatActivity implements View.OnClickListener {
 
     Intent intent = null;
-    private long insertRowid;
     private List<TrackerdeviceResponse.Data> mDatalist;
-    private EditText mDeviceNumber, mName, mDeviceImeiNumber,mRelation;
-    private Button mAdd;
-    private String number, name,imeiNumber;
-    private AddedDeviceData data = null;
+    private EditText mDeviceNumber;
+    private EditText mName;
+    private EditText mDeviceImeiNumber;
+    private EditText mRelation;
     private DBManager mDbManager;
     private AdminLoginData adminData;
 
@@ -47,19 +45,19 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         mDeviceNumber = findViewById(R.id.deviceName);
         mName = findViewById(R.id.memberName);
         mDeviceImeiNumber = findViewById(R.id.deviceIMEINumber);
-        mAdd = findViewById(R.id.save);
+        Button mAdd = findViewById(R.id.save);
         mDbManager = new DBManager(this);
         mAdd.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        data = new AddedDeviceData();
-        number = mDeviceNumber.getText().toString();
-        name = mName.getText().toString();
+        AddedDeviceData data = new AddedDeviceData();
+        String number = mDeviceNumber.getText().toString();
+        String name = mName.getText().toString();
          String phoneNumber=mDbManager.getAdminphoneNumber();
         //relation = mRelation.getText().toString();
-        imeiNumber = mDeviceImeiNumber.getText().toString();
+        String imeiNumber = mDeviceImeiNumber.getText().toString();
         if (!isValidIMEINumber(imeiNumber)) {
             mDeviceImeiNumber.setError(Constant.IMEI_VALIDATION);
             return;
@@ -69,13 +67,12 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
             mDeviceNumber.setError(Constant.MOBILENUMBER_VALIDATION);
             return;
         }
-        if(phoneNumber.equals("91"+number))
-        {
+        if(phoneNumber.equals("91"+ number)) {
             Util.alertDilogBox(Constant.REGMOBILENUMBER_VALIDATION,Constant.ALERT_TITLE,this);
             return;
         }
 
-        if (number.equals("") || name.equals("")) {
+        if (number.isEmpty() || name.isEmpty()) {
             Toast.makeText(this, Constant.CHECK_DETAILS, Toast.LENGTH_SHORT).show();
         } else {
             data.setImeiNumber(imeiNumber);
@@ -103,23 +100,24 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
     private void matchMobileNumber(AddedDeviceData addedDeviceData) {
         adminData = mDbManager.getAdminLoginDetail();
         boolean isLatLngFound = false;
-        if((RegistrationActivity.isFMSFlow == false) && mDatalist != null) {
-            for (int i = 0; i < mDatalist.size(); i++) {
+        long insertRowid;
+        if((!RegistrationActivity.isFMSFlow) && mDatalist != null) {
+            for (TrackerdeviceResponse.Data data : mDatalist) {
                 String phoneNumber = addedDeviceData.getPhoneNumber().trim();
-                if (phoneNumber.equals(mDatalist.get(i).getmDevice().getPhoneNumber())) {
-                    if (mDatalist.get(i).getEvent() != null) {
+                if (phoneNumber.equals(data.getmDevice().getPhoneNumber())) {
+                    if (data.getEvent() != null) {
                         isLatLngFound = true;
-                        addedDeviceData.setLat(mDatalist.get(i).getEvent().getLocation().getLatLocation().getLatitu());
-                        addedDeviceData.setLng(mDatalist.get(i).getEvent().getLocation().getLatLocation().getLongni());
+                        addedDeviceData.setLat(data.getEvent().getLocation().getLatLocation().getLatitu());
+                        addedDeviceData.setLng(data.getEvent().getLocation().getLatLocation().getLongni());
                         insertRowid = mDbManager.insertInBorqsDB(addedDeviceData,adminData.getEmail());
                         //gotoDashBoard();
                         checkRow(insertRowid);
                         break;
-                    } else if (mDatalist.get(i).getLocation() != null) {
+                    } else if (data.getLocation() != null) {
                         isLatLngFound = true;
-                        addedDeviceData.setLat(mDatalist.get(i).getLocation().getLat().toString().trim());
-                        addedDeviceData.setLng(mDatalist.get(i).getLocation().getLng().toString().trim());
-                        insertRowid = mDbManager.insertInBorqsDB(addedDeviceData,adminData.getEmail().toString());
+                        addedDeviceData.setLat(data.getLocation().getLat().toString().trim());
+                        addedDeviceData.setLng(data.getLocation().getLng().toString().trim());
+                        insertRowid = mDbManager.insertInBorqsDB(addedDeviceData,adminData.getEmail());
                         checkRow(insertRowid);
                         //gotoDashBoard();
                         break;
@@ -144,10 +142,8 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
     }
 
-    private void checkRow(long id)
-    {
-        if(id == -1)
-        {
+    private void checkRow(long id) {
+        if(id == -1) {
             Util.alertDilogBox(Constant.DUPLICATE_NUMBER,Constant.ALERT_TITLE,this);
         } else {
             gotoDashBoard();

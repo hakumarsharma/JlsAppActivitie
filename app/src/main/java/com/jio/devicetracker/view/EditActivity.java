@@ -8,18 +8,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.EditProfileData;
-import com.jio.devicetracker.jiotoken.JiotokenHandler;
 import com.jio.devicetracker.util.Util;
 
 public class EditActivity extends Activity implements View.OnClickListener {
 
     private EditText mName, mNumber, mIMEI;
-    private Button mUpdate;
     private String number;
     private DBManager mDBmanager;
     private EditProfileData editData;
@@ -29,18 +25,18 @@ public class EditActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-        TextView toolbar_title = findViewById(R.id.toolbar_title);
-        toolbar_title.setText("Edit");
+        TextView toolbarTitle = findViewById(R.id.toolbar_title);
+        toolbarTitle.setText("Edit");
         mName = findViewById(R.id.memberName);
         //mRelation = findViewById(R.id.relation);
         mNumber = findViewById(R.id.deviceName);
         mIMEI = findViewById(R.id.deviceIMEINumber);
-        mUpdate = findViewById(R.id.update);
+        Button update = findViewById(R.id.update);
         mDBmanager = new DBManager(this);
-        mUpdate.setOnClickListener(this);
+        update.setOnClickListener(this);
         Intent intent = getIntent();
         number = intent.getStringExtra("number");
-        if (RegistrationActivity.isFMSFlow == false) {
+        if (!RegistrationActivity.isFMSFlow) {
             editData = mDBmanager.getUserdataForEdit(number);
         } else {
             editData = mDBmanager.getUserdataForEditFMS(number);
@@ -57,7 +53,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         String phoneNumber = mDBmanager.getAdminphoneNumber();
-        if (RegistrationActivity.isFMSFlow == false) {
+        if (!RegistrationActivity.isFMSFlow) {
             mDBmanager.updateProfile(number, mName.getText().toString(), mNumber.getText().toString(), mIMEI.getText().toString());
         } else {
             if (phoneNumber.equals("91" + mNumber.getText().toString())) {

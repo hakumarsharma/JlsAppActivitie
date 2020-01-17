@@ -13,40 +13,30 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.jiotoken.JioUtilsToken;
-import com.jio.devicetracker.jiotoken.JiotokenHandler;
 import com.jio.devicetracker.network.MQTTManager;
-import com.jio.devicetracker.util.AESEncrypt;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.mqttclient.JiotMqttClient;
 
 import java.util.List;
 
-import static android.Manifest.permission.READ_PHONE_NUMBERS;
-import static android.Manifest.permission.READ_PHONE_STATE;
-import static android.Manifest.permission.READ_SMS;
-
 public class RegistrationActivity extends Activity implements View.OnClickListener {
 
-    private Button mRegistration, mBorqs;
-    private EditText mJionmber, mName;
-    private AESEncrypt mAesEncryption = null;
+    private Button mRegistration;
+    private EditText mJionmber;
+    private EditText mName;
     private List<SubscriptionInfo> subscriptionInfos;
-    private DBManager mDbManager;
     public static boolean isFMSFlow = false;
     public static String phoneNumber = null;
 
@@ -61,22 +51,12 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         mJionmber = findViewById(R.id.jioNumber);
         mName = findViewById(R.id.name);
         mRegistration = findViewById(R.id.registration);
-       // mBorqs = findViewById(R.id.borqs);
-        mDbManager = new DBManager(this);
         mRegistration.setOnClickListener(this);
-        //mBorqs.setOnClickListener(this);
         mJionmber.setOnClickListener(this);
-        try {
-            mAesEncryption = new AESEncrypt(Util.getProperty("key", this));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
         mJionmber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                // Unused empty method
             }
 
             @Override
@@ -88,7 +68,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             @Override
             public void afterTextChanged(Editable s) {
                 String number = mJionmber.getText().toString();
-                if (number.equals("")) {
+                if (number.isEmpty()) {
                     mRegistration.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
                     mRegistration.setTextColor(Color.WHITE);
                 } else {
@@ -111,24 +91,22 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     // Request for SMS and Phone Permissions
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{READ_SMS, READ_PHONE_NUMBERS, READ_PHONE_STATE}, 100);
+            requestPermissions(new String[]{Manifest.permission.READ_SMS,
+                    Manifest.permission.READ_PHONE_NUMBERS,
+                    Manifest.permission.READ_PHONE_STATE}, 100);
         }
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        // TODO change switch to if condition, if you are not handlig multiple cases
-        switch (requestCode) {
-            case 100:
-
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
-                        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-                checkJioSIMSlot1();
-                break;
+        if (100 == requestCode) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
+            checkJioSIMSlot1();
         }
     }
 
@@ -147,6 +125,8 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
           /*  case R.id.jioNumber:
                 showDialog(subscriptionInfos);*/
+          default:
+              break;
 
         }
     }
@@ -183,8 +163,8 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         String carierName = subscriptionInfos.get(0).getCarrierName().toString();
         String number = subscriptionInfos.get(0).getNumber();
 
-        if((number != null && number.equals(phoneNumber)) || (number !=null && number.equals("91"+ phoneNumber)) )
-        {
+        if(number != null
+                && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
             if (carierName.contains("Jio"))
             {
                 JioUtilsToken.getSSOIdmaToken(RegistrationActivity.this);
@@ -204,13 +184,6 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
         }
 
-    }
-
-    private void gotoLoginScreen() {
-        JiotokenHandler.ssoToken = null;
-        isFMSFlow = false;
-        Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
-        startActivity(intent);
     }
 
     private void gotoDashBoardActivity() {

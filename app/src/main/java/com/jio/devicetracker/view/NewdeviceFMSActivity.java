@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import com.jio.devicetracker.R;
 
 public class NewdeviceFMSActivity extends Activity implements View.OnClickListener {
@@ -26,6 +24,6 @@ public class NewdeviceFMSActivity extends Activity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-
+        // Unused empty method
     }
 }

@@ -75,8 +75,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public static List<MultipleselectData> selectedData;
     public static List<TrackerdeviceResponse.Data> data;
     private TrackerDeviceListAdapter adapter;
-    private static List<AddedDeviceData> addDeviceList;
-    private static final int PERMIT_ALL = 1;
+    private static List<AddedDeviceData> addDeviceList;    private static final int PERMIT_ALL = 1;
     public static List<String> consentListPhoneNumber = null;
     public static Map<Double, Double> latLngMap = null;
     private static DBManager mDbManager;
@@ -84,13 +83,14 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private ProgressDialog progressDialog = null;
     public static Map<String, Map<Double, Double>> namingMap = null;
     private static Context context = null;
-    private boolean flagValue;
+    private String number;
     public static Map<Double, Double> fmsLatLngMap = null;
     public static Map<String, Map<Double, Double>> fmsNamingMap = null;
     public static String trackeeIMEI = null;
     private String trackeeName = "";
     private DashboardActivity dashboardActivity = null;
     public static String adminEmail;
+    public static String otpNumber = "";
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
 
@@ -100,20 +100,19 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         setContentView(R.layout.activity_dashboard);
         toolbar = findViewById(R.id.customToolbar);
         listView = findViewById(R.id.listView);
-        FloatingActionButton mActionbtn = findViewById(R.id.fab);
+        FloatingActionButton actionBtn = findViewById(R.id.fab);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         listView.setLayoutManager(linearLayoutManager);
         intent = getIntent();
         mDbManager = new DBManager(this);
-        String number = intent.getStringExtra("phone");
-        flagValue = intent.getBooleanExtra("flag", false);
-        consentRequestBox(flagValue, number);
+        consentRequestBox(intent.getBooleanExtra("flag", false),
+                intent.getStringExtra("phone"));
         Button trackBtn = toolbar.findViewById(R.id.track);
         trackBtn.setVisibility(View.VISIBLE);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Constant.DASHBOARD_TITLE + "               ");
         trackBtn.setOnClickListener(this);
-        mActionbtn.setOnClickListener(this);
+        actionBtn.setOnClickListener(this);
         setSupportActionBar(toolbar);
         MessageReceiver.bindListener(DashboardActivity.this);
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
@@ -251,12 +250,12 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         Util util = Util.getInstance();
         MQTTManager mqttManager = new MQTTManager();
         List<AddedDeviceData> consentData = mDbManager.getAlldataFromFMS();
-        for (int i = 0; i < consentData.size(); i++) {
-            if ((consentData.get(i).getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone())) && consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("yes jiotracker")) {
+        for (AddedDeviceData consent : consentData) {
+            if ((consent.getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone())) && consent.getConsentStaus().trim().equalsIgnoreCase("yes jiotracker")) {
                 String topic = "jioiot/svckm/jiophone/" + util.getIMEI(getApplicationContext()) + "/uc/fwd/sesid";
                 Log.d("Topic --> ", topic);
-                trackeeIMEI = consentData.get(i).getImeiNumber();
-                String message = "{\"reqId\":\"" + consentData.get(i).getImeiNumber() + "\",\"trkId\":\"" + util.getIMEI(getApplicationContext()) + "\",\"sesId\":\"" + Util.getInstance().getSessionId() + "\",\"trknr\":\"" + RegistrationActivity.phoneNumber.substring(2) + "\",\"reqnr\":\"" + consentData.get(i).getPhoneNumber() + "\"}";
+                trackeeIMEI = consent.getImeiNumber();
+                String message = "{\"reqId\":\"" + consent.getImeiNumber() + "\",\"trkId\":\"" + util.getIMEI(getApplicationContext()) + "\",\"sesId\":\"" + Util.getInstance().getSessionId() + "\",\"trknr\":\"" + RegistrationActivity.phoneNumber.substring(2) + "\",\"reqnr\":\"" + consent.getPhoneNumber() + "\"}";
                 Log.d("Message --> ", message);
                 mqttManager.publishMessage(topic, message);
             }
@@ -284,7 +283,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         List<AddedDeviceData> alldata = null;
         if (RegistrationActivity.isFMSFlow == false) {
             alldata = dbManager.getAlldata(adminEmail);
-            if (alldata.size() == 0) {
+            if (alldata.isEmpty()) {
                 listView.setVisibility(View.INVISIBLE);
                 devicePresent.setVisibility(View.VISIBLE);
             } else {
@@ -293,7 +292,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             }
         } else {
             alldata = dbManager.getAlldataFromFMS();
-            if (alldata.size() == 0) {
+            if (alldata.isEmpty()) {
                 listView.setVisibility(View.INVISIBLE);
                 devicePresent.setVisibility(View.VISIBLE);
             } else {
@@ -356,7 +355,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         boolean flag = false;
         if (RegistrationActivity.isFMSFlow == false) {
             List<AddedDeviceData> consentData = mDbManager.getAlldata(adminEmail);
-            if (selectedData.size() == 0) {
+            if (selectedData.isEmpty()) {
                 Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
                 return;
             }
@@ -385,7 +384,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             List<String> imeiNumbers = new ArrayList<>();
             List<String> phoneNumbers = new ArrayList<>();
             List<AddedDeviceData> consentData = mDbManager.getAlldataFromFMS();
-            if (selectedData.size() == 0) {
+            if (selectedData.isEmpty()) {
                 Util.alertDilogBox("Please select the number for tracking", "Jio Alert", this);
                 return;
             }
@@ -491,12 +490,12 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private void sendSMS(String phoneNumber) {
         String userName = mDbManager.getAdminDetail();
         String consentStatus = mDbManager.getConsentStatusBorqs(phoneNumber);
-        if (consentStatus.equalsIgnoreCase("Yes JioTracker")) {
+        if ("Yes JioTracker".equalsIgnoreCase(consentStatus)) {
             Util.alertDilogBox(Constant.CONSENT_APPROVED, Constant.ALERT_TITLE, this);
         } else {
             new SendSMSTask().execute(phoneNumber, userName + " from JioTracker application wants to track your location, please reply with \"Yes JioTracker\" or \"No JioTracker !");
             Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
-            if (RegistrationActivity.isFMSFlow == false) {
+            if (!RegistrationActivity.isFMSFlow) {
                 mDbManager.updatependingConsent(phoneNumber);
                 showDatainList();
             } else {
@@ -524,7 +523,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         Toast.makeText(DashboardActivity.this, "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
         Log.d("Received Message --> ", message);
         String phone = phoneNum.substring(3);
-        if (RegistrationActivity.isFMSFlow == false) {
+        if (!RegistrationActivity.isFMSFlow) {
             mDbManager.updateConsentInBors(phone, message.toLowerCase().trim());
             showDatainList();
             /*if (RegistrationDetailActivity.phoneNumber != null && message.length() == 4) {
@@ -534,22 +533,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         } else {
             mDbManager.updateConsentInFMS(phone, message);
             showDataFromFMS();
-        }
-    }
-
-    private void publishMQTTMessage(String phoneNumber) {
-        Util util = Util.getInstance();
-        MQTTManager mqttManager = new MQTTManager();
-        if (addDeviceList != null) {
-            for (int i = 0; i < addDeviceList.size(); i++) {
-                if (addDeviceList.get(i).getPhoneNumber().equalsIgnoreCase(phoneNumber)) {
-                    String topic = "jioiot/svckm/jiophone/" + util.getIMEI(this) + "/uc/fwd/sesid";
-                    Log.d("Topic --> ", topic);
-                    String message = "{\"reqId\":\"" + addDeviceList.get(i).getImeiNumber() + "\",\"trkId\":\"" + util.getIMEI(getApplicationContext()) + "\",\"sesId\":\"" + Util.getInstance().getSessionId() + "\",\"trknr\":\"" + RegistrationActivity.phoneNumber.substring(2) + "\",\"reqnr\":\"" + addDeviceList.get(i).getPhoneNumber() + "\"}";
-                    Log.d("Message --> ", message);
-                    mqttManager.publishMessage(topic, message);
-                }
-            }
         }
     }
 
@@ -581,23 +564,17 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         adb.setTitle(title);
         adb.setMessage(message);
         adb.setIcon(android.R.drawable.ic_dialog_alert);
-        adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                if (RegistrationActivity.isFMSFlow == false) {
-                    mDbManager.deleteSelectedData(phoneNumber);
-                } else {
-                    mDbManager.deleteSelectedDataformFMS(phoneNumber);
-                }
-                //mDbManager.deleteSelectedData(phoneNumber);
-                adapter.removeItem(position);
-                isDevicePresent();
+        adb.setPositiveButton("OK", (dialog, which) -> {
+            if (RegistrationActivity.isFMSFlow == false) {
+                mDbManager.deleteSelectedData(phoneNumber);
+            } else {
+                mDbManager.deleteSelectedDataformFMS(phoneNumber);
             }
+            //mDbManager.deleteSelectedData(phoneNumber);
+            adapter.removeItem(position);
+            isDevicePresent();
         });
-        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        adb.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         adb.show();
     }
 

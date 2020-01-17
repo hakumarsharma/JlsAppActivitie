@@ -25,7 +25,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.ForgetPassToken;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
@@ -38,15 +37,12 @@ import com.jio.devicetracker.util.Util;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
 
-    private String jioEmailIdText = null;
-    private String jioPasswordText = null;
     private EditText jioEmailEditText = null;
     private EditText jioPasswordEditText = null;
     public static LogindetailResponse logindetailResponse = null;
     private ProgressDialog progressDialog = null;
-    private TextView mRegisterText,mForgetPass;
     private static final int PERMIT_ALL = 1;
-    private ForgetPassToken data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,11 +55,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //jioEmailEditText.setText("shivakumar.jagalur@ril.com");
         jioPasswordEditText = findViewById(R.id.jioPassword);
         //jioPasswordEditText.setText("Jio@1234");
-        mRegisterText = findViewById(R.id.registedHere);
-        mForgetPass = findViewById(R.id.clickForget);
+        TextView registerText = findViewById(R.id.registedHere);
+        TextView forgetPass = findViewById(R.id.clickForget);
         MessageReceiver.bindListener(LoginActivity.this);
-        mRegisterText.setOnClickListener(this);
-        mForgetPass.setOnClickListener(this);
+        registerText.setOnClickListener(this);
+        forgetPass.setOnClickListener(this);
 
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
         if (!hasPermissions(LoginActivity.this, permissions)) {
@@ -73,6 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         jioEmailEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Unused empty method
             }
 
             @Override
@@ -86,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void afterTextChanged(Editable s) {
                 String emailId = jioEmailEditText.getText().toString();
-                if (emailId.equals("")) {
+                if (emailId.isEmpty()) {
                     loginButton.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
                     loginButton.setTextColor(Color.WHITE);
                 }
@@ -97,8 +94,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
 
-                jioEmailIdText = jioEmailEditText.getText().toString().trim();
-                jioPasswordText = jioPasswordEditText.getText().toString().trim();
+                String jioEmailIdText = jioEmailEditText.getText().toString().trim();
+                String jioPasswordText = jioPasswordEditText.getText().toString().trim();
                 if (jioEmailEditText.length() == 0) {
                     jioEmailEditText.setError(Constant.EMAILID_VALIDATION);
                     return;
@@ -151,17 +148,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-
-        switch(v.getId())
-        {
+        switch (v.getId()) {
             case R.id.registedHere:
                 gotoRegisterScreen();
                 break;
-
             case R.id.clickForget:
                 gotoForgetPassTokenScreen();
+                break;
+            default:
+                break;
         }
-
     }
 
     private void gotoForgetPassTokenScreen() {
@@ -235,8 +231,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressDialog.setCancelable(true);
     }
 
-    private void gotoRegisterScreen()
-    {
+    private void gotoRegisterScreen() {
         Intent intent = new Intent(LoginActivity.this,RegistrationDetailActivity.class);
         startActivity(intent);
     }

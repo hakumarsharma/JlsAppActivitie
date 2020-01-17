@@ -4,14 +4,11 @@ package com.jio.devicetracker.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
@@ -37,27 +34,22 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
-import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     public static GoogleMap mMap;
     public static final int MY_PERMISSIONS_REQUEST_MAPS = 101;
     public LocationManager locationManager;
-    public Marker mCurrLocationMarker;
     public Toolbar toolbar;
     private static StringBuilder strAddress = null;
-    private static Map<Double, Double> latLongMap = null;
     public static int refreshIntervalTime = 300;
     private Context context = null;
     Map<String, Map<Double, Double>> namingMap = null;
@@ -147,7 +139,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         namingMap = DashboardActivity.namingMap;
         int i = 0;
         List<Float> mapColorList = createColoredMapList();
-        if (namingMap.size() > 0 && strAddress != null) {
+        if (!namingMap.isEmpty() && strAddress != null) {
             for (Map.Entry<String, Map<Double, Double>> entry : namingMap.entrySet()) {
                 MarkerOptions markerOptions = new MarkerOptions();
                 for (Map.Entry<Double, Double> mapEntry : entry.getValue().entrySet()) {
@@ -192,7 +184,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
+            if (!addresses.isEmpty()) {
                 Address fetchedAddress = addresses.get(0);
                 strAddress.setLength(0);
                 strAddress.append(fetchedAddress.getAddressLine(0)).append(" ");
@@ -239,12 +231,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (int i = 0; i < consentData.size(); i++) {
                 for (int j = 0; j < DashboardActivity.selectedData.size(); j++) {
                     if (consentData.get(i).getPhoneNumber().equals(DashboardActivity.selectedData.get(j).getPhone())){
-                        if (consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker"))
+                        if (consentData.get(i).getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")){
                             DashboardActivity.latLngMap = mDbManager.getLatLongForMap(DashboardActivity.selectedData, consentData.get(i).getPhoneNumber());
                             DashboardActivity.namingMap.put(DashboardActivity.selectedData.get(i).getName(), DashboardActivity.latLngMap);
                         } else {
                             Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED + consentData.get(i).getPhoneNumber(), Constant.ALERT_TITLE, this);
                         }
+                    }
                 }
             }
             if (mMap != null) {

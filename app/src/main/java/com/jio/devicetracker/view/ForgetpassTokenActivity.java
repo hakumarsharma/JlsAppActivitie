@@ -39,12 +39,13 @@ public class ForgetpassTokenActivity extends Activity implements View.OnClickLis
         mVerify = findViewById(R.id.tokenVerify);
         mEmail = findViewById(R.id.email);
         mVerify.setOnClickListener(this);
-        TextView toolbar_title = findViewById(R.id.toolbar_title);
-        toolbar_title.setText("Forgot password");
+        TextView toolbarTitle = findViewById(R.id.toolbar_title);
+        toolbarTitle.setText("Forgot password");
 
         mEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Unused Empty Method
             }
 
             @Override
@@ -58,7 +59,7 @@ public class ForgetpassTokenActivity extends Activity implements View.OnClickLis
             @Override
             public void afterTextChanged(Editable s) {
                 String emailId = mEmail.getText().toString();
-                if (emailId.equals("")) {
+                if (emailId.isEmpty()) {
                     mVerify.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
                     mVerify.setTextColor(Color.WHITE);
                 }

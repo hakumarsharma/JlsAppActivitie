@@ -27,9 +27,11 @@ import com.jio.devicetracker.util.Util;
 
 public class ForgotPasswordActivity extends Activity implements View.OnClickListener {
 
-    private EditText mEmail,mPass,mConfirmpass,mToken;
+    private EditText mEmail;
+    private EditText mPass;
+    private EditText mConfirmpass;
+    private EditText mToken;
     private Button mSubmit;
-    private ChangePassworddata data;
     private ProgressDialog progressDialog = null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,8 +43,8 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
         mToken = findViewById(R.id.emailToken);
         mSubmit = findViewById(R.id.submit);
         mSubmit.setOnClickListener(this);
-        TextView toolbar_title = findViewById(R.id.toolbar_title);
-        toolbar_title.setText("Reset password");
+        TextView toolbarTitle = findViewById(R.id.toolbar_title);
+        toolbarTitle.setText("Reset password");
 
         Intent intent = getIntent();
         String email = intent.getStringExtra("Email");
@@ -52,6 +54,7 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
         mToken.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Unused empty method
             }
 
             @Override
@@ -65,7 +68,7 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
             @Override
             public void afterTextChanged(Editable s) {
                 String token = mToken.getText().toString();
-                if (token.equals("")) {
+                if (token.isEmpty()) {
                     mSubmit.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
                     mSubmit.setTextColor(Color.WHITE);
                 }
@@ -99,7 +102,8 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
             mPass.setError("Password cannot be left blank.");
             return;
         }
-        if (mConfirmpass.getText().toString().length() == 0 || (!mConfirmpass.getText().toString().equals(mPass.getText().toString()))) {
+        if (mConfirmpass.getText().toString().length() == 0
+                || !mConfirmpass.getText().toString().equals(mPass.getText().toString())) {
             mConfirmpass.setError("Password did not match, please try again");
             return;
         }
@@ -116,7 +120,7 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
 
     }
     private void changepasswordApicall() {
-        data = new ChangePassworddata();
+        ChangePassworddata data = new ChangePassworddata();
         ChangePassworddata.EmailToken token = data.new EmailToken();
         token.setTokenValue(mToken.getText().toString().trim());
         data.setmToken(token);
