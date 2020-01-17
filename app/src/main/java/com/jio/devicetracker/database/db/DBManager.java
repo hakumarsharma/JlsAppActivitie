@@ -127,11 +127,11 @@ public class DBManager {
     public void updateBorqsData(List<TrackerdeviceResponse.Data> data){
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        for(int i = 0; i < data.size(); i ++) {
-            String[] arg = new String[]{data.get(i).getmDevice().getPhoneNumber()};
-            if(data.get(i).getEvent() != null) {
-                contentValue.put(DatabaseHelper.LAT, Double.parseDouble(data.get(i).getEvent().getLocation().getLatLocation().getLatitu()));
-                contentValue.put(DatabaseHelper.LON, Double.parseDouble(data.get(i).getEvent().getLocation().getLatLocation().getLongni()));
+        for(TrackerdeviceResponse.Data trackerDeviceResponseData : data) {
+            String[] arg = new String[]{trackerDeviceResponseData.getmDevice().getPhoneNumber()};
+            if(trackerDeviceResponseData.getEvent() != null) {
+                contentValue.put(DatabaseHelper.LAT, Double.parseDouble(trackerDeviceResponseData.getEvent().getLocation().getLatLocation().getLatitu()));
+                contentValue.put(DatabaseHelper.LON, Double.parseDouble(trackerDeviceResponseData.getEvent().getLocation().getLatLocation().getLongni()));
                 mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, contentValue, DatabaseHelper.DEVICE_NUM + "= ?", arg);
             }
         }
@@ -219,13 +219,13 @@ public class DBManager {
         Map<Double, Double> latLong = new HashMap<>();
         phoneNumner = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
-        for (int i = 0; i < mList.size(); i++) {
+        for (MultipleselectData multipleselectData : mList) {
             String[] column = {DatabaseHelper.LAT, DatabaseHelper.LON};
             String[] arg = {phoneNumber, "yes jiotracker"};
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.DEVICE_NUM + " =? AND " + DatabaseHelper.CONSENT_STATUS + "=?", arg, null, null, null);
             if (cursor != null) {
                 while (cursor.moveToNext()) {
-                    phoneNumner.add(mList.get(i).getPhone());
+                    phoneNumner.add(multipleselectData.getPhone());
                     latLong.put(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LAT)), cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LON)));
                 }
                 cursor.close();

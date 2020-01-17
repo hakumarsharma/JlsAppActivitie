@@ -29,7 +29,6 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
     private EditText mDeviceNumber;
     private EditText mName;
     private EditText mDeviceImeiNumber;
-    private EditText mRelation;
     private DBManager mDbManager;
     private AdminLoginData adminData;
 
@@ -55,8 +54,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         AddedDeviceData data = new AddedDeviceData();
         String number = mDeviceNumber.getText().toString();
         String name = mName.getText().toString();
-         String phoneNumber=mDbManager.getAdminphoneNumber();
-        //relation = mRelation.getText().toString();
+        String phoneNumber = mDbManager.getAdminphoneNumber();
         String imeiNumber = mDeviceImeiNumber.getText().toString();
         if (!isValidIMEINumber(imeiNumber)) {
             mDeviceImeiNumber.setError(Constant.IMEI_VALIDATION);

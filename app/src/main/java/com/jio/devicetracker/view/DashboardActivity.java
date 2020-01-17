@@ -59,6 +59,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -75,7 +76,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public static List<MultipleselectData> selectedData;
     public static List<TrackerdeviceResponse.Data> data;
     private TrackerDeviceListAdapter adapter;
-    private static List<AddedDeviceData> addDeviceList;    private static final int PERMIT_ALL = 1;
+    private static List<AddedDeviceData> addDeviceList;
+    private static final int PERMIT_ALL = 1;
     public static List<String> consentListPhoneNumber = null;
     public static Map<Double, Double> latLngMap = null;
     private static DBManager mDbManager;
@@ -83,16 +85,15 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private ProgressDialog progressDialog = null;
     public static Map<String, Map<Double, Double>> namingMap = null;
     private static Context context = null;
-    private String number;
     public static Map<Double, Double> fmsLatLngMap = null;
     public static Map<String, Map<Double, Double>> fmsNamingMap = null;
     public static String trackeeIMEI = null;
     private String trackeeName = "";
     private DashboardActivity dashboardActivity = null;
     public static String adminEmail;
-    public static String otpNumber = "";
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
+    Locale locale = Locale.ENGLISH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +106,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         listView.setLayoutManager(linearLayoutManager);
         intent = getIntent();
         mDbManager = new DBManager(this);
-        consentRequestBox(intent.getBooleanExtra("flag", false),
-                intent.getStringExtra("phone"));
+        consentRequestBox(intent.getBooleanExtra("flag", false), intent.getStringExtra("phone"));
         Button trackBtn = toolbar.findViewById(R.id.track);
         trackBtn.setVisibility(View.VISIBLE);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
@@ -151,11 +151,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                     checkConsentPublishMQTTMessage(data);
                     Log.d(TAG, "Value of data" + selectedData.size());
                 } else {
-                    for (int i = 0; i < selectedData.size(); i++) {
-                        if (selectedData.get(i).getPhone() == data.getPhone()) {
-                            selectedData.remove(i); // TODO include break after this if you want to stop loop once the device is deleted
+                    for (MultipleselectData multipleselectData : selectedData) {
+                        if (multipleselectData.getPhone() == data.getPhone()) {
+                            selectedData.remove(multipleselectData); // TODO include break after this if you want to stop loop once the device is deleted
                         }
-                        //Log.d(TAG, "unselect the item from list");
                     }
                 }
             }
@@ -203,7 +202,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         });
     }
 
-    private void gotoProfileActivity(){
+    private void gotoProfileActivity() {
         startActivity(new Intent(this, ProfileActivity.class));
     }
 
@@ -347,6 +346,9 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             case R.id.track:
                 trackDevice();
                 break;
+            default:
+                Log.d("TAG", "Some other button is clicked");
+                break;
         }
     }
 
@@ -390,7 +392,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             }
             for (int i = 0; i < consentData.size(); i++) {
                 if (selectedData.get(i).getPhone().equals(consentData.get(i).getPhoneNumber())) {
-                    if (consentData.get(i).getConsentStaus().toLowerCase().contains("yes jiotracker")) {
+                    if (consentData.get(i).getConsentStaus().toLowerCase(locale).contains("yes jiotracker")) {
                         imeiNumbers.add(consentData.get(i).getImeiNumber());
                         phoneNumbers.add(consentData.get(i).getPhoneNumber());
                         trackeeName = consentData.get(i).getName();
@@ -524,7 +526,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         Log.d("Received Message --> ", message);
         String phone = phoneNum.substring(3);
         if (!RegistrationActivity.isFMSFlow) {
-            mDbManager.updateConsentInBors(phone, message.toLowerCase().trim());
+            mDbManager.updateConsentInBors(phone, message.toLowerCase(locale).trim());
             showDatainList();
             /*if (RegistrationDetailActivity.phoneNumber != null && message.length() == 4) {
                 otpNumber = message;

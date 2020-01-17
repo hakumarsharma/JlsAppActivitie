@@ -15,7 +15,9 @@ import com.jio.devicetracker.util.Util;
 
 public class EditActivity extends Activity implements View.OnClickListener {
 
-    private EditText mName, mNumber, mIMEI;
+    private EditText mName;
+    private EditText mNumber;
+    private EditText mIMEI;
     private String number;
     private DBManager mDBmanager;
     private EditProfileData editData;

@@ -236,7 +236,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (requestCode == 100) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+            if (ActivityCompat.checkSelfPermission(this, READ_SMS) !=
                     PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                     READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
