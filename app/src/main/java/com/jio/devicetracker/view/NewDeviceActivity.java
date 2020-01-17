@@ -99,7 +99,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         adminData = mDbManager.getAdminLoginDetail();
         boolean isLatLngFound = false;
         long insertRowid;
-        if((!RegistrationActivity.isFMSFlow) && mDatalist != null) {
+        if(!RegistrationActivity.isFMSFlow && mDatalist != null) {
             for (TrackerdeviceResponse.Data data : mDatalist) {
                 String phoneNumber = addedDeviceData.getPhoneNumber().trim();
                 if (phoneNumber.equals(data.getmDevice().getPhoneNumber())) {

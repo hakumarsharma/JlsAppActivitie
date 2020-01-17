@@ -46,7 +46,6 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     private EditText mPass;
     private EditText mRepass;
     private Button mRegister;
-    private RegisterRequestData data = null;
     private DBManager mDbmanager;
     private List<SubscriptionInfo> subscriptionInfos;
     public static String phoneNumber = null;
@@ -150,7 +149,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     }
 
     private void getServicecall() {
-        data = new RegisterRequestData();
+        RegisterRequestData data = new RegisterRequestData();
         data.setEmail(mEmail.getText().toString().trim());
         data.setType("registration");
         data.setPhone(mPhone.getText().toString().trim().substring(2));
