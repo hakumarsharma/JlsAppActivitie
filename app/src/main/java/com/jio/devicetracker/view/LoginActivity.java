@@ -167,36 +167,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivity(intent);
     }
 
-   /* private void forgetpassTokenApi() {
-
-        if(jioEmailEditText.getText().length()!= 0 && Util.isValidEmailId(jioEmailEditText.getText().toString().trim()))
-        {
-            data = new ForgetPassToken();
-            data.setEmail(jioEmailEditText.getText().toString().trim());
-           RequestHandler.getInstance(getApplicationContext()).handleRequest(new ForgetpasswordTokenRequest(new SuccessForgetToken(), new ErrorToken(),data));
-        } else {
-            jioEmailEditText.setError(Constant.EMAIL_VALIDATION);
-            return;
-        }
-
-    }
-
-    private class SuccessForgetToken implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            Toast.makeText(LoginActivity.this,"Token is sent to entered email",Toast.LENGTH_SHORT).show();
-            gotoForgetPassScreen();
-        }
-    }
-
-    private class ErrorToken implements Response.ErrorListener {
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-
-        }
-    }*/
-
     private class SuccessListener implements Response.Listener {
 
         @Override

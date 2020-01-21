@@ -5,27 +5,35 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
+import com.jio.devicetracker.database.pojo.request.TrackdeviceRequest;
+import com.jio.devicetracker.database.pojo.response.AddDeviceResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
+import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class NewDeviceActivity extends AppCompatActivity implements View.OnClickListener {
 
     Intent intent = null;
-    private List<TrackerdeviceResponse.Data> mDatalist;
     private EditText mDeviceNumber;
     private EditText mName;
     private EditText mDeviceImeiNumber;
@@ -40,7 +48,6 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         title.setText("Add");
         intent = getIntent();
         adminData = new AdminLoginData();
-        mDatalist = (List<TrackerdeviceResponse.Data>) intent.getSerializableExtra("DeviceData");
         mDeviceNumber = findViewById(R.id.deviceName);
         mName = findViewById(R.id.memberName);
         mDeviceImeiNumber = findViewById(R.id.deviceIMEINumber);
@@ -51,7 +58,6 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        AddedDeviceData data = new AddedDeviceData();
         String number = mDeviceNumber.getText().toString();
         String name = mName.getText().toString();
         String phoneNumber = mDbManager.getAdminphoneNumber();
@@ -73,29 +79,58 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         if (number.isEmpty() || name.isEmpty()) {
             Toast.makeText(this, Constant.CHECK_DETAILS, Toast.LENGTH_SHORT).show();
         } else {
-            data.setImeiNumber(imeiNumber);
-            data.setPhoneNumber(number);
-            data.setName(name);
-            //data.setRelation(relation);
-            matchMobileNumber(data);
+            makeAddDeviceAPICall();
+//          matchMobileNumber(data);
         }
     }
 
-    // TODO move to Utils
-    private boolean isValidIMEINumber(String imei) {
-        String imeiNumber = "^\\d{15}$";
-        Pattern pat = Pattern.compile(imeiNumber);
-        return pat.matcher(imei).matches();
+    private void makeAddDeviceAPICall(){
+        String number = mDeviceNumber.getText().toString();
+        String name = mName.getText().toString();
+        String imeiNumber = mDeviceImeiNumber.getText().toString();
+        AddDeviceData addDeviceData = new AddDeviceData();
+        AddDeviceData.Devices devices = addDeviceData.new Devices();
+        AddDeviceData.Flags flags = addDeviceData.new Flags();
+        devices.setMac(imeiNumber);
+        devices.setIdentifier("imei");
+        devices.setName(name);
+        devices.setPhone(number);
+        flags.setSkipAddDeviceToGroup(false);
+        List<AddDeviceData.Devices> listDevices = new LinkedList<>();
+        listDevices.add(devices);
+        addDeviceData.setDevices(listDevices);
+        addDeviceData.setFlags(flags);
+        Util.getInstance().showProgressBarDialog(this, "Please wait adding device");
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new SuccessListener(), new ErrorListener(), new DBManager(this).getAdminLoginDetail().getUserToken(), new DBManager(this).getAdminLoginDetail().getUserId(), addDeviceData));
     }
 
-    // TODO move to Utils
-    private boolean isValidMobileNumber(String mobile) {
-        String mobileNumber = "^[6-9][0-9]{9}$";
-        Pattern pat = Pattern.compile(mobileNumber);
-        return pat.matcher(mobile).matches();
+    private class SuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            AddDeviceResponse addDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), AddDeviceResponse.class);
+            adminData = mDbManager.getAdminLoginDetail();
+            if(addDeviceResponse.getMessage().equalsIgnoreCase(Constant.SUCCESSFULL_DEVICE_ADDITION_RESPONSE)){
+                AddedDeviceData addedDeviceData = new AddedDeviceData();
+                addedDeviceData.setName(addDeviceResponse.getData().getAssignedDevices().get(0).getName());
+                addedDeviceData.setPhoneNumber(addDeviceResponse.getData().getAssignedDevices().get(0).getPhone());
+                addedDeviceData.setImeiNumber(addDeviceResponse.getData().getAssignedDevices().get(0).getMac());
+                long insertRowid = mDbManager.insertInBorqsDB(addedDeviceData, adminData.getEmail());
+                Toast.makeText(NewDeviceActivity.this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+                checkRow(insertRowid);
+            }
+            Util.getInstance().dismissProgressBarDialog();
+        }
     }
 
-    private void matchMobileNumber(AddedDeviceData addedDeviceData) {
+    private class ErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.getInstance().dismissProgressBarDialog();
+            Toast.makeText(NewDeviceActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /*private void matchMobileNumber(AddedDeviceData addedDeviceData) {
         adminData = mDbManager.getAdminLoginDetail();
         boolean isLatLngFound = false;
         long insertRowid;
@@ -131,6 +166,20 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
             mDeviceNumber.setError("Enter the correct number, this number is not found on server");
             return;
         }
+    }*/
+
+    // TODO move to Utils
+    private boolean isValidIMEINumber(String imei) {
+        String imeiNumber = "^\\d{15}$";
+        Pattern pat = Pattern.compile(imeiNumber);
+        return pat.matcher(imei).matches();
+    }
+
+    // TODO move to Utils
+    private boolean isValidMobileNumber(String mobile) {
+        String mobileNumber = "^[6-9][0-9]{9}$";
+        Pattern pat = Pattern.compile(mobileNumber);
+        return pat.matcher(mobile).matches();
     }
 
     private void gotoDashBoard() {

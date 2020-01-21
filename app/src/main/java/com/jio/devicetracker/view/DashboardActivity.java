@@ -302,28 +302,24 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     public void getServicecall(String token) {
-        if (RegistrationActivity.isFMSFlow == true) {
-            gotoAddDeviceActivity();
-        } else {
-            showProgressBarDialog();
-            TrackerdeviceData data = new TrackerdeviceData();
-            TrackerdeviceData.StartsWith startsWith = data.new StartsWith();
-            startsWith.setCurrentDate(Util.convertTimeToEpochtime());
-            data.setStartsWith(startsWith);
-            devicePresent.setVisibility(View.GONE);
-            RequestHandler.getInstance(getApplicationContext()).handleRequest(new TrackdeviceRequest(new SuccessListener(), new ErrorListener(), token, data));
-        }
+        /*showProgressBarDialog();
+        TrackerdeviceData data = new TrackerdeviceData();
+        TrackerdeviceData.StartsWith startsWith = data.new StartsWith();
+        startsWith.setCurrentDate(Util.convertTimeToEpochtime());
+        data.setStartsWith(startsWith);
+        devicePresent.setVisibility(View.GONE);
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new TrackdeviceRequest(new SuccessListener(), new ErrorListener(), token, data));*/
+        gotoAddDeviceScreen();
     }
 
 
-    private class SuccessListener implements Response.Listener {
+    /*private class SuccessListener implements Response.Listener {
 
         @Override
         public void onResponse(Object response) {
             mtrackerresponse = Util.getInstance().getPojoObject(String.valueOf(response), TrackerdeviceResponse.class);
             data = mtrackerresponse.getmData();
             Log.d(TAG, "Response print" + response);
-            gotoAddDeviceScreen(data);
             progressDialog.dismiss();
         }
     }
@@ -335,7 +331,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             progressDialog.dismiss();
             //Toast.makeText(getApplicationContext(), "Token is null", Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -361,10 +357,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
                 return;
             }
-            for(AddedDeviceData addedDeviceData : consentData) {
-                for(MultipleselectData multipleselectData : selectedData) {
-                    if(addedDeviceData.getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone())){
-                        if(addedDeviceData.getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")){
+            for (AddedDeviceData addedDeviceData : consentData) {
+                for (MultipleselectData multipleselectData : selectedData) {
+                    if (addedDeviceData.getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone())) {
+                        if (addedDeviceData.getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")) {
                             latLngMap = mDbManager.getLatLongForMap(selectedData, addedDeviceData.getPhoneNumber());
                             namingMap.put(multipleselectData.getName(), latLngMap);
                             flag = true;
@@ -483,9 +479,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         startActivity(new Intent(getApplicationContext(), NewDeviceActivity.class));
     }
 
-    private void gotoAddDeviceScreen(List<TrackerdeviceResponse.Data> mData) {
+    private void gotoAddDeviceScreen() {
         Intent intent = new Intent(getApplicationContext(), NewDeviceActivity.class);
-        intent.putExtra("DeviceData", (Serializable) mData);
         startActivity(intent);
     }
 
