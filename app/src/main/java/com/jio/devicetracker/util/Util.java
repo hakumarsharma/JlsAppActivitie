@@ -2,6 +2,7 @@ package com.jio.devicetracker.util;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import java.util.regex.Pattern;
 public final class Util {
     private static Util mUtils;
     private static String sessionID = null;
+    ProgressDialog progressDialog = null;
 
     private Util() {
 
@@ -137,8 +139,7 @@ public final class Util {
         return pat.matcher(pass).matches();
     }
 
-    public static long convertTimeToEpochtime()
-    {
+    public static long convertTimeToEpochtime() {
         long epochTime = 0;
         Date today = Calendar.getInstance().getTime();
         SimpleDateFormat simpleFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
@@ -153,5 +154,16 @@ public final class Util {
         }
 
         return epochTime;
+    }
+
+    public void showProgressBarDialog(Context context, String message) {
+        progressDialog = ProgressDialog.show(context, "", message, true);
+        progressDialog.setCancelable(true);
+    }
+
+    public void dismissProgressBarDialog() {
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

@@ -63,5 +63,7 @@ public class Constant {
 
     // MAPs Activity constants
     public static final String LOCATION_UPDATE = "Location will be updated after every";
-
+    public static final String SUCCESSFULL_DEVICE_ADDITION_RESPONSE = "1 device(s) are assigned to one user.";
+    public static final String SUCCESSFULL_DEVICE_ADDITION = "Device is successfully added";
+    public static final String UNSUCCESSFULL_DEVICE_ADDITION = "Device is not added successfully, please try again later";
 }
