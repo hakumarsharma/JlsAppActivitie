@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+/**
+ * Pojo implementation for device location data.
+ */
 public class TrackerdeviceData implements Serializable {
 
     @SerializedName("startsWith")

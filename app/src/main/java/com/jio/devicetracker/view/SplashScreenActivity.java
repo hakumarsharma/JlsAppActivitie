@@ -11,7 +11,9 @@ import android.view.WindowManager;
 
 import com.jio.devicetracker.R;
 
-
+/**
+ * Implementation of Splash Screen.This class creates splash screen for JFF application
+ */
 public class SplashScreenActivity extends AppCompatActivity {
 
     private Handler mWaitHandler = new Handler();

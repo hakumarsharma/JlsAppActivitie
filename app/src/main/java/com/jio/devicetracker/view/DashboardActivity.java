@@ -65,6 +65,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Implementation of Dashboard Screen to show the tracee list and hamburger menu.
+ */
 public class DashboardActivity extends AppCompatActivity implements MessageListener, View.OnClickListener {
 
     Toolbar toolbar;

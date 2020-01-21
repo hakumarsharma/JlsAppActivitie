@@ -1,5 +1,8 @@
 package com.jio.devicetracker.database.pojo;
 
+/**
+ * Pojo implementation for admin login data .
+ */
 public class AdminLoginData {
 
     private String email;

@@ -25,7 +25,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Implementation of volley networking library for api call
+ */
 public class VolleyManager extends StringRequest {
     private static Map<Integer, String> mStatusCodes;
     private Context context = null;

@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementation of DataBase manager class to manage all operation like insert,delete,update and fetch in database.
+ */
 public class DBManager {
 
     private DatabaseHelper mDBHelper;

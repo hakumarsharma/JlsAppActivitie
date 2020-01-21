@@ -13,6 +13,9 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.EditProfileData;
 import com.jio.devicetracker.util.Util;
 
+/**
+ * Implementation of Edit Profile Screen to change the tracee's details.
+ */
 public class EditActivity extends Activity implements View.OnClickListener {
 
     private EditText mName;

@@ -29,6 +29,9 @@ import com.jio.devicetracker.database.pojo.response.FMSVerifyTokenResponse;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Util;
 
+/**
+ * Implementation of Registration OTP screen to verify the email OTP.
+ */
 public class BorqsOTPActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button verify = null;

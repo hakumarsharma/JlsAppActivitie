@@ -6,6 +6,9 @@ import com.jio.devicetracker.database.pojo.ForgetPassToken;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Util;
 
+/**
+ * Implementation of reset password token interface to call reset password token api .
+ */
 public class ForgetpasswordTokenRequest implements IRequest {
 
     private Response.Listener sucessListener;

@@ -1,5 +1,8 @@
 package com.jio.devicetracker.database.pojo;
 
+/**
+ * Pojo implementation for admin register data .
+ */
 public class RegisterData {
 
     private String name;

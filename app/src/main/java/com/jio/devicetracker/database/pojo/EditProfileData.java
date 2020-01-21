@@ -1,5 +1,8 @@
 package com.jio.devicetracker.database.pojo;
 
+/**
+ * Pojo implementation for edit profile data .
+ */
 public class EditProfileData {
 
     private String name;

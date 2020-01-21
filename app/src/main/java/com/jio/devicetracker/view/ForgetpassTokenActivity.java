@@ -25,6 +25,9 @@ import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
+/**
+ * Implementation of ForgotPasswordToken Screen.In this screen admin will send the email to server and will receive the OTP on email.
+ */
 public class ForgetpassTokenActivity extends Activity implements View.OnClickListener {
     private Button mVerify;
     private EditText mEmail;

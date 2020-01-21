@@ -34,7 +34,9 @@ import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
-
+/**
+ * Implementation of Splash Screen.This class creates splash screen for JFF application
+ */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
 
     private EditText jioEmailEditText = null;

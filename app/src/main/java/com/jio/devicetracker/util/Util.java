@@ -23,6 +23,9 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+/**
+ * Implementation of Utils class to write common methods .
+ */
 public final class Util {
     private static Util mUtils;
     private static String sessionID = null;

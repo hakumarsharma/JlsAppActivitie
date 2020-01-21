@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * Pojo implementation to fetch device location from server .
+ */
 public class LocationApiResponse {
 
     @SerializedName("evd")

@@ -25,7 +25,9 @@ import com.jio.devicetracker.util.Util;
 import java.io.Serializable;
 import java.util.List;
 
-
+/**
+ * Implementation of  Screen.This class creates splash screen for JFF application
+ */
 public class TrackDeviceActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String TAG = "TrackDeviceActivity";

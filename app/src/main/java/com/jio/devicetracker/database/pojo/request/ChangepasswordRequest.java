@@ -6,6 +6,9 @@ import com.jio.devicetracker.database.pojo.ChangePassworddata;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Util;
 
+/**
+ * Implementation of reset password interface to call reset password api .
+ */
 public class ChangepasswordRequest implements IRequest {
 
     private Response.Listener sucessListener;

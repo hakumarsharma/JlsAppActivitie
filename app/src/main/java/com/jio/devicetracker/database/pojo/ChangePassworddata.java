@@ -2,6 +2,9 @@ package com.jio.devicetracker.database.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Pojo implementation for change password  data .
+ */
 public class ChangePassworddata {
 
     @SerializedName("token")

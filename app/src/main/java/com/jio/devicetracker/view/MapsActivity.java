@@ -43,6 +43,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Implementation of MapScreen to show the tracee's live location in map .
+ */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     public static GoogleMap mMap;

@@ -7,6 +7,9 @@ import com.jio.devicetracker.util.Util;
 
 import static com.android.volley.Request.Method.POST;
 
+/**
+ * Implementation of registration token request api .
+ */
 public class RegistrationTokenrequest implements IRequest {
 
     private Response.Listener sucessListener;

@@ -25,6 +25,9 @@ import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
+/**
+ * Implementation of ChangePassword Screen to reset the admin's password.
+ */
 public class ForgotPasswordActivity extends Activity implements View.OnClickListener {
 
     private EditText mEmail;

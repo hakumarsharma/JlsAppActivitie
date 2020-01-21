@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+/**
+ * Pojo implementation to fetch login response from server .
+ */
 public class LogindetailResponse implements Serializable {
     @SerializedName("ugs_token")
     private String ugsToken;

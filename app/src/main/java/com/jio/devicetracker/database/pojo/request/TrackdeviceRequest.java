@@ -7,7 +7,9 @@ import com.jio.devicetracker.database.pojo.TrackerdeviceData;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Util;
 
-
+/**
+ * Implementation of track device request api.
+ */
 public class TrackdeviceRequest implements IRequest {
 
     private Response.Listener sucessListener;

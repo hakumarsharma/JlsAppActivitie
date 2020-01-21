@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+/**
+ * Implementation of reset password interface to call reset password api .
+ */
 public class FMSRegistrationToken implements Serializable {
     @SerializedName("token")
     private Token token;

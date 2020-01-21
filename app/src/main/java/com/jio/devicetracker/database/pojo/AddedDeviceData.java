@@ -3,6 +3,9 @@ package com.jio.devicetracker.database.pojo;
 
 import java.io.Serializable;
 
+/**
+ * Pojo implementation for add device data .
+ */
 public class AddedDeviceData implements Serializable {
 
     private String phoneNumber;

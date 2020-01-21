@@ -6,7 +6,9 @@ import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Util;
 
-
+/**
+ * Implementation of Login request api .
+ */
 public class LoginDataRequest implements IRequest {
 
     private Response.Listener sucessListener;

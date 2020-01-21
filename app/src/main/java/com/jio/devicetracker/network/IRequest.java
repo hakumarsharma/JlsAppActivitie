@@ -3,6 +3,9 @@ package com.jio.devicetracker.network;
 
 import com.android.volley.Response;
 
+/**
+ * Implementation of interface to provide communication channel between UI and networking library .
+ */
 public interface IRequest {
 
     String getReqParams();

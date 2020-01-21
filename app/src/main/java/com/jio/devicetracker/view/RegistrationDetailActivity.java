@@ -38,6 +38,9 @@ import static android.Manifest.permission.READ_SMS;
 
 import java.util.List;
 
+/**
+ * Implementation of Registration screen for admin registration.
+ */
 public class RegistrationDetailActivity extends Activity implements View.OnClickListener {
 
     private EditText mName;

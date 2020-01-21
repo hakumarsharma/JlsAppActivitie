@@ -22,6 +22,9 @@ import com.jio.devicetracker.util.Util;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * Implementation of Add Device Screen for adding the tracee number.
+ */
 public class NewDeviceActivity extends AppCompatActivity implements View.OnClickListener {
 
     Intent intent = null;

@@ -9,6 +9,9 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 
+/**
+ * Implementation of Admin's profile Screen to show the admin's details.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     private DBManager mDbManager;
