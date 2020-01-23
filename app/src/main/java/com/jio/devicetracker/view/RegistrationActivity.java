@@ -191,7 +191,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         startActivity(intent);
     }
 
-    public void showDialog(List<SubscriptionInfo> list) {
+   /* public void showDialog(List<SubscriptionInfo> list) {
         final Dialog dialog = new Dialog(RegistrationActivity.this);
         dialog.setContentView(R.layout.number_display_dialog);
         dialog.setTitle("Title...");
@@ -232,7 +232,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         dialog.show();
 
     }
-
+*/
     public void checkJioSIMSlot1()
     {
         if(subscriptionInfos != null) {

@@ -16,13 +16,17 @@ import com.jio.devicetracker.R;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,6 +69,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static android.Manifest.permission.READ_PHONE_NUMBERS;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.READ_SMS;
+
 /**
  * Implementation of Dashboard Screen to show the tracee list and hamburger menu.
  */
@@ -96,6 +104,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public static String adminEmail;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
+    private List<SubscriptionInfo> subscriptionInfos;
     Locale locale = Locale.ENGLISH;
 
     @Override
@@ -123,6 +132,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+        requestPermission();
         NavigationView navigationView = findViewById(R.id.nv);
         View header = navigationView.getHeaderView(0);
         user_account_name = header.findViewById(R.id.user_account_name);
@@ -135,6 +145,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         fmsNamingMap = new HashMap<>();
         context = getApplicationContext();
         fmsLatLngMap = new LinkedHashMap<>();
+
         getAdminDetail();
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE};
         if (!hasPermissions(DashboardActivity.this, permissions)) {
@@ -203,6 +214,13 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 return true;
             }
         });
+        /*Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        if(data != null ){
+            String number=data.toString().substring(data.toString().length()-10);
+            showDialog(number);
+        }*/
     }
 
     private void gotoProfileActivity() {
@@ -244,8 +262,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
     private void getAdminDetail() {
         AdminLoginData adminLoginData = new DBManager(this).getAdminLoginDetail();
-        userToken = adminLoginData.getUserToken();
-        adminEmail = adminLoginData.getEmail();
+        if(adminLoginData != null) {
+            userToken = adminLoginData.getUserToken();
+            adminEmail = adminLoginData.getEmail();
+        }
     }
 
     private void checkConsentPublishMQTTMessage(MultipleselectData multipleselectData) {
@@ -493,7 +513,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         if ("Yes JioTracker".equalsIgnoreCase(consentStatus)) {
             Util.alertDilogBox(Constant.CONSENT_APPROVED, Constant.ALERT_TITLE, this);
         } else {
-            new SendSMSTask().execute(phoneNumber, userName + " from JioTracker application wants to track your location, please reply with \"Yes JioTracker\" or \"No JioTracker !");
+            String phoneNumber1 = subscriptionInfos.get(0).getNumber();
+            new SendSMSTask().execute(phoneNumber, userName + " from JioTracker application wants to track your location, please click on given link https://www.example.com/home?data="+phoneNumber1.trim().substring(2,phoneNumber1.length()));
             Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
             if (!RegistrationActivity.isFMSFlow) {
                 mDbManager.updatependingConsent(phoneNumber);
@@ -596,6 +617,67 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     @Override
     protected void onResume() {
         super.onResume();
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        if(data != null ){
+            String number=data.toString().substring(data.toString().length()-10);
+            showDialog(number);
+        }
         isDevicePresent();
     }
+
+    public void showDialog(String number) {
+        final Dialog dialog = new Dialog(DashboardActivity.this);
+        dialog.setContentView(R.layout.number_display_dialog);
+        dialog.setTitle("Title...");
+        dialog.getWindow().setLayout(1000, 500);
+
+
+        // set the custom dialog components - text, image and button
+        final Button yes = (Button) dialog.findViewById(R.id.positive);
+        Button no = (Button) dialog.findViewById(R.id.negative);
+
+
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SendSMSTask().execute(number, "Yes Jiotracker");
+                dialog.dismiss();
+            }
+        });
+
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+    }
+
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{READ_SMS, READ_PHONE_NUMBERS, READ_PHONE_STATE}, 100);
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == 100) {
+            if (ActivityCompat.checkSelfPermission(this, READ_SMS) !=
+                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
+           // checkJioSIMSlot1();
+        }
+    }
+
+
 }
