@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
-import com.jio.devicetracker.util.Util;
 
 import com.jio.devicetracker.R;
 
@@ -28,9 +27,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mWaitHandler.postDelayed(() -> {
             try {
-                gotoScreen();
-                /*Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
                 finish();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -42,18 +40,5 @@ public class SplashScreenActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         mWaitHandler.removeCallbacksAndMessages(null);
-    }
-
-    public void gotoScreen()
-    {
-        boolean flag = Util.getTermconditionFlag(SplashScreenActivity.this);
-        if(flag){
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(getApplicationContext(), HelpActivity.class);
-            startActivity(intent);
-        }
-
     }
 }

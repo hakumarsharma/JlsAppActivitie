@@ -1,4 +1,3 @@
-// (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
 package com.jio.devicetracker.util;
 
 import android.util.Base64;

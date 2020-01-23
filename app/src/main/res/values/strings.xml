@@ -11,6 +11,4 @@
     <string name="Open">Open</string>
     <string name="Close">Close</string>
     <string name="instruction">* \t Click on + icon to add details of the device to be \n \t \t tracked. \n* \t After adding the device, click on \"Request consent\" \n \t \t to obtain consent approval from the device owner. \n* \t After consent approval is received from the device \n \t \t owner over SMS, select the device from the  list \n \t \t and click on \"Track\" to start tracking.</string>
-    <string name="message">JioTracker application wants to track your location, please click on \"Yes\" or \"No\"!</string>
-    <string name="termcondition">All materials reproduced on this site speak as of the original date of publication or filing. The fact that a document is available on this site does not mean that the information contained in such document has not been modified or superseded by events or by a subsequent document or filing. We have no duty or policy to update any information or statements contained on this site and, therefore, such information or statements should not be relied upon as being current as of the date you access this site.</string>
 </resources>

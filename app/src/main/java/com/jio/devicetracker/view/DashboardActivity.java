@@ -10,35 +10,19 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.jio.devicetracker.R;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.location.Location;
-import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.SubscriptionInfo;
-import android.telephony.SubscriptionManager;
-import android.telephony.CellInfo;
-import android.telephony.CellInfoLte;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,14 +36,12 @@ import com.android.volley.VolleyError;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.FMSAPIData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
-import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
-import com.jio.devicetracker.database.pojo.SearchEventData;
 import com.jio.devicetracker.database.pojo.TrackerdeviceData;
-import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
-import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
+import com.jio.devicetracker.database.pojo.request.FMSTrackRequest;
 import com.jio.devicetracker.database.pojo.request.TrackdeviceRequest;
-import com.jio.devicetracker.database.pojo.response.SearchDeviceStatusResponse;
+import com.jio.devicetracker.database.pojo.response.LocationApiResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
@@ -70,9 +52,9 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.TrackerDeviceListAdapter;
 
-import java.text.SimpleDateFormat;
+
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -83,15 +65,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static android.Manifest.permission.READ_PHONE_NUMBERS;
-import static android.Manifest.permission.READ_PHONE_STATE;
-import static android.Manifest.permission.READ_SMS;
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.RECEIVE_SMS;
-import static android.Manifest.permission.SEND_SMS;
-
 /**
- * Implementation of Dashboard Screen to show the trackee list and hamburger menu.
+ * Implementation of Dashboard Screen to show the tracee list and hamburger menu.
  */
 public class DashboardActivity extends AppCompatActivity implements MessageListener, View.OnClickListener {
 
@@ -115,20 +90,13 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private static Context context = null;
     public static Map<Double, Double> fmsLatLngMap = null;
     public static Map<String, Map<Double, Double>> fmsNamingMap = null;
+    public static String trackeeIMEI = null;
     private String trackeeName = "";
+    private DashboardActivity dashboardActivity = null;
     public static String adminEmail;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
-    private List<SubscriptionInfo> subscriptionInfos;
     Locale locale = Locale.ENGLISH;
-    private int batteryLevel;
-    private FusedLocationProviderClient client;
-    String[] permissions = {READ_SMS, RECEIVE_SMS, SEND_SMS, READ_PHONE_STATE, ACCESS_COARSE_LOCATION};
-    private static Double latitude;
-    private static Double longitude;
-    private static int signalStrengthValue;
-    private int REQUEST_COARSE_LOCATION_PERMISSION = 1;
-    private static List<String> deviceIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +123,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        requestPermission();
         NavigationView navigationView = findViewById(R.id.nv);
         View header = navigationView.getHeaderView(0);
         user_account_name = header.findViewById(R.id.user_account_name);
@@ -168,9 +135,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         fmsNamingMap = new HashMap<>();
         context = getApplicationContext();
         fmsLatLngMap = new LinkedHashMap<>();
-
         getAdminDetail();
-        Util.getInstance().getIMEI(this);
+        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE};
         if (!hasPermissions(DashboardActivity.this, permissions)) {
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
@@ -185,12 +151,12 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             public void recyclerViewListClicked(View v, int position, MultipleselectData data, boolean val) {
                 if (val) {
                     selectedData.add(data);
-//                    checkConsentPublishMQTTMessage(data);
+                    checkConsentPublishMQTTMessage(data);
                     Log.d(TAG, "Value of data" + selectedData.size());
                 } else {
                     for (MultipleselectData multipleselectData : selectedData) {
                         if (multipleselectData.getPhone() == data.getPhone()) {
-                            selectedData.remove(multipleselectData);
+                            selectedData.remove(multipleselectData); // TODO include break after this if you want to stop loop once the device is deleted
                         }
                     }
                 }
@@ -237,45 +203,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 return true;
             }
         });
-
-        sendLocationInTimeInterval();
-        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        DashboardActivity.this.registerReceiver(broadcastreceiver, intentFilter);
-        MyPhoneStateListener myPhoneStateListener = new MyPhoneStateListener();
-        TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-        client = LocationServices.getFusedLocationProviderClient(this);
-        deviceIds = new ArrayList<>();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (broadcastreceiver != null) {
-            unregisterReceiver(broadcastreceiver);
-        }
-    }
-
-    private BroadcastReceiver broadcastreceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-            int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-            batteryLevel = (int) (((float) level / (float) scale) * 100.0f);
-        }
-    };
-
-    /****** To get the lat and long of the current device*******/
-    private void getLocation() {
-        client.getLastLocation().addOnSuccessListener(DashboardActivity.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(@NonNull Location location) {
-                if (location != null) {
-                    latitude = location.getLongitude();
-                    longitude = location.getLongitude();
-                }
-            }
-        });
     }
 
     private void gotoProfileActivity() {
@@ -317,27 +244,32 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
 
     private void getAdminDetail() {
         AdminLoginData adminLoginData = new DBManager(this).getAdminLoginDetail();
-        if(adminLoginData != null) {
-            userToken = adminLoginData.getUserToken();
-            adminEmail = adminLoginData.getEmail();
+        userToken = adminLoginData.getUserToken();
+        adminEmail = adminLoginData.getEmail();
+    }
+
+    private void checkConsentPublishMQTTMessage(MultipleselectData multipleselectData) {
+        Util util = Util.getInstance();
+        MQTTManager mqttManager = new MQTTManager();
+        List<AddedDeviceData> consentData = mDbManager.getAlldataFromFMS();
+        for (AddedDeviceData consent : consentData) {
+            if (consent.getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone()) && consent.getConsentStaus().trim().equalsIgnoreCase("yes jiotracker")) {
+                String topic = "jioiot/svckm/jiophone/" + util.getIMEI(getApplicationContext()) + "/uc/fwd/sesid";
+                Log.d("Topic --> ", topic);
+                trackeeIMEI = consent.getImeiNumber();
+                String message = "{\"reqId\":\"" + consent.getImeiNumber() + "\",\"trkId\":\"" + util.getIMEI(getApplicationContext()) + "\",\"sesId\":\"" + Util.getInstance().getSessionId() + "\",\"trknr\":\"" + RegistrationActivity.phoneNumber.substring(2) + "\",\"reqnr\":\"" + consent.getPhoneNumber() + "\"}";
+                Log.d("Message --> ", message);
+                mqttManager.publishMessage(topic, message);
+            }
         }
     }
 
-    /***** Publish the MQTT message along with battery level, signal strength and time format*********/
-    public void publishMessage() {
-        getLocation();
-        String message = "{\"imi\":\"" + Util.imeiNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
-                "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
-        String topic = Constant.MQTT_SIT_TOPIC;
-        Log.d("Message --> ", message);
-        Log.d("Topic --> ", topic);
-        new MQTTManager().publishMessage(topic, message);
-    }
-
-    private String getMQTTTimeFormat() {
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH);
-        return sdf.format(c.getTime());
+    public DashboardActivity getDashboardActivity() {
+        if (dashboardActivity == null) {
+            dashboardActivity = new DashboardActivity();
+            return dashboardActivity;
+        }
+        return dashboardActivity;
     }
 
     private void gotoEditScreen(String relation, String phoneNumber) {
@@ -348,10 +280,11 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     private void isDevicePresent() {
+        DBManager dbManager = new DBManager(getApplicationContext());
         devicePresent = findViewById(R.id.devicePresent);
         List<AddedDeviceData> alldata = null;
         if (RegistrationActivity.isFMSFlow == false) {
-            alldata = mDbManager.getAlldata(adminEmail);
+            alldata = dbManager.getAlldata(adminEmail);
             if (alldata.isEmpty()) {
                 listView.setVisibility(View.INVISIBLE);
                 devicePresent.setVisibility(View.VISIBLE);
@@ -360,7 +293,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 listView.setVisibility(View.VISIBLE);
             }
         } else {
-            alldata = mDbManager.getAlldataFromFMS();
+            alldata = dbManager.getAlldataFromFMS();
             if (alldata.isEmpty()) {
                 listView.setVisibility(View.INVISIBLE);
                 devicePresent.setVisibility(View.VISIBLE);
@@ -372,8 +305,36 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     public void getServicecall(String token) {
+        /*showProgressBarDialog();
+        TrackerdeviceData data = new TrackerdeviceData();
+        TrackerdeviceData.StartsWith startsWith = data.new StartsWith();
+        startsWith.setCurrentDate(Util.convertTimeToEpochtime());
+        data.setStartsWith(startsWith);
+        devicePresent.setVisibility(View.GONE);
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new TrackdeviceRequest(new SuccessListener(), new ErrorListener(), token, data));*/
         gotoAddDeviceScreen();
     }
+
+
+    /*private class SuccessListener implements Response.Listener {
+
+        @Override
+        public void onResponse(Object response) {
+            mtrackerresponse = Util.getInstance().getPojoObject(String.valueOf(response), TrackerdeviceResponse.class);
+            data = mtrackerresponse.getmData();
+            Log.d(TAG, "Response print" + response);
+            progressDialog.dismiss();
+        }
+    }
+
+    private class ErrorListener implements Response.ErrorListener {
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            progressDialog.dismiss();
+            //Toast.makeText(getApplicationContext(), "Token is null", Toast.LENGTH_SHORT).show();
+        }
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -390,70 +351,88 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         }
     }
 
-    /***** Track the device ***********/
-    private void trackDevice() {
-        showProgressBarDialog();
-        SearchDeviceStatusData searchDeviceStatusData = new SearchDeviceStatusData();
-        SearchDeviceStatusData.Device device = searchDeviceStatusData.new Device();
-        AdminLoginData adminLoginDetail = mDbManager.getAdminLoginDetail();
-        List<String> data = new ArrayList<>();
-        data.add(adminLoginDetail.getUserId());
-        device.setUsersAssigned(data);
-        searchDeviceStatusData.setDevice(device);
-        RequestHandler.getInstance(getApplicationContext()).handleRequest(new SearchDeviceStatusRequest(new SearchDeviceStatusSuccessListener(), new SearchDeviceStatusErrorListener(), userToken, searchDeviceStatusData));
-    }
 
-    /****** Search device status response success listener **************/
-    private class SearchDeviceStatusSuccessListener implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            SearchDeviceStatusResponse searchDeviceStatusResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchDeviceStatusResponse.class);
-            if (selectedData.size() > 0) {
-                for (SearchDeviceStatusResponse.Data data : searchDeviceStatusResponse.getData())
-                    for (MultipleselectData multipleselectData : selectedData) {
-                        if (multipleselectData.getPhone().equalsIgnoreCase(data.getDevice().getPhone())) {
-                            deviceIds.add(data.getDevice().getId());
+    private void trackDevice() {
+        boolean flag = false;
+        if (RegistrationActivity.isFMSFlow == false) {
+            List<AddedDeviceData> consentData = mDbManager.getAlldata(adminEmail);
+            if (selectedData.isEmpty()) {
+                Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
+                return;
+            }
+            for (AddedDeviceData addedDeviceData : consentData) {
+                for (MultipleselectData multipleselectData : selectedData) {
+                    if (addedDeviceData.getPhoneNumber().equalsIgnoreCase(multipleselectData.getPhone())) {
+                        if (addedDeviceData.getConsentStaus().trim().equalsIgnoreCase("Yes JioTracker")) {
+                            latLngMap = mDbManager.getLatLongForMap(selectedData, addedDeviceData.getPhoneNumber());
+                            namingMap.put(multipleselectData.getName(), latLngMap);
+                            flag = true;
+                        } else {
+                            Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED + addedDeviceData.getPhoneNumber(), Constant.ALERT_TITLE, this);
+                            flag = false;
+                            return;
                         }
                     }
-                SearchEventData searchEventData = new SearchEventData();
-                SearchEventData.Device device = searchEventData.new Device();
-                device.setId(deviceIds.get(0));
-                searchEventData.setFrom(Util.convertTimeToEpochtime());
-                searchEventData.setTo(Util.getTimeEpochFormatAfterCertainTime(Constant.EPOCH_TIME_DURATION));
-                SearchEventData.Flags flags = searchEventData.new Flags();
-                flags.setPopulateGeofence(false);
-                flags.setPopulateRoute(false);
-                searchEventData.setFlags(flags);
-                searchEventData.setDevice(device);
-                RequestHandler.getInstance(getApplicationContext()).handleRequest(new SearchEventRequest(new SearchEventSuccessListener(), new SearchEventErrorListener(), userToken, searchEventData));
-            } else {
-                Log.d("TAG", "Please add the device first and then select");
+                }
             }
+            if (flag) {
+                startTheScheduler();
+                Intent map = new Intent(this, MapsActivity.class);
+                startActivity(map);
+            }
+        } else {
+            showProgressBarDialog();
+            List<String> imeiNumbers = new ArrayList<>();
+            List<String> phoneNumbers = new ArrayList<>();
+            List<AddedDeviceData> consentData = mDbManager.getAlldataFromFMS();
+            if (selectedData.isEmpty()) {
+                Util.alertDilogBox("Please select the number for tracking", "Jio Alert", this);
+                return;
+            }
+            for (int i = 0; i < consentData.size(); i++) {
+                if (selectedData.get(i).getPhone().equals(consentData.get(i).getPhoneNumber())) {
+                    if (consentData.get(i).getConsentStaus().toLowerCase(locale).contains("yes jiotracker")) {
+                        imeiNumbers.add(consentData.get(i).getImeiNumber());
+                        phoneNumbers.add(consentData.get(i).getPhoneNumber());
+                        trackeeName = consentData.get(i).getName();
+                    } else {
+                        Util.alertDilogBox("Consent is not apporoved for phone number " + consentData.get(i).getPhoneNumber(), "Jio Alert", this);
+                    }
+                }
+            }
+
+            FMSAPIData fmsapiData = new FMSAPIData();
+            fmsapiData.setEvt(new String[]{"GPS"});
+            fmsapiData.setDvt("SIM");
+            fmsapiData.setImi(imeiNumbers);
+            fmsapiData.setEfd(14546957247L);
+            fmsapiData.setMob(phoneNumbers);
+            fmsapiData.setTid("456");
+            RequestHandler.getInstance(getApplicationContext()).handleFMSRequest(new FMSTrackRequest(new FMSSuccessListener(), new FMSErrorListener(), fmsapiData));
         }
     }
 
-    /****** Search device status response error listener **************/
-    private class SearchDeviceStatusErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d("TAG", "Error Response");
-        }
-    }
+    private class FMSSuccessListener implements Response.Listener {
 
-    /********** Search Even Success Listener ************/
-    private class SearchEventSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
+            LocationApiResponse fmsAPIResponse = Util.getInstance().getPojoObject(String.valueOf(response), LocationApiResponse.class);
+            fmsLatLngMap.put(Double.parseDouble(fmsAPIResponse.new Event().getLatitute()), Double.parseDouble(fmsAPIResponse.new Event().getLongnitute()));
+            fmsNamingMap.put(trackeeName, fmsLatLngMap);
             progressDialog.dismiss();
+            startActivity(new Intent(DashboardActivity.this, FMSMapActivity.class));
         }
     }
 
-    /********** Search Even Error Listener ************/
-    private class SearchEventErrorListener implements Response.ErrorListener {
+    private class FMSErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d("TAG", "Error in Search Event Response");
+            Map<Double, Double> hashMap = new HashMap<>();
+            hashMap.put(12.976786, 77.593926);
+            fmsNamingMap.put("JIO Location", hashMap);
             progressDialog.dismiss();
+            startActivity(new Intent(DashboardActivity.this, FMSMapActivity.class));
+            Toast.makeText(getApplicationContext(), Constant.FMS_SERVERISSUE, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -467,25 +446,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 new MapsActivity().showMapOnTimeInterval();
             });
         }, 0, MapsActivity.refreshIntervalTime, TimeUnit.SECONDS);
-    }
-
-    /******** Sends the current location message to the Borqs portal after every 10 seconds ************/
-    public void sendLocationInTimeInterval() {
-        final ScheduledExecutorService scheduler =
-                Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(() -> {
-            DashboardActivity.this.runOnUiThread(() -> {
-                makeMQTTConnection();
-                publishMessage();
-            });
-        }, 0, Constant.MQTT_TIME_INTERVAL, TimeUnit.SECONDS);
-    }
-
-    /******* Connect to the MQTT ************/
-    private void makeMQTTConnection() {
-        MQTTManager mqttManager = new MQTTManager();
-        mqttManager.getMQTTClient(this);
-        mqttManager.connetMQTT();
     }
 
     public void makeAPICall(String token) {
@@ -518,6 +478,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         }
     }
 
+    private void gotoAddDeviceActivity() {
+        startActivity(new Intent(getApplicationContext(), NewDeviceActivity.class));
+    }
+
     private void gotoAddDeviceScreen() {
         Intent intent = new Intent(getApplicationContext(), NewDeviceActivity.class);
         startActivity(intent);
@@ -529,8 +493,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         if ("Yes JioTracker".equalsIgnoreCase(consentStatus)) {
             Util.alertDilogBox(Constant.CONSENT_APPROVED, Constant.ALERT_TITLE, this);
         } else {
-            String phoneNumber1 = subscriptionInfos.get(0).getNumber();
-            new SendSMSTask().execute(phoneNumber, userName + " from JioTracker application wants to track your location, please click on given link https://www.example.com/home?data="+phoneNumber1.trim().substring(2,phoneNumber1.length()));
+            new SendSMSTask().execute(phoneNumber, userName + " from JioTracker application wants to track your location, please reply with \"Yes JioTracker\" or \"No JioTracker !");
             Toast.makeText(DashboardActivity.this, "Consent sent", Toast.LENGTH_SHORT).show();
             if (!RegistrationActivity.isFMSFlow) {
                 mDbManager.updatependingConsent(phoneNumber);
@@ -541,6 +504,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
             }
         }
     }
+
 
     public boolean hasPermissions(Context context, String[] permissions) {
 
@@ -562,6 +526,10 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         if (!RegistrationActivity.isFMSFlow) {
             mDbManager.updateConsentInBors(phone, message.toLowerCase(locale).trim());
             showDatainList();
+            /*if (RegistrationDetailActivity.phoneNumber != null && message.length() == 4) {
+                otpNumber = message;
+                BorqsOTPActivity.phoneOTP.setText(otpNumber);
+            }*/
         } else {
             mDbManager.updateConsentInFMS(phone, message);
             showDataFromFMS();
@@ -590,7 +558,9 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     }
 
     public void alertDilogBoxWithCancelbtn(String message, String title, String phoneNumber, int position) {
+
         AlertDialog.Builder adb = new AlertDialog.Builder(DashboardActivity.this);
+        //adb.setView(alertDialogView);
         adb.setTitle(title);
         adb.setMessage(message);
         adb.setIcon(android.R.drawable.ic_dialog_alert);
@@ -618,6 +588,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
         Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
         startActivity(intent);
     }
@@ -625,95 +596,6 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        Uri data = intent.getData();
-        if(data != null ){
-            String number=data.toString().substring(data.toString().length()-10);
-            showDialog(number);
-        }
         isDevicePresent();
-    }
-
-    public void showDialog(String number) {
-        final Dialog dialog = new Dialog(DashboardActivity.this);
-        dialog.setContentView(R.layout.number_display_dialog);
-        dialog.setTitle("Title...");
-        dialog.getWindow().setLayout(1000, 500);
-
-
-        // set the custom dialog components - text, image and button
-        final Button yes = (Button) dialog.findViewById(R.id.positive);
-        Button no = (Button) dialog.findViewById(R.id.negative);
-
-
-
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SendSMSTask().execute(number, "Yes Jiotracker");
-                dialog.dismiss();
-            }
-        });
-
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-
-    }
-
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{READ_SMS, READ_PHONE_NUMBERS, READ_PHONE_STATE}, 100);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("TAG", "COARSE_PERMISSION_GRANTED");
-            } else {
-                Toast.makeText(getApplicationContext(), "COARSE PEMISSSION NOT GRANTED", Toast.LENGTH_SHORT).show();
-            }
-            return;
-        }
-        if (requestCode == 100) {
-            if (ActivityCompat.checkSelfPermission(this, READ_SMS) !=
-                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-        }
-    }
-
-
-    /************  Class to calculate the signal strength ***********************/
-    class MyPhoneStateListener extends PhoneStateListener {
-        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-            super.onSignalStrengthsChanged(signalStrength);
-            TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            if (ActivityCompat.checkSelfPermission(DashboardActivity.this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(DashboardActivity.this, new String[]{ACCESS_COARSE_LOCATION}, REQUEST_COARSE_LOCATION_PERMISSION);
-                return;
-            } else {
-                List<CellInfo> cellInfoList = mTelephonyManager.getAllCellInfo();
-                if (cellInfoList != null) {
-                    for (CellInfo cellInfo : cellInfoList) {
-                        if (cellInfo instanceof CellInfoLte) {
-                            signalStrengthValue = ((CellInfoLte) cellInfo).getCellSignalStrength().getDbm();
-                        }
-                    }
-                }
-            }
-        }
     }
 }

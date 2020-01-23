@@ -1,4 +1,3 @@
-// (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
 package com.jio.devicetracker.util;
 
 import android.Manifest;
@@ -6,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
@@ -33,9 +31,6 @@ public final class Util {
     private static Util mUtils;
     private static String sessionID = null;
     ProgressDialog progressDialog = null;
-    static SharedPreferences sharedpreferences = null;
-    public static final String TERMCONDITIONFLAG = "TermFlag";
-    public static String imeiNumber = "911653450000264";
 
     private Util() {
 
@@ -107,11 +102,10 @@ public final class Util {
     }
 
     public String getIMEI(Context context) {
-        if(context != null && imeiNumber.equals("")) {
+        if(context != null) {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                imeiNumber = telephonyManager.getDeviceId();
-                return imeiNumber;
+                return telephonyManager.getDeviceId();
             }
         }
         return "IMEI permission is not granted!";
@@ -153,21 +147,8 @@ public final class Util {
         try {
             Date date = simpleFormat.parse(currentTime);
             epochTime = date.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-        return epochTime;
-    }
 
-    public static long getTimeEpochFormatAfterCertainTime(int min) {
-        long epochTime = 0;
-        Date today = Calendar.getInstance().getTime();
-        SimpleDateFormat simpleFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
-        String currentTime = simpleFormat.format(today);
-        try {
-            Date date = simpleFormat.parse(currentTime);
-            epochTime = date.getTime() + min*60*1000;
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -184,21 +165,5 @@ public final class Util {
         if(progressDialog != null) {
             progressDialog.dismiss();
         }
-    }
-
-    public static void setTermconditionFlag(Context mContext, boolean flag) {
-        sharedpreferences = mContext.getSharedPreferences(TERMCONDITIONFLAG, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putBoolean("FLAG", flag);
-        editor.commit();
-    }
-
-    public static boolean getTermconditionFlag(Context mContext) {
-        sharedpreferences = mContext.getSharedPreferences(TERMCONDITIONFLAG, Context.MODE_PRIVATE);
-        if (sharedpreferences != null) {
-
-            return sharedpreferences.getBoolean("FLAG",false);
-        }
-        return false;
     }
 }

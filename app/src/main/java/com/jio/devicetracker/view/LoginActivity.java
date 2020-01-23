@@ -28,7 +28,6 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
-import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
@@ -55,7 +54,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         Button loginButton = findViewById(R.id.login);
         jioEmailEditText = findViewById(R.id.jioEmailId);
+        //jioEmailEditText.setText("shivakumar.jagalur@ril.com");
         jioPasswordEditText = findViewById(R.id.jioPassword);
+        //jioPasswordEditText.setText("Jio@1234");
         TextView registerText = findViewById(R.id.registedHere);
         TextView forgetPass = findViewById(R.id.clickForget);
         MessageReceiver.bindListener(LoginActivity.this);
@@ -121,13 +122,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 showProgressBarDialog();
             }
         });
-        makeMQTTConnection();
-    }
-
-    private void makeMQTTConnection() {
-        MQTTManager mqttManager = new MQTTManager();
-        mqttManager.getMQTTClient(this);
-        mqttManager.connetMQTT();
     }
 
     public boolean hasPermissions(Context context, String[] permissions) {
@@ -144,7 +138,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void messageReceived(String message, String phoneNum) {
+       // Toast.makeText(LoginActivity.this, "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
         Log.d("Received Message --> ", message);
+//        String phone = phoneNum.substring(3);
+        /*if (RegistrationActivity.isFMSFlow == false) {
+            if(RegistrationDetailActivity.phoneNumber != null && message.length() == 4) {
+                BorqsOTPActivity.phoneOTP.setText(message);
+            }
+        }*/
     }
 
     @Override

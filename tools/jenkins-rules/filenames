@@ -458,13 +458,3 @@ user-management/src/main/java/com/jio/iot/usermanagement/service/AdminUserManage
 user-management/src/main/java/com/jio/iot/usermanagement/service/UserManagementAutomationService.java
 user-management/src/main/java/com/jio/iot/usermanagement/service/UserManagementMakerService.java
 user-management/src/main/java/com/jio/iot/usermanagement/service/UserManagementService.java
-apps/app/src/main/java/com/jio/devicetracker/view/DashboardActivity.java
-apps/app/src/main/java/com/jio/devicetracker/view/EditActivity.java
-apps/app/src/main/java/com/jio/devicetracker/view/FMSMapActivity.java
-apps/app/src/main/java/com/jio/devicetracker/view/ForgetpassTokenActivity.java
-apps/app/src/main/java/com/jio/devicetracker/view/ForgotPasswordActivity.java    apps/app/src/main/java/com/jio/devicetracker/view/LoginActivity.java
-apps/app/src/main/java/com/jio/devicetracker/view/MapsActivity.java
-apps/app/src/main/java/com/jio/devicetracker/view/RegistrationActivity.java
-apps/app/src/main/java/com/jio/devicetracker/view/RegistrationDetailActivity.java
-apps/app/src/main/java/com/jio/devicetracker/util/Constant.java
-apps/app/src/main/java/com/jio/devicetracker/jiotoken/JioUtilToken.java

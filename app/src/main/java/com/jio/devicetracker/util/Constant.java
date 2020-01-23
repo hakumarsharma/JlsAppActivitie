@@ -1,4 +1,3 @@
-// (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
 package com.jio.devicetracker.util;
 
 /**
@@ -16,13 +15,9 @@ public class Constant {
     public static int ACCOUNT_LOCK = 403;
 
     // MQTT connection details
-    public static final String MQTT_SIT_URL = "tcp://sit.tnt.cats.jvts.net:1883";
-    public static final String MQTT_STG_URL = "tcp://bocats.tnt.jiophone.net:1883";
+    public static final String MQTT_URL = "tcp://sit.tnt.cats.jvts.net:1883";
     public static final String MQTT_USER_NAME = "trackNT";
     public static final String MQTT_PASSWORD = "trackNT";
-    public static final String MQTT_SIT_TOPIC = "jioiot/svcd/tracker/" + Util.imeiNumber + "/uc/fwd/locinfo";
-    public static final String MQTT_STG_TOPIC = "jioiot/svcd/jiophone/" + Util.imeiNumber + "/uc/fwd/locinfo";
-    public static final int MQTT_TIME_INTERVAL = 10;
 
     //  Common Text
 
@@ -71,7 +66,4 @@ public class Constant {
     public static final String SUCCESSFULL_DEVICE_ADDITION_RESPONSE = "1 device(s) are assigned to one user.";
     public static final String SUCCESSFULL_DEVICE_ADDITION = "Device is successfully added";
     public static final String UNSUCCESSFULL_DEVICE_ADDITION = "Device is not added successfully, please try again later";
-    public static final long FREQUENCY_FOR_LOCATION_UPDATE = 10;
-    public static final long PRIORITY_BALANCED_POWER_ACCURACY = 10;
-    public static final int EPOCH_TIME_DURATION = 15;
 }

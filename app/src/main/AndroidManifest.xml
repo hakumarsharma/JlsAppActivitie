@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -44,42 +43,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".view.DashboardActivity">
-            <intent-filter android:label="@string/title_activity_maps">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "example://gizmos” -->
-                <data android:scheme="https"
-                    android:host="www.example.com"
-                    android:pathPrefix="/home" />
-            </intent-filter>
-
-            <intent-filter android:label="@string/title_activity_maps">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-                <data android:scheme="https"
-                    android:host="www.example.com"
-                    android:pathPrefix="/YesJioTracker" />
-                <!-- note that the leading "/" is required for pathPrefix-->
-            </intent-filter>
-            <intent-filter android:label="@string/title_activity_maps">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-                <data android:scheme="https"
-                    android:host="www.example.com"
-                    android:pathPrefix="/NoJioTracker" />
-                <!-- note that the leading "/" is required for pathPrefix-->
-            </intent-filter>
-            <intent-filter>
-                <data android:scheme="https" android:host="www.example.com" />
-                <data android:scheme="app" android:host="open.my.app" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".view.DashboardActivity" />
         <activity
             android:name=".view.MapsActivity"
             android:label="@string/map_name" />
@@ -97,12 +61,6 @@
             android:label="@string/map_name" />
         <activity
             android:name=".view.ForgetpassTokenActivity"
-            android:label="@string/map_name" />
-        <activity
-            android:name=".view.HelpActivity"
-            android:label="@string/map_name" />
-        <activity
-            android:name=".view.TermAndConditionActivity"
             android:label="@string/map_name" />
         <activity
             android:name=".view.ForgotPasswordActivity"
