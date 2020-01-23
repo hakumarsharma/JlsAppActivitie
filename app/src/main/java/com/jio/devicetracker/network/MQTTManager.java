@@ -4,11 +4,9 @@ package com.jio.devicetracker.network;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.DashboardActivity;
 import com.jio.mqttclient.JiotMqttCallback;
 import com.jio.mqttclient.JiotMqttClient;
 import com.jio.mqttclient.JiotMqttConnectOptions;

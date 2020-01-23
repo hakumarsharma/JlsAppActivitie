@@ -107,10 +107,10 @@ public final class Util {
     }
 
     public String getIMEI(Context context) {
-        if(context != null && imeiNumber == "") {
+        if(context != null && imeiNumber.equals("")) {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                imeiNumber = telephonyManager.getDeviceId();;
+                imeiNumber = telephonyManager.getDeviceId();
                 return imeiNumber;
             }
         }

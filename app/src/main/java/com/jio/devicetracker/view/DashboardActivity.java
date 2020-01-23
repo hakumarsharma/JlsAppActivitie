@@ -52,16 +52,13 @@ import com.android.volley.VolleyError;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
-import com.jio.devicetracker.database.pojo.FMSAPIData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
 import com.jio.devicetracker.database.pojo.SearchEventData;
 import com.jio.devicetracker.database.pojo.TrackerdeviceData;
-import com.jio.devicetracker.database.pojo.request.FMSTrackRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
 import com.jio.devicetracker.database.pojo.request.TrackdeviceRequest;
-import com.jio.devicetracker.database.pojo.response.LocationApiResponse;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceStatusResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.network.MQTTManager;
@@ -90,6 +87,8 @@ import static android.Manifest.permission.READ_PHONE_NUMBERS;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.READ_SMS;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.RECEIVE_SMS;
+import static android.Manifest.permission.SEND_SMS;
 
 /**
  * Implementation of Dashboard Screen to show the trackee list and hamburger menu.
@@ -123,9 +122,8 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     private List<SubscriptionInfo> subscriptionInfos;
     Locale locale = Locale.ENGLISH;
     private int batteryLevel;
-    private IntentFilter intentFilter;
     private FusedLocationProviderClient client;
-    String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION};
+    String[] permissions = {READ_SMS, RECEIVE_SMS, SEND_SMS, READ_PHONE_STATE, ACCESS_COARSE_LOCATION};
     private static Double latitude;
     private static Double longitude;
     private static int signalStrengthValue;
@@ -241,7 +239,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         });
 
         sendLocationInTimeInterval();
-        intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         DashboardActivity.this.registerReceiver(broadcastreceiver, intentFilter);
         MyPhoneStateListener myPhoneStateListener = new MyPhoneStateListener();
         TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -434,6 +432,15 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         }
     }
 
+    /****** Search device status response error listener **************/
+    private class SearchDeviceStatusErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d("TAG", "Error Response");
+        }
+    }
+
+    /********** Search Even Success Listener ************/
     private class SearchEventSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
@@ -441,19 +448,12 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
         }
     }
 
+    /********** Search Even Error Listener ************/
     private class SearchEventErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d("TAG", "Error in Search Event Response");
             progressDialog.dismiss();
-        }
-    }
-
-    /****** Search device status response error listener **************/
-    private class SearchDeviceStatusErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d("TAG", "Error Response");
         }
     }
 
@@ -678,6 +678,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if(requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("TAG", "COARSE_PERMISSION_GRANTED");
             } else {
                 Toast.makeText(getApplicationContext(), "COARSE PEMISSSION NOT GRANTED", Toast.LENGTH_SHORT).show();
             }

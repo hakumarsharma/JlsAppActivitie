@@ -3,7 +3,6 @@ package com.jio.devicetracker.view;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -24,10 +23,8 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.jiotoken.JioUtilToken;
-import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.mqttclient.JiotMqttClient;
 
 import java.util.List;
 

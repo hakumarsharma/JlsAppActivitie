@@ -34,7 +34,6 @@ import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.mqttclient.JiotMqttClient;
 
 /**
  * Implementation of Splash Screen.This class creates splash screen for JFF application

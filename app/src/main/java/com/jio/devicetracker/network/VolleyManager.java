@@ -2,20 +2,12 @@
 package com.jio.devicetracker.network;
 
 import android.content.Context;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
-import com.jio.devicetracker.database.pojo.FMSHeader;
-import com.jio.devicetracker.jiotoken.JiotokenHandler;
-import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.DashboardActivity;
-import com.jio.devicetracker.view.RegistrationActivity;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
