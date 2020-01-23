@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
@@ -31,6 +32,8 @@ public final class Util {
     private static Util mUtils;
     private static String sessionID = null;
     ProgressDialog progressDialog = null;
+    static SharedPreferences sharedpreferences = null;
+    public static final String TERMCONDITIONFLAG = "TermFlag";
 
     private Util() {
 
@@ -165,5 +168,21 @@ public final class Util {
         if(progressDialog != null) {
             progressDialog.dismiss();
         }
+    }
+
+    public static void setTermconditionFlag(Context mContext, boolean flag) {
+        sharedpreferences = mContext.getSharedPreferences(TERMCONDITIONFLAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean("FLAG", flag);
+        editor.commit();
+    }
+
+    public static boolean getTermconditionFlag(Context mContext) {
+        sharedpreferences = mContext.getSharedPreferences(TERMCONDITIONFLAG, Context.MODE_PRIVATE);
+        if (sharedpreferences != null) {
+
+            return sharedpreferences.getBoolean("FLAG",false);
+        }
+        return false;
     }
 }

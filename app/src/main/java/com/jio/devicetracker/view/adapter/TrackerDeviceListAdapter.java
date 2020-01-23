@@ -20,7 +20,7 @@ import com.jio.devicetracker.database.pojo.MultipleselectData;
 import java.util.List;
 
 /**
- * Implementation of Registration OTP screen to verify the email OTP.
+ * Implementation of adapter for tracee list.
  */
 public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDeviceListAdapter.ViewHolder> {
 
