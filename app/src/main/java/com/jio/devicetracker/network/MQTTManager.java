@@ -3,8 +3,12 @@ package com.jio.devicetracker.network;
 
 import android.content.Context;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.DashboardActivity;
 import com.jio.mqttclient.JiotMqttCallback;
 import com.jio.mqttclient.JiotMqttClient;
 import com.jio.mqttclient.JiotMqttConnectOptions;
@@ -15,11 +19,12 @@ import com.jio.mqttclient.JiotMqttToken;
 public class MQTTManager {
 
     private static JiotMqttClient jiotMqttClient = null;
-    private JiotMqttConnectOptions options = null;
+    private static JiotMqttConnectOptions options = null;
 
     public JiotMqttClient getMQTTClient(Context context) {
         if (jiotMqttClient == null) {
-            JiotMqttCreateOptions jiotMqttCreateOptions = new JiotMqttCreateOptions(Util.getInstance().getSessionId(), Constant.MQTT_USER_NAME, Constant.MQTT_PASSWORD, Constant.MQTT_URL);
+            JiotMqttCreateOptions jiotMqttCreateOptions = new JiotMqttCreateOptions(Util.imeiNumber, Constant.MQTT_USER_NAME, Constant.MQTT_PASSWORD, Constant.MQTT_SIT_URL);
+            Log.d("MQTT URL --> ", Constant.MQTT_SIT_URL);
             options = new JiotMqttConnectOptions();
             options.setAutoReconnect(false);
             jiotMqttClient = new JiotMqttClient(context, new JiotMqttCallback() {
@@ -85,7 +90,7 @@ public class MQTTManager {
     }
 
     public void connetMQTT() {
-        if(jiotMqttClient != null && options != null) {
+        if(jiotMqttClient != null && options != null && jiotMqttClient.isConnected() != true) {
             jiotMqttClient.connect(options);
         }
     }

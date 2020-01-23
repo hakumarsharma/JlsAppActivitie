@@ -61,7 +61,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mRegistration.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.login_selector,null));
+                mRegistration.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
                 mRegistration.setTextColor(Color.WHITE);
             }
 
@@ -69,7 +69,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             public void afterTextChanged(Editable s) {
                 String number = mJionmber.getText().toString();
                 if (number.isEmpty()) {
-                    mRegistration.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.selector,null));
+                    mRegistration.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
                     mRegistration.setTextColor(Color.WHITE);
                 } else {
                     mJionmber.setError(null);
@@ -116,25 +116,11 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.registration:
                 validateNumber();
-                makeMQTTConnection();
+                break;
+            default:
                 break;
 
-            /*case R.id.borqs:
-                gotoLoginScreen();
-                break;*/
-
-          /*  case R.id.jioNumber:
-                showDialog(subscriptionInfos);*/
-          default:
-              break;
-
         }
-    }
-
-    private void makeMQTTConnection() {
-        MQTTManager mqttManager = new MQTTManager();
-        JiotMqttClient jiotMqttClient = mqttManager.getMQTTClient(getApplicationContext());
-        jiotMqttClient.connect();
     }
 
     private void validateNumber() {
@@ -163,24 +149,23 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         String carierName = subscriptionInfos.get(0).getCarrierName().toString();
         String number = subscriptionInfos.get(0).getNumber();
 
-        if(number != null
+        if (number != null
                 && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
-            if (carierName.contains("Jio"))
-            {
+            if (carierName.contains("Jio")) {
                 JioUtilToken.getSSOIdmaToken(RegistrationActivity.this);
                 //mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
                 gotoDashBoardActivity();
             } else {
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
             }
-        } else if(subscriptionInfos.size()==2 && subscriptionInfos.get(1).getNumber().toString() != null ){
-             if(subscriptionInfos.get(1).getNumber().toString().equals("91"+phoneNumber)|| subscriptionInfos.get(1).getNumber().toString().equals(phoneNumber)) {
-                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
-             } else {
-                 Util.alertDilogBox(Constant.DEVICE_JIONUMBER,Constant.ALERT_TITLE,this);
-             }
+        } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber().toString() != null) {
+            if (subscriptionInfos.get(1).getNumber().toString().equals("91" + phoneNumber) || subscriptionInfos.get(1).getNumber().toString().equals(phoneNumber)) {
+                Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+            } else {
+                Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
+            }
         } else {
-            Util.alertDilogBox(Constant.DEVICE_JIONUMBER,Constant.ALERT_TITLE,this);
+            Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
 
         }
 
@@ -231,11 +216,10 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
         dialog.show();
 
-    }
-*/
-    public void checkJioSIMSlot1()
-    {
-        if(subscriptionInfos != null) {
+    }*/
+
+    public void checkJioSIMSlot1() {
+        if (subscriptionInfos != null) {
             String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
             if (!carrierNameSlot1.contains("Jio")) {
                 Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);

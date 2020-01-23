@@ -35,6 +35,7 @@ public final class Util {
     ProgressDialog progressDialog = null;
     static SharedPreferences sharedpreferences = null;
     public static final String TERMCONDITIONFLAG = "TermFlag";
+    public static String imeiNumber = "911653450000264";
 
     private Util() {
 
@@ -106,10 +107,11 @@ public final class Util {
     }
 
     public String getIMEI(Context context) {
-        if(context != null) {
+        if(context != null && imeiNumber == "") {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                return telephonyManager.getDeviceId();
+                imeiNumber = telephonyManager.getDeviceId();;
+                return imeiNumber;
             }
         }
         return "IMEI permission is not granted!";
@@ -151,8 +153,21 @@ public final class Util {
         try {
             Date date = simpleFormat.parse(currentTime);
             epochTime = date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
+        return epochTime;
+    }
 
+    public static long getTimeEpochFormatAfterCertainTime(int min) {
+        long epochTime = 0;
+        Date today = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
+        String currentTime = simpleFormat.format(today);
+        try {
+            Date date = simpleFormat.parse(currentTime);
+            epochTime = date.getTime() + min*60*1000;
         } catch (ParseException e) {
             e.printStackTrace();
         }

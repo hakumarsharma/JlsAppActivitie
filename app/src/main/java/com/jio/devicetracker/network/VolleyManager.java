@@ -76,12 +76,12 @@ public class VolleyManager extends StringRequest {
     }
 
     @Override
-    public Map<String, String> getHeaders() throws AuthFailureError {
-        if(RegistrationActivity.isFMSFlow == false) {
-            Map<String, String> header = new HashMap<String, String>();
-            header.put("Content-Type", "application/json; charset=utf-8");
-            return header;
-        }
+    public Map<String, String> getHeaders(){
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("Content-Type", "application/json; charset=utf-8");
+        return header;
+       /* if(RegistrationActivity.isFMSFlow == false) {
+         }
         else {
             FMSHeader fmsHeader = new FMSHeader();
             fmsHeader.setReqId(DashboardActivity.trackeeIMEI);
@@ -96,7 +96,7 @@ public class VolleyManager extends StringRequest {
             Gson gson = new Gson();
             header.put("tracker-Info", gson.toJson(fmsHeader));
             return header;
-        }
+        }*/
     }
 
 
