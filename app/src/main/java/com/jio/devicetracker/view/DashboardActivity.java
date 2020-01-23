@@ -421,7 +421,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                 SearchEventData.Device device = searchEventData.new Device();
                 device.setId(deviceIds.get(0));
                 searchEventData.setFrom(Util.convertTimeToEpochtime());
-                searchEventData.setTo(Util.getTimeEpochFormatAfterCertainTime(15));
+                searchEventData.setTo(Util.getTimeEpochFormatAfterCertainTime(Constant.EPOCH_TIME_DURATION));
                 SearchEventData.Flags flags = searchEventData.new Flags();
                 flags.setPopulateGeofence(false);
                 flags.setPopulateRoute(false);

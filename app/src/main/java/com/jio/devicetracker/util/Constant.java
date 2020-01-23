@@ -73,4 +73,5 @@ public class Constant {
     public static final String UNSUCCESSFULL_DEVICE_ADDITION = "Device is not added successfully, please try again later";
     public static final long FREQUENCY_FOR_LOCATION_UPDATE = 10;
     public static final long PRIORITY_BALANCED_POWER_ACCURACY = 10;
+    public static final int EPOCH_TIME_DURATION = 15;
 }
