@@ -33,7 +33,7 @@ for p in ` find . -type f \\( -name "*.py" -o -name "*.sh" -o -name "*.yaml" -o 
                 done
                 if [ $ignore_it -eq 0 ]; then
 		   # pylint --rcfile=.pylintrc --output-format=parseable ${wkp}/$p >> "${wkp}/pylint.txt"   2>&1
-		    grep -e "RadiSys Corporation" $p > /dev/null
+		    grep -e "Reliance" $p > /dev/null
 		    status=$?
 			if [ "$status" != 0 ]
 				then
