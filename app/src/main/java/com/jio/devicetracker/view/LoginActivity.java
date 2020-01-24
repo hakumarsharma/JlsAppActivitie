@@ -208,8 +208,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivity(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

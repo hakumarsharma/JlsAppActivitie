@@ -23,7 +23,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.jiotoken.JioTokenUtility;
+import com.jio.devicetracker.jiotoken.JioToken;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -167,7 +167,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                 && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
             if (carierName.contains("Jio"))
             {
-                JioTokenUtility.getSSOIdmaToken(this);
+                JioToken.getSSOIdmaToken(this);
                 //mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
                 gotoDashBoardActivity();
             } else {
