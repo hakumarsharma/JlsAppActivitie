@@ -37,8 +37,8 @@ import java.util.Locale;
 import java.util.Map;
 
 public class FMSMapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
-
-    private StringBuilder strAddress = null;
+    @SuppressWarnings({"PMD.AvoidStringBufferField"})
+    private static StringBuilder strAddress = null;
     private Context context = null;
     public static GoogleMap mMap;
     public LocationManager locationManager;

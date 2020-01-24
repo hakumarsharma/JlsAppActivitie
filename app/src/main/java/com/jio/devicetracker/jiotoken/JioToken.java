@@ -7,6 +7,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.iot.sso.JiotAuthenticationManager;
 import com.jio.iot.sso.JiotSSOApp;
 
+@SuppressWarnings({"PMD.ClassNamingConventions", "UseUtilityClass"})
 public class JioToken {
     private static JiotSSOApp jioSSo;
     private static JiotAuthenticationManager mJioAuth;

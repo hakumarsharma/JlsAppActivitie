@@ -4,6 +4,8 @@ package com.jio.devicetracker.util;
 /**
  * Implementation of Constant class to maintain the constant of application .
  */
+
+@SuppressWarnings({"PMD.ClassNamingConventions"})
 public class Constant {
 
     // TODO move IDAM details to properties file

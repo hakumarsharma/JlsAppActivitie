@@ -52,6 +52,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int MY_PERMISSIONS_REQUEST_MAPS = 101;
     public LocationManager locationManager;
     public Toolbar toolbar;
+    @SuppressWarnings("PMD.AvoidStringBufferField")
     private static StringBuilder strAddress = null;
     public static int refreshIntervalTime = 300;
     private Context context = null;
