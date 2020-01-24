@@ -67,7 +67,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         strAddress = new StringBuilder();
         TextView title = findViewById(R.id.toolbar_title);
         title.setText("      Location");
-        context = MapsActivity.this;
+        context = this;
 
         if (mMap != null) {
             mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this));

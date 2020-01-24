@@ -193,7 +193,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
     }
 
     private boolean getssoToken() {
-        boolean isAvailable = Util.isMobileNetworkAvailable(RegistrationDetailActivity.this);
+        boolean isAvailable = Util.isMobileNetworkAvailable(this);
         if (isAvailable) {
             return checkJiooperator();
         } else {
@@ -209,7 +209,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
 
         if (number != null && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
             if (carierName.contains("Jio")) {
-                JioToken.getSSOIdmaToken(RegistrationDetailActivity.this);
+                JioToken.getSSOIdmaToken(this);
                 return true;
             } else {
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);

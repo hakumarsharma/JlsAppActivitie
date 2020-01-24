@@ -111,13 +111,13 @@ public class ForgetpassTokenActivity extends Activity implements View.OnClickLis
 
     private void gotoForgetPassScreen() {
 
-        Intent intent = new Intent(ForgetpassTokenActivity.this,ForgotPasswordActivity.class);
+        Intent intent = new Intent(this,ForgotPasswordActivity.class);
         intent.putExtra("Email",mEmail.getText().toString().trim());
         startActivity(intent);
     }
 
     private void showProgressBarDialog() {
-        progressDialog = ProgressDialog.show(ForgetpassTokenActivity.this, "", Constant.WAIT_LOADER, true);
+        progressDialog = ProgressDialog.show(this, "", Constant.WAIT_LOADER, true);
         progressDialog.setCancelable(true);
     }
 }

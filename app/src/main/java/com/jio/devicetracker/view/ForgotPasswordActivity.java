@@ -146,7 +146,7 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
     }
 
     private void gotoLoginScreen() {
-        Intent intent = new Intent(ForgotPasswordActivity.this,LoginActivity.class);
+        Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
     }
 
@@ -166,7 +166,7 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
     }
 
     private void showProgressBarDialog() {
-        progressDialog = ProgressDialog.show(ForgotPasswordActivity.this, "", Constant.WAIT_LOADER, true);
+        progressDialog = ProgressDialog.show(this, "", Constant.WAIT_LOADER, true);
         progressDialog.setCancelable(true);
     }
 }

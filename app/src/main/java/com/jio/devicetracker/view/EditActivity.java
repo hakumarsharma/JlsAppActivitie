@@ -73,7 +73,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
 
         private void gotoDashboard () {
 
-            Intent intent = new Intent(EditActivity.this, DashboardActivity.class);
+            Intent intent = new Intent(this, DashboardActivity.class);
             startActivity(intent);
         }
     }

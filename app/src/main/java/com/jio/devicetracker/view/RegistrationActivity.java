@@ -149,7 +149,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     }
 
     private void getssoToken() {
-        boolean isAvailable = Util.isMobileNetworkAvailable(RegistrationActivity.this);
+        boolean isAvailable = Util.isMobileNetworkAvailable(this);
         if (isAvailable) {
             checkJiooperator();
 
@@ -167,7 +167,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                 && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
             if (carierName.contains("Jio"))
             {
-                JioToken.getSSOIdmaToken(RegistrationActivity.this);
+                JioToken.getSSOIdmaToken(this);
                 //mDbManager.insertAdminData(mName.getText().toString(), mJionmber.getText().toString());
                 gotoDashBoardActivity();
             } else {
@@ -187,12 +187,12 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     }
 
     private void gotoDashBoardActivity() {
-        Intent intent = new Intent(RegistrationActivity.this, DashboardActivity.class);
+        Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }
 
     public void showDialog(List<SubscriptionInfo> list) {
-        final Dialog dialog = new Dialog(RegistrationActivity.this);
+        final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.number_display_dialog);
         dialog.setTitle("Title...");
         dialog.getWindow().setLayout(1000, 400);
