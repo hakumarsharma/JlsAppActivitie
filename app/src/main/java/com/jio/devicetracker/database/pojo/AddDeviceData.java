@@ -1,8 +1,6 @@
 // (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
 package com.jio.devicetracker.database.pojo;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.List;
 
