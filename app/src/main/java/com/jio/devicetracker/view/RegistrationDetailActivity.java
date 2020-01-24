@@ -28,7 +28,7 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.RegisterRequestData;
 import com.jio.devicetracker.database.pojo.request.RegistrationTokenrequest;
-import com.jio.devicetracker.jiotoken.JioToken;
+import com.jio.devicetracker.jiotoken.JioTokenUtility;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -209,7 +209,7 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
 
         if (number != null && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
             if (carierName.contains("Jio")) {
-                JioToken.getSSOIdmaToken(this);
+                JioTokenUtility.getSSOIdmaToken(this);
                 return true;
             } else {
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);

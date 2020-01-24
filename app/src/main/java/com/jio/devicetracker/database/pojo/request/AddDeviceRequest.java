@@ -4,8 +4,6 @@ package com.jio.devicetracker.database.pojo.request;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.jio.devicetracker.database.pojo.AddDeviceData;
-import com.jio.devicetracker.database.pojo.AddedDeviceData;
-import com.jio.devicetracker.database.pojo.TrackerdeviceData;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Util;
 
