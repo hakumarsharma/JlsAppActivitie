@@ -8,9 +8,13 @@ import com.jio.iot.sso.JiotAuthenticationManager;
 import com.jio.iot.sso.JiotSSOApp;
 
 @SuppressWarnings({"PMD.ClassNamingConventions", "UseUtilityClass"})
-public class JioToken {
+public final class JioToken {
     private static JiotSSOApp jioSSo;
     private static JiotAuthenticationManager mJioAuth;
+
+    private JioToken() {
+
+    }
 
     public static void getSSOIdmaToken(Context mContext)
     {
