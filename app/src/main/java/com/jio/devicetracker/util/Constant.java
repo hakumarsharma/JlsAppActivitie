@@ -1,11 +1,6 @@
-// (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
+// (c) Copyright 2019 by Reliance JIO. All rights reserved.
 package com.jio.devicetracker.util;
 
-/**
- * Implementation of Constant class to maintain the constant of application .
- */
-
-@SuppressWarnings({"PMD.ClassNamingConventions"})
 public class Constant {
 
     // TODO move IDAM details to properties file
@@ -65,8 +60,4 @@ public class Constant {
     public static final String LOGOUT_CONFIRMATION_MESSAGE = "Are you sure you want to logout ?";
 
     // MAPs Activity constants
-    public static final String LOCATION_UPDATE = "Location will be updated after every";
-    public static final String SUCCESSFULL_DEVICE_ADDITION_RESPONSE = "1 device(s) are assigned to one user.";
-    public static final String SUCCESSFULL_DEVICE_ADDITION = "Device is successfully added";
-    public static final String UNSUCCESSFULL_DEVICE_ADDITION = "Device is not added successfully, please try again later";
 }

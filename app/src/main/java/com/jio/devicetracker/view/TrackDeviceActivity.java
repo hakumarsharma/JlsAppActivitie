@@ -46,7 +46,7 @@ public class TrackDeviceActivity extends AppCompatActivity implements View.OnCli
         phoneNumberEditText = findViewById(R.id.trackeeDeviceNumber);
         Button trackDevice = findViewById(R.id.trackDevice);
         trackDevice.setOnClickListener(this);
-        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -70,14 +70,14 @@ public class TrackDeviceActivity extends AppCompatActivity implements View.OnCli
             TrackerdeviceResponse mtrackerresponse = Util.getInstance().getPojoObject(String.valueOf(response), TrackerdeviceResponse.class);
             List<TrackerdeviceResponse.Data> data= mtrackerresponse.getmData();
             Log.d(TAG,"Response print"+response);
-           gotoDashboard(data);
+            gotoDashboard(data);
         }
     }
 
     private void gotoDashboard(List<TrackerdeviceResponse.Data> phoneList) {
-       Intent intent = new Intent(this,DashboardActivity.class);
-       intent.putExtra("PhoneList",(Serializable)phoneList);
-       startActivity(intent);
+        Intent intent = new Intent(this,DashboardActivity.class);
+        intent.putExtra("PhoneList",(Serializable)phoneList);
+        startActivity(intent);
     }
 
     private class ErrorListener implements Response.ErrorListener {

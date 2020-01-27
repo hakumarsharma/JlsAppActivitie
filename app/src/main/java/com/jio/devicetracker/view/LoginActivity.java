@@ -15,6 +15,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,13 +28,13 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
+import com.jio.devicetracker.network.MessageListener;
+import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
-/**
- * Implementation of Splash Screen.This class creates splash screen for JFF application
- */
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText jioEmailEditText = null;
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgetPass.setOnClickListener(this);
 
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
-        if (!hasPermissions(this, permissions)) {
+        if (!hasPermissions(LoginActivity.this, permissions)) {
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
 
@@ -148,10 +149,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void gotoForgetPassTokenScreen() {
 
-        Intent intent = new Intent(this,ForgetpassTokenActivity.class);
+        Intent intent = new Intent(LoginActivity.this,ForgetpassTokenActivity.class);
         intent.putExtra("Email",jioEmailEditText.getText().toString().trim());
         startActivity(intent);
     }
+
+   /* private void forgetpassTokenApi() {
+
+        if(jioEmailEditText.getText().length()!= 0 && Util.isValidEmailId(jioEmailEditText.getText().toString().trim()))
+        {
+            data = new ForgetPassToken();
+            data.setEmail(jioEmailEditText.getText().toString().trim());
+           RequestHandler.getInstance(getApplicationContext()).handleRequest(new ForgetpasswordTokenRequest(new SuccessForgetToken(), new ErrorToken(),data));
+        } else {
+            jioEmailEditText.setError(Constant.EMAIL_VALIDATION);
+            return;
+        }
+
+    }
+
+    private class SuccessForgetToken implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Toast.makeText(LoginActivity.this,"Token is sent to entered email",Toast.LENGTH_SHORT).show();
+            gotoForgetPassScreen();
+        }
+    }
+
+    private class ErrorToken implements Response.ErrorListener {
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+        }
+    }*/
 
     private class SuccessListener implements Response.Listener {
 
@@ -183,13 +214,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void showProgressBarDialog() {
-        progressDialog = ProgressDialog.show(this, "", Constant.WAIT_LOADER, true);
+        progressDialog = ProgressDialog.show(LoginActivity.this, "", Constant.WAIT_LOADER, true);
         progressDialog.setCancelable(true);
     }
 
     private void gotoRegisterScreen() {
-        Intent intent = new Intent(this,RegistrationDetailActivity.class);
+        Intent intent = new Intent(LoginActivity.this,RegistrationDetailActivity.class);
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
