@@ -15,7 +15,6 @@ import androidx.core.content.res.ResourcesCompat;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,8 +27,6 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
-import com.jio.devicetracker.network.MessageListener;
-import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -223,8 +220,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivity(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

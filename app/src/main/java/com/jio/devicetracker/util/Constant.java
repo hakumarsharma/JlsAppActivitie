@@ -1,6 +1,7 @@
 // (c) Copyright 2019 by Reliance JIO. All rights reserved.
 package com.jio.devicetracker.util;
 
+@SuppressWarnings("PMD.ClassNamingConventions")
 public class Constant {
 
     // TODO move IDAM details to properties file
