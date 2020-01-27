@@ -15,7 +15,6 @@ import androidx.core.content.res.ResourcesCompat;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,8 +27,6 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
-import com.jio.devicetracker.network.MessageListener;
-import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -37,7 +34,7 @@ import com.jio.devicetracker.util.Util;
 /**
  * Implementation of Splash Screen.This class creates splash screen for JFF application
  */
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText jioEmailEditText = null;
     private EditText jioPasswordEditText = null;
@@ -59,7 +56,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //jioPasswordEditText.setText("Jio@1234");
         TextView registerText = findViewById(R.id.registedHere);
         TextView forgetPass = findViewById(R.id.clickForget);
-        MessageReceiver.bindListener(this);
         registerText.setOnClickListener(this);
         forgetPass.setOnClickListener(this);
 
@@ -134,18 +130,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         return true;
-    }
-
-    @Override
-    public void messageReceived(String message, String phoneNum) {
-       // Toast.makeText(LoginActivity.this, "Received message -> " + message + " from phone number -> " + phoneNum, Toast.LENGTH_SHORT).show();
-        Log.d("Received Message --> ", message);
-//        String phone = phoneNum.substring(3);
-        /*if (RegistrationActivity.isFMSFlow == false) {
-            if(RegistrationDetailActivity.phoneNumber != null && message.length() == 4) {
-                BorqsOTPActivity.phoneOTP.setText(message);
-            }
-        }*/
     }
 
     @Override

@@ -31,7 +31,6 @@ import java.util.List;
 public class TrackDeviceActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String TAG = "TrackDeviceActivity";
-    private TrackerdeviceResponse mtrackerresponse;
     private String userToken =null;
     private EditText phoneNumberEditText = null;
     public Toolbar toolbar;
@@ -68,7 +67,7 @@ public class TrackDeviceActivity extends AppCompatActivity implements View.OnCli
 
         @Override
         public void onResponse(Object response) {
-            mtrackerresponse = Util.getInstance().getPojoObject(String.valueOf(response), TrackerdeviceResponse.class);
+            TrackerdeviceResponse mtrackerresponse = Util.getInstance().getPojoObject(String.valueOf(response), TrackerdeviceResponse.class);
             List<TrackerdeviceResponse.Data> data= mtrackerresponse.getmData();
             Log.d(TAG,"Response print"+response);
            gotoDashboard(data);

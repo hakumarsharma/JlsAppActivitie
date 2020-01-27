@@ -152,7 +152,7 @@ public class DashboardActivity extends AppCompatActivity implements MessageListe
                     Log.d(TAG, "Value of data" + selectedData.size());
                 } else {
                     for (MultipleselectData multipleselectData : selectedData) {
-                        if (multipleselectData.getPhone() == data.getPhone()) {
+                        if (multipleselectData.getPhone().equalsIgnoreCase(data.getPhone())) {
                             selectedData.remove(multipleselectData); // TODO include break after this if you want to stop loop once the device is deleted
                         }
                     }
