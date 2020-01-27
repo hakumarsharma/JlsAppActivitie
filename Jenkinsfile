@@ -90,7 +90,7 @@ pipeline {
                         this.notifyStash('FAILED')
                 throw err
                                             }
-
+         this.notifyStash('SUCCESS')
                           }
                         }
 

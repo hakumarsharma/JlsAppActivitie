@@ -3,14 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="visible"
-    tools:visibility="visible">
+    android:background="#03007F"
+    tools:visibility="visible"
+    tools:context=".view.SplashScreenActivity"
+    >
+
 
     <ImageView
-        android:id="@+id/splashImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/reliance_jio"
-        android:visibility="visible"/>
-
+        android:src="@drawable/ic_splash"
+        />
 </RelativeLayout>

@@ -1,2 +1,2 @@
-include ':app', ':jioutils-ssolib-sit-release-1.0'
+include ':app', ':jioutils-ssolib-sit-release-1.0', ':jioutils-mqtt-client-1.0'
 rootProject.name='JIODeviceTracker'
