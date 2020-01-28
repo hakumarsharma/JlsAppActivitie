@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgetPass.setOnClickListener(this);
 
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
-        if (!hasPermissions(LoginActivity.this, permissions)) {
+        if (!hasPermissions(this, permissions)) {
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
 
@@ -146,40 +146,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void gotoForgetPassTokenScreen() {
 
-        Intent intent = new Intent(LoginActivity.this,ForgetpassTokenActivity.class);
+        Intent intent = new Intent(this,ForgetpassTokenActivity.class);
         intent.putExtra("Email",jioEmailEditText.getText().toString().trim());
         startActivity(intent);
     }
-
-   /* private void forgetpassTokenApi() {
-
-        if(jioEmailEditText.getText().length()!= 0 && Util.isValidEmailId(jioEmailEditText.getText().toString().trim()))
-        {
-            data = new ForgetPassToken();
-            data.setEmail(jioEmailEditText.getText().toString().trim());
-           RequestHandler.getInstance(getApplicationContext()).handleRequest(new ForgetpasswordTokenRequest(new SuccessForgetToken(), new ErrorToken(),data));
-        } else {
-            jioEmailEditText.setError(Constant.EMAIL_VALIDATION);
-            return;
-        }
-
-    }
-
-    private class SuccessForgetToken implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            Toast.makeText(LoginActivity.this,"Token is sent to entered email",Toast.LENGTH_SHORT).show();
-            gotoForgetPassScreen();
-        }
-    }
-
-    private class ErrorToken implements Response.ErrorListener {
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-
-        }
-    }*/
 
     private class SuccessListener implements Response.Listener {
 
@@ -211,13 +181,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void showProgressBarDialog() {
-        progressDialog = ProgressDialog.show(LoginActivity.this, "", Constant.WAIT_LOADER, true);
+        progressDialog = ProgressDialog.show(this, "", Constant.WAIT_LOADER, true);
         progressDialog.setCancelable(true);
     }
 
     private void gotoRegisterScreen() {
-        Intent intent = new Intent(LoginActivity.this,RegistrationDetailActivity.class);
+        Intent intent = new Intent(this,RegistrationDetailActivity.class);
         startActivity(intent);
     }
-
 }
