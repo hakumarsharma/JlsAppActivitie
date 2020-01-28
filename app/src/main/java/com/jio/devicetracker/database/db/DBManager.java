@@ -20,9 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Implementation of DataBase manager class to manage all operation like insert,delete,update and fetch in database.
- */
 public class DBManager {
 
     private DatabaseHelper mDBHelper;
@@ -41,8 +38,8 @@ public class DBManager {
         contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
         contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
         contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
-        /*contentValue.put(DatabaseHelper.LAT, Double.parseDouble(deviceData.getLat()));
-        contentValue.put(DatabaseHelper.LON, Double.parseDouble(deviceData.getLng()));*/
+        contentValue.put(DatabaseHelper.LAT, Double.parseDouble(deviceData.getLat()));
+        contentValue.put(DatabaseHelper.LON, Double.parseDouble(deviceData.getLng()));
         return  mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
 
     }
