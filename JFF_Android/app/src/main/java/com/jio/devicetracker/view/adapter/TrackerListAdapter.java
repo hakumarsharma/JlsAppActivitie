@@ -11,18 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.pojo.TraceeListData;
 import com.jio.devicetracker.database.pojo.TrackerListData;
 
 import java.util.List;
 
 public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.ViewHolder> {
     private List<TrackerListData> mList;
-    private Context mContext;
 
-    public TrackerListAdapter(Context mContext, List<TrackerListData> mList){
+    public TrackerListAdapter(List<TrackerListData> mList){
         this.mList = mList;
-        this.mContext = mContext;
     }
 
     @NonNull

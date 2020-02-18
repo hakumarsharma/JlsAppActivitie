@@ -1,6 +1,5 @@
 package com.jio.devicetracker.view.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +58,6 @@ public class TraceeListAdapter extends RecyclerView.Adapter<TraceeListAdapter.Vi
             durationtime = itemView.findViewById(R.id.durationTime);
             expirytime = itemView.findViewById(R.id.expiryTime);
             profile = itemView.findViewById(R.id.traceeImage);
-
-
         }
     }
 }

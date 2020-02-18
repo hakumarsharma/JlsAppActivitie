@@ -346,6 +346,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // If request is cancelled, the result arrays are empty.
                 for (int grantResult : grantResults) {
                     if (grantResults.length > 0 && grantResult == PackageManager.PERMISSION_GRANTED) {
+                        System.out.println("Permission is granted");
                     }
                 }
                 break;

@@ -91,7 +91,7 @@ public final class Util extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
             }
         }
-        if (("").equalsIgnoreCase(imeiNumber)) {
+        if ("".equalsIgnoreCase(imeiNumber)) {
             imeiNumber = telephonyManager.getDeviceId();
         }
         Log.d("IMEI Number --> ", imeiNumber);

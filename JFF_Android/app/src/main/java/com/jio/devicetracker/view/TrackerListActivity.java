@@ -17,8 +17,6 @@ import java.util.List;
 
 public class TrackerListActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerList;
-    private TrackerListAdapter mAdapter;
     private List<TrackerListData> mList;
 
     @Override
@@ -29,11 +27,11 @@ public class TrackerListActivity extends AppCompatActivity {
         addDataInList();
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Constant.TRACKER_TITLE);
-        mRecyclerList = findViewById(R.id.trackerList);
+        RecyclerView mRecyclerList = findViewById(R.id.trackerList);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
-        mAdapter = new TrackerListAdapter(this, mList);
+        TrackerListAdapter mAdapter = new TrackerListAdapter(mList);
         mRecyclerList.setAdapter(mAdapter);
     }
 
