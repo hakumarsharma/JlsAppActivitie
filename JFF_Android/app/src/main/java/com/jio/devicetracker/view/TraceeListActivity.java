@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TraceeListActivity extends Activity {
-    private RecyclerView mRecyclerList;
-    private TraceeListAdapter mAdapter;
     private List<TraceeListData> mList;
 
     @Override
@@ -29,11 +27,11 @@ public class TraceeListActivity extends Activity {
         addDataInList();
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Constant.TRACEE_TITLE);
-        mRecyclerList = findViewById(R.id.traceeList);
+        RecyclerView mRecyclerList = findViewById(R.id.traceeList);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
-        mAdapter = new TraceeListAdapter(this, mList);
+        TraceeListAdapter mAdapter = new TraceeListAdapter(mList);
         mRecyclerList.setAdapter(mAdapter);
 
 

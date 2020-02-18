@@ -13,7 +13,6 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.EditProfileData;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.Util;
 
 /**
  * Implementation of Edit Profile Screen to change the tracee's details.

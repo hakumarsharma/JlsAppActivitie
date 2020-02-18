@@ -213,7 +213,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    // Shows the Notification on map screen, after taping on notification the map activity will open and notification will dissapear
+  /*  // Shows the Notification on map screen, after taping on notification the map activity will open and notification will dissapear
     private void showNotifications(String title, String text) {
         Intent intent = new Intent(this, MapsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -228,5 +228,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setAutoCancel(true);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(Constant.NOTIFICATION__ID, builder.build());
-    }
+    }*/
 }

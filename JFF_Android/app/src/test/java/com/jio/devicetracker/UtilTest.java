@@ -1,21 +1,12 @@
 package com.jio.devicetracker;
 
 import android.content.Context;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.core.app.ApplicationProvider;
-
 import com.jio.devicetracker.database.pojo.SearchDevice;
 import com.jio.devicetracker.util.Util;
-
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +51,7 @@ public class UtilTest{
     @Test
     public void getIMEI() {
         String imeiNumber = Util.getInstance().getIMEI(context);
-        assertTrue(imeiNumber != null);
+        assertNotNull(imeiNumber);
         assertTrue(!imeiNumber.isEmpty());
     }
 
@@ -97,18 +88,22 @@ public class UtilTest{
 
     @Test
     public void showProgressBarDialog() {
+        System.out.println("Inside test method");
     }
 
     @Test
     public void showProgressBarDialog1() {
+        System.out.println("Inside test method");
     }
 
     @Test
     public void dismissProgressBarDialog() {
+        System.out.println("Inside test method");
     }
 
     @Test
     public void setTermconditionFlag() {
+        System.out.println("Inside test method");
     }
 
     @Test
@@ -124,14 +119,17 @@ public class UtilTest{
 
     @Test
     public void setAutologinStatus() {
+        System.out.println("Inside test method");
     }
 
     @Test
     public void getAutologinStatus() {
+        System.out.println("Inside test method");
     }
 
     @Test
     public void clearAutologinstatus() {
+        System.out.println("Inside test method");
     }
 
     @Test

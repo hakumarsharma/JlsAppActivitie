@@ -42,7 +42,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -64,8 +63,6 @@ import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceStatusResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.network.MQTTManager;
-import com.jio.devicetracker.network.MessageListener;
-import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.network.SendLocationService;
 import com.jio.devicetracker.network.SendSMSTask;
@@ -80,7 +77,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -103,7 +99,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private static List<AddedDeviceData> addDeviceList;
     public static List<String> consentListPhoneNumber = null;
     private static DBManager mDbManager;
-    private ProgressDialog progressDialog = null;
     public static Map<String, Map<Double, Double>> namingMap = null;
     private static Context context = null;
     public static String adminEmail;
@@ -371,7 +366,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private void isDevicePresent() {
         TextView devicePresent = findViewById(R.id.devicePresent);
         List<AddedDeviceData> alldata = null;
-        /*if (RegistrationActivity.isFMSFlow == false) {*/
             alldata = mDbManager.getAlldata(adminEmail);
             if (alldata.isEmpty()) {
                 listView.setVisibility(View.INVISIBLE);
@@ -380,17 +374,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 devicePresent.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
             }
-        //}
-        /*else {
-            alldata = mDbManager.getAlldataFromFMS();
-            if (alldata.isEmpty()) {
-                listView.setVisibility(View.INVISIBLE);
-                devicePresent.setVisibility(View.VISIBLE);
-            } else {
-                devicePresent.setVisibility(View.GONE);
-                listView.setVisibility(View.VISIBLE);
-            }
-        }*/
     }
 
     public void getServicecall() {
@@ -545,7 +528,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void goToMapActivity() {
-        Util.setLocationFlagStatus(DashboardActivity.this, true);
+        Util.setLocationFlagStatus(this, true);
         Util.clearAutologinstatus(this);
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
@@ -622,7 +605,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    Log.d("TAG", "Permission not granted");
+                     System.out.println("Permission not granted");
                 }
             }
             if (LoginActivity.isAccessCoarsePermissionGranted) {
@@ -675,7 +658,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 // If request is cancelled, the result arrays are empty.
                 for (int grantResult : grantResults) {
                     if (grantResults.length > 0 && grantResult == PackageManager.PERMISSION_GRANTED) {
-//                        Log.d("TAG", "Permission granted");
+                          System.out.println("Permission granted");
                     }
                 }
             }

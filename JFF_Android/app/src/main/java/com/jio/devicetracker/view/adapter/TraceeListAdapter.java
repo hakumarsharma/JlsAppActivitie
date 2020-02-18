@@ -4,28 +4,21 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.TraceeListData;
-
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 public class TraceeListAdapter extends RecyclerView.Adapter<TraceeListAdapter.ViewHolder> {
     private List<TraceeListData> mList;
-    private Context mContext;
 
-    public TraceeListAdapter(Context mContext, List<TraceeListData> mList){
+    public TraceeListAdapter(List<TraceeListData> mList){
         this.mList = mList;
-        this.mContext = mContext;
     }
 
     @NonNull

@@ -91,7 +91,7 @@ public final class Util extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
             }
         }
-        if (imeiNumber.equals("")) {
+        if (("").equalsIgnoreCase(imeiNumber)) {
             imeiNumber = telephonyManager.getDeviceId();
         }
         Log.d("IMEI Number --> ", imeiNumber);
@@ -100,7 +100,7 @@ public final class Util extends AppCompatActivity {
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//            Log.d("Permission", "READ_PHONE_STATE permission granted");
+            System.out.println("READ_PHONE_STATE permission granted");
         }
     }
 

@@ -348,6 +348,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (grantResults.length > 0 && grantResult == PackageManager.PERMISSION_GRANTED) {
                     }
                 }
+                break;
             }
             default:
                 break;

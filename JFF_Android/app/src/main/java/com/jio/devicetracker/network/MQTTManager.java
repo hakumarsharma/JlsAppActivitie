@@ -2,9 +2,6 @@
 package com.jio.devicetracker.network;
 
 import android.content.Context;
-import android.util.Log;
-
-
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
