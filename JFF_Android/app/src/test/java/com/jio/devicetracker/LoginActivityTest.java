@@ -1,5 +1,10 @@
 package com.jio.devicetracker;
 
-public class LoginActivityTest {
+import org.junit.Test;
 
+public class LoginActivityTest {
+    @Test
+    private void show() {
+
+    }
 }
