@@ -1,4 +1,5 @@
 // (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
+
 package com.jio.devicetracker.database.pojo;
 
 import java.io.Serializable;

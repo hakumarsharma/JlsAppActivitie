@@ -12,7 +12,7 @@ public final class JioUtils {
     private static JiotAuthenticationManager mJioAuth;
 
     private JioUtils() {
-        
+
     }
 
     public static void getSSOIdmaToken(Context mContext)
