@@ -92,7 +92,7 @@ public class ForgetpassTokenActivity extends Activity implements View.OnClickLis
     private class SuccessForgetToken implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            Util.progressDialog.dismiss();
+            Util.getInstance().dismissProgressBarDialog();
             Toast.makeText(ForgetpassTokenActivity.this,Constant.FORGOT_TOKEN_MSG,Toast.LENGTH_SHORT).show();
             gotoForgetPassScreen();
         }
@@ -102,7 +102,7 @@ public class ForgetpassTokenActivity extends Activity implements View.OnClickLis
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Util.progressDialog.dismiss();
+            Util.getInstance().dismissProgressBarDialog();
             Toast.makeText(ForgetpassTokenActivity.this,Constant.FORGOT_TOKEN_FAIL_MSG,Toast.LENGTH_SHORT).show();
         }
     }

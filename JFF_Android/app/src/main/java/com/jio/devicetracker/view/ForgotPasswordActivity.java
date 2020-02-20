@@ -138,7 +138,7 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
         @Override
         public void onResponse(Object response) {
             Toast.makeText(ForgotPasswordActivity.this,Constant.PASSWORD_RESET_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
-            Util.progressDialog.dismiss();
+            Util.getInstance().dismissProgressBarDialog();
             gotoLoginScreen();
         }
     }
@@ -159,7 +159,7 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
             } else {
                 Toast.makeText(ForgotPasswordActivity.this,Constant.RESET_PASSWORD_FAILED,Toast.LENGTH_SHORT).show();
             }
-            Util.progressDialog.dismiss();
+            Util.getInstance().dismissProgressBarDialog();
         }
     }
 

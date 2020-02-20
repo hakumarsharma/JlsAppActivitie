@@ -30,9 +30,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.SearchDevice;
 import com.jio.devicetracker.database.pojo.Userdata;
+import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
@@ -44,6 +46,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -58,6 +61,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static LogindetailResponse logindetailResponse = null;
     public static SearchDeviceResponse searchdeviceResponse = null;
     private static final int PERMIT_ALL = 1;
+    String name,mbNumber,imei;
     private DBManager mDbManager;
     private List<SubscriptionInfo> subscriptionInfos;
     public static boolean isReadPhoneStatePermissionGranted = false;
@@ -150,8 +154,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = getIntent();
         Uri data = intent.getData();
         if (data != null && data.toString().contains("home")) {
+            String[] splitStr = data.toString().split("=");
+            String[] splitNamenumber = splitStr[1].split("&");
+            name = splitNamenumber[0];
+            mbNumber = splitNamenumber[1];
+            imei = splitNamenumber[2];
+
             String number = data.toString().substring(data.toString().length() - 10);
-            showDialog(number);
+            showDialog(mbNumber);
         }
     }
 
@@ -164,11 +174,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final Button yes = dialog.findViewById(R.id.positive);
         Button no = dialog.findViewById(R.id.negative);
         yes.setOnClickListener(v -> {
-            String phoneNumber = null;
+            serviceCallLogin();
+           /* String phoneNumber = null;
             if (subscriptionInfos != null) {
                 phoneNumber = subscriptionInfos.get(0).getNumber();
             }
-            new SendSMSTask().execute(number, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
+            new SendSMSTask().execute(number, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));*/
             dialog.dismiss();
         });
 
@@ -353,6 +364,42 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             default:
                 break;
+        }
+    }
+
+    private void serviceCallLogin(){
+        AddDeviceData addDeviceData = new AddDeviceData();
+        AddDeviceData.Devices devices = addDeviceData.new Devices();
+        AddDeviceData.Flags flags = addDeviceData.new Flags();
+        devices.setMac(imei);
+        devices.setIdentifier(Constant.IMEI);
+        devices.setName(name);
+        devices.setPhone(mbNumber);
+        flags.setSkipAddDeviceToGroup(false);
+        List<AddDeviceData.Devices> listDevices = new LinkedList<>();
+        listDevices.add(devices);
+        addDeviceData.setDevices(listDevices);
+        addDeviceData.setFlags(flags);
+        Util.getInstance().showProgressBarDialog(this, Constant.PROGRESSBAR_MSG);
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new SuccessListenerAddDevice(), new ErrorListenerAddDevice(), new DBManager(this).getAdminLoginDetail().getUserToken(), new DBManager(this).getAdminLoginDetail().getUserId(), addDeviceData));
+    }
+
+    private class SuccessListenerAddDevice implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+
+            String phoneNumber = null;
+            if (subscriptionInfos != null) {
+                phoneNumber = subscriptionInfos.get(0).getNumber();
+            }
+            new SendSMSTask().execute(mbNumber, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
+        }
+    }
+
+    private class ErrorListenerAddDevice implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.getInstance().dismissProgressBarDialog();
         }
     }
 }

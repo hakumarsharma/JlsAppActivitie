@@ -536,6 +536,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private void sendSMS(String phoneNumber) {
         String userName = mDbManager.getAdminDetail();
+        String imei = Util.getInstance().getIMEI(this);
         String consentStatus = mDbManager.getConsentStatusBorqs(phoneNumber);
         if (Constant.CONSENT_STATUS_MSG.equalsIgnoreCase(consentStatus)) {
             Util.alertDilogBox(Constant.CONSENT_APPROVED, Constant.ALERT_TITLE, this);
@@ -544,7 +545,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             if (subscriptionInfos != null) {
                 phoneNumber1 = subscriptionInfos.get(0).getNumber();
             }
-            new SendSMSTask().execute(phoneNumber, userName + Constant.CONSENT_MSG_TO_TRACKEE + phoneNumber1.trim().substring(2, phoneNumber1.length()));
+            new SendSMSTask().execute(phoneNumber, userName + Constant.CONSENT_MSG_TO_TRACKEE + phoneNumber1.trim().substring(2, phoneNumber1.length())+"&"+userName+"&"+imei);
             Toast.makeText(this, Constant.CONSENT_MSG_SENT, Toast.LENGTH_SHORT).show();
             mDbManager.updatependingConsent(phoneNumber);
             showDatainList();

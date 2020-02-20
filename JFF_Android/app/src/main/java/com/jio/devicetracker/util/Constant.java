@@ -145,7 +145,7 @@ public class Constant {
     public static final String NUMBER_CARRIER = "number";
     public static final String CONSENT_STATUS_MSG = "Yes JioTracker";
     public static final String CONSENT_MSG_SENT = "Consent sent";
-    public static final String CONSENT_MSG_TO_TRACKEE = " wants to track your location from JFF application. Please click below link to reply. https://www.jff.com/home?data=";
+    public static final String CONSENT_MSG_TO_TRACKEE = " wants to track your location. Click below link to reply. https://www.jff.com/home?data=";
     public static final String START_TRACKING = "To start tracking ";
     public static final String REQUEST_CONSENT_USER = " please request for consent from the user by clicking “Request consent”";
     public static final String DIALOG_TITLE = "Title...";
