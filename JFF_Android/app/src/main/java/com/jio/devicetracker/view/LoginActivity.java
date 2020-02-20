@@ -61,7 +61,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static LogindetailResponse logindetailResponse = null;
     public static SearchDeviceResponse searchdeviceResponse = null;
     private static final int PERMIT_ALL = 1;
-    String name,mbNumber,imei;
+    String name;
+    String mbNumber;
+    String imei;
     private DBManager mDbManager;
     private List<SubscriptionInfo> subscriptionInfos;
     public static boolean isReadPhoneStatePermissionGranted = false;
@@ -159,8 +161,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             name = splitNamenumber[0];
             mbNumber = splitNamenumber[1];
             imei = splitNamenumber[2];
-
-            String number = data.toString().substring(data.toString().length() - 10);
             showDialog(mbNumber);
         }
     }
