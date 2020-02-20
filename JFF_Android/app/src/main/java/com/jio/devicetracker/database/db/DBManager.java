@@ -41,7 +41,12 @@ public class DBManager {
         contentValue.put(DatabaseHelper.EMAIL, email);
         contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
         contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
-        contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
+        if(!deviceData.getConsentStaus().equals("")){
+            contentValue.put(DatabaseHelper.CONSENT_STATUS,deviceData.getConsentStaus());
+        }else {
+            contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
+        }
+
         contentValue.put(DatabaseHelper.CONSENT_TIME, "");
         contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT,1234);
         return  mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
@@ -55,7 +60,13 @@ public class DBManager {
                 contentValue.put(DatabaseHelper.EMAIL, email);
                 contentValue.put(DatabaseHelper.IMEI_NUM, addData.getImeiNumber());
                 contentValue.put(DatabaseHelper.DEVICE_NUM, addData.getPhoneNumber());
+                Log.d("DB","Value of consentstatus"+addData.getConsentStaus());
+            if(addData.getConsentStaus()!=null){
+                contentValue.put(DatabaseHelper.CONSENT_STATUS,addData.getConsentStaus());
+            }else {
                 contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
+            }
+                //contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
                 contentValue.put(DatabaseHelper.CONSENT_TIME, "");
                 contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
                 mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);

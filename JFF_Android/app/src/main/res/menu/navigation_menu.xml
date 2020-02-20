@@ -10,9 +10,9 @@
     <item android:id="@+id/about"
         android:title="About"/>
     <item android:id="@+id/traceelist"
-        android:title="Tracky List"/>
+        android:title="Trackees List"/>
     <item android:id="@+id/trackerListMenu"
-        android:title="Tracker List"/>
+        android:title="Trackers List"/>
     <item android:id="@+id/logout"
         android:title="Logout"/>
 

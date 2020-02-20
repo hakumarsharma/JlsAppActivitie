@@ -164,8 +164,8 @@ public class Constant {
     public static final String REGISTARTION_SUCCESS_MESSAGE = "Registration successfull!";
     public static final String REGISTARTION_FAILED_MESSAGE = "Registration is failed";
     public static final String EDIT = "Edit";
-    public static final String TRACEE_TITLE = "Tracky";
-    public static final String TRACKER_TITLE = "Tracker";
+    public static final String TRACEE_TITLE = "Trackees";
+    public static final String TRACKER_TITLE = "Trackers";
     public static final String CANT_ADD_REG_MOB_NUM = "You can't add registered mobile number";
     public static final String TEN_SECONDS = "10 Seconds";
     public static final String ONE_MINUTE = "1 Minute";

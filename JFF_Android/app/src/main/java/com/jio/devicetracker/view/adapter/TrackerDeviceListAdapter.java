@@ -65,6 +65,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
             holder.mConsentStatus.setText(Constant.CONSENT_PENDING);
             holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending,0,0,0);
+            holder.mConsentStatus.setEnabled(false);
 
         } else {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentNotSent));
