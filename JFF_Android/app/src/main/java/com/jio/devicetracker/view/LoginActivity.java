@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -32,6 +33,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.SearchDevice;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
@@ -58,12 +60,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private EditText jioEmailEditText = null;
     private EditText jioPasswordEditText = null;
+    private AdminLoginData adminData;
     public static LogindetailResponse logindetailResponse = null;
     public static SearchDeviceResponse searchdeviceResponse = null;
     private static final int PERMIT_ALL = 1;
     String name;
     String mbNumber;
     String imei;
+    private List<AddedDeviceData> mList;
     private DBManager mDbManager;
     private List<SubscriptionInfo> subscriptionInfos;
     public static boolean isReadPhoneStatePermissionGranted = false;
@@ -78,6 +82,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Button loginButton = findViewById(R.id.login);
         jioEmailEditText = findViewById(R.id.jioEmailId);
         jioPasswordEditText = findViewById(R.id.jioPassword);
+        adminData = new AdminLoginData();
+        mList = new ArrayList<>();
         TextView registerText = findViewById(R.id.registedHere);
         TextView forgetPass = findViewById(R.id.clickForget);
         registerText.setOnClickListener(this);
@@ -158,8 +164,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (data != null && data.toString().contains("home")) {
             String[] splitStr = data.toString().split("=");
             String[] splitNamenumber = splitStr[1].split("&");
-            name = splitNamenumber[0];
-            mbNumber = splitNamenumber[1];
+            mbNumber = splitNamenumber[0];
+            name = splitNamenumber[1];
             imei = splitNamenumber[2];
             showDialog(mbNumber);
         }
@@ -255,14 +261,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private class SuccessListenerSearchDevice implements Response.Listener {
         @Override
         public void onResponse(Object response) {
+
+            String consentStatus = null;
             List<AddedDeviceData> mlist = new ArrayList<>();
             searchdeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchDeviceResponse.class);
             AddedDeviceData data;
             List<SearchDeviceResponse.SearchDeviceData> deviceData = searchdeviceResponse.getmData();
             for (SearchDeviceResponse.SearchDeviceData devData : deviceData) {
                 data = new AddedDeviceData();
-                data.setPhoneNumber(devData.getPhoneNumber());
-                data.setName(devData.getName());
+
+
+                if(devData.getPhoneNumber().equals("Shivakumar")) {
+                    data.setPhoneNumber(devData.getName());
+                    data.setName(devData.getPhoneNumber());
+                    consentStatus = mDbManager.getConsentStatusBorqs(devData.getName());
+                } else {
+                    data.setPhoneNumber(devData.getPhoneNumber());
+                    data.setName(devData.getName());
+                    consentStatus = mDbManager.getConsentStatusBorqs(devData.getPhoneNumber());
+                }
+
+                data.setConsentStaus(consentStatus);
+
+
                 data.setImeiNumber(devData.getImeiNumber());
                 mlist.add(data);
             }
@@ -270,7 +291,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mDbManager.insertInBorqsDB(mlist, jioEmailEditText.getText().toString().trim());
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
             startActivity(intent);
-            Util.progressDialog.dismiss();
+            Util.getInstance().dismissProgressBarDialog();
         }
     }
 
@@ -278,7 +299,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Util.progressDialog.dismiss();
+            Util.getInstance().dismissProgressBarDialog();
         }
     }
 
@@ -368,31 +389,54 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void serviceCallLogin(){
-        AddDeviceData addDeviceData = new AddDeviceData();
-        AddDeviceData.Devices devices = addDeviceData.new Devices();
-        AddDeviceData.Flags flags = addDeviceData.new Flags();
-        devices.setMac(imei);
-        devices.setIdentifier(Constant.IMEI);
-        devices.setName(name);
-        devices.setPhone(mbNumber);
-        flags.setSkipAddDeviceToGroup(false);
-        List<AddDeviceData.Devices> listDevices = new LinkedList<>();
-        listDevices.add(devices);
-        addDeviceData.setDevices(listDevices);
-        addDeviceData.setFlags(flags);
-        Util.getInstance().showProgressBarDialog(this, Constant.PROGRESSBAR_MSG);
-        RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new SuccessListenerAddDevice(), new ErrorListenerAddDevice(), new DBManager(this).getAdminLoginDetail().getUserToken(), new DBManager(this).getAdminLoginDetail().getUserId(), addDeviceData));
+        boolean serviceFlag = true;
+        adminData = mDbManager.getAdminLoginDetail();
+        mList = mDbManager.getAlldata(adminData.getEmail());
+
+        for(AddedDeviceData data : mList){
+            if(data.getPhoneNumber().equals(mbNumber))
+            {
+                mDbManager.updateConsentInBors(data.getPhoneNumber(),Constant.CONSENT_STATUS_MSG);
+                serviceFlag = false;
+                break;
+            }
+        }
+        if(serviceFlag) {
+            AddDeviceData addDeviceData = new AddDeviceData();
+            AddDeviceData.Devices devices = addDeviceData.new Devices();
+            AddDeviceData.Flags flags = addDeviceData.new Flags();
+            devices.setMac("857170180584765");
+            devices.setIdentifier(Constant.IMEI);
+            devices.setName(name);
+            devices.setPhone(mbNumber);
+            flags.setSkipAddDeviceToGroup(false);
+            List<AddDeviceData.Devices> listDevices = new LinkedList<>();
+            listDevices.add(devices);
+            addDeviceData.setDevices(listDevices);
+            addDeviceData.setFlags(flags);
+            Util.getInstance().showProgressBarDialog(this, Constant.PROGRESSBAR_MSG);
+            RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new SuccessListenerAddDevice(), new ErrorListenerAddDevice(), new DBManager(this).getAdminLoginDetail().getUserToken(), new DBManager(this).getAdminLoginDetail().getUserId(), addDeviceData));
+
+        }
+        String phoneNumber = null;
+        if (subscriptionInfos != null) {
+            phoneNumber = subscriptionInfos.get(0).getNumber();
+        }
+        new SendSMSTask().execute(mbNumber, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
+
     }
 
     private class SuccessListenerAddDevice implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-
-            String phoneNumber = null;
-            if (subscriptionInfos != null) {
-                phoneNumber = subscriptionInfos.get(0).getNumber();
-            }
-            new SendSMSTask().execute(mbNumber, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
+            AddedDeviceData addedDeviceData = new AddedDeviceData();
+            addedDeviceData.setName(name);
+            addedDeviceData.setPhoneNumber(mbNumber);
+            addedDeviceData.setImeiNumber(imei);
+            addedDeviceData.setConsentStaus(Constant.CONSENT_APPROVED_STATUS);
+            long insertRowid = mDbManager.insertInBorqsDB(addedDeviceData, adminData.getEmail());
+            Util.getInstance().dismissProgressBarDialog();
+            Toast.makeText(LoginActivity.this,"2 way tracking done",Toast.LENGTH_SHORT).show();
         }
     }
 
