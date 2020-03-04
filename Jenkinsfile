@@ -90,7 +90,7 @@ pipeline {
                         this.notifyStash('FAILED')
                 throw err
                                             }
-
+         this.notifyStash('SUCCESS')
                           }
                         }
 
@@ -168,6 +168,3 @@ def findJiraIssue(){
 	}
 	return jiraIssues
 }
-
-
-
