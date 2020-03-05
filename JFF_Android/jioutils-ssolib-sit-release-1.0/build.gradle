@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('jioutils-ssolib-sit-release-1.0.aar'))

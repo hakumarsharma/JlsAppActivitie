@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.jio.devicetracker">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/app_icon"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup">
+        <activity android:name=".view.TrackerListActivity"></activity>
+        <activity android:name=".view.RefreshIntervalSettingActivity" />
+
+        <service
+            android:name=".network.SendLocationService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".view.ProfileActivity" />
+        <activity android:name=".view.BorqsOTPActivity" />
+        <activity
+            android:name=".view.TrackDeviceActivity"
+            android:label="Track device" />
+        <activity
+            android:name=".view.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter android:label="@string/title_activity_maps">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "example://gizmos” -->
+                <data
+                    android:host="www.jff.com"
+                    android:pathPrefix="/home"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".view.NewDeviceActivity" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity android:name=".view.DashboardActivity">
+            <intent-filter android:label="@string/title_activity_maps">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+                <data
+                    android:host="www.jff.com"
+                    android:pathPrefix="/YesJFF"
+                    android:scheme="https" />
+                <!-- note that the leading "/" is required for pathPrefix -->
+            </intent-filter>
+            <intent-filter android:label="@string/title_activity_maps">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+                <data
+                    android:host="www.jff.com"
+                    android:pathPrefix="/NoJFF"
+                    android:scheme="https" />
+                <!-- note that the leading "/" is required for pathPrefix -->
+            </intent-filter>
+            <intent-filter>
+                <data
+                    android:host="www.example.com"
+                    android:scheme="https" />
+                <data
+                    android:host="open.my.app"
+                    android:scheme="app" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.MapsActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.RegistrationActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.RegistrationDetailActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.EditActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.ForgetpassTokenActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.HelpActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.TraceeListActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.PrivacyPolicyActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.ForgotPasswordActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.SplashScreenActivity"
+            android:theme="@style/SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".network.MessageReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:priority="2147483647">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
