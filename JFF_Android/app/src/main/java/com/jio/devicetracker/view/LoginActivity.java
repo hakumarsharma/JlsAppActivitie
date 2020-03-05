@@ -434,7 +434,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             addedDeviceData.setPhoneNumber(mbNumber);
             addedDeviceData.setImeiNumber(imei);
             addedDeviceData.setConsentStaus(Constant.CONSENT_APPROVED_STATUS);
-            long insertRowid = mDbManager.insertInBorqsDB(addedDeviceData, adminData.getEmail());
             Util.getInstance().dismissProgressBarDialog();
             Toast.makeText(LoginActivity.this,"2 way tracking done",Toast.LENGTH_SHORT).show();
         }
