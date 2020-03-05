@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="40dp"
-                android:text="Please enter device details"
+                android:text="Please enter the details"
                 android:textSize="20dp" />
 
 
@@ -48,7 +48,7 @@
                 android:textCursorDrawable="@color/colorLogin" />
 
             <EditText
-                android:id="@+id/deviceName"
+                android:id="@+id/relationWithUser"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/memberName"
@@ -56,21 +56,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/colorLogin"
-                android:hint="Mobile Number*"
+                android:hint="Relation with user*"
                 android:inputType="phone"
-                android:textCursorDrawable="@color/colorLogin" />
-
-            <EditText
-                android:id="@+id/deviceIMEINumber"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/deviceName"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="10dp"
-                android:backgroundTint="@color/colorLogin"
-                android:hint="Device IMEI*"
-                android:inputType="number"
                 android:textCursorDrawable="@color/colorLogin" />
 
 

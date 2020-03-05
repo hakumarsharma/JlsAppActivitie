@@ -1,4 +1,25 @@
-// (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.jio.devicetracker.view;
 
 import android.app.Activity;
@@ -10,8 +31,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.EditProfileData;
 import com.jio.devicetracker.util.Constant;
 
 /**
@@ -19,39 +38,25 @@ import com.jio.devicetracker.util.Constant;
  */
 public class EditActivity extends Activity implements View.OnClickListener {
 
-    private EditText mName;
-    private EditText mNumber;
-    private EditText mIMEI;
-    private String number;
-    private DBManager mDBmanager;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Constant.EDIT);
-        mName = findViewById(R.id.memberName);
-        mNumber = findViewById(R.id.deviceName);
-        mIMEI = findViewById(R.id.deviceIMEINumber);
+        EditText mName = findViewById(R.id.memberName);
+        EditText relationEditText = findViewById(R.id.relationWithUser);
         Button update = findViewById(R.id.update);
-        mDBmanager = new DBManager(this);
         update.setOnClickListener(this);
         Intent intent = getIntent();
-        number = intent.getStringExtra(Constant.NUMBER_CARRIER);
-        EditProfileData editData;
-        editData = mDBmanager.getUserdataForEdit(number);
-        mName.setText(editData.getName());
-        mNumber.setText(editData.getPhoneNumber());
-        mIMEI.setText(editData.getImeiNumber());
-
-
+        String name = intent.getStringExtra(Constant.NAME);
+        String relation = intent.getStringExtra(Constant.NUMBER_CARRIER);
+        mName.setText(name);
+        relationEditText.setText(relation);
     }
 
     @Override
     public void onClick(View v) {
-        mDBmanager.updateProfile(number, mName.getText().toString(), mNumber.getText().toString(), mIMEI.getText().toString());
         gotoDashboard();
     }
 

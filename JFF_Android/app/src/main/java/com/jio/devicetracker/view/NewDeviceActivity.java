@@ -1,4 +1,25 @@
-// (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.jio.devicetracker.view;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +53,9 @@ import java.util.List;
 public class NewDeviceActivity extends AppCompatActivity implements View.OnClickListener {
 
     Intent intent = null;
+    private String name;
+    private String number;
+    private String imeiNumber;
     private EditText mDeviceNumber;
     private EditText mName;
     private EditText mDeviceImeiNumber;
@@ -45,6 +69,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.ADD_DEVICE_TITLE);
         intent = getIntent();
+        String qrValue = intent.getStringExtra("QRCodeValue");
         adminData = new AdminLoginData();
         mDeviceNumber = findViewById(R.id.deviceName);
         mName = findViewById(R.id.memberName);
@@ -52,6 +77,21 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
         Button mAdd = findViewById(R.id.save);
         mDbManager = new DBManager(this);
         mAdd.setOnClickListener(this);
+        setNameNumberImei(qrValue);
+    }
+
+    private void setNameNumberImei(String qrValue) {
+        if(qrValue != null){
+            String []splitString = qrValue.split("\n");
+            name = splitString[0];
+            number = splitString[1];
+            imeiNumber = splitString[2];
+            mName.setText(name);
+            mDeviceNumber.setText(number);
+            mDeviceImeiNumber.setText(imeiNumber);
+
+        }
+
     }
 
     @Override

@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:allowBackup="true"
@@ -21,6 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
+        <activity android:name=".view.GroupNameActivity"/>
         <activity android:name=".view.TrackerListActivity"></activity>
         <activity android:name=".view.RefreshIntervalSettingActivity" />
 
@@ -119,10 +122,19 @@
             android:name=".view.TraceeListActivity"
             android:label="@string/map_name" />
         <activity
+            android:name=".view.QRCodeReaderActivity"
+            android:label="@string/map_name" />
+        <activity
             android:name=".view.PrivacyPolicyActivity"
             android:label="@string/map_name" />
         <activity
+            android:name=".view.ContactDetailsActivity"
+            android:label="@string/map_name" />
+        <activity
             android:name=".view.ForgotPasswordActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.GroupListActivity"
             android:label="@string/map_name" />
         <activity
             android:name=".view.SplashScreenActivity"

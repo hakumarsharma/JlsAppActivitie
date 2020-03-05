@@ -1,4 +1,25 @@
-// (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 
 package com.jio.devicetracker.view.adapter;
 
@@ -53,7 +74,9 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         holder.mDelete.setTransformationMethod(null);
         holder.mEdit.setTransformationMethod(null);
         holder.mConsentStatus.setTransformationMethod(null);
-        holder.mConsentStatus.setOnClickListener(v -> itemListener.consetClick(mData.get(position).getPhoneNumber()));
+        holder.mConsentStatus.setOnClickListener(v -> {
+            itemListener.consetClick(mData.get(position).getPhoneNumber());
+        });
         if(mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equalsIgnoreCase(Constant.CONSENT_STATUS_MSG))
         {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
@@ -93,7 +116,15 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         holder.mDelete.setOnClickListener(v -> itemListener.recyclerviewDeleteList(mData.get(position).getPhoneNumber(),position));
 
 
-        holder.mListlayout.setOnLongClickListener(v -> true);
+        holder.mListlayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
+        holder.mListlayout.setOnClickListener(v -> {
+            return;
+        });
     }
 
 

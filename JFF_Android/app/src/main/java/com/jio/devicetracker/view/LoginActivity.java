@@ -1,4 +1,25 @@
-// (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.jio.devicetracker.view;
 
 import android.Manifest;
@@ -91,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
         @SuppressWarnings("PMD.UnnecessaryFullyQualifiedName")
-        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS};
         if (!hasPermissions(this, permissions)) {
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
@@ -181,11 +202,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Button no = dialog.findViewById(R.id.negative);
         yes.setOnClickListener(v -> {
             serviceCallLogin();
-           /* String phoneNumber = null;
-            if (subscriptionInfos != null) {
-                phoneNumber = subscriptionInfos.get(0).getNumber();
-            }
-            new SendSMSTask().execute(number, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));*/
             dialog.dismiss();
         });
 

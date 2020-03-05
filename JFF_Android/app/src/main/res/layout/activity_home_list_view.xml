@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/listLayout"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    card_view:cardCornerRadius="10dp"
+    android:layout_margin="10dp"
+    card_view:cardElevation="8dp"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    tools:context=".view.DashboardActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/statusView"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorConsentNotSent" />
+
+
+        <ImageView
+            android:id="@+id/contactImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ic_group_button" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/contactImage"
+            android:layout_marginLeft="10dp"
+            android:layout_alignTop="@+id/contactImage"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="5dp"
+            android:text="Name"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/relationWithGrpMembers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/contactImage"
+            android:text="Radisys"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/consentstatus"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/consent"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorButtonBackground"
+            android:text="Request consent"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/consent"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignTop="@+id/relationWithGrpMembers"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="-30dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/ic_checkboxempty" />
+
+        <TextView
+            android:id="@+id/textViewOptions"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="370dp"
+            android:layout_below="@id/consent"
+            android:text="&#8942;"
+            android:textAppearance="?android:textAppearanceLarge" />
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
