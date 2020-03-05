@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
@@ -43,19 +44,40 @@
             android:dividerHeight="1dp" />
 
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/fab_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="50dp"
-            android:src="@drawable/ic_add_btn"
-            app:backgroundTint="@color/colorPrimary"
-            app:elevation="6dp"
-            app:pressedTranslationZ="12dp" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            fab:fab_addButtonColorNormal="@color/float_menu_color"
+            fab:fab_addButtonColorPressed="@color/black"
+            fab:fab_addButtonPlusIconColor="@color/colorPrimary"
+            fab:fab_labelStyle="@style/menu_labels_style"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp">
 
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/createGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/colorConsentNotSent"
+                app:fab_icon="@drawable/group_white"
+                fab:fab_title="Create Group"
+                fab:fab_colorPressed="@color/white"/>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addDeviceTransparent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_icon="@drawable/add_indivisual"
+                fab:fab_colorNormal="@color/colorConsentNotSent"
+                fab:fab_title="Add Device"
+                fab:fab_colorPressed="@color/white"/>
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView

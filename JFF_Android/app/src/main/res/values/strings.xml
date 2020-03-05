@@ -22,7 +22,7 @@
     <string name="location_heading"><b>Track :</b></string>
     <string name="location_help">Location of the device being tracked will be displayed on the map as a pin-drop. Tapping on the pin-drop will display address of the location.\nLocation of multiple devices will be displayed as multiple pin-drops on the map.</string>
     <string name="home_heading"><b>Home :</b></string>
-    <string name="home_help">Logged-in user can add a device to be tracked by clicking (+) button provided on the bottom-right corner of the screen.\n Device\'s phone number and IMEI number are required for device addition. \nAfter the device is added successfully, it will be displayed on the screen as shown above.</string>
+    <string name="home_help">Logged-in user can add a device to be tracked by clicking (+) button provided on the bottom-right corner of the screen.\nDevice\'s phone number and IMEI number are required for device addition. \nAfter the device is added successfully, it will be displayed on the screen as shown above.</string>
     <string name="home_help1">To track the device, please click on the "Request Consent" and get an approval from the owner of the device to be tracked.\nTracking can be initiated after consent is approved by the device owner.</string>
     <string name="notification_title">Jio friends and family</string>
     <string name="foreground_service_channel">Foreground Service Channel</string>
@@ -32,6 +32,10 @@
     <string name="nojff">NoJFF</string>
     <string name="channel_name">channel_name</string>
     <string name="channel_description">channel_description</string>
+    <string name="device_imei">IMEI*</string>
+    <string name="trackee_number">Number*</string>
+    <string name="trackee_name">Name*</string>
+    <string name="group_name_textview">Please enter your group name</string>
 
     <string name="privacy_policy">
         <![CDATA[

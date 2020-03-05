@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        android:id="@+id/loginToolbar"
+        layout="@layout/toolbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/loginToolbar">
+
+
+        <EditText
+            android:id="@+id/memberName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/colorLogin"
+            android:hint="@string/trackee_name"
+            android:inputType="text"
+            android:textCursorDrawable="@color/colorLogin" />
+
+        <EditText
+            android:id="@+id/deviceName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/memberName"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/colorLogin"
+            android:hint="@string/trackee_number"
+            android:inputType="phone"
+            android:textCursorDrawable="@color/colorLogin" />
+
+        <Button
+            android:id="@+id/addContactInGroup"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp"
+            android:background="@drawable/login_selector"
+            android:textAllCaps="false"
+            android:text="Add"
+            android:textColor="@color/colorButtonText" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

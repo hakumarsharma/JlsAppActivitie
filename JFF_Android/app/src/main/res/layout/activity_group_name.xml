@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.NewDeviceActivity">
+
+    <include
+        android:id="@+id/loginToolbar"
+        layout="@layout/toolbar" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="25dp"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/trackntrack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:text="@string/group_name_textview"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/groupNameEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/trackntrack"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="@color/colorLogin"
+                android:hint="Group Name"
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textCursorDrawable="@color/colorLogin" />
+
+            <EditText
+                android:id="@+id/relationWithGroupMembers"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/groupNameEditText"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="@color/colorLogin"
+                android:hint="Relation with group members"
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textCursorDrawable="@color/colorLogin" />
+
+
+            <Button
+                android:id="@+id/createGroupName"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/relationWithGroupMembers"
+                android:layout_centerHorizontal="true"
+                android:textAllCaps="false"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/selector"
+                android:text="Create" />
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

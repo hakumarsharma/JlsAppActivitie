@@ -1,4 +1,25 @@
-// (c) Copyright 2020 by Reliance Jio infocomm Ltd. All rights reserved.
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.jio.devicetracker.util;
 
 /**
@@ -104,6 +125,7 @@ public class Constant {
     public static final String FORGOT_TOKEN_MSG = "Token is sent to entered email";
     public static final String FORGOT_TOKEN_FAIL_MSG = "Token api failed";
     public static final String FORGOT_EMAIL = "Email";
+    public static final String CONTACT_DEVICE_TITLE = "Contact Detail";
 
 
     //Rest API URL
@@ -164,8 +186,11 @@ public class Constant {
     public static final String REGISTARTION_SUCCESS_MESSAGE = "Registration successfull!";
     public static final String REGISTARTION_FAILED_MESSAGE = "Registration is failed";
     public static final String EDIT = "Edit";
+    public static final String GROUP_NAME = "Group Name";
     public static final String TRACEE_TITLE = "Trackees";
     public static final String TRACKER_TITLE = "Trackers";
+    public static final String GROUP_TITLE = "Group List";
+    public static final String CREATE_GROUP_LIST = "Create";
     public static final String CANT_ADD_REG_MOB_NUM = "You can't add registered mobile number";
     public static final String TEN_SECONDS = "10 Seconds";
     public static final String ONE_MINUTE = "1 Minute";
@@ -175,6 +200,8 @@ public class Constant {
     public static final String REFRESH_INTERVAL_SETTING = "Settings";
     public static final String MAP_UPDATION_MSG = "Map will be updated after every ";
     public static final String PENDING = "Pending";
+    public static final String GROUP_LIMITATION = "You can't create more than two groups, please add it as a individual trackee";
+    public static final String USER_LIMITATION = "You can't add more than ten individual users";
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";
 
