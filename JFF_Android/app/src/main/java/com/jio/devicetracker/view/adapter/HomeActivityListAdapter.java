@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.MultipleselectData;
 
 import java.util.List;
 
@@ -106,6 +107,14 @@ public class HomeActivityListAdapter extends RecyclerView.Adapter<HomeActivityLi
     }
 
     public interface RecyclerViewClickListener {
+        void recyclerViewListClicked(View v, int position, MultipleselectData data, boolean val);
+
+        void recyclerviewEditList(String relation, String phoneNumber);
+
+        void recyclerviewDeleteList(String phoneNumber, int position);
+
+        void consetClick(String phoneNumber);
+
         //         void recyclerViewListClicked(View v, int position, MultipleselectData data, boolean val);
 //        void recyclerviewEditList(String relation, String phoneNumber);
          /*void recyclerviewDeleteList(String phoneNuber, int position);

@@ -55,6 +55,7 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.SearchDevice;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
@@ -88,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String name;
     String mbNumber;
     String imei;
-    private List<AddedDeviceData> mList;
+    private List<HomeActivityListData> mList;
     private DBManager mDbManager;
     private List<SubscriptionInfo> subscriptionInfos;
     public static boolean isReadPhoneStatePermissionGranted = false;
@@ -279,14 +280,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         public void onResponse(Object response) {
 
             String consentStatus = null;
-            List<AddedDeviceData> mlist = new ArrayList<>();
+            List<HomeActivityListData> mlist = new ArrayList<>();
             searchdeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchDeviceResponse.class);
-            AddedDeviceData data;
+            HomeActivityListData data;
             List<SearchDeviceResponse.SearchDeviceData> deviceData = searchdeviceResponse.getmData();
             for (SearchDeviceResponse.SearchDeviceData devData : deviceData) {
-                data = new AddedDeviceData();
+                data = new HomeActivityListData();
 
-
+                // TEMPORARY CODE FOR IMPROPER UPLOAD OF CSV FILE DATA
                 if(devData.getPhoneNumber().equals("Shivakumar")) {
                     data.setPhoneNumber(devData.getName());
                     data.setName(devData.getPhoneNumber());
@@ -409,7 +410,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         adminData = mDbManager.getAdminLoginDetail();
         mList = mDbManager.getAlldata(adminData.getEmail());
 
-        for(AddedDeviceData data : mList){
+        for(HomeActivityListData data : mList){
             if(data.getPhoneNumber().equals(mbNumber))
             {
                 mDbManager.updateConsentInBors(data.getPhoneNumber(),Constant.CONSENT_STATUS_MSG);

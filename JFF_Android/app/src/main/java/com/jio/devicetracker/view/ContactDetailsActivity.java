@@ -33,13 +33,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupData;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.ListOnHomeScreen;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -48,6 +52,8 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
     private EditText mName;
     private EditText mNumber;
+    private DBManager mDbManager;
+    private AdminLoginData adminData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,9 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         addContactInGroup.setOnClickListener(this);
         mName = findViewById(R.id.memberName);
         mNumber = findViewById(R.id.deviceName);
+        mDbManager = new DBManager(this);
+        adminData = new AdminLoginData();
+        adminData = mDbManager.getAdminLoginDetail();
         ImageView contactBtn = toolbar.findViewById(R.id.contactAdd);
         contactBtn.setVisibility(View.VISIBLE);
         contactBtn.setOnClickListener(this);
@@ -121,7 +130,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     } else {
                         setListDataOnHomeScreen(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)).trim(), number.trim(), false);
                     }
-                    gotoDashboardActivity();
+
                 }
             }
         }
@@ -135,12 +144,16 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         DashboardActivity.specificGroupMemberData.add(groupData);
     }
 
-    private void setListDataOnHomeScreen(String name, String relationWithGroupMember, boolean isGroupMember) {
-        ListOnHomeScreen listOnHomeScreen = new ListOnHomeScreen();
+    private void setListDataOnHomeScreen(String name, String number, boolean isGroupMember) {
+        HomeActivityListData listOnHomeScreen = new HomeActivityListData();
         listOnHomeScreen.setName(name);
-        listOnHomeScreen.setRelationWithName(relationWithGroupMember);
+        listOnHomeScreen.setPhoneNumber(number);
+//        listOnHomeScreen.setRelationWithName(relationWithGroupMember);
         listOnHomeScreen.setGroupMember(isGroupMember);
-        DashboardActivity.listOnHomeScreens.add(listOnHomeScreen);
+        long insertRowid = mDbManager.insertInBorqsDB(listOnHomeScreen, adminData.getEmail());
+        checkRow(insertRowid);
+        Toast.makeText(ContactDetailsActivity.this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+//        DashboardActivity.listOnHomeScreens.add(listOnHomeScreen);
     }
 
     private void gotoGroupListActivity() {
@@ -149,5 +162,12 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
     private void gotoDashboardActivity() {
         startActivity(new Intent(this, DashboardActivity.class));
+    }
+    private void checkRow(long id) {
+        if(id == -1) {
+            Util.alertDilogBox(Constant.DUPLICATE_NUMBER,Constant.ALERT_TITLE,this);
+        } else {
+            gotoDashboardActivity();
+        }
     }
 }

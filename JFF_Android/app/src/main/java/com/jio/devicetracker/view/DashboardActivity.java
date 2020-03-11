@@ -45,6 +45,7 @@ import com.jio.devicetracker.R;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -59,11 +60,15 @@ import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
+import android.telephony.SubscriptionInfo;
 import android.telephony.TelephonyManager;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +76,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
@@ -83,13 +89,19 @@ import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.network.SendLocationService;
+import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.ConsentTimeUpdate;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.HomeActivityListAdapter;
+import com.jio.devicetracker.view.adapter.TrackerDeviceListAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -106,7 +118,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private static String userToken = null;
     public static List<MultipleselectData> selectedData;
     public static List<TrackerdeviceResponse.Data> data;
-    private HomeActivityListAdapter adapter;
+    private TrackerDeviceListAdapter adapter;
     public static List<String> consentListPhoneNumber = null;
     private static DBManager mDbManager;
     public static Map<String, Map<Double, Double>> namingMap = null;
@@ -114,7 +126,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public static String adminEmail;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
-//    private List<SubscriptionInfo> subscriptionInfos;
+    private List<SubscriptionInfo> subscriptionInfos;
     Locale locale = Locale.ENGLISH;
     private static int batteryLevel;
     private static FusedLocationProviderClient client;
@@ -125,7 +137,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private WorkManager mWorkManager = null;
     private static Thread thread = null;
     public static List<GroupData> specificGroupMemberData = null;
-    public static List<ListOnHomeScreen> listOnHomeScreens;
+    public static List<HomeActivityListData> listOnHomeScreens;
     public static String groupName = "";
     public static boolean isAddIndividual = false;
     public static boolean isComingFromGroupList = false;
@@ -140,7 +152,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         setLayoutData();
         setNavigationData();
         initializeDataMember();
-        checkPermission();
+        //checkPermission();
         getAdminDetail();
         setConstaint();
         startService();
@@ -156,10 +168,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+
+
     private void adapterEventListener() {
         if (adapter != null) {
-            adapter.setOnItemClickPagerListener(new HomeActivityListAdapter.RecyclerViewClickListener() {
-                /*@Override
+            adapter.setOnItemClickPagerListener(new TrackerDeviceListAdapter.RecyclerViewClickListener() {
+                @Override
                 public void recyclerViewListClicked(View v, int position, MultipleselectData data, boolean val) {
                     if (val) {
                         selectedData.add(data);
@@ -171,25 +185,25 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                             }
                         }
                     }
-                } */
+                }
 
-                /*@Override
+                @Override
                 public void recyclerviewEditList(String relation, String phoneNumber) {
-                    gotoEditScreen(phoneNumber);
-                }*/
+                    gotoEditScreen(relation,phoneNumber);
+                }
 
-               /* @Override
+               @Override
                 public void recyclerviewDeleteList(String phoneNumber, int position) {
-                    //alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, phoneNumber, position);
+                    alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, phoneNumber, position);
 
                 }
 
                 @Override
                 public void consetClick(String phoneNumber) {
                     showSpinnerforConsentTime(phoneNumber);
-                }*/
+                }
 
-                @Override
+               /* @Override
                 public void onPopupMenuClicked(View v, int position, String name, String relation) {
                     PopupMenu popup = new PopupMenu(DashboardActivity.this, v);
                     popup.inflate(R.menu.options_menu);
@@ -207,15 +221,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                         return false;
                     });
                     popup.show();
-                }
+                }*/
 
-                @Override
+               /* @Override
                 public void onRecyclerViewItemClick(View v, int position, String name) {
                     groupName = name;
-                    if(listOnHomeScreens != null && listOnHomeScreens.get(position).isGroupMember() == false) {
-                        startActivity(new Intent(DashboardActivity.this, GroupListActivity.class));
-                    }
-                }
+//                    if(listOnHomeScreens != null && listOnHomeScreens.get(position).isGroupMember() == false) {
+//                        startActivity(new Intent(DashboardActivity.this, GroupListActivity.class));
+//                    }
+                }*/
             });
         }
     }
@@ -292,19 +306,21 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         Toolbar toolbar = findViewById(R.id.customToolbar);
         listView = findViewById(R.id.listView);
         FloatingActionButton fabCreateGroup = findViewById(R.id.createGroup);
-        FloatingActionButton fabAddIndividual = findViewById(R.id.addDeviceTransparent);
+        FloatingActionButton fabAddDevice= findViewById(R.id.addDevice);
+        FloatingActionButton fabAddContact = findViewById(R.id.addContact);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         listView.setLayoutManager(linearLayoutManager);
         Button trackBtn = toolbar.findViewById(R.id.track);
-        ImageView scanner = toolbar.findViewById(R.id.qrScanner);
+        //ImageView scanner = toolbar.findViewById(R.id.qrScanner);
         trackBtn.setVisibility(View.VISIBLE);
-        scanner.setVisibility(View.VISIBLE);
+//        scanner.setVisibility(View.VISIBLE);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Constant.DASHBOARD_TITLE + "               ");
         trackBtn.setOnClickListener(this);
-        scanner.setOnClickListener(this);
+//        scanner.setOnClickListener(this);
         fabCreateGroup.setOnClickListener(this);
-        fabAddIndividual.setOnClickListener(this);
+        fabAddDevice.setOnClickListener(this);
+        fabAddContact.setOnClickListener(this);
         setSupportActionBar(toolbar);
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.Open, R.string.Close);
@@ -324,6 +340,20 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         ContextCompat.startForegroundService(this, serviceIntent);
     }
 
+    public void alertDilogBoxWithCancelbtn(String message, String title, String phoneNumber, int position) {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setTitle(title);
+        adb.setMessage(message);
+        adb.setIcon(android.R.drawable.ic_dialog_alert);
+        adb.setPositiveButton("OK", (dialog, which) -> {
+            mDbManager.deleteSelectedData(phoneNumber);
+//            adapter.removeItem(position);
+            adapter.notifyDataSetChanged();
+            isDevicePresent();
+        });
+        adb.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        adb.show();
+    }
 
     @Override
     public void onDestroy() {
@@ -411,24 +441,24 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         new MQTTManager().publishMessage(topic, message);
     }
 
-    private void gotoEditScreen(String name, String relation) {
+    private void gotoEditScreen(String name, String phonenumber) {
         Intent intent = new Intent(this, EditActivity.class);
         intent.putExtra(Constant.NAME, name);
-        intent.putExtra(Constant.NUMBER_CARRIER, relation);
+        intent.putExtra(Constant.NUMBER_CARRIER, phonenumber);
         startActivity(intent);
     }
 
     private void isDevicePresent() {
         TextView devicePresent = findViewById(R.id.devicePresent);
-        if(listOnHomeScreens.isEmpty()) {
-            listView.setVisibility(View.INVISIBLE);
-            devicePresent.setVisibility(View.VISIBLE);
-        }else {
-            devicePresent.setVisibility(View.GONE);
-            listView.setVisibility(View.VISIBLE);
-        }
+//        if(listOnHomeScreens.isEmpty()) {
+//            listView.setVisibility(View.INVISIBLE);
+//            devicePresent.setVisibility(View.VISIBLE);
+//        }else {
+//            devicePresent.setVisibility(View.GONE);
+//            listView.setVisibility(View.VISIBLE);
+//        }
 
-       /* List<AddedDeviceData> alldata = null;
+       List<HomeActivityListData> alldata = null;
         alldata = mDbManager.getAlldata(adminEmail);
         if (alldata.isEmpty()) {
             listView.setVisibility(View.INVISIBLE);
@@ -436,7 +466,21 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         } else {
             devicePresent.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
-        }*/
+        }
+//        adapter = new HomeActivityListAdapter(alldata);
+//        listView.setAdapter(adapter);
+//        List<HomeActivityListData> mList = new ArrayList<>();
+//        if (!listOnHomeScreens.isEmpty()) {
+//            for (ListOnHomeScreen listOnHomeScreenData : listOnHomeScreens) {
+//                HomeActivityListData data = new HomeActivityListData();
+//                data.setName(listOnHomeScreenData.getName());
+//                data.setNumber(listOnHomeScreenData.getRelationWithName());
+//                data.setGroupMember(listOnHomeScreenData.isGroupMember());
+//                mList.add(data);
+//            }
+//            adapter = new HomeActivityListAdapter(mList);
+//            listView.setAdapter(adapter);
+//        }
     }
 
     public void getServicecall() {
@@ -447,16 +491,18 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.createGroup:
-                checkNumberOfGroups();
+//                checkNumberOfGroups();
+                gotoGroupNameActivity();
                 break;
             case R.id.track:
                 trackDevice();
                 break;
-            case R.id.qrScanner:
+            case R.id.addDevice:
                 gotoQRScannerScreen();
                 break;
-            case R.id.addDeviceTransparent:
-                checkNumberOfIndividualUser();
+            case R.id.addContact:
+//                checkNumberOfIndividualUser();
+                gotoContactsDetailsActivity();
                 break;
             default:
 //                Log.d("TAG", "Some other button is clicked");
@@ -470,7 +516,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             isComingFromGroupList = false;
         }
         if(listOnHomeScreens != null) {
-            for(ListOnHomeScreen listOnHomeScreen : listOnHomeScreens) {
+            for(HomeActivityListData listOnHomeScreen : listOnHomeScreens) {
                 if(listOnHomeScreen.isGroupMember()){
                     individualUserCount ++;
                 }
@@ -486,7 +532,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private void checkNumberOfGroups() {
         int groupCount = 1;
         if(listOnHomeScreens != null) {
-            for(ListOnHomeScreen listOnHomeScreen : listOnHomeScreens) {
+            for(HomeActivityListData listOnHomeScreen : listOnHomeScreens) {
                 if(listOnHomeScreen.isGroupMember() == false){
                     groupCount ++;
                 }
@@ -654,7 +700,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-  /*  private void sendSMS(String phoneNumber) {
+    private void sendSMS(String phoneNumber) {
         String userName = mDbManager.getAdminDetail();
         String imei = Util.getInstance().getIMEI(this);
         String consentStatus = mDbManager.getConsentStatusBorqs(phoneNumber);
@@ -669,7 +715,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             Toast.makeText(this, Constant.CONSENT_MSG_SENT, Toast.LENGTH_SHORT).show();
             mDbManager.updatependingConsent(phoneNumber);
         }
-    }*/
+    }
 
     public void consentRequestBox(boolean flag, String name) {
         if (flag) {
@@ -775,12 +821,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    /*private void storeConsentTime(String phoneNumber, int approvalTime) {
+    private void storeConsentTime(String phoneNumber, int approvalTime) {
         Date currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String currentDateandTime = sdf.format(currentTime);
         mDbManager.updateConsentTime(phoneNumber, currentDateandTime.trim(), approvalTime);
-    }*/
+    }
 
     public void setConstaint() {
         Constraints constraints = new Constraints.Builder()
@@ -828,7 +874,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    /*private void showSpinnerforConsentTime(String phoneNumber) {
+    private void showSpinnerforConsentTime(String phoneNumber) {
         String time[] = {Constant.MIN_15, Constant.MIN_25, Constant.MIN_30, Constant.MIN_40};
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_consent_time);
@@ -866,20 +912,24 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             dialog.dismiss();
         });
         dialog.show();
-    }*/
+    }
 
     private void addDataInHomeScreen() {
-        List<HomeActivityListData> mList = new ArrayList<>();
-        if (!listOnHomeScreens.isEmpty()) {
-            for (ListOnHomeScreen listOnHomeScreenData : listOnHomeScreens) {
-                HomeActivityListData data = new HomeActivityListData();
-                data.setName(listOnHomeScreenData.getName());
-                data.setNumber(listOnHomeScreenData.getRelationWithName());
-                data.setGroupMember(listOnHomeScreenData.isGroupMember());
-                mList.add(data);
-            }
-            adapter = new HomeActivityListAdapter(mList);
-            listView.setAdapter(adapter);
-        }
+//        List<HomeActivityListData> mList = new ArrayList<>();
+//        if (!listOnHomeScreens.isEmpty()) {
+//            for (ListOnHomeScreen listOnHomeScreenData : listOnHomeScreens) {
+//                HomeActivityListData data = new HomeActivityListData();
+//                data.setName(listOnHomeScreenData.getName());
+//                data.setNumber(listOnHomeScreenData.getRelationWithName());
+//                data.setGroupMember(listOnHomeScreenData.isGroupMember());
+//                mList.add(data);
+//            }
+//            adapter = new HomeActivityListAdapter(mList);
+//            listView.setAdapter(adapter);
+//        }
+        List<HomeActivityListData> alldata = null;
+        alldata = mDbManager.getAlldata(adminEmail);
+        adapter = new TrackerDeviceListAdapter(this,alldata);
+        listView.setAdapter(adapter);
     }
 }

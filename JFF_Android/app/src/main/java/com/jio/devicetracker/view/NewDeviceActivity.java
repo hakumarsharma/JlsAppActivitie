@@ -38,6 +38,7 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.response.AddDeviceResponse;
 import com.jio.devicetracker.network.RequestHandler;
@@ -147,7 +148,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
             AddDeviceResponse addDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), AddDeviceResponse.class);
             adminData = mDbManager.getAdminLoginDetail();
             if(addDeviceResponse.getMessage().equalsIgnoreCase(Constant.SUCCESSFULL_DEVICE_ADDITION_RESPONSE)){
-                AddedDeviceData addedDeviceData = new AddedDeviceData();
+                HomeActivityListData addedDeviceData = new HomeActivityListData();
                 addedDeviceData.setName(addDeviceResponse.getData().getAssignedDevices().get(0).getName());
                 addedDeviceData.setPhoneNumber(addDeviceResponse.getData().getAssignedDevices().get(0).getPhone());
                 addedDeviceData.setImeiNumber(addDeviceResponse.getData().getAssignedDevices().get(0).getMac());

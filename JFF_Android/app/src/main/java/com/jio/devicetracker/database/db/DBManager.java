@@ -31,6 +31,7 @@ import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ConsentTimeupdateData;
 import com.jio.devicetracker.database.pojo.EditProfileData;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
@@ -54,27 +55,26 @@ public class DBManager {
         mDBHelper = new DatabaseHelper(context);
     }
 
-    public long insertInBorqsDB(AddedDeviceData deviceData, String email) {
+    public long insertInBorqsDB(HomeActivityListData deviceData, String email) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
         contentValue.put(DatabaseHelper.NAME, deviceData.getName());
         contentValue.put(DatabaseHelper.EMAIL, email);
         contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
         contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
-        if(!deviceData.getConsentStaus().equals("")){
+        if(deviceData.getConsentStaus()!=null){
             contentValue.put(DatabaseHelper.CONSENT_STATUS,deviceData.getConsentStaus());
         }else {
             contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
         }
-
         contentValue.put(DatabaseHelper.CONSENT_TIME, "");
         contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT,1234);
         return  mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
 
     }
-    public void insertInBorqsDB(List<AddedDeviceData> deviceData, String email) {
+    public void insertInBorqsDB(List<HomeActivityListData> deviceData, String email) {
         mDatabase = mDBHelper.getWritableDatabase();
-        for(AddedDeviceData addData : deviceData) {
+        for(HomeActivityListData addData : deviceData) {
                 ContentValues contentValue = new ContentValues();
                 contentValue.put(DatabaseHelper.NAME, addData.getName());
                 contentValue.put(DatabaseHelper.EMAIL, email);
@@ -89,6 +89,7 @@ public class DBManager {
                 //contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
                 contentValue.put(DatabaseHelper.CONSENT_TIME, "");
                 contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
+                Log.d(addData.getImeiNumber(), "insertInBorqsDB");
                 mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
 
         }
@@ -151,20 +152,20 @@ public class DBManager {
         return mlist;
     }
 
-    public List<AddedDeviceData> getAlldata(String email) {
-        List<AddedDeviceData> mlist = new ArrayList<>();
+    public List<HomeActivityListData> getAlldata(String email) {
+        List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
         if (email != null) {
             String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM,DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM};
             String[] arg = {email};
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.EMAIL + " = ? " , arg, null, null, null);
-            if (cursor != null) {
+            if ((cursor != null) && cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
-                    AddedDeviceData data = new AddedDeviceData();
+                    HomeActivityListData data = new HomeActivityListData();
                     data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
                     data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
                     data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)).trim());
-                    data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
+                     data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
                     data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
                     data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
                     mlist.add(data);

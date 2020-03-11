@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.util.Constant;
 
@@ -48,11 +49,11 @@ import java.util.List;
 public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDeviceListAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<AddedDeviceData> mData;
+    private List<HomeActivityListData> mData;
     private static RecyclerViewClickListener itemListener;
     private MultipleselectData mSelectData;
 
-    public TrackerDeviceListAdapter(Context mContext, List<AddedDeviceData> mData) {
+    public TrackerDeviceListAdapter(Context mContext, List<HomeActivityListData> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }
@@ -68,7 +69,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        AddedDeviceData data = mData.get(position);
+        HomeActivityListData data = mData.get(position);
         holder.phone.setText(mData.get(position).getPhoneNumber());
         holder.name.setText(mData.get(position).getName());
         holder.mDelete.setTransformationMethod(null);
