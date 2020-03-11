@@ -65,7 +65,7 @@ public class Constant {
     // Registration Activity constants
     public static final String REGISTRATION_TITLE = "Registration";
     public static final String REGISTRATION = "registration";
-    public static final String NAME_VALIDATION = "Name can't left empty";
+    public static final String NAME_VALIDATION = "Please enter your name";
     public static final String PHONE_VALIDATION = "Phone number cannot be left empty!";
     public static final String MOBILE_NETWORKCHECK = "Please use your mobile data";
     public static final String JIO_NUMBER = "Please use Jio number";
@@ -87,7 +87,7 @@ public class Constant {
     public static final String LOADING_DATA = "Please wait loading data...";
 
     // Login Activity constants
-    public static final String LOGIN_TITLE = "Login";
+    public static final String LOGIN_TITLE = "People Tracker";
     public static final String EMAILID_VALIDATION = "Email id cannot be left blank.";
     public static final String PASSWORD_VALIDATION = "Password cannot be left blank.";
     public static final String EMAIL_VALIDATION = "Please provide the correct Email Id!";

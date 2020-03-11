@@ -63,6 +63,7 @@ import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceResponse;
+import com.jio.devicetracker.jiotoken.JioUtils;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.network.SendSMSTask;
@@ -82,7 +83,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private EditText jioEmailEditText = null;
     private EditText jioPasswordEditText = null;
+    private EditText jioMobileNumberEditText = null;
+    private EditText jioUserNameEditText = null;
+    private EditText otp = null;
     private AdminLoginData adminData;
+    public static String phoneNumber = null;
     public static LogindetailResponse logindetailResponse = null;
     public static SearchDeviceResponse searchdeviceResponse = null;
     private static final int PERMIT_ALL = 1;
@@ -90,26 +95,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String mbNumber;
     String imei;
     private List<HomeActivityListData> mList;
+    String userName;
     private DBManager mDbManager;
     private List<SubscriptionInfo> subscriptionInfos;
     public static boolean isReadPhoneStatePermissionGranted = false;
     public static boolean isAccessCoarsePermissionGranted = false;
-
+    private int permissionRequestCode = 100;
+    private Button loginButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.LOGIN_TITLE);
-        Button loginButton = findViewById(R.id.login);
-        jioEmailEditText = findViewById(R.id.jioEmailId);
-        jioPasswordEditText = findViewById(R.id.jioPassword);
+        loginButton = findViewById(R.id.login);
+        jioUserNameEditText = findViewById(R.id.userName);
+        otp = findViewById(R.id.otpDetail);
+        jioMobileNumberEditText = findViewById(R.id.jioNumber);
+        jioMobileNumberEditText.setEnabled(false);
+        loginButton.setOnClickListener(this);
+        jioMobileNumberEditText.setOnClickListener(this);
         adminData = new AdminLoginData();
         mList = new ArrayList<>();
-        TextView registerText = findViewById(R.id.registedHere);
-        TextView forgetPass = findViewById(R.id.clickForget);
-        registerText.setOnClickListener(this);
-        forgetPass.setOnClickListener(this);
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
         @SuppressWarnings("PMD.UnnecessaryFullyQualifiedName")
@@ -118,7 +125,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
         }
 
-        jioEmailEditText.addTextChangedListener(new TextWatcher() {
+
+        jioMobileNumberEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // Unused empty method
@@ -126,18 +134,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!jioEmailEditText.getText().toString().equals("") || !jioPasswordEditText.getText().toString().equals("")) {
-                    loginButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
-                    loginButton.setTextColor(Color.WHITE);
-                }
+                loginButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                loginButton.setTextColor(Color.WHITE);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                String emailId = jioEmailEditText.getText().toString();
-                if (emailId.isEmpty()) {
+                String number = jioMobileNumberEditText.getText().toString();
+                if (number.isEmpty()) {
                     loginButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
                     loginButton.setTextColor(Color.WHITE);
+                } else {
+                    jioMobileNumberEditText.setError(null);
                 }
             }
         });
@@ -147,11 +155,100 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
         checkTermandCondition(termConditionsFlag);
+        requestPermission();
+    }
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.login:
+                validateNumber();
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    private void validateNumber() {
+      if (jioMobileNumberEditText.getText().toString().equals("")) {
+            jioMobileNumberEditText.setError(Constant.PHONE_VALIDATION);
+        } else {
+            getssoToken();
+        }
+    }
+
+    private void getssoToken() {
+        boolean isAvailable = Util.isMobileNetworkAvailable(this);
+        if (isAvailable) {
+            checkJiooperator();
+
+        } else {
+            Util.alertDilogBox(Constant.MOBILE_NETWORKCHECK, Constant.ALERT_TITLE, this);
+        }
+    }
+
+    /**
+     * Checks the Jio SIM in slot 1 when user enters the mobile number.
+     */
+    private void checkJiooperator() {
+        phoneNumber = jioMobileNumberEditText.getText().toString();
+        String carierName = subscriptionInfos.get(0).getCarrierName().toString();
+        String number = subscriptionInfos.get(0).getNumber();
+
+        if (number != null
+                && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
+            if (carierName.contains(Constant.JIO)) {
+                JioUtils.getSSOIdmaToken(this);
+               // gotoDashBoardActivity();
+            } else {
+                Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+            }
+        } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber() != null) {
+            if (subscriptionInfos.get(1).getNumber().equals("91" + phoneNumber) || subscriptionInfos.get(1).getNumber().equals(phoneNumber)) {
+                Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+            } else {
+                Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
+            }
+        } else {
+            Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
+        }
+
+    }
+
+
+    /**
+     * Checks the Jio SIM in slot 1 automatically
+     */
+    public void checkJioSIMSlot1() {
+        if (subscriptionInfos != null) {
+            String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
+            if (!carrierNameSlot1.contains(Constant.JIO)) {
+                Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
+            } else {
+                jioMobileNumberEditText.setText(subscriptionInfos.get(0).getNumber().toString());
+            }
+        }
+    }
+
+    // Request for SMS and Phone Permissions
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{Manifest.permission.READ_SMS,
+                    Manifest.permission.READ_PHONE_NUMBERS,
+                    Manifest.permission.READ_PHONE_STATE}, permissionRequestCode);
+        }
     }
 
     private void onLoginButtonClick() {
+        
         String jioEmailIdText = jioEmailEditText.getText().toString().trim();
         String jioPasswordText = jioPasswordEditText.getText().toString().trim();
+
+        if (jioUserNameEditText.length() == 0) {
+            jioUserNameEditText.setError(Constant.NAME_VALIDATION);
+        }
+
         if (jioEmailEditText.length() == 0) {
             jioEmailEditText.setError(Constant.EMAILID_VALIDATION);
             return;
@@ -165,9 +262,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (Util.isValidEmailId(jioEmailIdText)) {
                 makeMQTTConnection();
                 Userdata data = new Userdata();
-                data.setEmailId(jioEmailIdText);
-                data.setPassword(jioPasswordText);
+               /* data.setEmailId(jioEmailIdText);
+                data.setPassword(jioPasswordText);*/
+                data.setMobileNumber(String.valueOf(jioMobileNumberEditText));
                 data.setType(Constant.SUPERVISOR);
+                data.setUserName(userName);
                 RequestHandler.getInstance(getApplicationContext()).handleRequest(new LoginDataRequest(new SuccessListener(), new ErrorListener(), data));
             } else {
                 jioEmailEditText.setError(Constant.EMAIL_VALIDATION);
@@ -239,19 +338,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.registedHere:
-                gotoRegisterScreen();
-                break;
-            case R.id.clickForget:
-                gotoForgetPassTokenScreen();
-                break;
-            default:
-                break;
-        }
-    }
+
 
     private void gotoForgetPassTokenScreen() {
         Intent intent = new Intent(this, ForgetpassTokenActivity.class);
@@ -374,9 +461,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivity(intent);
     }
 
+
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (permissionRequestCode == requestCode) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
+            checkJioSIMSlot1();
+        }
         switch (requestCode) {
             case PERMIT_ALL: {
                 if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
@@ -462,4 +561,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Util.getInstance().dismissProgressBarDialog();
         }
     }
+
+
 }

@@ -26,7 +26,39 @@ import com.google.gson.annotations.SerializedName;
 
 public class Userdata {
 
-    @SerializedName("email")
+    @SerializedName("mobileNumber")
+    private  String mobileNumber;
+
+    @SerializedName("userName")
+    private String userName;
+
+    @SerializedName("type")
+    private String type;
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+    /*  @SerializedName("email")
     private String emailId;
     @SerializedName("password")
     private String password;
@@ -55,5 +87,5 @@ public class Userdata {
 
     public void setType(String type) {
         this.type = type;
-    }
+    }*/
 }

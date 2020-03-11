@@ -39,19 +39,19 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/jioLogoLogin"
                 android:layout_centerHorizontal="true"
-                android:text="@string/loginLabel"
+                android:text="@string/loginSubText"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/loginTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/trackntrack"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:text="Please enter your login details"
-                android:textSize="20dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/loginTextView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@id/trackntrack"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:text="@string/loginSubText"-->
+<!--                android:textSize="20dp" />-->
 
             <!--<TextView
                 android:id="@+id/loginTextView2"
@@ -64,30 +64,62 @@
                 android:textSize="20dp" />
 -->
             <EditText
-                android:id="@+id/jioEmailId"
+                android:id="@+id/userName"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/loginTextView"
+                android:layout_below="@id/trackntrack"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/colorLogin"
-                android:hint="Email Id"
+                android:hint="User Name"
                 android:inputType="text"
                 android:textColor="#000000"
                 android:textCursorDrawable="@color/colorLogin" />
 
+<!--
             <EditText
-                android:id="@+id/jioPassword"
+                android:id="@+id/jioNumber"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/jioEmailId"
+                android:layout_below="@id/userName"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="@color/colorLogin"
+                android:hint="Mobile Number"
+                android:inputType="number"
+                android:textColor="#000000"
+                android:textCursorDrawable="@color/colorLogin" />-->
+
+
+            <EditText
+                android:id="@+id/jioNumber"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/userName"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="@color/colorLogin"
+                android:hint="Jio Number"
+                android:inputType="text"
+                android:longClickable="false"
+                android:textColor="#000000"
+                android:imeOptions="actionDone"
+                android:textCursorDrawable="@color/colorLogin" />
+
+            <EditText
+                android:id="@+id/otpDetail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/jioNumber"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
                 android:backgroundTint="@color/colorLogin"
-                android:hint="Password"
-                android:inputType="textPassword"
+                android:hint="OTP"
+                android:inputType="text"
                 android:textColor="#000000"
                 android:textCursorDrawable="@color/colorLogin" />
 
@@ -96,13 +128,15 @@
                 android:id="@+id/login"
                 android:layout_width="200dp"
                 android:layout_height="50dp"
-                android:layout_below="@id/jioPassword"
+                android:layout_below="@id/otpDetail"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/selector"
-                android:text="Login" />
+                android:text="Continue" />
 
-            <TextView
+
+
+            <!--<TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New User ?"
@@ -134,7 +168,8 @@
                 android:layout_marginTop="15dp"
                 android:layout_alignLeft="@id/newUserText"
                 android:textSize="13sp"
-                />
+                />-->
+<!--
 
             <TextView
                 android:layout_width="wrap_content"
@@ -148,6 +183,7 @@
                 android:layout_toRightOf="@+id/forgetPass"
                 android:textSize="15sp"
                 />
+-->
 
 
         </RelativeLayout>
