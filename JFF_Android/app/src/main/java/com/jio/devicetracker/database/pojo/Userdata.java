@@ -26,6 +26,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class Userdata {
 
+    @SerializedName("email")
+    private String emailId;
+
+    @SerializedName("password")
+    private String password;
+
     @SerializedName("mobileNumber")
     private  String mobileNumber;
 
@@ -54,6 +60,23 @@ public class Userdata {
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;

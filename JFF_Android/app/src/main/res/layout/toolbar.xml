@@ -21,7 +21,7 @@
             android:id="@+id/qrScanner"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="5dp"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_qrscanner"
             android:layout_toLeftOf="@+id/track"

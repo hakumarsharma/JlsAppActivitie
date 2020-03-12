@@ -58,10 +58,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_contact_details);
         Toolbar toolbar = findViewById(R.id.loginToolbar);
         TextView title = findViewById(R.id.toolbar_title);
-        title.setText(Constant.CONTACT_DEVICE_TITLE);
+        title.setText(Constant.CONTACT_DEVICE_TITLE+ "               ");
         Button addContactInGroup = findViewById(R.id.addContactInGroup);
         addContactInGroup.setOnClickListener(this);
         mName = findViewById(R.id.memberName);
@@ -69,6 +70,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         mDbManager = new DBManager(this);
         adminData = new AdminLoginData();
         adminData = mDbManager.getAdminLoginDetail();
+
+        ImageView scanner = toolbar.findViewById(R.id.qrScanner);
+        scanner.setVisibility(View.VISIBLE);
+        scanner.setOnClickListener(this);
+
         ImageView contactBtn = toolbar.findViewById(R.id.contactAdd);
         contactBtn.setVisibility(View.VISIBLE);
         contactBtn.setOnClickListener(this);
@@ -97,6 +103,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                 }
             }
         }
+
+        if (v.getId() == R.id.qrScanner) {
+            gotoQRScannerScreen();
+        }
+
     }
 
     @Override
@@ -163,6 +174,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private void gotoDashboardActivity() {
         startActivity(new Intent(this, DashboardActivity.class));
     }
+
+    private void gotoQRScannerScreen() {
+        startActivity(new Intent(this, QRCodeReaderActivity.class));
+    }
+
     private void checkRow(long id) {
         if(id == -1) {
             Util.alertDilogBox(Constant.DUPLICATE_NUMBER,Constant.ALERT_TITLE,this);

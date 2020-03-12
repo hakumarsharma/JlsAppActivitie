@@ -81,8 +81,8 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
  */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText jioEmailEditText = null;
-    private EditText jioPasswordEditText = null;
+//    private EditText jioEmailEditText = null;
+//    private EditText jioPasswordEditText = null;
     private EditText jioMobileNumberEditText = null;
     private EditText jioUserNameEditText = null;
     private EditText otp = null;
@@ -241,38 +241,41 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void onLoginButtonClick() {
-        
-        String jioEmailIdText = jioEmailEditText.getText().toString().trim();
-        String jioPasswordText = jioPasswordEditText.getText().toString().trim();
 
-        if (jioUserNameEditText.length() == 0) {
-            jioUserNameEditText.setError(Constant.NAME_VALIDATION);
-        }
+        String emailId = "Shivakumar.jagalur@ril.com";
+        String password = "Ril@12345";
 
-        if (jioEmailEditText.length() == 0) {
-            jioEmailEditText.setError(Constant.EMAILID_VALIDATION);
-            return;
-        }
-        if (jioPasswordText.length() == 0) {
-            jioPasswordEditText.setError(Constant.PASSWORD_VALIDATION);
-            return;
-        }
+//        String jioEmailIdText = jioEmailEditText.getText().toString().trim();
+//        String jioPasswordText = jioPasswordEditText.getText().toString().trim();
 
-        if (jioEmailEditText.length() != 0) {
-            if (Util.isValidEmailId(jioEmailIdText)) {
+//        if (jioUserNameEditText.length() == 0) {
+//            jioUserNameEditText.setError(Constant.NAME_VALIDATION);
+//        }
+
+//        if (jioEmailEditText.length() == 0) {
+//            jioEmailEditText.setError(Constant.EMAILID_VALIDATION);
+//            return;
+//        }
+//        if (jioPasswordText.length() == 0) {
+//            jioPasswordEditText.setError(Constant.PASSWORD_VALIDATION);
+//            return;
+//        }
+
+//        if (jioEmailEditText.length() != 0) {
+//            if (Util.isValidEmailId(jioEmailIdText)) {
                 makeMQTTConnection();
                 Userdata data = new Userdata();
-               /* data.setEmailId(jioEmailIdText);
-                data.setPassword(jioPasswordText);*/
-                data.setMobileNumber(String.valueOf(jioMobileNumberEditText));
+                data.setEmailId(emailId);
+                data.setPassword(password);
+                //data.setMobileNumber(String.valueOf(jioMobileNumberEditText));
                 data.setType(Constant.SUPERVISOR);
                 data.setUserName(userName);
                 RequestHandler.getInstance(getApplicationContext()).handleRequest(new LoginDataRequest(new SuccessListener(), new ErrorListener(), data));
-            } else {
-                jioEmailEditText.setError(Constant.EMAIL_VALIDATION);
-                return;
-            }
-        }
+//            } else {
+//                jioEmailEditText.setError(Constant.EMAIL_VALIDATION);
+//                return;
+//            }
+//        }
         Util.getInstance().showProgressBarDialog(this);
     }
 
@@ -342,7 +345,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void gotoForgetPassTokenScreen() {
         Intent intent = new Intent(this, ForgetpassTokenActivity.class);
-        intent.putExtra("Email", jioEmailEditText.getText().toString().trim());
+        //intent.putExtra("Email", jioEmailEditText.getText().toString().trim());
         startActivity(intent);
     }
 
@@ -392,7 +395,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mlist.add(data);
             }
             Util.setAutologinStatus(LoginActivity.this, true);
-            mDbManager.insertInBorqsDB(mlist, jioEmailEditText.getText().toString().trim());
+            adminData = mDbManager.getAdminLoginDetail();
+            mDbManager.insertInBorqsDB(mlist, adminData.getEmail());
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
             startActivity(intent);
             Util.getInstance().dismissProgressBarDialog();
