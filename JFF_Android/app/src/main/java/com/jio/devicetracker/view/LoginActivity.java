@@ -36,8 +36,10 @@ import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.text.Editable;
@@ -73,6 +75,7 @@ import com.jio.devicetracker.util.Util;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 
@@ -85,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText jioPasswordEditText = null;
     private EditText jioMobileNumberEditText = null;
     private EditText jioUserNameEditText = null;
-    private EditText otp = null;
+    private EditText jioMobileOtp = null;
     private AdminLoginData adminData;
     public static String phoneNumber = null;
     public static LogindetailResponse logindetailResponse = null;
@@ -94,6 +97,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String name;
     String mbNumber;
     String imei;
+    String number;
     private List<HomeActivityListData> mList;
     String userName;
     private DBManager mDbManager;
@@ -102,28 +106,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static boolean isAccessCoarsePermissionGranted = false;
     private int permissionRequestCode = 100;
     private Button loginButton;
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // @SuppressWarnings("PMD.UnnecessaryFullyQualifiedName")
+        requestPermission();
+        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS,
+                Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS};
+        if (!hasPermissions(this, permissions)) {
+            ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
+        }
+
+
+
         setContentView(R.layout.activity_login);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.LOGIN_TITLE);
         loginButton = findViewById(R.id.login);
         jioUserNameEditText = findViewById(R.id.userName);
-        otp = findViewById(R.id.otpDetail);
         jioMobileNumberEditText = findViewById(R.id.jioNumber);
         jioMobileNumberEditText.setEnabled(false);
-        loginButton.setOnClickListener(this);
+
+
         jioMobileNumberEditText.setOnClickListener(this);
         adminData = new AdminLoginData();
+
         mList = new ArrayList<>();
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
-        @SuppressWarnings("PMD.UnnecessaryFullyQualifiedName")
-        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS};
-        if (!hasPermissions(this, permissions)) {
-            ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
-        }
 
 
         jioMobileNumberEditText.addTextChangedListener(new TextWatcher() {
@@ -140,23 +152,65 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void afterTextChanged(Editable s) {
-                String number = jioMobileNumberEditText.getText().toString();
+                number = jioMobileNumberEditText.getText().toString();
                 if (number.isEmpty()) {
                     loginButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
                     loginButton.setTextColor(Color.WHITE);
                 } else {
                     jioMobileNumberEditText.setError(null);
                 }
+                generateOTP();
             }
         });
+
+
+        jioMobileOtp = findViewById(R.id.otpDetail);
+        loginButton.setOnClickListener(this);
 
         loginButton.setOnClickListener(v -> {
             onLoginButtonClick();
         });
 
         checkTermandCondition(termConditionsFlag);
-        requestPermission();
     }
+
+    Integer otpGeneratedValue = null;
+    private void generateOTP() {
+        Random rand = new Random();
+        otpGeneratedValue = rand.nextInt(10000);
+        sendSMSMessage( otpGeneratedValue);
+    }
+
+private String phoneNo;
+    private String message;
+    protected void sendSMSMessage(int randomNumberForOTP) {
+        phoneNo = number;
+         message = "JFF OTP : "+ randomNumberForOTP;
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.SEND_SMS)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.SEND_SMS},
+                        MY_PERMISSIONS_REQUEST_SEND_SMS);
+            }
+        }
+       if (0 == PackageManager.PERMISSION_GRANTED) {
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(phoneNo, null, message, null, null);
+                Toast.makeText(getApplicationContext(), "OTP sent.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "SMS faild, please try again.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -171,6 +225,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void validateNumber() {
+        if(!(jioMobileOtp.getText().toString().equals(String.valueOf(otpGeneratedValue)))){
+            jioMobileOtp.setError("Invalid OTP Provided");
+        }
       if (jioMobileNumberEditText.getText().toString().equals("")) {
             jioMobileNumberEditText.setError(Constant.PHONE_VALIDATION);
         } else {
@@ -230,18 +287,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
-
+/*Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS,
+                Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS*/
     // Request for SMS and Phone Permissions
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.READ_SMS,
                     Manifest.permission.READ_PHONE_NUMBERS,
-                    Manifest.permission.READ_PHONE_STATE}, permissionRequestCode);
+                    Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.READ_CONTACTS}, permissionRequestCode);
         }
     }
 
     private void onLoginButtonClick() {
-        
+        if(!(jioMobileOtp.getText().toString().equals(String.valueOf(otpGeneratedValue)))){
+            jioMobileOtp.setError("Invalid OTP Provided");
+        }
         String jioEmailIdText = jioEmailEditText.getText().toString().trim();
         String jioPasswordText = jioPasswordEditText.getText().toString().trim();
 
