@@ -72,6 +72,25 @@ public class DBManager {
         return  mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
 
     }
+
+    public long insertInBorqsDeviceDB(HomeActivityListData deviceData, String email) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.NAME, deviceData.getName());
+        contentValue.put(DatabaseHelper.EMAIL, email);
+        contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
+        contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
+        if(deviceData.getConsentStaus()!=null){
+            contentValue.put(DatabaseHelper.CONSENT_STATUS,deviceData.getConsentStaus());
+        }else {
+            contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
+        }
+        contentValue.put(DatabaseHelper.CONSENT_TIME, "");
+        contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT,1234);
+        return  mDatabase.insert(DatabaseHelper.TABLE_NAME_DEVICE, null, contentValue);
+
+    }
+
     public void insertInBorqsDB(List<HomeActivityListData> deviceData, String email) {
         mDatabase = mDBHelper.getWritableDatabase();
         for(HomeActivityListData addData : deviceData) {
@@ -166,6 +185,30 @@ public class DBManager {
                     data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
                     data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)).trim());
                      data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
+                    data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
+                    data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
+                    mlist.add(data);
+                }
+                cursor.close();
+            }
+        }
+        return mlist;
+    }
+
+    public List<HomeActivityListData> getAllDevicedata(String email) {
+        List<HomeActivityListData> mlist = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        if (email != null) {
+            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM,DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM};
+            String[] arg = {email};
+            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.EMAIL + " = ? " , arg, null, null, null);
+            if ((cursor != null) && cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    HomeActivityListData data = new HomeActivityListData();
+                    data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                    data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
+                    data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)).trim());
+                    data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
                     data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
                     data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
                     mlist.add(data);
