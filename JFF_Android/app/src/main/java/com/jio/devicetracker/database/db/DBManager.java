@@ -92,6 +92,23 @@ public class DBManager {
     }
 
     public void insertInBorqsDB(List<HomeActivityListData> deviceData, String email) {
+        List<HomeActivityListData> homeData = new ArrayList<>();
+        HomeActivityListData homeActivityListData = new HomeActivityListData();
+        homeActivityListData.setName("umapathi");
+        homeActivityListData.setPhoneNumber("9091020584");
+        homeActivityListData.setLat("12.9140667");
+        homeActivityListData.setLng("77.6650655");
+
+        HomeActivityListData homeActivityListData1 = new HomeActivityListData();
+        homeActivityListData1.setName("Teja sree");
+        homeActivityListData1.setPhoneNumber("8088422893");
+        homeActivityListData1.setLat("12.9950641");
+        homeActivityListData1.setLng("77.6810009");
+
+        homeData.add(homeActivityListData);
+        homeData.add(homeActivityListData1);
+
+        deviceData.addAll(homeData);
         mDatabase = mDBHelper.getWritableDatabase();
         for(HomeActivityListData addData : deviceData) {
                 ContentValues contentValue = new ContentValues();
