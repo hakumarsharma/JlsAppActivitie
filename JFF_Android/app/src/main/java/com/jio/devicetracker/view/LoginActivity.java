@@ -110,8 +110,8 @@ private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
    // @SuppressWarnings("PMD.UnnecessaryFullyQualifiedName")
-    requestPermission();
-//    String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS,
+   requestPermission();
+//    String[] permissions = {Manifest.permission.READ_SMS,Manifest.permission.READ_PHONE_NUMBERS, Manifest.permission.RECEIVE_SMS,
 //            Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE,
 //            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA,
 //            Manifest.permission.READ_CONTACTS
@@ -139,6 +139,19 @@ protected void onCreate(Bundle savedInstanceState) {
     boolean termConditionsFlag = Util.getTermconditionFlag(this);
 
 
+    jioMobileOtp = findViewById(R.id.otpDetail);
+    loginButton.setOnClickListener(this);
+
+    loginButton.setOnClickListener(v -> {
+        onLoginButtonClick();
+    });
+
+    fetchMobileNumber();
+    checkTermandCondition(termConditionsFlag);
+
+}
+
+private void fetchMobileNumber() {
     jioMobileNumberEditText.addTextChangedListener(new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -163,24 +176,12 @@ protected void onCreate(Bundle savedInstanceState) {
             generateOTP();
         }
     });
-
-
-    jioMobileOtp = findViewById(R.id.otpDetail);
-    loginButton.setOnClickListener(this);
-
-    loginButton.setOnClickListener(v -> {
-        onLoginButtonClick();
-    });
-
-    checkTermandCondition(termConditionsFlag);
-    validateNumber();
-
 }
 
 Integer otpGeneratedValue = null;
 private void generateOTP() {
     otpGeneratedValue =((int)(Math.random()*9000)+1000);
-   sendSMSMessage( otpGeneratedValue);
+    //sendSMSMessage( otpGeneratedValue);
 }
 
 private String phoneNo;
@@ -280,6 +281,13 @@ private void checkJiooperator() {
  * Checks the Jio SIM in slot 1 automatically
  */
 public void checkJioSIMSlot1() {
+    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+            PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+            Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        return;
+    }
+    subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
     if (subscriptionInfos != null) {
         String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
         if (!carrierNameSlot1.contains(Constant.JIO)) {
@@ -301,20 +309,20 @@ private void requestPermission() {
                 Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECEIVE_SMS,
-                Manifest.permission.READ_CONTACTS}, permissionRequestCode);
+                Manifest.permission.READ_CONTACTS}, PERMIT_ALL);
     }
 }
 
 private void onLoginButtonClick() {
     String compareOtp = String.valueOf(otpGeneratedValue);
-    if(!jioMobileOtp.getText().toString().equals(compareOtp)){
-        jioMobileOtp.setError("Invalid OTP Provided");
-        return;
-    }
-    if (jioUserNameEditText.length() == 0) {
-        jioUserNameEditText.setError(Constant.NAME_VALIDATION);
-        return;
-    }
+//    if(!jioMobileOtp.getText().toString().equals(compareOtp)){
+//        jioMobileOtp.setError("Invalid OTP Provided");
+//        return;
+//    }
+//    if (jioUserNameEditText.length() == 0) {
+//        jioUserNameEditText.setError(Constant.NAME_VALIDATION);
+//        return;
+//    }
     String emailId = "Shivakumar.jagalur@ril.com";
     String password = "Ril@12345";
 
@@ -336,7 +344,7 @@ private void onLoginButtonClick() {
 
 //        if (jioEmailEditText.length() != 0) {
 //            if (Util.isValidEmailId(jioEmailIdText)) {
-            makeMQTTConnection();
+           // makeMQTTConnection();
             Userdata data = new Userdata();
             data.setEmailId(emailId);
             data.setPassword(password);
@@ -377,7 +385,13 @@ public void showDialog(String number) {
     final Button yes = dialog.findViewById(R.id.positive);
     Button no = dialog.findViewById(R.id.negative);
     yes.setOnClickListener(v -> {
-        serviceCallLogin();
+        //serviceCallLogin();
+        String phoneNumber = null;
+        if (subscriptionInfos != null) {
+            phoneNumber = subscriptionInfos.get(0).getNumber();
+        }
+        new SendSMSTask().execute(mbNumber, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
+
         dialog.dismiss();
     });
 
@@ -543,7 +557,7 @@ private void goToSplashnActivity() {
 @RequiresApi(api = Build.VERSION_CODES.M)
 @Override
 public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-    if (permissionRequestCode == requestCode) {
+    if (PERMIT_ALL == requestCode) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
@@ -564,6 +578,7 @@ public void onRequestPermissionsResult(int requestCode, String permissions[], in
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                 isReadPhoneStatePermissionGranted = true;
             }
+
             if (checkSelfPermission(ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 isAccessCoarsePermissionGranted = true;
             }

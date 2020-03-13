@@ -86,6 +86,8 @@ public class DBManager {
             contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
         }
         contentValue.put(DatabaseHelper.CONSENT_TIME, "");
+        contentValue.put(DatabaseHelper.LAT,deviceData.getLat());
+        contentValue.put(DatabaseHelper.LON,deviceData.getLng());
         contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT,1234);
         return  mDatabase.insert(DatabaseHelper.TABLE_NAME_DEVICE, null, contentValue);
 
@@ -95,7 +97,7 @@ public class DBManager {
         List<HomeActivityListData> homeData = new ArrayList<>();
         HomeActivityListData homeActivityListData = new HomeActivityListData();
         homeActivityListData.setName("Umapathi");
-        homeActivityListData.setPhoneNumber("9091020584");
+        homeActivityListData.setPhoneNumber("9019020584");
         homeActivityListData.setLat("12.9140667");
         homeActivityListData.setLng("77.6650655");
 
@@ -105,12 +107,34 @@ public class DBManager {
         homeActivityListData1.setLat("12.9950641");
         homeActivityListData1.setLng("77.6810009");
 
+
+        HomeActivityListData homeActivityListData2 = new HomeActivityListData();
+        homeActivityListData2.setName("sree");
+        homeActivityListData2.setPhoneNumber("9019930384");
+        homeActivityListData2.setLat("12.8950641");
+        homeActivityListData2.setLng("77.5810009");
+
+        HomeActivityListData homeActivityListData3 = new HomeActivityListData();
+        homeActivityListData3.setName("Harish");
+        homeActivityListData3.setPhoneNumber("9019930384");
+        homeActivityListData3.setLat("12.9050641");
+        homeActivityListData3.setLng("77.6310009");
+
+        HomeActivityListData homeActivityListData4 = new HomeActivityListData();
+        homeActivityListData4.setName("Ashish");
+        homeActivityListData4.setPhoneNumber("9019020587");
+        homeActivityListData4.setLat("12.6950641");
+        homeActivityListData4.setLng("77.7910009");
+
         homeData.add(homeActivityListData);
         homeData.add(homeActivityListData1);
+        homeData.add(homeActivityListData2);
+        homeData.add(homeActivityListData3);
+        homeData.add(homeActivityListData4);
 
-        deviceData.addAll(homeData);
+
         mDatabase = mDBHelper.getWritableDatabase();
-        for(HomeActivityListData addData : deviceData) {
+        for(HomeActivityListData addData : homeData) {
                 ContentValues contentValue = new ContentValues();
                 contentValue.put(DatabaseHelper.NAME, addData.getName());
                 contentValue.put(DatabaseHelper.EMAIL, email);
@@ -125,6 +149,8 @@ public class DBManager {
                 //contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
                 contentValue.put(DatabaseHelper.CONSENT_TIME, "");
                 contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
+                contentValue.put(DatabaseHelper.LAT,addData.getLat());
+            contentValue.put(DatabaseHelper.LON,addData.getLng());
                 Log.d(addData.getImeiNumber(), "insertInBorqsDB");
                 mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
 
@@ -262,6 +288,13 @@ public class DBManager {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.CONSENT_STATUS, message);
         mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
+    }
+
+    public void updateConsentInDeviceBors(String phoneNumber, String message) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.CONSENT_STATUS, message);
+        mDatabase.update(DatabaseHelper.TABLE_NAME_DEVICE, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
     }
 
     public void updateConsentInFMS(String phoneNumber, String message) {

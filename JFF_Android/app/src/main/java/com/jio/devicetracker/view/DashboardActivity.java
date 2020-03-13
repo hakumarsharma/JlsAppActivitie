@@ -156,32 +156,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         checkPermission();
         getAdminDetail();
         setConstaint();
-        startService();
+        //startService();
         registerReceiver();
         deepLinkingURICheck();
         addDataInHomeScreen();
         adapterEventListener();
-        insertUserData();
-    }
-
-    private void insertUserData() {
-/*
-        List<HomeActivityListData> userList = new ArrayList<>();
-        HomeActivityListData homeActivityListData = new HomeActivityListData();
-        homeActivityListData.setName("umapathi");
-        homeActivityListData.setNumber("9091020584");
-        homeActivityListData.setLat("12.9140667");
-        homeActivityListData.setLng("77.6650655");
-
-        HomeActivityListData homeActivityListData1 = new HomeActivityListData();
-        homeActivityListData1.setName("Teja sree");
-        homeActivityListData1.setNumber("8088422893");
-        homeActivityListData1.setLat("12.9950641");
-        homeActivityListData1.setLng("77.6810009");
-
-*/
-
-
     }
 
     private void isPermissionGranted() {
@@ -263,7 +242,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         Util.getInstance().getIMEI(this);
         mDbManager = new DBManager(this);
         thread = new Thread(new RefreshMap());
-        thread.start();
+        //thread.start();
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         this.registerReceiver(broadcastreceiver, intentFilter);
         MyPhoneStateListener myPhoneStateListener = new MyPhoneStateListener();
@@ -598,7 +577,22 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             SearchDeviceStatusData.Device device = searchDeviceStatusData.new Device();
             device.setUsersAssigned(data);
             searchDeviceStatusData.setDevice(device);
-            RequestHandler.getInstance(getApplicationContext()).handleRequest(new SearchDeviceStatusRequest(new SearchDeviceStatusSuccessListener(), new SearchDeviceStatusErrorListener(), userToken, searchDeviceStatusData));
+//            RequestHandler.getInstance(getApplicationContext()).handleRequest(new SearchDeviceStatusRequest(new SearchDeviceStatusSuccessListener(), new SearchDeviceStatusErrorListener(), userToken, searchDeviceStatusData));
+
+            for (MultipleselectData multipleselectData : selectedData) {
+                    Map<Double, Double> latLngMap = new HashMap<>();
+                    if (multipleselectData.getLat() != null) {
+                        latLngMap.put(Double.valueOf(multipleselectData.getLat()),
+                                Double.valueOf(multipleselectData.getLng()));
+                        namingMap.put(multipleselectData.getName(), latLngMap);
+
+                    }
+            }
+            Util.progressDialog.dismiss();
+            if (!namingMap.isEmpty()) {
+                goToMapActivity();
+            }
+
         }
     }
 
@@ -657,13 +651,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 namingMap.clear();
                 for (SearchDeviceStatusResponse.Data data : searchDeviceStatusResponse.getData()) {
                     for (MultipleselectData multipleselectData : selectedData) {
-                        if (multipleselectData.getImeiNumber().equalsIgnoreCase(data.getDevice().getImei())) {
-                            Map<Double, Double> latLngMap = new HashMap<>();
-                            if (data.getLocation() != null) {
-                                latLngMap.put(data.getLocation().getLat(), data.getLocation().getLng());
-                                namingMap.put(data.getDevice().getName(), latLngMap);
+                        if(data.getDevice().getImei() !=null){
+                            if (multipleselectData.getImeiNumber().equalsIgnoreCase(data.getDevice().getImei())) {
+                                Map<Double, Double> latLngMap = new HashMap<>();
+                                if (data.getLocation() != null) {
+                                    latLngMap.put(data.getLocation().getLat(), data.getLocation().getLng());
+                                    namingMap.put(data.getDevice().getName(), latLngMap);
+                                }
                             }
                         }
+
                     }
                 }
             }
@@ -682,7 +679,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         if (thread != null) {
             thread.interrupt();
             thread = new Thread(new RefreshMap());
-            thread.start();
+            //thread.start();
         }
     }
 
@@ -889,11 +886,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         Uri data = intent.getData();
         if (data != null && data.toString().contains(getString(R.string.yesjff))) {
             String number = data.toString().substring(data.toString().length() - 10);
-            mDbManager.updateConsentInBors(number, Constant.CONSENT_STATUS_MSG);
+            mDbManager.updateConsentInDeviceBors(number, Constant.CONSENT_STATUS_MSG);
 //            showDatainList();
         } else if (data != null && data.toString().contains(getString(R.string.nojff))) {
             String number = data.toString().substring(data.toString().length() - 10);
-            mDbManager.updateConsentInBors(number, Constant.NO_JIO_TRACKER);
+            mDbManager.updateConsentInDeviceBors(number, Constant.NO_JIO_TRACKER);
         }
     }
 
@@ -952,6 +949,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 //        }
         List<HomeActivityListData> alldata = null;
         alldata = mDbManager.getAllDevicedata(adminEmail);
+        if (!listOnHomeScreens.isEmpty()) {
+            for (HomeActivityListData listOnHomeScreenData : listOnHomeScreens) {
+                HomeActivityListData data = new HomeActivityListData();
+                data.setName(listOnHomeScreenData.getName());
+                data.setNumber(listOnHomeScreenData.getRelationWithName());
+                data.setGroupMember(listOnHomeScreenData.isGroupMember());
+                alldata.add(data);
+            }
+        }
         adapter = new TrackerDeviceListAdapter(this,alldata);
         listView.setAdapter(adapter);
     }
