@@ -33,6 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Table Name
     public static final String TABLE_NAME_BORQS = "BorqsDevicedata";
+    public static final String TABLE_NAME_DEVICE = "BorqsAddDevicedata";
     public static final String TABLE_NAME_FMS = "FmsDevicedata";
     public static final String TABLE_NAME_USER = "UserData";
     public static final String TABLE_USER_LOGIN = "UserloginData";
@@ -66,6 +67,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_BORQS = "create table " + TABLE_NAME_BORQS + "(" + IMEI_NUM
             + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " +CONSENT_STATUS+ " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
 
+    private static final String CREATE_TABLE_DEVICE = "create table " + TABLE_NAME_DEVICE + "(" + IMEI_NUM
+            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " +CONSENT_STATUS+ " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
+
+
     private static final String CREATE_TABLE_FMS = "create table " + TABLE_NAME_FMS + "(" + IMEI_NUM
             + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + RELATION + " TEXT, " +CONSENT_STATUS+ " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ," +"PRIMARY KEY" +"(" +DEVICE_NUM +" ," +IMEI_NUM +"))";
 
@@ -81,6 +86,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_BORQS);
+        db.execSQL(CREATE_TABLE_DEVICE);
         db.execSQL(CREATE_TABLE_FMS);
         db.execSQL(CREATE_TABLE_USER);
         db.execSQL(CREATE_TABLE_USER_LOGIN);
@@ -89,6 +95,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_BORQS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_DEVICE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_FMS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LOGIN);

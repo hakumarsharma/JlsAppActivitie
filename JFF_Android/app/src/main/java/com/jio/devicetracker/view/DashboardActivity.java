@@ -61,6 +61,7 @@ import android.telephony.CellInfoLte;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.view.MenuItem;
 import android.view.View;
@@ -152,7 +153,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         setLayoutData();
         setNavigationData();
         initializeDataMember();
-        //checkPermission();
+       // checkPermission();
         getAdminDetail();
         setConstaint();
         startService();
@@ -557,7 +558,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void gotoQRScannerScreen() {
-        startActivity(new Intent(this, QRCodeReaderActivity.class));
+        isAddIndividual = false;
+        isComingFromGroupList = false;
+        startActivity(new Intent(this, ContactDetailsActivity.class));
     }
 
     private void gotoContactsDetailsActivity() {
@@ -780,11 +783,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         if (fineLocationCoarse != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
-        if (!listPermissionsNeeded.isEmpty()) {
+        if (listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
-        } /*else {
+        } else {
             subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-        }*/
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -798,7 +801,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-//                subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
+                subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
                 // If request is cancelled, the result arrays are empty.
                 for (int grantResult : grantResults) {
                     if (grantResults.length > 0 && grantResult == PackageManager.PERMISSION_GRANTED) {
@@ -933,7 +936,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 //            listView.setAdapter(adapter);
 //        }
         List<HomeActivityListData> alldata = null;
-        alldata = mDbManager.getAlldata(adminEmail);
+        alldata = mDbManager.getAllDevicedata(adminEmail);
         adapter = new TrackerDeviceListAdapter(this,alldata);
         listView.setAdapter(adapter);
     }

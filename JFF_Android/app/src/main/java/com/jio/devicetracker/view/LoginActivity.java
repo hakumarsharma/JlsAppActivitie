@@ -173,6 +173,8 @@ protected void onCreate(Bundle savedInstanceState) {
     });
 
     checkTermandCondition(termConditionsFlag);
+    validateNumber();
+
 }
 
 Integer otpGeneratedValue = null;
