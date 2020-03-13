@@ -115,11 +115,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     setGroupData(DashboardActivity.groupName, mName.getText().toString(), mNumber.getText().toString());
                     gotoGroupListActivity();
                 } else {
-                    if (DashboardActivity.isAddIndividual == true) {
-                        setListDataOnHomeScreen(mName.getText().toString().trim(), mNumber.getText().toString().trim(), true);
-                    } else {
                         setListDataOnHomeScreen(mName.getText().toString().trim(), mNumber.getText().toString().trim(), false);
-                    }
                     gotoDashboardActivity();
                 }
             }
@@ -157,11 +153,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     setGroupData(DashboardActivity.groupName, cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)), number);
                     gotoGroupListActivity();
                 } else {
-                    if (DashboardActivity.isAddIndividual == true) {
-                        setListDataOnHomeScreen(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)).trim(), number.trim(), true);
-                    } else {
                         setListDataOnHomeScreen(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)).trim(), number.trim(), false);
-                    }
 
                 }
             }

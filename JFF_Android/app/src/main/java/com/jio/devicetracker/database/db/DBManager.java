@@ -88,6 +88,7 @@ public class DBManager {
         contentValue.put(DatabaseHelper.CONSENT_TIME, "");
         contentValue.put(DatabaseHelper.LAT,deviceData.getLat());
         contentValue.put(DatabaseHelper.LON,deviceData.getLng());
+        contentValue.put(DatabaseHelper.IS_GROUP_MEMBER,(deviceData.isGroupMember()) ? 1 : 0);
         contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT,1234);
         return  mDatabase.insert(DatabaseHelper.TABLE_NAME_DEVICE, null, contentValue);
 
@@ -150,7 +151,7 @@ public class DBManager {
                 contentValue.put(DatabaseHelper.CONSENT_TIME, "");
                 contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
                 contentValue.put(DatabaseHelper.LAT,addData.getLat());
-            contentValue.put(DatabaseHelper.LON,addData.getLng());
+                contentValue.put(DatabaseHelper.LON,addData.getLng());
                 Log.d(addData.getImeiNumber(), "insertInBorqsDB");
                 mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
 
@@ -242,7 +243,7 @@ public class DBManager {
         List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
         if (email != null) {
-            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM,DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM};
+            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM,DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM,DatabaseHelper.IS_GROUP_MEMBER};
             String[] arg = {email};
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.EMAIL + " = ? " , arg, null, null, null);
             if ((cursor != null) && cursor.getCount() > 0) {
@@ -254,6 +255,11 @@ public class DBManager {
                     data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
                     data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
                     data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
+                    if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_MEMBER))>0) {
+                        data.setGroupMember(true);
+                    } else {
+                        data.setGroupMember(false);
+                    }
                     mlist.add(data);
                 }
                 cursor.close();

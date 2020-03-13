@@ -181,7 +181,7 @@ private void fetchMobileNumber() {
 Integer otpGeneratedValue = null;
 private void generateOTP() {
     otpGeneratedValue =((int)(Math.random()*9000)+1000);
-    //sendSMSMessage( otpGeneratedValue);
+    sendSMSMessage( otpGeneratedValue);
 }
 
 private String phoneNo;

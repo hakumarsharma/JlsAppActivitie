@@ -40,6 +40,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.GroupmemberListData;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.GroupMemberListAdapter;
 
 import java.util.ArrayList;
@@ -92,7 +93,8 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
             DashboardActivity.isComingFromGroupList = true;
             startActivity(new Intent(this, ContactDetailsActivity.class));
         } else if(v.getId() == R.id.createGroupButtonOnToolbar){
-            Toast.makeText(this, "We will make an API to create group on borqs", Toast.LENGTH_LONG).show();
+            Util.alertDilogBox("Coming Soon...","Alert",this);
+//            Toast.makeText(this, "We will make an API to create group on borqs", Toast.LENGTH_LONG).show();
         }
     }
 

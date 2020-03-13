@@ -60,9 +60,9 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
             String groupName = groupNameEditText.getText().toString();
             String relationWithGroupMembersText = relationWithGroupMembers.getText().toString();
             boolean isGroupMember;
-            if(DashboardActivity.isAddIndividual){
+            if(DashboardActivity.isComingFromGroupList){
                 isGroupMember = true;
-            }else{
+            } else  {
                 isGroupMember = false;
             }
             setHomeScreenData(groupName, relationWithGroupMembersText, isGroupMember);
@@ -70,9 +70,10 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setHomeScreenData(String groupName, String relationWithGroupMembersText, boolean isGroupMember) {
+        DashboardActivity.listOnHomeScreens.clear();
         HomeActivityListData listOnHomeScreen = new HomeActivityListData();
         listOnHomeScreen.setName(groupName);
-        listOnHomeScreen.setRelationWithName(relationWithGroupMembersText);
+        listOnHomeScreen.setPhoneNumber(relationWithGroupMembersText);
         listOnHomeScreen.setGroupMember(isGroupMember);
         DashboardActivity.listOnHomeScreens.add(listOnHomeScreen);
         startActivity(new Intent(this, DashboardActivity.class));

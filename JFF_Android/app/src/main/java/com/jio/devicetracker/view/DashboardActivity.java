@@ -174,36 +174,39 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         if (adapter != null) {
             adapter.setOnItemClickPagerListener(new TrackerDeviceListAdapter.RecyclerViewClickListener() {
                 @Override
-                public void recyclerViewListClicked(View v, int position, MultipleselectData data, boolean val) {
-                    if (val) {
+                public void recyclerViewListClicked(View v, int position, MultipleselectData data, int val) {
+                    if (val == 2) {
                         selectedData.add(data);
-                    } else {
+                    } else if (val == 3){
                         Iterator<MultipleselectData> iterator = selectedData.iterator();
                         while (iterator.hasNext()) {
                             if (iterator.next().getPhone().equalsIgnoreCase(data.getPhone())) {
                                 iterator.remove();
                             }
                         }
+                    }else  {
+                        groupName = data.getName();
+                        startActivity(new Intent(DashboardActivity.this, GroupListActivity.class));
                     }
                 }
 
-                @Override
-                public void recyclerviewEditList(String relation, String phoneNumber) {
-                    gotoEditScreen(relation,phoneNumber);
-                }
-
-               @Override
-                public void recyclerviewDeleteList(String phoneNumber, int position) {
-                    alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, phoneNumber, position);
-
-                }
+//                @Override
+//                public void recyclerviewEditList(String relation, String phoneNumber) {
+//                    gotoEditScreen(relation,phoneNumber);
+//                }
+//
+//               @Override
+//                public void recyclerviewDeleteList(String phoneNumber, int position) {
+//                    alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, phoneNumber, position);
+//
+//                }
 
                 @Override
                 public void consetClick(String phoneNumber) {
                     showSpinnerforConsentTime(phoneNumber);
                 }
 
-               /* @Override
+               @Override
                 public void onPopupMenuClicked(View v, int position, String name, String relation) {
                     PopupMenu popup = new PopupMenu(DashboardActivity.this, v);
                     popup.inflate(R.menu.options_menu);
@@ -221,7 +224,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                         return false;
                     });
                     popup.show();
-                }*/
+                }
 
                /* @Override
                 public void onRecyclerViewItemClick(View v, int position, String name) {
@@ -491,7 +494,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.createGroup:
-//                checkNumberOfGroups();
+                checkNumberOfGroups();
                 gotoGroupNameActivity();
                 break;
             case R.id.track:
@@ -501,7 +504,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 gotoQRScannerScreen();
                 break;
             case R.id.addContact:
-//                checkNumberOfIndividualUser();
+                checkNumberOfIndividualUser();
                 gotoContactsDetailsActivity();
                 break;
             default:
@@ -548,6 +551,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private void gotoGroupNameActivity() {
         isAddIndividual = false;
+        isComingFromGroupList = true;
         startActivity(new Intent(this, GroupNameActivity.class));
     }
 
@@ -559,14 +563,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private void gotoContactsDetailsActivity() {
         isAddIndividual = true;
+        isComingFromGroupList = false;
         startActivity(new Intent(this, ContactDetailsActivity.class));
     }
 
     /***** Track the device ***********/
     private void trackDevice() {
-        if (LoginActivity.isAccessCoarsePermissionGranted == false) {
-            Util.alertDilogBox(Constant.ACCESS_COARSE_PERMISSION_ALERT, Constant.ALERT_TITLE, this);
-        } else if (selectedData.isEmpty()) {
+//        if (LoginActivity.isAccessCoarsePermissionGranted == false) {
+//            Util.alertDilogBox(Constant.ACCESS_COARSE_PERMISSION_ALERT, Constant.ALERT_TITLE, this);
+//        } else
+        if (selectedData.isEmpty()) {
             Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
         } else {
             Util.getInstance().showProgressBarDialog(this);
@@ -795,7 +801,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         if (fineLocationCoarse != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
-        if (listPermissionsNeeded.isEmpty()) {
+        if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
         } else {
             subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
@@ -947,17 +953,18 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 //            adapter = new HomeActivityListAdapter(mList);
 //            listView.setAdapter(adapter);
 //        }
-        List<HomeActivityListData> alldata = null;
-        alldata = mDbManager.getAllDevicedata(adminEmail);
+        List<HomeActivityListData> alldata = new ArrayList<>();
         if (!listOnHomeScreens.isEmpty()) {
             for (HomeActivityListData listOnHomeScreenData : listOnHomeScreens) {
                 HomeActivityListData data = new HomeActivityListData();
                 data.setName(listOnHomeScreenData.getName());
-                data.setNumber(listOnHomeScreenData.getRelationWithName());
+                data.setPhoneNumber(listOnHomeScreenData.getPhoneNumber());
                 data.setGroupMember(listOnHomeScreenData.isGroupMember());
-                alldata.add(data);
+                mDbManager.insertInBorqsDeviceDB(data, adminEmail);
             }
         }
+        listOnHomeScreens.clear();
+        alldata = mDbManager.getAllDevicedata(adminEmail);
         adapter = new TrackerDeviceListAdapter(this,alldata);
         listView.setAdapter(adapter);
     }

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/listLayout"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="120dp"
     card_view:cardCornerRadius="10dp"
     android:layout_margin="10dp"
     card_view:cardElevation="8dp"
@@ -47,6 +47,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+
         <TextView
             android:id="@+id/phoneNumber"
             android:layout_width="wrap_content"
@@ -59,7 +60,17 @@
             android:textSize="15sp"
 
             />
-
+        <Button
+            android:id="@+id/consentstatus"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/consent"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorButtonBackground"
+            android:text="Request consent"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/consent"
@@ -71,52 +82,15 @@
             android:layout_marginRight="13dp"
             android:background="@drawable/ic_checkboxempty" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="3"
-            android:layout_marginBottom="5dp"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/contactImage"
-            >
-            <Button
-                android:id="@+id/consentstatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Request consent"
-                android:layout_marginTop="20dp"
-                android:textSize="12sp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorButtonBackground"
-                android:drawableLeft="@drawable/ic_notsent"
-                />
-
-            <Button
-                android:id="@+id/edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:layout_weight="1"
-                android:layout_marginTop="20dp"
-                android:text="Edit"
-                android:backgroundTint="@color/colorButtonBackground"
-                android:drawableLeft="@drawable/ic_edit"
-                />
-            <Button
-                android:id="@+id/delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:text="Delete"
-                android:backgroundTint="@color/colorButtonBackground"
-                android:drawableLeft="@drawable/ic_delete"
-                />
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/textViewOptions"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="370dp"
+            android:layout_below="@id/consent"
+            android:text="&#8942;"
+            android:textAppearance="?android:textAppearanceLarge" />
 
         <!-- <TextView
             android:layout_width="wrap_content"

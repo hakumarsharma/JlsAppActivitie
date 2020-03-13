@@ -5,7 +5,7 @@
     <string name="action_settings">Setting</string>
     <string name="about_us">About Us</string>
     <string name="loginLabel">People Tracker</string>
-    <string name="loginSubText">Hi nice to see you!</string>
+    <string name="loginSubText">Login/Sign up</string>
     <string name="title_activity_login">Login</string>
     <string name="register_here"> <b>Register Here</b></string>
     <string name="forget_password"> <b>Click Here</b></string>
