@@ -160,6 +160,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         deepLinkingURICheck();
         addDataInHomeScreen();
         adapterEventListener();
+        insertUserData();
+    }
+
+    private void insertUserData() {
+        List<HomeActivityListData> userList = new ArrayList<>();
     }
 
     private void isPermissionGranted() {
