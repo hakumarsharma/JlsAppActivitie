@@ -94,7 +94,7 @@ public class DBManager {
     public void insertInBorqsDB(List<HomeActivityListData> deviceData, String email) {
         List<HomeActivityListData> homeData = new ArrayList<>();
         HomeActivityListData homeActivityListData = new HomeActivityListData();
-        homeActivityListData.setName("umapathi");
+        homeActivityListData.setName("Umapathi");
         homeActivityListData.setPhoneNumber("9091020584");
         homeActivityListData.setLat("12.9140667");
         homeActivityListData.setLng("77.6650655");

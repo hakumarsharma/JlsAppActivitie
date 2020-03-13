@@ -111,14 +111,14 @@ protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
    // @SuppressWarnings("PMD.UnnecessaryFullyQualifiedName")
     requestPermission();
-    String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS,
-            Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA,
-            Manifest.permission.READ_CONTACTS
-            };
-    if (!hasPermissions(this, permissions)) {
-        ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
-    }
+//    String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS,
+//            Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE,
+//            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA,
+//            Manifest.permission.READ_CONTACTS
+//            };
+//    if (!hasPermissions(this, permissions)) {
+//        ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
+//    }
 
 
 
@@ -180,7 +180,7 @@ protected void onCreate(Bundle savedInstanceState) {
 Integer otpGeneratedValue = null;
 private void generateOTP() {
     otpGeneratedValue =((int)(Math.random()*9000)+1000);
-    sendSMSMessage( otpGeneratedValue);
+   sendSMSMessage( otpGeneratedValue);
 }
 
 private String phoneNo;
@@ -189,17 +189,17 @@ protected void sendSMSMessage(int randomNumberForOTP) {
     phoneNo = number;
      message = "JFF OTP : "+ randomNumberForOTP;
 
-    if (ContextCompat.checkSelfPermission(this,
-            Manifest.permission.SEND_SMS)
-            != PackageManager.PERMISSION_GRANTED) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.SEND_SMS)) {
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.SEND_SMS},
-                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-        }
-    }
+//    if (ContextCompat.checkSelfPermission(this,
+//            Manifest.permission.SEND_SMS)
+//            != PackageManager.PERMISSION_GRANTED) {
+//        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                Manifest.permission.SEND_SMS)) {
+//        } else {
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.SEND_SMS},
+//                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+//        }
+//    }
    if (0 == PackageManager.PERMISSION_GRANTED) {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNo, null, message, null, null);
@@ -297,6 +297,7 @@ private void requestPermission() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         requestPermissions(new String[]{Manifest.permission.READ_SMS,
                 Manifest.permission.READ_PHONE_NUMBERS,
+                Manifest.permission.SEND_SMS,
                 Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECEIVE_SMS,

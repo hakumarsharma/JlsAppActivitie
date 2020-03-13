@@ -184,16 +184,22 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         List<HomeActivityListData> homeListData = null;
         homeListData = mDbManager.getAlldata( adminData.getEmail());
 
-        for (HomeActivityListData data : homeListData) {
-            if (data.getPhoneNumber().equals(number)) {
-                listOnHomeScreen.setName(name);
-                listOnHomeScreen.setPhoneNumber(number);
-                listOnHomeScreen.setLat(data.getLat());
-                listOnHomeScreen.setLng(data.getLng());
-                break;
+        if(homeListData.contains(number)) {
+            for (HomeActivityListData data : homeListData) {
+                if (data.getPhoneNumber().equals(number)) {
+                    listOnHomeScreen.setName(name);
+                    listOnHomeScreen.setPhoneNumber(number);
+                    listOnHomeScreen.setLat(data.getLat());
+                    listOnHomeScreen.setLng(data.getLng());
+                    break;
+                }
             }
+        } else {
+            listOnHomeScreen.setName(name);
+            listOnHomeScreen.setPhoneNumber(number);
+            listOnHomeScreen.setLat("12.9950641");
+            listOnHomeScreen.setLng("77.6810009");
         }
-
 
         long insertRowid = mDbManager.insertInBorqsDeviceDB(listOnHomeScreen, adminData.getEmail());
         checkRow(insertRowid);

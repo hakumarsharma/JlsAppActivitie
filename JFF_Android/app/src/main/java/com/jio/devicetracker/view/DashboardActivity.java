@@ -149,11 +149,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_dashboard);
         Intent intent = getIntent();
         consentRequestBox(intent.getBooleanExtra("flag", false), intent.getStringExtra("name"));
-        isPermissionGranted();
+        //isPermissionGranted();
         setLayoutData();
         setNavigationData();
         initializeDataMember();
-       // checkPermission();
+        checkPermission();
         getAdminDetail();
         setConstaint();
         startService();
@@ -189,7 +189,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             Util.alertDilogBox(Constant.ACCESS_COARSE_PERMISSION_ALERT, Constant.ALERT_TITLE, this);
         }
     }
-
 
 
     private void adapterEventListener() {
@@ -481,7 +480,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 //        }
 
        List<HomeActivityListData> alldata = null;
-        alldata = mDbManager.getAlldata(adminEmail);
+        alldata = mDbManager.getAllDevicedata(adminEmail);
         if (alldata.isEmpty()) {
             listView.setVisibility(View.INVISIBLE);
             devicePresent.setVisibility(View.VISIBLE);
