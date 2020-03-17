@@ -190,7 +190,7 @@ public class Constant {
     public static final String TRACEE_TITLE = "Trackees";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";
-    public static final String CREATE_GROUP_LIST = "Create";
+    public static final String CREATE_GROUP_LIST = "Track";
     public static final String CANT_ADD_REG_MOB_NUM = "You can't add registered mobile number";
     public static final String TEN_SECONDS = "10 Seconds";
     public static final String ONE_MINUTE = "1 Minute";

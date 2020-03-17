@@ -315,14 +315,14 @@ private void requestPermission() {
 
 private void onLoginButtonClick() {
     String compareOtp = String.valueOf(otpGeneratedValue);
-//    if(!jioMobileOtp.getText().toString().equals(compareOtp)){
-//        jioMobileOtp.setError("Invalid OTP Provided");
-//        return;
-//    }
-//    if (jioUserNameEditText.length() == 0) {
-//        jioUserNameEditText.setError(Constant.NAME_VALIDATION);
-//        return;
-//    }
+    if(!jioMobileOtp.getText().toString().equals(compareOtp)){
+        jioMobileOtp.setError("Invalid OTP Provided");
+        return;
+    }
+    if (jioUserNameEditText.length() == 0) {
+        jioUserNameEditText.setError(Constant.NAME_VALIDATION);
+        return;
+    }
     String emailId = "Shivakumar.jagalur@ril.com";
     String password = "Ril@12345";
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JFF</string>
+    <string name="app_name">People Tracker</string>
     <string name="title_activity_maps">Jio Friends and Family</string>
     <string name="map_name">Jio Friends and Family</string>
     <string name="action_settings">Setting</string>
