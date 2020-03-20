@@ -244,7 +244,7 @@ public class DBManager {
             String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM, DatabaseHelper.IS_GROUP_MEMBER};
             String[] arg = {email};
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.EMAIL + " = ? ", arg, null, null, null);
-            if ((cursor != null) && cursor.getCount() > 0) {
+            if (cursor != null && cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
                     HomeActivityListData data = new HomeActivityListData();
                     data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));

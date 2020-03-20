@@ -88,7 +88,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String mbNumber;
     String imei;
     String number;
-    private List<HomeActivityListData> mList;
     String userName;
     private DBManager mDbManager;
     private List<SubscriptionInfo> subscriptionInfos;
@@ -124,7 +123,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         jioMobileNumberEditText.setOnClickListener(this);
         adminData = new AdminLoginData();
 
-        mList = new ArrayList<>();
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
 
@@ -502,10 +500,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void gotoRegisterScreen() {
+    /*private void gotoRegisterScreen() {
         Intent intent = new Intent(this, RegistrationDetailActivity.class);
         startActivity(intent);
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

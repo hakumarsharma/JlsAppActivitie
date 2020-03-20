@@ -86,7 +86,6 @@ import com.jio.devicetracker.database.pojo.response.SearchDeviceStatusResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.RequestHandler;
-import com.jio.devicetracker.network.SendLocationService;
 import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.ConsentTimeUpdate;
 import com.jio.devicetracker.util.Constant;

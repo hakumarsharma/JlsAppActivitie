@@ -50,7 +50,6 @@ import java.util.List;
 
 public class ContactDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Intent intent = null;
     private String name;
     private String number;
     private EditText mName;
@@ -73,7 +72,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         mDbManager = new DBManager(this);
         adminData = new AdminLoginData();
         adminData = mDbManager.getAdminLoginDetail();
-        intent = getIntent();
+        Intent intent = getIntent();
         String qrValue = intent.getStringExtra("QRCodeValue");
         setNameNumberImei(qrValue);
 
