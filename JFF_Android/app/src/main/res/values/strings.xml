@@ -1,17 +1,18 @@
 <resources>
-    <string name="app_name">JFF</string>
+    <string name="app_name">People Tracker</string>
     <string name="title_activity_maps">Jio Friends and Family</string>
     <string name="map_name">Jio Friends and Family</string>
     <string name="action_settings">Setting</string>
     <string name="about_us">About Us</string>
-    <string name="loginLabel">Jio Friends and Family</string>
+    <string name="loginLabel">People Tracker</string>
+    <string name="loginSubText">Login/Sign up</string>
     <string name="title_activity_login">Login</string>
     <string name="register_here"> <b>Register Here</b></string>
     <string name="forget_password"> <b>Click Here</b></string>
     <string name="pagerindicater">&amp;#9673;</string>
     <string name="Open">Open</string>
     <string name="Close">Close</string>
-    <string name="instruction">* \t Click on + icon to add details of the device to be tracked. \n* \t After adding the device, click on \"Request consent\" to obtain consent approval from the device owner. \n* \t After consent approval is received from the device owner over SMS, select the device from the  list and click on \"Track\" to start tracking.</string>
+    <string name="instruction">* \t  Click on + icon to add details of a person or a device to be tracked. \n* \t Select Add Device or Add Person accordingly. Device details may be entered manually or using QR code scanner. Person details may be addded manually or by selecting the contact from contacts. After adding the device/person, click on \"Request consent\" to obtain consent approval from the device/person. \n* \t After consent approval is received from the device/person over SMS, select the device/person from the  list and click on \"Track\" to start tracking.</string>
     <string name="message">Are you sure, do you want the user track your location.</string>
     <string name="termcondition">Jio Friends and Family helps you to track the Jio devices which has data in portal. This application will display the location information completely along with address details and pin drop of location on map to identify the details easily.\n \nDevice which has the application will always send current location details and this can be done once the location permissions are accepted when you launch the application.\n \nTo track device we need to take approval from the person who is using the device once that is approved then we can track the device.\n \nLocation permissions and SMS permissions are mandatory to use this application.\n \nPlease agree the terms and conditions.</string>
     <string name="refresh_inteval_textview">Location refresh interval</string>

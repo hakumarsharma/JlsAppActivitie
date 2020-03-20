@@ -33,25 +33,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupData;
-import com.jio.devicetracker.database.pojo.ListOnHomeScreen;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import java.util.List;
 
 public class ContactDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private String name;
+    private String number;
     private EditText mName;
     private EditText mNumber;
+    private DBManager mDbManager;
+    private AdminLoginData adminData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_contact_details);
         Toolbar toolbar = findViewById(R.id.loginToolbar);
         TextView title = findViewById(R.id.toolbar_title);
@@ -60,9 +69,33 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         addContactInGroup.setOnClickListener(this);
         mName = findViewById(R.id.memberName);
         mNumber = findViewById(R.id.deviceName);
-        ImageView contactBtn = toolbar.findViewById(R.id.contactAdd);
-        contactBtn.setVisibility(View.VISIBLE);
-        contactBtn.setOnClickListener(this);
+        mDbManager = new DBManager(this);
+        adminData = new AdminLoginData();
+        adminData = mDbManager.getAdminLoginDetail();
+        Intent intent = getIntent();
+        String qrValue = intent.getStringExtra("QRCodeValue");
+        setNameNumberImei(qrValue);
+
+        if (DashboardActivity.isComingFromGroupList || DashboardActivity.isAddIndividual) {
+            ImageView contactBtn = toolbar.findViewById(R.id.contactAdd);
+            contactBtn.setVisibility(View.VISIBLE);
+            contactBtn.setOnClickListener(this);
+        } else {
+            ImageView scanner = toolbar.findViewById(R.id.qrScanner);
+            scanner.setVisibility(View.VISIBLE);
+            scanner.setOnClickListener(this);
+        }
+    }
+
+    private void setNameNumberImei(String qrValue) {
+        if(qrValue != null){
+            String []splitString = qrValue.split("\n");
+            name = splitString[0];
+            number = splitString[1];
+            mName.setText(name);
+            mNumber.setText(number);
+        }
+
     }
 
     @Override
@@ -79,15 +112,16 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     setGroupData(DashboardActivity.groupName, mName.getText().toString(), mNumber.getText().toString());
                     gotoGroupListActivity();
                 } else {
-                    if (DashboardActivity.isAddIndividual == true) {
-                        setListDataOnHomeScreen(mName.getText().toString().trim(), mNumber.getText().toString().trim(), true);
-                    } else {
                         setListDataOnHomeScreen(mName.getText().toString().trim(), mNumber.getText().toString().trim(), false);
-                    }
                     gotoDashboardActivity();
                 }
             }
         }
+
+        if (v.getId() == R.id.qrScanner) {
+            gotoQRScannerScreen();
+        }
+
     }
 
     @Override
@@ -116,12 +150,8 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     setGroupData(DashboardActivity.groupName, cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)), number);
                     gotoGroupListActivity();
                 } else {
-                    if (DashboardActivity.isAddIndividual == true) {
-                        setListDataOnHomeScreen(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)).trim(), number.trim(), true);
-                    } else {
                         setListDataOnHomeScreen(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)).trim(), number.trim(), false);
-                    }
-                    gotoDashboardActivity();
+
                 }
             }
         }
@@ -135,12 +165,40 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         DashboardActivity.specificGroupMemberData.add(groupData);
     }
 
-    private void setListDataOnHomeScreen(String name, String relationWithGroupMember, boolean isGroupMember) {
-        ListOnHomeScreen listOnHomeScreen = new ListOnHomeScreen();
-        listOnHomeScreen.setName(name);
-        listOnHomeScreen.setRelationWithName(relationWithGroupMember);
+    private void setListDataOnHomeScreen(String name, String number, boolean isGroupMember) {
+        HomeActivityListData listOnHomeScreen = new HomeActivityListData();
+
+//        listOnHomeScreen.setRelationWithName(relationWithGroupMember);
         listOnHomeScreen.setGroupMember(isGroupMember);
-        DashboardActivity.listOnHomeScreens.add(listOnHomeScreen);
+        List<HomeActivityListData> homeListData = null;
+        homeListData = mDbManager.getAlldata( adminData.getEmail());
+
+          HomeActivityListData activitylistData = containsNumber(homeListData,number);
+          if(activitylistData != null) {
+              listOnHomeScreen.setName(name);
+              listOnHomeScreen.setPhoneNumber(number);
+              listOnHomeScreen.setLat(activitylistData.getLat());
+              listOnHomeScreen.setLng(activitylistData.getLng());
+          } else {
+            listOnHomeScreen.setName(name);
+            listOnHomeScreen.setPhoneNumber(number);
+            listOnHomeScreen.setLat("12.4950641");
+            listOnHomeScreen.setLng("77.3810009");
+        }
+
+        long insertRowid = mDbManager.insertInBorqsDeviceDB(listOnHomeScreen, adminData.getEmail());
+        checkRow(insertRowid);
+        Toast.makeText(this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+//        DashboardActivity.listOnHomeScreens.add(listOnHomeScreen);
+    }
+
+    private static HomeActivityListData containsNumber(List<HomeActivityListData> listData, String phoneNumber) {
+        for (HomeActivityListData li : listData) {
+            if (li.getPhoneNumber().equals(phoneNumber)) {
+                return li;
+            }
+        }
+        return null;
     }
 
     private void gotoGroupListActivity() {
@@ -149,5 +207,17 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
     private void gotoDashboardActivity() {
         startActivity(new Intent(this, DashboardActivity.class));
+    }
+
+    private void gotoQRScannerScreen() {
+        startActivity(new Intent(this, QRCodeReaderActivity.class));
+    }
+
+    private void checkRow(long id) {
+        if(id == -1) {
+            Util.alertDilogBox(Constant.DUPLICATE_NUMBER,Constant.ALERT_TITLE,this);
+        } else {
+            gotoDashboardActivity();
+        }
     }
 }

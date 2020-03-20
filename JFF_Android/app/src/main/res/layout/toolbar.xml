@@ -19,12 +19,12 @@
             android:id="@+id/toolbar_title"/>
         <ImageView
             android:id="@+id/qrScanner"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginRight="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="15dp"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_qrscanner"
-            android:layout_toLeftOf="@+id/track"
+            android:layout_alignParentRight="true"
             android:background="@color/colorPrimaryDark"
             android:visibility="invisible" />
 

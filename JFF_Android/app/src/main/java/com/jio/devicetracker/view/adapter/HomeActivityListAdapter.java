@@ -63,7 +63,7 @@ public class HomeActivityListAdapter extends RecyclerView.Adapter<HomeActivityLi
         holder.name.setText(mData.get(position).getName());
         if (mData.get(position).isGroupMember() == true) {
             holder.imageView.setImageResource(R.drawable.ic_user);
-        } else if (mData.get(position).isGroupMember() == false) {
+        } else  {
             holder.imageView.setImageResource(R.drawable.ic_group_button);
         }
 

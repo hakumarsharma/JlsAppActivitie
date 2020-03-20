@@ -35,7 +35,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.pojo.AddedDeviceData;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.util.Constant;
 
@@ -48,11 +48,11 @@ import java.util.List;
 public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDeviceListAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<AddedDeviceData> mData;
+    private List<HomeActivityListData> mData;
     private static RecyclerViewClickListener itemListener;
     private MultipleselectData mSelectData;
 
-    public TrackerDeviceListAdapter(Context mContext, List<AddedDeviceData> mData) {
+    public TrackerDeviceListAdapter(Context mContext, List<HomeActivityListData> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }
@@ -68,36 +68,44 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        AddedDeviceData data = mData.get(position);
+        HomeActivityListData data = mData.get(position);
         holder.phone.setText(mData.get(position).getPhoneNumber());
         holder.name.setText(mData.get(position).getName());
-        holder.mDelete.setTransformationMethod(null);
-        holder.mEdit.setTransformationMethod(null);
+       // holder.mDelete.setTransformationMethod(null);
+        //holder.mEdit.setTransformationMethod(null);
         holder.mConsentStatus.setTransformationMethod(null);
-        holder.mConsentStatus.setOnClickListener(v -> {
-            itemListener.consetClick(mData.get(position).getPhoneNumber());
-        });
         if(mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equalsIgnoreCase(Constant.CONSENT_STATUS_MSG))
         {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
             holder.mConsentStatus.setText(Constant.CONSENT_APPROVED_STATUS);
-            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved,0,0,0);
+//            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved,0,0,0);
             holder.mConsentStatus.setEnabled(false);
         } else if(mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equals(Constant.PENDING))
         {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
             holder.mConsentStatus.setText(Constant.CONSENT_PENDING);
-            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending,0,0,0);
+//            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending,0,0,0);
             holder.mConsentStatus.setEnabled(false);
 
         } else {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentNotSent));
             holder.mConsentStatus.setText(Constant.REQUEST_CONSENT);
-            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notsent,0,0,0);
+//            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notsent,0,0,0);
+        }
+
+        if (!data.isGroupMember()) {
+            holder.mConsentStatus.setOnClickListener(v -> {
+                itemListener.consetClick(mData.get(position).getPhoneNumber());
+            });
         }
         holder.mConsent.setOnClickListener(v -> {
             data.setSelected(!data.isSelected());
-            if (data.isSelected()) {
+            if (data.isGroupMember()) {
+                mSelectData = new MultipleselectData();
+                mSelectData.setName(mData.get(position).getName());
+                itemListener.recyclerViewListClicked(v, position, mSelectData,1);
+            }
+            else if (data.isSelected()) {
                 holder.mConsent.setBackgroundResource(R.drawable.ic_checkmark);
                 mSelectData = new MultipleselectData();
                 mSelectData.setPhone(mData.get(position).getPhoneNumber());
@@ -105,16 +113,17 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 mSelectData.setLng(mData.get(position).getLng());
                 mSelectData.setName(mData.get(position).getName());
                 mSelectData.setImeiNumber(mData.get(position).getImeiNumber());
-                itemListener.recyclerViewListClicked(v, position, mSelectData,true);
+                itemListener.recyclerViewListClicked(v, position, mSelectData,2);
             } else {
                 holder.mConsent.setBackgroundResource(R.drawable.ic_checkboxempty);
-                itemListener.recyclerViewListClicked(v, position, mSelectData,false);
+                itemListener.recyclerViewListClicked(v, position, mSelectData,3);
             }
         });
 
-        holder.mEdit.setOnClickListener(v -> itemListener.recyclerviewEditList(mData.get(position).getRelation(),mData.get(position).getPhoneNumber()));
-        holder.mDelete.setOnClickListener(v -> itemListener.recyclerviewDeleteList(mData.get(position).getPhoneNumber(),position));
+       // holder.mEdit.setOnClickListener(v -> itemListener.recyclerviewEditList(mData.get(position).getRelation(),mData.get(position).getPhoneNumber()));
+       // holder.mDelete.setOnClickListener(v -> itemListener.recyclerviewDeleteList(mData.get(position).getPhoneNumber(),position));
 
+        holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, mData.get(position).getName(), mData.get(position).getNumber()));
 
         holder.mListlayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -140,10 +149,11 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         public TextView relation;
         public TextView status;
         public CardView mListlayout;
-        public Button mDelete;
-        public Button mEdit;
+//        public Button mDelete;
+//        public Button mEdit;
         public Button mConsent;
         public Button mConsentStatus;
+        public TextView viewOptionMenu;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -151,20 +161,21 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             phone = itemView.findViewById(R.id.phoneNumber);
             name = itemView.findViewById(R.id.name);
             mListlayout = itemView.findViewById(R.id.listLayout);
-            mDelete = itemView.findViewById(R.id.delete);
-            mEdit = itemView.findViewById(R.id.edit);
             mConsent = itemView.findViewById(R.id.consent);
             mConsentStatus = itemView.findViewById(R.id.consentstatus);
+            viewOptionMenu = itemView.findViewById(R.id.textViewOptions);
             status = itemView.findViewById(R.id.statusView);
+
 
         }
     }
 
     public interface RecyclerViewClickListener {
-        void recyclerViewListClicked(View v, int position, MultipleselectData data,boolean val);
-        void recyclerviewEditList(String relation,String phoneNumber);
-        void recyclerviewDeleteList(String phoneNuber,int position);
+        void recyclerViewListClicked(View v, int position, MultipleselectData data,int val);
+       // void recyclerviewEditList(String relation,String phoneNumber);
+       // void recyclerviewDeleteList(String phoneNuber,int position);
         void consetClick(String phoneNumber);
+        void onPopupMenuClicked(View v, int position, String name, String number);
     }
 
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {

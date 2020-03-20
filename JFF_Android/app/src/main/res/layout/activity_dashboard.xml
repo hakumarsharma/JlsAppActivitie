@@ -69,12 +69,21 @@
                 fab:fab_colorPressed="@color/white"/>
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/addDeviceTransparent"
+                android:id="@+id/addDevice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:fab_icon="@drawable/add_indivisual"
                 fab:fab_colorNormal="@color/colorConsentNotSent"
                 fab:fab_title="Add Device"
+                fab:fab_colorPressed="@color/white"/>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_icon="@drawable/add_indivisual"
+                fab:fab_colorNormal="@color/colorConsentNotSent"
+                fab:fab_title="Add Contact"
                 fab:fab_colorPressed="@color/white"/>
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
