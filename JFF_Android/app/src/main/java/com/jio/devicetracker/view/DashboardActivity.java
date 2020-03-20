@@ -68,7 +68,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,11 +76,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
-import com.jio.devicetracker.database.pojo.ListOnHomeScreen;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
@@ -94,7 +91,6 @@ import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.ConsentTimeUpdate;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.adapter.HomeActivityListAdapter;
 import com.jio.devicetracker.view.adapter.TrackerDeviceListAdapter;
 
 import java.text.SimpleDateFormat;
@@ -163,11 +159,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         adapterEventListener();
     }
 
-    private void isPermissionGranted() {
+   /* private void isPermissionGranted() {
         if (LoginActivity.isAccessCoarsePermissionGranted == false) {
             Util.alertDilogBox(Constant.ACCESS_COARSE_PERMISSION_ALERT, Constant.ALERT_TITLE, this);
         }
-    }
+    }*/
 
 
     private void adapterEventListener() {
@@ -337,11 +333,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(new Intent(this, RefreshIntervalSettingActivity.class));
     }
 
-    private void startService() {
+    /*private void startService() {
         Intent serviceIntent = new Intent(this, SendLocationService.class);
         serviceIntent.putExtra("inputExtra", getString(R.string.notification_subtitle));
         ContextCompat.startForegroundService(this, serviceIntent);
-    }
+    }*/
 
     public void alertDilogBoxWithCancelbtn(String message, String title, String phoneNumber, int position) {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);

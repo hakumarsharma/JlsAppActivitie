@@ -44,15 +44,13 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
-import com.jio.devicetracker.database.pojo.ListOnHomeScreen;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-
 import java.util.List;
 
 public class ContactDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Intent intent = null;
+    private Intent intent = null;
     private String name;
     private String number;
     private EditText mName;
@@ -191,7 +189,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
         long insertRowid = mDbManager.insertInBorqsDeviceDB(listOnHomeScreen, adminData.getEmail());
         checkRow(insertRowid);
-        Toast.makeText(ContactDetailsActivity.this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
 //        DashboardActivity.listOnHomeScreens.add(listOnHomeScreen);
     }
 

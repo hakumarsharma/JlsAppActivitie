@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -62,14 +60,14 @@ public class DBManager {
         contentValue.put(DatabaseHelper.EMAIL, email);
         contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
         contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
-        if(deviceData.getConsentStaus()!=null){
-            contentValue.put(DatabaseHelper.CONSENT_STATUS,deviceData.getConsentStaus());
-        }else {
+        if (deviceData.getConsentStaus() != null) {
+            contentValue.put(DatabaseHelper.CONSENT_STATUS, deviceData.getConsentStaus());
+        } else {
             contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
         }
         contentValue.put(DatabaseHelper.CONSENT_TIME, "");
-        contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT,1234);
-        return  mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
+        contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
+        return mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
 
     }
 
@@ -80,17 +78,17 @@ public class DBManager {
         contentValue.put(DatabaseHelper.EMAIL, email);
         contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
         contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
-        if(deviceData.getConsentStaus()!=null){
-            contentValue.put(DatabaseHelper.CONSENT_STATUS,deviceData.getConsentStaus());
-        }else {
+        if (deviceData.getConsentStaus() != null) {
+            contentValue.put(DatabaseHelper.CONSENT_STATUS, deviceData.getConsentStaus());
+        } else {
             contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
         }
         contentValue.put(DatabaseHelper.CONSENT_TIME, "");
-        contentValue.put(DatabaseHelper.LAT,deviceData.getLat());
-        contentValue.put(DatabaseHelper.LON,deviceData.getLng());
-        contentValue.put(DatabaseHelper.IS_GROUP_MEMBER,(deviceData.isGroupMember()) ? 1 : 0);
-        contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT,1234);
-        return  mDatabase.insert(DatabaseHelper.TABLE_NAME_DEVICE, null, contentValue);
+        contentValue.put(DatabaseHelper.LAT, deviceData.getLat());
+        contentValue.put(DatabaseHelper.LON, deviceData.getLng());
+        contentValue.put(DatabaseHelper.IS_GROUP_MEMBER, deviceData.isGroupMember() ? 1 : 0);
+        contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
+        return mDatabase.insert(DatabaseHelper.TABLE_NAME_DEVICE, null, contentValue);
 
     }
 
@@ -135,25 +133,25 @@ public class DBManager {
 
 
         mDatabase = mDBHelper.getWritableDatabase();
-        for(HomeActivityListData addData : homeData) {
-                ContentValues contentValue = new ContentValues();
-                contentValue.put(DatabaseHelper.NAME, addData.getName());
-                contentValue.put(DatabaseHelper.EMAIL, email);
-                contentValue.put(DatabaseHelper.IMEI_NUM, addData.getImeiNumber());
-                contentValue.put(DatabaseHelper.DEVICE_NUM, addData.getPhoneNumber());
-                Log.d("DB","Value of consentstatus"+addData.getConsentStaus());
-            if(addData.getConsentStaus()!=null){
-                contentValue.put(DatabaseHelper.CONSENT_STATUS,addData.getConsentStaus());
-            }else {
+        for (HomeActivityListData addData : homeData) {
+            ContentValues contentValue = new ContentValues();
+            contentValue.put(DatabaseHelper.NAME, addData.getName());
+            contentValue.put(DatabaseHelper.EMAIL, email);
+            contentValue.put(DatabaseHelper.IMEI_NUM, addData.getImeiNumber());
+            contentValue.put(DatabaseHelper.DEVICE_NUM, addData.getPhoneNumber());
+            Log.d("DB", "Value of consentstatus" + addData.getConsentStaus());
+            if (addData.getConsentStaus() != null) {
+                contentValue.put(DatabaseHelper.CONSENT_STATUS, addData.getConsentStaus());
+            } else {
                 contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
             }
-                //contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
-                contentValue.put(DatabaseHelper.CONSENT_TIME, "");
-                contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
-                contentValue.put(DatabaseHelper.LAT,addData.getLat());
-                contentValue.put(DatabaseHelper.LON,addData.getLng());
-                Log.d(addData.getImeiNumber(), "insertInBorqsDB");
-                mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
+            //contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
+            contentValue.put(DatabaseHelper.CONSENT_TIME, "");
+            contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
+            contentValue.put(DatabaseHelper.LAT, addData.getLat());
+            contentValue.put(DatabaseHelper.LON, addData.getLng());
+            Log.d(addData.getImeiNumber(), "insertInBorqsDB");
+            mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
 
         }
     }
@@ -219,16 +217,16 @@ public class DBManager {
         List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
         if (email != null) {
-            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM,DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM};
+            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM};
             String[] arg = {email};
-            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.EMAIL + " = ? " , arg, null, null, null);
-            if ((cursor != null) && cursor.getCount() > 0) {
+            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.EMAIL + " = ? ", arg, null, null, null);
+            if (cursor != null && cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
                     HomeActivityListData data = new HomeActivityListData();
                     data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
                     data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
                     data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)).trim());
-                     data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
+                    data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
                     data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
                     data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
                     mlist.add(data);
@@ -243,9 +241,9 @@ public class DBManager {
         List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
         if (email != null) {
-            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM,DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM,DatabaseHelper.IS_GROUP_MEMBER};
+            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM, DatabaseHelper.IS_GROUP_MEMBER};
             String[] arg = {email};
-            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.EMAIL + " = ? " , arg, null, null, null);
+            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.EMAIL + " = ? ", arg, null, null, null);
             if ((cursor != null) && cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
                     HomeActivityListData data = new HomeActivityListData();
@@ -255,7 +253,7 @@ public class DBManager {
                     data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
                     data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
                     data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
-                    if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_MEMBER))>0) {
+                    if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_MEMBER)) > 0) {
                         data.setGroupMember(true);
                     } else {
                         data.setGroupMember(false);
@@ -268,12 +266,12 @@ public class DBManager {
         return mlist;
     }
 
-    public void updateBorqsData(List<TrackerdeviceResponse.Data> data){
+    public void updateBorqsData(List<TrackerdeviceResponse.Data> data) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        for(TrackerdeviceResponse.Data trackerDeviceResponseData : data) {
+        for (TrackerdeviceResponse.Data trackerDeviceResponseData : data) {
             String[] arg = new String[]{trackerDeviceResponseData.getmDevice().getPhoneNumber()};
-            if(trackerDeviceResponseData.getEvent() != null) {
+            if (trackerDeviceResponseData.getEvent() != null) {
                 contentValue.put(DatabaseHelper.LAT, Double.parseDouble(trackerDeviceResponseData.getEvent().getLocation().getLatLocation().getLatitu()));
                 contentValue.put(DatabaseHelper.LON, Double.parseDouble(trackerDeviceResponseData.getEvent().getLocation().getLatLocation().getLongni()));
                 mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, contentValue, DatabaseHelper.DEVICE_NUM + "= ?", arg);
@@ -281,10 +279,10 @@ public class DBManager {
         }
     }
 
-    public void updateLogoutData(){
+    public void updateLogoutData() {
         mDatabase = mDBHelper.getWritableDatabase();
         int row = mDatabase.delete(DatabaseHelper.TABLE_USER_LOGIN, null, null);
-        if(row == 1){
+        if (row == 1) {
             Log.d("Database Info --> ", "Logout data is updated");
         }
     }
@@ -500,7 +498,7 @@ public class DBManager {
         return data;
     }
 
-    public void updateConsentTime(String phoneNumber,String consentTime,int approvalTime) {
+    public void updateConsentTime(String phoneNumber, String consentTime, int approvalTime) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.CONSENT_TIME, consentTime);
@@ -512,8 +510,8 @@ public class DBManager {
         List<AddedDeviceData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
 
-        String[] column = {DatabaseHelper.CONSENT_TIME,DatabaseHelper.DEVICE_NUM,DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT};
-        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, null , null, null, null, null);
+        String[] column = {DatabaseHelper.CONSENT_TIME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, null, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 AddedDeviceData data = new AddedDeviceData();
@@ -527,10 +525,11 @@ public class DBManager {
 
         return mlist;
     }
+
     public void updateConsentTimeandStatus(List<ConsentTimeupdateData> mList) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = null;
-        for(ConsentTimeupdateData consentData : mList) {
+        for (ConsentTimeupdateData consentData : mList) {
             values = new ContentValues();
             values.put(DatabaseHelper.CONSENT_TIME, consentData.getConsentTime());
             values.put(DatabaseHelper.CONSENT_STATUS, consentData.getConsentStatus());

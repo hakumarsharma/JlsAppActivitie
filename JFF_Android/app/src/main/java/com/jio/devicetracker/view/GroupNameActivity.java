@@ -34,7 +34,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
-import com.jio.devicetracker.database.pojo.ListOnHomeScreen;
 import com.jio.devicetracker.util.Constant;
 
 public class GroupNameActivity extends AppCompatActivity implements View.OnClickListener{
