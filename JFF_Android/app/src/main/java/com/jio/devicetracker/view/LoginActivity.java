@@ -94,7 +94,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static boolean isReadPhoneStatePermissionGranted = false;
     public static boolean isAccessCoarsePermissionGranted = false;
     private Button loginButton;
-    private MessageListener messageListener = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         jioMobileOtp = findViewById(R.id.otpDetail);
         loginButton.setOnClickListener(this);
 
-        messageListener = new LoginActivity();
+        MessageListener messageListener = new LoginActivity();
         MessageReceiver.bindListener(messageListener);
 
         loginButton.setOnClickListener(v -> {
@@ -269,7 +268,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (!carrierNameSlot1.contains(Constant.JIO)) {
                 Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
             } else {
-                jioMobileNumberEditText.setText(subscriptionInfos.get(0).getNumber().toString());
+                jioMobileNumberEditText.setText(subscriptionInfos.get(0).getNumber());
             }
         }
     }
@@ -367,7 +366,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 phoneNumber = subscriptionInfos.get(0).getNumber();
             }
             new SendSMSTask().execute(mbNumber, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
-
             dialog.dismiss();
         });
 
