@@ -23,7 +23,6 @@ package com.jio.devicetracker.view;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -61,6 +60,8 @@ import com.jio.devicetracker.database.pojo.request.SearchDeviceRequest;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceResponse;
 import com.jio.devicetracker.jiotoken.JioUtils;
+import com.jio.devicetracker.network.MessageListener;
+import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.Constant;
@@ -72,29 +73,28 @@ import java.util.List;
 /**
  * Implementation of Splash Screen.This class creates splash screen for JFF application
  */
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
 
     //    private EditText jioEmailEditText = null;
 //    private EditText jioPasswordEditText = null;
     private EditText jioMobileNumberEditText = null;
     private EditText jioUserNameEditText = null;
-    private EditText jioMobileOtp = null;
+    private static EditText jioMobileOtp = null;
     private AdminLoginData adminData;
     public static String phoneNumber = null;
     public static LogindetailResponse logindetailResponse = null;
     public static SearchDeviceResponse searchdeviceResponse = null;
     private static final int PERMIT_ALL = 1;
-    String name;
-    String mbNumber;
-    String imei;
-    String number;
-    String userName;
+    private String name;
+    private String mbNumber;
+    private String imei;
+    private String number;
     private DBManager mDbManager;
     private List<SubscriptionInfo> subscriptionInfos;
     public static boolean isReadPhoneStatePermissionGranted = false;
     public static boolean isAccessCoarsePermissionGranted = false;
     private Button loginButton;
-
+    private MessageListener messageListener = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,16 +119,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         jioMobileNumberEditText = findViewById(R.id.jioNumber);
         jioMobileNumberEditText.setEnabled(false);
 
-
         jioMobileNumberEditText.setOnClickListener(this);
         adminData = new AdminLoginData();
 
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
 
-
         jioMobileOtp = findViewById(R.id.otpDetail);
         loginButton.setOnClickListener(this);
+
+        messageListener = new LoginActivity();
+        MessageReceiver.bindListener(messageListener);
 
         loginButton.setOnClickListener(v -> {
             onLoginButtonClick();
@@ -136,7 +137,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         fetchMobileNumber();
         checkTermandCondition(termConditionsFlag);
-
     }
 
     private void fetchMobileNumber() {
@@ -177,17 +177,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String phoneNo = number;
         String message = "JFF OTP : " + randomNumberForOTP;
 
-//    if (ContextCompat.checkSelfPermission(this,
-//            Manifest.permission.SEND_SMS)
-//            != PackageManager.PERMISSION_GRANTED) {
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                Manifest.permission.SEND_SMS)) {
-//        } else {
-//            ActivityCompat.requestPermissions(this,
-//                    new String[]{Manifest.permission.SEND_SMS},
-//                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-//        }
-//    }
         if (0 == PackageManager.PERMISSION_GRANTED) {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNo, null, message, null, null);
@@ -338,7 +327,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         data.setPassword(password);
         //data.setMobileNumber(String.valueOf(jioMobileNumberEditText));
         data.setType(Constant.SUPERVISOR);
-        data.setUserName(userName);
         RequestHandler.getInstance(getApplicationContext()).handleRequest(new LoginDataRequest(new SuccessListener(), new ErrorListener(), data));
 //            } else {
 //                jioEmailEditText.setError(Constant.EMAIL_VALIDATION);
@@ -394,6 +382,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog.show();
     }
 
+    @Override
+    public void messageReceived(String message, String phoneNum) {
+        if (jioMobileOtp != null) {
+            jioMobileOtp.setText(message.substring(10, 14));
+        }
+    }
+
     /**
      * Creates the MQTT connection with MQTT server
      */
@@ -403,7 +398,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mqttManager.connetMQTT();
     }*/
 
-    public boolean hasPermissions(Context context, String[] permissions) {
+    /*public boolean hasPermissions(Context context, String[] permissions) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (String permission : permissions) {
@@ -414,7 +409,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
         }
         return true;
-    }
+    }*/
 
 
    /* private void gotoForgetPassTokenScreen() {
