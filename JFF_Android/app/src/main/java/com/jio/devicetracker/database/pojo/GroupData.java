@@ -26,6 +26,8 @@ public class GroupData {
     private String groupName;
     private String name;
     private String number;
+    private String lat;
+    private String lng;
 
     public String getGroupName() {
         return groupName;
@@ -49,5 +51,21 @@ public class GroupData {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 }

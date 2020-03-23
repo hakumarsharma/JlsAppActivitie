@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.util.Constant;
 
 /**
@@ -38,21 +39,26 @@ import com.jio.devicetracker.util.Constant;
  */
 public class EditActivity extends Activity implements View.OnClickListener {
 
+    private DBManager mDBmanager;
+    private EditText mName;
+    private EditText mNumber;
+    private String number;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+        mDBmanager = new DBManager(this);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Constant.EDIT);
-        EditText mName = findViewById(R.id.memberName);
-        EditText relationEditText = findViewById(R.id.relationWithUser);
+        mName = findViewById(R.id.memberName);
+        mNumber = findViewById(R.id.deviceNumber);
         Button update = findViewById(R.id.update);
         update.setOnClickListener(this);
         Intent intent = getIntent();
         String name = intent.getStringExtra(Constant.NAME);
-        String relation = intent.getStringExtra(Constant.NUMBER_CARRIER);
+        number = intent.getStringExtra(Constant.NUMBER_CARRIER);
         mName.setText(name);
-        relationEditText.setText(relation);
+        mNumber.setText(number);
     }
 
     @Override
@@ -61,6 +67,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
     }
 
     private void gotoDashboard() {
+        mDBmanager.updateProfile(number, mName.getText().toString(), mNumber.getText().toString());
         Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }

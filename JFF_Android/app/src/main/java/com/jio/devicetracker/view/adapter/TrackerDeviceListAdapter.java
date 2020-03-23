@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -71,6 +72,11 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         HomeActivityListData data = mData.get(position);
         holder.phone.setText(mData.get(position).getPhoneNumber());
         holder.name.setText(mData.get(position).getName());
+        if (mData.get(position).isGroupMember() == true) {
+            holder.mIconImage.setImageResource(R.drawable.ic_group_button);
+        } else  {
+            holder.mIconImage.setImageResource(R.drawable.ic_user);
+        }
        // holder.mDelete.setTransformationMethod(null);
         //holder.mEdit.setTransformationMethod(null);
         holder.mConsentStatus.setTransformationMethod(null);
@@ -97,10 +103,15 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             holder.mConsentStatus.setOnClickListener(v -> {
                 itemListener.consetClick(mData.get(position).getPhoneNumber());
             });
+        } else {
+            holder.mConsentStatus.setOnClickListener(v -> {
+                itemListener.consentClickForGroup(mData.get(position).getName());
+            });
         }
         holder.mConsent.setOnClickListener(v -> {
             data.setSelected(!data.isSelected());
-            if (data.isGroupMember()) {
+            if (data.isGroupMember() && data.isSelected()) {
+                holder.mConsent.setBackgroundResource(R.drawable.ic_checkmark);
                 mSelectData = new MultipleselectData();
                 mSelectData.setName(mData.get(position).getName());
                 itemListener.recyclerViewListClicked(v, position, mSelectData,1);
@@ -131,9 +142,12 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 return true;
             }
         });
-        holder.mListlayout.setOnClickListener(v -> {
-            return;
-        });
+        if (data.isGroupMember()) {
+            holder.mListlayout.setOnClickListener(v -> {
+                itemListener.clickonListLayout(mData.get(position).getName());
+                return;
+            });
+        }
     }
 
 
@@ -154,6 +168,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         public Button mConsent;
         public Button mConsentStatus;
         public TextView viewOptionMenu;
+        public ImageView mIconImage;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -165,6 +180,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             mConsentStatus = itemView.findViewById(R.id.consentstatus);
             viewOptionMenu = itemView.findViewById(R.id.textViewOptions);
             status = itemView.findViewById(R.id.statusView);
+            mIconImage = itemView.findViewById(R.id.contactImage);
 
 
         }
@@ -174,7 +190,9 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         void recyclerViewListClicked(View v, int position, MultipleselectData data,int val);
        // void recyclerviewEditList(String relation,String phoneNumber);
        // void recyclerviewDeleteList(String phoneNuber,int position);
+        void clickonListLayout(String selectedGroupName);
         void consetClick(String phoneNumber);
+        void consentClickForGroup(String selectedGroupName);
         void onPopupMenuClicked(View v, int position, String name, String number);
     }
 

@@ -57,6 +57,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private DBManager mDbManager;
     private AdminLoginData adminData;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +163,8 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         groupData.setGroupName(groupName.trim());
         groupData.setName(name.trim());
         groupData.setNumber(number.trim());
+        groupData.setLat("12.9050641");
+        groupData.setLng("77.6310009");
         DashboardActivity.specificGroupMemberData.add(groupData);
     }
 
@@ -180,6 +183,8 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
               listOnHomeScreen.setLat(activitylistData.getLat());
               listOnHomeScreen.setLng(activitylistData.getLng());
           } else {
+
+
             listOnHomeScreen.setName(name);
             listOnHomeScreen.setPhoneNumber(number);
             listOnHomeScreen.setLat("12.4950641");

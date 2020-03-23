@@ -36,8 +36,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.GroupmemberListData;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.GroupMemberListAdapter;
@@ -48,6 +50,8 @@ import java.util.List;
 public class GroupListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView mRecyclerList;
+    public static String mGroupName;
+    private DBManager mDbmanager;
 
 
     @Override
@@ -55,6 +59,7 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_member);
         Toolbar toolbar = findViewById(R.id.customToolbar);
+        mDbmanager = new DBManager(this);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Button createGroupButtonOnToolbar = toolbar.findViewById(R.id.createGroupButtonOnToolbar);
         createGroupButtonOnToolbar.setText(Constant.CREATE_GROUP_LIST);
@@ -62,26 +67,34 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         createGroupButtonOnToolbar.setOnClickListener(this);
         toolbarTitle.setText(Constant.GROUP_TITLE);
         mRecyclerList = findViewById(R.id.groupList);
+        //mGroupName = new Intent().getStringExtra("GroupName");
         FloatingActionButton groupMembersListFloatButton = findViewById(R.id.groupMembersListFloatButton);
         groupMembersListFloatButton.setOnClickListener(this);
         addDataInList();
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
     }
 
     private void addDataInList() {
         List<GroupmemberListData> mList = new ArrayList<>();
-        if (DashboardActivity.specificGroupMemberData.size() > 0) {
+        if (DashboardActivity.specificGroupMemberData != null && DashboardActivity.specificGroupMemberData.size() > 0) {
             for (GroupData groupData : DashboardActivity.specificGroupMemberData) {
                 if (groupData.getGroupName().equalsIgnoreCase(DashboardActivity.groupName)) {
                     GroupmemberListData data = new GroupmemberListData();
                     data.setName(groupData.getName());
                     data.setNumber(groupData.getNumber());
                     data.setProfileImage(R.drawable.ic_tracee_list);
+                    data.setGroupName(groupData.getGroupName());
+                    data.setLat("12.9050641");
+                    data.setLng("77.6310009");
+                    mGroupName = groupData.getName();
+                    long rowValue = mDbmanager.insertGroupDataInBorqsDeviceDB(data);
                     mList.add(data);
                 }
             }
         }
+        List<HomeActivityListData> getDataList = mDbmanager.getGroupdata("radisys");
         GroupMemberListAdapter mAdapter = new GroupMemberListAdapter(mList);
         mRecyclerList.setAdapter(mAdapter);
     }

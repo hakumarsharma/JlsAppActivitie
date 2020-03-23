@@ -29,11 +29,13 @@ import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ConsentTimeupdateData;
 import com.jio.devicetracker.database.pojo.EditProfileData;
+import com.jio.devicetracker.database.pojo.GroupmemberListData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
+import com.jio.devicetracker.util.Constant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +73,21 @@ public class DBManager {
 
     }
 
+    public long insertGroupDataInBorqsDeviceDB(GroupmemberListData deviceData) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.NAME, deviceData.getName());
+        contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getNumber());
+        if(deviceData.getConsentStatus()!=null){
+            contentValue.put(DatabaseHelper.CONSENT_STATUS,deviceData.getConsentStatus());
+        }else {
+            contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
+        }
+        contentValue.put(DatabaseHelper.CONSENT_TIME, "");
+        contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT,1234);
+        contentValue.put(DatabaseHelper.GROUP_NAME,deviceData.getGroupName());
+        return  mDatabase.insert(DatabaseHelper.TABLE_NAME_DEVICE, null, contentValue);
+    }
     public long insertInBorqsDeviceDB(HomeActivityListData deviceData, String email) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
@@ -326,12 +343,12 @@ public class DBManager {
 
     }
 
-    public void updateProfile(String priviousNumber, String name, String newNumber, String imei) {
+    public void updateProfile(String priviousNumber, String name, String newNumber) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.DEVICE_NUM, newNumber);
         values.put(DatabaseHelper.NAME, name);
-        values.put(DatabaseHelper.IMEI_NUM, imei);
+        //values.put(DatabaseHelper.IMEI_NUM, imei);
         if (!priviousNumber.equals(newNumber)) {
             values.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
         }
@@ -535,5 +552,49 @@ public class DBManager {
             values.put(DatabaseHelper.CONSENT_STATUS, consentData.getConsentStatus());
             mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + consentData.getPhoneNumber(), null);
         }
+    }
+
+    public List<HomeActivityListData> getGroupdata(String groupName) {
+        List<HomeActivityListData> mlist = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String query = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_DEVICE + " WHERE " + DatabaseHelper.GROUP_NAME + " = ?" ;
+        if (groupName != null) {
+            String[] column = {DatabaseHelper.DEVICE_NUM};
+            String[] arg = {groupName};
+            //Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.GROUP_NAME + " = "  + groupName  , null, null, null, null);
+            Cursor cursor = mDatabase.rawQuery(query, new String[] { groupName });
+            if ((cursor != null) ) {
+                while (cursor.moveToNext()) {
+                    HomeActivityListData data = new HomeActivityListData();
+                    data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                    mlist.add(data);
+                }
+                cursor.close();
+            }
+        }
+        return mlist;
+    }
+
+    public List<MultipleselectData> getGroupLatLongdata(String groupName) {
+        List<MultipleselectData> mlist = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String query = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_DEVICE + " WHERE " + DatabaseHelper.GROUP_NAME + " = ?  AND "+ DatabaseHelper.CONSENT_STATUS + " = ?" ;
+        if (groupName != null) {
+            String[] column = {DatabaseHelper.DEVICE_NUM};
+            String[] arg = {groupName};
+            //Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.GROUP_NAME + " = "  + groupName  , null, null, null, null);
+            Cursor cursor = mDatabase.rawQuery(query, new String[] { groupName, Constant.CONSENT_STATUS_MSG});
+            if ((cursor != null) ) {
+                while (cursor.moveToNext()) {
+                    MultipleselectData data = new MultipleselectData();
+                    data.setPhone(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                    data.setLat(String.valueOf(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LAT))));
+                    data.setLng(String.valueOf(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LON))));
+                    mlist.add(data);
+                }
+                cursor.close();
+            }
+        }
+        return mlist;
     }
 }

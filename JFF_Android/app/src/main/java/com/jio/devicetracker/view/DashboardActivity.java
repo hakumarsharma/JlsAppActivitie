@@ -180,10 +180,27 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                             }
                         }
                     }else  {
-                        groupName = data.getName();
-                        startActivity(new Intent(DashboardActivity.this, GroupListActivity.class));
+
+                        List<MultipleselectData> groupData = mDbManager.getGroupLatLongdata(data.getName());
+                        for(MultipleselectData GroupdataLatlon : groupData)
+                        {
+                            selectedData.add(GroupdataLatlon);
+                        }
                     }
                 }
+
+                @Override
+                public void clickonListLayout(String selectedGroupName) {
+                    groupName = selectedGroupName;
+                   startActivity(new Intent(DashboardActivity.this, GroupListActivity.class));
+                }
+
+              /*  @Override
+                public void clickonListLayout() {
+                    groupName = data.getName();
+
+                    startActivity(new Intent(DashboardActivity.this, GroupListActivity.class).putExtra("Groupname",groupName.toString().trim()));
+                }*/
 
 //                @Override
 //                public void recyclerviewEditList(String relation, String phoneNumber) {
@@ -201,16 +218,24 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     showSpinnerforConsentTime(phoneNumber);
                 }
 
-               @Override
-                public void onPopupMenuClicked(View v, int position, String name, String relation) {
+                @Override
+                public void consentClickForGroup(String selectedGroupName) {
+                    groupName = selectedGroupName;
+                   List<HomeActivityListData> data = mDbManager.getGroupdata(groupName);
+                   showSpinnerforGroupConsentTime(data);
+                }
+
+                @Override
+                public void onPopupMenuClicked(View v, int position, String name, String number) {
                     PopupMenu popup = new PopupMenu(DashboardActivity.this, v);
                     popup.inflate(R.menu.options_menu);
                     popup.setOnMenuItemClickListener(item -> {
                         switch (item.getItemId()) {
                             case R.id.editOnCardView:
-                                gotoEditScreen(name, relation);
+                                gotoEditScreen(name, number);
                                 break;
                             case R.id.deleteOnCardView:
+                                alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, number, position);
                                 Toast.makeText(DashboardActivity.this, "You have selected delete", Toast.LENGTH_SHORT).show();
                                 break;
                             default:
@@ -345,8 +370,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         adb.setIcon(android.R.drawable.ic_dialog_alert);
         adb.setPositiveButton("OK", (dialog, which) -> {
             mDbManager.deleteSelectedData(phoneNumber);
-//            adapter.removeItem(position);
-            adapter.notifyDataSetChanged();
+            adapter.removeItem(position);
             isDevicePresent();
         });
         adb.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -930,6 +954,49 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         });
         close.setOnClickListener(v -> {
             sendSMS(phoneNumber);
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
+
+
+    private void showSpinnerforGroupConsentTime(List<HomeActivityListData> data) {
+        String time[] = {Constant.MIN_15, Constant.MIN_25, Constant.MIN_30, Constant.MIN_40};
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_consent_time);
+        dialog.setTitle(Constant.DIALOG_TITLE);
+        dialog.getWindow().setLayout(1000, 500);
+        ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, time);
+        Spinner spinner = dialog.findViewById(R.id.consentSpinner);
+        Button close = dialog.findViewById(R.id.close);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int consentTimeApproval;
+                String value = (String) parent.getItemAtPosition(position);
+                if (value.contains("15")) {
+                    consentTimeApproval = 14;
+                } else if (value.contains("25")) {
+                    consentTimeApproval = 23;
+                } else if (value.contains("30")) {
+                    consentTimeApproval = 28;
+
+                } else {
+                    consentTimeApproval = 38;
+                }
+                //storeConsentTime(phoneNumber, consentTimeApproval);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // To do
+            }
+        });
+        close.setOnClickListener(v -> {
+            for(int i = 0; i < data.size() ; i++) {
+                sendSMS(data.get(i).getPhoneNumber());
+            }
             dialog.dismiss();
         });
         dialog.show();

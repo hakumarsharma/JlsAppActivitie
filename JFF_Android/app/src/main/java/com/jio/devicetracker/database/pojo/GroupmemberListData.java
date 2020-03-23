@@ -27,6 +27,12 @@ public class GroupmemberListData {
     private String name;
     private String number;
     private int profileImage;
+    private String groupName;
+    private String consentStatus;
+    private String lat;
+    private String lng;
+
+
 
     public String getName() {
         return name;
@@ -50,5 +56,37 @@ public class GroupmemberListData {
 
     public void setProfileImage(int profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getConsentStatus() {
+        return consentStatus;
+    }
+
+    public void setConsentStatus(String consentStatus) {
+        this.consentStatus = consentStatus;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 }

@@ -55,7 +55,7 @@ public class Constant {
     //  Common Text
     public static final String ALERT_TITLE = "Alert";
     public static final String WAIT_LOADER = "Please wait...";
-    public static final String JIO = "Jio";
+    public static final String JIO = "jio";
     public static final String NAME = "name";
     public static final String FLAG = "flag";
     public static final String SUPERVISOR = "supervisor";

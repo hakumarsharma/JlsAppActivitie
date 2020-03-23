@@ -56,6 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CONSENT_TIME = "ConsentTime";
     public static final String CONSENT_TIME_APPROVAL_LIMIT = "ConsentApprovalTime";
     public static final String IS_GROUP_MEMBER = "isGroupMember";
+    public static final String GROUP_NAME = "groupName";
 
 
 
@@ -69,7 +70,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " +CONSENT_STATUS+ " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
 
     private static final String CREATE_TABLE_DEVICE = "create table " + TABLE_NAME_DEVICE + "(" + IMEI_NUM
-            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " +CONSENT_STATUS+ " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ," + IS_GROUP_MEMBER + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
+            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " +CONSENT_STATUS+ " TEXT, "+GROUP_NAME+ " TEXT," + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ," + IS_GROUP_MEMBER + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
 
 
     private static final String CREATE_TABLE_FMS = "create table " + TABLE_NAME_FMS + "(" + IMEI_NUM

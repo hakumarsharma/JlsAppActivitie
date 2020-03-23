@@ -40,6 +40,7 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -174,7 +175,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     protected void sendSMSMessage(int randomNumberForOTP) {
         String phoneNo = number;
-        String message = "JFF OTP : " + randomNumberForOTP;
+        String message = "PeopleTracker OTP :" + randomNumberForOTP;
 
         if (0 == PackageManager.PERMISSION_GRANTED) {
             SmsManager smsManager = SmsManager.getDefault();
@@ -183,7 +184,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getApplicationContext(),
-                    "SMS faild, please try again.", Toast.LENGTH_LONG).show();
+                    "SMS failed, please try again.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -265,7 +266,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
         if (subscriptionInfos != null) {
             String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
-            if (!carrierNameSlot1.contains(Constant.JIO)) {
+            if (!carrierNameSlot1.toLowerCase().contains(Constant.JIO)) {
                 Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
             } else {
                 jioMobileNumberEditText.setText(subscriptionInfos.get(0).getNumber());
@@ -382,8 +383,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void messageReceived(String message, String phoneNum) {
+        String [] splitmessage = message.split(":");
         if (jioMobileOtp != null) {
-            jioMobileOtp.setText(message.substring(10, 14));
+            Log.d("Message","value"+splitmessage[1]);
+            jioMobileOtp.setText(splitmessage[1]);
         }
     }
 
