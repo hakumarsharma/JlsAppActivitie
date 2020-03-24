@@ -89,12 +89,12 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
                     data.setLat("12.9050641");
                     data.setLng("77.6310009");
                     mGroupName = groupData.getName();
-                    long rowValue = mDbmanager.insertGroupDataInBorqsDeviceDB(data);
+                    mDbmanager.insertGroupDataInBorqsDeviceDB(data);
                     mList.add(data);
                 }
             }
         }
-        List<HomeActivityListData> getDataList = mDbmanager.getGroupdata("radisys");
+        mDbmanager.getGroupdata("radisys");
         GroupMemberListAdapter mAdapter = new GroupMemberListAdapter(mList);
         mRecyclerList.setAdapter(mAdapter);
     }

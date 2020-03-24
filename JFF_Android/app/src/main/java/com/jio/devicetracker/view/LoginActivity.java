@@ -70,6 +70,7 @@ import com.jio.devicetracker.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Implementation of Splash Screen.This class creates splash screen for JFF application
@@ -95,6 +96,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static boolean isReadPhoneStatePermissionGranted = false;
     public static boolean isAccessCoarsePermissionGranted = false;
     private Button loginButton;
+    private Locale locale = Locale.ENGLISH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,7 +268,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
         if (subscriptionInfos != null) {
             String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
-            if (!carrierNameSlot1.toLowerCase().contains(Constant.JIO)) {
+            if (!carrierNameSlot1.toLowerCase(locale).contains(Constant.JIO)) {
                 Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
             } else {
                 jioMobileNumberEditText.setText(subscriptionInfos.get(0).getNumber());

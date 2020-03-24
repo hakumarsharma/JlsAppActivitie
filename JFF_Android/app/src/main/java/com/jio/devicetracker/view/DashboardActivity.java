@@ -121,7 +121,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
     private List<SubscriptionInfo> subscriptionInfos;
-    Locale locale = Locale.ENGLISH;
+    private Locale locale = Locale.ENGLISH;
     private static int batteryLevel;
     private static FusedLocationProviderClient client;
     private static Double latitude;
@@ -179,8 +179,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                         }
                     } else {
                         List<MultipleselectData> groupData = mDbManager.getGroupLatLongdata(data.getName());
-                        for (MultipleselectData GroupdataLatlon : groupData) {
-                            selectedData.add(GroupdataLatlon);
+                        for (MultipleselectData GroupDataLatLon : groupData) {
+                            selectedData.add(GroupDataLatLon);
                         }
                     }
                 }
@@ -964,8 +964,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }
         });
         close.setOnClickListener(v -> {
-            for (int i = 0; i < data.size(); i++) {
-                sendSMS(data.get(i).getPhoneNumber());
+            for (HomeActivityListData homeActivityListData : data) {
+                sendSMS(homeActivityListData.getPhoneNumber());
             }
             dialog.dismiss();
         });

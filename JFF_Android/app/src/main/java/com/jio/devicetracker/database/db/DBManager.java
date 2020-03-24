@@ -563,7 +563,7 @@ public class DBManager {
             String[] arg = {groupName};
             //Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.GROUP_NAME + " = "  + groupName  , null, null, null, null);
             Cursor cursor = mDatabase.rawQuery(query, new String[] { groupName });
-            if ((cursor != null) ) {
+            if (cursor != null)  {
                 while (cursor.moveToNext()) {
                     HomeActivityListData data = new HomeActivityListData();
                     data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
@@ -584,7 +584,7 @@ public class DBManager {
             String[] arg = {groupName};
             //Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.GROUP_NAME + " = "  + groupName  , null, null, null, null);
             Cursor cursor = mDatabase.rawQuery(query, new String[] { groupName, Constant.CONSENT_STATUS_MSG});
-            if ((cursor != null) ) {
+            if (cursor != null)  {
                 while (cursor.moveToNext()) {
                     MultipleselectData data = new MultipleselectData();
                     data.setPhone(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
