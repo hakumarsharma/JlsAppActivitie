@@ -352,7 +352,7 @@ public class DBManager {
         if (!priviousNumber.equals(newNumber)) {
             values.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
         }
-        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + priviousNumber, null);
+        mDatabase.update(DatabaseHelper.TABLE_NAME_DEVICE, values, DatabaseHelper.DEVICE_NUM + "= '" + priviousNumber + "';", null);
 
     }
 
@@ -377,7 +377,7 @@ public class DBManager {
 
     public void deleteSelectedData(String phoneNumber) {
         mDatabase = mDBHelper.getWritableDatabase();
-        mDatabase.delete(DatabaseHelper.TABLE_NAME_BORQS, DatabaseHelper.DEVICE_NUM + "=" + phoneNumber, null);
+        mDatabase.delete(DatabaseHelper.TABLE_NAME_DEVICE, DatabaseHelper.DEVICE_NUM + "= '" + phoneNumber + "';", null);
     }
 
 

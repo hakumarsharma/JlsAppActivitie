@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -172,18 +170,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 public void recyclerViewListClicked(View v, int position, MultipleselectData data, int val) {
                     if (val == 2) {
                         selectedData.add(data);
-                    } else if (val == 3){
+                    } else if (val == 3) {
                         Iterator<MultipleselectData> iterator = selectedData.iterator();
                         while (iterator.hasNext()) {
                             if (iterator.next().getPhone().equalsIgnoreCase(data.getPhone())) {
                                 iterator.remove();
                             }
                         }
-                    }else  {
-
+                    } else {
                         List<MultipleselectData> groupData = mDbManager.getGroupLatLongdata(data.getName());
-                        for(MultipleselectData GroupdataLatlon : groupData)
-                        {
+                        for (MultipleselectData GroupdataLatlon : groupData) {
                             selectedData.add(GroupdataLatlon);
                         }
                     }
@@ -192,26 +188,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 @Override
                 public void clickonListLayout(String selectedGroupName) {
                     groupName = selectedGroupName;
-                   startActivity(new Intent(DashboardActivity.this, GroupListActivity.class));
+                    startActivity(new Intent(DashboardActivity.this, GroupListActivity.class));
                 }
-
-              /*  @Override
-                public void clickonListLayout() {
-                    groupName = data.getName();
-
-                    startActivity(new Intent(DashboardActivity.this, GroupListActivity.class).putExtra("Groupname",groupName.toString().trim()));
-                }*/
-
-//                @Override
-//                public void recyclerviewEditList(String relation, String phoneNumber) {
-//                    gotoEditScreen(relation,phoneNumber);
-//                }
-//
-//               @Override
-//                public void recyclerviewDeleteList(String phoneNumber, int position) {
-//                    alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, phoneNumber, position);
-//
-//                }
 
                 @Override
                 public void consetClick(String phoneNumber) {
@@ -221,8 +199,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 @Override
                 public void consentClickForGroup(String selectedGroupName) {
                     groupName = selectedGroupName;
-                   List<HomeActivityListData> data = mDbManager.getGroupdata(groupName);
-                   showSpinnerforGroupConsentTime(data);
+                    List<HomeActivityListData> data = mDbManager.getGroupdata(groupName);
+                    showSpinnerforGroupConsentTime(data);
                 }
 
                 @Override
@@ -236,7 +214,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                                 break;
                             case R.id.deleteOnCardView:
                                 alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, number, position);
-                                Toast.makeText(DashboardActivity.this, "You have selected delete", Toast.LENGTH_SHORT).show();
                                 break;
                             default:
                                 break;
@@ -246,13 +223,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     popup.show();
                 }
 
-               /* @Override
-                public void onRecyclerViewItemClick(View v, int position, String name) {
-                    groupName = name;
-//                    if(listOnHomeScreens != null && listOnHomeScreens.get(position).isGroupMember() == false) {
-//                        startActivity(new Intent(DashboardActivity.this, GroupListActivity.class));
-//                    }
-                }*/
             });
         }
     }
@@ -329,7 +299,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         Toolbar toolbar = findViewById(R.id.customToolbar);
         listView = findViewById(R.id.listView);
         FloatingActionButton fabCreateGroup = findViewById(R.id.createGroup);
-        FloatingActionButton fabAddDevice= findViewById(R.id.addDevice);
+        FloatingActionButton fabAddDevice = findViewById(R.id.addDevice);
         FloatingActionButton fabAddContact = findViewById(R.id.addContact);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         listView.setLayoutManager(linearLayoutManager);
@@ -480,7 +450,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 //            listView.setVisibility(View.VISIBLE);
 //        }
 
-       List<HomeActivityListData> alldata = null;
+        List<HomeActivityListData> alldata = null;
         alldata = mDbManager.getAllDevicedata(adminEmail);
         if (alldata.isEmpty()) {
             listView.setVisibility(View.INVISIBLE);
@@ -534,36 +504,36 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private void checkNumberOfIndividualUser() {
         int individualUserCount = 1;
-        if( isComingFromGroupList) {
+        if (isComingFromGroupList) {
             isComingFromGroupList = false;
         }
-        if(listOnHomeScreens != null) {
-            for(HomeActivityListData listOnHomeScreen : listOnHomeScreens) {
-                if(listOnHomeScreen.isGroupMember()){
-                    individualUserCount ++;
+        if (listOnHomeScreens != null) {
+            for (HomeActivityListData listOnHomeScreen : listOnHomeScreens) {
+                if (listOnHomeScreen.isGroupMember()) {
+                    individualUserCount++;
                 }
             }
         }
-        if(individualUserCount > 10) {
+        if (individualUserCount > 10) {
             Util.alertDilogBox(Constant.USER_LIMITATION, "Jio Alert", this);
-        }else {
+        } else {
             gotoContactsDetailsActivity();
         }
     }
 
     private void checkNumberOfGroups() {
         int groupCount = 1;
-        if(listOnHomeScreens != null) {
-            for(HomeActivityListData listOnHomeScreen : listOnHomeScreens) {
-                if(listOnHomeScreen.isGroupMember() == false){
-                    groupCount ++;
+        if (listOnHomeScreens != null) {
+            for (HomeActivityListData listOnHomeScreen : listOnHomeScreens) {
+                if (listOnHomeScreen.isGroupMember() == false) {
+                    groupCount++;
                 }
             }
         }
-        if(groupCount > 2) {
+        if (groupCount > 2) {
             Util.alertDilogBox(Constant.GROUP_LIMITATION, "Jio Alert", this);
             return;
-        }else {
+        } else {
             gotoGroupNameActivity();
         }
     }
@@ -605,13 +575,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 //            RequestHandler.getInstance(getApplicationContext()).handleRequest(new SearchDeviceStatusRequest(new SearchDeviceStatusSuccessListener(), new SearchDeviceStatusErrorListener(), userToken, searchDeviceStatusData));
 
             for (MultipleselectData multipleselectData : selectedData) {
-                    Map<Double, Double> latLngMap = new HashMap<>();
-                    if (multipleselectData.getLat() != null) {
-                        latLngMap.put(Double.valueOf(multipleselectData.getLat()),
-                                Double.valueOf(multipleselectData.getLng()));
-                        namingMap.put(multipleselectData.getName(), latLngMap);
+                Map<Double, Double> latLngMap = new HashMap<>();
+                if (multipleselectData.getLat() != null) {
+                    latLngMap.put(Double.valueOf(multipleselectData.getLat()),
+                            Double.valueOf(multipleselectData.getLng()));
+                    namingMap.put(multipleselectData.getName(), latLngMap);
 
-                    }
+                }
             }
             Util.progressDialog.dismiss();
             if (!namingMap.isEmpty()) {
@@ -676,7 +646,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 namingMap.clear();
                 for (SearchDeviceStatusResponse.Data data : searchDeviceStatusResponse.getData()) {
                     for (MultipleselectData multipleselectData : selectedData) {
-                        if(data.getDevice().getImei() !=null){
+                        if (data.getDevice().getImei() != null) {
                             if (multipleselectData.getImeiNumber().equalsIgnoreCase(data.getDevice().getImei())) {
                                 Map<Double, Double> latLngMap = new HashMap<>();
                                 if (data.getLocation() != null) {
@@ -994,7 +964,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }
         });
         close.setOnClickListener(v -> {
-            for(int i = 0; i < data.size() ; i++) {
+            for (int i = 0; i < data.size(); i++) {
                 sendSMS(data.get(i).getPhoneNumber());
             }
             dialog.dismiss();
@@ -1003,18 +973,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void addDataInHomeScreen() {
-//        List<HomeActivityListData> mList = new ArrayList<>();
-//        if (!listOnHomeScreens.isEmpty()) {
-//            for (ListOnHomeScreen listOnHomeScreenData : listOnHomeScreens) {
-//                HomeActivityListData data = new HomeActivityListData();
-//                data.setName(listOnHomeScreenData.getName());
-//                data.setNumber(listOnHomeScreenData.getRelationWithName());
-//                data.setGroupMember(listOnHomeScreenData.isGroupMember());
-//                mList.add(data);
-//            }
-//            adapter = new HomeActivityListAdapter(mList);
-//            listView.setAdapter(adapter);
-//        }
         List<HomeActivityListData> alldata = new ArrayList<>();
         if (!listOnHomeScreens.isEmpty()) {
             for (HomeActivityListData listOnHomeScreenData : listOnHomeScreens) {
@@ -1027,7 +985,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
         listOnHomeScreens.clear();
         alldata = mDbManager.getAllDevicedata(adminEmail);
-        adapter = new TrackerDeviceListAdapter(this,alldata);
+        adapter = new TrackerDeviceListAdapter(this, alldata);
         listView.setAdapter(adapter);
     }
 }
