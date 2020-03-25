@@ -179,8 +179,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                         }
                     } else {
                         List<MultipleselectData> groupData = mDbManager.getGroupLatLongdata(data.getName());
-                        for (MultipleselectData GroupDataLatLon : groupData) {
-                            selectedData.add(GroupDataLatLon);
+                        for (MultipleselectData groupDataLatLon : groupData) {
+                            selectedData.add(groupDataLatLon);
                         }
                     }
                 }
@@ -484,7 +484,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()) {
             case R.id.createGroup:
                 checkNumberOfGroups();
-                gotoGroupNameActivity();
                 break;
             case R.id.track:
                 trackDevice();
@@ -494,7 +493,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.addContact:
                 checkNumberOfIndividualUser();
-                gotoContactsDetailsActivity();
                 break;
             default:
 //                Log.d("TAG", "Some other button is clicked");
@@ -504,14 +502,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private void checkNumberOfIndividualUser() {
         int individualUserCount = 1;
-        if (isComingFromGroupList) {
-            isComingFromGroupList = false;
-        }
-        if (listOnHomeScreens != null) {
-            for (HomeActivityListData listOnHomeScreen : listOnHomeScreens) {
-                if (listOnHomeScreen.isGroupMember()) {
-                    individualUserCount++;
-                }
+        List<HomeActivityListData> allDevicedata = mDbManager.getAllDevicedata(adminEmail);
+        for(HomeActivityListData homeActivityListData : allDevicedata) {
+            if(homeActivityListData.isGroupMember() == false) {
+                individualUserCount ++;
             }
         }
         if (individualUserCount > 10) {
@@ -522,14 +516,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void checkNumberOfGroups() {
+        List<HomeActivityListData> allDevicedata = mDbManager.getAllDevicedata(adminEmail);
         int groupCount = 1;
-        if (listOnHomeScreens != null) {
-            for (HomeActivityListData listOnHomeScreen : listOnHomeScreens) {
-                if (listOnHomeScreen.isGroupMember() == false) {
-                    groupCount++;
-                }
+        for(HomeActivityListData homeActivityListData : allDevicedata) {
+            if(homeActivityListData.isGroupMember() == true) {
+                groupCount ++;
             }
         }
+
         if (groupCount > 2) {
             Util.alertDilogBox(Constant.GROUP_LIMITATION, "Jio Alert", this);
             return;
@@ -547,7 +541,19 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private void gotoQRScannerScreen() {
         isAddIndividual = false;
         isComingFromGroupList = false;
-        startActivity(new Intent(this, ContactDetailsActivity.class));
+        int individualUserCount = 1;
+
+        List<HomeActivityListData> allDevicedata = mDbManager.getAllDevicedata(adminEmail);
+        for(HomeActivityListData homeActivityListData : allDevicedata) {
+            if(homeActivityListData.isGroupMember() == false) {
+                individualUserCount ++;
+            }
+        }
+        if (individualUserCount > 10) {
+            Util.alertDilogBox(Constant.USER_LIMITATION, "Jio Alert", this);
+        } else {
+            startActivity(new Intent(this, ContactDetailsActivity.class));
+        }
     }
 
     private void gotoContactsDetailsActivity() {
@@ -973,7 +979,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void addDataInHomeScreen() {
-        List<HomeActivityListData> alldata = new ArrayList<>();
         if (!listOnHomeScreens.isEmpty()) {
             for (HomeActivityListData listOnHomeScreenData : listOnHomeScreens) {
                 HomeActivityListData data = new HomeActivityListData();
@@ -984,7 +989,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }
         }
         listOnHomeScreens.clear();
-        alldata = mDbManager.getAllDevicedata(adminEmail);
+        List<HomeActivityListData> alldata = mDbManager.getAllDevicedata(adminEmail);
         adapter = new TrackerDeviceListAdapter(this, alldata);
         listView.setAdapter(adapter);
     }

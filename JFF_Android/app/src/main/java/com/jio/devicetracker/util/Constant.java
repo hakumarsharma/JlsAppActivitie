@@ -202,6 +202,8 @@ public class Constant {
     public static final String PENDING = "Pending";
     public static final String GROUP_LIMITATION = "You can't create more than two groups, please add it as a individual trackee";
     public static final String USER_LIMITATION = "You can't add more than ten individual users";
+    public static final String GROUP_NAME_VALIDATION_ERROR = "Group name cannot be left empty";
+    public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";
 

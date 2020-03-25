@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -46,6 +44,7 @@ import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+
 import java.util.List;
 
 public class ContactDetailsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -56,13 +55,14 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private EditText mNumber;
     private DBManager mDbManager;
     private AdminLoginData adminData;
+    private long insertRowid;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_contact_details);
+
         Toolbar toolbar = findViewById(R.id.loginToolbar);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.CONTACT_DEVICE_TITLE);
@@ -89,8 +89,8 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     }
 
     private void setNameNumberImei(String qrValue) {
-        if(qrValue != null){
-            String []splitString = qrValue.split("\n");
+        if (qrValue != null) {
+            String[] splitString = qrValue.split("\n");
             name = splitString[0];
             number = splitString[1];
             mName.setText(name);
@@ -105,6 +105,10 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             startActivityForResult(intent, 1);
         } else if (v.getId() == R.id.addContactInGroup) {
+            if(mName.getText().toString().equalsIgnoreCase("")){
+                mName.setError(Constant.NAME_EMPTY);
+                return;
+            }
             if (!Util.isValidMobileNumber(mNumber.getText().toString().trim())) {
                 mNumber.setError(Constant.MOBILENUMBER_VALIDATION);
                 return;
@@ -113,8 +117,13 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     setGroupData(DashboardActivity.groupName, mName.getText().toString(), mNumber.getText().toString());
                     gotoGroupListActivity();
                 } else {
-                        setListDataOnHomeScreen(mName.getText().toString().trim(), mNumber.getText().toString().trim(), false);
-                    gotoDashboardActivity();
+                    setListDataOnHomeScreen(mName.getText().toString().trim(), mNumber.getText().toString().trim(), false);
+                    if (insertRowid > 0) {
+                        gotoDashboardActivity();
+                    } else {
+                        Util.alertDilogBox(Constant.DUPLICATE_NUMBER, Constant.ALERT_TITLE, this);
+                        insertRowid = 0;
+                    }
                 }
             }
         }
@@ -122,7 +131,6 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         if (v.getId() == R.id.qrScanner) {
             gotoQRScannerScreen();
         }
-
     }
 
     @Override
@@ -147,12 +155,16 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 }
 
-                if(DashboardActivity.isComingFromGroupList) {
+                if (DashboardActivity.isComingFromGroupList) {
                     setGroupData(DashboardActivity.groupName, cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)), number);
                     gotoGroupListActivity();
                 } else {
-                        setListDataOnHomeScreen(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)).trim(), number.trim(), false);
-
+                    setListDataOnHomeScreen(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)).trim(), number.trim(), false);
+                    if (insertRowid > 0) {
+                        gotoDashboardActivity();
+                    } else {
+                        Util.alertDilogBox(Constant.DUPLICATE_NUMBER, Constant.ALERT_TITLE, this);
+                    }
                 }
             }
         }
@@ -170,31 +182,24 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
     private void setListDataOnHomeScreen(String name, String number, boolean isGroupMember) {
         HomeActivityListData listOnHomeScreen = new HomeActivityListData();
-
 //        listOnHomeScreen.setRelationWithName(relationWithGroupMember);
         listOnHomeScreen.setGroupMember(isGroupMember);
         List<HomeActivityListData> homeListData = null;
-        homeListData = mDbManager.getAlldata( adminData.getEmail());
-
-          HomeActivityListData activitylistData = containsNumber(homeListData,number);
-          if(activitylistData != null) {
-              listOnHomeScreen.setName(name);
-              listOnHomeScreen.setPhoneNumber(number);
-              listOnHomeScreen.setLat(activitylistData.getLat());
-              listOnHomeScreen.setLng(activitylistData.getLng());
-          } else {
-
-
+        homeListData = mDbManager.getAlldata(adminData.getEmail());
+        HomeActivityListData activitylistData = containsNumber(homeListData, number);
+        if (activitylistData != null) {
+            listOnHomeScreen.setName(name);
+            listOnHomeScreen.setPhoneNumber(number);
+            listOnHomeScreen.setLat(activitylistData.getLat());
+            listOnHomeScreen.setLng(activitylistData.getLng());
+        } else {
             listOnHomeScreen.setName(name);
             listOnHomeScreen.setPhoneNumber(number);
             listOnHomeScreen.setLat("12.4950641");
             listOnHomeScreen.setLng("77.3810009");
         }
 
-        long insertRowid = mDbManager.insertInBorqsDeviceDB(listOnHomeScreen, adminData.getEmail());
-        checkRow(insertRowid);
-        Toast.makeText(this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
-//        DashboardActivity.listOnHomeScreens.add(listOnHomeScreen);
+        insertRowid = mDbManager.insertInBorqsDeviceDB(listOnHomeScreen, adminData.getEmail());
     }
 
     private static HomeActivityListData containsNumber(List<HomeActivityListData> listData, String phoneNumber) {
@@ -216,13 +221,5 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
     private void gotoQRScannerScreen() {
         startActivity(new Intent(this, QRCodeReaderActivity.class));
-    }
-
-    private void checkRow(long id) {
-        if(id == -1) {
-            Util.alertDilogBox(Constant.DUPLICATE_NUMBER,Constant.ALERT_TITLE,this);
-        } else {
-            gotoDashboardActivity();
-        }
     }
 }
