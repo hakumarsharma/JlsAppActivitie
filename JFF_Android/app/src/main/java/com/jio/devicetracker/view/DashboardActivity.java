@@ -269,12 +269,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     case R.id.helpPrivacy:
 //                        Toast.makeText(DashboardActivity.this, "Help & Support", Toast.LENGTH_SHORT).show();
                         break;
-                    case R.id.traceelist:
-                        gotoTraceeListScreen();
+                    case R.id.activeSessions:
+                        gotoActiveSessionActivity();
                         break;
-                    case R.id.trackerListMenu:
+                    /*case R.id.trackerListMenu:
                         gotoTrackerListScreen();
-                        break;
+                        break;*/
                     case R.id.logout:
                         updateLogoutData();
                         break;
@@ -286,14 +286,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
-    private void gotoTraceeListScreen() {
-        Intent intent = new Intent(this, TraceeListActivity.class);
+    private void gotoActiveSessionActivity() {
+        Intent intent = new Intent(this, ActiveSessionActivity.class);
         startActivity(intent);
     }
-
-    private void gotoTrackerListScreen() {
+    /*private void gotoTrackerListScreen() {
         startActivity(new Intent(this, TrackerListActivity.class));
-    }
+    }*/
 
     private void setLayoutData() {
         Toolbar toolbar = findViewById(R.id.customToolbar);

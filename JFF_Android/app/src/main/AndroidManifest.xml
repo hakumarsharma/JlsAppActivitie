@@ -119,7 +119,7 @@
             android:name=".view.HelpActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.TraceeListActivity"
+            android:name=".view.ActiveSessionActivity"
             android:label="@string/map_name" />
         <activity
             android:name=".view.QRCodeReaderActivity"

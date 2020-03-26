@@ -9,10 +9,10 @@
         android:title="Settings"/>
     <item android:id="@+id/about"
         android:title="About"/>
-    <item android:id="@+id/traceelist"
-        android:title="Trackees List"/>
-    <item android:id="@+id/trackerListMenu"
-        android:title="Trackers List"/>
+    <item android:id="@+id/activeSessions"
+        android:title="Active Session"/>
+    <!--<item android:id="@+id/trackerListMenu"
+        android:title="Trackers List"/>-->
     <item android:id="@+id/logout"
         android:title="Logout"/>
 

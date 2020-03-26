@@ -23,7 +23,7 @@
 
 package com.jio.devicetracker.database.pojo;
 
-public class TraceeListData {
+public class ActiveSessionData {
 
     private String name;
     private String number;

@@ -176,8 +176,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             viewOptionMenu = itemView.findViewById(R.id.textViewOptions);
             status = itemView.findViewById(R.id.statusView);
             mIconImage = itemView.findViewById(R.id.contactImage);
-
-
         }
     }
 

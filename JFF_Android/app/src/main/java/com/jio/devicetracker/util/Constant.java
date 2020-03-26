@@ -187,7 +187,7 @@ public class Constant {
     public static final String REGISTARTION_FAILED_MESSAGE = "Registration is failed";
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";
-    public static final String TRACEE_TITLE = "Trackees";
+    public static final String ACTIVE_SESSION_TITLE = "Active Session";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";
     public static final String CREATE_GROUP_LIST = "Track";
