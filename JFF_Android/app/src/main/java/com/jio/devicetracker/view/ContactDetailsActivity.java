@@ -27,9 +27,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,16 +49,19 @@ import com.jio.devicetracker.util.Util;
 
 import java.util.List;
 
-public class ContactDetailsActivity extends AppCompatActivity implements View.OnClickListener {
+public class ContactDetailsActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private String name;
     private String number;
     private EditText mName;
     private EditText mNumber;
+    private EditText mIMEINumber;
+    private Spinner deviceTypeSpinner;
     private DBManager mDbManager;
     private AdminLoginData adminData;
     private long insertRowid;
-
+    private String deviceType;
+    private boolean isDataMatched = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,9 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         addContactInGroup.setOnClickListener(this);
         mName = findViewById(R.id.memberName);
         mNumber = findViewById(R.id.deviceName);
+        mIMEINumber = findViewById(R.id.contactDetailIMEI);
+        deviceTypeSpinner = findViewById(R.id.deviceTypeSpinner);
+        deviceTypeSpinner.setOnItemSelectedListener(this);
         mDbManager = new DBManager(this);
         adminData = new AdminLoginData();
         adminData = mDbManager.getAdminLoginDetail();
@@ -112,24 +120,45 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             if (!Util.isValidMobileNumber(mNumber.getText().toString().trim())) {
                 mNumber.setError(Constant.MOBILENUMBER_VALIDATION);
                 return;
+            }
+            if(!Util.isValidIMEINumber(mIMEINumber.getText().toString().trim())) {
+                mIMEINumber.setError(Constant.IMEI_VALIDATION);
+                return;
             } else {
-                if (DashboardActivity.isComingFromGroupList) {
-                    setGroupData(DashboardActivity.groupName, mName.getText().toString(), mNumber.getText().toString());
+                checkValidationOfUser(mName.getText().toString().trim(), mNumber.getText().toString().trim(), mIMEINumber.getText().toString().trim());
+                if (isDataMatched && DashboardActivity.isComingFromGroupList) {
+                    mDbManager.updateIsGroupMember(1, mIMEINumber.getText().toString().trim(), DashboardActivity.groupName);
                     gotoGroupListActivity();
-                } else {
-                    setListDataOnHomeScreen(mName.getText().toString().trim(), mNumber.getText().toString().trim(), false);
+                } else if(isDataMatched && DashboardActivity.isComingFromGroupList == false) {
+                    mDbManager.updateIsGroupMember(0, mIMEINumber.getText().toString().trim(), mName.getText().toString());
+                    gotoDashboardActivity();
+                    /*setListDataOnHomeScreen(mName.getText().toString().trim(), mNumber.getText().toString().trim());
                     if (insertRowid > 0) {
                         gotoDashboardActivity();
                     } else {
                         Util.alertDilogBox(Constant.DUPLICATE_NUMBER, Constant.ALERT_TITLE, this);
                         insertRowid = 0;
-                    }
+                    }*/
                 }
             }
         }
 
         if (v.getId() == R.id.qrScanner) {
             gotoQRScannerScreen();
+        }
+    }
+
+    private void checkValidationOfUser(String mName, String mNumber, String mIMEINumber) {
+        List<HomeActivityListData> homeListData = mDbManager.getAllBorqsData(adminData.getEmail());
+        for(HomeActivityListData homeActivityListData : homeListData) {
+            if(homeActivityListData.getImeiNumber() != null && homeActivityListData.getImeiNumber().equalsIgnoreCase(mIMEINumber) && homeActivityListData.getPhoneNumber().equalsIgnoreCase(mNumber)) {
+                mDbManager.updateDeviceTypeAndGroupName(deviceType, homeActivityListData.getGroupName(), homeActivityListData.getImeiNumber(), mName, 1);
+                isDataMatched = true;
+            }
+        }
+        if(!isDataMatched) {
+            Util.alertDilogBox(Constant.DEVICE_DETAIL_VALIDATION, Constant.ALERT_TITLE, this);
+            return;
         }
     }
 
@@ -184,31 +213,9 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         HomeActivityListData listOnHomeScreen = new HomeActivityListData();
 //        listOnHomeScreen.setRelationWithName(relationWithGroupMember);
         listOnHomeScreen.setGroupMember(isGroupMember);
-        List<HomeActivityListData> homeListData = null;
-        homeListData = mDbManager.getAlldata(adminData.getEmail());
-        HomeActivityListData activitylistData = containsNumber(homeListData, number);
-        if (activitylistData != null) {
-            listOnHomeScreen.setName(name);
-            listOnHomeScreen.setPhoneNumber(number);
-            listOnHomeScreen.setLat(activitylistData.getLat());
-            listOnHomeScreen.setLng(activitylistData.getLng());
-        } else {
-            listOnHomeScreen.setName(name);
-            listOnHomeScreen.setPhoneNumber(number);
-            listOnHomeScreen.setLat("12.4950641");
-            listOnHomeScreen.setLng("77.3810009");
-        }
+        List<HomeActivityListData> homeListData = mDbManager.getAlldata(adminData.getEmail());
 
         insertRowid = mDbManager.insertInBorqsDeviceDB(listOnHomeScreen, adminData.getEmail());
-    }
-
-    private static HomeActivityListData containsNumber(List<HomeActivityListData> listData, String phoneNumber) {
-        for (HomeActivityListData li : listData) {
-            if (li.getPhoneNumber().equals(phoneNumber)) {
-                return li;
-            }
-        }
-        return null;
     }
 
     private void gotoGroupListActivity() {
@@ -222,4 +229,25 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private void gotoQRScannerScreen() {
         startActivity(new Intent(this, QRCodeReaderActivity.class));
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            case 0:
+                deviceType = parent.getItemAtPosition(position).toString();
+                break;
+            case 1:
+                deviceType = parent.getItemAtPosition(position).toString();
+                break;
+            case 2:
+                deviceType = parent.getItemAtPosition(position).toString();
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        //To-Do
+    }
+
 }

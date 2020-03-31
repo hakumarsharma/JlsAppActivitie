@@ -53,11 +53,14 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.SearchDevice;
 import com.jio.devicetracker.database.pojo.Userdata;
+import com.jio.devicetracker.database.pojo.request.GetDeviceLocationRequest;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceRequest;
+import com.jio.devicetracker.database.pojo.response.GetDeviceLocationResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceResponse;
 import com.jio.devicetracker.jiotoken.JioUtils;
@@ -77,8 +80,8 @@ import java.util.Locale;
  */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
 
-    //    private EditText jioEmailEditText = null;
-//    private EditText jioPasswordEditText = null;
+    //   private EditText jioEmailEditText = null;
+    //   private EditText jioPasswordEditText = null;
     private EditText jioMobileNumberEditText = null;
     private EditText jioUserNameEditText = null;
     private static EditText jioMobileOtp = null;
@@ -97,6 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static boolean isAccessCoarsePermissionGranted = false;
     private Button loginButton;
     private Locale locale = Locale.ENGLISH;
+    public static GetDeviceLocationResponse getDeviceLocationResponse = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +115,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //    if (!hasPermissions(this, permissions)) {
 //        ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
 //    }
-
-
         setContentView(R.layout.activity_login);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.LOGIN_TITLE);
@@ -120,23 +122,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         jioUserNameEditText = findViewById(R.id.userName);
         jioMobileNumberEditText = findViewById(R.id.jioNumber);
         jioMobileNumberEditText.setEnabled(false);
-
         jioMobileNumberEditText.setOnClickListener(this);
         adminData = new AdminLoginData();
-
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
-
         jioMobileOtp = findViewById(R.id.otpDetail);
         loginButton.setOnClickListener(this);
-
         MessageListener messageListener = new LoginActivity();
         MessageReceiver.bindListener(messageListener);
-
         loginButton.setOnClickListener(v -> {
             onLoginButtonClick();
         });
-
         fetchMobileNumber();
         checkTermandCondition(termConditionsFlag);
     }
@@ -369,6 +365,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 phoneNumber = subscriptionInfos.get(0).getNumber();
             }
             new SendSMSTask().execute(mbNumber, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
+            mDbManager.updateConsentInBors(mbNumber, Constant.CONSENT_APPROVED_STATUS);
             dialog.dismiss();
         });
 
@@ -378,6 +375,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 phoneNumber = subscriptionInfos.get(0).getNumber();
             }
             new SendSMSTask().execute(number, Constant.NOJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
+            mDbManager.updateConsentInBors(mbNumber, Constant.REQUEST_CONSENT);
             dialog.dismiss();
         });
         dialog.show();
@@ -385,9 +383,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void messageReceived(String message, String phoneNum) {
-        String [] splitmessage = message.split(":");
+        String[] splitmessage = message.split(":");
         if (jioMobileOtp != null) {
-            Log.d("Message","value"+splitmessage[1]);
+            Log.d("Message", "value" + splitmessage[1]);
             jioMobileOtp.setText(splitmessage[1]);
         }
     }
@@ -440,7 +438,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private class SuccessListenerSearchDevice implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-
             String consentStatus = null;
             List<HomeActivityListData> mlist = new ArrayList<>();
             searchdeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchDeviceResponse.class);
@@ -448,35 +445,57 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             List<SearchDeviceResponse.SearchDeviceData> deviceData = searchdeviceResponse.getmData();
             for (SearchDeviceResponse.SearchDeviceData devData : deviceData) {
                 data = new HomeActivityListData();
-
-                // TEMPORARY CODE FOR IMPROPER UPLOAD OF CSV FILE DATA
-                if (devData.getPhoneNumber().equals("Shivakumar")) {
-                    data.setPhoneNumber(devData.getName());
-                    data.setName(devData.getPhoneNumber());
-                    consentStatus = mDbManager.getConsentStatusBorqs(devData.getName());
-                } else {
-                    data.setPhoneNumber(devData.getPhoneNumber());
-                    data.setName(devData.getName());
-                    consentStatus = mDbManager.getConsentStatusBorqs(devData.getPhoneNumber());
-                }
-
+                data.setPhoneNumber(devData.getPhoneNumber());
+                data.setName(devData.getName());
+                consentStatus = mDbManager.getConsentStatusBorqs(devData.getPhoneNumber());
                 data.setConsentStaus(consentStatus);
-
-
                 data.setImeiNumber(devData.getImeiNumber());
                 mlist.add(data);
             }
             Util.setAutologinStatus(LoginActivity.this, true);
             adminData = mDbManager.getAdminLoginDetail();
             mDbManager.insertInBorqsDB(mlist, adminData.getEmail());
+            List<HomeActivityListData> getallDeviceData = mDbManager.getAllDevicedata(adminData.getEmail());
+            for(HomeActivityListData getDeviceId : getallDeviceData) {
+                RequestHandler.getInstance(getApplicationContext()).handleRequest(new GetDeviceLocationRequest(new SuccessListenerDeviceLocation(), new ErrorListenerDeviceLocation(), logindetailResponse.getUgsToken(), getDeviceId.getPhoneNumber()));
+            }
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
             startActivity(intent);
             Util.getInstance().dismissProgressBarDialog();
         }
     }
 
-    private class ErrorListenerSearchDevice implements Response.ErrorListener {
+    /**
+     * this class is handling the getDevice location api's success response
+     */
+    private class SuccessListenerDeviceLocation implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            getDeviceLocationResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetDeviceLocationResponse.class);
+            if(getDeviceLocationResponse != null && (getDeviceLocationResponse.getData().getDeviceStatus().getLocation() != null)) {
+                GetDeviceLocationData latlangdata = new GetDeviceLocationData();
+                latlangdata.setDeviceId(getDeviceLocationResponse.getData().getPhoneNumber());
+                latlangdata.setLat(getDeviceLocationResponse.getData().getDeviceStatus().getLocation().getLat());
+                latlangdata.setLang(getDeviceLocationResponse.getData().getDeviceStatus().getLocation().getLng());
+                mDbManager.updateLatLangInBorqsDB(getDeviceLocationResponse.getData().getPhoneNumber(),latlangdata);
+            }
+        }
+    }
 
+    /**
+     * this class is handling the getDevice location api's error response
+     */
+    private class ErrorListenerDeviceLocation implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.getInstance().dismissProgressBarDialog();
+        }
+    }
+
+    /**
+     * this class is handling the search device api's error response
+     */
+    private class ErrorListenerSearchDevice implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.getInstance().dismissProgressBarDialog();
@@ -484,7 +503,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private class ErrorListener implements Response.ErrorListener {
-
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == Constant.INVALID_USER) {

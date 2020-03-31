@@ -37,6 +37,33 @@ public class HomeActivityListData {
     private int consentApprovalTime;
     private boolean isSelected;
     private String relationWithName;
+    private String deviceType;
+    private String groupName;
+    public int isCreated;
+
+    public int getIsCreated() {
+        return isCreated;
+    }
+
+    public void setIsCreated(int isCreated) {
+        this.isCreated = isCreated;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 
     public String getNumber() {
         return number;

@@ -38,6 +38,13 @@
     <string name="trackee_name">Name*</string>
     <string name="group_name_textview">Please enter your group name</string>
 
+
+    <string-array name="device_type_array">
+        <item>Pet Tracker</item>
+        <item>People Tracker</item>
+        <item>Device Tracker</item>
+    </string-array>
+
     <string name="privacy_policy">
         <![CDATA[
 <p><strong>This document is an electronic record in terms of Information Technology&nbsp;Act, 2000 and rules there under as applicable and the amended provisions pertaining to electronic records in various statutes as amended by the</strong>&nbsp;<strong>Information Technology Act, 2000. This electronic record is generated</strong>&nbsp;<strong>by a computer system and does not require any physical or digital</strong>&nbsp;<strong>signatures.</strong></p>

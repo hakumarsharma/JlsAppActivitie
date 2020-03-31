@@ -140,6 +140,8 @@ public class Constant {
     public static final String SEARCH_DEVICE_STATUS = "/accounts/api/devicestatuses/search?ugs_token=";
     public static final String SEARCH_EVENT_REQUEST = "/accounts/api/events/search?skip=0&limit=100&ugs_token=";
     public static final String TRACK_DEVICE_REQUEST = "/accounts/api/devicestatuses/search?skip=0&limit=20&tsp=1572443375692&ugs_token=";
+    public static final String GET_DEVICE_LOCATION_URL_1 = "/accounts/api/devices/";
+    public static final String GET_DEVICE_LOCATION_URL_2 = "?tsp=1585031229387&ugs_token=";
 
     //Privacy Policy
 
@@ -167,7 +169,7 @@ public class Constant {
     public static final String NUMBER_CARRIER = "number";
     public static final String CONSENT_STATUS_MSG = "Yes JioTracker";
     public static final String CONSENT_MSG_SENT = "Consent sent";
-    public static final String CONSENT_MSG_TO_TRACKEE = " wants to track your location. Click below link to reply. https://www.jff.com/home?data=";
+    public static final String CONSENT_MSG_TO_TRACKEE = " wants to track your location. Click below link to reply. https://peopletracker/home?data=";
     public static final String START_TRACKING = "To start tracking ";
     public static final String REQUEST_CONSENT_USER = " please request for consent from the user by clicking “Request consent”";
     public static final String DIALOG_TITLE = "Title...";
@@ -204,6 +206,8 @@ public class Constant {
     public static final String USER_LIMITATION = "You can't add more than ten individual users";
     public static final String GROUP_NAME_VALIDATION_ERROR = "Group name cannot be left empty";
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
+    public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
+
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";
 

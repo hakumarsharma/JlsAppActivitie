@@ -79,9 +79,10 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
     private void setHomeScreenData(String groupName, String relationWithGroupMembersText, boolean isGroupMember) {
         DashboardActivity.listOnHomeScreens.clear();
         HomeActivityListData listOnHomeScreen = new HomeActivityListData();
-        listOnHomeScreen.setName(groupName);
+        listOnHomeScreen.setGroupName(groupName);
         listOnHomeScreen.setPhoneNumber(relationWithGroupMembersText);
-        listOnHomeScreen.setGroupMember(isGroupMember);
+        listOnHomeScreen.setGroupMember(true);
+        listOnHomeScreen.setIsCreated(1);
         DashboardActivity.listOnHomeScreens.add(listOnHomeScreen);
         startActivity(new Intent(this, DashboardActivity.class));
     }

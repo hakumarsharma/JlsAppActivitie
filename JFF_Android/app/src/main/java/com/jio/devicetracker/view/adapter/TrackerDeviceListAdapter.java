@@ -66,33 +66,34 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         HomeActivityListData data = mData.get(position);
         holder.phone.setText(mData.get(position).getPhoneNumber());
-        holder.name.setText(mData.get(position).getName());
+        holder.name.setText(mData.get(position).getGroupName());
         if (mData.get(position).isGroupMember() == true) {
             holder.mIconImage.setImageResource(R.drawable.ic_group_button);
-        } else {
+        } else if(mData.get(position).getDeviceType().equalsIgnoreCase("People Tracker")) {
             holder.mIconImage.setImageResource(R.drawable.ic_user);
+        } else if(mData.get(position).getDeviceType().equalsIgnoreCase("Pet Tracker")) {
+            holder.mIconImage.setImageResource(R.drawable.ic_pet);
         }
         // holder.mDelete.setTransformationMethod(null);
         //holder.mEdit.setTransformationMethod(null);
         holder.mConsentStatus.setTransformationMethod(null);
-        if (mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equalsIgnoreCase(Constant.CONSENT_STATUS_MSG)) {
+        if (mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equalsIgnoreCase(Constant.CONSENT_APPROVED_STATUS)) {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
             holder.mConsentStatus.setText(Constant.CONSENT_APPROVED_STATUS);
-//            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved,0,0,0);
+            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved,0,0,0);
             holder.mConsentStatus.setEnabled(false);
-        } else if (mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equals(Constant.PENDING)) {
+        } else if (mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equals(Constant.CONSENT_PENDING)) {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
             holder.mConsentStatus.setText(Constant.CONSENT_PENDING);
-//            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending,0,0,0);
+            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending,0,0,0);
             holder.mConsentStatus.setEnabled(false);
-
         } else {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentNotSent));
             holder.mConsentStatus.setText(Constant.REQUEST_CONSENT);
-//            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notsent,0,0,0);
+            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notsent,0,0,0);
         }
 
         if (!data.isGroupMember()) {
@@ -139,7 +140,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         });
         if (data.isGroupMember()) {
             holder.mListlayout.setOnClickListener(v -> {
-                itemListener.clickonListLayout(mData.get(position).getName());
+                itemListener.clickonListLayout(mData.get(position).getGroupName());
                 return;
             });
         }
@@ -169,7 +170,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             phone = itemView.findViewById(R.id.phoneNumber);
-            name = itemView.findViewById(R.id.name);
+            name = itemView.findViewById(R.id.nameDeviceTracker);
             mListlayout = itemView.findViewById(R.id.listLayout);
             mConsent = itemView.findViewById(R.id.consent);
             mConsentStatus = itemView.findViewById(R.id.consentstatus);

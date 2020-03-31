@@ -35,7 +35,7 @@
             android:src="@drawable/ic_user" />
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/nameDeviceTracker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/contactImage"
@@ -52,7 +52,7 @@
             android:id="@+id/phoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/name"
+            android:layout_below="@+id/nameDeviceTracker"
             android:layout_marginTop="6dp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/contactImage"

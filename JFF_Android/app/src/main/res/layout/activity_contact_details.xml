@@ -37,6 +37,28 @@
             android:inputType="phone"
             android:textCursorDrawable="@color/colorLogin" />
 
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/contactDetailIMEI"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/colorLogin"
+            android:hint="@string/device_imei"
+            android:layout_below="@id/deviceName"
+            android:inputType="phone"/>
+
+        <Spinner
+            android:id="@+id/deviceTypeSpinner"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@id/contactDetailIMEI"
+            android:entries="@array/device_type_array"/>
+
         <Button
             android:id="@+id/addContactInGroup"
             android:layout_width="300dp"

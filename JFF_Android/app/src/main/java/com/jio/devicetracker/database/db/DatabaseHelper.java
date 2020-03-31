@@ -44,6 +44,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String NAME = "name";
     public static final String RELATION = "relation";
     public static  final String CONSENT_STATUS = "consentStatus";
+    public static final String GROUP_NAME = "groupName";
+    public static final String DEVICE_TYPE = "deviceType";
     public static final String LAT = "latitude";
     public static final String LON = "longnitude";
     public static final String EMAIL = "email";
@@ -56,8 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CONSENT_TIME = "ConsentTime";
     public static final String CONSENT_TIME_APPROVAL_LIMIT = "ConsentApprovalTime";
     public static final String IS_GROUP_MEMBER = "isGroupMember";
-    public static final String GROUP_NAME = "groupName";
-
+    public static final String IS_CREATED = "isCreated";
 
 
 
@@ -67,7 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String CREATE_TABLE_BORQS = "create table " + TABLE_NAME_BORQS + "(" + IMEI_NUM
-            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " +CONSENT_STATUS+ " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
+            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " + CONSENT_STATUS + " TEXT, " + GROUP_NAME + " TEXT, " + DEVICE_TYPE + " TEXT, " + IS_GROUP_MEMBER + " INTEGER ," + IS_CREATED + " INTEGER ," + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
 
     private static final String CREATE_TABLE_DEVICE = "create table " + TABLE_NAME_DEVICE + "(" + IMEI_NUM
             + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " +CONSENT_STATUS+ " TEXT, "+GROUP_NAME+ " TEXT," + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ," + IS_GROUP_MEMBER + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
