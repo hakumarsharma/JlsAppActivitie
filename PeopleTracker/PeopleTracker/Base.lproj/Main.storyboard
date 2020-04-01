@@ -342,6 +342,9 @@
                                 <state key="normal" title="ADD">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="addDeviceButtonAction:" destination="FJa-y6-TRg" eventType="touchUpInside" id="iMQ-6K-6qO"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -360,6 +363,11 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="spL-ii-4Sx"/>
                     </view>
+                    <connections>
+                        <outlet property="imeiTxt" destination="ONi-vP-hXK" id="FhF-85-cbF"/>
+                        <outlet property="nameTxt" destination="aeT-6y-REZ" id="eG6-zG-Xed"/>
+                        <outlet property="phoneNumberTxt" destination="30Q-ws-CEu" id="bK9-bh-eCb"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="drN-sj-tYX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

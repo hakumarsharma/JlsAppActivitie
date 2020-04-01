@@ -20,6 +20,7 @@ class LoginScreen: UIViewController {
     }
     
     @IBAction func continueBtnAction(_ sender: Any) {
+        
         // validation check
         if(userNameTxt.text?.count == 0)
         {
@@ -39,12 +40,13 @@ class LoginScreen: UIViewController {
             return
         }
 
-        self.callLoginServiceApi()
+        self.callLoginApi()
         
     }
     
-    func callLoginServiceApi() {
-        UserServiceAPI.shared.loginRequest(with:  URL(string: Constants.ApiPath.loginUrl)!, parameters: ["email":"shivakumar.jagalur@ril.com","password":"Ril@1235","type": "supervisor"]) { (result : Result<LoginModel, Error>) in
+    // login api call
+    func callLoginApi() {
+        UserService.shared.loginRequest(with:  URL(string: Constants.ApiPath.loginUrl)!, parameters: ["email":"shivakumar.jagalur@ril.com","password":"Ril@1235","type": "supervisor"]) { (result : Result<LoginModel, Error>) in
                 switch result {
                     case .success(let loginResponse):
                         self.navigateToHomeScreen(usgToken: loginResponse.ugstoken)

@@ -12,7 +12,10 @@ class Constants {
     
     struct ApiPath {
        static let BaseUrl = "https://sit.boapi.cats.jvts.net/"
-       static let loginUrl = BaseUrl + "accounts/api/users/login?isResponseDataAsUser=true&isPopulateGroup=true&isPopulateGroupUsers=true&isPopulateUserDevices=true&isPopulateUserDevicesAsWearableUsers=true"
+       static let userApisUrl = "accounts/api/users/"
+       static let loginUrl = BaseUrl + userApisUrl + "login?isResponseDataAsUser=true&isPopulateGroup=true&isPopulateGroupUsers=true&isPopulateUserDevices=true&isPopulateUserDevicesAsWearableUsers=true"
+       static let addDeviceUrl = "/devices/verifyandassign?ugs_token="
+    
         
     }
     
@@ -23,7 +26,12 @@ class Constants {
         static let otp = "Please enter otp"
     }
     
-    struct errorMessage {
+    struct AddDeviceConstants {
+          static let name = "Please enter name"
+          static let imei = "Please enter valid IMEI number"
+      }
+    
+    struct ErrorMessage {
         static let unauthorized = "Please check your login credentails"
         static let somethingwentwrong = "Something went wrong"
     }

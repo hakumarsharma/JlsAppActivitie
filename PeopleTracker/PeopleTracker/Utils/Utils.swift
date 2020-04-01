@@ -12,11 +12,11 @@ class Utils {
     static let shared = Utils()
     func handleError(error : NetworkManager.ErrorType) -> String {
         if error == NetworkManager.ErrorType.Unauthorized {
-            return Constants.errorMessage.unauthorized
+            return Constants.ErrorMessage.unauthorized
         } else if (error == NetworkManager.ErrorType.SomethingWentWrong) {
-            return Constants.errorMessage.somethingwentwrong
+            return Constants.ErrorMessage.somethingwentwrong
         } else {
-            return Constants.errorMessage.somethingwentwrong
+            return Constants.ErrorMessage.somethingwentwrong
         }
     }
 }
