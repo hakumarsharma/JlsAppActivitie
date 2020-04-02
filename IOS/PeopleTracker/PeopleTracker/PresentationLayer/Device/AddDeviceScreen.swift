@@ -27,7 +27,7 @@ class AddDeviceScreen: UIViewController {
             self.ShowALert(title: Constants.AddDeviceConstants.name)
             return
         }
-        if phoneNumberTxt.text?.count == 0 || !(phoneNumberTxt.text?.isValidPhone ?? false){
+        if phoneNumberTxt.text?.count == 0 || !(phoneNumberTxt.text?.isValidPhone ?? true){
             self.ShowALert(title: Constants.LoginScreenConstants.phoneNumber)
             return
         }
@@ -36,15 +36,27 @@ class AddDeviceScreen: UIViewController {
             return
         }
         
+        self.callAddDeviceApi()
     }
     
+    // API to add device details
     func callAddDeviceApi() {
         let deviceURL = URL(string: Constants.ApiPath.BaseUrl + Constants.ApiPath.userApisUrl + userid + Constants.ApiPath.addDeviceUrl + ugstoken)!
-        let deviceDetails : [String : String] = ["mac": imeiTxt.text ?? "","identifier": "imei","name": nameTxt.text ?? "","phone": phoneNumberTxt.text ?? ""]
+        let deviceDetails : [[String : String]] = [["mac": imeiTxt.text ?? "","identifier": "imei","name": nameTxt.text ?? "","phone": phoneNumberTxt.text ?? ""]]
         let flagDetails : [String : Bool] = ["isSkipAddDeviceToGroup" : false]
-        let deviceParams :  [String : Any] = ["devices" : [{deviceDetails}], "flags": flagDetails]
+        let deviceParams :  [String : Any] = ["devices" : deviceDetails, "flags": flagDetails]
         DeviceService.shared.addDevice(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
-            
-        }
+            switch result {
+                    case .success(let deviceResponse):
+                          print(deviceResponse)
+                          self.navigationController?.popViewController(animated: true)
+                    case .failure(let error):
+                        if type(of: error) == NetworkManager.ErrorType.self {
+                            self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                        } else {
+                            self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
     }
 }

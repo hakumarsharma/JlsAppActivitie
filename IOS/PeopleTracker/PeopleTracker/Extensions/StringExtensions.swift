@@ -17,7 +17,7 @@ extension String {
    }
     // To validate phone number
    var isValidPhone: Bool {
-      let regularExpressionForPhone = "^\\d{3}-\\d{3}-\\d{4}$"
+      let regularExpressionForPhone = "^[6-9][0-9]{9}$"
       let testPhone = NSPredicate(format:"SELF MATCHES %@", regularExpressionForPhone)
       return testPhone.evaluate(with: self)
    }
