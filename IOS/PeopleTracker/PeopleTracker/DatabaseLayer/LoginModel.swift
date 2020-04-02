@@ -10,11 +10,11 @@ import Foundation
 
 public struct LoginModel : Codable {
     
-    let ugstoken: String
-    let ugstokenexpiry: Double
-    let user : User?
+    let ugstoken        : String
+    let ugstokenexpiry  : Double
+    let user            : User?
     
-    private enum CodingKeys: String, CodingKey {
+    private enum CodingKeys : String, CodingKey {
         case ugstoken = "ugs_token", ugstokenexpiry = "ugs_token_expiry",user
     }
     
@@ -22,21 +22,21 @@ public struct LoginModel : Codable {
 
 struct User : Codable {
     
-    let userId : String
-    let email : String
-    let usertype : String
-    let name : String
-    let phone : String
+    let userId        : String
+    let email         : String
+    let usertype      : String
+    let name          : String
+    let phone         : String
     let wearableUsers : [WearableUsers]?
     
-    private enum CodingKeys: String, CodingKey {
+    private enum CodingKeys : String, CodingKey {
         case userId = "_id", email, usertype = "type", name, phone,wearableUsers
     }
 }
 struct WearableUsers : Codable {
     
     let wearableDeviceId : String
-    let deviceId : String
+    let deviceId         : String
     
     private enum CodingKeys: String, CodingKey {
         case wearableDeviceId = "_id", deviceId = "deviceId"

@@ -43,21 +43,6 @@ class AddDeviceScreen: UIViewController {
         let deviceDetails : [String : String] = ["mac": imeiTxt.text ?? "","identifier": "imei","name": nameTxt.text ?? "","phone": phoneNumberTxt.text ?? ""]
         let flagDetails : [String : Bool] = ["isSkipAddDeviceToGroup" : false]
         let deviceParams :  [String : Any] = ["devices" : [{deviceDetails}], "flags": flagDetails]
-        
-//        {
-//            "devices":
-//                {
-//                    "mac": "124644113",
-//                    "identifier": "imei",
-//                    "name": "eeedrrfty4023",
-//                    "phone": "9090909090",
-//
-//                }
-//            ],
-//            "flags": {
-//                "isSkipAddDeviceToGroup": false
-//            }
-//        }
         DeviceService.shared.addDevice(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
             
         }

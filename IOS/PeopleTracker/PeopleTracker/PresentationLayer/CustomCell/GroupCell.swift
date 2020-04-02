@@ -8,6 +8,6 @@
 
 import UIKit
 class GroupCell: UITableViewCell {
-    @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var phoneNumber: UILabel!
+    @IBOutlet weak var name        : UILabel!
+    @IBOutlet weak var phoneNumber : UILabel!
 }

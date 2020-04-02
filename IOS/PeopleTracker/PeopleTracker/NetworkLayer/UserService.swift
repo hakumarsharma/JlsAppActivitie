@@ -13,7 +13,7 @@ class UserService {
     private init() {}
     
     // Api to check login data
-    func loginRequest(with loginurl: URL, parameters : [String : Any], completion: @escaping (Result<LoginModel, Error>) -> Void) -> Void {
+    func loginRequest(with loginurl: URL, parameters: [String : Any], completion: @escaping (Result<LoginModel, Error>) -> Void) -> Void {
  
         let networkManager = NetworkManager.init(url: loginurl)
         let request = networkManager.buildRequest(method: NetworkManager.Method.post, parameters: parameters)

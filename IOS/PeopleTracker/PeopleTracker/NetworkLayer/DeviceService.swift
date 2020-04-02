@@ -13,9 +13,8 @@ class DeviceService {
     public static let shared = DeviceService()
     private init() {}
     
-    
     // Api to add device
-    func addDevice(with deviceUrl : URL, parameters : [String : Any], completion: @escaping(Result<DeviceModel, Error>) -> Void) -> Void {
+    func addDevice(with deviceUrl: URL, parameters: [String : Any], completion: @escaping(Result<DeviceModel, Error>) -> Void) -> Void {
         let networkManager = NetworkManager.init(url: deviceUrl)
         let request = networkManager.buildRequest(method: NetworkManager.Method.post, parameters: parameters)
         networkManager.sendRequest(request: request) { (result) in

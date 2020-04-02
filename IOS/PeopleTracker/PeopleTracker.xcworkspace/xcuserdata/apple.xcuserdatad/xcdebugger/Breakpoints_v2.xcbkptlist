@@ -18,38 +18,6 @@
             endingLineNumber = "22"
             landmarkName = "loginRequest(with:parameters:completion:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "F495C8B0-501B-4E04-85D0-FF32322314C8 - b29c95347beb5af8"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (PeopleTracker.NetworkManager.QueryResult&lt;(__C.NSURLResponse, Swift.Optional&lt;Foundation.Data&gt;)&gt;) -&gt; () in PeopleTracker.UserServiceAPI.loginRequest(with: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Result&lt;PeopleTracker.LoginModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "PeopleTracker"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/PeopleTracker/PeopleTracker/NetworkLayer/UserServiceAPI.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "22"
-                  endingLineNumber = "22"
-                  offsetFromSymbolStart = "432">
-               </Location>
-               <Location
-                  uuid = "F495C8B0-501B-4E04-85D0-FF32322314C8 - b29c95347beb5af8"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (PeopleTracker.NetworkManager.QueryResult&lt;(__C.NSURLResponse, Swift.Optional&lt;Foundation.Data&gt;)&gt;) -&gt; () in PeopleTracker.UserServiceAPI.loginRequest(with: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Result&lt;PeopleTracker.LoginModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "PeopleTracker"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/PeopleTracker/PeopleTracker/NetworkLayer/UserServiceAPI.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "22"
-                  endingLineNumber = "22"
-                  offsetFromSymbolStart = "468">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -65,86 +33,6 @@
             startingLineNumber = "36"
             endingLineNumber = "36"
             landmarkName = "loginRequest(with:parameters:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "93D289A5-FE29-4E3D-9DC1-CD58B8A4C9F3"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleTracker/NetworkLayer/NetowrkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
-            landmarkName = "sendRequest(request:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A3B00F3E-CCB9-4F63-805A-44A32CC0889C"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleTracker/NetworkLayer/NetowrkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
-            landmarkName = "sendRequest(request:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A86800F2-22B4-49F7-AA1F-945FD9700CBC"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleTracker/NetworkLayer/NetowrkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "sendRequest(request:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "31DB3558-9A3A-4369-B276-648455467955"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleTracker/NetworkLayer/NetowrkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
-            landmarkName = "sendRequest(request:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6620ADDB-FB7F-4ACB-A62E-348E390EA4DD"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleTracker/NetworkLayer/NetowrkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
-            landmarkName = "sendRequest(request:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

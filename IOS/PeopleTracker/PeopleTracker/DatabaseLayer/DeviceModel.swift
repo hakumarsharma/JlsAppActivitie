@@ -10,7 +10,7 @@ import Foundation
 
 public struct DeviceModel : Codable {
     
-    let code : Int
+    let code    : Int
     let message : String
     
     private enum CodingKeys : String, CodingKey {

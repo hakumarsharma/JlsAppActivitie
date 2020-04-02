@@ -11,9 +11,9 @@ import Foundation
 struct NetworkManager {
 
    enum  Method : String {
-        case get = "GET"
-        case post = "POST"
-        case put = "PUT"
+        case get    = "GET"
+        case post   = "POST"
+        case put    = "PUT"
         case delete = "DELETE"
         
         var acceptsBody : Bool {
@@ -37,6 +37,7 @@ struct NetworkManager {
         case Unauthorized                   = 401
         case Forbidden                      = 403
         case NotFound                       = 404
+        case DeviceAlreadyAssigned          = 409
     }
 
 
