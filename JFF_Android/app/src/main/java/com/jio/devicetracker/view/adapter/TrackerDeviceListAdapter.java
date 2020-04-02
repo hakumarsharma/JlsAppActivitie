@@ -76,16 +76,17 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             holder.mIconImage.setImageResource(R.drawable.ic_user);
         } else if(mData.get(position).getDeviceType().equalsIgnoreCase("Pet Tracker")) {
             holder.mIconImage.setImageResource(R.drawable.ic_pet);
+            holder.mConsentStatus.setVisibility(View.INVISIBLE);
         }
         // holder.mDelete.setTransformationMethod(null);
-        //holder.mEdit.setTransformationMethod(null);
+        // holder.mEdit.setTransformationMethod(null);
         holder.mConsentStatus.setTransformationMethod(null);
         if (mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equalsIgnoreCase(Constant.CONSENT_APPROVED_STATUS)) {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
             holder.mConsentStatus.setText(Constant.CONSENT_APPROVED_STATUS);
             holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved,0,0,0);
             holder.mConsentStatus.setEnabled(false);
-        } else if (mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equals(Constant.CONSENT_PENDING)) {
+        } else if(mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equals(Constant.CONSENT_PENDING)) {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
             holder.mConsentStatus.setText(Constant.CONSENT_PENDING);
             holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending,0,0,0);

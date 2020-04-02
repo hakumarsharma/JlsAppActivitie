@@ -40,6 +40,15 @@ public class HomeActivityListData {
     private String deviceType;
     private String groupName;
     public int isCreated;
+    private String deviceId;
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
 
     public int getIsCreated() {
         return isCreated;

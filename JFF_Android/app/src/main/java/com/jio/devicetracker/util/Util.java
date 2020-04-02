@@ -262,6 +262,13 @@ public final class Util extends AppCompatActivity {
         return pat.matcher(mobile).matches();
     }
 
+    // Mobile Number validation through RegEx
+    public static boolean isValidMobileNumberForPet(String mobile) {
+        String mobileNumber = "^[0-9]{13}$";
+        Pattern pat = Pattern.compile(mobileNumber);
+        return pat.matcher(mobile).matches();
+    }
+
     public static void setLocationFlagStatus(Context mContext, boolean flag) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.LOCATION_FLAG_STATUS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedAutologin.edit();

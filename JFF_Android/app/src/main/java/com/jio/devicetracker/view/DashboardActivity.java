@@ -61,6 +61,8 @@ import android.telephony.SignalStrength;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -107,7 +109,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Implementation of Dashboard Screen to show the trackee list and hamburger menu.
  */
-public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
+public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView listView;
     private static String userToken = null;
@@ -125,6 +127,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private Locale locale = Locale.ENGLISH;
     private static int batteryLevel;
     private static FusedLocationProviderClient client;
+    private DrawerLayout drawerLayout;
     private static Double latitude;
     private static Double longitude;
     private static int signalStrengthValue;
@@ -150,7 +153,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         checkPermission();
         getAdminDetail();
         setConstaint();
-        //startService();
+//        startService();
         registerReceiver();
         deepLinkingURICheck();
         addDataInHomeScreen();
@@ -243,6 +246,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         client = LocationServices.getFusedLocationProviderClient(this);
+        new Thread(new SendLocation()).start();
         if (specificGroupMemberData == null) {
             specificGroupMemberData = new ArrayList<>();
         }
@@ -256,36 +260,34 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         View header = navigationView.getHeaderView(0);
         user_account_name = header.findViewById(R.id.user_account_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.profile:
-                        gotoProfileActivity();
-                        break;
-                    case R.id.settings:
-                        goToRefreshIntervalSettingActivity();
-                        break;
-                    case R.id.helpPrivacy:
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.profile:
+                    gotoProfileActivity();
+                    break;
+                case R.id.settings:
+                    goToRefreshIntervalSettingActivity();
+                    break;
+                case R.id.helpPrivacy:
 //                        Toast.makeText(DashboardActivity.this, "Help & Support", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.activeSessions:
-                        gotoActiveSessionActivity();
-                        break;
-                    /*case R.id.trackerListMenu:
-                        gotoTrackerListScreen();
-                        break;*/
-                    case R.id.logout:
-                        updateLogoutData();
-                        break;
-                    default:
-                        return true;
-                }
-                return true;
+                    break;
+                case R.id.activeSessions:
+                    gotoActiveSessionActivity();
+                    break;
+                case R.id.home:
+                    drawerLayout.closeDrawer((Gravity.LEFT));
+                    break;
+                case R.id.logout:
+                    updateLogoutData();
+                    break;
+                default:
+                    return true;
             }
+            return true;
         });
     }
+
 
     private void gotoActiveSessionActivity() {
         Intent intent = new Intent(this, ActiveSessionActivity.class);
@@ -315,7 +317,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         fabAddDevice.setOnClickListener(this);
         fabAddContact.setOnClickListener(this);
         setSupportActionBar(toolbar);
-        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+        drawerLayout = findViewById(R.id.drawerLayout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.Open, R.string.Close);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -327,7 +329,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(new Intent(this, RefreshIntervalSettingActivity.class));
     }
 
-    /*private void startService() {
+   /* private void startService() {
         Intent serviceIntent = new Intent(this, SendLocationService.class);
         serviceIntent.putExtra("inputExtra", getString(R.string.notification_subtitle));
         ContextCompat.startForegroundService(this, serviceIntent);
@@ -429,7 +431,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         getLocation();
         String message = "{\"imi\":\"" + Util.imeiNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                 "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
-        String topic = Constant.MQTT_CIT_TOPIC;
+        String topic = "jioiot/svcd/jiophone/" + Util.imeiNumber + "/uc/fwd/locinfo";
+        Log.d("Topic --> ", topic);
+        Log.d("Mesage --> ", message);
+        Log.d("IMEI Number --> ", Util.imeiNumber);
+        Log.d("CIT User Name --> ", Constant.MQTT_CIT_USER_NAME);
+        Log.d("CIT Password --> ", Constant.MQTT_CIT_PASSWORD);
+        Log.d("CIT URL --> ", Constant.MQTT_CIT_URL);
         new MQTTManager().publishMessage(topic, message);
     }
 
@@ -546,35 +554,53 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         if (selectedData.isEmpty()) {
             Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
         } else {
-            Util.getInstance().showProgressBarDialog(this);
-            AdminLoginData adminLoginDetail = mDbManager.getAdminLoginDetail();
+            /*AdminLoginData adminLoginDetail = mDbManager.getAdminLoginDetail();
             List<String> data = new ArrayList<>();
-            data.add(adminLoginDetail.getUserId());
-            SearchDeviceStatusData searchDeviceStatusData = new SearchDeviceStatusData();
+            data.add(adminLoginDetail.getUserId());*/
+
+            /*SearchDeviceStatusData searchDeviceStatusData = new SearchDeviceStatusData();
             SearchDeviceStatusData.Device device = searchDeviceStatusData.new Device();
             device.setUsersAssigned(data);
-            searchDeviceStatusData.setDevice(device);
+            searchDeviceStatusData.setDevice(device);*/
 
-            for (MultipleselectData multipleselectData : selectedData) {
-                Map<Double, Double> latLngMap = new HashMap<>();
-                if (multipleselectData.getLat() != null) {
-                    latLngMap.put(Double.valueOf(multipleselectData.getLat()),
-                            Double.valueOf(multipleselectData.getLng()));
-                    namingMap.put(multipleselectData.getName(), latLngMap);
-
+            Util.getInstance().showProgressBarDialog(this);
+            List<HomeActivityListData> hmActivityListData = mDbManager.getAlldata(adminEmail);
+            boolean isConsentApproved = false;
+            for (HomeActivityListData homeActivityListData : hmActivityListData) {
+                for (MultipleselectData multipleselectData : selectedData) {
+                    if(multipleselectData.getPhone().equalsIgnoreCase(homeActivityListData.getPhoneNumber()) && homeActivityListData.getDeviceType().equalsIgnoreCase("People Tracker")) {
+                        if(homeActivityListData.getConsentStaus().equalsIgnoreCase("") || homeActivityListData.getConsentStaus().equalsIgnoreCase(Constant.CONSENT_PENDING) || homeActivityListData.getConsentStaus().equalsIgnoreCase(Constant.REQUEST_CONSENT)) {
+                            Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED, Constant.ALERT_TITLE, this);
+                            Util.progressDialog.dismiss();
+                            return;
+                        }
+                    }
+                    if (homeActivityListData.getConsentStaus().equalsIgnoreCase(Constant.CONSENT_APPROVED_STATUS) &&
+                            multipleselectData.getPhone().equalsIgnoreCase(homeActivityListData.getPhoneNumber()) ||
+                            multipleselectData.getPhone().equalsIgnoreCase(homeActivityListData.getPhoneNumber()) && homeActivityListData.getDeviceType().equalsIgnoreCase("Pet Tracker")) {
+                        isConsentApproved = true;
+                    }
                 }
             }
-            Util.progressDialog.dismiss();
-            if (!namingMap.isEmpty()) {
-                goToMapActivity();
+
+            if (isConsentApproved) {
+                for (MultipleselectData multipleselectData : selectedData) {
+                    Map<Double, Double> latLngMap = new HashMap<>();
+                    if (multipleselectData.getLat() != null) {
+                        latLngMap.put(Double.valueOf(multipleselectData.getLat()),
+                                Double.valueOf(multipleselectData.getLng()));
+                        namingMap.put(multipleselectData.getName(), latLngMap);
+                    }
+                }
+                Util.progressDialog.dismiss();
+                if (!namingMap.isEmpty()) {
+                    goToMapActivity();
+                }
+            } else {
+                Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED, Constant.ALERT_TITLE, this);
+                Util.progressDialog.dismiss();
             }
-
         }
-    }
-
-    @Override
-    public void messageReceived(String message, String phoneNum) {
-
     }
 
     /****** Search device status response success listener **************/
@@ -749,13 +775,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     System.out.println("Permission not granted");
                 }
             }
-            if (LoginActivity.isAccessCoarsePermissionGranted) {
-                List<CellInfo> cellInfoList = mTelephonyManager.getAllCellInfo();
-                if (cellInfoList != null) {
-                    for (CellInfo cellInfo : cellInfoList) {
-                        if (cellInfo instanceof CellInfoLte) {
-                            signalStrengthValue = ((CellInfoLte) cellInfo).getCellSignalStrength().getDbm();
-                        }
+            List<CellInfo> cellInfoList = mTelephonyManager.getAllCellInfo();
+            if (cellInfoList != null) {
+                for (CellInfo cellInfo : cellInfoList) {
+                    if (cellInfo instanceof CellInfoLte) {
+                        signalStrengthValue = ((CellInfoLte) cellInfo).getCellSignalStrength().getDbm();
                     }
                 }
             }
@@ -812,10 +836,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public class SendLocation implements Runnable {
         public void run() {
             while (true) {
-                makeMQTTConnection();
-                publishMessage();
                 try {
-                    Thread.sleep(10000);
+                    makeMQTTConnection();
+                    Thread.sleep(15000);
+                    publishMessage();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

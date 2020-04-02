@@ -49,6 +49,18 @@
             android:layout_below="@id/deviceName"
             android:inputType="phone"/>
 
+        <Button
+            android:id="@+id/deviceTypeTextView"
+            android:layout_width="180dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/contactDetailIMEI"
+            android:layout_marginTop="30dp"
+            android:text="@string/device_type"
+            android:clickable="false"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textSize="14dp" />
+
         <Spinner
             android:id="@+id/deviceTypeSpinner"
             android:layout_width="fill_parent"
@@ -56,6 +68,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="30dp"
             android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/deviceTypeTextView"
             android:layout_below="@id/contactDetailIMEI"
             android:entries="@array/device_type_array"/>
 

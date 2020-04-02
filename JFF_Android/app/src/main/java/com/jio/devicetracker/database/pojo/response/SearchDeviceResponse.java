@@ -62,6 +62,16 @@ public class SearchDeviceResponse implements Serializable {
         private String phoneNumber;
         @SerializedName("imei")
         private String imeiNumber;
+        @SerializedName("_id")
+        private String deviceId;
+
+        public String getDeviceId() {
+            return deviceId;
+        }
+
+        public void setDeviceId(String deviceId) {
+            this.deviceId = deviceId;
+        }
 
         public String getImeiNumber() {
             return imeiNumber;

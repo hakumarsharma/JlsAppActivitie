@@ -12,10 +12,11 @@
     <string name="pagerindicater">&amp;#9673;</string>
     <string name="Open">Open</string>
     <string name="Close">Close</string>
-    <string name="instruction">* \t  Click on + icon to add details of a person or a device to be tracked. \n* \t Select Add Device or Add Person accordingly. Device details may be entered manually or using QR code scanner. Person details may be addded manually or by selecting the contact from contacts. After adding the device/person, click on \"Request consent\" to obtain consent approval from the device/person. \n* \t After consent approval is received from the device/person over SMS, select the device/person from the  list and click on \"Track\" to start tracking.</string>
+    <string name="instruction">* \t  Click on + icon to add details of device (associated with a person/pet), or to create a group of devices to be tracked. \n* \t Select Add Device or Add Person accordingly. \n* \t Device details may be entered manually or using QR code scanner. Person details may be addded manually or by selecting the contact from contacts. After adding the device/person/group, click on \"Request consent\" to obtain consent approval from the device/person. \n* \t After consent approval is received from the device/person over SMS, select the device/person from the  list and click on \"Track\" to start tracking.</string>
     <string name="message">Are you sure, do you want the user track your location.</string>
     <string name="termcondition">Jio Friends and Family helps you to track the Jio devices which has data in portal. This application will display the location information completely along with address details and pin drop of location on map to identify the details easily.\n \nDevice which has the application will always send current location details and this can be done once the location permissions are accepted when you launch the application.\n \nTo track device we need to take approval from the person who is using the device once that is approved then we can track the device.\n \nLocation permissions and SMS permissions are mandatory to use this application.\n \nPlease agree the terms and conditions.</string>
     <string name="refresh_inteval_textview">Location refresh interval</string>
+    <string name="device_type">Device Type</string>
     <string name="login_heading"><b>Login :</b></string>
     <string name="login_help">It is mandatory for the user to login by using the credentials used during registration. Without login, the user will not be able to use the application.</string>
     <string name="registration_heading"><b>Registration :</b></string>
@@ -29,8 +30,8 @@
     <string name="foreground_service_channel">Foreground Service Channel</string>
     <string name="notification_subtitle">Track friends and family</string>
     <string name="customintent">custom-intent</string>
-    <string name="yesjff">YesJFF</string>
-    <string name="nojff">NoJFF</string>
+    <string name="yesjff">YesPeopleTracker</string>
+    <string name="nojff">NoPeopleTracker</string>
     <string name="channel_name">channel_name</string>
     <string name="channel_description">channel_description</string>
     <string name="device_imei">IMEI*</string>
@@ -48,10 +49,10 @@
     <string name="privacy_policy">
         <![CDATA[
 <p><strong>This document is an electronic record in terms of Information Technology&nbsp;Act, 2000 and rules there under as applicable and the amended provisions pertaining to electronic records in various statutes as amended by the</strong>&nbsp;<strong>Information Technology Act, 2000. This electronic record is generated</strong>&nbsp;<strong>by a computer system and does not require any physical or digital</strong>&nbsp;<strong>signatures.</strong></p>
-<p>For the purpose of these Privacy policies, wherever the context so requires&nbsp;<strong>"You"</strong>&nbsp;or&nbsp;<strong>"User"</strong>&nbsp;shall mean any natural or legal person who uses our <strong>Jio Friends And Family app</strong> to track location information of other users of the app with a mutual consent. The term&nbsp;<strong>"We"</strong>,&nbsp;<strong>"Us"</strong>,&nbsp;<strong>"Our"</strong>&nbsp;shall mean Reliance Jio Infocomm Limited.</p>
+<p>For the purpose of these Privacy policies, wherever the context so requires&nbsp;<strong>"You"</strong>&nbsp;or&nbsp;<strong>"User"</strong>&nbsp;shall mean any natural or legal person who uses our <strong>People Tracker app</strong> to track location information of other users of the app with a mutual consent. The term&nbsp;<strong>"We"</strong>,&nbsp;<strong>"Us"</strong>,&nbsp;<strong>"Our"</strong>&nbsp;shall mean Reliance Jio Infocomm Limited.</p>
 <p>&nbsp;</p>
 <p><strong><u>Definitions</u></strong></p>
-<p>&ldquo;<strong>App(s)</strong>&rdquo; shall mean applications for mobile and includes Jio Friend And Family App.</p>
+<p>&ldquo;<strong>App(s)</strong>&rdquo; shall mean applications for mobile and includes People Tracker App.</p>
 <p>&ldquo;<strong>Device(s)</strong>&rdquo; shall mean a desktop computer, laptop computer, tablet, mobile phone, smart watch or such other electronic equipment.</p>
 <p>&ldquo;<strong>Force Majeure Event</strong>&rdquo; shall mean any event that is beyond our reasonable control and shall include, without limitation, sabotage, fire, flood, explosion, acts of God, civil commotion, strikes or industrial action or any kind, riots, insurrection, war, acts of government, computer hacking, unauthorized access to your mobile or storage device, crashes, breach of security and encryption.</p>
 <p>&ldquo;<strong>Personal Information</strong>&rdquo; refers to any information that identifies or can be used to identify, contact or locate the person, to whom such information pertains including, but not limited to, name, address, phone number and email address disclosed by you in relation to the services available on the Platform.</p>

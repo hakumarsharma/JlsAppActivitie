@@ -62,6 +62,8 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private long insertRowid;
     private String deviceType;
     private boolean isDataMatched = false;
+    private static String numberComingFromContactList = null;
+    private static String nameComingFromContactList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             scanner.setVisibility(View.VISIBLE);
             scanner.setOnClickListener(this);
         }
+
+        if(numberComingFromContactList != "" && nameComingFromContactList != "") {
+            mName.setText(nameComingFromContactList);
+            mNumber.setText(numberComingFromContactList);
+        }
     }
 
     private void setNameNumberImei(String qrValue) {
@@ -117,10 +124,25 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                 mName.setError(Constant.NAME_EMPTY);
                 return;
             }
-            if (!Util.isValidMobileNumber(mNumber.getText().toString().trim())) {
-                mNumber.setError(Constant.MOBILENUMBER_VALIDATION);
-                return;
+            String mPhoneNumber = mNumber.getText().toString().trim();
+            if(deviceType.equalsIgnoreCase("People Tracker")) {
+                if(Util.isValidMobileNumberForPet(mPhoneNumber)) {
+                    mNumber.setError(Constant.PEOPLE_NUMBER_VALIDATION_PET_NUMBER_ENTERED);
+                    return;
+                } else if(!Util.isValidMobileNumber(mPhoneNumber)) {
+                    mNumber.setError(Constant.MOBILENUMBER_VALIDATION);
+                    return;
+                }
+            } else if(deviceType.equalsIgnoreCase("Pet Tracker")) {
+                if(Util.isValidMobileNumber(mPhoneNumber)) {
+                    mNumber.setError(Constant.PET_TRACKER_VALIDATION_PEOPLE_NUMBER_ENTERE);
+                    return;
+                }else if(!Util.isValidMobileNumberForPet(mPhoneNumber)) {
+                    mNumber.setError(Constant.PET_NUMBER_VALIDATION);
+                    return;
+                }
             }
+
             if(!Util.isValidIMEINumber(mIMEINumber.getText().toString().trim())) {
                 mIMEINumber.setError(Constant.IMEI_VALIDATION);
                 return;
@@ -132,15 +154,10 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                 } else if(isDataMatched && DashboardActivity.isComingFromGroupList == false) {
                     mDbManager.updateIsGroupMember(0, mIMEINumber.getText().toString().trim(), mName.getText().toString());
                     gotoDashboardActivity();
-                    /*setListDataOnHomeScreen(mName.getText().toString().trim(), mNumber.getText().toString().trim());
-                    if (insertRowid > 0) {
-                        gotoDashboardActivity();
-                    } else {
-                        Util.alertDilogBox(Constant.DUPLICATE_NUMBER, Constant.ALERT_TITLE, this);
-                        insertRowid = 0;
-                    }*/
                 }
             }
+            mNumber.setError(null);
+            mIMEINumber.setError(number);
         }
 
         if (v.getId() == R.id.qrScanner) {
@@ -165,7 +182,6 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String number = null;
 
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
@@ -181,10 +197,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
                             null, null);
                     phones.moveToFirst();
-                    number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    numberComingFromContactList = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    nameComingFromContactList = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 }
-
-                if (DashboardActivity.isComingFromGroupList) {
+                startActivity(new Intent(this, ContactDetailsActivity.class));
+                /*if (DashboardActivity.isComingFromGroupList) {
                     setGroupData(DashboardActivity.groupName, cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)), number);
                     gotoGroupListActivity();
                 } else {
@@ -194,7 +211,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     } else {
                         Util.alertDilogBox(Constant.DUPLICATE_NUMBER, Constant.ALERT_TITLE, this);
                     }
-                }
+                }*/
             }
         }
     }

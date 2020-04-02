@@ -66,6 +66,10 @@ public class Constant {
     public static final String REGISTRATION_TITLE = "Registration";
     public static final String REGISTRATION = "registration";
     public static final String NAME_VALIDATION = "Please enter your name";
+    public static final String INVALID_OTP = "Invalid OTP Provided";
+    public static final String OTP_SENT = "OTP sent.";
+    public static final String SMS_SEND_FAILED = "SMS failed, please try again.";
+    public static final String OTP_MESSAGE = "PeopleTracker OTP :";
     public static final String PHONE_VALIDATION = "Phone number cannot be left empty!";
     public static final String MOBILE_NETWORKCHECK = "Please use your mobile data";
     public static final String JIO_NUMBER = "Please use Jio number";
@@ -95,14 +99,17 @@ public class Constant {
     public static final String EMAIL_LOCKED = "Account is locked";
     public static final String VALID_USER = "Please enter valid user";
     public static final String PASSWORD_VALIDATION2 = "Password must have a minimum of 8 characters and a maximum of 16 characters. Also, must contain atleast one lowercase alphabet, one uppercase alphabet, one numeric and one special character";
-    public static final String YESJFF_SMS = "Please click on below link to know the consent response https://www.jff.com/YesJFF?data=";
-    public static final String NOJFF_SMS = "Please click on below link to know the consent response https://www.jff.com/NoJFF?data=";
+    public static final String YESJFF_SMS = "Please click on below link to know the consent response https://peopletracker/YesPeopleTracker?data=";
+    public static final String NOJFF_SMS = "Please click on below link to know the consent response https://peopletracker/NoPeopleTracker?data=";
 
 
     // New Device Activity Constants
     public static final String ADD_DEVICE_TITLE = "Add";
     public static final String IMEI_VALIDATION = "Enter the 15 digit IMEI number";
     public static final String MOBILENUMBER_VALIDATION = "Enter the valid mobile number";
+    public static final String PET_NUMBER_VALIDATION = "Please enter the valid device number of pet";
+    public static final String PEOPLE_NUMBER_VALIDATION_PET_NUMBER_ENTERED = "Please enter the valid mobile number, Select Pet Tracker from drop down if you want to track any pet";
+    public static final String PET_TRACKER_VALIDATION_PEOPLE_NUMBER_ENTERE = "Please enter the valid device number of pet, if you want to track people please select People Tracker from dropdown";
     public static final String REGMOBILENUMBER_VALIDATION = "You can't add registered mobile number";
     public static final String CHECK_DETAILS = "Please Enter the details";
     public static final String DUPLICATE_NUMBER = "This number is already added";
@@ -145,7 +152,7 @@ public class Constant {
 
     //Privacy Policy
 
-    public static final String TERM_AND_CONDITION_ALERT = "Please accept terms and conditions to proceed with the application";
+    public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
     public static final String TERM_AND_CONDITION_STATUS_MSG = "Please accept terms and conditions and login then again click on the link which is given in message";
     public static final String NOT_REGISTERED_MSG = "User is not registered";
     public static final String INVALID_TOKEN_MSG = "Invalid token please try again";
@@ -189,7 +196,7 @@ public class Constant {
     public static final String REGISTARTION_FAILED_MESSAGE = "Registration is failed";
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";
-    public static final String ACTIVE_SESSION_TITLE = "Active Session";
+    public static final String ACTIVE_SESSION_TITLE = "Active Sessions";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";
     public static final String CREATE_GROUP_LIST = "Track";

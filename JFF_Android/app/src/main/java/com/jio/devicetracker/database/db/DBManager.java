@@ -37,6 +37,8 @@ import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.view.DashboardActivity;
+import com.jio.devicetracker.view.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -134,7 +136,7 @@ public class DBManager {
             contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
             contentValue.put(DatabaseHelper.LAT, addData.getLat());
             contentValue.put(DatabaseHelper.LON, addData.getLng());
-            Log.d(addData.getImeiNumber(), "insertInBorqsDB");
+            contentValue.put(DatabaseHelper.DEVICE_ID, addData.getDeviceId());
             mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
         }
     }
@@ -158,7 +160,7 @@ public class DBManager {
         contentValue.put(DatabaseHelper.USER_ID, data.getUser().getId());
         contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, data.getUgsTokenExpiry());
         contentValue.put(DatabaseHelper.EMAIL, data.getUser().getEmail());
-        contentValue.put(DatabaseHelper.USER_NAME, data.getUser().getName());
+        contentValue.put(DatabaseHelper.USER_NAME, LoginActivity.userName);
         return mDatabase.insert(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
     }
 
@@ -266,9 +268,9 @@ public class DBManager {
         List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
         if (email != null) {
-            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM, DatabaseHelper.IS_GROUP_MEMBER};
+            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM, DatabaseHelper.IS_GROUP_MEMBER, DatabaseHelper.DEVICE_ID};
             String[] arg = {email};
-            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.EMAIL + " = ? ", arg, null, null, null);
+            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.EMAIL + " = ? ", arg, null, null, null);
             if (cursor != null && cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
                     HomeActivityListData data = new HomeActivityListData();
@@ -278,6 +280,7 @@ public class DBManager {
                     data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
                     data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
                     data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
+                    data.setDeviceId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_ID)));
                     if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_MEMBER)) > 0) {
                         data.setGroupMember(true);
                     } else {
@@ -364,7 +367,7 @@ public class DBManager {
     public void updatependingConsent(String phoneNumber) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.CONSENT_STATUS, "Pending");
+        values.put(DatabaseHelper.CONSENT_STATUS, Constant.CONSENT_PENDING);
         mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
     }
 

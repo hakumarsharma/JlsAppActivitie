@@ -74,8 +74,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
                 <data
-                    android:host="www.jff.com"
-                    android:pathPrefix="/YesJFF"
+                    android:host="peopletracker"
+                    android:pathPrefix="/YesPeopleTracker"
                     android:scheme="https" />
                 <!-- note that the leading "/" is required for pathPrefix -->
             </intent-filter>
@@ -86,8 +86,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
                 <data
-                    android:host="www.jff.com"
-                    android:pathPrefix="/NoJFF"
+                    android:host="peopletracker"
+                    android:pathPrefix="/NoPeopleTracker"
                     android:scheme="https" />
                 <!-- note that the leading "/" is required for pathPrefix -->
             </intent-filter>

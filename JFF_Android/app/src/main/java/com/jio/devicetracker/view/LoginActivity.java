@@ -64,6 +64,7 @@ import com.jio.devicetracker.database.pojo.response.GetDeviceLocationResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceResponse;
 import com.jio.devicetracker.jiotoken.JioUtils;
+import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
@@ -94,6 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String mbNumber;
     private String imei;
     private String number;
+    public static String userName;
     private DBManager mDbManager;
     private List<SubscriptionInfo> subscriptionInfos;
     public static boolean isReadPhoneStatePermissionGranted = false;
@@ -178,11 +180,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (0 == PackageManager.PERMISSION_GRANTED) {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNo, null, message, null, null);
-            Toast.makeText(getApplicationContext(), "OTP sent.",
+            Toast.makeText(getApplicationContext(), Constant.OTP_SENT,
                     Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getApplicationContext(),
-                    "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+                    Constant.SMS_SEND_FAILED, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -291,7 +293,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void onLoginButtonClick() {
         String compareOtp = String.valueOf(otpGeneratedValue);
         if (!jioMobileOtp.getText().toString().equals(compareOtp)) {
-            jioMobileOtp.setError("Invalid OTP Provided");
+            jioMobileOtp.setError(Constant.INVALID_OTP);
             return;
         }
         if (jioUserNameEditText.length() == 0) {
@@ -300,7 +302,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         String emailId = "Shivakumar.jagalur@ril.com";
         String password = "Ril@12345";
-
+        userName = jioUserNameEditText.getText().toString();
 //        String jioEmailIdText = jioEmailEditText.getText().toString().trim();
 //        String jioPasswordText = jioPasswordEditText.getText().toString().trim();
 
@@ -319,7 +321,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 //        if (jioEmailEditText.length() != 0) {
 //            if (Util.isValidEmailId(jioEmailIdText)) {
-        // makeMQTTConnection();
+        makeMQTTConnection();
         Userdata data = new Userdata();
         data.setEmailId(emailId);
         data.setPassword(password);
@@ -384,7 +386,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void messageReceived(String message, String phoneNum) {
         String[] splitmessage = message.split(":");
-        if (jioMobileOtp != null) {
+        if (message.contains(Constant.OTP_MESSAGE) && jioMobileOtp != null) {
             Log.d("Message", "value" + splitmessage[1]);
             jioMobileOtp.setText(splitmessage[1]);
         }
@@ -393,11 +395,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     /**
      * Creates the MQTT connection with MQTT server
      */
-    /*private void makeMQTTConnection() {
+    private void makeMQTTConnection() {
         MQTTManager mqttManager = new MQTTManager();
         mqttManager.getMQTTClient(this);
         mqttManager.connetMQTT();
-    }*/
+    }
 
     /*public boolean hasPermissions(Context context, String[] permissions) {
 
@@ -450,6 +452,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 consentStatus = mDbManager.getConsentStatusBorqs(devData.getPhoneNumber());
                 data.setConsentStaus(consentStatus);
                 data.setImeiNumber(devData.getImeiNumber());
+                data.setDeviceId(devData.getDeviceId());
                 mlist.add(data);
             }
             Util.setAutologinStatus(LoginActivity.this, true);
@@ -457,7 +460,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mDbManager.insertInBorqsDB(mlist, adminData.getEmail());
             List<HomeActivityListData> getallDeviceData = mDbManager.getAllDevicedata(adminData.getEmail());
             for(HomeActivityListData getDeviceId : getallDeviceData) {
-                RequestHandler.getInstance(getApplicationContext()).handleRequest(new GetDeviceLocationRequest(new SuccessListenerDeviceLocation(), new ErrorListenerDeviceLocation(), logindetailResponse.getUgsToken(), getDeviceId.getPhoneNumber()));
+                RequestHandler.getInstance(getApplicationContext()).handleRequest(new GetDeviceLocationRequest(new SuccessListenerDeviceLocation(), new ErrorListenerDeviceLocation(), logindetailResponse.getUgsToken(), getDeviceId.getDeviceId()));
             }
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
             startActivity(intent);
@@ -543,7 +546,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         adb.setTitle(Constant.ALERT_TITLE);
         adb.setMessage(Constant.TERM_AND_CONDITION_STATUS_MSG);
         adb.setPositiveButton("OK", (dialog, which) -> {
-
             goToSplashnActivity();
         });
 
