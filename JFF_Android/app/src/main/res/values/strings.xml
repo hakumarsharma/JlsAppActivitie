@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">People Tracker</string>
-    <string name="title_activity_maps">Jio Friends and Family</string>
-    <string name="map_name">Jio Friends and Family</string>
+    <string name="title_activity_maps">People Tracker</string>
+    <string name="map_name">People Tracker</string>
     <string name="action_settings">Setting</string>
     <string name="about_us">About Us</string>
     <string name="loginLabel">People Tracker</string>
