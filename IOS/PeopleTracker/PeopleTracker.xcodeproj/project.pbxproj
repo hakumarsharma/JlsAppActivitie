@@ -31,6 +31,7 @@
 		1845D6842428FAFC00584FB4 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D6832428FAFC00584FB4 /* Utils.swift */; };
 		1845D686242A0AE700584FB4 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D685242A0AE700584FB4 /* LoginModel.swift */; };
 		1845D688242A118500584FB4 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
+		186321F024371236001E2E53 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186321EF24371236001E2E53 /* LocationModel.swift */; };
 		18708C422434A14C00940011 /* DeviceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C412434A14C00940011 /* DeviceService.swift */; };
 		18708C442434A5D200940011 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C432434A5D200940011 /* DeviceModel.swift */; };
 		188D44E5242887CE001D8CF0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188D44E4242887CE001D8CF0 /* UserCell.swift */; };
@@ -90,6 +91,7 @@
 		1845D6832428FAFC00584FB4 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		1845D685242A0AE700584FB4 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		1845D687242A118500584FB4 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		186321EF24371236001E2E53 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		18708C412434A14C00940011 /* DeviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceService.swift; sourceTree = "<group>"; };
 		18708C432434A5D200940011 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
 		188D44E4242887CE001D8CF0 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
@@ -210,6 +212,7 @@
 			children = (
 				1845D685242A0AE700584FB4 /* LoginModel.swift */,
 				18708C432434A5D200940011 /* DeviceModel.swift */,
+				186321EF24371236001E2E53 /* LocationModel.swift */,
 			);
 			path = DatabaseLayer;
 			sourceTree = "<group>";
@@ -569,6 +572,7 @@
 				1816ACBD2421ECAF00589CD9 /* PrivacyPolicyScreen.swift in Sources */,
 				1816ACB12421EB2600589CD9 /* AddPersonScreen.swift in Sources */,
 				1845D688242A118500584FB4 /* UserService.swift in Sources */,
+				186321F024371236001E2E53 /* LocationModel.swift in Sources */,
 				1816AC692421E34E00589CD9 /* AppDelegate.swift in Sources */,
 				1816ACB32421EB3200589CD9 /* CreateGroupScreen.swift in Sources */,
 				18708C422434A14C00940011 /* DeviceService.swift in Sources */,

@@ -32,8 +32,8 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
      @IBOutlet weak var groupListTableView: UITableView!
        
        let actionButton = JJFloatingActionButton()
-       let names: [String] = ["Sree", "Maruti", "Harish", "Ashish", "Satish"]
-       let numbers: [String] = ["8088422893", "9019022684", "7200706845", "9949442884", "9848367485"]
+       let names: [String] = ["Sree", "Maruti", "Harish", "Ashish", "Satish"] // TODO: remove once api is integrated
+       let numbers: [String] = ["8088422893", "9019022684", "7200706845", "9949442884", "9848367485"]  // TODO: remove once api is integrated
        
        override func viewDidLoad() {
            super.viewDidLoad()
@@ -72,38 +72,38 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     
     
         @objc func trackButton(sender: UIBarButtonItem) {
-            navigateToMapsScreen()
+            //navigateToMapsScreen()
         }
        
        func navigateToMapsScreen() {
            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-           let mapsViewController = storyBoard.instantiateViewController(withIdentifier: "MapsScreen") as! MapsScreen
+        let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.mapsScreen) as! MapsScreen
            self.navigationController?.pushViewController(mapsViewController, animated: true)
        }
        
        func navigateToAddDeviceScreen(title : String) {
              let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-             let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: "AddDeviceScreen") as! AddDeviceScreen
+        let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.addDeviceScreen) as! AddDeviceScreen
              addDeviceViewController.navtitle = title
              self.navigationController?.pushViewController(addDeviceViewController, animated: true)
          }
        
        func navigateToCreateGroupScreen() {
               let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-              let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: "CreateGroupScreen") as! CreateGroupScreen
+        let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.createGroupScreen) as! CreateGroupScreen
               self.navigationController?.pushViewController(createGroupViewController, animated: true)
           }
        
        // MARK: Show floating button
        func floatingActionButton () {
-           actionButton.addItem(title: "Add Device", image: UIImage(named: "device")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.addDevice, image: UIImage(named: "device")?.withRenderingMode(.alwaysTemplate)) { item in
                // do something
-               self.navigateToAddDeviceScreen(title: "Add Device")
+            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.addDevice)
            }
            
-           actionButton.addItem(title: "Add Person", image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.addPerson, image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
                // do something
-               self.navigateToAddDeviceScreen(title: "Add Person")
+            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.addPerson)
            }
          
            view.addSubview(actionButton)

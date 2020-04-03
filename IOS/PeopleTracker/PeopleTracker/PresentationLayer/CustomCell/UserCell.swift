@@ -20,6 +20,9 @@ class UserCell: UITableViewCell {
     func setData(deviceData : DeviceData){
         self.name.text        = deviceData.name
         self.phoneNumber.text = deviceData.phone
+        self.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkempty"), for: .normal)
+        self.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkmark"), for: .selected)
+             
     }
    
 }
