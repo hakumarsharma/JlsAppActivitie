@@ -43,6 +43,16 @@ class Constants {
         static let cancelButton = "Cancel"
     }
     
+    
+    struct  screenNames {
+        static let loginScreen = "LoginScreen"
+        static let homeScreen = "HomeScreen"
+        static let addDeviceScreen = "AddDeviceScreen"
+        static let createGroupScreen = "CreateGroupScreen"
+        static let groupListScreen = "GroupListScreen"
+        static let mapsScreen = "MapsScreen"
+    }
+    
     struct LoginScreenConstants {
         
         static let userName = "Please enter user name"
@@ -50,11 +60,30 @@ class Constants {
         static let otp = "Please enter otp"
     }
     
+    struct HomScreenConstants {
+        static let select = "Select"
+        static let edit = "Edit"
+        static let delete = "Delete"
+        static let dismiss = "Dismiss"
+        static let addDevice = "Add Device"
+        static let addPerson = "Add Person"
+        static let createGroup = "Create Group"
+        static let deleteDevice = "Are you sure do you want to delete ?"
+        static let requestConsent = "Request Consent"
+        static let consentApproved = "Consent Approved"
+        static let consentPending = "Consent Pending"
+    }
+    
     struct AddDeviceConstants {
           static let name = "Please enter name"
           static let imei = "Please enter valid IMEI number"
           static let deviceAddedSuccessfully = "Device added successfully"
       }
+    
+    struct LocationConstants {
+        static let noLatLong = "Device doesnot have any latitude and longitude"
+        static let locationDetailsNotFound = "Selected Device location details are not available"
+    }
     
     struct ErrorMessage {
         static let unauthorized = "Please check your login credentails"

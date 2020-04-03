@@ -46,7 +46,7 @@ class DeviceService {
     }
 
     // Api to get location details
-      func getDeviceLocationDetails(with deviceUrl: URL, completion: @escaping(Result<DeviceModel, Error>) -> Void) -> Void {
+      func getDeviceLocationDetails(with deviceUrl: URL, completion: @escaping(Result<LocationModel, Error>) -> Void) -> Void {
           let networkManager = NetworkManager.init(url: deviceUrl)
           let request = networkManager.buildRequest(method: NetworkManager.Method.get)
           networkManager.sendRequest(request: request) { (result) in
@@ -58,8 +58,8 @@ class DeviceService {
                               let data = try JSONSerialization.data(withJSONObject: json, options: [])
                               if let string = String(data: data, encoding: String.Encoding.utf8) {
                                   let jsonData = string.data(using: .utf8)!
-                                  let devicedata = try! JSONDecoder().decode(DeviceModel.self, from: jsonData)
-                                  completion(.success(devicedata))
+                                  let locationdata = try! JSONDecoder().decode(LocationModel.self, from: jsonData)
+                                  completion(.success(locationdata))
                               }
                           }
                       }

@@ -31,13 +31,12 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var usersTableView: UITableView!
     
     let actionButton = JJFloatingActionButton()
-    let names: [String] = ["Office Group","Sree", "Maruti", "Harish", "Ashish", "Satish"]
-    let numbers: [String] = ["8188422893","8088422893", "9019022684", "7200706845", "9949442884", "9848367485"]
-    let userIcons : [String] = ["group","user0","user1","user2","user3","user1"]
-    var selectedCell : [Int] = []
+    var selectedCell : [String] = []
+    let names: [String] = ["Office Group","Sree", "Maruti", "Harish", "Ashish", "Satish"] // TODO: remove after api call is integrated
     var userid : String = ""
     var ugsToken : String = ""
     var listOfDevices : [DeviceData] = []
+    var deviceDetails : [DeviceDetails] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,59 +71,77 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         cell.setData(deviceData: deviceDetails)
         cell.userIcon.image = UIImage(named: "user4")
         cell.optionsButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
-        cell.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkempty"), for: .normal)
-        cell.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkmark"), for: .selected)
         cell.checkBoxButton.addTarget(self, action: #selector(checkmarkSelection(sender:)), for: .touchUpInside)
+        cell.checkBoxButton.tag = indexPath.row
         cell.checkBoxButton.isHidden = false
+        // TODO: Remove after grouping and consent mechanisam is integrated
         if indexPath.row == 0{
             cell.checkBoxButton.isHidden = true
             cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
-            cell.requestConsentButton.setTitle("Request Consent", for: .normal)
-        } else if indexPath.row % 2 == 0{
-            cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
-            cell.requestConsentButton.setTitle("Consent Approved", for: .normal)
-        } else {
-            cell.consentstatusColor.backgroundColor = .orange
-            cell.requestConsentButton.setTitle("Consent pending", for: .normal)
+            cell.requestConsentButton.setTitle(Constants.HomScreenConstants.requestConsent, for: .normal)
+        } else
+            if indexPath.row % 2 == 0{
+                cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
+                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.consentApproved, for: .normal)
+            } else {
+                cell.consentstatusColor.backgroundColor = .orange
+                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.consentPending, for: .normal)
         }
-      
+        
         return cell
     }
-   
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.selectedCell.append(indexPath.row)
-        tableView.reloadData()
-           if indexPath.row > 0 {
-               //navigateToMapsScreen()
-           } else {
-               let selectedName = self.names[indexPath.row]
-               navigateToGroupListScreen(title: selectedName)
-           }
-       }
-       
+        if indexPath.row == 0 {
+            let selectedName = self.names[indexPath.row]
+            navigateToGroupListScreen(title: selectedName)
+        }
+    }
+    
     @objc func checkmarkSelection(sender:UIButton) {
         let tempBtn : UIButton = sender
+        if tempBtn.isSelected {
+            selectedCell = selectedCell.filter({ (item) -> Bool in
+                return item != self.listOfDevices[tempBtn.tag].deviceId
+            })
+            deviceDetails = deviceDetails.filter({ (item) -> Bool in
+                return item.deviceId != self.listOfDevices[tempBtn.tag].deviceId
+            })
+        } else {
+            selectedCell.append(self.listOfDevices[tempBtn.tag].deviceId)
+            
+        }
         tempBtn.isSelected = !tempBtn.isSelected
     }
     
     @objc func trackButton(sender: UIBarButtonItem) {
-        navigateToMapsScreen()
+        self.callgetDeviceLocationDetails { (success) in
+            if success && self.deviceDetails.count > 0  {
+                DispatchQueue.main.async {
+                    self.navigateToMapsScreen()
+                }
+            }else {
+                DispatchQueue.main.async {
+                    self.ShowALert(title: Constants.LocationConstants.locationDetailsNotFound)
+                }
+            }
+        }
     }
     
     // MARK : Navigatation screens
     func navigateToMapsScreen() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let mapsViewController = storyBoard.instantiateViewController(withIdentifier: "MapsScreen") as! MapsScreen
-        mapsViewController.names = ["Maruti", "Ashish"]
+        let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.mapsScreen) as! MapsScreen
         mapsViewController.deviceId = self.userid
         mapsViewController.ugsToken = self.ugsToken
         mapsViewController.userId = self.userid
+        mapsViewController.deviceDetails = self.deviceDetails
         self.navigationController?.pushViewController(mapsViewController, animated: true)
     }
     
     func navigateToAddDeviceScreen(title : String) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: "AddDeviceScreen") as! AddDeviceScreen
+        let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.addDeviceScreen) as! AddDeviceScreen
         addDeviceViewController.navtitle = title
         addDeviceViewController.userid = self.userid
         addDeviceViewController.ugsToken = self.ugsToken
@@ -132,33 +149,33 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     }
     
     func navigateToCreateGroupScreen() {
-           let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-           let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: "CreateGroupScreen") as! CreateGroupScreen
-           createGroupViewController.navtitle = "Create Group"
-           self.navigationController?.pushViewController(createGroupViewController, animated: true)
-       }
-
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.createGroupScreen) as! CreateGroupScreen
+        createGroupViewController.navtitle = Constants.HomScreenConstants.createGroup
+        self.navigationController?.pushViewController(createGroupViewController, animated: true)
+    }
+    
     func navigateToGroupListScreen(title : String) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let groupListViewController = storyBoard.instantiateViewController(withIdentifier: "GroupListScreen") as! GroupListScreen
+        let groupListViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.groupListScreen) as! GroupListScreen
         groupListViewController.navtitle = title
         self.navigationController?.pushViewController(groupListViewController, animated: true)
     }
     
-
+    
     // MARK: Show floating button
     func floatingActionButton () {
-        actionButton.addItem(title: "Add Device", image: UIImage(named: "device")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.addDevice, image: UIImage(named: "device")?.withRenderingMode(.alwaysTemplate)) { item in
             // do something
-            self.navigateToAddDeviceScreen(title: "Add Device")
+            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.addDevice)
         }
         
-        actionButton.addItem(title: "Add Person", image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.addPerson, image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
             // do something
-            self.navigateToAddDeviceScreen(title: "Add Person")
+            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.addPerson)
         }
         
-        actionButton.addItem(title: "Create Group", image: UIImage(named: "group")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.addDevice, image: UIImage(named: "group")?.withRenderingMode(.alwaysTemplate)) { item in
             // do something
             self.navigateToCreateGroupScreen()
         }
@@ -169,23 +186,32 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
     }
     
+    // Alert with button action
+     func ShowALertWithButtonAction(title: String){
+         let alert = UIAlertController(title: Constants.AlertConstants.alert, message: title, preferredStyle: UIAlertController.Style.alert)
+         alert.addAction(UIAlertAction(title: Constants.AlertConstants.okButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+             DispatchQueue.main.async {
+                
+             }
+         }))
+         self.present(alert, animated: true, completion: nil)
+     }
+    
     // MARK: Display ActionSheet
     
     @objc func showActionSheet(){
         
-        let alert = UIAlertController(title: "Select", message: "", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: Constants.HomScreenConstants.select, message: "", preferredStyle: .actionSheet)
         
-        alert.addAction(UIAlertAction(title: "Edit", style: .default , handler:{ (UIAlertAction)in
-            print("User click Approve button")
+        alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.edit, style: .default , handler:{ (UIAlertAction)in
+            self.navigateToAddDeviceScreen(title : Constants.HomScreenConstants.edit)
         }))
         
-        alert.addAction(UIAlertAction(title: "Delete", style: .default , handler:{ (UIAlertAction)in
-            print("User click Edit button")
+        alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.delete, style: .default , handler:{ (UIAlertAction)in
+            self.ShowALert(title: Constants.HomScreenConstants.deleteDevice)
         }))
-        
-        
-        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler:{ (UIAlertAction)in
-            print("User click Dismiss button")
+        alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.dismiss, style: .cancel, handler:{ (UIAlertAction)in
+            
         }))
         
         self.present(alert, animated: true, completion: {
@@ -193,32 +219,66 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         })
     }
     
+    // MARK: Service Calls
     // API to add device details
     func callgetDeviceApi() {
         let deviceURL = URL(string:  Constants.ApiPath.deviceDetails + ugsToken)!
         let deviceParams :  [String : Any] = ["usersAssigned":[self.userid]]
         DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
             switch result {
-                    case .success(let deviceResponse):
-                        print(deviceResponse.devicedata!)
-                        guard let deviceData = deviceResponse.devicedata else {
-                            return
-                        }
-                        for device in deviceData {
-                            self.listOfDevices.append(device)
-                        }
-                        DispatchQueue.main.async {
-                          self.usersTableView.reloadData()
-                        }
-                    case .failure(let error):
-                        if type(of: error) == NetworkManager.ErrorType.self {
-                            
-                        } else {
-                            DispatchQueue.main.async {
-                            self.ShowALert(title: error.localizedDescription)
-                            }
+            case .success(let deviceResponse):
+                print(deviceResponse.devicedata!)
+                guard let deviceData = deviceResponse.devicedata else {
+                    return
+                }
+                for device in deviceData {
+                    self.listOfDevices.append(device)
+                }
+                DispatchQueue.main.async {
+                    self.usersTableView.reloadData()
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.ShowALert(title: error.localizedDescription)
                     }
                 }
             }
+        }
     }
+    
+    // API to get location details
+    // TODO: check and change api call to track multiple devices
+    func callgetDeviceLocationDetails(completion: @escaping(_ success: Bool) -> Void) {
+        for (index,element) in selectedCell.enumerated() {
+            let deviceURL = URL(string:  Constants.ApiPath.deviceApisUrl + element + "?tsp=1585031229387&ugs_token=" + self.ugsToken)! // TODO: Save tsp in user defaults
+            DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<LocationModel, Error>)) in
+                switch result {
+                case .success(let deviceResponse):
+                    if let device = deviceResponse.devicedata , let _ = deviceResponse.devicedata?.deviceStatus?.location {
+                        self.deviceDetails.append(device)
+                    }
+                    if index == self.selectedCell.count - 1 {
+                        completion(true)
+                    }
+                case .failure(let error):
+                    if type(of: error) == NetworkManager.ErrorType.self {
+                        DispatchQueue.main.async {
+                            self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.ShowALert(title: error.localizedDescription)
+                        }
+                    }
+                }
+            }
+            
+        }
+    }
+    
 }

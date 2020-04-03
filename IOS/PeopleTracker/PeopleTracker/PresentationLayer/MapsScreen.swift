@@ -28,69 +28,70 @@ import MapKit
 import GoogleMaps
 
 class MapsScreen: UIViewController {
-
+    
     @IBOutlet weak var mapView: MKMapView!
     
-    let googleApiKey = "AIzaSyCL18AjsFlIRWkG5_BcHEZsOnFDE0aok2w"
+    let googleApiKey = Bundle.main.infoDictionary?["GoggleApiKey"]
     let regionRadius: CLLocationDistance = 1000
-    var names : [String] = []
-    var latitude : [Double] = [-33.86, -39.86]
-    var longitude : [Double] = [151.20, 155.20]
     var deviceId : String = ""
     var userId : String = ""
     var ugsToken : String = ""
+    var deviceDetails : [DeviceDetails] = []
+//    var deviceIdsArr : [String] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.title = "Location"
-        self.callgetDeviceLocationDetails()
-        // Maps Key
-        GMSServices.provideAPIKey(googleApiKey)
         
-        createmapView()
-       
-    }
+        self.createMapViewMarker()
+        
 
-    // create mapview to display maps
-    func createmapView() {
-        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
-        let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
-        mapView.settings.zoomGestures = true
-        view = mapView
-        self.createMapViewMarker(mapView: mapView)
     }
     
-    // create marker to display pindrop over map
-    func createMapViewMarker(mapView: GMSMapView) {
-        for (index, element) in names.enumerated() {
-            let marker = GMSMarker()
-            marker.position = CLLocationCoordinate2D(latitude: latitude[index], longitude: longitude[index])
-                   marker.map = mapView
-                   marker.title = element
-                   let img = UIImage.init(named: "avatar" + String(index+1))
-                   let markerView = UIImageView(image: img)
-                   markerView.tintColor = UIColor.red
-                   marker.iconView = markerView
-                   
+    // Create marker to display pindrop over map
+    func createMapViewMarker() {
+        let camera = GMSCameraPosition.camera(withLatitude: deviceDetails[0].deviceStatus?.location?.latitude ?? 12.3456, longitude: deviceDetails[0].deviceStatus?.location?.longitude ?? 27.5467, zoom: 6.0)
+        let mapView = GMSMapView.map(withFrame: self.view.frame, camera: camera)
+        mapView.settings.zoomGestures = true
+        self.view.addSubview(mapView)
+        for (index, element) in self.deviceDetails.enumerated() {
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2D(latitude: deviceDetails[index].deviceStatus?.location?.latitude ?? 12.3456, longitude:deviceDetails[index].deviceStatus?.location?.longitude ?? 27.5467)
+            marker.title = element.name
+        let img = UIImage.init(named: "avatar1")
+        let markerView = UIImageView(image: img)
+        markerView.tintColor = UIColor.red
+        marker.iconView = markerView
+        marker.map = mapView
+            
+        }
+
+    }
+    // API to get location details
+    func callgetDeviceLocationDetails() {
+        let deviceURL = URL(string:  Constants.ApiPath.deviceApisUrl + "5e789ad0a789b5a7f632ff7e" + "?tsp=1585031229387&ugs_token=" + self.ugsToken)!
+        DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<LocationModel, Error>)) in
+            switch result {
+            case .success(let deviceResponse):
+                if let _ = deviceResponse.devicedata {
+                    DispatchQueue.main.async {
+                        
+                        //self.createmapView()
+                    }
+                } else {
+                    self.ShowALert(title: Constants.LocationConstants.noLatLong)
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    
+                } else {
+                    DispatchQueue.main.async {
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
         }
     }
-    
-    // API to get location details
-      func callgetDeviceLocationDetails() {
-        let deviceURL = URL(string:  Constants.ApiPath.deviceApisUrl + "5e789ad0a789b5a7f632ff7e" + "?tsp=1585031229387&ugs_token=" + self.ugsToken)!
-        DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<DeviceModel, Error>)) in
-              switch result {
-                      case .success(let deviceResponse):
-                          print(deviceResponse.devicedata!)
-                      case .failure(let error):
-                          if type(of: error) == NetworkManager.ErrorType.self {
-                              
-                          } else {
-                              DispatchQueue.main.async {
-                              self.ShowALert(title: error.localizedDescription)
-                              }
-                      }
-                  }
-              }
-      }
+
 }

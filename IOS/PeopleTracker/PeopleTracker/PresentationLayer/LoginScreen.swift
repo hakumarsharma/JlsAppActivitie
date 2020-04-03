@@ -59,6 +59,7 @@ class LoginScreen: UIViewController {
     }
     
     // login api call
+    // TODO :  Change API call based on phone registration process
     func callLoginApi() {
         UserService.shared.loginRequest(with:  URL(string: Constants.ApiPath.loginUrl)!, parameters: ["email":"shivakumar.jagalur@ril.com","password":"Ril@12345","type": "supervisor"]) { (result : Result<LoginModel, Error>) in
                 switch result {
@@ -83,7 +84,7 @@ class LoginScreen: UIViewController {
     // navigate to home screen upon succesful login
     func navigateToHomeScreen(ugsToken : String, userid : String) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "HomeScreen") as! HomeScreen
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.homeScreen) as! HomeScreen
         nextViewController.userid = userid
         nextViewController.ugsToken = ugsToken
         self.navigationController?.pushViewController(nextViewController, animated: true)
