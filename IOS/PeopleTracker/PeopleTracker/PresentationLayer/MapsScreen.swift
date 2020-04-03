@@ -19,11 +19,14 @@ class MapsScreen: UIViewController {
     var names : [String] = []
     var latitude : [Double] = [-33.86, -39.86]
     var longitude : [Double] = [151.20, 155.20]
+    var deviceId : String = ""
+    var userId : String = ""
+    var ugsToken : String = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.title = "Location"
-        
+        self.callgetDeviceLocationDetails()
         // Maps Key
         GMSServices.provideAPIKey(googleApiKey)
         
@@ -42,8 +45,6 @@ class MapsScreen: UIViewController {
     
     // create marker to display pindrop over map
     func createMapViewMarker(mapView: GMSMapView) {
-       
-        
         for (index, element) in names.enumerated() {
             let marker = GMSMarker()
             marker.position = CLLocationCoordinate2D(latitude: latitude[index], longitude: longitude[index])
@@ -54,15 +55,25 @@ class MapsScreen: UIViewController {
                    markerView.tintColor = UIColor.red
                    marker.iconView = markerView
                    
-//            let state_marker = GMSMarker()
-//            state_marker.position = CLLocationCoordinate2D(latitude: -33.86 + 10, longitude: 151.20 + 20)
-//            state_marker.title = val
-//            state_marker.snippet = "Hey, this is \(val)"
-//             let img = UIImage.init(named: "pindrop")
-//             let markerView = UIImageView(image: img)
-//             markerView.tintColor = UIColor.red
-//            state_marker.iconView = markerView
-//            state_marker.map = mapView
         }
     }
+    
+    // API to get location details
+      func callgetDeviceLocationDetails() {
+        let deviceURL = URL(string:  Constants.ApiPath.deviceApisUrl + "5e789ad0a789b5a7f632ff7e" + "?tsp=1585031229387&ugs_token=" + self.ugsToken)!
+        DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<DeviceModel, Error>)) in
+              switch result {
+                      case .success(let deviceResponse):
+                          print(deviceResponse.devicedata!)
+                      case .failure(let error):
+                          if type(of: error) == NetworkManager.ErrorType.self {
+                              
+                          } else {
+                              DispatchQueue.main.async {
+                              self.ShowALert(title: error.localizedDescription)
+                              }
+                      }
+                  }
+              }
+      }
 }

@@ -95,7 +95,11 @@ struct NetworkManager {
                 } else if (httpResponse.statusCode == 401) {
                     completion?(.failure(ErrorType.Unauthorized))
                     return
-                }  else {
+                } else if (httpResponse.statusCode == 409) {
+                    completion?(.failure(ErrorType.DeviceAlreadyAssigned))
+                    return
+                }
+                else {
                     completion?(.failure(ErrorType.SomethingWentWrong))
                     return
                 }

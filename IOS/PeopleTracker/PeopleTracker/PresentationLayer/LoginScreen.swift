@@ -46,21 +46,29 @@ class LoginScreen: UIViewController {
         UserService.shared.loginRequest(with:  URL(string: Constants.ApiPath.loginUrl)!, parameters: ["email":"shivakumar.jagalur@ril.com","password":"Ril@12345","type": "supervisor"]) { (result : Result<LoginModel, Error>) in
                 switch result {
                     case .success(let loginResponse):
-                        self.navigateToHomeScreen(usgToken: loginResponse.ugstoken)
+                        DispatchQueue.main.async {
+                            self.navigateToHomeScreen(ugsToken: loginResponse.ugsToken, userid: loginResponse.user?.userId ?? "")
+                       }
                     case .failure(let error):
                         if type(of: error) == NetworkManager.ErrorType.self {
+                            DispatchQueue.main.async {
                             self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                            }
                         } else {
+                            DispatchQueue.main.async {
                             self.ShowALert(title: error.localizedDescription)
+                            }
                     }
                 }
             }
     }
     
     // navigate to home screen upon succesful login
-    func navigateToHomeScreen(usgToken : String) {
+    func navigateToHomeScreen(ugsToken : String, userid : String) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "HomeScreen") as! HomeScreen
+        nextViewController.userid = userid
+        nextViewController.ugsToken = ugsToken
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
     

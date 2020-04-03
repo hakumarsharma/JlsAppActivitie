@@ -18,6 +18,9 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     let numbers: [String] = ["8188422893","8088422893", "9019022684", "7200706845", "9949442884", "9848367485"]
     let userIcons : [String] = ["group","user0","user1","user2","user3","user1"]
     var selectedCell : [Int] = []
+    var userid : String = ""
+    var ugsToken : String = ""
+    var listOfDevices : [DeviceData] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,13 +31,16 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         usersTableView.delegate = self
         usersTableView.dataSource = self
         floatingActionButton()
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.callgetDeviceApi()
     }
     
     // MARK: UITableView Delegate and DataSource methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.names.count
+        return self.listOfDevices.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -45,14 +51,14 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellIdentifier") as! UserCell
         cell.selectionStyle = .none
-        cell.userIcon.image = UIImage(named: self.userIcons[indexPath.row])
-        cell.name.text = self.names[indexPath.row];
-        cell.phoneNumber.text = self.numbers[indexPath.row];
+        let deviceDetails = self.listOfDevices[indexPath.row]
+        cell.setData(deviceData: deviceDetails)
+        cell.userIcon.image = UIImage(named: "user4")
         cell.optionsButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
         cell.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkempty"), for: .normal)
-            cell.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkmark"), for: .selected)
+        cell.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkmark"), for: .selected)
         cell.checkBoxButton.addTarget(self, action: #selector(checkmarkSelection(sender:)), for: .touchUpInside)
-         cell.checkBoxButton.isHidden = false
+        cell.checkBoxButton.isHidden = false
         if indexPath.row == 0{
             cell.checkBoxButton.isHidden = true
             cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
@@ -93,6 +99,9 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let mapsViewController = storyBoard.instantiateViewController(withIdentifier: "MapsScreen") as! MapsScreen
         mapsViewController.names = ["Maruti", "Ashish"]
+        mapsViewController.deviceId = self.userid
+        mapsViewController.ugsToken = self.ugsToken
+        mapsViewController.userId = self.userid
         self.navigationController?.pushViewController(mapsViewController, animated: true)
     }
     
@@ -100,6 +109,8 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: "AddDeviceScreen") as! AddDeviceScreen
         addDeviceViewController.navtitle = title
+        addDeviceViewController.userid = self.userid
+        addDeviceViewController.ugsToken = self.ugsToken
         self.navigationController?.pushViewController(addDeviceViewController, animated: true)
     }
     
@@ -165,4 +176,32 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         })
     }
     
+    // API to add device details
+    func callgetDeviceApi() {
+        let deviceURL = URL(string:  Constants.ApiPath.deviceDetails + ugsToken)!
+        let deviceParams :  [String : Any] = ["usersAssigned":[self.userid]]
+        DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
+            switch result {
+                    case .success(let deviceResponse):
+                        print(deviceResponse.devicedata!)
+                        guard let deviceData = deviceResponse.devicedata else {
+                            return
+                        }
+                        for device in deviceData {
+                            self.listOfDevices.append(device)
+                        }
+                        DispatchQueue.main.async {
+                          self.usersTableView.reloadData()
+                        }
+                    case .failure(let error):
+                        if type(of: error) == NetworkManager.ErrorType.self {
+                            
+                        } else {
+                            DispatchQueue.main.async {
+                            self.ShowALert(title: error.localizedDescription)
+                            }
+                    }
+                }
+            }
+    }
 }

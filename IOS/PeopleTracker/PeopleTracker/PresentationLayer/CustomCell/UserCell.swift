@@ -16,4 +16,10 @@ class UserCell: UITableViewCell {
     @IBOutlet weak var checkBoxButton       : UIButton!
     @IBOutlet weak var consentstatusColor   : UILabel!
     @IBOutlet weak var requestConsentButton : UIButton!
+    
+    func setData(deviceData : DeviceData){
+        self.name.text        = deviceData.name
+        self.phoneNumber.text = deviceData.phone
+    }
+   
 }

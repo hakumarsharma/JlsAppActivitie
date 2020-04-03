@@ -10,12 +10,12 @@ import Foundation
 
 public struct LoginModel : Codable {
     
-    let ugstoken        : String
-    let ugstokenexpiry  : Double
+    let ugsToken        : String
+    let ugsTokenexpiry  : Double
     let user            : User?
     
     private enum CodingKeys : String, CodingKey {
-        case ugstoken = "ugs_token", ugstokenexpiry = "ugs_token_expiry",user
+        case ugsToken = "ugs_token", ugsTokenexpiry = "ugs_token_expiry",user
     }
     
 }

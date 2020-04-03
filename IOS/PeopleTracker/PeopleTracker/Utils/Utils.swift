@@ -13,9 +13,11 @@ class Utils {
     func handleError(error : NetworkManager.ErrorType) -> String {
         if error == NetworkManager.ErrorType.Unauthorized {
             return Constants.ErrorMessage.unauthorized
-        } else if (error == NetworkManager.ErrorType.SomethingWentWrong) {
+        } else if error == NetworkManager.ErrorType.SomethingWentWrong {
             return Constants.ErrorMessage.somethingwentwrong
-        } else {
+        } else if error == NetworkManager.ErrorType.DeviceAlreadyAssigned {
+            return Constants.ErrorMessage.deviceCanotBeAssigned
+        }else {
             return Constants.ErrorMessage.somethingwentwrong
         }
     }
@@ -23,8 +25,8 @@ class Utils {
 
 extension UIViewController {
     func ShowALert(title: String){
-         let alert = UIAlertController(title: "Alert", message: title, preferredStyle: UIAlertController.Style.alert)
-         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+        let alert = UIAlertController(title: Constants.AlertConstants.alert, message: title, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.okButton, style: UIAlertAction.Style.default, handler: nil))
          self.present(alert, animated: true, completion: nil)
      }
     

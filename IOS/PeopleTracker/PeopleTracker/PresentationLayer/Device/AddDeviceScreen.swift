@@ -15,7 +15,7 @@ class AddDeviceScreen: UIViewController {
     
     var navtitle : String = ""
     var userid : String = ""
-    var ugstoken : String = ""
+    var ugsToken : String = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = navtitle
@@ -31,7 +31,7 @@ class AddDeviceScreen: UIViewController {
             self.ShowALert(title: Constants.LoginScreenConstants.phoneNumber)
             return
         }
-        if imeiTxt.text?.count == 0 {
+        if imeiTxt.text?.count == 0 || !(imeiTxt.text?.isValidImei ?? true){
             self.ShowALert(title: Constants.AddDeviceConstants.imei)
             return
         }
@@ -41,22 +41,37 @@ class AddDeviceScreen: UIViewController {
     
     // API to add device details
     func callAddDeviceApi() {
-        let deviceURL = URL(string: Constants.ApiPath.BaseUrl + Constants.ApiPath.userApisUrl + userid + Constants.ApiPath.addDeviceUrl + ugstoken)!
+        let deviceURL = URL(string: Constants.ApiPath.userApisUrl + userid + Constants.ApiPath.addDeviceUrl + ugsToken)!
         let deviceDetails : [[String : String]] = [["mac": imeiTxt.text ?? "","identifier": "imei","name": nameTxt.text ?? "","phone": phoneNumberTxt.text ?? ""]]
         let flagDetails : [String : Bool] = ["isSkipAddDeviceToGroup" : false]
         let deviceParams :  [String : Any] = ["devices" : deviceDetails, "flags": flagDetails]
-        DeviceService.shared.addDevice(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
+        DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
             switch result {
                     case .success(let deviceResponse):
                           print(deviceResponse)
-                          self.navigationController?.popViewController(animated: true)
+                          self.ShowALertWithButtonAction(title: Constants.AddDeviceConstants.deviceAddedSuccessfully)
                     case .failure(let error):
                         if type(of: error) == NetworkManager.ErrorType.self {
-                            self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                            DispatchQueue.main.async {
+                            self.ShowALertWithButtonAction(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                            }
                         } else {
-                            self.ShowALert(title: error.localizedDescription)
+                            DispatchQueue.main.async {
+                                self.ShowALertWithButtonAction(title: error.localizedDescription)
+                            }
                     }
                 }
             }
+    }
+    
+   // Alert with button action
+    func ShowALertWithButtonAction(title: String){
+        let alert = UIAlertController(title: Constants.AlertConstants.alert, message: title, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.okButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+            DispatchQueue.main.async {
+               self.navigationController?.popViewController(animated: true)
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 }
