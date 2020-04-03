@@ -25,7 +25,7 @@
             android:textCursorDrawable="@color/colorLogin" />
 
         <EditText
-            android:id="@+id/deviceName"
+            android:id="@+id/deviceNumberInContactDetails"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/memberName"
@@ -46,7 +46,7 @@
             android:layout_marginRight="10dp"
             android:backgroundTint="@color/colorLogin"
             android:hint="@string/device_imei"
-            android:layout_below="@id/deviceName"
+            android:layout_below="@id/deviceNumberInContactDetails"
             android:inputType="phone"/>
 
         <Button
@@ -79,10 +79,9 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="80dp"
-            android:background="@drawable/login_selector"
             android:textAllCaps="false"
-            android:text="Add"
-            android:textColor="@color/colorButtonText" />
+            android:background="@drawable/selector"
+            android:text="Add" />
 
     </RelativeLayout>
 

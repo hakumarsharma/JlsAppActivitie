@@ -568,8 +568,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             boolean isConsentApproved = false;
             for (HomeActivityListData homeActivityListData : hmActivityListData) {
                 for (MultipleselectData multipleselectData : selectedData) {
-                    if(multipleselectData.getPhone().equalsIgnoreCase(homeActivityListData.getPhoneNumber()) && homeActivityListData.getDeviceType().equalsIgnoreCase("People Tracker")) {
-                        if(homeActivityListData.getConsentStaus().equalsIgnoreCase("") || homeActivityListData.getConsentStaus().equalsIgnoreCase(Constant.CONSENT_PENDING) || homeActivityListData.getConsentStaus().equalsIgnoreCase(Constant.REQUEST_CONSENT)) {
+                    if (multipleselectData.getPhone().equalsIgnoreCase(homeActivityListData.getPhoneNumber()) && homeActivityListData.getDeviceType().equalsIgnoreCase("People Tracker")) {
+                        if (homeActivityListData.getConsentStaus().equalsIgnoreCase("") || homeActivityListData.getConsentStaus().equalsIgnoreCase(Constant.CONSENT_PENDING) || homeActivityListData.getConsentStaus().equalsIgnoreCase(Constant.REQUEST_CONSENT)) {
                             Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED, Constant.ALERT_TITLE, this);
                             Util.progressDialog.dismiss();
                             return;

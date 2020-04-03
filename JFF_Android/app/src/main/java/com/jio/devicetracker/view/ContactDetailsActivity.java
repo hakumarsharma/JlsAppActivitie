@@ -23,9 +23,12 @@ package com.jio.devicetracker.view;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -38,6 +41,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
@@ -64,19 +68,19 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private boolean isDataMatched = false;
     private static String numberComingFromContactList = null;
     private static String nameComingFromContactList = null;
+    private Button addContactInGroupButon = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_details);
-
         Toolbar toolbar = findViewById(R.id.loginToolbar);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.CONTACT_DEVICE_TITLE);
-        Button addContactInGroup = findViewById(R.id.addContactInGroup);
-        addContactInGroup.setOnClickListener(this);
+        addContactInGroupButon = findViewById(R.id.addContactInGroup);
+        addContactInGroupButon.setOnClickListener(this);
         mName = findViewById(R.id.memberName);
-        mNumber = findViewById(R.id.deviceName);
+        mNumber = findViewById(R.id.deviceNumberInContactDetails);
         mIMEINumber = findViewById(R.id.contactDetailIMEI);
         deviceTypeSpinner = findViewById(R.id.deviceTypeSpinner);
         deviceTypeSpinner.setOnItemSelectedListener(this);
@@ -86,6 +90,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         Intent intent = getIntent();
         String qrValue = intent.getStringExtra("QRCodeValue");
         setNameNumberImei(qrValue);
+        changeButtonColorOnDataEntry();
 
         if (DashboardActivity.isComingFromGroupList || DashboardActivity.isAddIndividual) {
             ImageView contactBtn = toolbar.findViewById(R.id.contactAdd);
@@ -97,10 +102,57 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             scanner.setOnClickListener(this);
         }
 
-        if(numberComingFromContactList != "" && nameComingFromContactList != "") {
+        if (numberComingFromContactList != "" && nameComingFromContactList != "") {
             mName.setText(nameComingFromContactList);
             mNumber.setText(numberComingFromContactList);
         }
+    }
+
+    private void changeButtonColorOnDataEntry() {
+        mName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Unused empty method
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                /*addContactInGroupButon.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                addContactInGroupButon.setTextColor(Color.WHITE);*/
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String name = mName.getText().toString();
+                if (!name.equalsIgnoreCase("")) {
+                    addContactInGroupButon.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                    addContactInGroupButon.setTextColor(Color.WHITE);
+                }
+            }
+        });
+
+        mIMEINumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Unused empty method
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                addContactInGroupButon.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                addContactInGroupButon.setTextColor(Color.WHITE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String name = mName.getText().toString();
+                if (!name.equalsIgnoreCase("")) {
+                    addContactInGroupButon.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                    addContactInGroupButon.setTextColor(Color.WHITE);
+                }
+            }
+        });
+
     }
 
     private void setNameNumberImei(String qrValue) {
@@ -111,7 +163,6 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             mName.setText(name);
             mNumber.setText(number);
         }
-
     }
 
     @Override
@@ -120,30 +171,30 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             startActivityForResult(intent, 1);
         } else if (v.getId() == R.id.addContactInGroup) {
-            if(mName.getText().toString().equalsIgnoreCase("")){
+            if (mName.getText().toString().equalsIgnoreCase("")) {
                 mName.setError(Constant.NAME_EMPTY);
                 return;
             }
             String mPhoneNumber = mNumber.getText().toString().trim();
-            if(deviceType.equalsIgnoreCase("People Tracker")) {
-                if(Util.isValidMobileNumberForPet(mPhoneNumber)) {
+            if (deviceType.equalsIgnoreCase("People Tracker")) {
+                if (Util.isValidMobileNumberForPet(mPhoneNumber)) {
                     mNumber.setError(Constant.PEOPLE_NUMBER_VALIDATION_PET_NUMBER_ENTERED);
                     return;
-                } else if(!Util.isValidMobileNumber(mPhoneNumber)) {
+                } else if (!Util.isValidMobileNumber(mPhoneNumber)) {
                     mNumber.setError(Constant.MOBILENUMBER_VALIDATION);
                     return;
                 }
-            } else if(deviceType.equalsIgnoreCase("Pet Tracker")) {
-                if(Util.isValidMobileNumber(mPhoneNumber)) {
+            } else if (deviceType.equalsIgnoreCase("Pet Tracker")) {
+                if (Util.isValidMobileNumber(mPhoneNumber)) {
                     mNumber.setError(Constant.PET_TRACKER_VALIDATION_PEOPLE_NUMBER_ENTERE);
                     return;
-                }else if(!Util.isValidMobileNumberForPet(mPhoneNumber)) {
+                } else if (!Util.isValidMobileNumberForPet(mPhoneNumber)) {
                     mNumber.setError(Constant.PET_NUMBER_VALIDATION);
                     return;
                 }
             }
 
-            if(!Util.isValidIMEINumber(mIMEINumber.getText().toString().trim())) {
+            if (!Util.isValidIMEINumber(mIMEINumber.getText().toString().trim())) {
                 mIMEINumber.setError(Constant.IMEI_VALIDATION);
                 return;
             } else {
@@ -151,7 +202,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                 if (isDataMatched && DashboardActivity.isComingFromGroupList) {
                     mDbManager.updateIsGroupMember(1, mIMEINumber.getText().toString().trim(), DashboardActivity.groupName);
                     gotoGroupListActivity();
-                } else if(isDataMatched && DashboardActivity.isComingFromGroupList == false) {
+                } else if (isDataMatched && DashboardActivity.isComingFromGroupList == false) {
                     mDbManager.updateIsGroupMember(0, mIMEINumber.getText().toString().trim(), mName.getText().toString());
                     gotoDashboardActivity();
                 }
@@ -167,13 +218,13 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
     private void checkValidationOfUser(String mName, String mNumber, String mIMEINumber) {
         List<HomeActivityListData> homeListData = mDbManager.getAllBorqsData(adminData.getEmail());
-        for(HomeActivityListData homeActivityListData : homeListData) {
-            if(homeActivityListData.getImeiNumber() != null && homeActivityListData.getImeiNumber().equalsIgnoreCase(mIMEINumber) && homeActivityListData.getPhoneNumber().equalsIgnoreCase(mNumber)) {
+        for (HomeActivityListData homeActivityListData : homeListData) {
+            if (homeActivityListData.getImeiNumber() != null && homeActivityListData.getImeiNumber().equalsIgnoreCase(mIMEINumber) && homeActivityListData.getPhoneNumber().equalsIgnoreCase(mNumber)) {
                 mDbManager.updateDeviceTypeAndGroupName(deviceType, homeActivityListData.getGroupName(), homeActivityListData.getImeiNumber(), mName, 1);
                 isDataMatched = true;
             }
         }
-        if(!isDataMatched) {
+        if (!isDataMatched) {
             Util.alertDilogBox(Constant.DEVICE_DETAIL_VALIDATION, Constant.ALERT_TITLE, this);
             return;
         }

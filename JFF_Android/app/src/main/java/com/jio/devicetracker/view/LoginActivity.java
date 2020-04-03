@@ -440,16 +440,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private class SuccessListenerSearchDevice implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            String consentStatus = null;
             List<HomeActivityListData> mlist = new ArrayList<>();
             searchdeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchDeviceResponse.class);
-            HomeActivityListData data;
             List<SearchDeviceResponse.SearchDeviceData> deviceData = searchdeviceResponse.getmData();
             for (SearchDeviceResponse.SearchDeviceData devData : deviceData) {
-                data = new HomeActivityListData();
+                HomeActivityListData data = new HomeActivityListData();
                 data.setPhoneNumber(devData.getPhoneNumber());
                 data.setName(devData.getName());
-                consentStatus = mDbManager.getConsentStatusBorqs(devData.getPhoneNumber());
+                String consentStatus = mDbManager.getConsentStatusBorqs(devData.getPhoneNumber());
                 data.setConsentStaus(consentStatus);
                 data.setImeiNumber(devData.getImeiNumber());
                 data.setDeviceId(devData.getDeviceId());
@@ -459,7 +457,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             adminData = mDbManager.getAdminLoginDetail();
             mDbManager.insertInBorqsDB(mlist, adminData.getEmail());
             List<HomeActivityListData> getallDeviceData = mDbManager.getAllDevicedata(adminData.getEmail());
-            for(HomeActivityListData getDeviceId : getallDeviceData) {
+            for (HomeActivityListData getDeviceId : getallDeviceData) {
                 RequestHandler.getInstance(getApplicationContext()).handleRequest(new GetDeviceLocationRequest(new SuccessListenerDeviceLocation(), new ErrorListenerDeviceLocation(), logindetailResponse.getUgsToken(), getDeviceId.getDeviceId()));
             }
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -475,12 +473,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onResponse(Object response) {
             getDeviceLocationResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetDeviceLocationResponse.class);
-            if(getDeviceLocationResponse != null && (getDeviceLocationResponse.getData().getDeviceStatus().getLocation() != null)) {
+            if (getDeviceLocationResponse != null && (getDeviceLocationResponse.getData().getDeviceStatus().getLocation() != null)) {
                 GetDeviceLocationData latlangdata = new GetDeviceLocationData();
                 latlangdata.setDeviceId(getDeviceLocationResponse.getData().getPhoneNumber());
                 latlangdata.setLat(getDeviceLocationResponse.getData().getDeviceStatus().getLocation().getLat());
                 latlangdata.setLang(getDeviceLocationResponse.getData().getDeviceStatus().getLocation().getLng());
-                mDbManager.updateLatLangInBorqsDB(getDeviceLocationResponse.getData().getPhoneNumber(),latlangdata);
+                mDbManager.updateLatLangInBorqsDB(getDeviceLocationResponse.getData().getPhoneNumber(), latlangdata);
             }
         }
     }

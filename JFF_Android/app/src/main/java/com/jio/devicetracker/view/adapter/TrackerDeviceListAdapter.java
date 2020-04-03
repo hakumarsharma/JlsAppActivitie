@@ -72,9 +72,9 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         holder.name.setText(mData.get(position).getGroupName());
         if (mData.get(position).isGroupMember() == true) {
             holder.mIconImage.setImageResource(R.drawable.ic_group_button);
-        } else if(mData.get(position).getDeviceType().equalsIgnoreCase("People Tracker")) {
+        } else if (mData.get(position).getDeviceType().equalsIgnoreCase("People Tracker")) {
             holder.mIconImage.setImageResource(R.drawable.ic_user);
-        } else if(mData.get(position).getDeviceType().equalsIgnoreCase("Pet Tracker")) {
+        } else if (mData.get(position).getDeviceType().equalsIgnoreCase("Pet Tracker")) {
             holder.mIconImage.setImageResource(R.drawable.ic_pet);
             holder.mConsentStatus.setVisibility(View.INVISIBLE);
         }
@@ -84,17 +84,17 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         if (mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equalsIgnoreCase(Constant.CONSENT_APPROVED_STATUS)) {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
             holder.mConsentStatus.setText(Constant.CONSENT_APPROVED_STATUS);
-            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved,0,0,0);
+            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved, 0, 0, 0);
             holder.mConsentStatus.setEnabled(false);
-        } else if(mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equals(Constant.CONSENT_PENDING)) {
+        } else if (mData.get(position).getConsentStaus() != null && mData.get(position).getConsentStaus().trim().equals(Constant.CONSENT_PENDING)) {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
             holder.mConsentStatus.setText(Constant.CONSENT_PENDING);
-            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending,0,0,0);
+            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending, 0, 0, 0);
             holder.mConsentStatus.setEnabled(false);
         } else {
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentNotSent));
             holder.mConsentStatus.setText(Constant.REQUEST_CONSENT);
-            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notsent,0,0,0);
+            holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notsent, 0, 0, 0);
         }
 
         if (!data.isGroupMember()) {
@@ -122,6 +122,9 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 mSelectData.setName(mData.get(position).getName());
                 mSelectData.setImeiNumber(mData.get(position).getImeiNumber());
                 itemListener.recyclerViewListClicked(v, position, mSelectData, 2);
+            } else if(data.isGroupMember()){
+                holder.mConsent.setBackgroundResource(R.drawable.ic_checkboxempty);
+                itemListener.recyclerViewListClicked(v, position, mSelectData, 3);
             } else {
                 holder.mConsent.setBackgroundResource(R.drawable.ic_checkboxempty);
                 itemListener.recyclerViewListClicked(v, position, mSelectData, 3);
@@ -131,7 +134,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         // holder.mEdit.setOnClickListener(v -> itemListener.recyclerviewEditList(mData.get(position).getRelation(),mData.get(position).getPhoneNumber()));
         // holder.mDelete.setOnClickListener(v -> itemListener.recyclerviewDeleteList(mData.get(position).getPhoneNumber(),position));
 
-        holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, mData.get(position).getName(), mData.get(position).getPhoneNumber()));
+        holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, mData.get(position).getGroupName(), mData.get(position).getPhoneNumber()));
 
         holder.mListlayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

@@ -241,26 +241,26 @@ public class DBManager {
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.EMAIL + " = ? ", arg, null, null, null);
             if (cursor != null && cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
-                        HomeActivityListData data = new HomeActivityListData();
-                        data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
-                        data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
-                        data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)).trim());
-                        data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
-                        data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
-                        data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
-                        data.setDeviceType(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_TYPE)));
-                        data.setGroupName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_NAME)));
-                        data.setIsCreated(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_CREATED)));
-                        if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_MEMBER)) > 0) {
-                            data.setGroupMember(true);
-                        } else {
-                            data.setGroupMember(false);
-                        }
-                        mlist.add(data);
+                    HomeActivityListData data = new HomeActivityListData();
+                    data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                    data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
+                    data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)).trim());
+                    data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
+                    data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
+                    data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
+                    data.setDeviceType(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_TYPE)));
+                    data.setGroupName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_NAME)));
+                    data.setIsCreated(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_CREATED)));
+                    if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_MEMBER)) > 0) {
+                        data.setGroupMember(true);
+                    } else {
+                        data.setGroupMember(false);
                     }
+                    mlist.add(data);
                 }
-                cursor.close();
             }
+            cursor.close();
+        }
         return mlist;
     }
 
@@ -311,7 +311,7 @@ public class DBManager {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.LAT, mData.getLat());
-        values.put(DatabaseHelper.LON,mData.getLang());
+        values.put(DatabaseHelper.LON, mData.getLang());
         mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + deviceId, null);
 
     }
@@ -384,12 +384,12 @@ public class DBManager {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.DEVICE_NUM, newNumber);
-        values.put(DatabaseHelper.NAME, name);
+        values.put(DatabaseHelper.GROUP_NAME, name);
         //values.put(DatabaseHelper.IMEI_NUM, imei);
         if (!priviousNumber.equals(newNumber)) {
-            values.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
+            values.put(DatabaseHelper.CONSENT_STATUS, Constant.REQUEST_CONSENT);
         }
-        mDatabase.update(DatabaseHelper.TABLE_NAME_DEVICE, values, DatabaseHelper.DEVICE_NUM + "= '" + priviousNumber + "';", null);
+        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= '" + priviousNumber + "';", null);
 
     }
 
@@ -414,7 +414,7 @@ public class DBManager {
 
     public void deleteSelectedData(String phoneNumber) {
         mDatabase = mDBHelper.getWritableDatabase();
-        mDatabase.delete(DatabaseHelper.TABLE_NAME_DEVICE, DatabaseHelper.DEVICE_NUM + "= '" + phoneNumber + "';", null);
+        mDatabase.delete(DatabaseHelper.TABLE_NAME_BORQS, DatabaseHelper.DEVICE_NUM + "= '" + phoneNumber + "';", null);
     }
 
 
