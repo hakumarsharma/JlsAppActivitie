@@ -33,7 +33,6 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.ActiveSessionData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.adapter.ActiveSessionListAdapter;
-import com.jio.devicetracker.view.adapter.TrackerDeviceListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

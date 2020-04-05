@@ -31,7 +31,6 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -115,7 +114,6 @@ public final class Util extends AppCompatActivity {
         if ("".equalsIgnoreCase(imeiNumber)) {
             imeiNumber = telephonyManager.getDeviceId();
         }
-        Log.d("IMEI Number --> ", imeiNumber);
         return imeiNumber;
     }
 

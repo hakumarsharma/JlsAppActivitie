@@ -92,7 +92,7 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
                 groupNameEditText.setError(Constant.GROUP_NAME_VALIDATION_ERROR);
                 return;
             }
-            else if(relationWithGroupMembersText.equalsIgnoreCase("")) {
+            else if("".equalsIgnoreCase(relationWithGroupMembersText)) {
                 relationWithGroupMembers.setError(Constant.RELATION_WITH_GROUP_ERROR);
                 return;
             }
@@ -111,7 +111,7 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
         HomeActivityListData listOnHomeScreen = new HomeActivityListData();
         listOnHomeScreen.setGroupName(groupName);
         listOnHomeScreen.setPhoneNumber(relationWithGroupMembersText);
-        listOnHomeScreen.setGroupMember(true);
+        listOnHomeScreen.setGroupMember(isGroupMember);
         listOnHomeScreen.setIsCreated(1);
         DashboardActivity.listOnHomeScreens.add(listOnHomeScreen);
         startActivity(new Intent(this, DashboardActivity.class));

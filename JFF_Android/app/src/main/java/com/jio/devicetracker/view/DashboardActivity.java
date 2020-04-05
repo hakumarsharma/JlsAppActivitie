@@ -20,7 +20,6 @@
 
 package com.jio.devicetracker.view;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,7 +60,6 @@ import android.telephony.SignalStrength;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,7 +83,6 @@ import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceStatusResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.network.MQTTManager;
-import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.ConsentTimeUpdate;
@@ -276,7 +273,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     gotoActiveSessionActivity();
                     break;
                 case R.id.home:
-                    drawerLayout.closeDrawer((Gravity.LEFT));
+                    drawerLayout.closeDrawer(Gravity.LEFT);
                     break;
                 case R.id.logout:
                     updateLogoutData();
@@ -432,12 +429,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         String message = "{\"imi\":\"" + Util.imeiNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                 "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
         String topic = "jioiot/svcd/jiophone/" + Util.imeiNumber + "/uc/fwd/locinfo";
-        Log.d("Topic --> ", topic);
-        Log.d("Mesage --> ", message);
-        Log.d("IMEI Number --> ", Util.imeiNumber);
-        Log.d("CIT User Name --> ", Constant.MQTT_CIT_USER_NAME);
-        Log.d("CIT Password --> ", Constant.MQTT_CIT_PASSWORD);
-        Log.d("CIT URL --> ", Constant.MQTT_CIT_URL);
         new MQTTManager().publishMessage(topic, message);
     }
 
@@ -955,7 +946,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int consentTimeApproval;
+                /*int consentTimeApproval;
                 String value = (String) parent.getItemAtPosition(position);
                 if (value.contains("15")) {
                     consentTimeApproval = 14;
@@ -966,7 +957,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
                 } else {
                     consentTimeApproval = 38;
-                }
+                }*/
                 //storeConsentTime(phoneNumber, consentTimeApproval);
             }
 

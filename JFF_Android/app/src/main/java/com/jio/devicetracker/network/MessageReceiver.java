@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 
 public class MessageReceiver extends BroadcastReceiver {
@@ -48,7 +47,6 @@ public class MessageReceiver extends BroadcastReceiver {
                         + "Time in millisecond: " + smsMessage.getTimestampMillis()
                         + "Message: " + smsMessage.getMessageBody();
                 mListener.messageReceived(smsMessage.getDisplayMessageBody(), smsMessage.getDisplayOriginatingAddress());
-                Log.d("Incoming message", message);
             }
 
         }

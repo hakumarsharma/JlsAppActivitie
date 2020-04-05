@@ -33,7 +33,6 @@ import android.widget.TextView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.TrackerListData;
-import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.adapter.TrackerListAdapter;
 
 import java.util.ArrayList;

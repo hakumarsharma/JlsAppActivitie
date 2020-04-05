@@ -40,7 +40,6 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -387,7 +386,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void messageReceived(String message, String phoneNum) {
         String[] splitmessage = message.split(":");
         if (message.contains(Constant.OTP_MESSAGE) && jioMobileOtp != null) {
-            Log.d("Message", "value" + splitmessage[1]);
             jioMobileOtp.setText(splitmessage[1]);
         }
     }
@@ -473,7 +471,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onResponse(Object response) {
             getDeviceLocationResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetDeviceLocationResponse.class);
-            if (getDeviceLocationResponse != null && (getDeviceLocationResponse.getData().getDeviceStatus().getLocation() != null)) {
+            if (getDeviceLocationResponse != null && getDeviceLocationResponse.getData().getDeviceStatus().getLocation() != null) {
                 GetDeviceLocationData latlangdata = new GetDeviceLocationData();
                 latlangdata.setDeviceId(getDeviceLocationResponse.getData().getPhoneNumber());
                 latlangdata.setLat(getDeviceLocationResponse.getData().getDeviceStatus().getLocation().getLat());

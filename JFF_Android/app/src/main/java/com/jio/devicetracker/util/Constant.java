@@ -116,6 +116,8 @@ public class Constant {
     public static final String LOGOUT_CONFIRMATION_MESSAGE = "Are you sure you want to logout ?";
     public static final String IMEI = "imei";
     public static final String PROGRESSBAR_MSG = "Please wait adding device";
+    public static final String PET_TRACKER_DEVICE_TYPE = "Pet Tracker";
+    public static final String PEOPLE_TRACKER_DEVICE_TYPE = "People Tracker";
 
     // MAPs Activity constants
     public static final String MAP_TITLE = "      Location";

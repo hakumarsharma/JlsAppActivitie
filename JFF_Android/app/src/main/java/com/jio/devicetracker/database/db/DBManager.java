@@ -23,7 +23,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
@@ -37,7 +36,6 @@ import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.view.DashboardActivity;
 import com.jio.devicetracker.view.LoginActivity;
 
 import java.util.ArrayList;
@@ -125,7 +123,6 @@ public class DBManager {
             contentValue.put(DatabaseHelper.EMAIL, email);
             contentValue.put(DatabaseHelper.IMEI_NUM, addData.getImeiNumber());
             contentValue.put(DatabaseHelper.DEVICE_NUM, addData.getPhoneNumber());
-            Log.d("DB", "Value of consentstatus" + addData.getConsentStaus());
             if (addData.getConsentStaus() != null) {
                 contentValue.put(DatabaseHelper.CONSENT_STATUS, addData.getConsentStaus());
             } else {
@@ -318,10 +315,7 @@ public class DBManager {
 
     public void updateLogoutData() {
         mDatabase = mDBHelper.getWritableDatabase();
-        int row = mDatabase.delete(DatabaseHelper.TABLE_USER_LOGIN, null, null);
-        if (row == 1) {
-            Log.d("Database Info --> ", "Logout data is updated");
-        }
+        mDatabase.delete(DatabaseHelper.TABLE_USER_LOGIN, null, null);
     }
 
     public void updateConsentInBors(String phoneNumber, String message) {

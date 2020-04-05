@@ -36,7 +36,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -63,7 +62,6 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private Spinner deviceTypeSpinner;
     private DBManager mDbManager;
     private AdminLoginData adminData;
-    private long insertRowid;
     private String deviceType;
     private boolean isDataMatched = false;
     private static String numberComingFromContactList = null;
@@ -102,7 +100,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             scanner.setOnClickListener(this);
         }
 
-        if (numberComingFromContactList != "" && nameComingFromContactList != "") {
+        if ("".equals(numberComingFromContactList) && "".equals(nameComingFromContactList)) {
             mName.setText(nameComingFromContactList);
             mNumber.setText(numberComingFromContactList);
         }
@@ -124,7 +122,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             @Override
             public void afterTextChanged(Editable s) {
                 String name = mName.getText().toString();
-                if (!name.equalsIgnoreCase("")) {
+                if (!"".equalsIgnoreCase(name)) {
                     addContactInGroupButon.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
                     addContactInGroupButon.setTextColor(Color.WHITE);
                 }
@@ -176,7 +174,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                 return;
             }
             String mPhoneNumber = mNumber.getText().toString().trim();
-            if (deviceType.equalsIgnoreCase("People Tracker")) {
+            if (deviceType.equalsIgnoreCase(Constant.PEOPLE_TRACKER_DEVICE_TYPE)) {
                 if (Util.isValidMobileNumberForPet(mPhoneNumber)) {
                     mNumber.setError(Constant.PEOPLE_NUMBER_VALIDATION_PET_NUMBER_ENTERED);
                     return;
@@ -184,7 +182,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     mNumber.setError(Constant.MOBILENUMBER_VALIDATION);
                     return;
                 }
-            } else if (deviceType.equalsIgnoreCase("Pet Tracker")) {
+            } else if (deviceType.equalsIgnoreCase(Constant.PET_TRACKER_DEVICE_TYPE)) {
                 if (Util.isValidMobileNumber(mPhoneNumber)) {
                     mNumber.setError(Constant.PET_TRACKER_VALIDATION_PEOPLE_NUMBER_ENTERE);
                     return;
@@ -267,7 +265,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private void setGroupData(String groupName, String name, String number) {
+    /*private void setGroupData(String groupName, String name, String number) {
         GroupData groupData = new GroupData();
         groupData.setGroupName(groupName.trim());
         groupData.setName(name.trim());
@@ -283,8 +281,8 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         listOnHomeScreen.setGroupMember(isGroupMember);
         List<HomeActivityListData> homeListData = mDbManager.getAlldata(adminData.getEmail());
 
-        insertRowid = mDbManager.insertInBorqsDeviceDB(listOnHomeScreen, adminData.getEmail());
-    }
+        mDbManager.insertInBorqsDeviceDB(listOnHomeScreen, adminData.getEmail());
+    }*/
 
     private void gotoGroupListActivity() {
         startActivity(new Intent(this, GroupListActivity.class));
@@ -300,17 +298,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (position) {
-            case 0:
-                deviceType = parent.getItemAtPosition(position).toString();
-                break;
-            case 1:
-                deviceType = parent.getItemAtPosition(position).toString();
-                break;
-            case 2:
-                deviceType = parent.getItemAtPosition(position).toString();
-                break;
-        }
+        deviceType = parent.getItemAtPosition(position).toString();
     }
 
     @Override
