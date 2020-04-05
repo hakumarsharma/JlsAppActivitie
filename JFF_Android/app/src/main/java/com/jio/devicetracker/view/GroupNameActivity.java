@@ -88,7 +88,7 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
         if(v.getId() == R.id.createGroupName){
             String groupName = groupNameEditText.getText().toString();
             String relationWithGroupMembersText = relationWithGroupMembers.getText().toString();
-            if(groupName.equalsIgnoreCase("")) {
+            if("".equalsIgnoreCase(groupName)) {
                 groupNameEditText.setError(Constant.GROUP_NAME_VALIDATION_ERROR);
                 return;
             }

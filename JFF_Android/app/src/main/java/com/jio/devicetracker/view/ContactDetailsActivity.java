@@ -45,7 +45,6 @@ import androidx.core.content.res.ResourcesCompat;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
-import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -59,7 +58,6 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private EditText mName;
     private EditText mNumber;
     private EditText mIMEINumber;
-    private Spinner deviceTypeSpinner;
     private DBManager mDbManager;
     private AdminLoginData adminData;
     private String deviceType;
@@ -80,7 +78,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         mName = findViewById(R.id.memberName);
         mNumber = findViewById(R.id.deviceNumberInContactDetails);
         mIMEINumber = findViewById(R.id.contactDetailIMEI);
-        deviceTypeSpinner = findViewById(R.id.deviceTypeSpinner);
+        Spinner deviceTypeSpinner = findViewById(R.id.deviceTypeSpinner);
         deviceTypeSpinner.setOnItemSelectedListener(this);
         mDbManager = new DBManager(this);
         adminData = new AdminLoginData();
@@ -144,7 +142,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             @Override
             public void afterTextChanged(Editable s) {
                 String name = mName.getText().toString();
-                if (!name.equalsIgnoreCase("")) {
+                if (!"".equalsIgnoreCase(name)) {
                     addContactInGroupButon.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
                     addContactInGroupButon.setTextColor(Color.WHITE);
                 }
