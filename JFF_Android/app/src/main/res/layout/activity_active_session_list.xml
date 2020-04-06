@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="100dp"
-    >
+    android:id="@+id/activeSessionLayout"
+    android:layout_height="100dp">
 
     <ImageView
-        android:id="@+id/traceeImage"
+        android:id="@+id/activeSessionImage"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/ic_tracee_list" />
+        android:layout_marginTop="15dp" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +20,7 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:id="@+id/name"
-        android:layout_toRightOf="@+id/traceeImage"
+        android:layout_toRightOf="@+id/activeSessionImage"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -37,16 +36,16 @@
         />
 
     <TextView
+        android:id="@+id/durationTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="5dp"
-        android:text="Duration"
-        android:textStyle="bold"
-        android:textSize="14sp"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="25dp"
-        android:id="@+id/durationTitle"
         android:layout_toLeftOf="@+id/expiryTitle"
+        android:text="Duration"
+        android:textSize="14sp"
+        android:textStyle="bold"
 
         />
     <TextView
@@ -94,7 +93,6 @@
         android:layout_height="2dp"
         android:background="@color/black"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
-        />
+        android:layout_marginTop="20dp" />
 
 </RelativeLayout>

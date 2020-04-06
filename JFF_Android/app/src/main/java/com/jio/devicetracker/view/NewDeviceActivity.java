@@ -151,6 +151,7 @@ public class NewDeviceActivity extends AppCompatActivity implements View.OnClick
                 addedDeviceData.setName(addDeviceResponse.getData().getAssignedDevices().get(0).getName());
                 addedDeviceData.setPhoneNumber(addDeviceResponse.getData().getAssignedDevices().get(0).getPhone());
                 addedDeviceData.setImeiNumber(addDeviceResponse.getData().getAssignedDevices().get(0).getMac());
+                addedDeviceData.setIsCreated(1);
                 long insertRowid = mDbManager.insertInBorqsDB(addedDeviceData, adminData.getEmail());
                 Toast.makeText(NewDeviceActivity.this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
                 checkRow(insertRowid);

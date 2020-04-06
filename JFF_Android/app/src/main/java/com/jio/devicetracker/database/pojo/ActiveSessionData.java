@@ -20,19 +20,16 @@
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
  **************************************************************/
 
+
 package com.jio.devicetracker.database.pojo;
 
-public class GroupmemberListData {
+public class ActiveSessionData {
 
     private String name;
     private String number;
+    private String durationTime;
+    private String expiryTime;
     private int profileImage;
-    private String groupName;
-    private String consentStatus;
-    private String lat;
-    private String lng;
-
-
 
     public String getName() {
         return name;
@@ -50,43 +47,27 @@ public class GroupmemberListData {
         this.number = number;
     }
 
+    public String getDurationTime() {
+        return durationTime;
+    }
+
+    public void setDurationTime(String durationTime) {
+        this.durationTime = durationTime;
+    }
+
+    public String getExpiryTime() {
+        return expiryTime;
+    }
+
+    public void setExpiryTime(String expiryTime) {
+        this.expiryTime = expiryTime;
+    }
+
     public int getProfileImage() {
         return profileImage;
     }
 
     public void setProfileImage(int profileImage) {
         this.profileImage = profileImage;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public String getConsentStatus() {
-        return consentStatus;
-    }
-
-    public void setConsentStatus(String consentStatus) {
-        this.consentStatus = consentStatus;
-    }
-
-    public String getLat() {
-        return lat;
-    }
-
-    public void setLat(String lat) {
-        this.lat = lat;
-    }
-
-    public String getLng() {
-        return lng;
-    }
-
-    public void setLng(String lng) {
-        this.lng = lng;
     }
 }

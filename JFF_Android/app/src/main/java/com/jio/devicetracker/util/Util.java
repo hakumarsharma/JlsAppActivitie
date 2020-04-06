@@ -31,7 +31,6 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -115,7 +114,6 @@ public final class Util extends AppCompatActivity {
         if ("".equalsIgnoreCase(imeiNumber)) {
             imeiNumber = telephonyManager.getDeviceId();
         }
-        Log.d("IMEI Number --> ", imeiNumber);
         return imeiNumber;
     }
 
@@ -258,6 +256,13 @@ public final class Util extends AppCompatActivity {
     // Mobile Number validation through RegEx
     public static boolean isValidMobileNumber(String mobile) {
         String mobileNumber = "^[6-9][0-9]{9}$";
+        Pattern pat = Pattern.compile(mobileNumber);
+        return pat.matcher(mobile).matches();
+    }
+
+    // Mobile Number validation through RegEx
+    public static boolean isValidMobileNumberForPet(String mobile) {
+        String mobileNumber = "^[0-9]{13}$";
         Pattern pat = Pattern.compile(mobileNumber);
         return pat.matcher(mobile).matches();
     }

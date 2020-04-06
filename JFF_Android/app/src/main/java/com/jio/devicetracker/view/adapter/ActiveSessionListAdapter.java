@@ -27,38 +27,42 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.pojo.TraceeListData;
+import com.jio.devicetracker.database.pojo.ActiveSessionData;
 import java.util.List;
 
-public class TraceeListAdapter extends RecyclerView.Adapter<TraceeListAdapter.ViewHolder> {
-    private List<TraceeListData> mList;
+public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSessionListAdapter.ViewHolder> {
+    private List<ActiveSessionData> mList;
+    private static RecyclerViewClickListener itemListener;
 
-    public TraceeListAdapter(List<TraceeListData> mList){
+    public ActiveSessionListAdapter(List<ActiveSessionData> mList){
         this.mList = mList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_tracee_list, parent, false);
-
-        return new TraceeListAdapter.ViewHolder(itemView);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_active_session_list, parent, false);
+        return new ActiveSessionListAdapter.ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         holder.phone.setText(mList.get(position).getNumber());
         holder.name.setText(mList.get(position).getName());
         holder.durationtime.setText(mList.get(position).getDurationTime());
         holder.expirytime.setText(mList.get(position).getExpiryTime());
         holder.profile.setImageResource(mList.get(position).getProfileImage());
+        holder.relativeLayout.setOnClickListener(v -> {
+            itemListener.clickOnListLayout(mList.get(position).getProfileImage(), mList.get(position).getName());
+            return;
+        });
     }
 
     @Override
@@ -72,7 +76,7 @@ public class TraceeListAdapter extends RecyclerView.Adapter<TraceeListAdapter.Vi
         public TextView durationtime;
         public TextView expirytime;
         public ImageView profile;
-
+        public RelativeLayout relativeLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,7 +84,17 @@ public class TraceeListAdapter extends RecyclerView.Adapter<TraceeListAdapter.Vi
             name = itemView.findViewById(R.id.name);
             durationtime = itemView.findViewById(R.id.durationTime);
             expirytime = itemView.findViewById(R.id.expiryTime);
-            profile = itemView.findViewById(R.id.traceeImage);
+            profile = itemView.findViewById(R.id.activeSessionImage);
+            relativeLayout = itemView.findViewById(R.id.activeSessionLayout);
         }
     }
+
+    public interface RecyclerViewClickListener {
+        void clickOnListLayout(int selectedGroupName, String name);
+    }
+
+    public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
+        this.itemListener = mItemClickListener;
+    }
+
 }

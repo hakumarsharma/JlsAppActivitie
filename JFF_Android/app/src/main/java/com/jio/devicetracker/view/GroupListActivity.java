@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -36,8 +34,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.pojo.GroupData;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupmemberListData;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.GroupMemberListAdapter;
@@ -48,6 +48,8 @@ import java.util.List;
 public class GroupListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView mRecyclerList;
+    public static String mGroupName;
+    private DBManager mDbmanager;
 
 
     @Override
@@ -55,6 +57,7 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_member);
         Toolbar toolbar = findViewById(R.id.customToolbar);
+        mDbmanager = new DBManager(this);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Button createGroupButtonOnToolbar = toolbar.findViewById(R.id.createGroupButtonOnToolbar);
         createGroupButtonOnToolbar.setText(Constant.CREATE_GROUP_LIST);
@@ -62,24 +65,27 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         createGroupButtonOnToolbar.setOnClickListener(this);
         toolbarTitle.setText(Constant.GROUP_TITLE);
         mRecyclerList = findViewById(R.id.groupList);
+        //mGroupName = new Intent().getStringExtra("GroupName");
         FloatingActionButton groupMembersListFloatButton = findViewById(R.id.groupMembersListFloatButton);
         groupMembersListFloatButton.setOnClickListener(this);
         addDataInList();
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
     }
 
     private void addDataInList() {
         List<GroupmemberListData> mList = new ArrayList<>();
-        if (DashboardActivity.specificGroupMemberData.size() > 0) {
-            for (GroupData groupData : DashboardActivity.specificGroupMemberData) {
-                if (groupData.getGroupName().equalsIgnoreCase(DashboardActivity.groupName)) {
-                    GroupmemberListData data = new GroupmemberListData();
-                    data.setName(groupData.getName());
-                    data.setNumber(groupData.getNumber());
-                    data.setProfileImage(R.drawable.ic_tracee_list);
-                    mList.add(data);
-                }
+        AdminLoginData adminLoginData = mDbmanager.getAdminLoginDetail();
+        List<HomeActivityListData> listData = mDbmanager.getAllBorqsData(adminLoginData.getEmail());
+        for (HomeActivityListData homeActivityListData : listData) {
+            if (homeActivityListData.getGroupName() != null && homeActivityListData.getGroupName().equalsIgnoreCase(DashboardActivity.groupName) && homeActivityListData.getName() != null) {
+                GroupmemberListData data = new GroupmemberListData();
+                data.setName(homeActivityListData.getName());
+                data.setNumber(homeActivityListData.getPhoneNumber());
+                data.setProfileImage(R.drawable.ic_tracee_list);
+                data.setGroupName(homeActivityListData.getGroupName());
+                mList.add(data);
             }
         }
         GroupMemberListAdapter mAdapter = new GroupMemberListAdapter(mList);
@@ -91,8 +97,8 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         if (v.getId() == R.id.groupMembersListFloatButton) {
             DashboardActivity.isComingFromGroupList = true;
             startActivity(new Intent(this, ContactDetailsActivity.class));
-        } else if(v.getId() == R.id.createGroupButtonOnToolbar){
-            Util.alertDilogBox("Coming Soon...","Alert",this);
+        } else if (v.getId() == R.id.createGroupButtonOnToolbar) {
+            Util.alertDilogBox("Coming Soon...", "Alert", this);
 //            Toast.makeText(this, "We will make an API to create group on borqs", Toast.LENGTH_LONG).show();
         }
     }

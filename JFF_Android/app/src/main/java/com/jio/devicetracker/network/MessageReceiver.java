@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 
 public class MessageReceiver extends BroadcastReceiver {
@@ -41,14 +40,13 @@ public class MessageReceiver extends BroadcastReceiver {
         for (Object o : pdus) {
             SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) o);
             if(smsMessage != null && mListener != null) {
-                String message = "Sender : " + smsMessage.getDisplayOriginatingAddress()
+                /*String message = "Sender : " + smsMessage.getDisplayOriginatingAddress()
                         + "Email From: " + smsMessage.getEmailFrom()
                         + "Emal Body: " + smsMessage.getEmailBody()
                         + "Display message body: " + smsMessage.getDisplayMessageBody()
                         + "Time in millisecond: " + smsMessage.getTimestampMillis()
-                        + "Message: " + smsMessage.getMessageBody();
+                        + "Message: " + smsMessage.getMessageBody();*/
                 mListener.messageReceived(smsMessage.getDisplayMessageBody(), smsMessage.getDisplayOriginatingAddress());
-                Log.d("Incoming message", message);
             }
 
         }

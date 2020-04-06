@@ -27,12 +27,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.TrackerListData;
-import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.adapter.TrackerListAdapter;
 
 import java.util.ArrayList;
@@ -49,7 +49,8 @@ public class TrackerListActivity extends AppCompatActivity {
         mList = new ArrayList<>();
         addDataInList();
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(Constant.TRACKER_TITLE);
+        Intent intent = getIntent();
+        toolbarTitle.setText(intent.getStringExtra("groupName"));
         RecyclerView mRecyclerList = findViewById(R.id.trackerList);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());

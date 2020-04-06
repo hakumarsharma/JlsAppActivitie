@@ -32,10 +32,10 @@
             android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/ic_user" />
+            android:src="@drawable/ic_user" />
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/nameDeviceTracker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/contactImage"
@@ -52,7 +52,7 @@
             android:id="@+id/phoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/name"
+            android:layout_below="@+id/nameDeviceTracker"
             android:layout_marginTop="6dp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/contactImage"
@@ -87,11 +87,11 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="18dp"
-            android:layout_marginLeft="370dp"
+            android:layout_alignParentRight="true"
             android:layout_below="@id/consent"
             android:text="&#8942;"
             android:textAppearance="?android:textAppearanceLarge" />
-
+-->
         <!-- <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -45,9 +45,9 @@ public class HelpActivity extends Activity implements View.OnClickListener {
     private List<HelpPagedata> mList;
     private LinearLayout mLayout;
     TextView[] dot;
-    private int helpImage[] = {R.drawable.resigtration_screenshot, R.drawable.login_screenshot, R.drawable.dashboard_screenshot, R.drawable.home_2_screenshot, R.drawable.location_screenshot};
-    private int helpTitle[] = {R.string.registration_heading, R.string.login_heading, R.string.home_heading, R.string.home_heading, R.string.location_heading};
-    private int helpContent[] = {R.string.registration_help, R.string.login_help, R.string.home_help, R.string.home_help1, R.string.location_help};
+    private int helpImage[] = {R.drawable.login_screenshot, R.drawable.dashboard_screenshot, R.drawable.home_2_screenshot, R.drawable.location_screenshot};
+    private int helpTitle[] = {R.string.login_heading, R.string.home_heading, R.string.home_heading, R.string.location_heading};
+    private int helpContent[] = {R.string.login_help, R.string.home_help, R.string.home_help1, R.string.location_help};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,7 +92,6 @@ public class HelpActivity extends Activity implements View.OnClickListener {
             data.setContent(helpContent[i]);
             mList.add(data);
         }
-
     }
 
     public void addDot(int pagePosition) {
@@ -100,7 +99,6 @@ public class HelpActivity extends Activity implements View.OnClickListener {
         mLayout.removeAllViews();
 
         for (int i = 0; i < helpImage.length; i++) {
-            ;
             dot[i] = new TextView(this);
             dot[i].setText(Html.fromHtml(getResources().getString(R.string.pagerindicater)));
             dot[i].setTextSize(35);
@@ -124,10 +122,7 @@ public class HelpActivity extends Activity implements View.OnClickListener {
 
             default:
                 break;
-
         }
-
-
     }
 
     private void gotoTermandCondition() {

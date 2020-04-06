@@ -55,7 +55,7 @@ public class Constant {
     //  Common Text
     public static final String ALERT_TITLE = "Alert";
     public static final String WAIT_LOADER = "Please wait...";
-    public static final String JIO = "Jio";
+    public static final String JIO = "jio";
     public static final String NAME = "name";
     public static final String FLAG = "flag";
     public static final String SUPERVISOR = "supervisor";
@@ -66,6 +66,10 @@ public class Constant {
     public static final String REGISTRATION_TITLE = "Registration";
     public static final String REGISTRATION = "registration";
     public static final String NAME_VALIDATION = "Please enter your name";
+    public static final String INVALID_OTP = "Invalid OTP Provided";
+    public static final String OTP_SENT = "OTP sent.";
+    public static final String SMS_SEND_FAILED = "SMS failed, please try again.";
+    public static final String OTP_MESSAGE = "PeopleTracker OTP :";
     public static final String PHONE_VALIDATION = "Phone number cannot be left empty!";
     public static final String MOBILE_NETWORKCHECK = "Please use your mobile data";
     public static final String JIO_NUMBER = "Please use Jio number";
@@ -95,20 +99,25 @@ public class Constant {
     public static final String EMAIL_LOCKED = "Account is locked";
     public static final String VALID_USER = "Please enter valid user";
     public static final String PASSWORD_VALIDATION2 = "Password must have a minimum of 8 characters and a maximum of 16 characters. Also, must contain atleast one lowercase alphabet, one uppercase alphabet, one numeric and one special character";
-    public static final String YESJFF_SMS = "Please click on below link to know the consent response https://www.jff.com/YesJFF?data=";
-    public static final String NOJFF_SMS = "Please click on below link to know the consent response https://www.jff.com/NoJFF?data=";
+    public static final String YESJFF_SMS = "Please click on below link to know the consent response https://peopletracker/YesPeopleTracker?data=";
+    public static final String NOJFF_SMS = "Please click on below link to know the consent response https://peopletracker/NoPeopleTracker?data=";
 
 
     // New Device Activity Constants
     public static final String ADD_DEVICE_TITLE = "Add";
     public static final String IMEI_VALIDATION = "Enter the 15 digit IMEI number";
     public static final String MOBILENUMBER_VALIDATION = "Enter the valid mobile number";
+    public static final String PET_NUMBER_VALIDATION = "Please enter the valid device number of pet";
+    public static final String PEOPLE_NUMBER_VALIDATION_PET_NUMBER_ENTERED = "Please enter the valid mobile number, Select Pet Tracker from drop down if you want to track any pet";
+    public static final String PET_TRACKER_VALIDATION_PEOPLE_NUMBER_ENTERE = "Please enter the valid device number of pet, if you want to track people please select People Tracker from dropdown";
     public static final String REGMOBILENUMBER_VALIDATION = "You can't add registered mobile number";
     public static final String CHECK_DETAILS = "Please Enter the details";
     public static final String DUPLICATE_NUMBER = "This number is already added";
     public static final String LOGOUT_CONFIRMATION_MESSAGE = "Are you sure you want to logout ?";
     public static final String IMEI = "imei";
     public static final String PROGRESSBAR_MSG = "Please wait adding device";
+    public static final String PET_TRACKER_DEVICE_TYPE = "Pet Tracker";
+    public static final String PEOPLE_TRACKER_DEVICE_TYPE = "People Tracker";
 
     // MAPs Activity constants
     public static final String MAP_TITLE = "      Location";
@@ -140,10 +149,12 @@ public class Constant {
     public static final String SEARCH_DEVICE_STATUS = "/accounts/api/devicestatuses/search?ugs_token=";
     public static final String SEARCH_EVENT_REQUEST = "/accounts/api/events/search?skip=0&limit=100&ugs_token=";
     public static final String TRACK_DEVICE_REQUEST = "/accounts/api/devicestatuses/search?skip=0&limit=20&tsp=1572443375692&ugs_token=";
+    public static final String GET_DEVICE_LOCATION_URL_1 = "/accounts/api/devices/";
+    public static final String GET_DEVICE_LOCATION_URL_2 = "?tsp=1585031229387&ugs_token=";
 
     //Privacy Policy
 
-    public static final String TERM_AND_CONDITION_ALERT = "Please accept terms and conditions to proceed with the application";
+    public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
     public static final String TERM_AND_CONDITION_STATUS_MSG = "Please accept terms and conditions and login then again click on the link which is given in message";
     public static final String NOT_REGISTERED_MSG = "User is not registered";
     public static final String INVALID_TOKEN_MSG = "Invalid token please try again";
@@ -167,7 +178,7 @@ public class Constant {
     public static final String NUMBER_CARRIER = "number";
     public static final String CONSENT_STATUS_MSG = "Yes JioTracker";
     public static final String CONSENT_MSG_SENT = "Consent sent";
-    public static final String CONSENT_MSG_TO_TRACKEE = " wants to track your location. Click below link to reply. https://www.jff.com/home?data=";
+    public static final String CONSENT_MSG_TO_TRACKEE = " wants to track your location. Click below link to reply. https://peopletracker/home?data=";
     public static final String START_TRACKING = "To start tracking ";
     public static final String REQUEST_CONSENT_USER = " please request for consent from the user by clicking “Request consent”";
     public static final String DIALOG_TITLE = "Title...";
@@ -187,7 +198,7 @@ public class Constant {
     public static final String REGISTARTION_FAILED_MESSAGE = "Registration is failed";
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";
-    public static final String TRACEE_TITLE = "Trackees";
+    public static final String ACTIVE_SESSION_TITLE = "Active Sessions";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";
     public static final String CREATE_GROUP_LIST = "Track";
@@ -202,6 +213,10 @@ public class Constant {
     public static final String PENDING = "Pending";
     public static final String GROUP_LIMITATION = "You can't create more than two groups, please add it as a individual trackee";
     public static final String USER_LIMITATION = "You can't add more than ten individual users";
+    public static final String GROUP_NAME_VALIDATION_ERROR = "Group name cannot be left empty";
+    public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
+    public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
+
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";
 

@@ -1,3 +1,4 @@
+
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
@@ -20,54 +21,38 @@
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
  **************************************************************/
 
-
+/**
+ * This is the pojo class which is helping to  maintain the get device location api data.
+ */
 package com.jio.devicetracker.database.pojo;
 
-public class TraceeListData {
+public class GetDeviceLocationData {
 
-    private String name;
-    private String number;
-    private String durationTime;
-    private String expiryTime;
-    private int profileImage;
+    private String deviceId;
+    private double lat;
+    private double lang;
 
-    public String getName() {
-        return name;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public String getNumber() {
-        return number;
+    public double getLat() {
+        return lat;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 
-    public String getDurationTime() {
-        return durationTime;
+    public double getLang() {
+        return lang;
     }
 
-    public void setDurationTime(String durationTime) {
-        this.durationTime = durationTime;
-    }
-
-    public String getExpiryTime() {
-        return expiryTime;
-    }
-
-    public void setExpiryTime(String expiryTime) {
-        this.expiryTime = expiryTime;
-    }
-
-    public int getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(int profileImage) {
-        this.profileImage = profileImage;
+    public void setLang(double lang) {
+        this.lang = lang;
     }
 }
