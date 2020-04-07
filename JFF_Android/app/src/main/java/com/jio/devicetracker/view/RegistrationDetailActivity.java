@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -48,7 +46,6 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.RegisterRequestData;
 import com.jio.devicetracker.database.pojo.request.RegistrationTokenrequest;
-import com.jio.devicetracker.jiotoken.JioUtils;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -227,59 +224,56 @@ public class RegistrationDetailActivity extends Activity implements View.OnClick
         phoneNumber = mPhone.getText().toString();
         String carierName = subscriptionInfos.get(0).getCarrierName().toString();
         String number = subscriptionInfos.get(0).getNumber();
-
         if (number != null && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
-            if (carierName.contains(Constant.JIO)) {
-                JioUtils.getSSOIdmaToken(this);
-                return true;
-            } else {
+            if (!carierName.contains(Constant.JIO)) {
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
                 return false;
-            }
-        } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber() != null) {
-            if (subscriptionInfos.get(1).getNumber().equals("91" + phoneNumber) || subscriptionInfos.get(1).getNumber().equals(phoneNumber)) {
-                Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
-                return false;
+            } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber() != null) {
+                if (subscriptionInfos.get(1).getNumber().equals("91" + phoneNumber) || subscriptionInfos.get(1).getNumber().equals(phoneNumber)) {
+                    Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+                    return false;
+                } else {
+                    Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
+                    return false;
+                }
             } else {
                 Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
                 return false;
             }
-        } else {
-            Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
-            return false;
-
         }
+        return false;
     }
 
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{READ_SMS, READ_PHONE_NUMBERS, READ_PHONE_STATE}, permissionRequestCode);
-        }
-    }
-
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == permissionRequestCode) {
-            if (ActivityCompat.checkSelfPermission(this, READ_SMS) !=
-                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-            checkJioSIMSlot1();
-        }
-    }
-
-    public void checkJioSIMSlot1() {
-        if (subscriptionInfos != null) {
-            String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
-            if (!carrierNameSlot1.contains("Jio")) {
-                Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
-            } else {
-                mPhone.setText(subscriptionInfos.get(0).getNumber().toString());
-                mPhone.setEnabled(false);
+        private void requestPermission () {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{READ_SMS, READ_PHONE_NUMBERS, READ_PHONE_STATE}, permissionRequestCode);
             }
         }
-    }
 
-}
+        public void onRequestPermissionsResult ( int requestCode, String permissions[],
+        int[] grantResults){
+            if (requestCode == permissionRequestCode) {
+                if (ActivityCompat.checkSelfPermission(this, READ_SMS) !=
+                        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                        READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
+                checkJioSIMSlot1();
+            }
+        }
+
+        public void checkJioSIMSlot1 () {
+            if (subscriptionInfos != null) {
+                String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
+                if (!carrierNameSlot1.contains("Jio")) {
+                    Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
+                } else {
+                    mPhone.setText(subscriptionInfos.get(0).getNumber().toString());
+                    mPhone.setEnabled(false);
+                }
+            }
+        }
+
+    }

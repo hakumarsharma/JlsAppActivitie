@@ -43,7 +43,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.jiotoken.JioUtils;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
@@ -163,12 +162,8 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         String carierName = subscriptionInfos.get(0).getCarrierName().toString();
         String number = subscriptionInfos.get(0).getNumber();
 
-        if (number != null
-                && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
-            if (carierName.contains(Constant.JIO)) {
-                JioUtils.getSSOIdmaToken(this);
-                gotoDashBoardActivity();
-            } else {
+        if (number != null && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
+            if (!carierName.contains(Constant.JIO)) {
                 Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
             }
         } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber() != null) {

@@ -31,6 +31,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 
 /**
  * Implementation of Admin's profile Screen to show the admin's details.
@@ -54,8 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getUserAdminDetail() {
-        AdminLoginData adminLoginData = mDbManager.getAdminLoginDetail();
-        userName.setText(adminLoginData.getName());
-        userEmail.setText(adminLoginData.getEmail());
+        userName.setText(Util.userName);
+        userEmail.setText(Util.adminEmail);
     }
 }

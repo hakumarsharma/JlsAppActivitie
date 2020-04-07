@@ -59,7 +59,6 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private EditText mNumber;
     private EditText mIMEINumber;
     private DBManager mDbManager;
-    private AdminLoginData adminData;
     private String deviceType;
     private boolean isDataMatched = false;
     private static String numberComingFromContactList = null;
@@ -81,8 +80,6 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         Spinner deviceTypeSpinner = findViewById(R.id.deviceTypeSpinner);
         deviceTypeSpinner.setOnItemSelectedListener(this);
         mDbManager = new DBManager(this);
-        adminData = new AdminLoginData();
-        adminData = mDbManager.getAdminLoginDetail();
         Intent intent = getIntent();
         String qrValue = intent.getStringExtra("QRCodeValue");
         setNameNumberImei(qrValue);
@@ -213,7 +210,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     }
 
     private void checkValidationOfUser(String mName, String mNumber, String mIMEINumber) {
-        List<HomeActivityListData> homeListData = mDbManager.getAllBorqsData(adminData.getEmail());
+        List<HomeActivityListData> homeListData = mDbManager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : homeListData) {
             if (homeActivityListData.getImeiNumber() != null && homeActivityListData.getImeiNumber().equalsIgnoreCase(mIMEINumber) && homeActivityListData.getPhoneNumber().equalsIgnoreCase(mNumber)) {
                 mDbManager.updateDeviceTypeAndGroupName(deviceType, homeActivityListData.getGroupName(), homeActivityListData.getImeiNumber(), mName, 1);

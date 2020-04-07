@@ -78,10 +78,11 @@ public class Constant {
     public static final String DEVICE_JIONUMBER = "Enter the valid jio number present in device";
     public static final String REGISTRAION_ALERT_409 = "User is already registered";
     public static final String REGISTRAION_FAILED = "Register failed ,Please contact your admin";
+    public static final String LOCATION_NOT_FOUND = "Location not found";
 
 
     // Dashboard Activity constants
-    public static final String DASHBOARD_TITLE = "Home";
+    public static final String DASHBOARD_TITLE = "Home               ";
     public static final String DELETC_DEVICE = "Do you want to delete ?";
     public static final String CHOOSE_DEVICE = "Please select the number for tracking";
     public static final String CONSENT_NOTAPPROVED = "Consent is not apporoved for phone number ";
@@ -101,6 +102,8 @@ public class Constant {
     public static final String PASSWORD_VALIDATION2 = "Password must have a minimum of 8 characters and a maximum of 16 characters. Also, must contain atleast one lowercase alphabet, one uppercase alphabet, one numeric and one special character";
     public static final String YESJFF_SMS = "Please click on below link to know the consent response https://peopletracker/YesPeopleTracker?data=";
     public static final String NOJFF_SMS = "Please click on below link to know the consent response https://peopletracker/NoPeopleTracker?data=";
+    public static final String ADMIN_EMAIL_ID = "Shivakumar.jagalur@ril.com";
+    public static final String ADMIN_PASSWORD = "Ril@12345";
 
 
     // New Device Activity Constants
