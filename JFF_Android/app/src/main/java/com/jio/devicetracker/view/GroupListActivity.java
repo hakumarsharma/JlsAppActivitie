@@ -76,8 +76,7 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
 
     private void addDataInList() {
         List<GroupmemberListData> mList = new ArrayList<>();
-        AdminLoginData adminLoginData = mDbmanager.getAdminLoginDetail();
-        List<HomeActivityListData> listData = mDbmanager.getAllBorqsData(adminLoginData.getEmail());
+        List<HomeActivityListData> listData = mDbmanager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : listData) {
             if (homeActivityListData.getGroupName() != null && homeActivityListData.getGroupName().equalsIgnoreCase(DashboardActivity.groupName) && homeActivityListData.getName() != null) {
                 GroupmemberListData data = new GroupmemberListData();

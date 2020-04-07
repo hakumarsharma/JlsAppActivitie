@@ -37,6 +37,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,6 +55,10 @@ public final class Util extends AppCompatActivity {
     public static ProgressDialog progressDialog = null;
     public static SharedPreferences sharedpreferences = null;
     public static String imeiNumber = "";
+    public static String adminEmail;
+    public static String userToken = "";
+    public static String userName = "";
+    public static String userId = "";
 
     private Util() {
 
@@ -72,6 +78,7 @@ public final class Util extends AppCompatActivity {
         return gson.toJson(pojo);
     }
 
+    // Returns Pojo class objects
     public <T> T getPojoObject(String response, Class<T> pojo) {
         Gson gson = new Gson();
         return gson.fromJson(response, pojo);
@@ -187,12 +194,13 @@ public final class Util extends AppCompatActivity {
         progressDialog.setCancelable(true);
     }
 
-    // Common progress bar dialog
+    // To show common progress bar dialog
     public void showProgressBarDialog(Context context) {
         progressDialog = ProgressDialog.show(context, "", Constant.LOADING_DATA, true);
         progressDialog.setCancelable(true);
     }
 
+    // To dismiss common progress bar dialog
     public void dismissProgressBarDialog() {
         if (progressDialog != null) {
             progressDialog.dismiss();
@@ -267,6 +275,7 @@ public final class Util extends AppCompatActivity {
         return pat.matcher(mobile).matches();
     }
 
+    // To set location flag status in Shared Prefrences variable
     public static void setLocationFlagStatus(Context mContext, boolean flag) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.LOCATION_FLAG_STATUS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedAutologin.edit();
@@ -288,5 +297,14 @@ public final class Util extends AppCompatActivity {
         editor.commit();
     }
 
-
+    // Returns the loged in user token and his email id
+    public static void getAdminDetail(Context context) {
+        AdminLoginData adminLoginData = new DBManager(context).getAdminLoginDetail();
+        if (adminLoginData != null) {
+            userToken = adminLoginData.getUserToken();
+            adminEmail = adminLoginData.getEmail();
+            userName = adminLoginData.getName();
+            userId = adminLoginData.getUserId();
+        }
+    }
 }

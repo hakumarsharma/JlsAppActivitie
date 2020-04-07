@@ -42,7 +42,7 @@ import com.jio.devicetracker.util.Constant;
 import java.util.List;
 
 /**
- * Implementation of adapter for tracee list.
+ * Implementation of adapter for trackee list in Home Screen with grouping options.
  */
 public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDeviceListAdapter.ViewHolder> {
 
@@ -51,11 +51,13 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
     private static RecyclerViewClickListener itemListener;
     private MultipleselectData mSelectData;
 
+    // Constructor to add devices in home screen
     public TrackerDeviceListAdapter(Context mContext, List<HomeActivityListData> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }
 
+    // Binds the given View to the position
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
@@ -65,6 +67,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         return new ViewHolder(itemView);
     }
 
+    //  A new ViewHolder that holds a View of the given view type
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         HomeActivityListData data = mData.get(position);
@@ -151,26 +154,25 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
     }
 
 
+    // return The total number of items in this adapter
     @Override
     public int getItemCount() {
         return mData.size();
     }
 
-
+    // A ViewHolder describes an item view and metadata about its place within the RecyclerView.
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView phone;
         public TextView name;
         public TextView relation;
         public TextView status;
         public CardView mListlayout;
-        //        public Button mDelete;
-//        public Button mEdit;
         public Button mConsent;
         public Button mConsentStatus;
         public TextView viewOptionMenu;
         public ImageView mIconImage;
 
-
+        // Constructor where we find element from .xml file
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             phone = itemView.findViewById(R.id.phoneNumber);
@@ -184,6 +186,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         }
     }
 
+    // Interface to override methods in Dashboard to call those methods on particular item click
     public interface RecyclerViewClickListener {
         void recyclerViewListClicked(View v, int position, MultipleselectData data, int val);
 
@@ -198,10 +201,12 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         void onPopupMenuClicked(View v, int position, String name, String number);
     }
 
+    // Register the listener
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
         this.itemListener = mItemClickListener;
     }
 
+    // Called when we remove device from home screen
     public void removeItem(int adapterPosition) {
         mData.remove(adapterPosition);
         notifyItemRemoved(adapterPosition);
