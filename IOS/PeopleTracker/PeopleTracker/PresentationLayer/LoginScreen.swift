@@ -53,7 +53,7 @@ class LoginScreen: UIViewController {
             self.ShowALert(title: Constants.LoginScreenConstants.otp);
             return
         }
-     
+       
        self.callLoginApi()
         
     }
@@ -61,19 +61,24 @@ class LoginScreen: UIViewController {
     // login api call
     // TODO :  Change API call based on phone registration process
     func callLoginApi() {
+        self.showActivityIndicator()
         UserService.shared.loginRequest(with:  URL(string: Constants.ApiPath.loginUrl)!, parameters: ["email":"shivakumar.jagalur@ril.com","password":"Ril@12345","type": "supervisor"]) { (result : Result<LoginModel, Error>) in
                 switch result {
                     case .success(let loginResponse):
+                        self.saveDataInUserDefaults(response: loginResponse)
                         DispatchQueue.main.async {
-                            self.navigateToHomeScreen(ugsToken: loginResponse.ugsToken, userid: loginResponse.user?.userId ?? "")
+                            self.hideActivityIndicator()
+                            self.navigateToHomeScreen()
                        }
                     case .failure(let error):
                         if type(of: error) == NetworkManager.ErrorType.self {
                             DispatchQueue.main.async {
+                            self.hideActivityIndicator()
                             self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
                             }
                         } else {
                             DispatchQueue.main.async {
+                            self.hideActivityIndicator()
                             self.ShowALert(title: error.localizedDescription)
                             }
                     }
@@ -81,15 +86,18 @@ class LoginScreen: UIViewController {
             }
     }
     
-    // navigate to home screen upon succesful login
-    func navigateToHomeScreen(ugsToken : String, userid : String) {
-        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.homeScreen) as! HomeScreen
-        nextViewController.userid = userid
-        nextViewController.ugsToken = ugsToken
-        self.navigationController?.pushViewController(nextViewController, animated: true)
+    func saveDataInUserDefaults(response : LoginModel) {
+        UserDefaults.standard.set(response.ugsToken, forKey: Constants.userDefaultConstants.ugsToken)
+        UserDefaults.standard.set(response.user?.userId ?? "", forKey: Constants.userDefaultConstants.userId)
+        UserDefaults.standard.set(response.ugsTokenexpiry, forKey: Constants.userDefaultConstants.ugsExpiryTime)
     }
     
+    // navigate to home screen upon succesful login
+    func navigateToHomeScreen() {
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.homeScreen) as! HomeScreen
+        self.navigationController?.pushViewController(nextViewController, animated: true)
+    }
     
     
 }

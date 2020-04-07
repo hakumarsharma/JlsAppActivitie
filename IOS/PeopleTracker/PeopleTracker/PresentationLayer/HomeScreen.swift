@@ -33,8 +33,6 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     let actionButton = JJFloatingActionButton()
     var selectedCell : [String] = []
     let names: [String] = ["Office Group","Sree", "Maruti", "Harish", "Ashish", "Satish"] // TODO: remove after api call is integrated
-    var userid : String = ""
-    var ugsToken : String = ""
     var listOfDevices : [DeviceData] = []
     var deviceDetails : [DeviceDetails] = []
     
@@ -132,9 +130,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     func navigateToMapsScreen() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.mapsScreen) as! MapsScreen
-        mapsViewController.deviceId = self.userid
-        mapsViewController.ugsToken = self.ugsToken
-        mapsViewController.userId = self.userid
+        mapsViewController.deviceId = UserDefaults.standard.string(forKey: Constants.userDefaultConstants.userId) ?? ""
         mapsViewController.deviceDetails = self.deviceDetails
         self.navigationController?.pushViewController(mapsViewController, animated: true)
     }
@@ -143,8 +139,8 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.addDeviceScreen) as! AddDeviceScreen
         addDeviceViewController.navtitle = title
-        addDeviceViewController.userid = self.userid
-        addDeviceViewController.ugsToken = self.ugsToken
+        addDeviceViewController.userid = UserDefaults.standard.string(forKey: Constants.userDefaultConstants.userId) ?? ""
+        addDeviceViewController.ugsToken = UserDefaults.standard.string(forKey: Constants.userDefaultConstants.ugsToken) ?? ""
         self.navigationController?.pushViewController(addDeviceViewController, animated: true)
     }
     
@@ -175,7 +171,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
             self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.addPerson)
         }
         
-        actionButton.addItem(title: Constants.HomScreenConstants.addDevice, image: UIImage(named: "group")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.createGroup, image: UIImage(named: "group")?.withRenderingMode(.alwaysTemplate)) { item in
             // do something
             self.navigateToCreateGroupScreen()
         }
@@ -187,15 +183,15 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     }
     
     // Alert with button action
-     func ShowALertWithButtonAction(title: String){
-         let alert = UIAlertController(title: Constants.AlertConstants.alert, message: title, preferredStyle: UIAlertController.Style.alert)
-         alert.addAction(UIAlertAction(title: Constants.AlertConstants.okButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
-             DispatchQueue.main.async {
+    func ShowALertWithButtonAction(title: String){
+        let alert = UIAlertController(title: Constants.AlertConstants.alert, message: title, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.okButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+            DispatchQueue.main.async {
                 
-             }
-         }))
-         self.present(alert, animated: true, completion: nil)
-     }
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
     
     // MARK: Display ActionSheet
     
@@ -222,12 +218,12 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     // MARK: Service Calls
     // API to add device details
     func callgetDeviceApi() {
-        let deviceURL = URL(string:  Constants.ApiPath.deviceDetails + ugsToken)!
-        let deviceParams :  [String : Any] = ["usersAssigned":[self.userid]]
+        self.showActivityIndicator()
+        let deviceURL = URL(string:  Constants.ApiPath.deviceDetails + (UserDefaults.standard.string(forKey: Constants.userDefaultConstants.ugsToken) ?? ""))!
+        let deviceParams :  [String : Any] = ["usersAssigned":[UserDefaults.standard.string(forKey: Constants.userDefaultConstants.userId) ?? ""]]
         DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
             switch result {
             case .success(let deviceResponse):
-                print(deviceResponse.devicedata!)
                 guard let deviceData = deviceResponse.devicedata else {
                     return
                 }
@@ -235,15 +231,18 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
                     self.listOfDevices.append(device)
                 }
                 DispatchQueue.main.async {
+                    self.hideActivityIndicator()
                     self.usersTableView.reloadData()
                 }
             case .failure(let error):
                 if type(of: error) == NetworkManager.ErrorType.self {
                     DispatchQueue.main.async {
+                        self.hideActivityIndicator()
                         self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
                     }
                 } else {
                     DispatchQueue.main.async {
+                        self.hideActivityIndicator()
                         self.ShowALert(title: error.localizedDescription)
                     }
                 }
@@ -254,24 +253,31 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     // API to get location details
     // TODO: check and change api call to track multiple devices
     func callgetDeviceLocationDetails(completion: @escaping(_ success: Bool) -> Void) {
+        self.showActivityIndicator()
         for (index,element) in selectedCell.enumerated() {
-            let deviceURL = URL(string:  Constants.ApiPath.deviceApisUrl + element + "?tsp=1585031229387&ugs_token=" + self.ugsToken)! // TODO: Save tsp in user defaults
+            let deviceURL = URL(string:  Constants.ApiPath.deviceApisUrl + element + "?tsp=1585031229387&ugs_token=" + (UserDefaults.standard.string(forKey: Constants.userDefaultConstants.ugsToken) ?? ""))! // TODO: Save tsp in user defaults
             DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<LocationModel, Error>)) in
                 switch result {
                 case .success(let deviceResponse):
+                     DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                     }
                     if let device = deviceResponse.devicedata , let _ = deviceResponse.devicedata?.deviceStatus?.location {
                         self.deviceDetails.append(device)
                     }
                     if index == self.selectedCell.count - 1 {
                         completion(true)
                     }
+                    
                 case .failure(let error):
                     if type(of: error) == NetworkManager.ErrorType.self {
                         DispatchQueue.main.async {
+                            self.hideActivityIndicator()
                             self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
                         }
                     } else {
                         DispatchQueue.main.async {
+                            self.hideActivityIndicator()
                             self.ShowALert(title: error.localizedDescription)
                         }
                     }
