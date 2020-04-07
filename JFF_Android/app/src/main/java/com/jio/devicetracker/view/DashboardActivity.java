@@ -141,6 +141,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        Intent intent = getIntent();
         //consentRequestBox(intent.getBooleanExtra("flag", false), intent.getStringExtra("name"));
         //isPermissionGranted();
         setLayoutData();
@@ -510,7 +511,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      */
     private void checkNumberOfIndividualUser() {
         int individualUserCount = 1;
-        List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
+        List<HomeActivityListData> allDevicedata = mDbManager.getAllDevicedata(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : allDevicedata) {
             if (homeActivityListData.isGroupMember() == false) {
                 individualUserCount++;
@@ -544,15 +545,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Navigates to the Group name acivity
-     */
-    private void gotoGroupNameActivity() {
-        isAddIndividual = false;
-        isComingFromGroupList = true;
-        startActivity(new Intent(this, GroupNameActivity.class));
-    }
-
-    /**
      * Navigates to the ContactDetailsActivity activity by counting individual device
      * which should be less than equal to ten.
      */
@@ -562,7 +554,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         groupName = null;
         int individualUserCount = 1;
 
-        List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
+        List<HomeActivityListData> allDevicedata = mDbManager.getAllDevicedata(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : allDevicedata) {
             if (homeActivityListData.isGroupMember() == false && homeActivityListData.getImeiNumber() != null) {
                 individualUserCount++;
