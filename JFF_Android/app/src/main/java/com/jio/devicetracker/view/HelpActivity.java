@@ -40,6 +40,9 @@ import com.jio.devicetracker.view.adapter.HelpPageAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Help screen, It displays login, dashboard and map screenshots along with details that how to use our app.
+ */
 public class HelpActivity extends Activity implements View.OnClickListener {
 
     private List<HelpPagedata> mList;
@@ -69,6 +72,9 @@ public class HelpActivity extends Activity implements View.OnClickListener {
         pageChangeListener();
     }
 
+    /**
+     * Called when you change the page
+     */
     private void pageChangeListener() {
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -88,6 +94,9 @@ public class HelpActivity extends Activity implements View.OnClickListener {
         });
     }
 
+    /**
+     * Adds data in help screen along with image, title and content
+     */
     private void addDataforHelpscreen() {
         for (int i = 0; i < helpImage.length; i++) {
             HelpPagedata data = new HelpPagedata();
@@ -129,6 +138,9 @@ public class HelpActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Go to Term & Condition page when you click on skip button
+     */
     private void gotoTermandCondition() {
         Intent intent = new Intent(this, PrivacyPolicyActivity.class);
         startActivity(intent);

@@ -54,6 +54,9 @@ public class ProfileActivity extends AppCompatActivity {
         getUserAdminDetail();
     }
 
+    /**
+     * Displays Admin user name and his email id
+     */
     private void getUserAdminDetail() {
         userName.setText(Util.userName);
         userEmail.setText(Util.adminEmail);

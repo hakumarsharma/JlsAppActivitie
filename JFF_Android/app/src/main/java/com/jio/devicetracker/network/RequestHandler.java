@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -31,12 +29,18 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.jio.devicetracker.util.Constant;
 
-
+/**
+ * Class which adds request into the queue and then make an api call using volley
+ */
 public class RequestHandler {
     private static RequestHandler mRequestHandler;
     private static Context mContext;
     private RequestQueue mRequestQueue;
 
+    /**
+     * @param context
+     * @return Request Handler instance, so that we can handle the request
+     */
     public static synchronized RequestHandler getInstance(Context context) {
         RequestHandler.mContext = context;
         if (mRequestHandler == null) {
@@ -45,7 +49,10 @@ public class RequestHandler {
         return mRequestHandler;
     }
 
-
+    /**
+     * Creates a default instance of the worker pool and calls {@link RequestQueue#start()} on it.
+     * @return A started {@link RequestQueue} instance.
+     */
     private RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
@@ -53,12 +60,20 @@ public class RequestHandler {
         return mRequestQueue;
     }
 
+    /**
+     * Add request to the queue
+     * @param req
+     * @param <T>
+     */
     private <T> void addToRequestQueue(Request<T> req) {
         getRequestQueue().add(req);
     }
 
+    /**
+     * Makes an final API call, after adding request into the queue
+     * @param req
+     */
     public void handleRequest(IRequest req) {
-
         VolleyManager volleyReq = new VolleyManager(mContext, req.getMethod(), constructUrl(req.getAction()), req);
         volleyReq.setTag(req.getTag());
         volleyReq.setShouldCache(false);
@@ -66,6 +81,11 @@ public class RequestHandler {
         addToRequestQueue(volleyReq);
     }
 
+    /**
+     * Constructs an URI
+     * @param action
+     * @return constructed URL
+     */
     private String constructUrl(String action) {
         return Constant.SIT_URL + action;
     }

@@ -37,6 +37,9 @@ import com.jio.devicetracker.database.pojo.GroupmemberListData;
 
 import java.util.List;
 
+/**
+ * Display the group member inside the list
+ */
 public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberListAdapter.ViewHolder> {
     private List<GroupmemberListData> mList;
 
@@ -44,6 +47,12 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         this.mList = mList;
     }
 
+    /**
+     * Binds the given View to the position
+     * @param parent
+     * @param viewType
+     * @return View Holder object
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -51,25 +60,39 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         return new GroupMemberListAdapter.ViewHolder(itemView);
     }
 
+    /**
+     * A new ViewHolder that holds a View of the given view type
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull GroupMemberListAdapter.ViewHolder holder, int position) {
-
         holder.phone.setText(mList.get(position).getNumber());
         holder.name.setText(mList.get(position).getName());
         holder.profile.setImageResource(mList.get(position).getProfileImage());
     }
 
+    /**
+     * return The total number of items in this adapter
+     * @return size
+     */
     @Override
     public int getItemCount() {
         return mList.size();
     }
 
+    /**
+     * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView phone;
         public TextView name;
         public ImageView profile;
 
-
+        /**
+         * Constructor where we find element from .xml file
+         * @param itemView
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             phone = itemView.findViewById(R.id.mobileNumber);

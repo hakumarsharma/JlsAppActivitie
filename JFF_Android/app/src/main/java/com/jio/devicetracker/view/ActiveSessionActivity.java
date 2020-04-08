@@ -37,6 +37,9 @@ import com.jio.devicetracker.view.adapter.ActiveSessionListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class shows all the active session(To whom you are tracking or you are tracked by)
+ */
 public class ActiveSessionActivity extends AppCompatActivity {
     private List<ActiveSessionData> mList;
     private ActiveSessionListAdapter mAdapter;
@@ -68,6 +71,9 @@ public class ActiveSessionActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Shows data in list
+     */
     private void addDataInList() {
         for (int i = 0; i < 6; i++) {
             if (i < 2) {

@@ -113,23 +113,6 @@ public class DBManager {
     }
 
     /**
-     * Inserts Admins data in TABLE_NAME_USER table
-     * @param data
-     * @return long
-     */
-    public long insertAdminData(RegisterData data) {
-        mDatabase = mDBHelper.getWritableDatabase();
-        ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.NAME, data.getName());
-        contentValue.put(DatabaseHelper.EMAIL, data.getEmail());
-        contentValue.put(DatabaseHelper.DEVICE_NUM, data.getPhoneNumber());
-        contentValue.put(DatabaseHelper.DOB, data.getDob());
-        contentValue.put(DatabaseHelper.PASS, data.getPassword());
-        contentValue.put(DatabaseHelper.USER_ID, "");
-        return mDatabase.insert(DatabaseHelper.TABLE_NAME_USER, null, contentValue);
-    }
-
-    /**
      * Inserts Login data into the login(TABLE_USER_LOGIN) table
      * @param data
      * @return
@@ -193,7 +176,7 @@ public class DBManager {
         List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
         if (email != null) {
-            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM, DatabaseHelper.DEVICE_TYPE, DatabaseHelper.GROUP_NAME, DatabaseHelper.IS_GROUP_MEMBER, DatabaseHelper.IS_CREATED};
+            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM, DatabaseHelper.DEVICE_TYPE, DatabaseHelper.GROUP_NAME, DatabaseHelper.IS_GROUP_MEMBER, DatabaseHelper.IS_CREATED, DatabaseHelper.DEVICE_ID};
             String[] arg = {email};
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.EMAIL + " = ? ", arg, null, null, null);
             if (cursor != null && cursor.getCount() > 0) {
@@ -208,6 +191,7 @@ public class DBManager {
                     data.setDeviceType(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_TYPE)));
                     data.setGroupName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_NAME)));
                     data.setIsCreated(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_CREATED)));
+                    data.setDeviceId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_ID)));
                     if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_MEMBER)) > 0) {
                         data.setGroupMember(true);
                     } else {
@@ -217,41 +201,6 @@ public class DBManager {
                 }
             }
             cursor.close();
-        }
-        return mlist;
-    }
-
-    /**
-     * Returns all Borqs data in the form of list from the table TABLE_NAME_BORQS
-     * @param email
-     * @return
-     */
-    public List<HomeActivityListData> getAllDevicedata(String email) {
-        List<HomeActivityListData> mlist = new ArrayList<>();
-        mDatabase = mDBHelper.getWritableDatabase();
-        if (email != null) {
-            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM, DatabaseHelper.IS_GROUP_MEMBER, DatabaseHelper.DEVICE_ID};
-            String[] arg = {email};
-            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.EMAIL + " = ? ", arg, null, null, null);
-            if (cursor != null && cursor.getCount() > 0) {
-                while (cursor.moveToNext()) {
-                    HomeActivityListData data = new HomeActivityListData();
-                    data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
-                    data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
-                    data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)).trim());
-                    data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
-                    data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
-                    data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
-                    data.setDeviceId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_ID)));
-                    if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_MEMBER)) > 0) {
-                        data.setGroupMember(true);
-                    } else {
-                        data.setGroupMember(false);
-                    }
-                    mlist.add(data);
-                }
-                cursor.close();
-            }
         }
         return mlist;
     }
@@ -436,28 +385,6 @@ public class DBManager {
             cursor.close();
         }
         return consentStatus;
-    }
-
-    /**
-     * Returns the registration data
-     * @return Registration data
-     */
-    public RegisterData getAdminRegistrationDetail() {
-        mDatabase = mDBHelper.getWritableDatabase();
-        RegisterData data = new RegisterData();
-        String[] column = {DatabaseHelper.NAME, DatabaseHelper.EMAIL, DatabaseHelper.DEVICE_NUM, DatabaseHelper.PASS, DatabaseHelper.DOB};
-        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_USER, column, null, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
-                data.setPassword(cursor.getString(cursor.getColumnIndex(DatabaseHelper.PASS)));
-                data.setEmail(cursor.getString(cursor.getColumnIndex(DatabaseHelper.EMAIL)));
-                data.setDob(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DOB)));
-                data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
-            }
-            cursor.close();
-        }
-        return data;
     }
 
     /**

@@ -34,7 +34,7 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.R;
 
 /**
- * Implementation of Splash Screen.This class creates splash screen for JFF application
+ * Implementation of Splash Screen.This class creates splash screen for People tracker application
  */
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -63,6 +63,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         mWaitHandler.removeCallbacksAndMessages(null);
     }
 
+    /**
+     * According to the condition it navigates to the particular screen
+     */
     public void gotoScreen() {
         boolean flag = Util.getTermconditionFlag(this);
         boolean flagAutologin = Util.getAutologinStatus(this);

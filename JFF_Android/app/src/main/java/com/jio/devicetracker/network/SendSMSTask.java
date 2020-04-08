@@ -25,7 +25,9 @@ package com.jio.devicetracker.network;
 import android.os.AsyncTask;
 import android.telephony.SmsManager;
 
-
+/**
+ * This class sends SMS to a given number Using AsyncTask
+ */
 public class SendSMSTask extends AsyncTask<String, String, Void> {
 
     @Override

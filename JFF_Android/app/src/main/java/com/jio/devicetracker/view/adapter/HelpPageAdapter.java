@@ -44,9 +44,7 @@ public class HelpPageAdapter extends PagerAdapter {
     private List<HelpPagedata> list;
     private LayoutInflater layoutInflater;
 
-
-    public HelpPageAdapter(Context context, List<HelpPagedata> mList)
-    {
+    public HelpPageAdapter(Context context, List<HelpPagedata> mList) {
         Context mContext = context;
         list = mList;
         this.layoutInflater=LayoutInflater.from(mContext);
