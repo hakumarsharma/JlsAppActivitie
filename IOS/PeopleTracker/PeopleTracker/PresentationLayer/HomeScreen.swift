@@ -41,6 +41,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         self.title = "Home"
         self.navigationItem.setHidesBackButton(true, animated: true)
         let trackBtn : UIBarButtonItem = UIBarButtonItem.init(title: "Track", style: .plain, target: self, action: #selector(trackButton(sender:)))
+        trackBtn.setTitleTextAttributes( [NSAttributedString.Key.foregroundColor : UIColor.white], for: .normal)
         self.navigationItem.setRightBarButton(trackBtn, animated: true)
         usersTableView.delegate = self
         usersTableView.dataSource = self
