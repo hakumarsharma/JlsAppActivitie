@@ -27,7 +27,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Implementation of database helper class to create and update the table for JFF application.
+ * Implementation of database helper class to create and update the table for People Tracker application application.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -86,6 +86,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
+    /**
+     * Called automatically when we install the application
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_BORQS);
@@ -95,6 +99,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_USER_LOGIN);
     }
 
+    /**
+     * Called automatically when we install the application
+     * @param db
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_BORQS);

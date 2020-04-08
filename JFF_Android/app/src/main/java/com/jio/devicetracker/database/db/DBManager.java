@@ -27,21 +27,15 @@ import android.database.sqlite.SQLiteDatabase;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ConsentTimeupdateData;
-import com.jio.devicetracker.database.pojo.EditProfileData;
 import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
-import com.jio.devicetracker.database.pojo.GroupmemberListData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
-import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
-import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.LoginActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Implementation of DataBase manager class to manage all operation like insert,delete,update and fetch in database.
@@ -50,7 +44,7 @@ public class DBManager {
 
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDatabase;
-    public static List<String> phoneNumner;
+
 
     public DBManager(Context context) {
         mDBHelper = new DatabaseHelper(context);

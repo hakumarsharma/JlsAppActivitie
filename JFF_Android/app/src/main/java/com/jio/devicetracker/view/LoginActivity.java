@@ -50,7 +50,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
@@ -87,9 +86,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static LogindetailResponse logindetailResponse = null;
     public static SearchDeviceResponse searchdeviceResponse = null;
     private static final int PERMIT_ALL = 1;
-    private String name;
     private String mbNumber;
-    private String imei;
     private String number;
     public static String userName;
     private DBManager mDbManager;
@@ -369,8 +366,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String[] splitStr = data.toString().split("=");
             String[] splitNamenumber = splitStr[1].split("&");
             mbNumber = splitNamenumber[0];
-            name = splitNamenumber[1];
-            imei = splitNamenumber[2];
+            /*String name = splitNamenumber[1];
+            String imei = splitNamenumber[2];*/
             showDialog(mbNumber);
         }
     }
