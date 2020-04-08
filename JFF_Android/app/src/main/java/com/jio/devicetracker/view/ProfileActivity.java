@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
@@ -38,7 +37,6 @@ import com.jio.devicetracker.util.Util;
  */
 public class ProfileActivity extends AppCompatActivity {
 
-    private DBManager mDbManager;
     private TextView userName;
     private TextView userEmail;
 
@@ -46,7 +44,6 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        mDbManager = new DBManager(this);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.PROFILE_TITLE);
         userName = findViewById(R.id.name);

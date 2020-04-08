@@ -141,7 +141,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        Intent intent = getIntent();
         //consentRequestBox(intent.getBooleanExtra("flag", false), intent.getStringExtra("name"));
         //isPermissionGranted();
         setLayoutData();
@@ -228,6 +227,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    /**
+     * Initialize all the data members
+     */
     private void initializeDataMember() {
         selectedData = new ArrayList<>();
         mWorkManager = WorkManager.getInstance();
@@ -252,6 +254,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    /**
+     * Sets Navigation data
+     */
     private void setNavigationData() {
         NavigationView navigationView = findViewById(R.id.nv);
         View header = navigationView.getHeaderView(0);
@@ -286,11 +291,17 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
 
+    /**
+     * Navigates to the Active Session Activity
+     */
     private void gotoActiveSessionActivity() {
         Intent intent = new Intent(this, ActiveSessionActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Sets all the layout data
+     */
     private void setLayoutData() {
         Toolbar toolbar = findViewById(R.id.customToolbar);
         listView = findViewById(R.id.listView);
@@ -316,6 +327,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         context = getApplicationContext();
     }
 
+    /**
+     * Navigates to the RefreshIntervalSettingActivity
+     */
     private void goToRefreshIntervalSettingActivity() {
         startActivity(new Intent(this, RefreshIntervalSettingActivity.class));
     }
@@ -326,6 +340,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         ContextCompat.startForegroundService(this, serviceIntent);
     }*/
 
+    /**
+     * Shows Alert Dialog with Yes and No options
+     * @param message
+     * @param title
+     * @param phoneNumber
+     * @param position
+     */
     public void alertDilogBoxWithCancelbtn(String message, String title, String phoneNumber, int position) {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setTitle(title);
@@ -351,7 +372,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Broadcast to calculate battery strength
+    /**
+     * Broadcast receiver to calculate battery strength
+     */
     private BroadcastReceiver broadcastreceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -361,7 +384,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     };
 
-    /****** To get the lat and long of the current device*******/
+    /**
+     * To get the lat and long of the current device
+     */
     private void getLocation() {
         if (client != null) {
             client.getLastLocation().addOnSuccessListener(this, location -> {
@@ -373,10 +398,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    /**
+     * Navigates to the profile Activity
+     */
     private void gotoProfileActivity() {
         startActivity(new Intent(this, ProfileActivity.class));
     }
 
+    /**
+     * Updates Logout data in database
+     */
     private void updateLogoutData() {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setTitle(Constant.ALERT_TITLE);
@@ -395,6 +426,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         adb.show();
     }
 
+    /**
+     * Navigates to the Login Activity
+     */
     private void goToLoginActivity() {
         startActivity(new Intent(this, LoginActivity.class));
     }
@@ -408,7 +442,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         return super.onOptionsItemSelected(item);
     }
 
-    /***** Publish the MQTT message along with battery level, signal strength and time format*********/
+    /**
+     * Publish the MQTT message along with battery level, signal strength and time format
+     */
     public void publishMessage() {
         getLocation();
         String message = "{\"imi\":\"" + Util.imeiNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
@@ -417,7 +453,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         new MQTTManager().publishMessage(topic, message);
     }
 
-    // Navigates to the Edit screen by carrying name and number
+    /**
+     * Navigates to the Edit screen by carrying name and number
+     * @param name
+     * @param phonenumber
+     */
     private void gotoEditScreen(String name, String phonenumber) {
         Intent intent = new Intent(this, EditActivity.class);
         intent.putExtra(Constant.NAME, name);
@@ -425,7 +465,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
     }
 
-    // Checks device is present or not, if not present show the help text otherwise display the added devices
+    /**
+     * Checks device is present or not, if not present show the help text otherwise display the added devices
+     */
     private void isDevicePresent() {
         TextView devicePresent = findViewById(R.id.devicePresent);
         List<HomeActivityListData> alldata = mDbManager.getAlldata(Util.adminEmail);
@@ -438,7 +480,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Gets called when we click on button
+    /**
+     * Gets called when we click on button
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -460,7 +505,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Count number of individual aaded user, If it is more than 10 then display alert dialog
+    /**
+     * Count number of individual aaded user, If it is more than 10 then display alert dialog
+     */
     private void checkNumberOfIndividualUser() {
         int individualUserCount = 1;
         List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
@@ -476,7 +523,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Count number of created groups, If it is more than 2 then display alert dialog
+    /**
+     * Count number of created groups, If it is more than 2 then display alert dialog
+     */
     private void checkNumberOfGroups() {
         List<HomeActivityListData> allDevicedata = mDbManager.getAlldata(Util.adminEmail);
         int groupCount = 1;
@@ -494,14 +543,19 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Navigates to the Group name acivity
+    /**
+     * Navigates to the Group name acivity
+     */
     private void gotoGroupNameActivity() {
         isAddIndividual = false;
         isComingFromGroupList = true;
         startActivity(new Intent(this, GroupNameActivity.class));
     }
 
-    // Navigates to the ContactDetailsActivity activity by counting Add device screen
+    /**
+     * Navigates to the ContactDetailsActivity activity by counting individual device
+     * which should be less than equal to ten.
+     */
     private void gotoQRScannerScreen() {
         isAddIndividual = false;
         isComingFromGroupList = false;
@@ -521,6 +575,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    /**
+     * Navigates to the Contact Details Activity
+     */
     private void gotoContactsDetailsActivity() {
         isAddIndividual = true;
         isComingFromGroupList = false;
@@ -528,20 +585,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(new Intent(this, ContactDetailsActivity.class));
     }
 
-    /***** Track the device ***********/
+    /**
+     * Track the device
+     */
     private void trackDevice() {
         if (selectedData.isEmpty()) {
             Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
         } else {
-            /*AdminLoginData adminLoginDetail = mDbManager.getAdminLoginDetail();
-            List<String> data = new ArrayList<>();
-            data.add(adminLoginDetail.getUserId());*/
-
-            /*SearchDeviceStatusData searchDeviceStatusData = new SearchDeviceStatusData();
-            SearchDeviceStatusData.Device device = searchDeviceStatusData.new Device();
-            device.setUsersAssigned(data);
-            searchDeviceStatusData.setDevice(device);*/
-
             Util.getInstance().showProgressBarDialog(this);
             List<HomeActivityListData> hmActivityListData = mDbManager.getAlldata(Util.adminEmail);
             boolean isConsentApproved = false;
@@ -582,7 +632,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Get latest lat-long from server after particular time interval
+    /**
+     * Get latest lat-long from server after particular time interval
+     */
     private void trackDeviceAfterTimeInterval() {
         AdminLoginData adminLoginDetail = mDbManager.getAdminLoginDetail();
         List<String> data = new ArrayList<>();
@@ -596,7 +648,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Success Listener of Search device status request
+    /**
+     * Success Listener of Search device status request
+     */
     private class SearchDeviceStatusAfterTimeIntervalSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
@@ -621,7 +675,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Error Listener of Search device status request
+    /**
+     * Error Listener of Search device status request
+     */
     private class SearchDeviceStatusAfterTimeIntervalErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -631,7 +687,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    /**************** Refresh map thread scheduler **************************/
+    /**
+     * start map thread scheduler
+     */
     public void startTheScheduler() {
         if (thread != null) {
             thread.interrupt();
@@ -640,7 +698,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Refresh Map thread
+    /**
+     * Refresh Map thread
+     */
     public class RefreshMap implements Runnable {
         public void run() {
             while (true) {
@@ -657,14 +717,18 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    /******* Connect to the MQTT ************/
+    /**
+     * Connect to the MQTT server
+     */
     public void makeMQTTConnection() {
         MQTTManager mqttManager = new MQTTManager();
         mqttManager.getMQTTClient(this);
         mqttManager.connetMQTT();
     }
 
-    // Navigates to the Map activity
+    /**
+     * Navigates to the Map activity
+     */
     private void goToMapActivity() {
         Util.setLocationFlagStatus(this, true);
         Util.clearAutologinstatus(this);
@@ -672,7 +736,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
     }
 
-    // Sends SMS and update the Consent to the Pending state for the particular device
+    /**
+     * Sends SMS and update the Consent to the Pending state for the particular device
+     * @param phoneNumber
+     */
     private void sendSMS(String phoneNumber) {
         String userName = mDbManager.getAdminDetail();
         String imei = Util.getInstance().getIMEI(this);
@@ -691,7 +758,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Called when you press back
+    /**
+     * Called when you press back
+     */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -699,14 +768,18 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
     }
 
-    // Called when you come back to the activity
+    /**
+     * Called when you come back to the activity
+     */
     @Override
     protected void onResume() {
         super.onResume();
         isDevicePresent();
     }
 
-    /************  Class to calculate the signal strength ***********************/
+    /**
+     * Class to calculate the signal strength
+     */
     class MyPhoneStateListener extends PhoneStateListener {
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             super.onSignalStrengthsChanged(signalStrength);
@@ -727,7 +800,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Permissions check
+    /**
+     * Permissions check
+     */
     public void checkPermission() {
         int fineLocation = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
         int fineLocationCoarse = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -774,7 +849,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Send location to the borqs every 15 seconds
+    /**
+     * Send location to the borqs every 15 seconds
+     */
     public class SendLocation implements Runnable {
         public void run() {
             while (true) {
@@ -789,7 +866,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Store consent time in database
+    /**
+     * Store consent time in database
+     * @param phoneNumber
+     * @param approvalTime
+     */
     private void storeConsentTime(String phoneNumber, int approvalTime) {
         Date currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
@@ -810,6 +891,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         mWorkManager.enqueue(refreshWork);
     }
 
+    /**
+     * register the receiver
+     */
     public void registerReceiver() {
         IntentFilter intent = new IntentFilter();
         intent.addAction(getString(R.string.customintent));
@@ -829,7 +913,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     };
 
-    // Deep Link URI Check, gets called when you click on Deep link URI and it comes back to the Home screen, not login page
+    /**
+     * Deep Link URI Check, gets called when you click on Deep link URI and
+     * it comes back to the Home screen, not login page
+     */
     private void deepLinkingURICheck() {
         Intent intent = getIntent();
         Uri data = intent.getData();
@@ -844,7 +931,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Displays Consent time for URI check
+    /**
+     * Displays Consent time for URI check
+     * @param phoneNumber
+     */
     private void showSpinnerforConsentTime(String phoneNumber) {
         String time[] = {Constant.MIN_15, Constant.MIN_25, Constant.MIN_30, Constant.MIN_40};
         final Dialog dialog = new Dialog(this);
@@ -885,7 +975,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         dialog.show();
     }
 
-    // Displays spinner for Group Consent time
+    /**
+     * Displays spinner for Group Consent time
+     * @param data
+     */
     private void showSpinnerforGroupConsentTime(List<HomeActivityListData> data) {
         String time[] = {Constant.MIN_15, Constant.MIN_25, Constant.MIN_30, Constant.MIN_40};
         final Dialog dialog = new Dialog(this);
@@ -928,7 +1021,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         dialog.show();
     }
 
-    // Adds data in Home screen using Recycler view, It is the main method to display devices in Home screen
+    /**
+     * Adds data in Home screen using Recycler view, It is the main method to display devices in Home screen
+     */
     private void addDataInHomeScreen() {
         if (!listOnHomeScreens.isEmpty()) {
             for (HomeActivityListData listOnHomeScreenData : listOnHomeScreens) {

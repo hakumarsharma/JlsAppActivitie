@@ -35,7 +35,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupmemberListData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;

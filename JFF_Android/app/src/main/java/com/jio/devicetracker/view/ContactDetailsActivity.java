@@ -44,7 +44,6 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
