@@ -60,6 +60,12 @@ class Constants {
         static let otp = "Please enter otp"
     }
     
+    struct userDefaultConstants {
+        static let ugsToken = "ugsToken"
+        static let userId = "userId"
+        static let ugsExpiryTime = "ugsExpiryTime"
+    }
+    
     struct HomScreenConstants {
         static let select = "Select"
         static let edit = "Edit"

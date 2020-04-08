@@ -34,10 +34,8 @@ class MapsScreen: UIViewController {
     let googleApiKey = Bundle.main.infoDictionary?["GoggleApiKey"]
     let regionRadius: CLLocationDistance = 1000
     var deviceId : String = ""
-    var userId : String = ""
-    var ugsToken : String = ""
     var deviceDetails : [DeviceDetails] = []
-//    var deviceIdsArr : [String] = []
+    //    var deviceIdsArr : [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +44,7 @@ class MapsScreen: UIViewController {
         
         self.createMapViewMarker()
         
-
+        
     }
     
     // Create marker to display pindrop over map
@@ -56,27 +54,28 @@ class MapsScreen: UIViewController {
         mapView.settings.zoomGestures = true
         self.view.addSubview(mapView)
         for (index, element) in self.deviceDetails.enumerated() {
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: deviceDetails[index].deviceStatus?.location?.latitude ?? 12.3456, longitude:deviceDetails[index].deviceStatus?.location?.longitude ?? 27.5467)
+            let marker = GMSMarker()
+            marker.position = CLLocationCoordinate2D(latitude: deviceDetails[index].deviceStatus?.location?.latitude ?? 12.3456, longitude:deviceDetails[index].deviceStatus?.location?.longitude ?? 27.5467)
             marker.title = element.name
-        let img = UIImage.init(named: "avatar1")
-        let markerView = UIImageView(image: img)
-        markerView.tintColor = UIColor.red
-        marker.iconView = markerView
-        marker.map = mapView
+            let img = UIImage.init(named: "avatar1")
+            let markerView = UIImageView(image: img)
+            markerView.tintColor = UIColor.red
+            marker.iconView = markerView
+            marker.map = mapView
             
         }
-
+        
     }
     // API to get location details
     func callgetDeviceLocationDetails() {
-        let deviceURL = URL(string:  Constants.ApiPath.deviceApisUrl + "5e789ad0a789b5a7f632ff7e" + "?tsp=1585031229387&ugs_token=" + self.ugsToken)!
+        self.showActivityIndicator()
+        let deviceURL = URL(string:  Constants.ApiPath.deviceApisUrl + "5e789ad0a789b5a7f632ff7e" + "?tsp=1585031229387&ugs_token=" + (UserDefaults.standard.string(forKey: Constants.userDefaultConstants.ugsToken) ?? ""))!
         DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<LocationModel, Error>)) in
             switch result {
             case .success(let deviceResponse):
                 if let _ = deviceResponse.devicedata {
                     DispatchQueue.main.async {
-                        
+                        self.hideActivityIndicator()
                         //self.createmapView()
                     }
                 } else {
@@ -84,14 +83,18 @@ class MapsScreen: UIViewController {
                 }
             case .failure(let error):
                 if type(of: error) == NetworkManager.ErrorType.self {
-                    
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
                 } else {
                     DispatchQueue.main.async {
+                        self.hideActivityIndicator()
                         self.ShowALert(title: error.localizedDescription)
                     }
                 }
             }
         }
     }
-
+    
 }
