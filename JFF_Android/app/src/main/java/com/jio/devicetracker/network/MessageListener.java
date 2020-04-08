@@ -22,6 +22,9 @@
 
 package com.jio.devicetracker.network;
 
+/**
+ * Interface to received SMS, This interface has to be implemented where you want to receive message
+ */
 public interface MessageListener {
     void messageReceived(String message, String phoneNum);
 }

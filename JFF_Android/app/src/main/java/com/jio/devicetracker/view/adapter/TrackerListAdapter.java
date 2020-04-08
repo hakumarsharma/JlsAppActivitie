@@ -36,13 +36,26 @@ import com.jio.devicetracker.database.pojo.TrackerListData;
 
 import java.util.List;
 
+/**
+ * Display the member's list available inside group
+ */
 public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.ViewHolder> {
     private List<TrackerListData> mList;
 
+    /**
+     * Constructor to add devices inside group
+     * @param mList
+     */
     public TrackerListAdapter(List<TrackerListData> mList){
         this.mList = mList;
     }
 
+    /**
+     * Binds the given View to the position
+     * @param parent
+     * @param viewType
+     * @return View Holder object
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -51,6 +64,11 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
         return new TrackerListAdapter.ViewHolder(itemView);
     }
 
+    /**
+     * A new ViewHolder that holds a View of the given view type
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull TrackerListAdapter.ViewHolder holder, int position) {
 
@@ -61,11 +79,18 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
         holder.profile.setImageResource(mList.get(position).getProfileImage());
     }
 
+    /**
+     * return The total number of items in this adapter
+     * @return size
+     */
     @Override
     public int getItemCount() {
         return mList.size();
     }
 
+    /**
+     * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView phone;
         public TextView name;
@@ -73,7 +98,10 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
         public TextView expirytime;
         public ImageView profile;
 
-
+        /**
+         * Constructor where we find element from .xml file
+         * @param itemView
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             phone = itemView.findViewById(R.id.mobileNumber);

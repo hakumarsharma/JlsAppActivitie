@@ -64,7 +64,10 @@ public final class Util extends AppCompatActivity {
 
     }
 
-    // Singleton which returns single instance of a Util class
+    /**
+     * Singleton which returns single instance of a Util class
+     * @return
+     */
     public synchronized static Util getInstance() {
         if (mUtils == null) {
             mUtils = new Util();
@@ -72,19 +75,33 @@ public final class Util extends AppCompatActivity {
         return mUtils;
     }
 
-    // Converts class to JSON object
+    /**
+     * Converts class to JSON object
+     * @param pojo
+     * @return
+     */
     public String toJSON(Object pojo) {
         Gson gson = new Gson();
         return gson.toJson(pojo);
     }
 
-    // Returns Pojo class objects
+    /**
+     * Returns Pojo class objects
+     * @param response
+     * @param pojo
+     * @param <T>
+     * @return
+     */
     public <T> T getPojoObject(String response, Class<T> pojo) {
         Gson gson = new Gson();
         return gson.fromJson(response, pojo);
     }
 
-    // Method to check Mobile network
+    /**
+     * Method to check Mobile network
+     * @param mContext
+     * @return
+     */
     public static boolean isMobileNetworkAvailable(Context mContext) {
         ConnectivityManager connectivity = (ConnectivityManager) mContext
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -99,7 +116,12 @@ public final class Util extends AppCompatActivity {
         return false;
     }
 
-    // Common alerts dialog box
+    /**
+     * Common alerts dialog box
+     * @param message
+     * @param title
+     * @param context
+     */
     public static void alertDilogBox(String message, String title, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
@@ -110,7 +132,11 @@ public final class Util extends AppCompatActivity {
         builder.show();
     }
 
-    // Returns IMEI number of the phone
+    /**
+     * Returns IMEI number of the phone
+     * @param context
+     * @return
+     */
     public String getIMEI(Context context) {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         if (context != null) {
@@ -130,8 +156,11 @@ public final class Util extends AppCompatActivity {
         }
     }
 
-
-    // Email id validation through RegEx
+    /**
+     * Email id validation through RegEx
+     * @param email
+     * @return
+     */
     public static boolean isValidEmailId(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
@@ -145,7 +174,11 @@ public final class Util extends AppCompatActivity {
         return pat.matcher(email).matches();
     }
 
-    // Password validation through RegEx
+    /**
+     * Password validation through RegEx
+     * @param pass
+     * @return
+     */
     public static boolean isValidPassword(String pass) {
         String passRegex = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,16})";
 
@@ -156,7 +189,10 @@ public final class Util extends AppCompatActivity {
         return pat.matcher(pass).matches();
     }
 
-    // Convert current time to epoch time
+    /**
+     * Convert current time to epoch time
+     * @return
+     */
     public static long convertTimeToEpochtime() {
         long epochTime = 0;
         Date today = Calendar.getInstance().getTime();
@@ -172,7 +208,11 @@ public final class Util extends AppCompatActivity {
         return epochTime;
     }
 
-    // Convert current time + given time to epoch time
+    /**
+     * Convert current time + given time to epoch time
+     * @param min
+     * @return
+     */
     public static long getTimeEpochFormatAfterCertainTime(int min) {
         long epochTime = 0;
         Date today = Calendar.getInstance().getTime();
@@ -188,26 +228,39 @@ public final class Util extends AppCompatActivity {
         return epochTime;
     }
 
-    // Common progress bar dialog with message
+    /**
+     * Common progress bar dialog with message
+     * @param context
+     * @param message
+     */
     public void showProgressBarDialog(Context context, String message) {
         progressDialog = ProgressDialog.show(context, "", message, true);
         progressDialog.setCancelable(true);
     }
 
-    // To show common progress bar dialog
+    /**
+     * To show common progress bar dialog
+     * @param context
+     */
     public void showProgressBarDialog(Context context) {
         progressDialog = ProgressDialog.show(context, "", Constant.LOADING_DATA, true);
         progressDialog.setCancelable(true);
     }
 
-    // To dismiss common progress bar dialog
+    /**
+     * To dismiss common progress bar dialog
+     */
     public void dismissProgressBarDialog() {
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
     }
 
-    // Sets the terms and condition flag
+    /**
+     * Sets the terms and condition flag
+     * @param mContext
+     * @param flag
+     */
     public static void setTermconditionFlag(Context mContext, boolean flag) {
         sharedpreferences = mContext.getSharedPreferences(Constant.TERM_CONDITION_FLAG, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -215,7 +268,11 @@ public final class Util extends AppCompatActivity {
         editor.commit();
     }
 
-    // Returns the terms and condition flag
+    /**
+     * returns the terms and condition flag
+     * @param mContext
+     * @return
+     */
     public static boolean getTermconditionFlag(Context mContext) {
         sharedpreferences = mContext.getSharedPreferences(Constant.TERM_CONDITION_FLAG, Context.MODE_PRIVATE);
         if (sharedpreferences != null) {
@@ -225,7 +282,11 @@ public final class Util extends AppCompatActivity {
         return false;
     }
 
-    // Sets Login status
+    /**
+     * Sets Login status
+     * @param mContext
+     * @param flag
+     */
     public static void setAutologinStatus(Context mContext, boolean flag) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.AUTO_LOGIN_STATUS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedAutologin.edit();
@@ -233,13 +294,20 @@ public final class Util extends AppCompatActivity {
         editor.commit();
     }
 
-    // Returns Login status
+    /**
+     * Returns Login status
+     * @param mContext
+     * @return
+     */
     public static boolean getAutologinStatus(Context mContext) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.AUTO_LOGIN_STATUS, Context.MODE_PRIVATE);
         return sharedAutologin.getBoolean(Constant.AUTO_LOGIN, false);
     }
 
-    // Clear Login status
+    /**
+     * Clear Login status
+     * @param mContext
+     */
     public static void clearAutologinstatus(Context mContext) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.AUTO_LOGIN_STATUS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedAutologin.edit();
@@ -247,35 +315,54 @@ public final class Util extends AppCompatActivity {
         editor.commit();
     }
 
-    // Returns MQTT time format
+    /**
+     * Returns MQTT time format
+     * @return
+     */
     public String getMQTTTimeFormat() {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH);
         return sdf.format(c.getTime());
     }
 
-    // IMEI number validation through Regex
+    /**
+     * IMEI number validation through Regex
+     * @param imei
+     * @return
+     */
     public static boolean isValidIMEINumber(String imei) {
         String imeiNumber = "^\\d{15}$";
         Pattern pat = Pattern.compile(imeiNumber);
         return pat.matcher(imei).matches();
     }
 
-    // Mobile Number validation through RegEx
+    /**
+     * Mobile Number validation through RegEx
+     * @param mobile
+     * @return
+     */
     public static boolean isValidMobileNumber(String mobile) {
         String mobileNumber = "^[6-9][0-9]{9}$";
         Pattern pat = Pattern.compile(mobileNumber);
         return pat.matcher(mobile).matches();
     }
 
-    // Mobile Number validation through RegEx
+    /**
+     * Device Number validation through RegEx for pet
+     * @param mobile
+     * @return
+     */
     public static boolean isValidMobileNumberForPet(String mobile) {
         String mobileNumber = "^[0-9]{13}$";
         Pattern pat = Pattern.compile(mobileNumber);
         return pat.matcher(mobile).matches();
     }
 
-    // To set location flag status in Shared Prefrences variable
+    /**
+     * To set location flag status in Shared Prefrences variable
+     * @param mContext
+     * @param flag
+     */
     public static void setLocationFlagStatus(Context mContext, boolean flag) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.LOCATION_FLAG_STATUS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedAutologin.edit();
@@ -283,13 +370,20 @@ public final class Util extends AppCompatActivity {
         editor.commit();
     }
 
-    // Returns Login status
+    /**
+     * Returns Login status
+     * @param mContext
+     * @return
+     */
     public static boolean getLocationFlagStatus(Context mContext) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.LOCATION_FLAG_STATUS, Context.MODE_PRIVATE);
         return sharedAutologin.getBoolean(Constant.AUTO_LOGIN, false);
     }
 
-    // Clear Login status
+    /**
+     * Clear Login status
+     * @param mContext
+     */
     public static void clearLocationFlagstatus(Context mContext) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.LOCATION_FLAG_STATUS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedAutologin.edit();
@@ -297,7 +391,10 @@ public final class Util extends AppCompatActivity {
         editor.commit();
     }
 
-    // Returns the loged in user token and his email id
+    /**
+     * Returns the loged in user token and his email id
+     * @param context
+     */
     public static void getAdminDetail(Context context) {
         AdminLoginData adminLoginData = new DBManager(context).getAdminLoginDetail();
         if (adminLoginData != null) {

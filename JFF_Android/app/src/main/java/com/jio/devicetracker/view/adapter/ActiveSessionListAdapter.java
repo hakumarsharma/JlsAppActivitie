@@ -41,10 +41,20 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
     private List<ActiveSessionData> mList;
     private static RecyclerViewClickListener itemListener;
 
+    /**
+     * Constructor to display the active session devices list
+     * @param mList
+     */
     public ActiveSessionListAdapter(List<ActiveSessionData> mList){
         this.mList = mList;
     }
 
+    /**
+     * Binds the given View to the position
+     * @param parent
+     * @param viewType
+     * @return View Holder object
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,6 +62,11 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
         return new ActiveSessionListAdapter.ViewHolder(itemView);
     }
 
+    /**
+     * A new ViewHolder that holds a View of the given view type
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.phone.setText(mList.get(position).getNumber());
@@ -65,11 +80,18 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
         });
     }
 
+    /**
+     * return The total number of items in this adapter
+     * @return size
+     */
     @Override
     public int getItemCount() {
         return mList.size();
     }
 
+    /**
+     * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView phone;
         public TextView name;
@@ -78,6 +100,10 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
         public ImageView profile;
         public RelativeLayout relativeLayout;
 
+        /**
+         * Constructor where we find element from .xml file
+         * @param itemView
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             phone = itemView.findViewById(R.id.mobileNumber);
@@ -89,10 +115,17 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
         }
     }
 
+    /**
+     * Interface to override methods in ActiveSessionActivity to call this methods on particular item click
+     */
     public interface RecyclerViewClickListener {
         void clickOnListLayout(int selectedGroupName, String name);
     }
 
+    /**
+     * Register the listener
+     * @param mItemClickListener
+     */
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
         this.itemListener = mItemClickListener;
     }

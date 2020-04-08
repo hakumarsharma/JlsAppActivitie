@@ -35,7 +35,7 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.util.Constant;
 
 /**
- * Implementation of Edit Profile Screen to change the tracee's details.
+ * Implementation of Edit device detail to change the tracee's details.
  */
 public class EditActivity extends Activity implements View.OnClickListener {
 
@@ -66,6 +66,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
         gotoDashboard();
     }
 
+    // Navigates to the Dashboard Activity with the entered data, and them update in database
     private void gotoDashboard() {
         mDBmanager.updateProfile(number, mName.getText().toString(), mNumber.getText().toString());
         Intent intent = new Intent(this, DashboardActivity.class);

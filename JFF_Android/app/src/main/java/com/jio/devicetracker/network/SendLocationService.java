@@ -39,6 +39,9 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.DashboardActivity;
 import com.jio.devicetracker.view.LoginActivity;
 
+/**
+ * Service which sends location in particular time interval to the MQTT server
+ */
 public class SendLocationService extends Service {
 
     @Override
@@ -65,6 +68,9 @@ public class SendLocationService extends Service {
         return null;
     }
 
+    /**
+     * It creates notification when service gets started
+     */
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(Constant.CHANNEL_ID, getString(R.string.foreground_service_channel), NotificationManager.IMPORTANCE_DEFAULT);

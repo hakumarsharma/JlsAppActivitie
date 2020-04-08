@@ -45,6 +45,9 @@ import com.jio.devicetracker.view.adapter.GroupMemberListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Displays the group member of a particular group
+ */
 public class GroupListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView mRecyclerList;
@@ -74,6 +77,9 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         mRecyclerList.setLayoutManager(linearLayoutManager);
     }
 
+    /**
+     * Displays group members in a list
+     */
     private void addDataInList() {
         List<GroupmemberListData> mList = new ArrayList<>();
         List<HomeActivityListData> listData = mDbmanager.getAllBorqsData(Util.adminEmail);
@@ -98,7 +104,6 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
             startActivity(new Intent(this, ContactDetailsActivity.class));
         } else if (v.getId() == R.id.createGroupButtonOnToolbar) {
             Util.alertDilogBox("Coming Soon...", "Alert", this);
-//            Toast.makeText(this, "We will make an API to create group on borqs", Toast.LENGTH_LONG).show();
         }
     }
 

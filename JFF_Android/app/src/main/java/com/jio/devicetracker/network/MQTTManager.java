@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -36,11 +34,19 @@ import com.jio.mqttclient.JiotMqttDeliveryToken;
 import com.jio.mqttclient.JiotMqttSSLOptions;
 import com.jio.mqttclient.JiotMqttToken;
 
+/**
+ * MQTT Manager class, It is a main class related to MQTT which is responsible for MQTT connection, publishing of messages and disconnection.
+ */
 public class MQTTManager {
 
     public static JiotMqttClient jiotMqttClient = null;
     private static JiotMqttConnectOptions options = null;
 
+    /**
+     * It takes MQTT URL, MQTT User name, MQTT Password and IMEI number as a parameter
+     * @param context
+     * @return the MQTTClient object
+     */
     public JiotMqttClient getMQTTClient(Context context) {
         if (jiotMqttClient == null) {
             JiotMqttSSLOptions jiotMqttSSLOptions = new JiotMqttSSLOptions(R.raw.ca, "ril@1234");
@@ -110,26 +116,40 @@ public class MQTTManager {
         return jiotMqttClient;
     }
 
+    /**
+     * Connects to the MQTT server
+     */
     public void connetMQTT() {
-        if(jiotMqttClient != null && options != null && jiotMqttClient.isConnected() != true) {
+        if (jiotMqttClient != null && options != null && jiotMqttClient.isConnected() != true) {
             jiotMqttClient.connect(options);
         }
     }
 
+    /**
+     * Disconnects to the MQTT server
+     */
     public void disconnectMQTT() {
-        if(jiotMqttClient != null) {
+        if (jiotMqttClient != null) {
             jiotMqttClient.disconnect();
         }
     }
 
+    /**
+     * Publishes the message with topic
+     * @param topic
+     */
     public void publishMessage(String topic, String message) {
-        if(jiotMqttClient != null) {
+        if (jiotMqttClient != null) {
             jiotMqttClient.publish(topic, message);
         }
     }
 
+    /**
+     * For the subscription to the topic
+     * @param topic
+     */
     public void subscribe(String topic) {
-        if(jiotMqttClient != null) {
+        if (jiotMqttClient != null) {
             jiotMqttClient.subscribe(topic);
         }
     }

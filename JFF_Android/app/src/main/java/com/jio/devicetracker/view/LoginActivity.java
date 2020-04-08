@@ -449,7 +449,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Util.setAutologinStatus(LoginActivity.this, true);
             adminData = mDbManager.getAdminLoginDetail();
             mDbManager.insertInBorqsDB(mlist, adminData.getEmail());
-            List<HomeActivityListData> getallDeviceData = mDbManager.getAllDevicedata(adminData.getEmail());
+            List<HomeActivityListData> getallDeviceData = mDbManager.getAllBorqsData(adminData.getEmail());
             for (HomeActivityListData getDeviceId : getallDeviceData) {
                 RequestHandler.getInstance(getApplicationContext()).handleRequest(new GetDeviceLocationRequest(new SuccessListenerDeviceLocation(), new ErrorListenerDeviceLocation(), logindetailResponse.getUgsToken(), getDeviceId.getDeviceId()));
             }

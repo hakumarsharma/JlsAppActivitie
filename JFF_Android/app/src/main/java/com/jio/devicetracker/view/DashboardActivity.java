@@ -290,9 +290,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         Intent intent = new Intent(this, ActiveSessionActivity.class);
         startActivity(intent);
     }
-    /*private void gotoTrackerListScreen() {
-        startActivity(new Intent(this, TrackerListActivity.class));
-    }*/
 
     private void setLayoutData() {
         Toolbar toolbar = findViewById(R.id.customToolbar);
@@ -466,7 +463,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     // Count number of individual aaded user, If it is more than 10 then display alert dialog
     private void checkNumberOfIndividualUser() {
         int individualUserCount = 1;
-        List<HomeActivityListData> allDevicedata = mDbManager.getAllDevicedata(Util.adminEmail);
+        List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : allDevicedata) {
             if (homeActivityListData.isGroupMember() == false) {
                 individualUserCount++;
@@ -511,7 +508,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         groupName = null;
         int individualUserCount = 1;
 
-        List<HomeActivityListData> allDevicedata = mDbManager.getAllDevicedata(Util.adminEmail);
+        List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : allDevicedata) {
             if (homeActivityListData.isGroupMember() == false && homeActivityListData.getImeiNumber() != null) {
                 individualUserCount++;
