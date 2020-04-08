@@ -141,7 +141,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        Intent intent = getIntent();
         //consentRequestBox(intent.getBooleanExtra("flag", false), intent.getStringExtra("name"));
         //isPermissionGranted();
         setLayoutData();
@@ -542,6 +541,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         } else {
             gotoGroupNameActivity();
         }
+    }
+
+    /**
+     * Navigates to the Group name acivity
+     */
+    private void gotoGroupNameActivity() {
+        isAddIndividual = false;
+        isComingFromGroupList = true;
+        startActivity(new Intent(this, GroupNameActivity.class));
     }
 
     /**
