@@ -511,7 +511,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      */
     private void checkNumberOfIndividualUser() {
         int individualUserCount = 1;
-        List<HomeActivityListData> allDevicedata = mDbManager.getAllDevicedata(Util.adminEmail);
+        List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : allDevicedata) {
             if (homeActivityListData.isGroupMember() == false) {
                 individualUserCount++;
@@ -554,7 +554,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         groupName = null;
         int individualUserCount = 1;
 
-        List<HomeActivityListData> allDevicedata = mDbManager.getAllDevicedata(Util.adminEmail);
+        List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : allDevicedata) {
             if (homeActivityListData.isGroupMember() == false && homeActivityListData.getImeiNumber() != null) {
                 individualUserCount++;
