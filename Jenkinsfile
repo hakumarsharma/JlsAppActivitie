@@ -6,7 +6,7 @@ pipeline {
    
   agent {
     node {
-      label 'cord_ci'
+      label 'deg_android'
     }
     
   }
@@ -54,73 +54,6 @@ pipeline {
 			}
 			
 		}
-
-
-
-    stage('Java-PMD-Analysis') {
-      steps {
-
-                    script{
-                        try {
-                                        echo 'Running PMD analysis '
-                                        sh 'bash tools/jenkins-rules/findbugs.sh ${WORKSPACE}'
-                                        sh 'rm -rf  pom.xml app.xml'
-					pmd unstableTotalAll:'0' , pattern: '*.xml'
-
-                                           }catch(err) {
-                        this.notifyStash('FAILED')
-                throw err
-                                           }
-                                 }
-
-      }
-    }
-
-	
-
-	
-	stage('Copyright check') {
-      steps {
-		script{  
-        try {
-			echo 'Checking Copyright for Apache,sterlite and Radisys'
-			sh '''echo "Checking copyright..."
-			rm -rf  ${WORKSPACE}/README.md
-			bash tools/jenkins-rules/copyright.sh ${WORKSPACE} 
-					
-					 '''
-			}catch(err) {
-        		this.notifyStash('FAILED')
-                throw err
-  			  		    } 
-			
-			  }
-			}
-			
-		}
-
-
-
-
-	 stage('UNIT_TESTS') {
-      steps {
-                script{
-        try {
-                        echo ''
-                        sh '''echo "Running Unit test suite ..."
-		        echo "UT scripts to be added once ready."
-			#nosetests
-                                         '''
-                        }catch(err) {
-                        this.notifyStash('FAILED')
-                throw err
-                                            }
-         this.notifyStash('SUCCESS')
-                          }
-                        }
-
-                }
-
 	
 	
   }
