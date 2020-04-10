@@ -37,8 +37,8 @@ pipeline {
             sh '''
 			echo "running gradle steps"
 			cd ${WORKSPACE}
-            cp -r ${WORKSPACE}/cheesesquare/gradle/wrapper/gradle-wrapper.jar ${WORKSPACE}/apps/JFF_Android/gradle/wrapper/
-            cd ${WORKSPACE}/apps/JFF_Android
+            cp -r /home/jenkins/cheesesquare/gradle/wrapper/gradle-wrapper.jar ${WORKSPACE}/JFF_Android/gradle/wrapper/
+            cd ${WORKSPACE}/JFF_Android
             sudo chmod 777 gradlew
             echo "sdk.dir = /home/jenkins/android-sdk" > local.properties
             sudo ./gradlew || echo "gradlew command failed"
