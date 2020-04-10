@@ -29,6 +29,31 @@ pipeline {
 			}
 			
 		}
+		
+	stage('gradle build steps') {
+      steps {
+		script{  
+        try {
+            sh '''
+			echo "running gradle steps"
+			cd ${WORKSPACE}
+            cp -r ${WORKSPACE}/cheesesquare/gradle/wrapper/gradle-wrapper.jar ${WORKSPACE}/apps/JFF_Android/gradle/wrapper/
+            cd ${WORKSPACE}/apps/JFF_Android
+            sudo chmod 777 gradlew
+            echo "sdk.dir = /home/jenkins/android-sdk" > local.properties
+            sudo ./gradlew || echo "gradlew command failed"
+            sudo ./gradlew assembleRelease || echo "gradlew assembleReleasefailed"
+
+			   '''
+			}catch(err) {
+        		this.notifyStash('FAILED')
+                throw err
+  			  		    } 
+			
+			  }
+			}
+			
+		}
 
 
 
