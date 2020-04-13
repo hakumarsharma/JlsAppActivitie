@@ -12,21 +12,28 @@ class Utils {
     static let shared = Utils()
     func handleError(error : NetworkManager.ErrorType) -> String {
         if error == NetworkManager.ErrorType.Unauthorized {
-            return Constants.ErrorMessage.unauthorized
+            return Constants.ErrorMessage.Unauthorized
         } else if error == NetworkManager.ErrorType.SomethingWentWrong {
-            return Constants.ErrorMessage.somethingwentwrong
+            return Constants.ErrorMessage.Somethingwentwrong
         } else if error == NetworkManager.ErrorType.DeviceAlreadyAssigned {
-            return Constants.ErrorMessage.deviceCanotBeAssigned
+            return Constants.ErrorMessage.DeviceCanotBeAssigned
         }else {
-            return Constants.ErrorMessage.somethingwentwrong
+            return Constants.ErrorMessage.Somethingwentwrong
         }
+    }
+    
+    func currentDateToString() -> String {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        return formatter.string(from: date)
     }
 }
 
 extension UIViewController {
     func ShowALert(title: String){
-        let alert = UIAlertController(title: Constants.AlertConstants.alert, message: title, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: Constants.AlertConstants.okButton, style: UIAlertAction.Style.default, handler: nil))
+        let alert = UIAlertController(title: Constants.AlertConstants.Alert, message: title, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.OkButton, style: UIAlertAction.Style.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -51,5 +58,6 @@ extension UIViewController {
             }
         }
     }
+    
     
 }

@@ -1,4 +1,7 @@
 PODS:
+  - CocoaAsyncSocket (7.6.4)
+  - CocoaMQTT (1.2.5):
+    - CocoaAsyncSocket (~> 7.6.3)
   - GoogleMaps (3.8.0):
     - GoogleMaps/Maps (= 3.8.0)
   - GoogleMaps/Base (3.8.0)
@@ -7,18 +10,23 @@ PODS:
   - JJFloatingActionButton (2.4.0)
 
 DEPENDENCIES:
+  - CocoaMQTT
   - GoogleMaps
   - JJFloatingActionButton
 
 SPEC REPOS:
   trunk:
+    - CocoaAsyncSocket
+    - CocoaMQTT
     - GoogleMaps
     - JJFloatingActionButton
 
 SPEC CHECKSUMS:
+  CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
+  CocoaMQTT: a61490ed3b328011c5d75169a77781983e2bb221
   GoogleMaps: 7c8d66d70e4e8c300f43a7219d8fdaad7b325a9a
   JJFloatingActionButton: 0d21f5cdd2adde150e62c22c63762ab713c4e16f
 
-PODFILE CHECKSUM: 68e8c1db7762496e9cbddfaf6890428329cbceb9
+PODFILE CHECKSUM: 98c6a4423d6f4f08e73be4d3bf1d3bf3ecadd6f9
 
 COCOAPODS: 1.9.1

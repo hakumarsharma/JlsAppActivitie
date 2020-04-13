@@ -25,6 +25,7 @@
 		1816ACBB2421EC8F00589CD9 /* HelpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1816ACBA2421EC8F00589CD9 /* HelpScreen.swift */; };
 		1816ACBD2421ECAF00589CD9 /* PrivacyPolicyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1816ACBC2421ECAF00589CD9 /* PrivacyPolicyScreen.swift */; };
 		1816ACBF2421F0B900589CD9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1816ACBE2421F0B900589CD9 /* SceneDelegate.swift */; };
+		181ACFE52444337000EACCC5 /* LoginExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 181ACFE42444337000EACCC5 /* LoginExtension.swift */; };
 		1836E51B2433092B0078E572 /* NetowrkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1836E51A2433092B0078E572 /* NetowrkManager.swift */; };
 		1836E51E24346D400078E572 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1836E51D24346D400078E572 /* StringExtensions.swift */; };
 		183F9674242CCFD900235065 /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183F9673242CCFD900235065 /* GroupCell.swift */; };
@@ -85,6 +86,7 @@
 		1816ACBA2421EC8F00589CD9 /* HelpScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpScreen.swift; sourceTree = "<group>"; };
 		1816ACBC2421ECAF00589CD9 /* PrivacyPolicyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyScreen.swift; sourceTree = "<group>"; };
 		1816ACBE2421F0B900589CD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		181ACFE42444337000EACCC5 /* LoginExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginExtension.swift; sourceTree = "<group>"; };
 		1836E51A2433092B0078E572 /* NetowrkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetowrkManager.swift; sourceTree = "<group>"; };
 		1836E51D24346D400078E572 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		183F9673242CCFD900235065 /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 			isa = PBXGroup;
 			children = (
 				1836E51D24346D400078E572 /* StringExtensions.swift */,
+				181ACFE42444337000EACCC5 /* LoginExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -590,6 +593,7 @@
 				1836E51B2433092B0078E572 /* NetowrkManager.swift in Sources */,
 				1816ACB72421EB5C00589CD9 /* MapsScreen.swift in Sources */,
 				18708C442434A5D200940011 /* DeviceModel.swift in Sources */,
+				181ACFE52444337000EACCC5 /* LoginExtension.swift in Sources */,
 				1816ACA32421E94D00589CD9 /* LoginScreen.swift in Sources */,
 				1816ACB92421EB7A00589CD9 /* Constants.swift in Sources */,
 			);
@@ -698,7 +702,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -752,7 +756,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -769,6 +773,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = PeopleTracker/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -787,6 +792,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = PeopleTracker/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
