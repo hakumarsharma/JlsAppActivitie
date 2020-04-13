@@ -6,7 +6,7 @@ pipeline {
    
   agent {
     node {
-      label 'cord_ci'
+      label 'deg_android'
     }
     
   }
@@ -29,10 +29,33 @@ pipeline {
 			}
 			
 		}
+		
+	stage('gradle build steps') {
+      steps {
+		script{  
+        try {
+            sh '''
+			echo "running gradle steps"
+			cd ${WORKSPACE}
+            cp -r /home/jenkins/cheesesquare/gradle/wrapper/gradle-wrapper.jar ${WORKSPACE}/JFF_Android/gradle/wrapper/
+            cd ${WORKSPACE}/JFF_Android
+            sudo chmod 777 gradlew
+            echo "sdk.dir = /home/jenkins/android-sdk" > local.properties
+            sudo ./gradlew || exit 1
+            sudo ./gradlew assembleRelease || exit 1
 
-
-
-    stage('Java-PMD-Analysis') {
+			   '''
+			}catch(err) {
+        		this.notifyStash('FAILED')
+                throw err
+  			  		    } 
+			
+			  }
+			}
+			
+		}
+		
+		stage('Java-PMD-Analysis') {
       steps {
 
                     script{
@@ -50,9 +73,6 @@ pipeline {
 
       }
     }
-
-	
-
 	
 	stage('Copyright check') {
       steps {
@@ -73,11 +93,8 @@ pipeline {
 			}
 			
 		}
-
-
-
-
-	 stage('UNIT_TESTS') {
+		
+		stage('UNIT_TESTS') {
       steps {
                 script{
         try {
@@ -95,7 +112,6 @@ pipeline {
                         }
 
                 }
-
 	
 	
   }
