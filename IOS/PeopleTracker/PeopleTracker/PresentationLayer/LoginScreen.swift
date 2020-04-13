@@ -34,6 +34,7 @@ class LoginScreen: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        self.navigationItem.setHidesBackButton(true, animated: true)
         self.setUpMQTT()
        
     }

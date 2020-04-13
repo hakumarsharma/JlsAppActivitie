@@ -26,11 +26,43 @@
 import UIKit
 
 class PrivacyPolicyScreen: UIViewController {
-
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var checkMarkButton: UIButton!
+    var isPrivacySelected : Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        self.intialiseData()
     }
-
-
+    
+    func intialiseData() {
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        self.title = "Privacy Policy"
+        textView.attributedText = Constants.PrivacyScreen.PrivacyPolicy.htmlToAttributedString
+    }
+    
+    @IBAction func checkMarkButtonAction(_ sender: Any) {
+        if isPrivacySelected {
+            isPrivacySelected = false
+            self.checkMarkButton.setBackgroundImage(UIImage(named: "ic_checkempty"), for: .normal)
+        } else {
+            isPrivacySelected = true
+            self.checkMarkButton.setBackgroundImage(UIImage(named: "ic_checkmark"), for: .normal)
+        }
+    }
+    
+    @IBAction func acceptButtonAction(_ sender: Any) {
+        if isPrivacySelected {
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let loginViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.LoginScreen) as! LoginScreen
+        self.navigationController?.pushViewController(loginViewController, animated: true)
+        } else {
+            self.ShowALert(title: Constants.PrivacyScreen.DeclineAlert)
+        }
+    }
+    
+    @IBAction func DeclineButtonAction(_ sender: Any) {
+        self.ShowALert(title: Constants.PrivacyScreen.DeclineAlert)
+    }
 }
