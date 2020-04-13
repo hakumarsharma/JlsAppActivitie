@@ -77,14 +77,14 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == 0{
             cell.checkBoxButton.isHidden = true
             cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
-            cell.requestConsentButton.setTitle(Constants.HomScreenConstants.requestConsent, for: .normal)
+            cell.requestConsentButton.setTitle(Constants.HomScreenConstants.RequestConsent, for: .normal)
         } else
             if indexPath.row % 2 == 0{
                 cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
-                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.consentApproved, for: .normal)
+                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentApproved, for: .normal)
             } else {
                 cell.consentstatusColor.backgroundColor = .orange
-                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.consentPending, for: .normal)
+                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentPending, for: .normal)
         }
         
         return cell
@@ -121,7 +121,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
                 }
             }else {
                 DispatchQueue.main.async {
-                    self.ShowALert(title: Constants.LocationConstants.locationDetailsNotFound)
+                    self.ShowALert(title: Constants.LocationConstants.LocationDetailsNotFound)
                 }
             }
         }
@@ -130,31 +130,31 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     // MARK : Navigatation screens
     func navigateToMapsScreen() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.mapsScreen) as! MapsScreen
-        mapsViewController.deviceId = UserDefaults.standard.string(forKey: Constants.userDefaultConstants.userId) ?? ""
+        let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.MapsScreen) as! MapsScreen
+        mapsViewController.deviceId = UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UserId) ?? ""
         mapsViewController.deviceDetails = self.deviceDetails
         self.navigationController?.pushViewController(mapsViewController, animated: true)
     }
     
     func navigateToAddDeviceScreen(title : String) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.addDeviceScreen) as! AddDeviceScreen
+        let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.AddDeviceScreen) as! AddDeviceScreen
         addDeviceViewController.navtitle = title
-        addDeviceViewController.userid = UserDefaults.standard.string(forKey: Constants.userDefaultConstants.userId) ?? ""
-        addDeviceViewController.ugsToken = UserDefaults.standard.string(forKey: Constants.userDefaultConstants.ugsToken) ?? ""
+        addDeviceViewController.userid = UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UserId) ?? ""
+        addDeviceViewController.ugsToken = UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UgsToken) ?? ""
         self.navigationController?.pushViewController(addDeviceViewController, animated: true)
     }
     
     func navigateToCreateGroupScreen() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.createGroupScreen) as! CreateGroupScreen
-        createGroupViewController.navtitle = Constants.HomScreenConstants.createGroup
+        let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.CreateGroupScreen) as! CreateGroupScreen
+        createGroupViewController.navtitle = Constants.HomScreenConstants.CreateGroup
         self.navigationController?.pushViewController(createGroupViewController, animated: true)
     }
     
     func navigateToGroupListScreen(title : String) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let groupListViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.groupListScreen) as! GroupListScreen
+        let groupListViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.GroupListScreen) as! GroupListScreen
         groupListViewController.navtitle = title
         self.navigationController?.pushViewController(groupListViewController, animated: true)
     }
@@ -162,17 +162,17 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
     // MARK: Show floating button
     func floatingActionButton () {
-        actionButton.addItem(title: Constants.HomScreenConstants.addDevice, image: UIImage(named: "device")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.AddDevice, image: UIImage(named: "device")?.withRenderingMode(.alwaysTemplate)) { item in
             // do something
-            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.addDevice)
+            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.AddDevice)
         }
         
-        actionButton.addItem(title: Constants.HomScreenConstants.addPerson, image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.AddPerson, image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
             // do something
-            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.addPerson)
+            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.AddPerson)
         }
         
-        actionButton.addItem(title: Constants.HomScreenConstants.createGroup, image: UIImage(named: "group")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.CreateGroup, image: UIImage(named: "group")?.withRenderingMode(.alwaysTemplate)) { item in
             // do something
             self.navigateToCreateGroupScreen()
         }
@@ -185,8 +185,8 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
     // Alert with button action
     func ShowALertWithButtonAction(title: String){
-        let alert = UIAlertController(title: Constants.AlertConstants.alert, message: title, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: Constants.AlertConstants.okButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+        let alert = UIAlertController(title: Constants.AlertConstants.Alert, message: title, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.OkButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
             DispatchQueue.main.async {
                 
             }
@@ -198,16 +198,16 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
     @objc func showActionSheet(){
         
-        let alert = UIAlertController(title: Constants.HomScreenConstants.select, message: "", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: Constants.HomScreenConstants.Select, message: "", preferredStyle: .actionSheet)
         
-        alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.edit, style: .default , handler:{ (UIAlertAction)in
-            self.navigateToAddDeviceScreen(title : Constants.HomScreenConstants.edit)
+        alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.Edit, style: .default , handler:{ (UIAlertAction)in
+            self.navigateToAddDeviceScreen(title : Constants.HomScreenConstants.Edit)
         }))
         
-        alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.delete, style: .default , handler:{ (UIAlertAction)in
-            self.ShowALert(title: Constants.HomScreenConstants.deleteDevice)
+        alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Delete, style: .default , handler:{ (UIAlertAction)in
+            self.ShowALert(title: Constants.HomScreenConstants.DeleteDevice)
         }))
-        alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.dismiss, style: .cancel, handler:{ (UIAlertAction)in
+        alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.Dismiss, style: .cancel, handler:{ (UIAlertAction)in
             
         }))
         
@@ -220,8 +220,8 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     // API to add device details
     func callgetDeviceApi() {
         self.showActivityIndicator()
-        let deviceURL = URL(string:  Constants.ApiPath.deviceDetails + (UserDefaults.standard.string(forKey: Constants.userDefaultConstants.ugsToken) ?? ""))!
-        let deviceParams :  [String : Any] = ["usersAssigned":[UserDefaults.standard.string(forKey: Constants.userDefaultConstants.userId) ?? ""]]
+        let deviceURL = URL(string:  Constants.ApiPath.DeviceDetails + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UgsToken) ?? ""))!
+        let deviceParams :  [String : Any] = ["usersAssigned":[UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UserId) ?? ""]]
         DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
             switch result {
             case .success(let deviceResponse):
@@ -256,7 +256,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     func callgetDeviceLocationDetails(completion: @escaping(_ success: Bool) -> Void) {
         self.showActivityIndicator()
         for (index,element) in selectedCell.enumerated() {
-            let deviceURL = URL(string:  Constants.ApiPath.deviceApisUrl + element + "?tsp=1585031229387&ugs_token=" + (UserDefaults.standard.string(forKey: Constants.userDefaultConstants.ugsToken) ?? ""))! // TODO: Save tsp in user defaults
+            let deviceURL = URL(string:  Constants.ApiPath.DeviceApisUrl + element + "?tsp=1585031229387&ugs_token=" + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UgsToken) ?? ""))! // TODO: Save tsp in user defaults
             DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<LocationModel, Error>)) in
                 switch result {
                 case .success(let deviceResponse):

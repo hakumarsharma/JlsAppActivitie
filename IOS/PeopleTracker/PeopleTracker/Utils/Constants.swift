@@ -29,71 +29,77 @@ class Constants {
     
     struct ApiPath {
        static let BaseUrl = "https://sit.boapi.cats.jvts.net/"
-       static let userApisUrl =  BaseUrl + "accounts/api/users/"
-       static let deviceApisUrl = BaseUrl + "accounts/api/devices/"
-       static let loginUrl = userApisUrl + "login?isResponseDataAsUser=true&isPopulateGroup=true&isPopulateGroupUsers=true&isPopulateUserDevices=true&isPopulateUserDevicesAsWearableUsers=true"
-       static let addDeviceUrl = "/devices/verifyandassign?ugs_token="
-       static let deviceDetails = deviceApisUrl + "v2/search?skip=0&limit=10&ugs_token="
+       static let UserApisUrl =  BaseUrl + "accounts/api/users/"
+       static let DeviceApisUrl = BaseUrl + "accounts/api/devices/"
+       static let LoginUrl = UserApisUrl + "login?isResponseDataAsUser=true&isPopulateGroup=true&isPopulateGroupUsers=true&isPopulateUserDevices=true&isPopulateUserDevicesAsWearableUsers=true"
+       static let AddDeviceUrl = "/devices/verifyandassign?ugs_token="
+       static let DeviceDetails = DeviceApisUrl + "v2/search?skip=0&limit=10&ugs_token="
         
     }
     
+    struct MqttConstants {
+        static let HostName = "tcp://v.dev.tnt.cats.jvts.net"
+        static let UserName = "borqs-sit"
+        static let Password = "borqs-sit@987"
+    }
+    
     struct AlertConstants {
-        static let alert = "Alert"
-        static let okButton = "Ok"
-        static let cancelButton = "Cancel"
+        static let Alert = "Alert"
+        static let OkButton = "Ok"
+        static let CancelButton = "Cancel"
     }
     
     
-    struct  screenNames {
-        static let loginScreen = "LoginScreen"
-        static let homeScreen = "HomeScreen"
-        static let addDeviceScreen = "AddDeviceScreen"
-        static let createGroupScreen = "CreateGroupScreen"
-        static let groupListScreen = "GroupListScreen"
-        static let mapsScreen = "MapsScreen"
+    struct  ScreenNames {
+        static let LoginScreen = "LoginScreen"
+        static let HomeScreen = "HomeScreen"
+        static let AddDeviceScreen = "AddDeviceScreen"
+        static let CreateGroupScreen = "CreateGroupScreen"
+        static let GroupListScreen = "GroupListScreen"
+        static let MapsScreen = "MapsScreen"
     }
     
     struct LoginScreenConstants {
         
-        static let userName = "Please enter user name"
-        static let phoneNumber = "Please enter valid phone number"
-        static let otp = "Please enter otp"
+        static let UserName = "Please enter user name"
+        static let PhoneNumber = "Please enter valid phone number"
+        static let Otp = "Please enter otp"
     }
     
-    struct userDefaultConstants {
-        static let ugsToken = "ugsToken"
-        static let userId = "userId"
-        static let ugsExpiryTime = "ugsExpiryTime"
+    struct UserDefaultConstants {
+        static let UgsToken = "ugsToken"
+        static let UserId = "userId"
+        static let UgsExpiryTime = "ugsExpiryTime"
     }
     
     struct HomScreenConstants {
-        static let select = "Select"
-        static let edit = "Edit"
-        static let delete = "Delete"
-        static let dismiss = "Dismiss"
-        static let addDevice = "Add Device"
-        static let addPerson = "Add Person"
-        static let createGroup = "Create Group"
-        static let deleteDevice = "Are you sure do you want to delete ?"
-        static let requestConsent = "Request Consent"
-        static let consentApproved = "Consent Approved"
-        static let consentPending = "Consent Pending"
+        static let Select = "Select"
+        static let Edit = "Edit"
+        static let Delete = "Delete"
+        static let Dismiss = "Dismiss"
+        static let AddDevice = "Add Device"
+        static let AddPerson = "Add Person"
+        static let CreateGroup = "Create Group"
+        static let DeleteDevice = "Are you sure do you want to delete ?"
+        static let RequestConsent = "Request Consent"
+        static let ConsentApproved = "Consent Approved"
+        static let ConsentPending = "Consent Pending"
     }
     
     struct AddDeviceConstants {
-          static let name = "Please enter name"
-          static let imei = "Please enter valid IMEI number"
-          static let deviceAddedSuccessfully = "Device added successfully"
+          static let Name = "Please enter name"
+          static let Imei = "Please enter valid IMEI number"
+          static let DeviceAddedSuccessfully = "Device added successfully"
       }
     
     struct LocationConstants {
-        static let noLatLong = "Device doesnot have any latitude and longitude"
-        static let locationDetailsNotFound = "Selected Device location details are not available"
+        static let NoLatLong = "Device doesnot have any latitude and longitude"
+        static let LocationDetailsNotFound = "Selected Device location details are not available"
     }
     
     struct ErrorMessage {
-        static let unauthorized = "Please check your login credentails"
-        static let deviceCanotBeAssigned = "Device cannot be added, Please try again later"
-        static let somethingwentwrong = "Something went wrong"
+        static let Unauthorized = "Please check your login credentails"
+        static let DeviceCanotBeAssigned = "Device cannot be added, Please try again later"
+        static let Somethingwentwrong = "Something went wrong"
     }
 }

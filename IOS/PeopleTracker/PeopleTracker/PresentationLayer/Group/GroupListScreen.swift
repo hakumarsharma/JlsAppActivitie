@@ -77,33 +77,33 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
        
        func navigateToMapsScreen() {
            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.mapsScreen) as! MapsScreen
+        let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.MapsScreen) as! MapsScreen
            self.navigationController?.pushViewController(mapsViewController, animated: true)
        }
        
        func navigateToAddDeviceScreen(title : String) {
              let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.addDeviceScreen) as! AddDeviceScreen
+        let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.AddDeviceScreen) as! AddDeviceScreen
              addDeviceViewController.navtitle = title
              self.navigationController?.pushViewController(addDeviceViewController, animated: true)
          }
        
        func navigateToCreateGroupScreen() {
               let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.createGroupScreen) as! CreateGroupScreen
+        let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.CreateGroupScreen) as! CreateGroupScreen
               self.navigationController?.pushViewController(createGroupViewController, animated: true)
           }
        
        // MARK: Show floating button
        func floatingActionButton () {
-        actionButton.addItem(title: Constants.HomScreenConstants.addDevice, image: UIImage(named: "device")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.AddDevice, image: UIImage(named: "device")?.withRenderingMode(.alwaysTemplate)) { item in
                // do something
-            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.addDevice)
+            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.AddDevice)
            }
            
-        actionButton.addItem(title: Constants.HomScreenConstants.addPerson, image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.AddPerson, image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
                // do something
-            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.addPerson)
+            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.AddPerson)
            }
          
            view.addSubview(actionButton)

@@ -41,15 +41,15 @@ class AddDeviceScreen: UIViewController {
     
     @IBAction func addDeviceButtonAction(_ sender: Any) {
         if nameTxt.text?.count == 0 {
-            self.ShowALert(title: Constants.AddDeviceConstants.name)
+            self.ShowALert(title: Constants.AddDeviceConstants.Name)
             return
         }
         if phoneNumberTxt.text?.count == 0 || !(phoneNumberTxt.text?.isValidPhone ?? true){
-            self.ShowALert(title: Constants.LoginScreenConstants.phoneNumber)
+            self.ShowALert(title: Constants.LoginScreenConstants.PhoneNumber)
             return
         }
         if imeiTxt.text?.count == 0 || !(imeiTxt.text?.isValidImei ?? true){
-            self.ShowALert(title: Constants.AddDeviceConstants.imei)
+            self.ShowALert(title: Constants.AddDeviceConstants.Imei)
             return
         }
         
@@ -58,7 +58,7 @@ class AddDeviceScreen: UIViewController {
     
     // API to add device details
     func callAddDeviceApi() {
-        let deviceURL = URL(string: Constants.ApiPath.userApisUrl + userid + Constants.ApiPath.addDeviceUrl + ugsToken)!
+        let deviceURL = URL(string: Constants.ApiPath.UserApisUrl + userid + Constants.ApiPath.AddDeviceUrl + ugsToken)!
         let deviceDetails : [[String : String]] = [["mac": imeiTxt.text ?? "","identifier": "imei","name": nameTxt.text ?? "","phone": phoneNumberTxt.text ?? ""]]
         let flagDetails : [String : Bool] = ["isSkipAddDeviceToGroup" : false]
         let deviceParams :  [String : Any] = ["devices" : deviceDetails, "flags": flagDetails]
@@ -66,7 +66,7 @@ class AddDeviceScreen: UIViewController {
             switch result {
                     case .success(let deviceResponse):
                           print(deviceResponse)
-                          self.ShowALertWithButtonAction(title: Constants.AddDeviceConstants.deviceAddedSuccessfully)
+                          self.ShowALertWithButtonAction(title: Constants.AddDeviceConstants.DeviceAddedSuccessfully)
                     case .failure(let error):
                         if type(of: error) == NetworkManager.ErrorType.self {
                             DispatchQueue.main.async {
@@ -83,8 +83,8 @@ class AddDeviceScreen: UIViewController {
     
    // Alert with button action
     func ShowALertWithButtonAction(title: String){
-        let alert = UIAlertController(title: Constants.AlertConstants.alert, message: title, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: Constants.AlertConstants.okButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+        let alert = UIAlertController(title: Constants.AlertConstants.Alert, message: title, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.OkButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
             DispatchQueue.main.async {
                self.navigationController?.popViewController(animated: true)
             }

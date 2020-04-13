@@ -34,23 +34,25 @@ class LoginScreen: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        self.setUpMQTT()
+       
     }
     
     @IBAction func continueBtnAction(_ sender: Any) {
         
         // validation check
         if userNameTxt.text?.count == 0{
-            self.ShowALert(title: Constants.LoginScreenConstants.userName)
+            self.ShowALert(title: Constants.LoginScreenConstants.UserName)
             return
         }
 
         if mobileNumberTxt.text?.count == 0 || !(mobileNumberTxt.text?.isValidPhone ?? true){
-            self.ShowALert(title: Constants.LoginScreenConstants.phoneNumber);
+            self.ShowALert(title: Constants.LoginScreenConstants.PhoneNumber);
             return
         }
 
         if otpTxt.text?.count == 0{
-            self.ShowALert(title: Constants.LoginScreenConstants.otp);
+            self.ShowALert(title: Constants.LoginScreenConstants.Otp);
             return
         }
        
@@ -62,7 +64,7 @@ class LoginScreen: UIViewController {
     // TODO :  Change API call based on phone registration process
     func callLoginApi() {
         self.showActivityIndicator()
-        UserService.shared.loginRequest(with:  URL(string: Constants.ApiPath.loginUrl)!, parameters: ["email":"shivakumar.jagalur@ril.com","password":"Ril@12345","type": "supervisor"]) { (result : Result<LoginModel, Error>) in
+        UserService.shared.loginRequest(with:  URL(string: Constants.ApiPath.LoginUrl)!, parameters: ["email":"shivakumar.jagalur@ril.com","password":"Ril@12345","type": "supervisor"]) { (result : Result<LoginModel, Error>) in
                 switch result {
                     case .success(let loginResponse):
                         self.saveDataInUserDefaults(response: loginResponse)
@@ -87,15 +89,15 @@ class LoginScreen: UIViewController {
     }
     
     func saveDataInUserDefaults(response : LoginModel) {
-        UserDefaults.standard.set(response.ugsToken, forKey: Constants.userDefaultConstants.ugsToken)
-        UserDefaults.standard.set(response.user?.userId ?? "", forKey: Constants.userDefaultConstants.userId)
-        UserDefaults.standard.set(response.ugsTokenexpiry, forKey: Constants.userDefaultConstants.ugsExpiryTime)
+        UserDefaults.standard.set(response.ugsToken, forKey: Constants.UserDefaultConstants.UgsToken)
+        UserDefaults.standard.set(response.user?.userId ?? "", forKey: Constants.UserDefaultConstants.UserId)
+        UserDefaults.standard.set(response.ugsTokenexpiry, forKey: Constants.UserDefaultConstants.UgsExpiryTime)
     }
     
     // navigate to home screen upon succesful login
     func navigateToHomeScreen() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: Constants.screenNames.homeScreen) as! HomeScreen
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.HomeScreen) as! HomeScreen
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
     

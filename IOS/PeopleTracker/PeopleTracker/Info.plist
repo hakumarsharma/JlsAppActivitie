@@ -67,5 +67,11 @@
 	</array>
 	<key>GoggleApiKey</key>
 	<string>AIzaSyCL18AjsFlIRWkG5_BcHEZsOnFDE0aok2w</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>PeopleTracks wants to access your location details. Please accept to track or to be tracked</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>PeopleTracks wants to access your location details. Please accept to track or to be tracked</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>PeopleTracks wants to access your location details. Please accept to track or to be tracked</string>
 </dict>
 </plist>
