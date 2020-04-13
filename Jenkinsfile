@@ -41,8 +41,8 @@ pipeline {
             cd ${WORKSPACE}/JFF_Android
             sudo chmod 777 gradlew
             echo "sdk.dir = /home/jenkins/android-sdk" > local.properties
-            sudo ./gradlew || echo "gradlew command failed"
-            sudo ./gradlew assembleRelease || echo "gradlew assembleReleasefailed"
+            sudo ./gradlew || exit 1
+            sudo ./gradlew assembleRelease || exit 1
 
 			   '''
 			}catch(err) {
