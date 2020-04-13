@@ -11,6 +11,7 @@ tools/jenkins-rules/gofmt_imports.sh
 tools/jenkins-rules/findbugs.sh
 Jenkinsfile
 .pylintrc
+JFF_Android/app/build/generated/source/buildConfig/release/com/jio/devicetracker/BuildConfig.java
 provisioning_service-radisys_release/auth-engine-common/pom.xml
 provisioning_service-radisys_release/auth-engine-common/src/main/java/com/iot/authengine/config/SwaggerConfig.java
 provisioning_service-radisys_release/auth-engine-common/src/main/java/com/iot/authengine/core/service/DeviceCommonService.java
