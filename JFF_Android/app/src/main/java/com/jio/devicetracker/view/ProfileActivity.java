@@ -28,7 +28,6 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
