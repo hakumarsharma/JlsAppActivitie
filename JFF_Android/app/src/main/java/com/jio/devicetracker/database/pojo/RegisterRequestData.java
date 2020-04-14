@@ -29,13 +29,12 @@ import com.google.gson.annotations.SerializedName;
  * Pojo implementation for register request data for registration api .
  */
 public class RegisterRequestData {
-
-    @SerializedName("email")
-    private String email;
-    @SerializedName("type")
-    private String type;
-    @SerializedName("phone")
     private String phone;
+    private String phoneCountryCode;
+    private String name;
+    private String password;
+    private Token token;
+    private MetaProfile metaprofile;
 
     public String getPhone() {
         return phone;
@@ -45,19 +44,67 @@ public class RegisterRequestData {
         this.phone = phone;
     }
 
-    public String getEmail() {
-        return email;
+    public String getPhoneCountryCode() {
+        return phoneCountryCode;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPhoneCountryCode(String phoneCountryCode) {
+        this.phoneCountryCode = phoneCountryCode;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
+    }
+
+    public MetaProfile getMetaprofile() {
+        return metaprofile;
+    }
+
+    public void setMetaprofile(MetaProfile metaprofile) {
+        this.metaprofile = metaprofile;
+    }
+
+    public class Token {
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public class MetaProfile {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }

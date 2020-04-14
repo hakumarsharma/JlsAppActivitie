@@ -97,6 +97,7 @@ public class Constant {
     public static final String PASSWORD_VALIDATION = "Password cannot be left blank.";
     public static final String EMAIL_VALIDATION = "Please provide the correct Email Id!";
     public static final String LOGIN_VALIDATION = "Please enter correct email and password";
+    public static final String GENERATE_TOKEN_SUCCESS = "Token generated successfully and sent to user.";
     public static final String EMAIL_LOCKED = "Account is locked";
     public static final String VALID_USER = "Please enter valid user";
     public static final String PASSWORD_VALIDATION2 = "Password must have a minimum of 8 characters and a maximum of 16 characters. Also, must contain atleast one lowercase alphabet, one uppercase alphabet, one numeric and one special character";
@@ -104,6 +105,8 @@ public class Constant {
     public static final String NOJFF_SMS = "Please click on below link to know the consent response https://peopletracker/NoPeopleTracker?data=";
     public static final String ADMIN_EMAIL_ID = "Shivakumar.jagalur@ril.com";
     public static final String ADMIN_PASSWORD = "Ril@12345";
+    public static final String BORQS_TOKEN_ACTIVITY_TITLE = "Token Verification";
+
 
 
     // New Device Activity Constants
@@ -143,7 +146,7 @@ public class Constant {
     //Rest API URL
     public static final String LOGIN_URL = "/accounts/api/users/login?isResponseDataAsUser=true&isPopulateGroup=true&isPopulateGroupUsers=true&isPopulateUserDevices=true&isPopulateUserDevicesAsWearableUsers=true";
     public static final String REGISTRATION_TOKEN_URL = "/accounts/api/users/tokens";
-    public static final String REGISTRATION_URL = "/accounts/api/users/tokens/verify";
+    public static final String REGISTRATION_URL = "/accounts/api/users/register";
     public static final String FORGOT_PASS_URL = "/accounts/api/users/resetpassword";
     public static final String FORGOTPASS_TOKEN_URL = "/ugs/api/user/forgotpassword";
     public static final String ADDDEVICE_URL_1 = "/accounts/api/users/";
@@ -154,6 +157,8 @@ public class Constant {
     public static final String TRACK_DEVICE_REQUEST = "/accounts/api/devicestatuses/search?skip=0&limit=20&tsp=1572443375692&ugs_token=";
     public static final String GET_DEVICE_LOCATION_URL_1 = "/accounts/api/devices/";
     public static final String GET_DEVICE_LOCATION_URL_2 = "?tsp=1585031229387&ugs_token=";
+    public static final String REGISTRATION_URL_VERIFY = "/accounts/api/users/tokens/verify";
+    public static final String GENERATE_TOKEN_REQUEST_URL = "/accounts/api/users/tokens";
 
     //Privacy Policy
 
@@ -167,7 +172,7 @@ public class Constant {
     public static final String PASSWORD_EMPTY = "Password cannot be left blank.";
     public static final String PASSWORD_NOT_MATCHED = "Password did not match, please try again";
     public static final String RESET_PASSWORD_FAILED = "Reset password is failed";
-    public static final String NAME_EMPTY = "Name cannot be left blank.";
+    public static final String NAME_EMPTY = "Name can't be left blank.";
     public static final String EMAIL_EMPTY = "Email cannot be left blank.";
     public static final String MOBILE_NUMBER_EMPTY = "Mobile number cannot be left blank.";
     public static final String VALID_PHONE_NUMBER = "Please enter valid phone number";
@@ -194,10 +199,10 @@ public class Constant {
     public static final String LOCATION_FLAG_STATUS = "LocationFlagStatus";
     public static final String CONSENT_NOT_SENT = "Consent not sent";
     public static final String BORQS_OTP_TITLE = "OTP Verification";
-    public static final String EMPTY_EMAIL_OTP = "Please enter the email otp";
+    public static final String EMPTY_OTP = "Please enter the otp";
     public static final String TOKEN_VERIFIED = "Token successfully verified.";
     public static final String TOKEN_VERIFICATION_FAILED = "Verification failed!";
-    public static final String REGISTARTION_SUCCESS_MESSAGE = "Registration successfull!";
+    public static final String REGISTARTION_SUCCESS_MESSAGE = "User registration is successful.";
     public static final String REGISTARTION_FAILED_MESSAGE = "Registration is failed";
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";
@@ -228,6 +233,7 @@ public class Constant {
     public static final int STATUS_CODE_404 = 404;
     public static final int STATUS_CODE_417 = 417;
     public static final int SUCCESS_CODE_200 = 200;
+    public static final int STATUS_CODE_401 = 401;
 
 
     // Track device Activity

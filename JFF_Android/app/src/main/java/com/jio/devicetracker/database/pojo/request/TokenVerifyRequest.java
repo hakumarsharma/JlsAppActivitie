@@ -22,43 +22,37 @@
 
 package com.jio.devicetracker.database.pojo.request;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
-import com.jio.devicetracker.database.pojo.RegisterRequestData;
+import com.jio.devicetracker.database.pojo.VerifyTokenData;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
-import static com.android.volley.Request.Method.POST;
-
-/**
- * Implementation of registration token request api .
- */
-public class RegistrationTokenrequest implements IRequest {
-
+public class TokenVerifyRequest implements IRequest {
     private Response.Listener sucessListener;
     private Response.ErrorListener errorListener;
-    private RegisterRequestData data;
+    private VerifyTokenData user;
 
-    public RegistrationTokenrequest(Response.Listener sucessListener, Response.ErrorListener errorListener, RegisterRequestData data)
+    public TokenVerifyRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, VerifyTokenData object)
     {
         this.sucessListener = sucessListener;
         this.errorListener = errorListener;
-        this.data = data;
-
+        this.user = object;
     }
     @Override
     public String getReqParams() {
-        return Util.getInstance().toJSON(data);
+        return Util.getInstance().toJSON(user);
     }
 
     @Override
     public int getMethod() {
-        return POST;
+        return Request.Method.POST;
     }
 
     @Override
     public String getAction() {
-        return Constant.REGISTRATION_URL;
+        return Constant.REGISTRATION_URL_VERIFY;
     }
 
     @Override
