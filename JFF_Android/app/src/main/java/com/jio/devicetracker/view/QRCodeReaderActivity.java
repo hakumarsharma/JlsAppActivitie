@@ -32,9 +32,12 @@ import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+/**
+ * Class which is responsible for reading the QR code
+ */
 public class QRCodeReaderActivity extends Activity implements ZXingScannerView.ResultHandler {
 
-    ZXingScannerView mScannerView;
+    private ZXingScannerView mScannerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,13 +46,15 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
         setContentView(mScannerView);
     }
 
+    /**
+     * Call back method, which navigates us to the ContactDetailsActivity
+     * @param result
+     */
     @Override
     public void handleResult(Result result) {
         Intent intent = new Intent(this, ContactDetailsActivity.class);
         intent.putExtra("QRCodeValue",result.getText());
         startActivity(intent);
-        // MainActivity.mresult.setText(result.getText());
-        // onBackPressed();
     }
 
     @Override

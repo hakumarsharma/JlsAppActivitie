@@ -28,6 +28,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 
+/**
+ * This class will be called whenever System receive SMS, because this is registered as a broadcast receiver
+ */
 
 public class MessageReceiver extends BroadcastReceiver {
 

@@ -35,7 +35,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupmemberListData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
@@ -45,6 +44,9 @@ import com.jio.devicetracker.view.adapter.GroupMemberListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Displays the group member of a particular group
+ */
 public class GroupListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView mRecyclerList;
@@ -74,10 +76,12 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         mRecyclerList.setLayoutManager(linearLayoutManager);
     }
 
+    /**
+     * Displays group members in a list
+     */
     private void addDataInList() {
         List<GroupmemberListData> mList = new ArrayList<>();
-        AdminLoginData adminLoginData = mDbmanager.getAdminLoginDetail();
-        List<HomeActivityListData> listData = mDbmanager.getAllBorqsData(adminLoginData.getEmail());
+        List<HomeActivityListData> listData = mDbmanager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : listData) {
             if (homeActivityListData.getGroupName() != null && homeActivityListData.getGroupName().equalsIgnoreCase(DashboardActivity.groupName) && homeActivityListData.getName() != null) {
                 GroupmemberListData data = new GroupmemberListData();
@@ -99,7 +103,6 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
             startActivity(new Intent(this, ContactDetailsActivity.class));
         } else if (v.getId() == R.id.createGroupButtonOnToolbar) {
             Util.alertDilogBox("Coming Soon...", "Alert", this);
-//            Toast.makeText(this, "We will make an API to create group on borqs", Toast.LENGTH_LONG).show();
         }
     }
 

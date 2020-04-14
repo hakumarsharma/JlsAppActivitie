@@ -50,7 +50,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
@@ -62,7 +61,6 @@ import com.jio.devicetracker.database.pojo.request.SearchDeviceRequest;
 import com.jio.devicetracker.database.pojo.response.GetDeviceLocationResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceResponse;
-import com.jio.devicetracker.jiotoken.JioUtils;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
@@ -80,8 +78,6 @@ import java.util.Locale;
  */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
 
-    //   private EditText jioEmailEditText = null;
-    //   private EditText jioPasswordEditText = null;
     private EditText jioMobileNumberEditText = null;
     private EditText jioUserNameEditText = null;
     private static EditText jioMobileOtp = null;
@@ -90,9 +86,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static LogindetailResponse logindetailResponse = null;
     public static SearchDeviceResponse searchdeviceResponse = null;
     private static final int PERMIT_ALL = 1;
-    private String name;
     private String mbNumber;
-    private String imei;
     private String number;
     public static String userName;
     private DBManager mDbManager;
@@ -102,20 +96,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginButton;
     private Locale locale = Locale.ENGLISH;
     public static GetDeviceLocationResponse getDeviceLocationResponse = null;
+    private Integer otpGeneratedValue = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // @SuppressWarnings("PMD.UnnecessaryFullyQualifiedName")
         requestPermission();
-//    String[] permissions = {Manifest.permission.READ_SMS,Manifest.permission.READ_PHONE_NUMBERS, Manifest.permission.RECEIVE_SMS,
-//            Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE,
-//            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA,
-//            Manifest.permission.READ_CONTACTS
-//            };
-//    if (!hasPermissions(this, permissions)) {
-//        ActivityCompat.requestPermissions(this, permissions, PERMIT_ALL);
-//    }
         setContentView(R.layout.activity_login);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.LOGIN_TITLE);
@@ -138,6 +124,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         checkTermandCondition(termConditionsFlag);
     }
 
+    /**
+     * Change the button color, when user enters something
+     */
     private void fetchMobileNumber() {
         jioMobileNumberEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -165,16 +154,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    Integer otpGeneratedValue = null;
-
+    /**
+     * Generates Random number(OTP)
+     */
     private void generateOTP() {
         otpGeneratedValue = (int) (Math.random() * 9000) + 1000;
         sendSMSMessage(otpGeneratedValue);
     }
 
+    /**
+     * Sends OTP to the user mobile number
+     *
+     * @param randomNumberForOTP
+     */
     protected void sendSMSMessage(int randomNumberForOTP) {
         String phoneNo = number;
-        String message = "PeopleTracker OTP :" + randomNumberForOTP;
+        String message = Constant.OTP_MESSAGE + randomNumberForOTP;
 
         if (0 == PackageManager.PERMISSION_GRANTED) {
             SmsManager smsManager = SmsManager.getDefault();
@@ -189,19 +184,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    /**
+     * Gets called when you click on login button
+     *
+     * @param v
+     */
     @Override
     public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.login:
-                validateNumber();
-                break;
-            default:
-                break;
-
+        if (v.getId() == R.id.login) {
+            validateNumber();
         }
     }
 
+    /*
+     * Validate mobile number
+     */
     private void validateNumber() {
         if (!(jioMobileOtp.getText().toString().equals(String.valueOf(otpGeneratedValue)))) {
             jioMobileOtp.setError("Invalid OTP Provided");
@@ -217,7 +214,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         boolean isAvailable = Util.isMobileNetworkAvailable(this);
         if (isAvailable) {
             checkJiooperator();
-
         } else {
             Util.alertDilogBox(Constant.MOBILE_NETWORKCHECK, Constant.ALERT_TITLE, this);
         }
@@ -228,27 +224,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void checkJiooperator() {
         phoneNumber = jioMobileNumberEditText.getText().toString();
-        String carierName = subscriptionInfos.get(0).getCarrierName().toString();
-        String number = subscriptionInfos.get(0).getNumber();
+        if (subscriptionInfos != null) {
+            String carierName = subscriptionInfos.get(0).getCarrierName().toString();
+            String number = subscriptionInfos.get(0).getNumber();
 
-        if (number != null
-                && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
-            if (carierName.contains(Constant.JIO)) {
-                JioUtils.getSSOIdmaToken(this);
-                // gotoDashBoardActivity();
-            } else {
-                Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
-            }
-        } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber() != null) {
-            if (subscriptionInfos.get(1).getNumber().equals("91" + phoneNumber) || subscriptionInfos.get(1).getNumber().equals(phoneNumber)) {
-                Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+            if (number != null
+                    && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
+                if (!carierName.contains(Constant.JIO)) {
+                    Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+                }
+            } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber() != null) {
+                if (subscriptionInfos.get(1).getNumber().equals("91" + phoneNumber) || subscriptionInfos.get(1).getNumber().equals(phoneNumber)) {
+                    Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
+                } else {
+                    Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
+                }
             } else {
                 Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
             }
-        } else {
-            Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
         }
-
     }
 
 
@@ -273,10 +267,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    /*Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS,
-                Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS*/
-// Request for SMS and Phone Permissions
+    // Request for SMS and Phone Permissions
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.READ_SMS,
@@ -289,6 +280,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * Called when you click on Login button
+     */
     private void onLoginButtonClick() {
         String compareOtp = String.valueOf(otpGeneratedValue);
         if (!jioMobileOtp.getText().toString().equals(compareOtp)) {
@@ -299,8 +293,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             jioUserNameEditText.setError(Constant.NAME_VALIDATION);
             return;
         }
-        String emailId = "Shivakumar.jagalur@ril.com";
-        String password = "Ril@12345";
         userName = jioUserNameEditText.getText().toString();
 //        String jioEmailIdText = jioEmailEditText.getText().toString().trim();
 //        String jioPasswordText = jioPasswordEditText.getText().toString().trim();
@@ -322,17 +314,46 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            if (Util.isValidEmailId(jioEmailIdText)) {
         makeMQTTConnection();
         Userdata data = new Userdata();
-        data.setEmailId(emailId);
-        data.setPassword(password);
-        //data.setMobileNumber(String.valueOf(jioMobileNumberEditText));
+        data.setEmailId(Constant.ADMIN_EMAIL_ID);
+        data.setPassword(Constant.ADMIN_PASSWORD);
         data.setType(Constant.SUPERVISOR);
         RequestHandler.getInstance(getApplicationContext()).handleRequest(new LoginDataRequest(new SuccessListener(), new ErrorListener(), data));
-//            } else {
-//                jioEmailEditText.setError(Constant.EMAIL_VALIDATION);
-//                return;
-//            }
-//        }
         Util.getInstance().showProgressBarDialog(this);
+    }
+
+    /**
+     * Login successful Listener
+     */
+    private class SuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            logindetailResponse = Util.getInstance().getPojoObject(String.valueOf(response), LogindetailResponse.class);
+            if (logindetailResponse.getUgsToken() != null) {
+                new DBManager(LoginActivity.this).insertLoginData(logindetailResponse);
+            }
+            SearchDevice data = new SearchDevice();
+            List<String> userAssignedList = new ArrayList<>();
+            userAssignedList.add(logindetailResponse.getUser().getId());
+            data.setUsersAssigned(userAssignedList);
+            RequestHandler.getInstance(getApplicationContext()).handleRequest(new SearchDeviceRequest(new SuccessListenerSearchDevice(), new ErrorListenerSearchDevice(), logindetailResponse.getUgsToken(), data));
+        }
+    }
+
+    /**
+     * Login unsuccessful Listener
+     */
+    private class ErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error.networkResponse.statusCode == Constant.INVALID_USER) {
+                Util.alertDilogBox(Constant.LOGIN_VALIDATION, Constant.ALERT_TITLE, LoginActivity.this);
+            } else if (error.networkResponse.statusCode == Constant.ACCOUNT_LOCK) {
+                Util.alertDilogBox(Constant.EMAIL_LOCKED, Constant.ALERT_TITLE, LoginActivity.this);
+            } else {
+                Util.alertDilogBox(Constant.VALID_USER, Constant.ALERT_TITLE, LoginActivity.this);
+            }
+            Util.progressDialog.dismiss();
+        }
     }
 
     /**
@@ -345,12 +366,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String[] splitStr = data.toString().split("=");
             String[] splitNamenumber = splitStr[1].split("&");
             mbNumber = splitNamenumber[0];
-            name = splitNamenumber[1];
-            imei = splitNamenumber[2];
+            /*String name = splitNamenumber[1];
+            String imei = splitNamenumber[2];*/
             showDialog(mbNumber);
         }
     }
 
+    /**
+     * Display Dialog when you click on Deep link URI
+     */
     public void showDialog(String number) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.number_display_dialog);
@@ -366,7 +390,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 phoneNumber = subscriptionInfos.get(0).getNumber();
             }
             new SendSMSTask().execute(mbNumber, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
-            mDbManager.updateConsentInBors(mbNumber, Constant.CONSENT_APPROVED_STATUS);
+            mDbManager.updateConsentInDeviceBors(mbNumber, Constant.CONSENT_APPROVED_STATUS);
             dialog.dismiss();
         });
 
@@ -376,12 +400,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 phoneNumber = subscriptionInfos.get(0).getNumber();
             }
             new SendSMSTask().execute(number, Constant.NOJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
-            mDbManager.updateConsentInBors(mbNumber, Constant.REQUEST_CONSENT);
+            mDbManager.updateConsentInDeviceBors(mbNumber, Constant.REQUEST_CONSENT);
             dialog.dismiss();
         });
         dialog.show();
     }
 
+    // Gets called when app receives message
     @Override
     public void messageReceived(String message, String phoneNum) {
         String[] splitmessage = message.split(":");
@@ -399,42 +424,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mqttManager.connetMQTT();
     }
 
-    /*public boolean hasPermissions(Context context, String[] permissions) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-            subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-        }
-        return true;
-    }*/
-
-
-   /* private void gotoForgetPassTokenScreen() {
-        Intent intent = new Intent(this, ForgetpassTokenActivity.class);
-        //intent.putExtra("Email", jioEmailEditText.getText().toString().trim());
-        startActivity(intent);
-    }*/
-
-    private class SuccessListener implements Response.Listener {
-
-        @Override
-        public void onResponse(Object response) {
-            logindetailResponse = Util.getInstance().getPojoObject(String.valueOf(response), LogindetailResponse.class);
-            if (logindetailResponse.getUgsToken() != null) {
-                new DBManager(LoginActivity.this).insertLoginData(logindetailResponse);
-            }
-            SearchDevice data = new SearchDevice();
-            List<String> userAssignedList = new ArrayList<>();
-            userAssignedList.add(logindetailResponse.getUser().getId());
-            data.setUsersAssigned(userAssignedList);
-            RequestHandler.getInstance(getApplicationContext()).handleRequest(new SearchDeviceRequest(new SuccessListenerSearchDevice(), new ErrorListenerSearchDevice(), logindetailResponse.getUgsToken(), data));
-        }
-    }
-
+    /*
+     * Search device Success Listener(Gets all the device available under that particular user)
+     */
     private class SuccessListenerSearchDevice implements Response.Listener {
         @Override
         public void onResponse(Object response) {
@@ -454,7 +446,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Util.setAutologinStatus(LoginActivity.this, true);
             adminData = mDbManager.getAdminLoginDetail();
             mDbManager.insertInBorqsDB(mlist, adminData.getEmail());
-            List<HomeActivityListData> getallDeviceData = mDbManager.getAllDevicedata(adminData.getEmail());
+            List<HomeActivityListData> getallDeviceData = mDbManager.getAllBorqsData(adminData.getEmail());
             for (HomeActivityListData getDeviceId : getallDeviceData) {
                 RequestHandler.getInstance(getApplicationContext()).handleRequest(new GetDeviceLocationRequest(new SuccessListenerDeviceLocation(), new ErrorListenerDeviceLocation(), logindetailResponse.getUgsToken(), getDeviceId.getDeviceId()));
             }
@@ -498,20 +490,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.getInstance().dismissProgressBarDialog();
-        }
-    }
-
-    private class ErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            if (error.networkResponse.statusCode == Constant.INVALID_USER) {
-                Util.alertDilogBox(Constant.LOGIN_VALIDATION, Constant.ALERT_TITLE, LoginActivity.this);
-            } else if (error.networkResponse.statusCode == Constant.ACCOUNT_LOCK) {
-                Util.alertDilogBox(Constant.EMAIL_LOCKED, Constant.ALERT_TITLE, LoginActivity.this);
-            } else {
-                Util.alertDilogBox(Constant.VALID_USER, Constant.ALERT_TITLE, LoginActivity.this);
-            }
-            Util.progressDialog.dismiss();
         }
     }
 
@@ -595,63 +573,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
-
-/*    private void serviceCallLogin() {
-        boolean serviceFlag = true;
-        adminData = mDbManager.getAdminLoginDetail();
-        mList = mDbManager.getAlldata(adminData.getEmail());
-
-        for (HomeActivityListData data : mList) {
-            if (data.getPhoneNumber().equals(mbNumber)) {
-                mDbManager.updateConsentInBors(data.getPhoneNumber(), Constant.CONSENT_STATUS_MSG);
-                serviceFlag = false;
-                break;
-            }
-        }
-        if (serviceFlag) {
-            AddDeviceData addDeviceData = new AddDeviceData();
-            AddDeviceData.Devices devices = addDeviceData.new Devices();
-            AddDeviceData.Flags flags = addDeviceData.new Flags();
-            devices.setMac("857170180584765");
-            devices.setIdentifier(Constant.IMEI);
-            devices.setName(name);
-            devices.setPhone(mbNumber);
-            flags.setSkipAddDeviceToGroup(false);
-            List<AddDeviceData.Devices> listDevices = new LinkedList<>();
-            listDevices.add(devices);
-            addDeviceData.setDevices(listDevices);
-            addDeviceData.setFlags(flags);
-            Util.getInstance().showProgressBarDialog(this, Constant.PROGRESSBAR_MSG);
-            RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new SuccessListenerAddDevice(), new ErrorListenerAddDevice(), new DBManager(this).getAdminLoginDetail().getUserToken(), new DBManager(this).getAdminLoginDetail().getUserId(), addDeviceData));
-
-        }
-        String phoneNumber = null;
-        if (subscriptionInfos != null) {
-            phoneNumber = subscriptionInfos.get(0).getNumber();
-        }
-        new SendSMSTask().execute(mbNumber, Constant.YESJFF_SMS + phoneNumber.trim().substring(2, phoneNumber.length()));
-
-    }*/
-
-    private class SuccessListenerAddDevice implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            AddedDeviceData addedDeviceData = new AddedDeviceData();
-            addedDeviceData.setName(name);
-            addedDeviceData.setPhoneNumber(mbNumber);
-            addedDeviceData.setImeiNumber(imei);
-            addedDeviceData.setConsentStaus(Constant.CONSENT_APPROVED_STATUS);
-            Util.getInstance().dismissProgressBarDialog();
-            Toast.makeText(LoginActivity.this, "2 way tracking done", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private class ErrorListenerAddDevice implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.getInstance().dismissProgressBarDialog();
-        }
-    }
-
-
 }

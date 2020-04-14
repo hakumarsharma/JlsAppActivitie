@@ -51,6 +51,7 @@ public class ConsentTimeUpdate extends Worker {
 
     }
 
+    // Update the consent time in background
     @NonNull
     @Override
     public Result doWork() {
@@ -58,8 +59,7 @@ public class ConsentTimeUpdate extends Worker {
         List<ConsentTimeupdateData> mList = new ArrayList<>();
         long unixTime = System.currentTimeMillis() / 1000L;
         AdminLoginData adminData = mDbmanager.getAdminLoginDetail();
-        if (adminData != null && adminData.getTokenExpirytime() != null &&unixTime >= Long.valueOf(adminData.getTokenExpirytime())) {
-
+        if (adminData != null && adminData.getTokenExpirytime() != null && unixTime >= Long.valueOf(adminData.getTokenExpirytime())) {
             expiryTokenFlag = true;
         }
 

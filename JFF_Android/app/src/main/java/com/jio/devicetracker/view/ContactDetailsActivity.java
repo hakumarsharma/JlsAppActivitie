@@ -44,13 +44,15 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 import java.util.List;
 
+/**
+ * This class is responsible for adding new devices(It can add from QR code, Contact list or manually)
+ */
 public class ContactDetailsActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private String name;
@@ -59,18 +61,18 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private EditText mNumber;
     private EditText mIMEINumber;
     private DBManager mDbManager;
-    private AdminLoginData adminData;
     private String deviceType;
     private boolean isDataMatched = false;
     private static String numberComingFromContactList = null;
     private static String nameComingFromContactList = null;
     private Button addContactInGroupButon = null;
+    private Toolbar toolbar = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_details);
-        Toolbar toolbar = findViewById(R.id.loginToolbar);
+        toolbar = findViewById(R.id.loginToolbar);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.CONTACT_DEVICE_TITLE);
         addContactInGroupButon = findViewById(R.id.addContactInGroup);
@@ -81,13 +83,18 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         Spinner deviceTypeSpinner = findViewById(R.id.deviceTypeSpinner);
         deviceTypeSpinner.setOnItemSelectedListener(this);
         mDbManager = new DBManager(this);
-        adminData = new AdminLoginData();
-        adminData = mDbManager.getAdminLoginDetail();
         Intent intent = getIntent();
         String qrValue = intent.getStringExtra("QRCodeValue");
         setNameNumberImei(qrValue);
         changeButtonColorOnDataEntry();
+        checkValidationOfFieldEntry();
+    }
 
+    /**
+     * If coming to this activity after clicking on Add Contact or Create group from floating button, then display the contact icon on toolbar
+     * or else display the QR code on toolbar when Add device is clicked
+     */
+    private void checkValidationOfFieldEntry() {
         if (DashboardActivity.isComingFromGroupList || DashboardActivity.isAddIndividual) {
             ImageView contactBtn = toolbar.findViewById(R.id.contactAdd);
             contactBtn.setVisibility(View.VISIBLE);
@@ -104,6 +111,9 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         }
     }
 
+    /**
+     * Change the button color when data is field
+     */
     private void changeButtonColorOnDataEntry() {
         mName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -151,6 +161,10 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
     }
 
+    /**
+     * Fetch the name and number after scanning from QR Scanner
+     * @param qrValue
+     */
     private void setNameNumberImei(String qrValue) {
         if (qrValue != null) {
             String[] splitString = qrValue.split("\n");
@@ -212,8 +226,14 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         }
     }
 
+    /**
+     * If data is matched then update device type and group name in database
+     * @param mName
+     * @param mNumber
+     * @param mIMEINumber
+     */
     private void checkValidationOfUser(String mName, String mNumber, String mIMEINumber) {
-        List<HomeActivityListData> homeListData = mDbManager.getAllBorqsData(adminData.getEmail());
+        List<HomeActivityListData> homeListData = mDbManager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : homeListData) {
             if (homeActivityListData.getImeiNumber() != null && homeActivityListData.getImeiNumber().equalsIgnoreCase(mIMEINumber) && homeActivityListData.getPhoneNumber().equalsIgnoreCase(mNumber)) {
                 mDbManager.updateDeviceTypeAndGroupName(deviceType, homeActivityListData.getGroupName(), homeActivityListData.getImeiNumber(), mName, 1);
@@ -226,6 +246,12 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         }
     }
 
+    /**
+     * Call back method of QR scanner button available on toolbar
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -248,39 +274,9 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     nameComingFromContactList = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 }
                 startActivity(new Intent(this, ContactDetailsActivity.class));
-                /*if (DashboardActivity.isComingFromGroupList) {
-                    setGroupData(DashboardActivity.groupName, cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)), number);
-                    gotoGroupListActivity();
-                } else {
-                    setListDataOnHomeScreen(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)).trim(), number.trim(), false);
-                    if (insertRowid > 0) {
-                        gotoDashboardActivity();
-                    } else {
-                        Util.alertDilogBox(Constant.DUPLICATE_NUMBER, Constant.ALERT_TITLE, this);
-                    }
-                }*/
             }
         }
     }
-
-    /*private void setGroupData(String groupName, String name, String number) {
-        GroupData groupData = new GroupData();
-        groupData.setGroupName(groupName.trim());
-        groupData.setName(name.trim());
-        groupData.setNumber(number.trim());
-        groupData.setLat("12.9050641");
-        groupData.setLng("77.6310009");
-        DashboardActivity.specificGroupMemberData.add(groupData);
-    }
-
-    private void setListDataOnHomeScreen(String name, String number, boolean isGroupMember) {
-        HomeActivityListData listOnHomeScreen = new HomeActivityListData();
-//        listOnHomeScreen.setRelationWithName(relationWithGroupMember);
-        listOnHomeScreen.setGroupMember(isGroupMember);
-        List<HomeActivityListData> homeListData = mDbManager.getAlldata(adminData.getEmail());
-
-        mDbManager.insertInBorqsDeviceDB(listOnHomeScreen, adminData.getEmail());
-    }*/
 
     private void gotoGroupListActivity() {
         startActivity(new Intent(this, GroupListActivity.class));

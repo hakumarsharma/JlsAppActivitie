@@ -40,6 +40,9 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 
+/**
+ * Class to create Group name and the relation with group members
+ */
 public class GroupNameActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText groupNameEditText = null;
@@ -59,6 +62,9 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
         changeButtonColorOnDataEntry();
     }
 
+    /**
+     * Change the button color when you enter data in edittext
+     */
     private void changeButtonColorOnDataEntry() {
         groupNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -106,6 +112,12 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    /**
+     * Displays the entered data in dashboard
+     * @param groupName
+     * @param relationWithGroupMembersText
+     * @param isGroupMember
+     */
     private void setHomeScreenData(String groupName, String relationWithGroupMembersText, boolean isGroupMember) {
         DashboardActivity.listOnHomeScreens.clear();
         HomeActivityListData listOnHomeScreen = new HomeActivityListData();

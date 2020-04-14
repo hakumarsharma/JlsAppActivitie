@@ -36,6 +36,10 @@ import android.widget.Toast;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 
+/**
+ * Class which is responsible for setting the Map refresh interval time(Map loading),
+ * It starts the scheduler for the selected time interval
+ */
 public class RefreshIntervalSettingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private String[] refreshInterval = {Constant.TEN_SECONDS, Constant.ONE_MINUTE, Constant.TEN_MINUTES, Constant.FIFTEEN_MINUTES, Constant.ONE_HOUR};

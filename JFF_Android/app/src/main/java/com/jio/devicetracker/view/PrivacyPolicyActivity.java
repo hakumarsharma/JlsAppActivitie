@@ -46,48 +46,43 @@ public class PrivacyPolicyActivity extends Activity implements View.OnClickListe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_termcondition);
         mCheckbox = findViewById(R.id.checkbox);
         Button mAccept = findViewById(R.id.accept);
         Button mDecline = findViewById(R.id.decline);
         TextView mPolicyContent = findViewById(R.id.termConditioncontent);
         mPolicyContent.setText(Html.fromHtml(getString(R.string.privacy_policy)));
-
         mAccept.setOnClickListener(this);
         mDecline.setOnClickListener(this);
-
     }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()){
             case R.id.accept:
                 checkBoxStatuscheck();
                 break;
-
             case R.id.decline:
                 Util.alertDilogBox(Constant.TERM_AND_CONDITION_ALERT,Constant.ALERT_TITLE,this);
                 break;
-
             default :
                 break;
-
         }
-
-
     }
 
+    /**
+     * Navigates to the Login activity
+     */
     private void gotoLoginScreen() {
-
         Util.setTermconditionFlag(this,true);
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * If accepted the term and condition go the Login screen else display the Alert dialog
+     */
     private void checkBoxStatuscheck(){
-
         if(mCheckbox.isChecked()){
             gotoLoginScreen();
         } else {

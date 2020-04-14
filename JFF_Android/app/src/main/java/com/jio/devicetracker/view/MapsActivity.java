@@ -112,6 +112,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Call back method to load the map on screen
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -144,6 +148,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Adds 10 color in list, so that we could be able to display
+     * different marker with different color
+     * @return List of available colors
+     */
     private List<Float> createColoredMapList() {
         List<Float> mapColorList = new ArrayList<>();
         mapColorList.add(BitmapDescriptorFactory.HUE_BLUE);
@@ -159,6 +168,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return mapColorList;
     }
 
+    /**
+     * Returns real address based on Lat and Long(Geo Coding)
+     * @param latitude
+     * @param longitude
+     * @return
+     */
     private String getAddressFromLocation(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
         try {
@@ -175,11 +190,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
+    /**
+     * Called when you click on Markers, Markers will display the full address
+     * @param marker
+     */
     @Override
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(this, strAddress.toString(), Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Class to show address when you click on marker
+     */
     class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         private final View myContentsView;
 
@@ -203,6 +225,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Refresh the map on particular time interval
+     */
     public void showMapOnTimeInterval() {
         if (mMap != null) {
             onMapReady(mMap);
@@ -218,7 +243,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
-    // Creates the notification channel
+    /**
+     * Creates the notification channel
+     */
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
