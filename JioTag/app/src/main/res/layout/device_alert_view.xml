@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/three_dp"
+    android:background="@drawable/disabled_button"
+    android:padding="3dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/devicealert_cv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <RelativeLayout
+            android:id="@+id/rel_devicealert_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/devicealert_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ten_dp"
+                android:layout_marginTop="@dimen/ten_dp"
+                android:fontFamily="Bold"
+                android:textStyle="bold"
+                android:freezesText="true"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp" />
+
+            <Switch
+                android:id="@+id/devicealert_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/ten_dp"
+                android:track="@drawable/switch_track_selector"
+                android:thumbTint="@color/lite_blue"
+                android:switchMinWidth="60dp"
+                android:textAlignment="center" />
+            <Spinner
+                android:id="@+id/devicealert_duration_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:visibility="invisible"
+                android:backgroundTint="@color/lite_blue"
+                android:spinnerMode="dropdown"
+                android:popupBackground="@drawable/square_blue_frame"
+                android:background="@drawable/spinner_back"
+                android:paddingRight="30dp"
+                android:entries="@array/duration_arrays"
+                />
+
+            <TextView
+                android:id="@+id/devicealert_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/devicealert_header"
+                android:layout_alignStart="@+id/devicealert_header"
+                android:layout_marginTop="@dimen/ten_dp"
+                android:freezesText="true"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/twelve_sp" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

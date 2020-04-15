@@ -1,0 +1,150 @@
+<resources>
+    <string name="splash_name">JioTags</string>
+    <string name="app_name">JioTags</string>
+    <string name="title_home">JioTags</string>
+    <string name="title_dashboard">Camera</string>
+    <string name="title_notifications">Location</string>
+    <string name="title_camera">Camera</string>
+    <string name="title_location">Location</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Devices Finder</string>
+    <string name="nav_header_subtitle">Finds Tags</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Scan</string>
+
+    <string name="menu_home">Jio Beacon</string>
+    <string name="menu_gallery">Jio Beacon</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Help</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="button_scan">Scan Devices</string>
+    <string name="connectstr">Connect</string>
+    <string name="introduction_text">"\n+Press Scan to see Devices List\n+Use Connect to pair to devices\n+Alarm Icon Alerts paired device\n+Location:Shows current location\n+Camera Icon:Launches Camera"</string>
+    <string name="alarm">Alarm</string>
+    <string name="device_status">Disconnected</string>
+    <string name="device_distance">Device Distance</string>
+    <string name="helptext">1.Launch the App\n2.Press Scan\n 3.ON Listed devices Press Connect\n 4.Press Alarm to Ring the device.\n 5.Press Location to see Location Data.\n 6.Press Camera Icon to launch Camera </string>
+    <string name="action_clear_devices">Clear Devices</string>
+    <string name="friendly_key">Key</string>
+    <string name="friendly_wallet">Wallet</string>
+    <string name="friendly_laptops">Laptop</string>
+    <string name="friendly_suitcase">Suitcase</string>
+    <string name="friendly_satchel">Satchel</string>
+    <string name="friendly_others">Others</string>
+    <string name="friendly_purse">Purse</string>
+    <string name="friendly_attach_asset">Attach Asset</string>
+    <string name="friendly_finish">Finish</string>
+    <string name="friendly_cancel">Cancel</string>
+    <string name="friendly_name">Assign Name</string>
+    <string name="friendly_name_hint">Item Name(e.g, key/wallet)</string>
+
+    <string name="attach_jio_finder_heading">Attach device</string>
+    <string name="attach_jio_finder_search">Search</string>
+    <string name="attach_jio_finder_Header">Turn on the device and long press the power button for 10 seconds, to get connected with the phone.</string>
+
+    <string name="notfound_heading">Search result</string>
+    <string name="notfound_header">Device not found ?</string>
+    <string name="notfound_steps">Please follow below steps:</string>
+    <string name="notfound_step_details">Please restart your phone Bluetooth.\n\nMake sure the device is ON, and put it closer to your phone.</string>
+
+    <string name="add_jio_finder_heading">Add device</string>
+    <string name="add_jio_finder_how">How to add device?</string>
+    <string name="add_jio_finder_how_add">Add</string>
+
+    <string name="jiopermissions_header_value">Permissions</string>
+    <string name="jiopermissions_before_activate_text">Before activating the Device</string>
+    <string name="jiopermissions_turnon_bt_text">Turn on Bluetooth</string>
+    <string name="jiopermissions_turnon_bt_details_text">In order to find your assets,bluetooth of your phone needs to be activated.</string>
+    <string name="jiopermissions_turnon_bt_details_enable_text">Enable</string>
+    <string name="jiopermissions_turnon_location_text">Turn on Location</string>
+    <string name="jiopermissions_turnon_location_details_text">In order to find your assets location accurately,location of your phone needs to be activated.</string>
+    <string name="jiopermissions_turnon_location_details_enable_text">Enable</string>
+    <string name="jiopermissions_next_text">Next</string>
+    <string name="jiopermissions_app_header_str">Permissions</string>
+    <string name="jiopleasewait_app_header_text">Searching for devices</string>
+    <string name="jiopleasewait_scan_text">Scanning for devices…please wait</string>
+
+    <string name="menu_settings">Settings</string>
+    <string name="menu_notification">Notification</string>
+    <string name="menu_homes">Home</string>
+    <string name="card_location">Avana Iblur, Bangalore</string>
+
+    <string name="settings_header_photocapture">Photo capture</string>
+    <string name="settings_header_sos">SOS</string>
+    <string name="settings_header_disconnect">Disconnect alert</string>
+
+    <string name="settings_photocapture_details">Pressing power button of the device twice will launch camera and click a photo</string>
+    <string name="settings_sos_details">Pressing power button thrice will send SOS alert</string>
+    <string name="settings_disconnect_details">When phone is in silent mode,Bluetooth disconnection reminder alert will still come</string>
+
+    <string name="camera_menu_take_new_photo">Take new photo</string>
+    <string name="camera_menu_open_gallery">Open Gallery</string>
+
+    <string name="cardviewlayout_device_heading_default">JioTags.0</string>
+    <string name="cardviewlayout_device_time_default">00.00 AM</string>
+
+    <string name="phonealert_header_duration">Duration for alert</string>
+    <string name="phonealert_header_duration_details">Select time duration when phone lost connection with finder.</string>
+
+    <string name="phonealert_header_repeat">Repeat</string>
+    <string name="phonealert_header_repeat_details">Repeat alert will receive if you dont find the phone.</string>
+    <string name="phonealert_main_header">Alert to find phone</string>
+
+    <string-array name="duration_arrays">
+        <item>5sec</item>
+        <item>10sec</item>
+        <item>15sec</item>
+    </string-array>
+
+    <string name="devicealert_alerts_header">Alerts Settings</string>
+    <string name="devicealert_notifications_header">Notification Settings</string>
+
+    <string name="devicealert_main_header">Alert to find JioTags</string>
+    <string name="devicealert_header">Device Alerts</string>
+    <string name="devicealert_header_duration">Duration for alert</string>
+    <string name="devicealert_header_duration_details">Select time duration when device lost connection with Phone.</string>
+    <string name="devicealert_repeat">Repeat</string>
+    <string name="devicealert_repeat_details">Repeat alert will receive if you dont find the Car Keys(name of the finder will appear)</string>
+    <string name="devicealert_reminder_for_connection">Reminder for connection</string>
+    <string name="devicealert_reminder_for_connection_details">Reminder alert and notification message will receive if device lost connection with phone.</string>
+    <string name="devicealert_alert_on_reconnection">Alert on Reconnection</string>
+    <string name="devicealert_alert_on_reconnection_details">Phone will send an alert and notification message when device reconnect to your phone.</string>
+    <string name="login_text">Login</string>
+    <string name="login_enter_number">Please enter your Jio\n mobile number</string>
+    <string name="login_registered_number">Registered mobile number</string>
+    <string name="login_privacy">I have read and accept the <b>Terms and Conditions &amp; Privacy Policy.</b></string>
+    <string name="login_send_otp">Send OTP</string>
+    <string name="login_btn_otp">Login</string>
+    <string name="login_otp_text">Please wait while we automatically retrieve the 6-digit verification code.\nYou can always enter it manually.</string>
+    <string name="login_btn_enter_otp">Enter OTP</string>
+    <string name="login_sms_otp_sent">SMS with OTP was sent</string>
+    <string name="login_sms_otp_sent_to">to</string>
+    <string name="login_sms_otp_header_text">OTP</string>
+    <string name="login_sms_otp_10digit">Enter 10 digit Mobile number</string>
+    <string name="login_resend_otp">Resend OTP</string>
+
+    <string name="carddetail_phone_alerts">Phone Alerts</string>
+    <string name="carddetail_device_alerts">Device Alerts</string>
+    <string name="india_country_code">+91</string>
+    <string name="submit_button">Submit</string>
+    <string name="submit_enter_email">Enter your email id</string>
+    <string name="submit_enter_email_text">Please type your feedback here...</string>
+    <string name="feedback_header">Feedback</string>
+    <string name="information_header">Information</string>
+
+    <string name="info_aboutjio_header">About JioTag</string>
+    <string name="info_aboutjio_details">JioTag connects to devices and helps in finding assets which are tagged with those devices.</string>
+    <string name="info_features_header">Features</string>
+    <string name="info_connectionsetup_header">Connection setup</string>
+    <string name="info_connectionsetup_details">Long press the power button of JioTag for 10 sec will establish the connection to phone.</string>
+    <string name="info_photoclick_header">Photo click</string>
+    <string name="info_photoclick_details">Pressing twice the power button will click a photo.</string>
+
+    <string name="how_header">How to add</string>
+    <string name="how_details2">Wait for a while till your phone is getting connected with the device.</string>
+    <string name="how_details3">Attached device to any asset and save the information to get it track.</string>
+
+</resources>
