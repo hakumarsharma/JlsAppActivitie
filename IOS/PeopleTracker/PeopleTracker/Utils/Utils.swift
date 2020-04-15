@@ -28,6 +28,15 @@ class Utils {
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         return formatter.string(from: date)
     }
+    
+    func createCirculatImage(imageView : UIImageView) -> UIImageView{
+        imageView.layer.borderWidth = 1.0
+        imageView.layer.masksToBounds = false
+        imageView.layer.borderColor = UIColor.clear.cgColor
+        imageView.layer.cornerRadius = imageView.frame.size.width / 2
+        imageView.clipsToBounds = true
+        return imageView
+    }
 }
 
 extension UIViewController {

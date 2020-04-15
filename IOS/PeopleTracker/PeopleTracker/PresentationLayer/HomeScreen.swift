@@ -25,6 +25,7 @@
 
 import UIKit
 import JJFloatingActionButton
+import SideMenu
 
 class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
@@ -38,14 +39,23 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.initialiseData()
+        floatingActionButton()
+    }
+    
+    func initialiseData() {
         self.title = "Home"
         self.navigationItem.setHidesBackButton(true, animated: true)
+        
+        let menuBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "Menu"), style: .plain, target: self, action: #selector(menuButton(sender:)))
+        menuBtn.tintColor = .white
+        self.navigationItem.setLeftBarButton(menuBtn, animated: true)
         let trackBtn : UIBarButtonItem = UIBarButtonItem.init(title: "Track", style: .plain, target: self, action: #selector(trackButton(sender:)))
         trackBtn.setTitleTextAttributes( [NSAttributedString.Key.foregroundColor : UIColor.white], for: .normal)
         self.navigationItem.setRightBarButton(trackBtn, animated: true)
         usersTableView.delegate = self
         usersTableView.dataSource = self
-        floatingActionButton()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -97,6 +107,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    // MARK: Bar button action items
     @objc func checkmarkSelection(sender:UIButton) {
         let tempBtn : UIButton = sender
         if tempBtn.isSelected {
@@ -111,6 +122,22 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
             
         }
         tempBtn.isSelected = !tempBtn.isSelected
+    }
+    
+    @objc func menuButton(sender: UIBarButtonItem) {
+        
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let menuViewController = storyBoard.instantiateViewController(withIdentifier: "SideMenuScreen") as! SideMenuScreen
+        menuViewController.isFromHomevc = true
+        let leftMenuNavigationController = SideMenuNavigationController(rootViewController: menuViewController)
+        SideMenuManager.default.leftMenuNavigationController = leftMenuNavigationController
+        leftMenuNavigationController.leftSide = true
+        leftMenuNavigationController.navigationBar.isHidden = true
+        leftMenuNavigationController.statusBarEndAlpha = 0
+        leftMenuNavigationController.presentationStyle = SideMenuPresentationStyle.menuSlideIn
+        leftMenuNavigationController.menuWidth = self.view.frame.size.width - 100
+        present(leftMenuNavigationController, animated: true, completion: nil)
+        
     }
     
     @objc func trackButton(sender: UIBarButtonItem) {
@@ -260,9 +287,9 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
             DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<LocationModel, Error>)) in
                 switch result {
                 case .success(let deviceResponse):
-                     DispatchQueue.main.async {
+                    DispatchQueue.main.async {
                         self.hideActivityIndicator()
-                     }
+                    }
                     if let device = deviceResponse.devicedata , let _ = deviceResponse.devicedata?.deviceStatus?.location {
                         self.deviceDetails.append(device)
                     }

@@ -38,6 +38,14 @@
 		188D44E5242887CE001D8CF0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188D44E4242887CE001D8CF0 /* UserCell.swift */; };
 		18A06A802431FD4E00E72E93 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
 		18A06A812431FD4E00E72E93 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
+		18B905552445D442006ECCD1 /* SideMenuScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B905542445D442006ECCD1 /* SideMenuScreen.swift */; };
+		18CC651E24472100003736BC /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC651D24472100003736BC /* ProfileCell.swift */; };
+		18CC652024472109003736BC /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC651F24472109003736BC /* MenuCell.swift */; };
+		18CC652224472EC9003736BC /* ActiveSessionsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652124472EC9003736BC /* ActiveSessionsScreen.swift */; };
+		18CC652424472F17003736BC /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652324472F17003736BC /* ProfileScreen.swift */; };
+		18CC652624472F42003736BC /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652524472F42003736BC /* SettingsScreen.swift */; };
+		18CC652824472F5B003736BC /* HelpPrivacyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652724472F5B003736BC /* HelpPrivacyScreen.swift */; };
+		18CC652A24473184003736BC /* AboutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652924473184003736BC /* AboutScreen.swift */; };
 		341FD4D5A42EEAA0F3ADF682 /* Pods_PeopleTrackerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCFA2046750A007C2D0B6E1 /* Pods_PeopleTrackerTests.framework */; };
 		B02417F2B72A1DCDF388C6A3 /* Pods_PeopleTracker_PeopleTrackerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F564BF8112588BCFEE328CD8 /* Pods_PeopleTracker_PeopleTrackerUITests.framework */; };
 		CED90390BA1ECF5CD66B1A28 /* Pods_PeopleTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F33F9A1ECF37C7294435877 /* Pods_PeopleTracker.framework */; };
@@ -97,6 +105,14 @@
 		18708C412434A14C00940011 /* DeviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceService.swift; sourceTree = "<group>"; };
 		18708C432434A5D200940011 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
 		188D44E4242887CE001D8CF0 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		18B905542445D442006ECCD1 /* SideMenuScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuScreen.swift; sourceTree = "<group>"; };
+		18CC651D24472100003736BC /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
+		18CC651F24472109003736BC /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
+		18CC652124472EC9003736BC /* ActiveSessionsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionsScreen.swift; sourceTree = "<group>"; };
+		18CC652324472F17003736BC /* ProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
+		18CC652524472F42003736BC /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
+		18CC652724472F5B003736BC /* HelpPrivacyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpPrivacyScreen.swift; sourceTree = "<group>"; };
+		18CC652924473184003736BC /* AboutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutScreen.swift; sourceTree = "<group>"; };
 		1D06A41AB10B7A158607EC5E /* Pods-PeopleTrackerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeopleTrackerTests.debug.xcconfig"; path = "Target Support Files/Pods-PeopleTrackerTests/Pods-PeopleTrackerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4062F81057CFA54509C942FE /* Pods-PeopleTracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeopleTracker.release.xcconfig"; path = "Target Support Files/Pods-PeopleTracker/Pods-PeopleTracker.release.xcconfig"; sourceTree = "<group>"; };
 		8726BFA3D79D73A1F648C7BB /* Pods-PeopleTracker-PeopleTrackerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeopleTracker-PeopleTrackerUITests.debug.xcconfig"; path = "Target Support Files/Pods-PeopleTracker-PeopleTrackerUITests/Pods-PeopleTracker-PeopleTrackerUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -197,6 +213,7 @@
 		1816AC9B2421E39E00589CD9 /* PresentationLayer */ = {
 			isa = PBXGroup;
 			children = (
+				18B905532445D435006ECCD1 /* Menu */,
 				1816ACC0242211D900589CD9 /* CustomCell */,
 				1816ACAD2421E9DB00589CD9 /* Group */,
 				1816ACA82421E9B700589CD9 /* Device */,
@@ -261,6 +278,8 @@
 			children = (
 				188D44E4242887CE001D8CF0 /* UserCell.swift */,
 				183F9673242CCFD900235065 /* GroupCell.swift */,
+				18CC651D24472100003736BC /* ProfileCell.swift */,
+				18CC651F24472109003736BC /* MenuCell.swift */,
 			);
 			path = CustomCell;
 			sourceTree = "<group>";
@@ -272,6 +291,19 @@
 				181ACFE42444337000EACCC5 /* LoginExtension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		18B905532445D435006ECCD1 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				18B905542445D442006ECCD1 /* SideMenuScreen.swift */,
+				18CC652124472EC9003736BC /* ActiveSessionsScreen.swift */,
+				18CC652324472F17003736BC /* ProfileScreen.swift */,
+				18CC652524472F42003736BC /* SettingsScreen.swift */,
+				18CC652724472F5B003736BC /* HelpPrivacyScreen.swift */,
+				18CC652924473184003736BC /* AboutScreen.swift */,
+			);
+			path = Menu;
 			sourceTree = "<group>";
 		};
 		35301FD2269CECD473AEA818 /* Pods */ = {
@@ -574,16 +606,22 @@
 			files = (
 				1816ACBD2421ECAF00589CD9 /* PrivacyPolicyScreen.swift in Sources */,
 				1816ACB12421EB2600589CD9 /* AddPersonScreen.swift in Sources */,
+				18CC652024472109003736BC /* MenuCell.swift in Sources */,
 				1845D688242A118500584FB4 /* UserService.swift in Sources */,
+				18CC652224472EC9003736BC /* ActiveSessionsScreen.swift in Sources */,
 				186321F024371236001E2E53 /* LocationModel.swift in Sources */,
 				1816AC692421E34E00589CD9 /* AppDelegate.swift in Sources */,
+				18CC652A24473184003736BC /* AboutScreen.swift in Sources */,
 				1816ACB32421EB3200589CD9 /* CreateGroupScreen.swift in Sources */,
+				18CC652824472F5B003736BC /* HelpPrivacyScreen.swift in Sources */,
 				18708C422434A14C00940011 /* DeviceService.swift in Sources */,
 				1816ACA72421E98700589CD9 /* HomeScreen.swift in Sources */,
 				1845D686242A0AE700584FB4 /* LoginModel.swift in Sources */,
 				1845D6842428FAFC00584FB4 /* Utils.swift in Sources */,
 				1816ACBB2421EC8F00589CD9 /* HelpScreen.swift in Sources */,
 				183F9674242CCFD900235065 /* GroupCell.swift in Sources */,
+				18B905552445D442006ECCD1 /* SideMenuScreen.swift in Sources */,
+				18CC651E24472100003736BC /* ProfileCell.swift in Sources */,
 				188D44E5242887CE001D8CF0 /* UserCell.swift in Sources */,
 				1816ACAF2421EB1A00589CD9 /* AddDeviceScreen.swift in Sources */,
 				1836E51E24346D400078E572 /* StringExtensions.swift in Sources */,
@@ -593,8 +631,10 @@
 				1836E51B2433092B0078E572 /* NetowrkManager.swift in Sources */,
 				1816ACB72421EB5C00589CD9 /* MapsScreen.swift in Sources */,
 				18708C442434A5D200940011 /* DeviceModel.swift in Sources */,
+				18CC652424472F17003736BC /* ProfileScreen.swift in Sources */,
 				181ACFE52444337000EACCC5 /* LoginExtension.swift in Sources */,
 				1816ACA32421E94D00589CD9 /* LoginScreen.swift in Sources */,
+				18CC652624472F42003736BC /* SettingsScreen.swift in Sources */,
 				1816ACB92421EB7A00589CD9 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

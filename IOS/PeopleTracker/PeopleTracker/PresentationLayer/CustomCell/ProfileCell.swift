@@ -1,5 +1,5 @@
 //
-//  GroupCell.swift
+//  ProfileCell.swift
 //  PeopleTracker
 //
 /*************************************************************
@@ -22,8 +22,15 @@
 * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
 **************************************************************/
 
+
 import UIKit
-class GroupCell: UITableViewCell {
-    @IBOutlet weak var name        : UILabel!
-    @IBOutlet weak var phoneNumber : UILabel!
+class ProfileCell: UITableViewCell {
+    
+    @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var userName: UILabel!
+    
+    func setProfileData()  {
+        self.userImage = Utils.shared.createCirculatImage(imageView: userImage)
+        self.userName.text = "Sree"
+    }
 }

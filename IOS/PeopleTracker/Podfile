@@ -8,6 +8,7 @@ target 'PeopleTracker' do
   pod 'GoogleMaps'
   pod 'JJFloatingActionButton'
   pod 'CocoaMQTT'
+  pod 'SideMenu'
   # Pods for PeopleTracker
 
   target 'PeopleTrackerTests' do
