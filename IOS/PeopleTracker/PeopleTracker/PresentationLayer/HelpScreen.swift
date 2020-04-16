@@ -24,6 +24,7 @@
 
 
 import UIKit
+import SideMenu
 
 class HelpScreen: UIViewController, UIScrollViewDelegate {
     
@@ -41,6 +42,7 @@ class HelpScreen: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
         self.initializeData()
+                
     }
     
     func initializeData() {
@@ -51,6 +53,7 @@ class HelpScreen: UIViewController, UIScrollViewDelegate {
         titleLbl.text = screenTitle[0]
         descriptionLabel.text =  screenDescription[0]
     }
+    
     
     // set scrollview with images
     func setupScreens() {

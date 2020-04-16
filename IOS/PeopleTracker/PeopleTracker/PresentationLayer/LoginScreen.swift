@@ -35,7 +35,7 @@ class LoginScreen: UIViewController {
         super.viewDidLoad()
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         self.navigationItem.setHidesBackButton(true, animated: true)
-        self.setUpMQTT()
+       // self.setUpMQTT()
        
     }
     

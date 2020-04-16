@@ -8,11 +8,13 @@ PODS:
   - GoogleMaps/Maps (3.8.0):
     - GoogleMaps/Base
   - JJFloatingActionButton (2.4.0)
+  - SideMenu (6.4.8)
 
 DEPENDENCIES:
   - CocoaMQTT
   - GoogleMaps
   - JJFloatingActionButton
+  - SideMenu
 
 SPEC REPOS:
   trunk:
@@ -20,13 +22,15 @@ SPEC REPOS:
     - CocoaMQTT
     - GoogleMaps
     - JJFloatingActionButton
+    - SideMenu
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaMQTT: a61490ed3b328011c5d75169a77781983e2bb221
   GoogleMaps: 7c8d66d70e4e8c300f43a7219d8fdaad7b325a9a
   JJFloatingActionButton: 0d21f5cdd2adde150e62c22c63762ab713c4e16f
+  SideMenu: 4a891be552d30bb6fa87ad404d62e485f8450c34
 
-PODFILE CHECKSUM: 98c6a4423d6f4f08e73be4d3bf1d3bf3ecadd6f9
+PODFILE CHECKSUM: 8ca391f4515870578acaae53424fba376158c61d
 
 COCOAPODS: 1.9.1

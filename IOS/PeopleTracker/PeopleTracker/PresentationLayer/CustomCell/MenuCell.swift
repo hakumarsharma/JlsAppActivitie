@@ -1,5 +1,5 @@
 //
-//  GroupCell.swift
+//  MenuCell.swift
 //  PeopleTracker
 //
 /*************************************************************
@@ -22,8 +22,17 @@
 * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
 **************************************************************/
 
+
+
 import UIKit
-class GroupCell: UITableViewCell {
-    @IBOutlet weak var name        : UILabel!
-    @IBOutlet weak var phoneNumber : UILabel!
+class MenuCell: UITableViewCell {
+    
+    
+    @IBOutlet weak var menuIcon: UIImageView!
+    @IBOutlet weak var menuTitle: UILabel!
+    
+    func setmenuData(menuItem : String, menuIcon : String)  {
+        self.menuIcon.image = UIImage.init(named: menuIcon)
+        self.menuTitle.text = menuItem
+     }
 }

@@ -73,6 +73,11 @@ class Constants {
         static let CreateGroupScreen = "CreateGroupScreen"
         static let GroupListScreen = "GroupListScreen"
         static let MapsScreen = "MapsScreen"
+        static let ActiveSessions = "ActiveSessionsScreen"
+        static let Profile = "ProfileScreen"
+        static let Settings = "SettingsScreen"
+        static let HelpPrivacy = "HelpPrivacyScreen"
+        static let About = "AboutScreen"
     }
     
     struct LoginScreenConstants {
