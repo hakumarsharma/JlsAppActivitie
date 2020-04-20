@@ -22,8 +22,10 @@
 
 package com.jio.devicetracker.database.pojo;
 
-public class GroupMemberListData {
-
+/**
+ * To add a Group Member in a particular group
+ */
+public class GroupMemberDataList {
     private String name;
     private String number;
     private int profileImage;
@@ -31,8 +33,6 @@ public class GroupMemberListData {
     private String consentStatus;
     private String lat;
     private String lng;
-
-
 
     public String getName() {
         return name;
