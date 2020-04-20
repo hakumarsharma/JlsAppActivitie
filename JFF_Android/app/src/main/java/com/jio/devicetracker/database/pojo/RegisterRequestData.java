@@ -23,8 +23,6 @@
 
 package com.jio.devicetracker.database.pojo;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Pojo implementation for register request data for registration api .
  */

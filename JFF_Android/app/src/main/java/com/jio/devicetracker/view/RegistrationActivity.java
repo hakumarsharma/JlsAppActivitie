@@ -29,7 +29,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SubscriptionInfo;
-import android.telephony.SubscriptionManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -70,11 +69,8 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     private EditText mPass;
     private EditText mRepass;
     private Button mRegister;
-    private DBManager mDbmanager;
-    private List<SubscriptionInfo> subscriptionInfos;
     private String phoneNumber;
     private String countryCode;
-    private Intent intent;
     private String receivedToken;
 
     @Override
@@ -97,9 +93,8 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         mPass = findViewById(R.id.password);
         mRepass = findViewById(R.id.repassword);
         mRegister = findViewById(R.id.register);
-        mDbmanager = new DBManager(this);
         mRegister.setOnClickListener(this);
-        intent = getIntent();
+        Intent intent = getIntent();
         phoneNumber = intent.getStringExtra("phoneNumber");
         countryCode = intent.getStringExtra("countryCode");
         receivedToken = intent.getStringExtra("token");

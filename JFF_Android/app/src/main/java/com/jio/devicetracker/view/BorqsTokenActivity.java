@@ -39,7 +39,6 @@ import androidx.core.content.res.ResourcesCompat;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.VerifyTokenData;
 import com.jio.devicetracker.database.pojo.request.TokenVerifyRequest;
 import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;

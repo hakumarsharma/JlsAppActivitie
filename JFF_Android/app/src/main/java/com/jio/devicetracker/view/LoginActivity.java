@@ -102,7 +102,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginButton;
     private Locale locale = Locale.ENGLISH;
     public static GetDeviceLocationResponse getDeviceLocationResponse = null;
-    private TextView registerHereTextView;
     public static String ugsToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
         loginOtpEditText = findViewById(R.id.loginOtp);
-        registerHereTextView = findViewById(R.id.registedHere);
+        TextView registerHereTextView = findViewById(R.id.registedHere);
         registerHereTextView.setOnClickListener(this);
         MessageListener messageListener = new LoginActivity();
         MessageReceiver.bindListener(messageListener);

@@ -64,7 +64,7 @@ public class RegistrationResponse implements Serializable {
 
     public class Data implements Serializable {
         @SerializedName("_id")
-        private String _id;
+        private String id;
         @SerializedName("phone")
         private String phone;
         @SerializedName("email")
@@ -72,12 +72,12 @@ public class RegistrationResponse implements Serializable {
         @SerializedName("name")
         private String name;
 
-        public String get_id() {
-            return _id;
+        public String getId() {
+            return id;
         }
 
-        public void set_id(String _id) {
-            this._id = _id;
+        public void setId(String id) {
+            this.id = id;
         }
 
         public String getPhone() {
