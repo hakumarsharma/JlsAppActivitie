@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    android:id="@+id/login_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardviewlayout_device_background_color"
+    android:paddingBottom="@dimen/adddevice_heading_height"
+    app:ignore="NamespaceTypo">
+    <!-- Header aligned to top -->
+    <RelativeLayout
+        android:id="@+id/login_appheader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/cardviewlayout_device_background_color"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/login_app_header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginBottom="@dimen/twenty_dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:text="@string/login_text"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/adddevice_heading_font_size" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/login_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_appheader"
+        android:layout_marginLeft="@dimen/adddevice_heading_height"
+        android:layout_marginRight="@dimen/adddevice_heading_height"
+        android:gravity="center"
+        android:background="@drawable/dialog_round_background"
+        android:paddingBottom="@dimen/twenty_dp">
+
+        <ImageView
+            android:id="@+id/login_img_location"
+            android:layout_width="@dimen/margin_100dp"
+            android:layout_height="@dimen/margin_100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:layout_marginBottom="@dimen/five_dp"
+            android:src="@drawable/appicontemp" />
+        <TextView
+            android:id="@+id/login_jioTags_text"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/login_img_location"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:text="@string/app_name"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/twenty_sp"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:id="@+id/login_jioTags_enter_number"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/login_jioTags_text"
+            android:text="@string/login_enter_number"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:textSize="@dimen/seventeen_sp"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:id="@+id/login_jioTags_registered_number"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/login_jioTags_enter_number"
+            android:text="@string/login_registered_number"
+            android:gravity="left"
+            android:textStyle="bold"
+            android:textSize="@dimen/margin_10dp"
+            android:layout_marginLeft="@dimen/sixteen_dp"
+            android:layout_marginTop="38dp"
+            android:textColor="@color/alert_dialog_location_color"
+            android:layout_height="@dimen/dimen_11sp">
+        </TextView>
+        <EditText
+            android:id="@+id/prefix_text"
+            android:layout_width="wrap_content"
+            android:text="@string/india_country_code"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/five_dp"
+            android:layout_below="@+id/login_jioTags_registered_number"
+            android:layout_marginLeft="@dimen/sixteen_dp"
+            android:enabled="false"
+            android:background="@android:color/transparent"
+            android:inputType="number"
+            android:textColor="#000000"
+            android:layout_height="wrap_content">
+        </EditText>
+
+        <EditText
+            android:id="@+id/login_edit_number"
+            android:layout_below="@+id/login_jioTags_registered_number"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/five_dp"
+            android:layout_marginLeft="@dimen/five_dp"
+            android:layout_toRightOf="@+id/prefix_text"
+            android:text=""
+            android:inputType="number"
+            android:background="@android:color/transparent"
+            android:maxLength="10"
+            android:focusedByDefault="true"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_height="wrap_content">
+        </EditText>
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/eigh_dp"
+            android:layout_alignStart="@+id/prefix_text"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:layout_below="@+id/login_edit_number"
+            android:background="@color/lite_blue"
+            android:layout_height="3dp">
+        </View>
+
+        <Button
+            android:id="@+id/login_skip_btn_send_otp"
+            android:layout_below="@+id/login_edit_number"
+            android:layout_width="@dimen/adddevice_button_width"
+            android:layout_height="@dimen/adddevice_button_height"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginBottom="@dimen/ten_dp"
+            android:background="@drawable/button_frame_blue"
+            android:text="Skip Login"
+            android:visibility="invisible"
+            android:layout_centerHorizontal="true"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/adddevice_content_font_size" />
+
+
+        <TextView
+            android:id="@+id/login_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/login_btn_send_otp"
+            android:layout_marginTop="@dimen/adddevice_content_margin_top"
+            android:layout_toRightOf="@+id/login_check_box"
+            android:layout_marginLeft="@dimen/eigh_dp"
+            android:text="@string/login_privacy"
+            android:textSize="@dimen/fourteen_sp" />
+
+
+        <Button
+            android:id="@+id/login_btn_send_otp"
+            android:layout_width="@dimen/adddevice_button_width"
+            android:layout_height="@dimen/adddevice_button_height"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/adddevice_button_margin_bottom"
+            android:background="@drawable/button_frame_blue"
+            android:text="@string/login_send_otp"
+            android:layout_centerHorizontal="true"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/adddevice_content_font_size" />
+
+        <CheckBox
+            android:id="@+id/login_check_box"
+            android:layout_above="@+id/login_btn_send_otp"
+            android:layout_marginTop="@dimen/adddevice_heading_height"
+            android:layout_marginBottom="@dimen/ten_dp"
+            android:layout_marginLeft="@dimen/sixteen_dp"
+            android:layout_width="@dimen/twenty_five_dp"
+            android:layout_height="@dimen/twenty_five_dp">
+        </CheckBox>
+
+
+
+    </RelativeLayout>
+</RelativeLayout>

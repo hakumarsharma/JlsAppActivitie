@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/maps_tick_header"
+        android:background="#F8F8F8"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_52"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:layout_marginLeft="@dimen/ten_dp"
+        android:layout_marginRight="@dimen/ten_dp"
+        android:padding="5dp">
+        <ImageButton
+            android:id="@+id/maps_back"
+            android:layout_width="@dimen/twenty_five_dp"
+            android:layout_height="@dimen/twenty_five_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:background="#F8F8F8"
+            android:src="@drawable/back"
+            />
+
+        <TextView
+            android:id="@+id/maps_texts"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/margin_30"
+            android:layout_marginLeft="@dimen/ten_dp"
+
+            android:fontFamily="Bold"
+            android:textAlignment="center"
+            android:layout_centerInParent="true"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:freezesText="true"
+            android:layout_centerVertical="true"
+            android:text="@string/title_location"
+            android:textSize="@dimen/twenty_sp" />
+
+        <ImageButton
+            android:id="@+id/maps_home"
+            android:layout_width="@dimen/twenty_five_dp"
+            android:background="#F8F8F8"
+            android:layout_height="@dimen/twenty_five_dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:src="@drawable/home"
+            android:textAlignment="center" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/maps_view_detail"
+        android:layout_below="@+id/maps_tick_header"
+        android:background="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:padding="5dp">
+    <fragment
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity" />
+    </RelativeLayout>
+</LinearLayout>

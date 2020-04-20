@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#E8E8E8"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/feedback_attach_asset_tick"
+        android:background="#F8F8F8"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_52"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:layout_marginLeft="@dimen/ten_dp"
+        android:layout_marginRight="@dimen/ten_dp"
+        android:padding="5dp">
+        <ImageButton
+            android:id="@+id/feedback_attach_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:background="#F8F8F8"
+            android:src="@drawable/back"
+            />
+
+        <TextView
+            android:id="@+id/feedback_attach_asset_texts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ten_dp"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:fontFamily="Bold"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_centerInParent="true"
+            android:freezesText="true"
+            android:layout_centerVertical="true"
+            android:text="@string/feedback_header"
+            android:textSize="@dimen/twenty_sp" />
+
+        <ImageButton
+            android:id="@+id/feedback_attach_tick"
+            android:layout_width="wrap_content"
+            android:background="#F8F8F8"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:src="@drawable/home"
+            android:textAlignment="center" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/feedback_attach_asset_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/ten_dp"
+        android:layout_marginRight="@dimen/ten_dp"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:background="#E8E8E8"
+        >
+        <EditText
+            android:id="@+id/feedback_email"
+            android:layout_width="match_parent"
+            android:hint="@string/submit_enter_email"
+            android:textColorHint="@color/grey"
+            android:layout_marginLeft="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:inputType="textEmailAddress"
+            android:text=""
+            android:ellipsize="start"
+            android:paddingLeft="@dimen/ten_dp"
+            android:background="@drawable/asset_dialog_round_bkgd"
+            android:textSize="@dimen/seventeen_sp"
+            android:layout_height="@dimen/fifty_dp"/>
+
+        <EditText
+            android:id="@+id/feedback_text"
+            android:hint="@string/submit_enter_email_text"
+            android:textColorHint="@color/grey"
+            android:layout_below="@+id/feedback_email"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dip_238"
+            android:layout_marginLeft="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:textColor="#000000"
+            android:ellipsize="start"
+            android:gravity="start"
+            android:paddingLeft="@dimen/ten_dp"
+            android:paddingTop="@dimen/ten_dp"
+            android:textStyle="normal"
+            android:text=""
+            android:background="@drawable/asset_dialog_round_bkgd"
+            android:layout_marginTop="@dimen/ten_dp"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/feedback_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/fourty_dp"
+        android:background="#E8E8E8"
+        >
+        <Button
+            android:id="@+id/feedback_attach_asset_btn_add"
+            android:layout_width="@dimen/adddevice_button_width"
+            android:layout_height="@dimen/adddevice_button_height"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:text="@string/submit_button"
+            android:textAllCaps="false"
+            android:enabled="false"
+            android:textColor="@android:color/white"
+            android:background="@drawable/disabled_button"
+            android:textSize="@dimen/seventeen_sp" />
+    </RelativeLayout>
+
+</LinearLayout>
