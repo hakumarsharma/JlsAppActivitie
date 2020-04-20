@@ -1,5 +1,5 @@
 //
-//  UserServiceAPI.swift
+//  GroupService.swift
 //  PeopleTracker
 //
 /*************************************************************
@@ -25,15 +25,18 @@
 
 import Foundation
 
-class UserService {
-    public static let shared = UserService()
+class GroupService {
+    public static let shared = GroupService()
     private init() {}
     
-    // Api to generate registration token
-    func generateRegistartionTokenwith (generateTokenUrl: URL, parameters: [String : Any], completion: @escaping (Result<UserModel, Error>) -> Void) -> Void  {
+    let accessKey = "bearer " + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UgsToken) ?? "")
+    
+    
+    // Api to create a group
+    func createGroup(createGroupUrl: URL, parameters: [String : Any], completion: @escaping (Result<GroupModel, Error>) -> Void) -> Void  {
         
-        let networkManager = NetworkManager.init(url: generateTokenUrl)
-        let request = networkManager.buildRequest(method: NetworkManager.Method.post, parameters: parameters)
+        let networkManager = NetworkManager.init(url: createGroupUrl)
+        let request = networkManager.buildRequest(method: NetworkManager.Method.post, accessKey: accessKey, parameters: parameters)
         networkManager.sendRequest(request: request) { (result) in
             switch result {
             case .success(_, let data) :
@@ -43,8 +46,8 @@ class UserService {
                             let data = try JSONSerialization.data(withJSONObject: json, options: [])
                             if let string = String(data: data, encoding: String.Encoding.utf8) {
                                 let jsonData = string.data(using: .utf8)!
-                                let logindata = try! JSONDecoder().decode(UserModel.self, from: jsonData)
-                                completion(.success(logindata))
+                                let groupdata = try! JSONDecoder().decode(GroupModel.self, from: jsonData)
+                                completion(.success(groupdata))
                             }
                         }
                     }
@@ -62,11 +65,11 @@ class UserService {
         
     }
     
-    // Api to verify registration token
-    func verifyRegistartionTokenwith(verifyTokenUrl: URL, parameters: [String : Any], completion: @escaping (Result<UserModel, Error>) -> Void) -> Void{
+    // Api to get group list
+    func getGroupListData(groupListUrl: URL, completion: @escaping (Result<GroupListModel, Error>) -> Void) -> Void  {
         
-        let networkManager = NetworkManager.init(url: verifyTokenUrl)
-        let request = networkManager.buildRequest(method: NetworkManager.Method.post, parameters: parameters)
+        let networkManager = NetworkManager.init(url: groupListUrl)
+        let request = networkManager.buildRequest(method: NetworkManager.Method.get, accessKey: accessKey)
         networkManager.sendRequest(request: request) { (result) in
             switch result {
             case .success(_, let data) :
@@ -76,72 +79,8 @@ class UserService {
                             let data = try JSONSerialization.data(withJSONObject: json, options: [])
                             if let string = String(data: data, encoding: String.Encoding.utf8) {
                                 let jsonData = string.data(using: .utf8)!
-                                let logindata = try! JSONDecoder().decode(UserModel.self, from: jsonData)
-                                completion(.success(logindata))
-                            }
-                        }
-                    }
-                }
-                catch {
-                    let msg = error.localizedDescription
-                    completion(.failure(error))
-                    print(msg)
-                }
-            case .failure(let error):
-                completion(.failure(error))
-                print(error)
-            }
-        }
-    }
-    
-    // Api to register
-    func registerUser(registerTokenUrl: URL, parameters: [String : Any], completion: @escaping (Result<UserModel, Error>) -> Void) -> Void{
-        
-        let networkManager = NetworkManager.init(url: registerTokenUrl)
-        let request = networkManager.buildRequest(method: NetworkManager.Method.post, parameters: parameters)
-        networkManager.sendRequest(request: request) { (result) in
-            switch result {
-            case .success(_, let data) :
-                do {
-                    if let resultdata = data {
-                        if let json = try JSONSerialization.jsonObject(with: resultdata) as? [String : Any] {
-                            let data = try JSONSerialization.data(withJSONObject: json, options: [])
-                            if let string = String(data: data, encoding: String.Encoding.utf8) {
-                                let jsonData = string.data(using: .utf8)!
-                                let logindata = try! JSONDecoder().decode(UserModel.self, from: jsonData)
-                                completion(.success(logindata))
-                            }
-                        }
-                    }
-                }
-                catch {
-                    let msg = error.localizedDescription
-                    completion(.failure(error))
-                    print(msg)
-                }
-            case .failure(let error):
-                completion(.failure(error))
-                print(error)
-            }
-        }
-    }
-    
-    // Api to check login data
-    func loginRequest(with loginurl: URL, parameters: [String : Any], completion: @escaping (Result<LoginModel, Error>) -> Void) -> Void {
-        
-        let networkManager = NetworkManager.init(url: loginurl)
-        let request = networkManager.buildRequest(method: NetworkManager.Method.post, parameters: parameters)
-        networkManager.sendRequest(request: request) { (result) in
-            switch result {
-            case .success(_, let data) :
-                do {
-                    if let resultdata = data {
-                        if let json = try JSONSerialization.jsonObject(with: resultdata) as? [String : Any] {
-                            let data = try JSONSerialization.data(withJSONObject: json, options: [])
-                            if let string = String(data: data, encoding: String.Encoding.utf8) {
-                                let jsonData = string.data(using: .utf8)!
-                                let logindata = try! JSONDecoder().decode(LoginModel.self, from: jsonData)
-                                completion(.success(logindata))
+                                let groupListdata = try! JSONDecoder().decode(GroupListModel.self, from: jsonData)
+                                completion(.success(groupListdata))
                             }
                         }
                     }
@@ -159,5 +98,70 @@ class UserService {
         
     }
     
+    // Api to update a group
+    func updateGroup(updateGroupUrl: URL, parameters: [String : Any], completion: @escaping (Result<GroupModel, Error>) -> Void) -> Void  {
+        
+        let networkManager = NetworkManager.init(url: updateGroupUrl)
+        let request = networkManager.buildRequest(method: NetworkManager.Method.put, accessKey: accessKey, parameters: parameters)
+        networkManager.sendRequest(request: request) { (result) in
+            switch result {
+            case .success(_, let data) :
+                do {
+                    if let resultdata = data {
+                        if let json = try JSONSerialization.jsonObject(with: resultdata) as? [String : Any] {
+                            let data = try JSONSerialization.data(withJSONObject: json, options: [])
+                            if let string = String(data: data, encoding: String.Encoding.utf8) {
+                                let jsonData = string.data(using: .utf8)!
+                                let groupdata = try! JSONDecoder().decode(GroupModel.self, from: jsonData)
+                                completion(.success(groupdata))
+                            }
+                        }
+                    }
+                }
+                catch {
+                    let msg = error.localizedDescription
+                    completion(.failure(error))
+                    print(msg)
+                }
+            case .failure(let error):
+                completion(.failure(error))
+                print(error)
+            }
+        }
+        
+    }
+    
+    
+    // Api to delete a group
+    func deleteGroup(deleteGroupUrl: URL, completion: @escaping (Result<GroupModel, Error>) -> Void) -> Void  {
+        
+        let networkManager = NetworkManager.init(url: deleteGroupUrl)
+        let request = networkManager.buildRequest(method: NetworkManager.Method.delete, accessKey: accessKey)
+        networkManager.sendRequest(request: request) { (result) in
+            switch result {
+            case .success(_, let data) :
+                do {
+                    if let resultdata = data {
+                        if let json = try JSONSerialization.jsonObject(with: resultdata) as? [String : Any] {
+                            let data = try JSONSerialization.data(withJSONObject: json, options: [])
+                            if let string = String(data: data, encoding: String.Encoding.utf8) {
+                                let jsonData = string.data(using: .utf8)!
+                                let groupdata = try! JSONDecoder().decode(GroupModel.self, from: jsonData)
+                                completion(.success(groupdata))
+                            }
+                        }
+                    }
+                }
+                catch {
+                    let msg = error.localizedDescription
+                    completion(.failure(error))
+                    print(msg)
+                }
+            case .failure(let error):
+                completion(.failure(error))
+                print(error)
+            }
+        }
+        
+    }
 }
-

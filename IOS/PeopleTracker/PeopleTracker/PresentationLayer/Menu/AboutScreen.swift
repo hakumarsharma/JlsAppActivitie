@@ -26,5 +26,9 @@
 import UIKit
 
 class AboutScreen: UIViewController {
-    
+    override func viewDidLoad() {
+                      super.viewDidLoad()
+                      self.title = "About"
+                     
+                  }
 }

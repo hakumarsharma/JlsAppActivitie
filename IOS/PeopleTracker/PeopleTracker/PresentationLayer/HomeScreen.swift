@@ -31,11 +31,13 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var usersTableView: UITableView!
     
+    @IBOutlet weak var instructionsLabel: UILabel!
     let actionButton = JJFloatingActionButton()
     var selectedCell : [String] = []
     let names: [String] = ["Office Group","Sree", "Maruti", "Harish", "Ashish", "Satish"] // TODO: remove after api call is integrated
-    var listOfDevices : [DeviceData] = []
-    var deviceDetails : [DeviceDetails] = []
+    //    var listOfDevices : [DeviceData]    = []
+    var deviceDetails : [GroupListData] = []
+    var groupList     : [GroupListData] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +48,6 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     func initialiseData() {
         self.title = "Home"
         self.navigationItem.setHidesBackButton(true, animated: true)
-        
         let menuBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "Menu"), style: .plain, target: self, action: #selector(menuButton(sender:)))
         menuBtn.tintColor = .white
         self.navigationItem.setLeftBarButton(menuBtn, animated: true)
@@ -55,17 +56,31 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         self.navigationItem.setRightBarButton(trackBtn, animated: true)
         usersTableView.delegate = self
         usersTableView.dataSource = self
+        usersTableView.tableFooterView = UIView()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.callgetDeviceApi()
+        self.showHideTableView()
+        //self.callgetDeviceApi()
+        self.getGroupListApi()
+    }
+    
+    func showHideTableView() {
+        
+        if self.groupList.count > 0 {
+                          self.instructionsLabel.isHidden = true
+                          self.usersTableView.isHidden = false
+                      } else {
+                          self.instructionsLabel.isHidden = false
+                          self.usersTableView.isHidden = true
+                      }
     }
     
     // MARK: UITableView Delegate and DataSource methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.listOfDevices.count
+        return self.groupList.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -76,26 +91,26 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellIdentifier") as! UserCell
         cell.selectionStyle = .none
-        let deviceDetails = self.listOfDevices[indexPath.row]
-        cell.setData(deviceData: deviceDetails)
-        cell.userIcon.image = UIImage(named: "user4")
-        cell.optionsButton.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
+        let groupListDetails = self.groupList[indexPath.row]
+        cell.setGroupData(groupData: groupListDetails)
+        cell.userIcon.image = UIImage(named: "group")
+        cell.optionsButton.addTarget(self, action: #selector(showActionSheet(sender:)), for: .touchUpInside)
         cell.checkBoxButton.addTarget(self, action: #selector(checkmarkSelection(sender:)), for: .touchUpInside)
         cell.checkBoxButton.tag = indexPath.row
-        cell.checkBoxButton.isHidden = false
+        cell.checkBoxButton.isHidden = true
         // TODO: Remove after grouping and consent mechanisam is integrated
-        if indexPath.row == 0{
-            cell.checkBoxButton.isHidden = true
-            cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
-            cell.requestConsentButton.setTitle(Constants.HomScreenConstants.RequestConsent, for: .normal)
-        } else
-            if indexPath.row % 2 == 0{
-                cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
-                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentApproved, for: .normal)
-            } else {
-                cell.consentstatusColor.backgroundColor = .orange
-                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentPending, for: .normal)
-        }
+//        if indexPath.row == 0{
+//            cell.checkBoxButton.isHidden = true
+//            cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
+//            cell.requestConsentButton.setTitle(Constants.HomScreenConstants.RequestConsent, for: .normal)
+//        } else
+//            if indexPath.row % 2 == 0{
+//                cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
+//                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentApproved, for: .normal)
+//            } else {
+//                cell.consentstatusColor.backgroundColor = .orange
+//                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentPending, for: .normal)
+//        }
         
         return cell
     }
@@ -112,13 +127,13 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         let tempBtn : UIButton = sender
         if tempBtn.isSelected {
             selectedCell = selectedCell.filter({ (item) -> Bool in
-                return item != self.listOfDevices[tempBtn.tag].deviceId
+                return item != self.groupList[tempBtn.tag].groupId
             })
             deviceDetails = deviceDetails.filter({ (item) -> Bool in
-                return item.deviceId != self.listOfDevices[tempBtn.tag].deviceId
+                return item.groupId != self.groupList[tempBtn.tag].groupId
             })
         } else {
-            selectedCell.append(self.listOfDevices[tempBtn.tag].deviceId)
+            selectedCell.append(self.groupList[tempBtn.tag].groupId)
             
         }
         tempBtn.isSelected = !tempBtn.isSelected
@@ -141,6 +156,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func trackButton(sender: UIBarButtonItem) {
+        if selectedCell.count > 0 {
         self.callgetDeviceLocationDetails { (success) in
             if success && self.deviceDetails.count > 0  {
                 DispatchQueue.main.async {
@@ -152,6 +168,9 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
                 }
             }
         }
+        } else {
+            self.ShowALert(title: Constants.HomScreenConstants.SelectDevice)
+        }
     }
     
     // MARK : Navigatation screens
@@ -159,7 +178,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.MapsScreen) as! MapsScreen
         mapsViewController.deviceId = UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UserId) ?? ""
-        mapsViewController.deviceDetails = self.deviceDetails
+        //        mapsViewController.deviceDetails = self.deviceDetails
         self.navigationController?.pushViewController(mapsViewController, animated: true)
     }
     
@@ -172,10 +191,13 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         self.navigationController?.pushViewController(addDeviceViewController, animated: true)
     }
     
-    func navigateToCreateGroupScreen() {
+    func navigateToCreateGroupScreen(title : String, isEdit : Bool) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.CreateGroupScreen) as! CreateGroupScreen
-        createGroupViewController.navtitle = Constants.HomScreenConstants.CreateGroup
+        createGroupViewController.navtitle = title
+        if isEdit {
+            createGroupViewController.name = self.groupList[0].name
+        }
         self.navigationController?.pushViewController(createGroupViewController, animated: true)
     }
     
@@ -201,7 +223,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         
         actionButton.addItem(title: Constants.HomScreenConstants.CreateGroup, image: UIImage(named: "group")?.withRenderingMode(.alwaysTemplate)) { item in
             // do something
-            self.navigateToCreateGroupScreen()
+            self.navigateToCreateGroupScreen(title: Constants.HomScreenConstants.CreateGroup, isEdit: false)
         }
         
         view.addSubview(actionButton)
@@ -221,18 +243,38 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         self.present(alert, animated: true, completion: nil)
     }
     
+    // Alert with button action
+    func ShowDeleteAlertWithButtonAction(title: String){
+        let alert = UIAlertController(title: Constants.AlertConstants.Alert, message: title, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.Delete, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+            DispatchQueue.main.async {
+                self.callDeleteGroupApi()
+            }
+        }))
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.CancelButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+            DispatchQueue.main.async {
+                
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     // MARK: Display ActionSheet
     
-    @objc func showActionSheet(){
+    @objc func showActionSheet(sender : UIButton){
         
+//        let buttonPosition = sender.convert(CGPoint.zero, to: self.usersTableView)
+//        let indexPath = self.usersTableView.indexPathForRow(at:buttonPosition)
+//        let cell = self.usersTableView.cellForRow(at: indexPath!) as! UserCell
+
         let alert = UIAlertController(title: Constants.HomScreenConstants.Select, message: "", preferredStyle: .actionSheet)
         
         alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.Edit, style: .default , handler:{ (UIAlertAction)in
-            self.navigateToAddDeviceScreen(title : Constants.HomScreenConstants.Edit)
+            self.navigateToCreateGroupScreen(title: Constants.HomScreenConstants.EditGroup, isEdit: true)
         }))
         
         alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Delete, style: .default , handler:{ (UIAlertAction)in
-            self.ShowALert(title: Constants.HomScreenConstants.DeleteDevice)
+            self.ShowDeleteAlertWithButtonAction(title: Constants.HomScreenConstants.DeleteDevice)
         }))
         alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.Dismiss, style: .cancel, handler:{ (UIAlertAction)in
             
@@ -255,9 +297,10 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
                 guard let deviceData = deviceResponse.devicedata else {
                     return
                 }
-                for device in deviceData {
-                    self.listOfDevices.append(device)
-                }
+                print(deviceData)
+                //                for device in deviceData {
+                //                    self.listOfDevices.append(device)
+                //                }
                 DispatchQueue.main.async {
                     self.hideActivityIndicator()
                     self.usersTableView.reloadData()
@@ -287,15 +330,17 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
             DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<LocationModel, Error>)) in
                 switch result {
                 case .success(let deviceResponse):
+                    print(index)
+                    print(deviceResponse)
                     DispatchQueue.main.async {
                         self.hideActivityIndicator()
                     }
-                    if let device = deviceResponse.devicedata , let _ = deviceResponse.devicedata?.deviceStatus?.location {
-                        self.deviceDetails.append(device)
-                    }
-                    if index == self.selectedCell.count - 1 {
-                        completion(true)
-                    }
+                    //                    if let device = deviceResponse.devicedata , let _ = deviceResponse.devicedata?.deviceStatus?.location {
+                    ////                        self.deviceDetails.append(device)
+                    //                    }
+                    //                    if index == self.selectedCell.count - 1 {
+                    //                        completion(true)
+                    //                    }
                     
                 case .failure(let error):
                     if type(of: error) == NetworkManager.ErrorType.self {
@@ -312,6 +357,73 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
                 }
             }
             
+        }
+    }
+    
+    
+    // Create GroupList Api Call
+    func getGroupListApi() {
+//        self.showActivityIndicator()
+        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UserId) ?? "") + Constants.ApiPath.GroupListUrl )!
+        GroupService.shared.getGroupListData(groupListUrl:  groupUrl) { (result : Result<GroupListModel, Error>) in
+            switch result {
+            case .success(let groupResponse):
+                print(groupResponse)
+                self.groupList.removeAll()
+                for groupdata in groupResponse.groupListData {
+                    if groupdata.status == Utils.GroupStatus.isActive.rawValue {
+                        UserDefaults.standard.set(groupdata.groupId, forKey: groupdata.name)
+                        self.groupList.append(groupdata)
+                    }
+                   
+                }
+               DispatchQueue.main.async {
+//                    self.hideActivityIndicator()
+                    self.usersTableView.reloadData()
+                    self.showHideTableView()
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+//                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+//                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Delete Group Api Call
+    func callDeleteGroupApi() {
+        self.showActivityIndicator()
+    
+        let deleteGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UserId) ?? "") + Constants.ApiPath.CreateGroupUrl + "/"  +  UserDefaults.standard.string(forKey: self.groupList[0].name)! )!
+        GroupService.shared.deleteGroup(deleteGroupUrl:  deleteGroupUrl) { (result : Result<GroupModel, Error>) in
+            switch result {
+            case .success(let groupResponse):
+                  print(groupResponse)
+                   DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                    self.getGroupListApi()
+                  }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
         }
     }
     

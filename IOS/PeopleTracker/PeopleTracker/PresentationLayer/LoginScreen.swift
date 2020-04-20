@@ -35,8 +35,8 @@ class LoginScreen: UIViewController {
         super.viewDidLoad()
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         self.navigationItem.setHidesBackButton(true, animated: true)
-       // self.setUpMQTT()
-       
+        // self.setUpMQTT()
+        
     }
     
     @IBAction func continueBtnAction(_ sender: Any) {
@@ -46,47 +46,118 @@ class LoginScreen: UIViewController {
             self.ShowALert(title: Constants.LoginScreenConstants.UserName)
             return
         }
-
+        
         if mobileNumberTxt.text?.count == 0 || !(mobileNumberTxt.text?.isValidPhone ?? true){
             self.ShowALert(title: Constants.LoginScreenConstants.PhoneNumber);
             return
         }
-
+        
         if otpTxt.text?.count == 0{
             self.ShowALert(title: Constants.LoginScreenConstants.Otp);
             return
         }
-       
-       self.callLoginApi()
+        //self.registerationApiCall()
+        self.callLoginApi()
         
     }
     
-    // login api call
-    // TODO :  Change API call based on phone registration process
-    func callLoginApi() {
+    //Regsiteration Api Call
+    func registerationApiCall() {
         self.showActivityIndicator()
-        UserService.shared.loginRequest(with:  URL(string: Constants.ApiPath.LoginUrl)!, parameters: ["email":"shivakumar.jagalur@ril.com","password":"Ril@12345","type": "supervisor"]) { (result : Result<LoginModel, Error>) in
-                switch result {
-                    case .success(let loginResponse):
-                        self.saveDataInUserDefaults(response: loginResponse)
-                        DispatchQueue.main.async {
-                            self.hideActivityIndicator()
-                            self.navigateToHomeScreen()
-                       }
-                    case .failure(let error):
-                        if type(of: error) == NetworkManager.ErrorType.self {
-                            DispatchQueue.main.async {
-                            self.hideActivityIndicator()
-                            self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                            self.hideActivityIndicator()
-                            self.ShowALert(title: error.localizedDescription)
-                            }
+        UserService.shared.generateRegistartionTokenwith(generateTokenUrl: URL(string: Constants.ApiPath.GenerateTokenUrl)!, parameters: ["type": "registration","phone": "9019930385","phoneCountryCode": "91"]) { (result : Result<UserModel, Error>) in
+            switch result {
+            case .success(let userResponse):
+                print(userResponse)
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
                     }
                 }
             }
+        }
+    }
+    
+    //Verification Api Call
+    func verificationApiCall(){
+        self.showActivityIndicator()
+        UserService.shared.verifyRegistartionTokenwith(verifyTokenUrl: URL(string: Constants.ApiPath.VerifyTokenUrl)!, parameters: ["token": "62178","phone": "9019930385","phoneCountryCode": "91","type": "registration"]) { (result : Result<UserModel, Error>) in
+            switch result {
+            case .success(let userResponse):
+                print(userResponse)
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Verification Api Call
+    func registrationApiCall(){
+        self.showActivityIndicator()
+        UserService.shared.registerUser(registerTokenUrl: URL(string: Constants.ApiPath.VerifyTokenUrl)!, parameters: ["token": "62178","phone": "9019930385","phoneCountryCode": "91","type": "registration"]) { (result : Result<UserModel, Error>) in
+            switch result {
+            case .success(let userResponse):
+                print(userResponse)
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    // Login Api Call
+    // TODO :  Change API call based on phone registration process
+    func callLoginApi() {
+        self.showActivityIndicator()
+        UserService.shared.loginRequest(with:  URL(string: Constants.ApiPath.LoginUrl)!, parameters: ["phone": "9019930384",
+        "phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
+            switch result {
+            case .success(let loginResponse):
+                self.saveDataInUserDefaults(response: loginResponse)
+                DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                    self.navigateToHomeScreen()
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+        }
     }
     
     func saveDataInUserDefaults(response : LoginModel) {

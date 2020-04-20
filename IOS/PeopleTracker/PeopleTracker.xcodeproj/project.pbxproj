@@ -32,12 +32,15 @@
 		1845D6842428FAFC00584FB4 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D6832428FAFC00584FB4 /* Utils.swift */; };
 		1845D686242A0AE700584FB4 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D685242A0AE700584FB4 /* LoginModel.swift */; };
 		1845D688242A118500584FB4 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
+		185A044B244990540087FD9F /* GroupListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185A044A244990540087FD9F /* GroupListModel.swift */; };
 		186321F024371236001E2E53 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186321EF24371236001E2E53 /* LocationModel.swift */; };
 		18708C422434A14C00940011 /* DeviceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C412434A14C00940011 /* DeviceService.swift */; };
 		18708C442434A5D200940011 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C432434A5D200940011 /* DeviceModel.swift */; };
 		188D44E5242887CE001D8CF0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188D44E4242887CE001D8CF0 /* UserCell.swift */; };
 		18A06A802431FD4E00E72E93 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
 		18A06A812431FD4E00E72E93 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
+		18A1C8552449807B00BD365A /* GroupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A1C8542449807B00BD365A /* GroupService.swift */; };
+		18A1C857244980F500BD365A /* GroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A1C856244980F500BD365A /* GroupModel.swift */; };
 		18B905552445D442006ECCD1 /* SideMenuScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B905542445D442006ECCD1 /* SideMenuScreen.swift */; };
 		18CC651E24472100003736BC /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC651D24472100003736BC /* ProfileCell.swift */; };
 		18CC652024472109003736BC /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC651F24472109003736BC /* MenuCell.swift */; };
@@ -46,6 +49,7 @@
 		18CC652624472F42003736BC /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652524472F42003736BC /* SettingsScreen.swift */; };
 		18CC652824472F5B003736BC /* HelpPrivacyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652724472F5B003736BC /* HelpPrivacyScreen.swift */; };
 		18CC652A24473184003736BC /* AboutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652924473184003736BC /* AboutScreen.swift */; };
+		18CC652E24484121003736BC /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652D24484121003736BC /* UserModel.swift */; };
 		341FD4D5A42EEAA0F3ADF682 /* Pods_PeopleTrackerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCFA2046750A007C2D0B6E1 /* Pods_PeopleTrackerTests.framework */; };
 		B02417F2B72A1DCDF388C6A3 /* Pods_PeopleTracker_PeopleTrackerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F564BF8112588BCFEE328CD8 /* Pods_PeopleTracker_PeopleTrackerUITests.framework */; };
 		CED90390BA1ECF5CD66B1A28 /* Pods_PeopleTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F33F9A1ECF37C7294435877 /* Pods_PeopleTracker.framework */; };
@@ -101,10 +105,13 @@
 		1845D6832428FAFC00584FB4 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		1845D685242A0AE700584FB4 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		1845D687242A118500584FB4 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		185A044A244990540087FD9F /* GroupListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListModel.swift; sourceTree = "<group>"; };
 		186321EF24371236001E2E53 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		18708C412434A14C00940011 /* DeviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceService.swift; sourceTree = "<group>"; };
 		18708C432434A5D200940011 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
 		188D44E4242887CE001D8CF0 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		18A1C8542449807B00BD365A /* GroupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupService.swift; sourceTree = "<group>"; };
+		18A1C856244980F500BD365A /* GroupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupModel.swift; sourceTree = "<group>"; };
 		18B905542445D442006ECCD1 /* SideMenuScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuScreen.swift; sourceTree = "<group>"; };
 		18CC651D24472100003736BC /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		18CC651F24472109003736BC /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
@@ -113,6 +120,7 @@
 		18CC652524472F42003736BC /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		18CC652724472F5B003736BC /* HelpPrivacyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpPrivacyScreen.swift; sourceTree = "<group>"; };
 		18CC652924473184003736BC /* AboutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutScreen.swift; sourceTree = "<group>"; };
+		18CC652D24484121003736BC /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		1D06A41AB10B7A158607EC5E /* Pods-PeopleTrackerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeopleTrackerTests.debug.xcconfig"; path = "Target Support Files/Pods-PeopleTrackerTests/Pods-PeopleTrackerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4062F81057CFA54509C942FE /* Pods-PeopleTracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeopleTracker.release.xcconfig"; path = "Target Support Files/Pods-PeopleTracker/Pods-PeopleTracker.release.xcconfig"; sourceTree = "<group>"; };
 		8726BFA3D79D73A1F648C7BB /* Pods-PeopleTracker-PeopleTrackerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeopleTracker-PeopleTrackerUITests.debug.xcconfig"; path = "Target Support Files/Pods-PeopleTracker-PeopleTrackerUITests/Pods-PeopleTracker-PeopleTrackerUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -231,7 +239,9 @@
 			children = (
 				1845D685242A0AE700584FB4 /* LoginModel.swift */,
 				18708C432434A5D200940011 /* DeviceModel.swift */,
-				186321EF24371236001E2E53 /* LocationModel.swift */,
+				18CC652D24484121003736BC /* UserModel.swift */,
+				18A1C856244980F500BD365A /* GroupModel.swift */,
+				185A044A244990540087FD9F /* GroupListModel.swift */,
 			);
 			path = DatabaseLayer;
 			sourceTree = "<group>";
@@ -242,6 +252,7 @@
 				1845D687242A118500584FB4 /* UserService.swift */,
 				1836E51A2433092B0078E572 /* NetowrkManager.swift */,
 				18708C412434A14C00940011 /* DeviceService.swift */,
+				18A1C8542449807B00BD365A /* GroupService.swift */,
 			);
 			path = NetworkLayer;
 			sourceTree = "<group>";
@@ -300,6 +311,7 @@
 				18CC652124472EC9003736BC /* ActiveSessionsScreen.swift */,
 				18CC652324472F17003736BC /* ProfileScreen.swift */,
 				18CC652524472F42003736BC /* SettingsScreen.swift */,
+				186321EF24371236001E2E53 /* LocationModel.swift */,
 				18CC652724472F5B003736BC /* HelpPrivacyScreen.swift */,
 				18CC652924473184003736BC /* AboutScreen.swift */,
 			);
@@ -605,6 +617,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1816ACBD2421ECAF00589CD9 /* PrivacyPolicyScreen.swift in Sources */,
+				18A1C857244980F500BD365A /* GroupModel.swift in Sources */,
 				1816ACB12421EB2600589CD9 /* AddPersonScreen.swift in Sources */,
 				18CC652024472109003736BC /* MenuCell.swift in Sources */,
 				1845D688242A118500584FB4 /* UserService.swift in Sources */,
@@ -614,6 +627,7 @@
 				18CC652A24473184003736BC /* AboutScreen.swift in Sources */,
 				1816ACB32421EB3200589CD9 /* CreateGroupScreen.swift in Sources */,
 				18CC652824472F5B003736BC /* HelpPrivacyScreen.swift in Sources */,
+				18CC652E24484121003736BC /* UserModel.swift in Sources */,
 				18708C422434A14C00940011 /* DeviceService.swift in Sources */,
 				1816ACA72421E98700589CD9 /* HomeScreen.swift in Sources */,
 				1845D686242A0AE700584FB4 /* LoginModel.swift in Sources */,
@@ -634,6 +648,8 @@
 				18CC652424472F17003736BC /* ProfileScreen.swift in Sources */,
 				181ACFE52444337000EACCC5 /* LoginExtension.swift in Sources */,
 				1816ACA32421E94D00589CD9 /* LoginScreen.swift in Sources */,
+				18A1C8552449807B00BD365A /* GroupService.swift in Sources */,
+				185A044B244990540087FD9F /* GroupListModel.swift in Sources */,
 				18CC652624472F42003736BC /* SettingsScreen.swift in Sources */,
 				1816ACB92421EB7A00589CD9 /* Constants.swift in Sources */,
 			);
@@ -812,6 +828,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8PVH2NGH42;
 				INFOPLIST_FILE = PeopleTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -831,6 +848,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8PVH2NGH42;
 				INFOPLIST_FILE = PeopleTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (

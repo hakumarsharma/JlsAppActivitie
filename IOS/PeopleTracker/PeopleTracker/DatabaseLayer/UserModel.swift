@@ -1,5 +1,5 @@
 //
-//  LoginModel.swift
+//  UserModel.swift
 //  PeopleTracker
 //
 /*************************************************************
@@ -22,41 +22,11 @@
 * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
 **************************************************************/
 
-
 import Foundation
 
-public struct LoginModel : Codable {
+public struct UserModel : Codable {
     
-    let ugsToken        : String
-    let ugsTokenexpiry  : Double
-    let user            : User?
-    
-    private enum CodingKeys : String, CodingKey {
-        case ugsToken = "ugs_token", ugsTokenexpiry = "ugs_token_expiry",user
-    }
-    
-}
-
-struct User : Codable {
-    
-    let userId        : String
-    let email         : String?
-    let usertype      : String
-    let name          : String
-    let phone         : String
-    let wearableUsers : [WearableUsers]?
-    
-    private enum CodingKeys : String, CodingKey {
-        case userId = "_id", email, usertype = "type", name, phone,wearableUsers
-    }
-}
-struct WearableUsers : Codable {
-    
-    let wearableDeviceId : String
-    let deviceId         : String
-    
-    private enum CodingKeys: String, CodingKey {
-        case wearableDeviceId = "_id", deviceId = "deviceId"
-    }
+       let code    : Int
+       let message : String
     
 }

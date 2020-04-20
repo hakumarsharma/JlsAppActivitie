@@ -32,10 +32,13 @@ class UserCell: UITableViewCell {
     @IBOutlet weak var checkBoxButton       : UIButton!
     @IBOutlet weak var consentstatusColor   : UILabel!
     @IBOutlet weak var requestConsentButton : UIButton!
+    @IBOutlet weak var customView: UIView!
     
-    func setData(deviceData : DeviceData){
-        self.name.text        = deviceData.name
-        self.phoneNumber.text = deviceData.phone
+    func setGroupData(groupData : GroupListData){
+        customView.layer.cornerRadius = 10
+        requestConsentButton.layer.cornerRadius = 10
+        self.name.text = groupData.name
+        self.phoneNumber.text = ""
         self.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkempty"), for: .normal)
         self.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkmark"), for: .selected)    
     }
