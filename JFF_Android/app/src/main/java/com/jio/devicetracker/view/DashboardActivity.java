@@ -79,9 +79,11 @@ import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
+import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceStatusResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.network.SendSMSTask;
@@ -109,7 +111,7 @@ import java.util.concurrent.TimeUnit;
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView listView;
-//    private static String userToken = null;
+    //    private static String userToken = null;
     public static List<MultipleselectData> selectedData;
     public static List<TrackerdeviceResponse.Data> data;
     private TrackerDeviceListAdapter adapter;
@@ -117,7 +119,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private static DBManager mDbManager;
     public static Map<String, Map<Double, Double>> namingMap = null;
     private static Context context = null;
-//    public static String adminEmail;
+    //    public static String adminEmail;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
     private List<SubscriptionInfo> subscriptionInfos;
@@ -136,6 +138,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public static String groupName = "";
     public static boolean isAddIndividual = false;
     public static boolean isComingFromGroupList = false;
+    private String userId;
+    private String grpId;
+    private int listPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,16 +209,18 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 @Override
-                public void onPopupMenuClicked(View v, int position, String name, String number) {
+                public void onPopupMenuClicked(View v, int position, String name, String number, String groupId) {
                     PopupMenu popup = new PopupMenu(DashboardActivity.this, v);
                     popup.inflate(R.menu.options_menu);
                     popup.setOnMenuItemClickListener(item -> {
                         switch (item.getItemId()) {
                             case R.id.editOnCardView:
-                                gotoEditScreen(name, number);
+                                gotoEditScreen(name, number, groupId);
                                 break;
                             case R.id.deleteOnCardView:
-                                alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, number, position);
+                                alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, groupId, position);
+                                grpId = groupId;
+                                listPosition = position;
                                 break;
                             default:
                                 break;
@@ -245,6 +252,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         client = LocationServices.getFusedLocationProviderClient(this);
+        userId = mDbManager.getAdminLoginDetail().getUserId();
         new Thread(new SendLocation()).start();
         if (specificGroupMemberData == null) {
             specificGroupMemberData = new ArrayList<>();
@@ -342,23 +350,52 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     /**
      * Shows Alert Dialog with Yes and No options
+     *
      * @param message
      * @param title
-     * @param phoneNumber
+     * @param groupId
      * @param position
      */
-    public void alertDilogBoxWithCancelbtn(String message, String title, String phoneNumber, int position) {
+    public void alertDilogBoxWithCancelbtn(String message, String title, String groupId, int position) {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setTitle(title);
         adb.setMessage(message);
         adb.setIcon(android.R.drawable.ic_dialog_alert);
         adb.setPositiveButton("OK", (dialog, which) -> {
-            mDbManager.deleteSelectedData(phoneNumber);
-            adapter.removeItem(position);
-            isDevicePresent();
+            makeDeleteGroupAPICall(groupId);
         });
         adb.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         adb.show();
+    }
+
+    /**
+     * Delete the Group and update the database
+     */
+    private void makeDeleteGroupAPICall(String groupId) {
+        GroupRequestHandler.getInstance(this).handleRequest(new DeleteGroupRequest(new DeleteGroupRequestSuccessListener(), new DeleteGroupRequestErrorListener(), groupId, userId));
+    }
+
+    /**
+     * Delete Group Request API Call Success Listener
+     */
+    private class DeleteGroupRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            mDbManager.deleteSelectedDataFromGroup(grpId);
+            adapter.removeItem(listPosition);
+            addDataInHomeScreen();
+            isDevicePresent();
+        }
+    }
+
+    /**
+     * Delete Group Request API Call Error Listener
+     */
+    private class DeleteGroupRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+                Util.alertDilogBox(Constant.GROUP_DELETION_FAILURE, Constant.ALERT_TITLE, DashboardActivity.this);
+        }
     }
 
     @Override
@@ -455,13 +492,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     /**
      * Navigates to the Edit screen by carrying name and number
+     *
      * @param name
      * @param phonenumber
      */
-    private void gotoEditScreen(String name, String phonenumber) {
+    private void gotoEditScreen(String name, String phonenumber, String groupId) {
         Intent intent = new Intent(this, EditActivity.class);
         intent.putExtra(Constant.NAME, name);
         intent.putExtra(Constant.NUMBER_CARRIER, phonenumber);
+        intent.putExtra(Constant.GROUP_ID, groupId);
         startActivity(intent);
     }
 
@@ -470,7 +509,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      */
     private void isDevicePresent() {
         TextView devicePresent = findViewById(R.id.devicePresent);
-        List<HomeActivityListData> alldata = mDbManager.getAlldata(Util.adminEmail);
+        List<HomeActivityListData> alldata = mDbManager.getAllGroupDetail();
         if (alldata.isEmpty()) {
             listView.setVisibility(View.INVISIBLE);
             devicePresent.setVisibility(View.VISIBLE);
@@ -482,6 +521,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     /**
      * Gets called when we click on button
+     *
      * @param v
      */
     @Override
@@ -738,6 +778,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     /**
      * Sends SMS and update the Consent to the Pending state for the particular device
+     *
      * @param phoneNumber
      */
     private void sendSMS(String phoneNumber) {
@@ -868,6 +909,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     /**
      * Store consent time in database
+     *
      * @param phoneNumber
      * @param approvalTime
      */
@@ -933,6 +975,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     /**
      * Displays Consent time for URI check
+     *
      * @param phoneNumber
      */
     private void showSpinnerforConsentTime(String phoneNumber) {
@@ -977,6 +1020,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     /**
      * Displays spinner for Group Consent time
+     *
      * @param data
      */
     private void showSpinnerforGroupConsentTime(List<HomeActivityListData> data) {
@@ -1025,7 +1069,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Adds data in Home screen using Recycler view, It is the main method to display devices in Home screen
      */
     private void addDataInHomeScreen() {
-        if (!listOnHomeScreens.isEmpty()) {
+        /*if (!listOnHomeScreens.isEmpty()) {
             for (HomeActivityListData listOnHomeScreenData : listOnHomeScreens) {
                 if (listOnHomeScreenData.isCreated == 1) {
                     HomeActivityListData data = new HomeActivityListData();
@@ -1047,8 +1091,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             } else if (homeActivityListData.isGroupMember() == false && homeActivityListData.getImeiNumber() != null) {
                 listOnDashBoard.add(homeActivityListData);
             }
-        }
-        adapter = new TrackerDeviceListAdapter(this, listOnDashBoard);
+        }*/
+        List<HomeActivityListData> listOnDashBoard = mDbManager.getAllGroupDetail();
+        adapter = new TrackerDeviceListAdapter(listOnDashBoard);
         listView.setAdapter(adapter);
     }
 }
