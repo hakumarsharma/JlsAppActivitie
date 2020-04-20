@@ -1093,7 +1093,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }
         }*/
         List<HomeActivityListData> listOnDashBoard = mDbManager.getAllGroupDetail();
-        adapter = new TrackerDeviceListAdapter(this, listOnDashBoard);
+        adapter = new TrackerDeviceListAdapter(listOnDashBoard);
         listView.setAdapter(adapter);
     }
 }

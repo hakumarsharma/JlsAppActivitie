@@ -39,11 +39,9 @@ import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.CreateGroupData;
-import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.CreateGroupRequest;
 import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
-import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
@@ -55,7 +53,6 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
     private EditText groupNameEditText = null;
     private Button createGroup = null;
     private DBManager mDbManager;
-    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

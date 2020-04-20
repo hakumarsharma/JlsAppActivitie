@@ -21,24 +21,18 @@
 
 package com.jio.devicetracker.view.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
-import com.jio.devicetracker.util.Constant;
-
-
 import java.util.List;
 
 /**
@@ -46,18 +40,15 @@ import java.util.List;
  */
 public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDeviceListAdapter.ViewHolder> {
 
-    private Context mContext;
     private List<HomeActivityListData> mData;
     private static RecyclerViewClickListener itemListener;
     private MultipleselectData mSelectData;
 
     /**
      * Constructor to add devices in home screen
-     * @param mContext
      * @param mData
      */
-    public TrackerDeviceListAdapter(Context mContext, List<HomeActivityListData> mData) {
-        this.mContext = mContext;
+    public TrackerDeviceListAdapter(List<HomeActivityListData> mData) {
         this.mData = mData;
     }
 

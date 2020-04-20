@@ -45,9 +45,6 @@ public class EditActivity extends Activity implements View.OnClickListener {
 
     private DBManager mDBmanager;
     private EditText mName;
-    private EditText mNumber;
-    private Button update;
-    private String number;
     private String name;
     private String groupId;
 
@@ -59,13 +56,13 @@ public class EditActivity extends Activity implements View.OnClickListener {
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Constant.EDIT);
         mName = findViewById(R.id.memberName);
-        mNumber = findViewById(R.id.deviceNumber);
+        EditText mNumber = findViewById(R.id.deviceNumber);
         mNumber.setVisibility(View.INVISIBLE);
-        update = findViewById(R.id.update);
+        Button update = findViewById(R.id.update);
         update.setOnClickListener(this);
         Intent intent = getIntent();
         name = intent.getStringExtra(Constant.NAME);
-        number = intent.getStringExtra(Constant.NUMBER_CARRIER);
+        String number = intent.getStringExtra(Constant.NUMBER_CARRIER);
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         mName.setText(name);
         mNumber.setText(number);
@@ -84,7 +81,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
     private void makeUpdateGroupNameAPICall() {
         UpdateGroupNameData updateGroupNameData = new UpdateGroupNameData();
         updateGroupNameData.setName(mName.getText().toString().trim());
-        GroupRequestHandler.getInstance(EditActivity.this).handleRequest(new UpdateGroupNameRequest(new UpdateGroupNameSuccessListener(), new UpdateGroupNameErrorListener(), updateGroupNameData, groupId, mDBmanager.getAdminLoginDetail().getUserId()));
+        GroupRequestHandler.getInstance(this).handleRequest(new UpdateGroupNameRequest(new UpdateGroupNameSuccessListener(), new UpdateGroupNameErrorListener(), updateGroupNameData, groupId, mDBmanager.getAdminLoginDetail().getUserId()));
     }
 
     /**

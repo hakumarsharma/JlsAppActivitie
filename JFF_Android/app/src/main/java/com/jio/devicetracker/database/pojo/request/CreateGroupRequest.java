@@ -28,7 +28,6 @@ import com.jio.devicetracker.database.pojo.CreateGroupData;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.LoginActivity;
 
 public class CreateGroupRequest implements IRequest {
     private Response.Listener sucessListener;
