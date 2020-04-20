@@ -1,0 +1,147 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="twenty_five_sp">26sp</dimen>
+    <dimen name="sixteen_dp">16dp</dimen>
+    <dimen name="twenty_five_dp">24dp</dimen>
+    <dimen name="seventeen_sp">17sp</dimen>
+    <dimen name="five_dp">5dp</dimen>
+    <dimen name="twenty_dp">20dp</dimen>
+    <dimen name="margin_24">24dp</dimen>
+    <dimen name="top_margin_layout">32dp</dimen>
+    <dimen name="normal_margin">8dp</dimen>
+    <dimen name="header_text">28dp</dimen>
+    <dimen name="layout_margin_160">160dp</dimen>
+    <dimen name="btton_margin_40">36dp</dimen>
+    <dimen name="margin_10dp">10dp</dimen>
+    <dimen name="cardview_515dp">515dp</dimen>
+    <dimen name="card_margin">5dp</dimen>
+    <dimen name="car_corner_4dp">4dp</dimen>
+    <dimen name="zero_margin">0dp</dimen>
+    <dimen name="padding_margin_40">40dp</dimen>
+    <dimen name="layout_margin_160dp">60dp</dimen>
+    <dimen name="layout_margin_260dp">260dp</dimen>
+    <dimen name="margin_200">200dp</dimen>
+    <dimen name="margin_100dp">100dp</dimen>
+    <dimen name="text_size">17dp</dimen>
+    <dimen name="margin_220">220dp</dimen>
+    <dimen name="layout_margin_240dp">240dp</dimen>
+    <dimen name="size_20">20dp</dimen>
+    <dimen name="size_18">18dp</dimen>
+    <dimen name="margin_130">130dp</dimen>
+    <dimen name="image_size_96">96dp</dimen>
+    <dimen name="layout_margin_250dp">250dp</dimen>
+    <dimen name="margin_60">60dp</dimen>
+    <dimen name="layout_margin_180">180dp</dimen>
+    <dimen name="margin_32dp">32dp</dimen>
+    <dimen name="text_size_80">80dp</dimen>
+    <dimen name="text_size_100">100dp</dimen>
+    <dimen name="margin_80">80dp</dimen>
+    <dimen name="margin_120">120dp</dimen>
+    <dimen name="margin_320">320dp</dimen>
+    <dimen name="margin_300">300dp</dimen>
+    <dimen name="margin_150">150dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="sixteen_sp">16sp</dimen>
+    <dimen name="ten_dp">10dp</dimen>
+    <dimen name="fifty_dp">50dp</dimen>
+    <dimen name="sixty_dp">60dp</dimen>
+    <dimen name="margin_280">280dp</dimen>
+    <dimen name="text_size_20">20dp</dimen>
+    <dimen name="margin_140">140dp</dimen>
+    <dimen name="margin_360">360dp</dimen>
+    <dimen name="margin_340">340dp</dimen>
+    <dimen name="layout_margin_170">170dp</dimen>
+    <dimen name="text_size_22">22dp</dimen>
+    <dimen name="margin_146">146dp</dimen>
+    <dimen name="margnin_380">380dp</dimen>
+    <dimen name="margin_18">18dp</dimen>
+    <dimen name="margin_26">26dp</dimen>
+    <dimen name="margin_30">30dp</dimen>
+    <dimen name="dimen_11sp">11sp</dimen>
+    <dimen name="two_dp">2dp</dimen>
+    <dimen name="margin_52">52dp</dimen>
+    <dimen name="text_size_18">18dp</dimen>
+    <dimen name="layout_margin_16">16dp</dimen>
+    <dimen name="fourty_two_dp">42dp</dimen>
+    <dimen name="eighteen_sp">18sp</dimen>
+    <dimen name="twenty_sp">20dp</dimen>
+    <dimen name="eighty_dp">80dp</dimen>
+    <dimen name="three_dp">3dp</dimen>
+    <dimen name="fourteen_sp">14sp</dimen>
+    <dimen name="twelve_sp">12sp</dimen>
+    <dimen name="text_size_21">21dp</dimen>
+    <dimen name="size_90">90dp</dimen>
+    <dimen name="margin_12dp">12dp</dimen>
+    <dimen name="eigh_dp">8dp</dimen>
+    <dimen name="title_layout">10dp</dimen>
+    <dimen name="fourty_dp">30dp</dimen>
+    <dimen name="fourty_dp_dp">76dp</dimen>
+    <dimen name="login_edt_dp">40dp</dimen>
+    <dimen name="sos_setup_fourty_dp">40dp</dimen>
+    <dimen name="sendsos_margin_30">30dp</dimen>
+    <dimen name="map_diag_margin_20">20dp</dimen>
+    <dimen name="fourteen_dp">14dp</dimen>
+    <dimen name="one_zero_four_dp">104dp</dimen>
+    <dimen name="one_two_zero_dp">130dp</dimen>
+
+    <!--Cardview layout start-->
+    <dimen name="cardviewlayout_device_heading_height">20dp</dimen>
+    <dimen name="cardviewlayout_device_heading_margin_bottom">8dp</dimen>
+    <dimen name="cardviewlayout_device_heading_margin_top">6dp</dimen>
+    <dimen name="cardviewlayout_device_heading_margin_left">10dp</dimen>
+    <dimen name="cardviewlayout_device_heading_font_size">17dp</dimen>
+
+    <dimen name="cardviewlayout_device_status_font_size">14dp</dimen>
+    <dimen name="cardviewlayout_device_status_height">16dp</dimen>
+
+    <dimen name="cardviewlayout_device_distance_font_size">12dp</dimen>
+    <dimen name="cardviewlayout_device_distance_height">16dp</dimen>
+
+    <dimen name="cardviewlayout_device_time_font_size">12dp</dimen>
+    <dimen name="cardviewlayout_device_time_height">16dp</dimen>
+
+    <dimen name="cardviewlayout_device_dots_height">24dp</dimen>
+    <dimen name="cardviewlayout_device_dots_width">24dp</dimen>
+
+    <dimen name="cardviewlayout_device_mainicon_height">108dp</dimen>
+    <dimen name="cardviewlayout_device_mainicon_width">108dp</dimen>
+    <!--Cardview layout end-->
+
+    <!--Start of add device screen-->
+    <dimen name="adddevice_heading_height">24dp</dimen>
+    <dimen name="adddevice_heading_width">104dp</dimen>
+    <dimen name="adddevice_heading_margin_top">36dp</dimen>
+    <dimen name="adddevice_heading_margin_bottom">36dp</dimen>
+    <dimen name="adddevice_heading_font_size">20dp</dimen>
+
+    <dimen name="adddevice_content_font_size">17dp</dimen>
+    <dimen name="adddevice_content_height">20dp</dimen>
+    <dimen name="adddevice_content_margin_bottom">18dp</dimen>
+    <dimen name="adddevice_content_margin_top">36dp</dimen>
+
+    <dimen name="adddevice_button_height">40dp</dimen>
+    <dimen name="adddevice_button_width">232dp</dimen>
+    <dimen name="adddevice_button_margin_bottom">20dp</dimen>
+
+    <dimen name="adddevice_image_height">343dp</dimen>
+    <dimen name="adddevice_image_width">258dp</dimen>
+    <dimen name="adddevice_image_margin_top">40dp</dimen>
+    <dimen name="adddevice_image_margin_left">30dp</dimen>
+    <dimen name="adddevice_image_margin_right">30dp</dimen>
+    <!--end of add device screen-->
+
+    <!--Permission-->
+    <dimen name="permissions_content_height">20dp</dimen>
+    <dimen name="permissions_padding_left">22dp</dimen>
+    <dimen name="permissions_padding_right">22dp</dimen>
+    <!--End of permissions-->
+    <dimen name="login_38">38dp</dimen>
+    <dimen name="icon_70">70dp</dimen>
+    <dimen name="icon_48">48dp</dimen>
+    <dimen name="dip_58">58dp</dimen>
+    <dimen name="dip_238">238dp</dimen>
+
+</resources>

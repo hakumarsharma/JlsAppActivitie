@@ -1,0 +1,8 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:drawable="@drawable/asset_dialog_round_bkgd"/>
+    <item android:state_pressed="false"
+        android:drawable="@drawable/asset_dialog_round_bkgd" /> <!-- pressed -->
+    <item android:state_pressed="true"
+        android:drawable="@drawable/square_blue_frame" /> <!-- focused -->
+    <item android:state_enabled="true" android:drawable="@drawable/asset_dialog_round_bkgd"/> <!-- idle state -->
+</selector>

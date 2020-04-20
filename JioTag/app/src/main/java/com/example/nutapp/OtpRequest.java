@@ -1,0 +1,260 @@
+package com.example.nutapp;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
+import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+public class OtpRequest extends AppCompatActivity {
+
+    static boolean m_login_check = false;
+    Button otp_send;
+    String m_url = "https://stg.borqs.io/accounts/api/users/tokens";
+    String m_publickey = "";
+    EditText login_edit_number;
+
+
+    int OTP_MIN = 100000;
+    int OTP_MAX = 999999;
+    int m_self_otp = 100000;
+    String sms_otp = "Dear Customer,your JioTags OTP is : " + m_self_otp + " .Use this password to validate your login.";
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
+
+    public boolean isPermissionAlreadyGranted() {
+        int send_sms= ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
+        int fine_location = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int camera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int write_external_storage=ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int read_external_storage=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int coarse_location=ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        int read_phone_state=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        int read_phone_numbers=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS);
+        int read_sms=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
+        int receive_sms=ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
+        if((send_sms != PackageManager.PERMISSION_GRANTED)|| (fine_location !=PackageManager.PERMISSION_GRANTED) || (camera !=PackageManager.PERMISSION_GRANTED) ||
+        (write_external_storage !=PackageManager.PERMISSION_GRANTED) || (read_external_storage !=PackageManager.PERMISSION_GRANTED) ||
+        (coarse_location !=PackageManager.PERMISSION_GRANTED) || (read_phone_state != PackageManager.PERMISSION_GRANTED) ||
+        (read_phone_numbers !=PackageManager.PERMISSION_GRANTED) || (read_sms !=PackageManager.PERMISSION_GRANTED) ||
+        (receive_sms != PackageManager.PERMISSION_GRANTED)){
+            return false;
+        }else{
+            return true;
+        }
+
+    }
+
+    private void checkLocationPermission() {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (isPermissionAlreadyGranted() == false) {
+                requestPermissions(
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_PHONE_NUMBERS, Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            } else {
+                Log.d("PERMISSIONS", "GRANTED ALREADY NO CHECK");
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        Log.d("onRequest", "onRequestPermissionsResult");
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                Log.d("INRESULT", "MY_PERMISSIONS_REQUEST_LOCATION" + permissions.toString());
+                // If request is cancelled, the result arrays are empty.
+                for (int result : grantResults) {
+                    if (result == PackageManager.PERMISSION_DENIED) {
+                        Log.d("NOPERM", "NOT Granted");
+                        Toast.makeText(this.getApplicationContext(), "You have to accept all the permissions else the app will close", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                }
+            }
+        }
+    }
+
+
+    public int generateSelfOtp() {
+        Random rand = new Random();
+        m_self_otp = rand.nextInt((OTP_MAX - OTP_MIN) + 1) + OTP_MIN;
+        Log.d("SELFOTP", m_self_otp + "");
+        return m_self_otp;
+    }
+
+    public void sendSelfOtp() {
+        generateSelfOtp();
+        sms_otp = "Dear Customer,your JioTags OTP is : " + m_self_otp + " .Use this password to validate your login.";
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(m_publickey, null, sms_otp, null, null);
+        Intent startMain = new Intent(getApplicationContext(), OtpWaitScreen.class);
+        startMain.putExtra("PHNUM", m_publickey);
+        startMain.putExtra("SELFOTP", Integer.toString(m_self_otp));
+        startActivity(startMain);
+    }
+
+    public boolean isNetworkEnabled() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
+    }
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.otp_view);
+
+        final CheckBox login_check = (CheckBox) findViewById(R.id.login_check_box);
+        login_check.setButtonDrawable(R.drawable.uncheckbox);
+        login_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                m_login_check = isChecked;
+                Log.d("CHECK::", isChecked + "");
+                if (m_login_check) {
+                    login_check.setButtonDrawable(R.drawable.filled);
+                    otp_send.setEnabled(true);
+                    otp_send.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
+                    Log.d("BUTTON::", "ENABLED" + "");
+                } else {
+                    login_check.setButtonDrawable(R.drawable.uncheckbox);
+                    otp_send.setEnabled(false);
+                    otp_send.setBackground(getResources().getDrawable(R.drawable.disabled_button));
+                    Log.d("BUTTON::", "DISABLED" + "");
+                }
+            }
+        });
+
+        otp_send = (Button) findViewById(R.id.login_btn_send_otp);
+        otp_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (true) {//isNetworkEnabled()) {
+                    String phNumber = login_edit_number.getText().toString();
+                    if (phNumber.isEmpty() || phNumber.length() < 10) {
+                        Toast.makeText(v.getContext(), "Please Enter 10 digit valid mobile number of this Phone!!!! ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        m_publickey = phNumber;
+                        //sendOtpReuest(m_url, m_publickey);
+                        sendSelfOtp();
+                    }
+                } else {
+                    Toast.makeText(v.getContext(), "Please Enable Network to to get OTP!!!! ", Toast.LENGTH_SHORT).show();
+                }
+                //Intent startMain = new Intent(getApplicationContext(), OtpWaitScreen.class);
+                //startActivity(startMain);
+            }
+        });
+        otp_send.setEnabled(false);
+        otp_send.setBackground(getResources().getDrawable(R.drawable.disabled_button));
+
+        login_edit_number = (EditText) findViewById(R.id.login_edit_number);
+        login_edit_number.setTypeface(JioUtils.mTypeface(this, 5));
+
+        EditText prefix_text = (EditText) findViewById(R.id.prefix_text);
+        prefix_text.setTypeface(JioUtils.mTypeface(this, 5));
+
+        TextView login_terms = (TextView) findViewById(R.id.login_terms);
+        //login_terms.setTypeface(JioUtils.mTypeface(this, 2));
+        TextView login_jioTags_enter_number = (TextView) findViewById(R.id.login_jioTags_enter_number);
+        login_jioTags_enter_number.setTypeface(JioUtils.mTypeface(this, 3));
+        TextView login_jioTags_registered_number = (TextView) findViewById(R.id.login_jioTags_registered_number);
+        login_jioTags_registered_number.setTypeface(JioUtils.mTypeface(this, 2));
+
+        ///Skip login View///////
+        Button login_skip_btn_send_otp = (Button) findViewById(R.id.login_skip_btn_send_otp);
+        login_skip_btn_send_otp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startMain = new Intent(getApplicationContext(), JioAddFinder.class);
+                startActivity(startMain);
+            }
+        });
+        //////////////////
+        checkLocationPermission();
+    }
+
+
+    public void sendOtpReuest(final String url, String publickey) {
+        Log.d("SERVER OTP", "Request OTP From server::" + publickey);
+
+        try {
+            JSONObject jsonMainBody = new JSONObject();
+            JSONObject jsonCode = new JSONObject();
+            jsonCode.put("code", "student");
+            jsonMainBody.put("role", jsonCode);
+            jsonMainBody.put("phone", publickey);
+            jsonMainBody.put("type", "registration");
+
+            RequestQueue queue = Volley.newRequestQueue(this);
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d("MSGFROMSERVER", "SUCCESS" + response.toString());
+                    try {
+                        Log.d("MSGFROMSERVER", "SUCCESS" + response.get("code"));
+                        Toast.makeText(getApplicationContext(), "Sent OTP Successfully!!!! ", Toast.LENGTH_SHORT).show();
+                        Intent startMain = new Intent(getApplicationContext(), OtpWaitScreen.class);
+                        startMain.putExtra("PHNUM", m_publickey);
+                        //startMain.putExtra("SELFOTP",m_self_otp);
+                        startActivity(startMain);
+                    } catch (Exception e) {
+                        Log.d("EXCEPTION", "exce");
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("MSGFROMSERVER", "FAILURE");
+                    Toast.makeText(getApplicationContext(), "Send OTP Failed!!!! ", Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap headers = new HashMap();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+            queue.add(req);
+        } catch (Exception e) {
+
+        }
+    }
+}

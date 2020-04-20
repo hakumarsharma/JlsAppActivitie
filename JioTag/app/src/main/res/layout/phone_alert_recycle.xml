@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#E8E8E8"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/phone_alert_tick_header"
+        android:background="#F8F8F8"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_52"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:layout_marginLeft="@dimen/ten_dp"
+        android:layout_marginRight="@dimen/ten_dp"
+        android:padding="5dp">
+        <ImageButton
+            android:id="@+id/phonealert_back"
+            android:layout_width="@dimen/twenty_five_dp"
+            android:layout_height="@dimen/twenty_five_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:background="#F8F8F8"
+            android:src="@drawable/back"
+            />
+
+        <TextView
+            android:id="@+id/phonealert_texts"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/twenty_five_dp"
+            android:layout_marginLeft="@dimen/ten_dp"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:fontFamily="Bold"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:freezesText="true"
+            android:layout_centerInParent="true"
+            android:text="Phone Alerts"
+            android:textSize="@dimen/eighteen_sp" />
+
+        <ImageButton
+            android:id="@+id/phonealert_home"
+            android:layout_width="@dimen/twenty_five_dp"
+            android:background="#F8F8F8"
+            android:layout_height="@dimen/twenty_five_dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:src="@drawable/home"
+            android:textAlignment="center" />
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/phone_rel_detail_header_layout"
+        android:layout_below="@+id/phone_alert_tick_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/eigh_dp"
+        android:layout_marginRight="@dimen/eigh_dp"
+        android:layout_marginBottom="@dimen/eigh_dp"
+        android:layout_marginTop="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="1dp">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/phonealert_recycle"
+        android:layout_marginBottom="5dp"
+        android:background="#E8E8E8"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
+    </RelativeLayout>
+
+</RelativeLayout>
