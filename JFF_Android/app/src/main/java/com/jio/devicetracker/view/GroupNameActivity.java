@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -36,27 +34,37 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.CreateGroupData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.request.CreateGroupRequest;
+import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
+import com.jio.devicetracker.network.GroupRequestHandler;
+import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 
 /**
  * Class to create Group name and the relation with group members
  */
-public class GroupNameActivity extends AppCompatActivity implements View.OnClickListener{
+public class GroupNameActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText groupNameEditText = null;
-    private EditText relationWithGroupMembers = null;
     private Button createGroup = null;
+    private DBManager mDbManager;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_name);
+        mDbManager = new DBManager(this);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Constant.GROUP_NAME);
         groupNameEditText = findViewById(R.id.groupNameEditText);
-        relationWithGroupMembers = findViewById(R.id.relationWithGroupMembers);
         createGroup = findViewById(R.id.createGroupName);
         createGroup.setOnClickListener(this);
         changeButtonColorOnDataEntry();
@@ -80,52 +88,63 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                String relation = relationWithGroupMembers.getText().toString();
-                if (relation.isEmpty()) {
-                    createGroup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
-                    createGroup.setTextColor(Color.WHITE);
-                }
+                createGroup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                createGroup.setTextColor(Color.WHITE);
             }
         });
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.createGroupName){
+        if (v.getId() == R.id.createGroupName) {
             String groupName = groupNameEditText.getText().toString();
-            String relationWithGroupMembersText = relationWithGroupMembers.getText().toString();
-            if("".equalsIgnoreCase(groupName)) {
+            if ("".equalsIgnoreCase(groupName)) {
                 groupNameEditText.setError(Constant.GROUP_NAME_VALIDATION_ERROR);
                 return;
             }
-            else if("".equalsIgnoreCase(relationWithGroupMembersText)) {
-                relationWithGroupMembers.setError(Constant.RELATION_WITH_GROUP_ERROR);
-                return;
-            }
-            boolean isGroupMember;
-            if(DashboardActivity.isComingFromGroupList){
-                isGroupMember = true;
-            } else  {
-                isGroupMember = false;
-            }
-            setHomeScreenData(groupName, relationWithGroupMembersText, isGroupMember);
+            createGroupAPICall(groupName);
         }
     }
 
     /**
-     * Displays the entered data in dashboard
-     * @param groupName
-     * @param relationWithGroupMembersText
-     * @param isGroupMember
+     * Create Group API call
      */
-    private void setHomeScreenData(String groupName, String relationWithGroupMembersText, boolean isGroupMember) {
-        DashboardActivity.listOnHomeScreens.clear();
-        HomeActivityListData listOnHomeScreen = new HomeActivityListData();
-        listOnHomeScreen.setGroupName(groupName);
-        listOnHomeScreen.setPhoneNumber(relationWithGroupMembersText);
-        listOnHomeScreen.setGroupMember(isGroupMember);
-        listOnHomeScreen.setIsCreated(1);
-        DashboardActivity.listOnHomeScreens.add(listOnHomeScreen);
-        startActivity(new Intent(this, DashboardActivity.class));
+    private void createGroupAPICall(String groupName) {
+        CreateGroupData createGroupData = new CreateGroupData();
+        createGroupData.setName(groupName);
+        createGroupData.setType("one_to_one");
+        CreateGroupData.Session session = new CreateGroupData().new Session();
+        session.setFrom(1587969892000L);
+        session.setTo(1588969892000L);
+        createGroupData.setSession(session);
+        Util.getInstance().showProgressBarDialog(this);
+        GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, mDbManager.getAdminLoginDetail().getUserId()));
     }
+
+    /**
+     * Create Group Success Listener
+     */
+    private class CreateGroupSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            CreateGroupResponse createGroupResponse = Util.getInstance().getPojoObject(String.valueOf(response), CreateGroupResponse.class);
+            mDbManager.insertIntoGroupTable(createGroupResponse);
+            Util.progressDialog.dismiss();
+            startActivity(new Intent(GroupNameActivity.this, DashboardActivity.class));
+        }
+    }
+
+    /**
+     * Create Group error Listener
+     */
+    private class CreateGroupErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            if(error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
+                Util.alertDilogBox(Constant.GROUP_CREATION_FAILURE, Constant.ALERT_TITLE, GroupNameActivity.this);
+            }
+        }
+    }
+
 }

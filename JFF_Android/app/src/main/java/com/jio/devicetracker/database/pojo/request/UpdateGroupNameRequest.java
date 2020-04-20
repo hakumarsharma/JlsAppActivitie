@@ -22,39 +22,43 @@
 
 package com.jio.devicetracker.database.pojo.request;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
-import com.jio.devicetracker.database.pojo.GenerateTokenData;
+import com.jio.devicetracker.database.pojo.UpdateGroupNameData;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.DashboardActivity;
+import com.jio.devicetracker.view.LoginActivity;
 
-import static com.android.volley.Request.Method.POST;
-
-public class GenerateTokenRequest implements IRequest {
+public class UpdateGroupNameRequest implements IRequest {
     private Response.Listener sucessListener;
     private Response.ErrorListener errorListener;
-    private GenerateTokenData data;
+    private UpdateGroupNameData updateGroupNameData;
+    private String groupId;
+    private String userId;
 
-    public GenerateTokenRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, GenerateTokenData data) {
+    public UpdateGroupNameRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, UpdateGroupNameData updateGroupNameData, String groupId, String userId)
+    {
         this.sucessListener = sucessListener;
         this.errorListener = errorListener;
-        this.data = data;
-
+        this.updateGroupNameData = updateGroupNameData;
+        this.groupId = groupId;
+        this.userId = userId;
     }
-
     @Override
     public String getReqParams() {
-        return Util.getInstance().toJSON(data);
+        return Util.getInstance().toJSON(updateGroupNameData);
     }
 
     @Override
     public int getMethod() {
-        return POST;
+        return Request.Method.PUT;
     }
 
     @Override
     public String getAction() {
-        return Constant.GENERATE_TOKEN_REQUEST_URL;
+        return Constant.UPDATE_GROUP_NAME_URL1 + userId + Constant.UPDATE_GROUP_NAME_URL2 + groupId;
     }
 
     @Override
@@ -77,4 +81,3 @@ public class GenerateTokenRequest implements IRequest {
         return true;
     }
 }
-

@@ -43,6 +43,8 @@ import com.jio.devicetracker.database.pojo.RegisterData;
 import com.jio.devicetracker.database.pojo.VerifyTokenData;
 import com.jio.devicetracker.database.pojo.request.TokenVerifyRequest;
 import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
+import com.jio.devicetracker.network.MessageListener;
+import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -50,11 +52,11 @@ import com.jio.devicetracker.util.Util;
 /**
  * Implementation of Registration Token screen to verify the Token.
  */
-public class BorqsTokenActivity extends AppCompatActivity implements View.OnClickListener {
+public class BorqsTokenActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
 
     private Button verify = null;
-    private EditText phoneToken = null;
-    private String token = "";
+    private static EditText phoneToken = null;
+    private String token;
     private String countryCode;
     private String phoneNumber;
 
@@ -70,6 +72,8 @@ public class BorqsTokenActivity extends AppCompatActivity implements View.OnClic
         phoneToken = findViewById(R.id.token);
         verify = findViewById(R.id.verify);
         verify.setOnClickListener(this);
+        MessageListener messageListener = new BorqsTokenActivity();
+        MessageReceiver.bindListener(messageListener);
         changeButtonColor();
     }
 
@@ -117,7 +121,8 @@ public class BorqsTokenActivity extends AppCompatActivity implements View.OnClic
             phoneToken.setError(Constant.INVALID_TOKEN_MSG);
             return;
         }
-        makeVerifyTokenAPICall(phoneToken.getText().toString());
+        token = phoneToken.getText().toString();
+        makeVerifyTokenAPICall(token);
     }
 
     /**
@@ -130,7 +135,7 @@ public class BorqsTokenActivity extends AppCompatActivity implements View.OnClic
         verifyTokenData.setType(Constant.REGISTRATION);
         verifyTokenData.setPhone(phoneNumber);
         verifyTokenData.setPhoneCountryCode(countryCode);
-        RequestHandler.getInstance(getApplicationContext()).handleRequest(new TokenVerifyRequest(new BorqsTokenActivity.SuccessListener(), new BorqsTokenActivity.ErrorListener(), verifyTokenData));
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new TokenVerifyRequest(new SuccessListener(), new ErrorListener(), verifyTokenData));
     }
 
     /**
@@ -140,8 +145,8 @@ public class BorqsTokenActivity extends AppCompatActivity implements View.OnClic
         @Override
         public void onResponse(Object response) {
             GenerateTokenResponse generateTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
-            if(generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.TOKEN_VERIFIED)) {
-                Toast.makeText(getApplicationContext(), Constant.TOKEN_VERIFICATION_FAILED, Toast.LENGTH_SHORT).show();
+            if(generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.TOKEN_VERIFIED_SUCCESS)) {
+                Toast.makeText(BorqsTokenActivity.this, Constant.TOKEN_VERIFIED_SUCCESS, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(BorqsTokenActivity.this, RegistrationActivity.class);
                 intent.putExtra("countryCode", countryCode);
                 intent.putExtra("phoneNumber", phoneNumber);
@@ -167,4 +172,15 @@ public class BorqsTokenActivity extends AppCompatActivity implements View.OnClic
         startActivity(new Intent(this, LoginActivity.class));
     }
 
+    /**
+     * To receive token
+     * @param message
+     * @param phoneNum
+     */
+    public void messageReceived(String message, String phoneNum) {
+        if(message.contains(Constant.TOKEN_SMS) && phoneToken != null) {
+            String[] splitMessage = message.split(":");
+            phoneToken.setText(splitMessage[1].substring(1, 6));
+        }
+    }
 }

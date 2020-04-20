@@ -1,19 +1,38 @@
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.jio.devicetracker.database.pojo;
 
-import java.io.Serializable;
-import java.util.List;
-
-public class CreateGroupData implements Serializable {
+public class CreateGroupData {
     private String name;
     private Session session;
-    private List<Consents> consents;
+    private String type;
 
-    public List<Consents> getConsents() {
-        return consents;
+    public String getType() {
+        return type;
     }
 
-    public void setConsents(List<Consents> consents) {
-        this.consents = consents;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getName() {
@@ -33,53 +52,23 @@ public class CreateGroupData implements Serializable {
     }
 
     public class Session {
-        private String from;
-        private String to;
+        private Long from;
+        private Long to;
 
-        public String getFrom() {
+        public Long getFrom() {
             return from;
         }
 
-        public void setFrom(String from) {
+        public void setFrom(Long from) {
             this.from = from;
         }
 
-        public String getTo() {
+        public Long getTo() {
             return to;
         }
 
-        public void setTo(String to) {
+        public void setTo(Long to) {
             this.to = to;
-        }
-    }
-
-    public class Consents {
-        private String phone;
-        private List<String> entities;
-        private Session session;
-
-        public String getPhone() {
-            return phone;
-        }
-
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
-
-        public List<String> getEntities() {
-            return entities;
-        }
-
-        public void setEntities(List<String> entities) {
-            this.entities = entities;
-        }
-
-        public Session getSession() {
-            return session;
-        }
-
-        public void setSession(Session session) {
-            this.session = session;
         }
     }
 }

@@ -56,7 +56,6 @@
             android:layout_marginTop="6dp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/contactImage"
-            android:text="9912345678"
             android:textSize="15sp"
 
             />

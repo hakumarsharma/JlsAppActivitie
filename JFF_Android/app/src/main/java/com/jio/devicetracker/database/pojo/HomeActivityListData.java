@@ -41,6 +41,24 @@ public class HomeActivityListData {
     private String groupName;
     public int isCreated;
     private String deviceId;
+    private String GroupId;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getGroupId() {
+        return GroupId;
+    }
+
+    public void setGroupId(String groupId) {
+        GroupId = groupId;
+    }
 
     public String getDeviceId() {
         return deviceId;

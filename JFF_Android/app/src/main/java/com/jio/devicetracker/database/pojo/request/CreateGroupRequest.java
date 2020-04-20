@@ -22,39 +22,40 @@
 
 package com.jio.devicetracker.database.pojo.request;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
-import com.jio.devicetracker.database.pojo.GenerateTokenData;
+import com.jio.devicetracker.database.pojo.CreateGroupData;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.LoginActivity;
 
-import static com.android.volley.Request.Method.POST;
-
-public class GenerateTokenRequest implements IRequest {
+public class CreateGroupRequest implements IRequest {
     private Response.Listener sucessListener;
     private Response.ErrorListener errorListener;
-    private GenerateTokenData data;
+    private CreateGroupData user;
+    private String userId;
 
-    public GenerateTokenRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, GenerateTokenData data) {
+    public CreateGroupRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, CreateGroupData object, String userId)
+    {
         this.sucessListener = sucessListener;
         this.errorListener = errorListener;
-        this.data = data;
-
+        this.user = object;
+        this.userId = userId;
     }
-
     @Override
     public String getReqParams() {
-        return Util.getInstance().toJSON(data);
+        return Util.getInstance().toJSON(user);
     }
 
     @Override
     public int getMethod() {
-        return POST;
+        return Request.Method.POST;
     }
 
     @Override
     public String getAction() {
-        return Constant.GENERATE_TOKEN_REQUEST_URL;
+        return Constant.CREATE_GROUP_URL1 + userId + Constant.CREATE_GROUP_URL2;
     }
 
     @Override
@@ -77,4 +78,3 @@ public class GenerateTokenRequest implements IRequest {
         return true;
     }
 }
-

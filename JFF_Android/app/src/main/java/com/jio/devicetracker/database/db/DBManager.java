@@ -30,6 +30,8 @@ import com.jio.devicetracker.database.pojo.ConsentTimeupdateData;
 import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
+import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
+import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.LoginActivity;
@@ -52,6 +54,7 @@ public class DBManager {
 
     /**
      * Insert data into the TABLE_NAME_BORQS table, It is a main table to store device data
+     *
      * @param deviceData
      * @param email
      * @return long
@@ -80,6 +83,7 @@ public class DBManager {
 
     /**
      * Insert data into the TABLE_NAME_BORQS table, It is a main table to store device data, stores by by taking value from list
+     *
      * @param deviceData
      * @param email
      */
@@ -108,6 +112,7 @@ public class DBManager {
 
     /**
      * Inserts Login data into the login(TABLE_USER_LOGIN) table
+     *
      * @param data
      * @return
      */
@@ -124,6 +129,7 @@ public class DBManager {
 
     /**
      * Returns all data from TABLE_NAME_BORQS table in the form of list
+     *
      * @param email
      * @return all the data available inside the table TABLE_NAME_BORQS
      */
@@ -163,6 +169,7 @@ public class DBManager {
 
     /**
      * Returns all Borqs data in the form of list from the table TABLE_NAME_BORQS
+     *
      * @param email
      * @return all the data available inside the table TABLE_NAME_BORQS
      */
@@ -201,6 +208,7 @@ public class DBManager {
 
     /**
      * Update lat and long in to the TABLE_NAME_BORQS table
+     *
      * @param deviceId
      * @param mData
      */
@@ -223,6 +231,7 @@ public class DBManager {
 
     /**
      * Update consent in TABLE_NAME_BORQS table
+     *
      * @param phoneNumber
      * @param message
      */
@@ -235,6 +244,7 @@ public class DBManager {
 
     /**
      * Update Pending Consent in TABLE_NAME_BORQS table
+     *
      * @param phoneNumber
      */
     public void updatependingConsent(String phoneNumber) {
@@ -246,6 +256,7 @@ public class DBManager {
 
     /**
      * Update device type and device name in TABLE_NAME_BORQS table
+     *
      * @param deviceType
      * @param groupName
      * @param imeiNumber
@@ -264,6 +275,7 @@ public class DBManager {
 
     /**
      * Update Group name and is group member in TABLE_NAME_BORQS table
+     *
      * @param isGroupMember
      * @param imeiNumber
      * @param groupName
@@ -296,6 +308,7 @@ public class DBManager {
 
     /**
      * Delete the selected data from the table TABLE_NAME_BORQS
+     *
      * @param phoneNumber
      */
     public void deleteSelectedData(String phoneNumber) {
@@ -305,6 +318,7 @@ public class DBManager {
 
     /**
      * Returns User name from the table TABLE_USER_LOGIN
+     *
      * @return user name
      */
     public String getAdminDetail() {
@@ -323,6 +337,7 @@ public class DBManager {
 
     /**
      * Returns user Login detail
+     *
      * @return user Login data
      */
     public AdminLoginData getAdminLoginDetail() {
@@ -346,6 +361,7 @@ public class DBManager {
 
     /**
      * Returns user phone number
+     *
      * @return User phone number
      */
     public String getAdminphoneNumber() {
@@ -364,6 +380,7 @@ public class DBManager {
 
     /**
      * Returns consent status for the particular device
+     *
      * @param phoneNumber
      * @return
      */
@@ -383,6 +400,7 @@ public class DBManager {
 
     /**
      * Update Consent time and approval time for the particular device in the table TABLE_NAME_BORQS
+     *
      * @param phoneNumber
      * @param consentTime
      * @param approvalTime
@@ -397,6 +415,7 @@ public class DBManager {
 
     /**
      * Returns the Consent time for the device
+     *
      * @return Consent time in the form of AddedDeviceData object
      */
     public List<AddedDeviceData> getConsentTime() {
@@ -421,6 +440,7 @@ public class DBManager {
 
     /**
      * Update consent time and Status in the table TABLE_NAME_BORQS
+     *
      * @param mList
      */
     public void updateConsentTimeandStatus(List<ConsentTimeupdateData> mList) {
@@ -436,6 +456,7 @@ public class DBManager {
 
     /**
      * Returns Group data from the table TABLE_NAME_DEVICE
+     *
      * @param groupName
      * @return
      */
@@ -462,6 +483,7 @@ public class DBManager {
 
     /**
      * Returns lat and long for the particular Group name
+     *
      * @param groupName
      * @return
      */
@@ -486,5 +508,81 @@ public class DBManager {
             }
         }
         return mlist;
+    }
+
+    /**
+     * Insert into the Group Table
+     */
+    public long insertIntoGroupTable(CreateGroupResponse createGroupResponse) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.GROUPID, createGroupResponse.getData().getId());
+        contentValue.put(DatabaseHelper.GROUP_NAME, createGroupResponse.getData().getName());
+        contentValue.put(DatabaseHelper.STATUS, createGroupResponse.getData().getStatus());
+        return mDatabase.insert(DatabaseHelper.TABLE_GROUP, null, contentValue);
+    }
+
+    /**
+     * insert into the Group table after fetching data through GetGroupInfoPerUserRequest API call
+     */
+    public void insertAllDataIntoGroupTable(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
+            if (data.getStatus().equalsIgnoreCase("active")) {
+                contentValue.put(DatabaseHelper.GROUPID, data.getId());
+                contentValue.put(DatabaseHelper.GROUP_NAME, data.getName());
+                contentValue.put(DatabaseHelper.STATUS, data.getStatus());
+                mDatabase.replace(DatabaseHelper.TABLE_GROUP, null, contentValue);
+            }
+        }
+    }
+
+
+    /**
+     * Returns Group Data
+     */
+    public List<HomeActivityListData> getAllGroupDetail() {
+        List<HomeActivityListData> mlist = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String[] column = {DatabaseHelper.GROUPID, DatabaseHelper.GROUP_NAME, DatabaseHelper.STATUS};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP, column, null, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                HomeActivityListData data = new HomeActivityListData();
+                if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)) != null && cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)).equalsIgnoreCase("active")) {
+                    data.setGroupName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_NAME)));
+                    data.setGroupId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUPID)));
+                    data.setStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)));
+                    mlist.add(data);
+                }
+            }
+        }
+        cursor.close();
+        return mlist;
+    }
+
+
+    /**
+     * Update Group Name in Database
+     * @param priviousName
+     * @param newName
+     * @param groupId
+     */
+    public void updateGroupName(String priviousName, String newName, String groupId) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        if (!priviousName.equals(newName)) {
+            values.put(DatabaseHelper.GROUP_NAME, newName);
+        }
+        mDatabase.update(DatabaseHelper.TABLE_GROUP, values, DatabaseHelper.GROUPID + "= '" + groupId + "';", null);
+    }
+
+    /**
+     * Delete the Selected data from Database
+     */
+    public void deleteSelectedDataFromGroup(String groupId) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        mDatabase.delete(DatabaseHelper.TABLE_GROUP, DatabaseHelper.GROUPID + "= '" + groupId + "';", null);
     }
 }

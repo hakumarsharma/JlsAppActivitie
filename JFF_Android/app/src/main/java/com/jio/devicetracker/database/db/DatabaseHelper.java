@@ -37,6 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME_FMS = "FmsDevicedata";
     public static final String TABLE_NAME_USER = "UserData";
     public static final String TABLE_USER_LOGIN = "UserloginData";
+    public static final String TABLE_GROUP = "GroupData";
 
     //Table Columns
     public static final String IMEI_NUM = "imei";
@@ -60,7 +61,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String IS_GROUP_MEMBER = "isGroupMember";
     public static final String IS_CREATED = "isCreated";
     public static final String DEVICE_ID = "deviceId";
-
+    public static final String GROUPID = "groupId";
+    public static final String STATUS = "status";
 
     //DB Information
     public static final String DB_NAME = "AddDevice.db";
@@ -81,6 +83,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_USER_LOGIN = "create table " + TABLE_USER_LOGIN + "("+ USER_TOKEN + " TEXT, " + TOKEN_EXPIRY_TIME + " TEXT, " + USER_NAME + " TEXT," + USER_ID + " TEXT, " + EMAIL + " TEXT, "+ "PRIMARY KEY" +"(" + USER_ID+"))";
 
+    private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + STATUS + " TEXT, "+ "PRIMARY KEY" + "(" + GROUPID +"))";
+
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -97,6 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FMS);
         db.execSQL(CREATE_TABLE_USER);
         db.execSQL(CREATE_TABLE_USER_LOGIN);
+        db.execSQL(CREATE_TABLE_GROUP);
     }
 
     /**
@@ -110,6 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_FMS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LOGIN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP);
         onCreate(db);
     }
 }

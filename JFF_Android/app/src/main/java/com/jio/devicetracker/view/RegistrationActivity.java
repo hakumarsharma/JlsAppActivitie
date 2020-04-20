@@ -212,12 +212,10 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     private class ErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-
             if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
                 Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, RegistrationActivity.this);
             } else {
                 Util.alertDilogBox(Constant.REGISTRAION_FAILED, Constant.ALERT_TITLE, RegistrationActivity.this);
-
             }
         }
     }

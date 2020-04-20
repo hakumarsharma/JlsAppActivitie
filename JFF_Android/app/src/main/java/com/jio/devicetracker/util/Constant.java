@@ -29,10 +29,6 @@ package com.jio.devicetracker.util;
 @SuppressWarnings("PMD.ClassNamingConventions")
 public class Constant {
 
-    public static String REG_ID = "n7zz1h465305";
-    public static String REG_KEY = "089640418g7f";
-    public static String REG_SVC = "1329142c2120";
-    public static String App_Name = "EDC";
     public static String AES_SECRET_KEY = "PBKDF2WithHmacSHA512";
     public static String CIPHER_KEY = "AES/CBC/PKCS5Padding";
 
@@ -75,11 +71,11 @@ public class Constant {
     public static final String JIO_NUMBER = "Please use Jio number";
     public static final String SIM_VALIDATION = "Jio number should be in SIM slot 1";
     public static final String NUMBER_VALIDATION = "Entered phone number should be in SIM slot 1";
-    public static final String DEVICE_JIONUMBER = "Enter the valid jio number present in device";
+    public static final String DEVICE_JIONUMBER = "Please use Jio number in SIM slot 1 to operate this application";
     public static final String REGISTRAION_ALERT_409 = "User is already registered";
     public static final String REGISTRAION_FAILED = "Register failed ,Please contact your admin";
     public static final String LOCATION_NOT_FOUND = "Location not found";
-
+    public static final String TOKEN_SMS = "Hi, please use the token : ";
 
     // Dashboard Activity constants
     public static final String DASHBOARD_TITLE = "Home               ";
@@ -90,6 +86,10 @@ public class Constant {
     public static final String FMS_SERVERISSUE = "FMS server is down please call back after some time";
     public static final String TOKEN_NULL = "Token is null";
     public static final String LOADING_DATA = "Please wait loading data...";
+    public static final String GROUP_CREATION_FAILURE = "You have exceeded maximum allowed active groups, Please delete one of the group members to add any other group.";
+    public static final String GROUP_UPDATION_FAILURE = "Group name updation failed";
+    public static final String NO_GROUP_FOUND = "No Group found, Please try again.";
+    public static final String GROUP_DELETION_FAILURE = "Group Deletion failed";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
@@ -106,8 +106,6 @@ public class Constant {
     public static final String ADMIN_EMAIL_ID = "Shivakumar.jagalur@ril.com";
     public static final String ADMIN_PASSWORD = "Ril@12345";
     public static final String BORQS_TOKEN_ACTIVITY_TITLE = "Token Verification";
-
-
 
     // New Device Activity Constants
     public static final String ADD_DEVICE_TITLE = "Add";
@@ -159,9 +157,16 @@ public class Constant {
     public static final String GET_DEVICE_LOCATION_URL_2 = "?tsp=1585031229387&ugs_token=";
     public static final String REGISTRATION_URL_VERIFY = "/accounts/api/users/tokens/verify";
     public static final String GENERATE_TOKEN_REQUEST_URL = "/accounts/api/users/tokens";
+    public static final String CREATE_GROUP_URL1 = "/accounts/api/users/";
+    public static final String CREATE_GROUP_URL2 = "/sessiongroups";
+    public static final String GET_ALL_GROUP_INFO_URL1 = "/accounts/api/users/";
+    public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true";
+    public static final String UPDATE_GROUP_NAME_URL1 = "/accounts/api/users/";
+    public static final String UPDATE_GROUP_NAME_URL2 = "/sessiongroups/";
+    public static final String DELETE_GROUP_URL1 = "/accounts/api/users/";
+    public static final String DELETE_GROUP_URL2 = "/sessiongroups/";
 
     //Privacy Policy
-
     public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
     public static final String TERM_AND_CONDITION_STATUS_MSG = "Please accept terms and conditions and login then again click on the link which is given in message";
     public static final String NOT_REGISTERED_MSG = "User is not registered";
@@ -200,12 +205,13 @@ public class Constant {
     public static final String CONSENT_NOT_SENT = "Consent not sent";
     public static final String BORQS_OTP_TITLE = "OTP Verification";
     public static final String EMPTY_OTP = "Please enter the otp";
-    public static final String TOKEN_VERIFIED = "Token successfully verified.";
-    public static final String TOKEN_VERIFICATION_FAILED = "Verification failed!";
+    public static final String TOKEN_VERIFIED_SUCCESS = "Token successfully verified.";
+    public static final String TOKEN_VERIFICATION_FAILED = "Token verification failed!";
     public static final String REGISTARTION_SUCCESS_MESSAGE = "User registration is successful.";
     public static final String REGISTARTION_FAILED_MESSAGE = "Registration is failed";
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";
+    public static final String GROUP_ID = "groupId";
     public static final String ACTIVE_SESSION_TITLE = "Active Sessions";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";

@@ -32,7 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.pojo.GroupmemberListData;
+import com.jio.devicetracker.database.pojo.GroupMemberListData;
 
 
 import java.util.List;
@@ -41,9 +41,9 @@ import java.util.List;
  * Display the group member inside the list
  */
 public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberListAdapter.ViewHolder> {
-    private List<GroupmemberListData> mList;
+    private List<GroupMemberListData> mList;
 
-    public GroupMemberListAdapter(List<GroupmemberListData> mList) {
+    public GroupMemberListAdapter(List<GroupMemberListData> mList) {
         this.mList = mList;
     }
 

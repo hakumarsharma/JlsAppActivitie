@@ -58,12 +58,15 @@ import com.jio.devicetracker.database.pojo.SearchDevice;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
 import com.jio.devicetracker.database.pojo.request.GetDeviceLocationRequest;
+import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceRequest;
 import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
 import com.jio.devicetracker.database.pojo.response.GetDeviceLocationResponse;
+import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceResponse;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
@@ -89,9 +92,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static LogindetailResponse logindetailResponse = null;
     public static SearchDeviceResponse searchdeviceResponse = null;
     private static final int PERMIT_ALL = 1;
-    private String name;
     private String mbNumber;
-    private String imei;
     private String number;
     public static String userName;
     private DBManager mDbManager;
@@ -102,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Locale locale = Locale.ENGLISH;
     public static GetDeviceLocationResponse getDeviceLocationResponse = null;
     private TextView registerHereTextView;
-
+    public static String ugsToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,22 +120,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.LOGIN_TITLE);
         loginButton = findViewById(R.id.login);
+        loginButton.setOnClickListener(this);
         jioUserNameEditText = findViewById(R.id.userName);
         jioMobileNumberEditText = findViewById(R.id.jioNumber);
+        jioMobileNumberEditText.setEnabled(false);
         jioMobileNumberEditText.setOnClickListener(this);
         adminData = new AdminLoginData();
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
         loginOtpEditText = findViewById(R.id.loginOtp);
-        loginButton.setOnClickListener(this);
         registerHereTextView = findViewById(R.id.registedHere);
         registerHereTextView.setOnClickListener(this);
         MessageListener messageListener = new LoginActivity();
         MessageReceiver.bindListener(messageListener);
-        loginButton.setOnClickListener(v -> {
-            onLoginButtonClick();
-        });
         checkTermandCondition(termConditionsFlag);
+        checkJioSIMSlot1();
     }
 
     /**
@@ -189,7 +189,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     /**
      * Gets called when you click on login button
-     *
      * @param v
      */
     @Override
@@ -197,8 +196,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (v.getId() == R.id.login) {
             validateNumber();
         } else if(v.getId() == R.id.registedHere) {
-            checkJioSIMSlot1();
-            generateTokenGotoRegistrationActivity();
+            checkJioSIMSlot1GotoRegistrationActivity();
         }
     }
 
@@ -206,20 +204,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * Validate mobile number
      */
     private void validateNumber() {
-        if ("".equals(jioMobileNumberEditText.getText().toString())) {
-            jioMobileNumberEditText.setError(Constant.PHONE_VALIDATION);
-            return;
-        } else if("".equals(jioUserNameEditText.getText().toString())) {
+        if("".equals(jioUserNameEditText.getText().toString())) {
             jioUserNameEditText.setError(Constant.NAME_EMPTY);
             return;
-        } else if("".equals(loginOtpEditText.getText().toString())) {
+        }
+        if("".equals(loginOtpEditText.getText().toString())) {
             loginOtpEditText.setError(Constant.EMPTY_OTP);
+            return;
         }
         else {
             getssoToken();
         }
     }
 
+    /**
+     * Check network is there in phone or not
+     */
     private void getssoToken() {
         boolean isAvailable = Util.isMobileNetworkAvailable(this);
         if (isAvailable) {
@@ -237,10 +237,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (subscriptionInfos != null) {
             String carierName = subscriptionInfos.get(0).getCarrierName().toString();
             String number = subscriptionInfos.get(0).getNumber();
-
-            if (number != null
-                    && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
-                if (!carierName.contains(Constant.JIO)) {
+            if (number != null && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
+                if(carierName.toLowerCase(locale).contains(Constant.JIO)) {
+                    onLoginButtonClick();
+                } else if (!carierName.contains(Constant.JIO)) {
                     Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
                 }
             } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber() != null) {
@@ -255,6 +255,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * Called when new register textview is clicked, number should be Jio number
+     */
+    private void checkJioSIMSlot1GotoRegistrationActivity() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
+        if (subscriptionInfos != null) {
+            String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
+            if (!carrierNameSlot1.toLowerCase(locale).contains(Constant.JIO)) {
+                Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
+            } else if(carrierNameSlot1.toLowerCase(locale).contains(Constant.JIO)) {
+                generateTokenGotoRegistrationActivity();
+            }
+        }
+    }
 
     /**
      * Checks the Jio SIM in slot 1 automatically
@@ -314,6 +334,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onErrorResponse(VolleyError error) {
             if(error.networkResponse.statusCode == 409) {
+                Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, LoginActivity.this);
                 jioMobileNumberEditText.setError(Constant.REGISTRAION_ALERT_409);
                 return;
             }
@@ -337,41 +358,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * Called when you click on Login button
      */
     private void onLoginButtonClick() {
-       /* String compareOtp = String.valueOf(otpGeneratedValue);
-        if (!loginOtpEditText.getText().toString().equals(compareOtp)) {
-            loginOtpEditText.setError(Constant.INVALID_OTP);
-            return;
-        }
-        if (jioUserNameEditText.length() == 0) {
-            jioUserNameEditText.setError(Constant.NAME_VALIDATION);
-            return;
-        }*/
-//        userName = jioUserNameEditText.getText().toString();
-//        String jioEmailIdText = jioEmailEditText.getText().toString().trim();
-//        String jioPasswordText = jioPasswordEditText.getText().toString().trim();
-
-//        if (jioUserNameEditText.length() == 0) {
-//            jioUserNameEditText.setError(Constant.NAME_VALIDATION);
-//        }
-
-//        if (jioEmailEditText.length() == 0) {
-//            jioEmailEditText.setError(Constant.EMAILID_VALIDATION);
-//            return;
-//        }
-//        if (jioPasswordText.length() == 0) {
-//            jioPasswordEditText.setError(Constant.PASSWORD_VALIDATION);
-//            return;
-//        }
-
-//        if (jioEmailEditText.length() != 0) {
-//            if (Util.isValidEmailId(jioEmailIdText)) {
+        Util.getInstance().showProgressBarDialog(this);
         makeMQTTConnection();
+        userName = jioUserNameEditText.getText().toString();
         Userdata data = new Userdata();
-        data.setEmailId(Constant.ADMIN_EMAIL_ID);
-        data.setPassword(Constant.ADMIN_PASSWORD);
+//        data.setToken(loginOtpEditText.getText().toString());
+        data.setPassword("Borqs@1234");
+        data.setPhone(number.substring(2));
+        data.setPhoneCountryCode(number.substring(0, 2));
         data.setType(Constant.SUPERVISOR);
         RequestHandler.getInstance(getApplicationContext()).handleRequest(new LoginDataRequest(new SuccessListener(), new ErrorListener(), data));
-        Util.getInstance().showProgressBarDialog(this);
     }
 
     /**
@@ -381,14 +377,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onResponse(Object response) {
             logindetailResponse = Util.getInstance().getPojoObject(String.valueOf(response), LogindetailResponse.class);
+            String userId = logindetailResponse.getUser().getId();
+            ugsToken = logindetailResponse.getUgsToken();
             if (logindetailResponse.getUgsToken() != null) {
                 new DBManager(LoginActivity.this).insertLoginData(logindetailResponse);
             }
-            SearchDevice data = new SearchDevice();
-            List<String> userAssignedList = new ArrayList<>();
-            userAssignedList.add(logindetailResponse.getUser().getId());
-            data.setUsersAssigned(userAssignedList);
-            RequestHandler.getInstance(getApplicationContext()).handleRequest(new SearchDeviceRequest(new SuccessListenerSearchDevice(), new ErrorListenerSearchDevice(), logindetailResponse.getUgsToken(), data));
+            // Get All Group info per user API Call
+            GroupRequestHandler.getInstance(LoginActivity.this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
         }
     }
 
@@ -408,6 +403,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Util.progressDialog.dismiss();
         }
     }
+
+    /**
+     * GetGroupInfoPerUserRequest Success listener
+     */
+    private class GetGroupInfoPerUserRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
+            mDbManager.insertAllDataIntoGroupTable(getGroupInfoPerUserResponse);
+            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+        }
+    }
+
+    /**
+     * GetGroupInfoPerUserRequest Error listener
+     */
+    private class GetGroupInfoPerUserRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if(error.networkResponse.statusCode == 409) {
+                Util.alertDilogBox(Constant.GROUP_LIMITATION, Constant.ALERT_TITLE, LoginActivity.this);
+            }
+        }
+    }
+
 
     /**
      * Checks the DeepLinking URI which tracker receives from tracee
