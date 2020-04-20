@@ -94,7 +94,7 @@ class SideMenuScreen: UITableViewController {
                 case 5:
                 self.navigateToHelpScreen()
                 case 6:
-                dismiss(animated: true, completion: nil)
+                self.navigateToLoginScreen()
             default:
                 dismiss(animated: true, completion: nil)
             }
@@ -128,7 +128,7 @@ class SideMenuScreen: UITableViewController {
     
     func navigateToHelpScreen() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let helpViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.HelpPrivacy) as! HelpScreen
+        let helpViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.HelpPrivacy) as! HelpPrivacyScreen
         self.navigationController?.pushViewController(helpViewController, animated: true)
     }
     
@@ -137,6 +137,12 @@ class SideMenuScreen: UITableViewController {
         let aboutViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.About) as! AboutScreen
         self.navigationController?.pushViewController(aboutViewController, animated: true)
     }
+    
+    func navigateToLoginScreen() {
+           let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+           let loginViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.LoginScreen) as! LoginScreen
+           self.navigationController?.pushViewController(loginViewController, animated: true)
+       }
     
 }
 

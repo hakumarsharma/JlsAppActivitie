@@ -26,5 +26,9 @@
 import UIKit
 
 class HelpPrivacyScreen: UIViewController {
-    
+    override func viewDidLoad() {
+                      super.viewDidLoad()
+                      self.title = "Help & Privacy"
+                     
+                  }
 }

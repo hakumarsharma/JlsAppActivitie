@@ -1,5 +1,5 @@
 //
-//  LoginModel.swift
+//  GroupModel.swift
 //  PeopleTracker
 //
 /*************************************************************
@@ -22,41 +22,36 @@
 * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
 **************************************************************/
 
-
 import Foundation
-
-public struct LoginModel : Codable {
+public struct GroupModel : Codable {
     
-    let ugsToken        : String
-    let ugsTokenexpiry  : Double
-    let user            : User?
+    let code      : Int
+    let message   : String
+    let groupData : GroupData
     
     private enum CodingKeys : String, CodingKey {
-        case ugsToken = "ugs_token", ugsTokenexpiry = "ugs_token_expiry",user
+        case code,message,groupData = "data"
     }
     
 }
-
-struct User : Codable {
+struct GroupData : Codable{
     
-    let userId        : String
-    let email         : String?
-    let usertype      : String
-    let name          : String
-    let phone         : String
-    let wearableUsers : [WearableUsers]?
+    let  status     : String?
+    let  groupId    : String
+    let  name       : String?
+    let  session    : Session
     
     private enum CodingKeys : String, CodingKey {
-        case userId = "_id", email, usertype = "type", name, phone,wearableUsers
+        case status,groupId = "_id",name,session
     }
 }
-struct WearableUsers : Codable {
+
+struct Session : Codable{
     
-    let wearableDeviceId : String
-    let deviceId         : String
+    let  from  : Int64
+    let  to    : Int64
     
-    private enum CodingKeys: String, CodingKey {
-        case wearableDeviceId = "_id", deviceId = "deviceId"
+    private enum CodingKeys : String, CodingKey {
+        case from,to
     }
-    
 }

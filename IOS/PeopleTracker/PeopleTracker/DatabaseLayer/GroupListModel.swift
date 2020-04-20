@@ -1,5 +1,5 @@
 //
-//  LoginModel.swift
+//  GroupListModel.swift
 //  PeopleTracker
 //
 /*************************************************************
@@ -22,41 +22,49 @@
 * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
 **************************************************************/
 
-
 import Foundation
 
-public struct LoginModel : Codable {
+public struct GroupListModel : Codable {
     
-    let ugsToken        : String
-    let ugsTokenexpiry  : Double
-    let user            : User?
+    let code          : Int
+    let message       : String
+    let groupListData : [GroupListData]
     
     private enum CodingKeys : String, CodingKey {
-        case ugsToken = "ugs_token", ugsTokenexpiry = "ugs_token_expiry",user
+        case code,message,groupListData = "data"
     }
-    
 }
 
-struct User : Codable {
+public struct GroupListData : Codable {
     
-    let userId        : String
-    let email         : String?
-    let usertype      : String
-    let name          : String
-    let phone         : String
-    let wearableUsers : [WearableUsers]?
+    let  status          : String
+    let  groupId         : String
+    let  name            : String
+    let  groupSession    : GroupSession
+    let  groupMember     : [GroupMember]
     
     private enum CodingKeys : String, CodingKey {
-        case userId = "_id", email, usertype = "type", name, phone,wearableUsers
+           case status,groupId = "_id",name,groupSession = "session",groupMember = "consents"
+        }
+}
+
+public struct GroupSession : Codable{
+    
+    let  from  : Int64
+    let  to    : Int64
+    
+    private enum CodingKeys : String, CodingKey {
+        case from,to
     }
 }
-struct WearableUsers : Codable {
+
+public struct GroupMember : Codable{
     
-    let wearableDeviceId : String
-    let deviceId         : String
+    let  memberStatus       : String
+    let  memberPhone        : String
+    let  isGroupAdmin       : Bool
     
-    private enum CodingKeys: String, CodingKey {
-        case wearableDeviceId = "_id", deviceId = "deviceId"
+    private enum CodingKeys : String, CodingKey {
+        case memberStatus="status",memberPhone="phone",isGroupAdmin
     }
-    
 }

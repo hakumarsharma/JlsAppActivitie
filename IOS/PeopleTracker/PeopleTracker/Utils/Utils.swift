@@ -10,13 +10,19 @@ import UIKit
 
 class Utils {
     static let shared = Utils()
+    
+    enum GroupStatus : String {
+        case isActive = "active"
+        case isClosed = "closed"
+    }
+    
     func handleError(error : NetworkManager.ErrorType) -> String {
         if error == NetworkManager.ErrorType.Unauthorized {
             return Constants.ErrorMessage.Unauthorized
         } else if error == NetworkManager.ErrorType.SomethingWentWrong {
             return Constants.ErrorMessage.Somethingwentwrong
-        } else if error == NetworkManager.ErrorType.DeviceAlreadyAssigned {
-            return Constants.ErrorMessage.DeviceCanotBeAssigned
+        } else if error == NetworkManager.ErrorType.ExceededGroupLimit {
+            return Constants.ErrorMessage.ExceededGroupLimit
         }else {
             return Constants.ErrorMessage.Somethingwentwrong
         }
