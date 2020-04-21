@@ -157,11 +157,11 @@
             android:id="@+id/login_btn_send_otp"
             android:layout_width="@dimen/adddevice_button_width"
             android:layout_height="@dimen/adddevice_button_height"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/adddevice_button_margin_bottom"
+            android:layout_marginTop="@dimen/thirteen_dp"
             android:background="@drawable/button_frame_blue"
             android:text="@string/login_send_otp"
             android:layout_centerHorizontal="true"
+            android:layout_above="@+id/email_login_option"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/adddevice_content_font_size" />
@@ -177,6 +177,18 @@
         </CheckBox>
 
 
+        <TextView
+            android:id="@+id/email_login_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/sixteen_dp"
+            android:layout_marginBottom="@dimen/permissions_padding_left"
+            android:text="@string/change_rmn"
+            android:textColor="@color/change_rmn_text_color"
+            android:textSize="@dimen/fourteen_dp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 </RelativeLayout>

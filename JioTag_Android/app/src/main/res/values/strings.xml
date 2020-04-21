@@ -25,6 +25,7 @@
     <string name="introduction_text">"\n+Press Scan to see Devices List\n+Use Connect to pair to devices\n+Alarm Icon Alerts paired device\n+Location:Shows current location\n+Camera Icon:Launches Camera"</string>
     <string name="alarm">Alarm</string>
     <string name="device_status">Disconnected</string>
+    <string name="login_subtext">Please tell us more\n about yourself</string>
     <string name="device_distance">Device Distance</string>
     <string name="helptext">1.Launch the App\n2.Press Scan\n 3.ON Listed devices Press Connect\n 4.Press Alarm to Ring the device.\n 5.Press Location to see Location Data.\n 6.Press Camera Icon to launch Camera </string>
     <string name="action_clear_devices">Clear Devices</string>
@@ -113,10 +114,11 @@
     <string name="devicealert_alert_on_reconnection">Alert on Reconnection</string>
     <string name="devicealert_alert_on_reconnection_details">Phone will send an alert and notification message when device reconnect to your phone.</string>
     <string name="login_text">Login</string>
-    <string name="login_enter_number">Please enter your Jio\n mobile number</string>
+    <string name="login_enter_number">Please enter your\n mobile number</string>
     <string name="login_registered_number">Registered mobile number</string>
     <string name="login_privacy">I have read and accept the <b>Terms and Conditions &amp; Privacy Policy.</b></string>
     <string name="login_send_otp">Send OTP</string>
+    <string name="login_next">Next</string>
     <string name="login_btn_otp">Login</string>
     <string name="login_otp_text">Please wait while we automatically retrieve the 6-digit verification code.\nYou can always enter it manually.</string>
     <string name="login_btn_enter_otp">Enter OTP</string>
@@ -125,6 +127,15 @@
     <string name="login_sms_otp_header_text">OTP</string>
     <string name="login_sms_otp_10digit">Enter 10 digit Mobile number</string>
     <string name="login_resend_otp">Resend OTP</string>
+    <string name="email_id">Email-id</string>
+    <string name="or">OR</string>
+    <string name="change_rmn">Change Registered mobile no.</string>
+    <string name="password">Password</string>
+    <string name="email_id_hint"><i>Email-Id*</i></string>
+    <string name="password_hint"><i>Password*</i></string>
+    <string name="fb_login">Login with Facebook</string>
+    <string name="google_login">Login with Google</string>
+
 
     <string name="carddetail_phone_alerts">Phone Alerts</string>
     <string name="carddetail_device_alerts">Device Alerts</string>

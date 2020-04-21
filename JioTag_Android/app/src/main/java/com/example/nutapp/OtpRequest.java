@@ -140,6 +140,7 @@ public class OtpRequest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.otp_view);
 
+        TextView changeRmn = findViewById(R.id.email_login_option);
         final CheckBox login_check = (CheckBox) findViewById(R.id.login_check_box);
         login_check.setButtonDrawable(R.drawable.uncheckbox);
         login_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -208,6 +209,14 @@ public class OtpRequest extends AppCompatActivity {
         });
         //////////////////
         checkLocationPermission();
+
+        changeRmn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent emailOption = new Intent(getApplicationContext(), AuthLoginActivity.class);
+                startActivity(emailOption);
+            }
+        });
     }
 
 
