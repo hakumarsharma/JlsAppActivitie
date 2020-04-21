@@ -52,7 +52,7 @@ public class DeleteGroupRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return Constant.DELETE_GROUP_URL1 + userId + Constant.DELETE_GROUP_URL2 + groupId;
+        return Constant.ACCOUNTS_API_USER_URL + userId + Constant.SESSION_GROUPS_URL + groupId;
     }
 
     @Override

@@ -51,7 +51,7 @@ public class GetGroupInfoPerUserRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return Constant.GET_ALL_GROUP_INFO_URL1 + userId + Constant.GET_ALL_GROUP_INFO_URL2;
+        return Constant.ACCOUNTS_API_USER_URL + userId + Constant.GET_ALL_GROUP_INFO_URL2;
     }
 
     @Override

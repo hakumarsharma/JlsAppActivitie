@@ -84,6 +84,17 @@ public class LogindetailResponse implements Serializable {
         @SerializedName("name")
         private String name;
 
+        @SerializedName("phoneCountryCode")
+        private String phoneCountryCode;
+
+        public String getPhoneCountryCode() {
+            return phoneCountryCode;
+        }
+
+        public void setPhoneCountryCode(String phoneCountryCode) {
+            this.phoneCountryCode = phoneCountryCode;
+        }
+
         public String getName() {
             return name;
         }

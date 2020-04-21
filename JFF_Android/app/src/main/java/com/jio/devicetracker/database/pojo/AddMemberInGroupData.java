@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -22,44 +20,37 @@
 
 package com.jio.devicetracker.database.pojo;
 
-/**
- * To add a Group Member in a particular group
- */
-public class GroupMemberDataList {
-    private String name;
-    private String number;
-    private String consentStatus;
-    private int profileImage;
+import java.util.List;
 
-    public int getProfileImage() {
-        return profileImage;
+public class AddMemberInGroupData {
+    private List<Consents> consents;
+
+    public List<Consents> getConsents() {
+        return consents;
     }
 
-    public void setProfileImage(int profileImage) {
-        this.profileImage = profileImage;
+    public void setConsents(List<Consents> consents) {
+        this.consents = consents;
     }
 
-    public String getName() {
-        return name;
-    }
+    public class Consents {
+        private String phone;
+        private List<String> entities;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        public String getPhone() {
+            return phone;
+        }
 
-    public String getNumber() {
-        return number;
-    }
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
+        public List<String> getEntities() {
+            return entities;
+        }
 
-    public String getConsentStatus() {
-        return consentStatus;
-    }
-
-    public void setConsentStatus(String consentStatus) {
-        this.consentStatus = consentStatus;
+        public void setEntities(List<String> entities) {
+            this.entities = entities;
+        }
     }
 }

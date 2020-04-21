@@ -50,9 +50,9 @@ import java.util.List;
 public class GroupListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView mRecyclerList;
-    public static String mGroupName;
     private DBManager mDbmanager;
-
+    private String groupId;
+    private String userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,11 +67,12 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         createGroupButtonOnToolbar.setOnClickListener(this);
         toolbarTitle.setText(Constant.GROUP_TITLE);
         mRecyclerList = findViewById(R.id.groupList);
-        //mGroupName = new Intent().getStringExtra("GroupName");
+        Intent intent = getIntent();
+        groupId = intent.getStringExtra("groupId");
+        userId = intent.getStringExtra("userId");
         FloatingActionButton groupMembersListFloatButton = findViewById(R.id.groupMembersListFloatButton);
         groupMembersListFloatButton.setOnClickListener(this);
         addDataInList();
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
     }
@@ -81,16 +82,15 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
      */
     private void addDataInList() {
         List<GroupMemberDataList> mList = new ArrayList<>();
-        List<HomeActivityListData> listData = mDbmanager.getAllBorqsData(Util.adminEmail);
-        for (HomeActivityListData homeActivityListData : listData) {
-            if (homeActivityListData.getGroupName() != null && homeActivityListData.getGroupName().equalsIgnoreCase(DashboardActivity.groupName) && homeActivityListData.getName() != null) {
-                GroupMemberDataList data = new GroupMemberDataList();
-                data.setName(homeActivityListData.getName());
-                data.setNumber(homeActivityListData.getPhoneNumber());
-                data.setProfileImage(R.drawable.ic_tracee_list);
-                data.setGroupName(homeActivityListData.getGroupName());
-                mList.add(data);
-            }
+        List<GroupMemberDataList> listData = mDbmanager.getAllGroupMemberData(groupId);
+        for (GroupMemberDataList groupMemberDataList : listData) {
+            GroupMemberDataList data = new GroupMemberDataList();
+            data.setName(groupMemberDataList.getName());
+            data.setNumber(groupMemberDataList.getNumber().substring(2));
+            data.setProfileImage(R.drawable.ic_tracee_list);
+            data.setConsentStatus(groupMemberDataList.getConsentStatus());
+            mList.add(data);
+
         }
         GroupMemberListAdapter mAdapter = new GroupMemberListAdapter(mList);
         mRecyclerList.setAdapter(mAdapter);
@@ -99,11 +99,20 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.groupMembersListFloatButton) {
-            DashboardActivity.isComingFromGroupList = true;
-            startActivity(new Intent(this, ContactDetailsActivity.class));
+            gotoContactDetailsActivity();
         } else if (v.getId() == R.id.createGroupButtonOnToolbar) {
             Util.alertDilogBox("Coming Soon...", "Alert", this);
         }
+    }
+
+    /**
+     * Goto Contact Details Activity
+     */
+    private void gotoContactDetailsActivity() {
+        Intent intent = new Intent(this, ContactDetailsActivity.class);
+        intent.putExtra("groupId", groupId);
+        intent.putExtra("userId", userId);
+        startActivity(intent);
     }
 
     @Override

@@ -191,9 +191,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 @Override
-                public void clickonListLayout(String selectedGroupName) {
+                public void clickonListLayout(String selectedGroupName, String groupId) {
                     groupName = selectedGroupName;
-                    startActivity(new Intent(DashboardActivity.this, GroupListActivity.class));
+                    goToGroupListActivity(groupId, userId);
                 }
 
                 @Override
@@ -232,6 +232,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
             });
         }
+    }
+
+    /**
+     * Goto Group List Activity
+     */
+    private void goToGroupListActivity(String groupId, String userId) {
+        Intent intent = new Intent(this, GroupListActivity.class);
+        intent.putExtra("groupId", groupId);
+        intent.putExtra("userId", userId);
+        startActivity(intent);
     }
 
     /**
@@ -372,6 +382,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Delete the Group and update the database
      */
     private void makeDeleteGroupAPICall(String groupId) {
+        Util.getInstance().showProgressBarDialog(this);
         GroupRequestHandler.getInstance(this).handleRequest(new DeleteGroupRequest(new DeleteGroupRequestSuccessListener(), new DeleteGroupRequestErrorListener(), groupId, userId));
     }
 
@@ -381,6 +392,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private class DeleteGroupRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
             mDbManager.deleteSelectedDataFromGroup(grpId);
             adapter.removeItem(listPosition);
             addDataInHomeScreen();
@@ -394,7 +406,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private class DeleteGroupRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-                Util.alertDilogBox(Constant.GROUP_DELETION_FAILURE, Constant.ALERT_TITLE, DashboardActivity.this);
+            Util.progressDialog.dismiss();
+            Util.alertDilogBox(Constant.GROUP_DELETION_FAILURE, Constant.ALERT_TITLE, DashboardActivity.this);
         }
     }
 

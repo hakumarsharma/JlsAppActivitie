@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
         <activity android:name=".view.GroupNameActivity" />
-        <activity android:name=".view.TrackerListActivity"></activity>
+        <activity android:name=".view.TrackerListActivity" />
         <activity android:name=".view.RefreshIntervalSettingActivity" />
 
         <service
@@ -46,7 +46,7 @@
                 <data
                     android:host="peopletracker"
                     android:pathPrefix="/home"
-                    android:scheme="https"/>
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <!--

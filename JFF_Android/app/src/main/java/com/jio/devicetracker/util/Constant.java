@@ -157,14 +157,10 @@ public class Constant {
     public static final String GET_DEVICE_LOCATION_URL_2 = "?tsp=1585031229387&ugs_token=";
     public static final String REGISTRATION_URL_VERIFY = "/accounts/api/users/tokens/verify";
     public static final String GENERATE_TOKEN_REQUEST_URL = "/accounts/api/users/tokens";
-    public static final String CREATE_GROUP_URL1 = "/accounts/api/users/";
-    public static final String CREATE_GROUP_URL2 = "/sessiongroups";
-    public static final String GET_ALL_GROUP_INFO_URL1 = "/accounts/api/users/";
+    public static final String ACCOUNTS_API_USER_URL = "/accounts/api/users/";
+    public static final String SESSION_GROUPS_URL = "/sessiongroups/";
     public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true";
-    public static final String UPDATE_GROUP_NAME_URL1 = "/accounts/api/users/";
-    public static final String UPDATE_GROUP_NAME_URL2 = "/sessiongroups/";
-    public static final String DELETE_GROUP_URL1 = "/accounts/api/users/";
-    public static final String DELETE_GROUP_URL2 = "/sessiongroups/";
+    public static final String SESSION_GROUP_CONSENTS_URL = "/sessiongroupconsents";
 
     //Privacy Policy
     public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
@@ -230,6 +226,7 @@ public class Constant {
     public static final String GROUP_NAME_VALIDATION_ERROR = "Group name cannot be left empty";
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
+    public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member in a group, Please try again!";
 
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";

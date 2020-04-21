@@ -70,6 +70,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         holder.phone.setText(mList.get(position).getNumber());
         holder.name.setText(mList.get(position).getName());
         holder.profile.setImageResource(mList.get(position).getProfileImage());
+        holder.consentStatus.setText(mList.get(position).getConsentStatus());
     }
 
     /**
@@ -88,6 +89,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         public TextView phone;
         public TextView name;
         public ImageView profile;
+        public TextView consentStatus;
 
         /**
          * Constructor where we find element from .xml file
@@ -98,6 +100,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
             phone = itemView.findViewById(R.id.mobileNumber);
             name = itemView.findViewById(R.id.name);
             profile = itemView.findViewById(R.id.groupmemberImage);
+            consentStatus = itemView.findViewById(R.id.consentstatus);
         }
     }
 }

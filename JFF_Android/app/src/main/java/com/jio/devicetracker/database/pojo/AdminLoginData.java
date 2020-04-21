@@ -32,6 +32,15 @@ public class AdminLoginData {
     private String tokenExpirytime;
     private String userId;
     private String name;
+    private String phoneCountryCode;
+
+    public String getPhoneCountryCode() {
+        return phoneCountryCode;
+    }
+
+    public void setPhoneCountryCode(String phoneCountryCode) {
+        this.phoneCountryCode = phoneCountryCode;
+    }
 
     public String getName() {
         return name;

@@ -28,8 +28,10 @@ import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ConsentTimeupdateData;
 import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
+import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
@@ -124,6 +126,7 @@ public class DBManager {
         contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, data.getUgsTokenExpiry());
         contentValue.put(DatabaseHelper.EMAIL, data.getUser().getEmail());
         contentValue.put(DatabaseHelper.USER_NAME, LoginActivity.userName);
+        contentValue.put(DatabaseHelper.PHONE_COUNTRY_CODE, data.getUser().getPhoneCountryCode());
         return mDatabase.insert(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
     }
 
@@ -290,6 +293,7 @@ public class DBManager {
 
     /**
      * Update profile information in Database
+     *
      * @param priviousNumber
      * @param name
      * @param newNumber
@@ -343,7 +347,7 @@ public class DBManager {
     public AdminLoginData getAdminLoginDetail() {
         mDatabase = mDBHelper.getWritableDatabase();
         AdminLoginData adminData = null;
-        String[] column = {DatabaseHelper.EMAIL, DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME};
+        String[] column = {DatabaseHelper.EMAIL, DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME, DatabaseHelper.PHONE_COUNTRY_CODE};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_USER_LOGIN, column, null, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -353,6 +357,7 @@ public class DBManager {
                 adminData.setUserToken(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_TOKEN)));
                 adminData.setTokenExpirytime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TOKEN_EXPIRY_TIME)));
                 adminData.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_NAME)));
+                adminData.setPhoneCountryCode(cursor.getString(cursor.getColumnIndex(DatabaseHelper.PHONE_COUNTRY_CODE)));
             }
             cursor.close();
         }
@@ -565,6 +570,7 @@ public class DBManager {
 
     /**
      * Update Group Name in Database
+     *
      * @param priviousName
      * @param newName
      * @param groupId
@@ -584,5 +590,46 @@ public class DBManager {
     public void deleteSelectedDataFromGroup(String groupId) {
         mDatabase = mDBHelper.getWritableDatabase();
         mDatabase.delete(DatabaseHelper.TABLE_GROUP, DatabaseHelper.GROUPID + "= '" + groupId + "';", null);
+    }
+
+    /**
+     * Insert into Group Member Table
+     */
+    public void insertGroupMemberDataInTable(GroupMemberResponse groupMemberResponse, String name) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        for (GroupMemberResponse.Data data : groupMemberResponse.getData()) {
+            contentValue.put(DatabaseHelper.GROUPID, data.getGroupId());
+            contentValue.put(DatabaseHelper.NAME, name);
+            contentValue.put(DatabaseHelper.STATUS, data.getStatus());
+            contentValue.put(DatabaseHelper.DEVICE_NUM, data.getPhone());
+            contentValue.put(DatabaseHelper.CONSENT_ID, data.getConsentId());
+            contentValue.put(DatabaseHelper.USER_ID, data.getUserId());
+            contentValue.put(DatabaseHelper.DEVICE_ID, data.getDeviceId());
+            mDatabase.replace(DatabaseHelper.TABLE_GROUP_MEMBER, null, contentValue);
+        }
+    }
+
+    /**
+     * Get all group member of a group
+     */
+    public List<GroupMemberDataList> getAllGroupMemberData(String groupId) {
+        List<GroupMemberDataList> mlist = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.STATUS, DatabaseHelper.GROUPID};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP_MEMBER, column, null, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                GroupMemberDataList data = new GroupMemberDataList();
+                if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUPID)).equalsIgnoreCase(groupId)) {
+                    data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
+                    data.setNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                    data.setConsentStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)));
+                    mlist.add(data);
+                }
+            }
+        }
+        cursor.close();
+        return mlist;
     }
 }

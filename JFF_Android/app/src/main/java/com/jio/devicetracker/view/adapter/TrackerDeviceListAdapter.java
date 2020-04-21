@@ -27,12 +27,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
+
 import java.util.List;
 
 /**
@@ -46,6 +49,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     /**
      * Constructor to add devices in home screen
+     *
      * @param mData
      */
     public TrackerDeviceListAdapter(List<HomeActivityListData> mData) {
@@ -54,6 +58,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     /**
      * Binds the given View to the position
+     *
      * @param parent
      * @param viewType
      * @return View Holder object
@@ -69,6 +74,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     /**
      * A new ViewHolder that holds a View of the given view type
+     *
      * @param holder
      * @param position
      */
@@ -132,7 +138,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 mSelectData.setName(mData.get(position).getName());
                 mSelectData.setImeiNumber(mData.get(position).getImeiNumber());
                 itemListener.recyclerViewListClicked(v, position, mSelectData, 2);
-            } else if(data.isGroupMember()){
+            } else if (data.isGroupMember()) {
                 holder.mConsent.setBackgroundResource(R.drawable.ic_checkboxempty);
                 itemListener.recyclerViewListClicked(v, position, mSelectData, 3);
             } else {
@@ -152,17 +158,16 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 return true;
             }
         });
-        if (data.isGroupMember()) {
-            holder.mListlayout.setOnClickListener(v -> {
-                itemListener.clickonListLayout(mData.get(position).getGroupName());
-                return;
-            });
-        }
+        holder.mListlayout.setOnClickListener(v -> {
+            itemListener.clickonListLayout(mData.get(position).getGroupName(), mData.get(position).getGroupId());
+            return;
+        });
     }
 
 
     /**
      * return The total number of items in this adapter
+     *
      * @return size
      */
     @Override
@@ -186,6 +191,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
         /**
          * Constructor where we find element from .xml file
+         *
          * @param itemView
          */
         public ViewHolder(@NonNull View itemView) {
@@ -209,7 +215,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
         // void recyclerviewEditList(String relation,String phoneNumber);
         // void recyclerviewDeleteList(String phoneNuber,int position);
-        void clickonListLayout(String selectedGroupName);
+        void clickonListLayout(String selectedGroupName, String groupId);
 
         void consetClick(String phoneNumber);
 
@@ -220,6 +226,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     /**
      * Register the listener
+     *
      * @param mItemClickListener
      */
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
@@ -228,6 +235,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     /**
      * Called when we remove device from home screen
+     *
      * @param adapterPosition
      */
     public void removeItem(int adapterPosition) {
