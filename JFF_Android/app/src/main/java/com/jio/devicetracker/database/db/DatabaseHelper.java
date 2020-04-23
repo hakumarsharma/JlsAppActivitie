@@ -88,7 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + STATUS + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
 
-    private static final String CREATE_TABLE_GROUP_MEMBER = "create table " + TABLE_GROUP_MEMBER + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + GROUPID + " TEXT, " + DEVICE_NUM + " TEXT ," + USER_ID + " TEXT ," + DEVICE_ID + " TEXT ," + STATUS + " TEXT, " + "PRIMARY KEY" +"("+ DEVICE_ID +"))";
+    private static final String CREATE_TABLE_GROUP_MEMBER = "create table " + TABLE_GROUP_MEMBER + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + GROUPID + " TEXT, " + DEVICE_NUM + " TEXT ," + USER_ID + " TEXT ," + DEVICE_ID + " TEXT ," + STATUS + " TEXT, " + "PRIMARY KEY" +"("+ CONSENT_ID +"))";
 
 
     public DatabaseHelper(Context context) {

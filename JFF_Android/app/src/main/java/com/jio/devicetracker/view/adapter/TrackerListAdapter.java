@@ -32,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.TrackerListData;
 
 import java.util.List;
@@ -40,13 +41,13 @@ import java.util.List;
  * Display the member's list available inside group
  */
 public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.ViewHolder> {
-    private List<TrackerListData> mList;
+    private List<GroupMemberDataList> mList;
 
     /**
      * Constructor to add devices inside group
      * @param mList
      */
-    public TrackerListAdapter(List<TrackerListData> mList){
+    public TrackerListAdapter(List<GroupMemberDataList> mList){
         this.mList = mList;
     }
 
@@ -74,8 +75,6 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
 
         holder.phone.setText(mList.get(position).getNumber());
         holder.name.setText(mList.get(position).getName());
-        holder.durationtime.setText(mList.get(position).getDurationTime());
-        holder.expirytime.setText(mList.get(position).getExpiryTime());
         holder.profile.setImageResource(mList.get(position).getProfileImage());
     }
 

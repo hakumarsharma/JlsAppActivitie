@@ -35,17 +35,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.ActiveSessionData;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
+
 import java.util.List;
 
 public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSessionListAdapter.ViewHolder> {
-    private List<ActiveSessionData> mList;
+    private List<HomeActivityListData> mList;
     private static RecyclerViewClickListener itemListener;
 
     /**
      * Constructor to display the active session devices list
      * @param mList
      */
-    public ActiveSessionListAdapter(List<ActiveSessionData> mList){
+    public ActiveSessionListAdapter(List<HomeActivityListData> mList){
         this.mList = mList;
     }
 
@@ -69,13 +71,12 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.phone.setText(mList.get(position).getNumber());
-        holder.name.setText(mList.get(position).getName());
-        holder.durationtime.setText(mList.get(position).getDurationTime());
-        holder.expirytime.setText(mList.get(position).getExpiryTime());
+        holder.name.setText(mList.get(position).getGroupName());
+        /*holder.durationtime.setText(mList.get(position).getDurationTime());
+        holder.expirytime.setText(mList.get(position).getExpiryTime());*/
         holder.profile.setImageResource(mList.get(position).getProfileImage());
         holder.relativeLayout.setOnClickListener(v -> {
-            itemListener.clickOnListLayout(mList.get(position).getProfileImage(), mList.get(position).getName());
+            itemListener.clickOnListLayout(mList.get(position).getProfileImage(), mList.get(position).getGroupName(), mList.get(position).getGroupId());
             return;
         });
     }
@@ -119,7 +120,7 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
      * Interface to override methods in ActiveSessionActivity to call this methods on particular item click
      */
     public interface RecyclerViewClickListener {
-        void clickOnListLayout(int selectedGroupName, String name);
+        void clickOnListLayout(int selectedGroupName, String name, String groupId);
     }
 
     /**

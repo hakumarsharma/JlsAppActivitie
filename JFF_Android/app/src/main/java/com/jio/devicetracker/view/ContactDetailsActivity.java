@@ -213,7 +213,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         List<String> mList = new ArrayList<>();
         mList.add("events");
         consents.setEntities(mList);
-        consents.setPhone(phoneCountryCode + number);
+        consents.setPhone(number);
         consentList.add(consents);
         addMemberInGroupData.setConsents(consentList);
         Util.getInstance().showProgressBarDialog(this);
@@ -243,6 +243,9 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             if (error.networkResponse.statusCode == 409) {
                 Util.progressDialog.dismiss();
                 Util.alertDilogBox(Constant.GROUP_MEMBER_ADDITION_FAILURE, Constant.ALERT_TITLE, ContactDetailsActivity.this);
+            } else if (error.networkResponse.statusCode == 404) {
+                Util.progressDialog.dismiss();
+                Util.alertDilogBox(Constant.DEVICE_NOT_FOUND, Constant.ALERT_TITLE, ContactDetailsActivity.this);
             }
         }
     }
@@ -250,7 +253,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     /**
      * Get all members of a particular group
      */
-    private void getAllForOneGroupAPICall() {
+    public void getAllForOneGroupAPICall() {
         GroupRequestHandler.getInstance(this).handleRequest(new GetGroupMemberRequest(new GetGroupMemberRequestSuccessListener(), new GetGroupMemberRequestErrorListener(), groupId, userId));
     }
 
@@ -260,7 +263,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     public class GetGroupMemberRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            Util.getInstance().showProgressBarDialog(ContactDetailsActivity.this);
+            Util.progressDialog.dismiss();
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse, name);

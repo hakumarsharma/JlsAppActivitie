@@ -1,7 +1,5 @@
 /*************************************************************
- *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -22,53 +20,35 @@
 
 package com.jio.devicetracker.database.pojo;
 
-/**
- * To add a Group Member in a particular group
- */
-public class GroupMemberDataList {
-    private String name;
-    private String number;
-    private String consentStatus;
-    private int profileImage;
-    private String consentId;
+public class ExitRemovedGroupData {
+    private Consent consent;
 
-    public String getConsentId() {
-        return consentId;
+    public Consent getConsent() {
+        return consent;
     }
 
-    public void setConsentId(String consentId) {
-        this.consentId = consentId;
+    public void setConsent(Consent consent) {
+        this.consent = consent;
     }
 
-    public int getProfileImage() {
-        return profileImage;
-    }
+    public class Consent {
+        private String phone;
+        private String status;
 
-    public void setProfileImage(int profileImage) {
-        this.profileImage = profileImage;
-    }
+        public String getPhone() {
+            return phone;
+        }
 
-    public String getName() {
-        return name;
-    }
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        public String getStatus() {
+            return status;
+        }
 
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getConsentStatus() {
-        return consentStatus;
-    }
-
-    public void setConsentStatus(String consentStatus) {
-        this.consentStatus = consentStatus;
+        public void setStatus(String status) {
+            this.status = status;
+        }
     }
 }

@@ -26,9 +26,7 @@ public class HomeActivityListData {
 
     private String name;
     private String number;
-    private boolean isGroupMember;
     private String phoneNumber;
-    private String relation;
     private String imeiNumber;
     private String lat;
     private String lng;
@@ -39,10 +37,18 @@ public class HomeActivityListData {
     private String relationWithName;
     private String deviceType;
     private String groupName;
-    public int isCreated;
     private String deviceId;
     private String GroupId;
     private String status;
+    private int profileImage;
+
+    public int getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(int profileImage) {
+        this.profileImage = profileImage;
+    }
 
     public String getStatus() {
         return status;
@@ -68,14 +74,6 @@ public class HomeActivityListData {
         this.deviceId = deviceId;
     }
 
-    public int getIsCreated() {
-        return isCreated;
-    }
-
-    public void setIsCreated(int isCreated) {
-        this.isCreated = isCreated;
-    }
-
     public String getDeviceType() {
         return deviceType;
     }
@@ -96,14 +94,6 @@ public class HomeActivityListData {
         return number;
     }
 
-    public boolean isGroupMember() {
-        return isGroupMember;
-    }
-
-    public void setGroupMember(boolean groupMember) {
-        isGroupMember = groupMember;
-    }
-
     public void setNumber(String number) {
         this.number = number;
     }
@@ -114,14 +104,6 @@ public class HomeActivityListData {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getRelation() {
-        return relation;
-    }
-
-    public void setRelation(String relation) {
-        this.relation = relation;
     }
 
     public String getImeiNumber() {

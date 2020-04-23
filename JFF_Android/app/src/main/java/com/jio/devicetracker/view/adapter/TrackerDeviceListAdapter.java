@@ -83,7 +83,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         HomeActivityListData data = mData.get(position);
         holder.mIconImage.setImageResource(R.drawable.ic_group_button);
         holder.name.setText(mData.get(position).getGroupName());
-        holder.mConsentStatus.setVisibility(View.INVISIBLE);
         /*holder.phone.setText(mData.get(position).getPhoneNumber());
         holder.name.setText(mData.get(position).getGroupName());
         if (mData.get(position).isGroupMember() == true) {
@@ -113,7 +112,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notsent, 0, 0, 0);
         }*/
 
-        if (!data.isGroupMember()) {
+        /*if (!data.isGroupMember()) {
             holder.mConsentStatus.setOnClickListener(v -> {
                 itemListener.consetClick(mData.get(position).getPhoneNumber());
             });
@@ -121,8 +120,8 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             holder.mConsentStatus.setOnClickListener(v -> {
                 itemListener.consentClickForGroup(mData.get(position).getName());
             });
-        }
-        holder.mConsent.setOnClickListener(v -> {
+        }*/
+        /*holder.mConsent.setOnClickListener(v -> {
             data.setSelected(!data.isSelected());
             if (data.isGroupMember() && data.isSelected()) {
                 holder.mConsent.setBackgroundResource(R.drawable.ic_checkmark);
@@ -145,7 +144,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 holder.mConsent.setBackgroundResource(R.drawable.ic_checkboxempty);
                 itemListener.recyclerViewListClicked(v, position, mSelectData, 3);
             }
-        });
+        });*/
 
         // holder.mEdit.setOnClickListener(v -> itemListener.recyclerviewEditList(mData.get(position).getRelation(),mData.get(position).getPhoneNumber()));
         // holder.mDelete.setOnClickListener(v -> itemListener.recyclerviewDeleteList(mData.get(position).getPhoneNumber(),position));

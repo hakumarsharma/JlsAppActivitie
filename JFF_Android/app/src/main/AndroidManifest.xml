@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
         <activity android:name=".view.GroupNameActivity" />
-        <activity android:name=".view.TrackerListActivity" />
+        <activity android:name=".view.ActiveMemberActivity" />
         <activity android:name=".view.RefreshIntervalSettingActivity" />
 
         <service

@@ -90,6 +90,9 @@ public class Constant {
     public static final String GROUP_UPDATION_FAILURE = "Group name updation failed";
     public static final String NO_GROUP_FOUND = "No Group found, Please try again.";
     public static final String GROUP_DELETION_FAILURE = "Group Deletion failed";
+    public static final String ACTIVE = "active";
+    public static final String APPROVED = "approved";
+
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
@@ -161,6 +164,10 @@ public class Constant {
     public static final String SESSION_GROUPS_URL = "/sessiongroups/";
     public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true";
     public static final String SESSION_GROUP_CONSENTS_URL = "/sessiongroupconsents";
+    public static final String SESSION_GROUP_CONSENTS_TOKEN_URL = "/sessiongroupconsents/tokens";
+    public static final String APPROVE_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";
+    public static final String STATUS_URL = "/status";
+    public static final String SESSION_GROUP_CONSENTS_URL1 = "/sessiongroupconsents/";
 
     //Privacy Policy
     public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
@@ -227,6 +234,7 @@ public class Constant {
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
     public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member in a group, Please try again!";
+    public static final String DEVICE_NOT_FOUND = "Device not found, Please try again!";
 
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";

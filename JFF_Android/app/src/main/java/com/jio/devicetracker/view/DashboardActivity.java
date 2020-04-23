@@ -565,9 +565,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         int individualUserCount = 1;
         List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : allDevicedata) {
-            if (homeActivityListData.isGroupMember() == false) {
+           /* if (homeActivityListData.isGroupMember() == false) {
                 individualUserCount++;
-            }
+            }*/
         }
         if (individualUserCount > 10) {
             Util.alertDilogBox(Constant.USER_LIMITATION, "Jio Alert", this);
@@ -583,9 +583,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         List<HomeActivityListData> allDevicedata = mDbManager.getAlldata(Util.adminEmail);
         int groupCount = 1;
         for (HomeActivityListData homeActivityListData : allDevicedata) {
-            if (homeActivityListData.isGroupMember() == true && homeActivityListData.getImeiNumber() == null) {
+           /* if (homeActivityListData.isGroupMember() == true && homeActivityListData.getImeiNumber() == null) {
                 groupCount++;
-            }
+            }*/
         }
 
         if (groupCount > 2) {
@@ -617,9 +617,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
         List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : allDevicedata) {
-            if (homeActivityListData.isGroupMember() == false && homeActivityListData.getImeiNumber() != null) {
+           /* if (homeActivityListData.isGroupMember() == false && homeActivityListData.getImeiNumber() != null) {
                 individualUserCount++;
-            }
+            }*/
         }
         if (individualUserCount > 10) {
             Util.alertDilogBox(Constant.USER_LIMITATION, "Jio Alert", this);

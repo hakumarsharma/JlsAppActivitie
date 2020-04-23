@@ -32,43 +32,45 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.pojo.TrackerListData;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.view.adapter.TrackerListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrackerListActivity extends AppCompatActivity {
+public class ActiveMemberActivity extends AppCompatActivity {
 
-    private List<TrackerListData> mList;
+    private String groupId;
+    private DBManager mDbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recycler_tracker_list);
-        mList = new ArrayList<>();
+        setContentView(R.layout.activity_active_member_list);
+        mDbManager = new DBManager(this);
         addDataInList();
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Intent intent = getIntent();
         toolbarTitle.setText(intent.getStringExtra("groupName"));
+        groupId = intent.getStringExtra("groupId");
         RecyclerView mRecyclerList = findViewById(R.id.trackerList);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
-        TrackerListAdapter mAdapter = new TrackerListAdapter(mList);
+        TrackerListAdapter mAdapter = new TrackerListAdapter(addDataInList());
         mRecyclerList.setAdapter(mAdapter);
     }
 
-    private void addDataInList() {
-        for (int i =0; i < 5 ; i++){
-            TrackerListData data = new TrackerListData();
-            data.setName("Test");
-            data.setNumber("1234567890");
-            data.setDurationTime("15 min");
-            data.setExpiryTime("05 min");
-            data.setProfileImage(R.drawable.ic_tracee_list);
-            mList.add(data);
+    private List<GroupMemberDataList> addDataInList() {
+        List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+        List<GroupMemberDataList> memberList = new ArrayList<>();
+        for(GroupMemberDataList data : mList) {
+            GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+            groupMemberDataList.setName(data.getName());
+            groupMemberDataList.setNumber(data.getNumber());
+            groupMemberDataList.setProfileImage(R.drawable.ic_tracee_list);
+            memberList.add(groupMemberDataList);
         }
+        return memberList;
     }
-
 }

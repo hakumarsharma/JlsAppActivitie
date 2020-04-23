@@ -63,9 +63,19 @@ public class GetGroupInfoPerUserResponse implements Serializable {
         @SerializedName("status")
         private String status;
         @SerializedName("name")
-        private String name;
+        private String groupName;
         @SerializedName("session")
         private Session session;
+        @SerializedName("consents")
+        private List<Consents> consents;
+
+        public List<Consents> getConsents() {
+            return consents;
+        }
+
+        public void setConsents(List<Consents> consents) {
+            this.consents = consents;
+        }
 
         public String getId() {
             return id;
@@ -83,12 +93,12 @@ public class GetGroupInfoPerUserResponse implements Serializable {
             this.status = status;
         }
 
-        public String getName() {
-            return name;
+        public String getGroupName() {
+            return groupName;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public void setGroupName(String groupName) {
+            this.groupName = groupName;
         }
 
         public Session getSession() {
@@ -97,6 +107,39 @@ public class GetGroupInfoPerUserResponse implements Serializable {
 
         public void setSession(Session session) {
             this.session = session;
+        }
+    }
+
+    public class Consents implements Serializable {
+        @SerializedName("_id")
+        private String consentId;
+        @SerializedName("status")
+        private String status;
+        @SerializedName("phone")
+        private String phone;
+
+        public String getConsentId() {
+            return consentId;
+        }
+
+        public void setConsentId(String consentId) {
+            this.consentId = consentId;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
         }
     }
 
