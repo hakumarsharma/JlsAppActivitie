@@ -11,6 +11,7 @@
     <dimen name="thirteen_dp">13dp</dimen>
     <dimen name="twenty_dp">20dp</dimen>
     <dimen name="margin_24">24dp</dimen>
+    <dimen name="margin_27">27dp</dimen>
     <dimen name="top_margin_layout">32dp</dimen>
     <dimen name="normal_margin">8dp</dimen>
     <dimen name="header_text">28dp</dimen>

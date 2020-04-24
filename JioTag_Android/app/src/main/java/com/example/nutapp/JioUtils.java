@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.util.Log;
 
+import java.util.regex.Pattern;
+
 public class JioUtils {
     public static final String MYPREFERENCES = "SETTINGS_JIOTAGS";
     public static final String MYPREFERENCES_PHOTO_CPATURE = "SETTINGS_JIOTAGS_PHOTO_CPATURE";
@@ -23,6 +25,7 @@ public class JioUtils {
     public static final String MYPREFERENCES_PHONE_ALERTS = "SETTINGS_JIOTAGS_PHONE_ALERTS";
     public static final String MYPREFERENCES_PHONE_ALERT_REPEAT = "SETTINGS_JIOTAGS_PHONE_ALERTS_REPEAT";
     public static final int REQUEST_CHECK_SETTINGS_MAIN=555;
+    public static final String AUTH_LOGIN_TITLE = "User Details";
 
     static SharedPreferences preferences;
 
@@ -110,5 +113,31 @@ public class JioUtils {
             font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-MediumItalic.ttf");
         }
         return font1;
+    }
+
+
+    // Email id validation through RegEx
+    public static boolean isValidEmailId(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null) {
+            return false;
+        }
+        return pat.matcher(email).matches();
+    }
+
+    // Password validation through RegEx
+    public static boolean isValidPassword(String pass) {
+        String passRegex = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,16})";
+
+        Pattern pat = Pattern.compile(passRegex);
+        if (pass == null) {
+            return false;
+        }
+        return pat.matcher(pass).matches();
     }
 }
