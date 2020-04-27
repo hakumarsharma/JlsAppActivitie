@@ -54,12 +54,32 @@ public class GroupMemberResponse implements Serializable {
         private String consentId;
         @SerializedName("phone")
         private String phone;
+        @SerializedName("name")
+        private String name;
         @SerializedName("user")
         private String userId;
         @SerializedName("device")
         private String deviceId;
         @SerializedName("sessionGroup")
         private String groupId;
+        @SerializedName("isGroupAdmin")
+        private boolean isGroupAdmin;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isGroupAdmin() {
+            return isGroupAdmin;
+        }
+
+        public void setGroupAdmin(boolean groupAdmin) {
+            isGroupAdmin = groupAdmin;
+        }
 
         public String getStatus() {
             return status;

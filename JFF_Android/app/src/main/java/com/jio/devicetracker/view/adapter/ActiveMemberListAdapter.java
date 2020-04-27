@@ -33,21 +33,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
-import com.jio.devicetracker.database.pojo.TrackerListData;
 
 import java.util.List;
 
 /**
  * Display the member's list available inside group
  */
-public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.ViewHolder> {
+public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberListAdapter.ViewHolder> {
     private List<GroupMemberDataList> mList;
+    private static RecyclerViewClickListener itemListener;
 
     /**
      * Constructor to add devices inside group
      * @param mList
      */
-    public TrackerListAdapter(List<GroupMemberDataList> mList){
+    public ActiveMemberListAdapter(List<GroupMemberDataList> mList){
         this.mList = mList;
     }
 
@@ -60,9 +60,9 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_tracker_list, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_member_list, parent, false);
 
-        return new TrackerListAdapter.ViewHolder(itemView);
+        return new ActiveMemberListAdapter.ViewHolder(itemView);
     }
 
     /**
@@ -71,11 +71,27 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
      * @param position
      */
     @Override
-    public void onBindViewHolder(@NonNull TrackerListAdapter.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull ActiveMemberListAdapter.ViewHolder holder, int position) {
         holder.phone.setText(mList.get(position).getNumber());
         holder.name.setText(mList.get(position).getName());
         holder.profile.setImageResource(mList.get(position).getProfileImage());
+        holder.activeSessionOptions.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.activeSessionOptions, position, mList.get(position).getGroupId(), mList.get(position).getConsentStatus(), mList.get(position).getNumber(), mList.get(position).getConsentId()));
+    }
+
+    /**
+     * Register the listener
+     *
+     * @param mItemClickListener
+     */
+    public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
+        this.itemListener = mItemClickListener;
+    }
+
+    /**
+     * Interface to override methods in Dashboard to call those methods on particular item click
+     */
+    public interface RecyclerViewClickListener {
+        void onPopupMenuClicked(View v, int position, String groupId, String consentStatus, String phoneNumber, String consentId);
     }
 
     /**
@@ -96,6 +112,7 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
         public TextView durationtime;
         public TextView expirytime;
         public ImageView profile;
+        public TextView activeSessionOptions;
 
         /**
          * Constructor where we find element from .xml file
@@ -108,7 +125,20 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
             durationtime = itemView.findViewById(R.id.durationTime);
             expirytime = itemView.findViewById(R.id.expiryTime);
             profile = itemView.findViewById(R.id.traceeImage);
+            activeSessionOptions = itemView.findViewById(R.id.activeSessionOptions);
         }
     }
+
+    /**
+     * Called when we remove device from home screen
+     *
+     * @param adapterPosition
+     */
+    public void removeItem(int adapterPosition) {
+        mList.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        notifyDataSetChanged();
+    }
+
 }
 

@@ -31,6 +31,42 @@ public class GroupMemberDataList {
     private String consentStatus;
     private int profileImage;
     private String consentId;
+    private boolean isGroupAdmin;
+    private String groupId;
+    private String userId;
+    private String deviceId;
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public boolean isGroupAdmin() {
+        return isGroupAdmin;
+    }
+
+    public void setGroupAdmin(boolean groupAdmin) {
+        isGroupAdmin = groupAdmin;
+    }
 
     public String getConsentId() {
         return consentId;

@@ -38,9 +38,26 @@ public class HomeActivityListData {
     private String deviceType;
     private String groupName;
     private String deviceId;
-    private String GroupId;
+    private String groupId;
     private String status;
     private int profileImage;
+    public String createdBy;
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public int getProfileImage() {
         return profileImage;
@@ -56,14 +73,6 @@ public class HomeActivityListData {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getGroupId() {
-        return GroupId;
-    }
-
-    public void setGroupId(String groupId) {
-        GroupId = groupId;
     }
 
     public String getDeviceId() {

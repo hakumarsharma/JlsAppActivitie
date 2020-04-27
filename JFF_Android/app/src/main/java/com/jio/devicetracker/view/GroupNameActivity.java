@@ -111,8 +111,8 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
         createGroupData.setName(groupName);
         createGroupData.setType("one_to_one");
         CreateGroupData.Session session = new CreateGroupData().new Session();
-        session.setFrom(1587969892000L);
-        session.setTo(1588969892000L);
+        session.setFrom(Util.getTimeEpochFormatAfterCertainTime(1));
+        session.setTo(Util.getTimeEpochFormatAfterCertainTime(15));
         createGroupData.setSession(session);
         Util.getInstance().showProgressBarDialog(this);
         GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, mDbManager.getAdminLoginDetail().getUserId()));
@@ -143,5 +143,4 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
             }
         }
     }
-
 }

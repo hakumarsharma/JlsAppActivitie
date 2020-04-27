@@ -510,19 +510,23 @@ public class DBManager {
         contentValue.put(DatabaseHelper.GROUPID, createGroupResponse.getData().getId());
         contentValue.put(DatabaseHelper.GROUP_NAME, createGroupResponse.getData().getName());
         contentValue.put(DatabaseHelper.STATUS, createGroupResponse.getData().getStatus());
+        contentValue.put(DatabaseHelper.CREATED_BY, createGroupResponse.getData().getCreatedBy());
         return mDatabase.insert(DatabaseHelper.TABLE_GROUP, null, contentValue);
     }
 
     /**
      * insert into the Group table after fetching data through GetGroupInfoPerUserRequest API call
+     *
+     * @param groupList
      */
-    public void insertAllDataIntoGroupTable(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
+    public void insertAllDataIntoGroupTable(List<HomeActivityListData> groupList) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-            contentValue.put(DatabaseHelper.GROUPID, data.getId());
+        for (HomeActivityListData data : groupList) {
+            contentValue.put(DatabaseHelper.GROUPID, data.getGroupId());
             contentValue.put(DatabaseHelper.GROUP_NAME, data.getGroupName());
             contentValue.put(DatabaseHelper.STATUS, data.getStatus());
+            contentValue.put(DatabaseHelper.CREATED_BY, data.getCreatedBy());
             mDatabase.replace(DatabaseHelper.TABLE_GROUP, null, contentValue);
         }
     }
@@ -530,19 +534,22 @@ public class DBManager {
 
     /**
      * Returns Group Data
+     *
+     * @return List of HomeActivityListData
      */
     public List<HomeActivityListData> getAllGroupDetail() {
         List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
-        String[] column = {DatabaseHelper.GROUPID, DatabaseHelper.GROUP_NAME, DatabaseHelper.STATUS};
+        String[] column = {DatabaseHelper.GROUPID, DatabaseHelper.GROUP_NAME, DatabaseHelper.STATUS, DatabaseHelper.CREATED_BY};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP, column, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 HomeActivityListData data = new HomeActivityListData();
-                if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)) != null && cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)).equalsIgnoreCase(Constant.ACTIVE)) {
+                if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)) != null && cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)).equalsIgnoreCase(Constant.SCHEDULED)) {
                     data.setGroupName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_NAME)));
                     data.setGroupId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUPID)));
                     data.setStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)));
+                    data.setCreatedBy(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CREATED_BY)));
                     mlist.add(data);
                 }
             }
@@ -569,7 +576,7 @@ public class DBManager {
     }
 
     /**
-     * Delete the Selected group from Database
+     * Delete the Selected data from group table
      */
     public void deleteSelectedDataFromGroup(String groupId) {
         mDatabase = mDBHelper.getWritableDatabase();
@@ -578,49 +585,57 @@ public class DBManager {
 
     /**
      * Insert into Group Member Table
+     *
+     * @param groupMemberResponse
      */
-    public void insertGroupMemberDataInTable(GroupMemberResponse groupMemberResponse, String name) {
+    public void insertGroupMemberDataInTable(GroupMemberResponse groupMemberResponse) {
         mDatabase = mDBHelper.getWritableDatabase();
-        ContentValues contentValue = new ContentValues();
-        if (name != null) {
-            for (GroupMemberResponse.Data data : groupMemberResponse.getData()) {
-                contentValue.put(DatabaseHelper.GROUPID, data.getGroupId());
-                contentValue.put(DatabaseHelper.NAME, name);
-                contentValue.put(DatabaseHelper.STATUS, data.getStatus());
-                contentValue.put(DatabaseHelper.DEVICE_NUM, data.getPhone());
-                contentValue.put(DatabaseHelper.CONSENT_ID, data.getConsentId());
-                contentValue.put(DatabaseHelper.USER_ID, data.getUserId());
-                contentValue.put(DatabaseHelper.DEVICE_ID, data.getDeviceId());
-                mDatabase.replace(DatabaseHelper.TABLE_GROUP_MEMBER, null, contentValue);
+        for (GroupMemberResponse.Data data : groupMemberResponse.getData()) {
+            ContentValues contentValue = new ContentValues();
+            contentValue.put(DatabaseHelper.GROUPID, data.getGroupId());
+            contentValue.put(DatabaseHelper.NAME, data.getName());
+            contentValue.put(DatabaseHelper.STATUS, data.getStatus());
+            contentValue.put(DatabaseHelper.DEVICE_NUM, data.getPhone());
+            contentValue.put(DatabaseHelper.CONSENT_ID, data.getConsentId());
+            contentValue.put(DatabaseHelper.USER_ID, data.getUserId());
+            contentValue.put(DatabaseHelper.DEVICE_ID, data.getDeviceId());
+            if (data.isGroupAdmin()) {
+                contentValue.put(DatabaseHelper.IS_GROUP_ADMIN, 1);
+            } else {
+                contentValue.put(DatabaseHelper.IS_GROUP_ADMIN, 0);
             }
-        } else {
-            List<GroupMemberDataList> mGroupMemberData = getAllGroupMemberData();
-            for(GroupMemberDataList groupMemberDataList : mGroupMemberData) {
-                for (GroupMemberResponse.Data data : groupMemberResponse.getData()) {
-                    contentValue.put(DatabaseHelper.GROUPID, data.getGroupId());
-                    contentValue.put(DatabaseHelper.STATUS, data.getStatus());
-                    contentValue.put(DatabaseHelper.DEVICE_NUM, data.getPhone());
-                    contentValue.put(DatabaseHelper.CONSENT_ID, data.getConsentId());
-                    contentValue.put(DatabaseHelper.USER_ID, data.getUserId());
-                    contentValue.put(DatabaseHelper.DEVICE_ID, data.getDeviceId());
-                    if(groupMemberDataList.getConsentId().equalsIgnoreCase(data.getConsentId())) {
-                        contentValue.put(DatabaseHelper.NAME, groupMemberDataList.getName());
-                    } else {
-                        contentValue.put(DatabaseHelper.NAME, "");
-                    }
-                    mDatabase.replace(DatabaseHelper.TABLE_GROUP_MEMBER, null, contentValue);
-                }
-            }
+            mDatabase.replace(DatabaseHelper.TABLE_GROUP_MEMBER, null, contentValue);
+        }
+    }
+
+    /**
+     * Insert Into the Group Member table when parameter is list
+     */
+    public void insertGroupMemberDataInListFormat(List<GroupMemberDataList> mGroupMemberDataLists) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        for (GroupMemberDataList responseData : mGroupMemberDataLists) {
+            ContentValues contentValue = new ContentValues();
+            contentValue.put(DatabaseHelper.CONSENT_ID, responseData.getConsentId());
+            contentValue.put(DatabaseHelper.DEVICE_NUM, responseData.getNumber());
+            contentValue.put(DatabaseHelper.IS_GROUP_ADMIN, responseData.isGroupAdmin());
+            contentValue.put(DatabaseHelper.GROUPID, responseData.getGroupId());
+            contentValue.put(DatabaseHelper.STATUS, responseData.getConsentStatus());
+            contentValue.put(DatabaseHelper.USER_ID, responseData.getUserId());
+            contentValue.put(DatabaseHelper.NAME, responseData.getName());
+            contentValue.put(DatabaseHelper.DEVICE_ID, responseData.getDeviceId());
+            mDatabase.replace(DatabaseHelper.TABLE_GROUP_MEMBER, null, contentValue);
         }
     }
 
     /**
      * Get all group member of a group based on group id
+     *
+     * @param groupId
      */
     public List<GroupMemberDataList> getAllGroupMemberDataBasedOnGroupId(String groupId) {
         List<GroupMemberDataList> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
-        String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.STATUS, DatabaseHelper.GROUPID, DatabaseHelper.CONSENT_ID};
+        String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.STATUS, DatabaseHelper.GROUPID, DatabaseHelper.CONSENT_ID, DatabaseHelper.IS_GROUP_ADMIN};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP_MEMBER, column, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -630,6 +645,11 @@ public class DBManager {
                     data.setNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
                     data.setConsentStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)));
                     data.setConsentId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_ID)));
+                    if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_ADMIN)) == 1) {
+                        data.setGroupAdmin(true);
+                    } else {
+                        data.setGroupAdmin(false);
+                    }
                     mlist.add(data);
                 }
             }
@@ -647,7 +667,7 @@ public class DBManager {
     public List<GroupMemberDataList> getAllGroupMemberData() {
         List<GroupMemberDataList> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
-        String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.STATUS, DatabaseHelper.GROUPID, DatabaseHelper.CONSENT_ID};
+        String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.STATUS, DatabaseHelper.GROUPID, DatabaseHelper.CONSENT_ID, DatabaseHelper.IS_GROUP_ADMIN, DatabaseHelper.USER_ID, DatabaseHelper.DEVICE_ID};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP_MEMBER, column, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -656,10 +676,26 @@ public class DBManager {
                 data.setNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
                 data.setConsentStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)));
                 data.setConsentId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_ID)));
+                data.setUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_ID)));
+                data.setDeviceId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_ID)));
+                if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_ADMIN)) == 1) {
+                    data.setGroupAdmin(true);
+                } else {
+                    data.setGroupAdmin(false);
+                }
                 mlist.add(data);
             }
         }
         cursor.close();
         return mlist;
     }
+
+    /**
+     * Delete the Selected data from group member table
+     */
+    public void deleteSelectedDataFromGroupMember(String consentId) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        mDatabase.delete(DatabaseHelper.TABLE_GROUP_MEMBER, DatabaseHelper.CONSENT_ID + "= '" + consentId + "';", null);
+    }
+
 }

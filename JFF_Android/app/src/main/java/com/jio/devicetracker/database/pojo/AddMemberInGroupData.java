@@ -36,6 +36,15 @@ public class AddMemberInGroupData {
     public class Consents {
         private String phone;
         private List<String> entities;
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
 
         public String getPhone() {
             return phone;

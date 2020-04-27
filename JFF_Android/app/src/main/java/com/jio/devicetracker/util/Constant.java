@@ -91,7 +91,9 @@ public class Constant {
     public static final String NO_GROUP_FOUND = "No Group found, Please try again.";
     public static final String GROUP_DELETION_FAILURE = "Group Deletion failed";
     public static final String ACTIVE = "active";
+    public static final String  SCHEDULED = "scheduled";
     public static final String APPROVED = "approved";
+    public static final String EXIT_FROM_GROUP_FAILURE = "Exit from group failed!";
 
 
     // Login Activity constants
@@ -162,7 +164,7 @@ public class Constant {
     public static final String GENERATE_TOKEN_REQUEST_URL = "/accounts/api/users/tokens";
     public static final String ACCOUNTS_API_USER_URL = "/accounts/api/users/";
     public static final String SESSION_GROUPS_URL = "/sessiongroups/";
-    public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true";
+    public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true&status=scheduled";
     public static final String SESSION_GROUP_CONSENTS_URL = "/sessiongroupconsents";
     public static final String SESSION_GROUP_CONSENTS_TOKEN_URL = "/sessiongroupconsents/tokens";
     public static final String APPROVE_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";
@@ -235,6 +237,9 @@ public class Constant {
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
     public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member in a group, Please try again!";
     public static final String DEVICE_NOT_FOUND = "Device not found, Please try again!";
+    public static final String REMOVE = "Remove";
+    public static final String EXIT = "Exit";
+    public static final String EXITED = "exited";
 
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";

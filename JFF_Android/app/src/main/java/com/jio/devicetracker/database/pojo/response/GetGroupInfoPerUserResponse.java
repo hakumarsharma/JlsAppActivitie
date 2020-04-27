@@ -68,6 +68,16 @@ public class GetGroupInfoPerUserResponse implements Serializable {
         private Session session;
         @SerializedName("consents")
         private List<Consents> consents;
+        @SerializedName("createdBy")
+        private String createdBy;
+
+        public String getCreatedBy() {
+            return createdBy;
+        }
+
+        public void setCreatedBy(String createdBy) {
+            this.createdBy = createdBy;
+        }
 
         public List<Consents> getConsents() {
             return consents;
@@ -117,6 +127,26 @@ public class GetGroupInfoPerUserResponse implements Serializable {
         private String status;
         @SerializedName("phone")
         private String phone;
+        @SerializedName("isGroupAdmin")
+        private boolean isGroupAdmin;
+        @SerializedName("name")
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isGroupAdmin() {
+            return isGroupAdmin;
+        }
+
+        public void setGroupAdmin(boolean groupAdmin) {
+            isGroupAdmin = groupAdmin;
+        }
 
         public String getConsentId() {
             return consentId;

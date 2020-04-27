@@ -66,6 +66,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String STATUS = "status";
     public static final String PHONE_COUNTRY_CODE = "phoneCountryCode";
     public static final String CONSENT_ID = "consentId";
+    public static final String IS_GROUP_ADMIN = "isGroupAdmin";
+    public static final String CREATED_BY = "createdBy";
 
     //DB Information
     public static final String DB_NAME = "AddDevice.db";
@@ -86,9 +88,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_USER_LOGIN = "create table " + TABLE_USER_LOGIN + "("+ USER_TOKEN + " TEXT, " + TOKEN_EXPIRY_TIME + " TEXT, " + USER_NAME + " TEXT," + USER_ID + " TEXT, " + PHONE_COUNTRY_CODE + " TEXT, " + EMAIL + " TEXT, "+ "PRIMARY KEY" +"(" + USER_ID+"))";
 
-    private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + STATUS + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
+    private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + CREATED_BY + " TEXT, " + STATUS + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
 
-    private static final String CREATE_TABLE_GROUP_MEMBER = "create table " + TABLE_GROUP_MEMBER + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + GROUPID + " TEXT, " + DEVICE_NUM + " TEXT ," + USER_ID + " TEXT ," + DEVICE_ID + " TEXT ," + STATUS + " TEXT, " + "PRIMARY KEY" +"("+ CONSENT_ID +"))";
+    private static final String CREATE_TABLE_GROUP_MEMBER = "create table " + TABLE_GROUP_MEMBER + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + GROUPID + " TEXT, " + IS_GROUP_ADMIN + " INTEGER, " + DEVICE_NUM + " TEXT ," + USER_ID + " TEXT ," + DEVICE_ID + " TEXT ," + STATUS + " TEXT, " + "PRIMARY KEY" +"("+ CONSENT_ID +"))";
 
 
     public DatabaseHelper(Context context) {

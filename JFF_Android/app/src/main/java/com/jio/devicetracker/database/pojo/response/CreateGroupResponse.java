@@ -64,6 +64,16 @@ public class CreateGroupResponse implements Serializable {
         private Session session;
         @SerializedName("status")
         private String status;
+        @SerializedName("createdBy")
+        private String createdBy;
+
+        public String getCreatedBy() {
+            return createdBy;
+        }
+
+        public void setCreatedBy(String createdBy) {
+            this.createdBy = createdBy;
+        }
 
         public String getStatus() {
             return status;

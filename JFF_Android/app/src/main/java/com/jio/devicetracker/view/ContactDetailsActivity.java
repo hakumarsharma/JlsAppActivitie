@@ -214,6 +214,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         mList.add("events");
         consents.setEntities(mList);
         consents.setPhone(number);
+        consents.setName(name);
         consentList.add(consents);
         addMemberInGroupData.setConsents(consentList);
         Util.getInstance().showProgressBarDialog(this);
@@ -228,7 +229,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         public void onResponse(Object response) {
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
-                mDbManager.insertGroupMemberDataInTable(groupMemberResponse, name);
+                mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
                 getAllForOneGroupAPICall();
             }
         }
@@ -240,10 +241,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private class AddMemberInGroupRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if (error.networkResponse.statusCode == 409) {
+            if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
                 Util.progressDialog.dismiss();
                 Util.alertDilogBox(Constant.GROUP_MEMBER_ADDITION_FAILURE, Constant.ALERT_TITLE, ContactDetailsActivity.this);
-            } else if (error.networkResponse.statusCode == 404) {
+            } else if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
+                // Make Verify and Assign call
                 Util.progressDialog.dismiss();
                 Util.alertDilogBox(Constant.DEVICE_NOT_FOUND, Constant.ALERT_TITLE, ContactDetailsActivity.this);
             }
@@ -266,7 +268,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             Util.progressDialog.dismiss();
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
-                mDbManager.insertGroupMemberDataInTable(groupMemberResponse, name);
+                mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
                 gotoGroupListActivity();
             }
         }

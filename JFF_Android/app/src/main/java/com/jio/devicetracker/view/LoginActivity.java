@@ -53,6 +53,7 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GenerateTokenData;
 import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
@@ -408,7 +409,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onResponse(Object response) {
             GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
-            mDbManager.insertAllDataIntoGroupTable(getGroupInfoPerUserResponse);
+            parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
             startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
         }
     }
@@ -425,6 +426,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * Parse the response and store in DB(Group Table and Member table)
+     */
+    private void parseResponseStoreInDatabase(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
+        List<HomeActivityListData> groupList = new ArrayList<>();
+        List<GroupMemberDataList> mGroupMemberDataLists = new ArrayList<>();
+        for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
+            HomeActivityListData homeActivityListData = new HomeActivityListData();
+            homeActivityListData.setGroupName(data.getGroupName());
+            homeActivityListData.setCreatedBy(data.getCreatedBy());
+            homeActivityListData.setGroupId(data.getId());
+            homeActivityListData.setStatus(data.getStatus());
+            groupList.add(homeActivityListData);
+        }
+        for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
+            for(GetGroupInfoPerUserResponse.Consents mConsents : data.getConsents()) {
+                GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+                groupMemberDataList.setConsentId(mConsents.getConsentId());
+                groupMemberDataList.setNumber(mConsents.getPhone());
+                groupMemberDataList.setGroupAdmin(mConsents.isGroupAdmin());
+                groupMemberDataList.setGroupId(data.getId());
+                groupMemberDataList.setConsentStatus(mConsents.getStatus());
+                groupMemberDataList.setName(mConsents.getName());
+                mGroupMemberDataLists.add(groupMemberDataList);
+            }
+
+        }
+        mDbManager.insertAllDataIntoGroupTable(groupList);
+        mDbManager.insertGroupMemberDataInListFormat(mGroupMemberDataLists);
+    }
 
     /**
      * Checks the DeepLinking URI which tracker receives from tracee

@@ -98,7 +98,7 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
             Util.progressDialog.dismiss();
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
-                mDbManager.insertGroupMemberDataInTable(groupMemberResponse, null);
+                mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
             }
             showDataInList();
         }
@@ -111,7 +111,7 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         List<GroupMemberDataList> mList = new ArrayList<>();
         List<GroupMemberDataList> listData = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
         for (GroupMemberDataList groupMemberDataList : listData) {
-            if(groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
+            if(groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
                 GroupMemberDataList data = new GroupMemberDataList();
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());

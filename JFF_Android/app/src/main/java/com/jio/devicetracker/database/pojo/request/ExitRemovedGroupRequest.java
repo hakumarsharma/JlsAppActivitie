@@ -55,7 +55,7 @@ public class ExitRemovedGroupRequest implements IRequest {
     @Override
     public String getAction() {
         return Constant.ACCOUNTS_API_USER_URL + userId + Constant.SESSION_GROUPS_URL + groupId
-                + Constant.SESSION_GROUP_CONSENTS_URL1 + Constant.STATUS_URL;
+                + Constant.SESSION_GROUP_CONSENTS_URL + Constant.STATUS_URL;
     }
 
     @Override

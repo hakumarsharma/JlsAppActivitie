@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -24,17 +22,27 @@
 package com.jio.devicetracker.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
-import com.jio.devicetracker.view.adapter.TrackerListAdapter;
+import com.jio.devicetracker.database.pojo.request.ExitRemovedGroupRequest;
+import com.jio.devicetracker.network.GroupRequestHandler;
+import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.adapter.ActiveMemberListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +51,9 @@ public class ActiveMemberActivity extends AppCompatActivity {
 
     private String groupId;
     private DBManager mDbManager;
+    private ActiveMemberListAdapter mAdapter;
+    private String consentId;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +68,94 @@ public class ActiveMemberActivity extends AppCompatActivity {
         RecyclerView mRecyclerList = findViewById(R.id.trackerList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
-        TrackerListAdapter mAdapter = new TrackerListAdapter(addDataInList());
+        mAdapter = new ActiveMemberListAdapter(addDataInList());
         mRecyclerList.setAdapter(mAdapter);
+        adapterEventListener();
     }
 
+    /**
+     * Adapter Listener
+     */
+    private void adapterEventListener() {
+        if (mAdapter != null) {
+            mAdapter.setOnItemClickPagerListener((v, position, groupId, consentStatus, phoneNumber, consentId) -> {
+                PopupMenu popup = new PopupMenu(ActiveMemberActivity.this, v);
+                this.consentId = consentId;
+                this.position = position;
+                if (consentStatus.equalsIgnoreCase("true")) {
+                    popup.getMenu().add(Menu.NONE, 1, 1, Constant.REMOVE);
+                } else {
+                    popup.getMenu().add(Menu.NONE, 2, 2, Constant.EXIT);
+                }
+                popup.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case 1:
+//                            makeRemoveAPICall(phoneNumber);
+                            break;
+                        case 2:
+                                makeExitAPICall(phoneNumber);
+                            break;
+                        default:
+                            break;
+                    }
+                    return false;
+                });
+                popup.show();
+            });
+        }
+    }
+
+    /**
+     * Make an Exit API Call
+     */
+    private void makeExitAPICall(String phoneNumber) {
+        ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
+        ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
+        consent.setPhone(phoneNumber);
+        consent.setStatus(Constant.EXITED);
+        exitRemovedGroupData.setConsent(consent);
+        Util.getInstance().showProgressBarDialog(ActiveMemberActivity.this);
+        GroupRequestHandler.getInstance(this).handleRequest(new ExitRemovedGroupRequest(new ExitRemovedGroupRequestSuccessListener(), new ExitRemovedGroupRequestErrorListener(), exitRemovedGroupData, groupId, mDbManager.getAdminLoginDetail().getUserId()));
+    }
+
+    /**
+     * Exit API Call Success Listener
+     */
+    private class ExitRemovedGroupRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
+            mDbManager.deleteSelectedDataFromGroup(consentId);
+            mAdapter.removeItem(position);
+            addDataInList();
+        }
+    }
+
+    /**
+     * Exit API Call Error Listener
+     */
+    private class ExitRemovedGroupRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            Util.alertDilogBox(Constant.EXIT_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+        }
+    }
+
+    /**
+     * Displays group member data in list
+     *
+     * @return List<GroupMemberDataList>
+     */
     private List<GroupMemberDataList> addDataInList() {
         List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
         List<GroupMemberDataList> memberList = new ArrayList<>();
-        for(GroupMemberDataList data : mList) {
+        for (GroupMemberDataList data : mList) {
             GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
             groupMemberDataList.setName(data.getName());
             groupMemberDataList.setNumber(data.getNumber());
+            groupMemberDataList.setConsentStatus(data.getConsentStatus());
+            groupMemberDataList.setGroupId(data.getGroupId());
             groupMemberDataList.setProfileImage(R.drawable.ic_tracee_list);
             memberList.add(groupMemberDataList);
         }

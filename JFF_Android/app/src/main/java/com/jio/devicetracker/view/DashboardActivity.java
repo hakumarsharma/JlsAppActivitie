@@ -167,7 +167,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }*/
 
-
+    /**
+     * Adapter Listener
+     */
     private void adapterEventListener() {
         if (adapter != null) {
             adapter.setOnItemClickPagerListener(new TrackerDeviceListAdapter.RecyclerViewClickListener() {
@@ -229,7 +231,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     });
                     popup.show();
                 }
-
             });
         }
     }
@@ -1082,29 +1083,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Adds data in Home screen using Recycler view, It is the main method to display devices in Home screen
      */
     private void addDataInHomeScreen() {
-        /*if (!listOnHomeScreens.isEmpty()) {
-            for (HomeActivityListData listOnHomeScreenData : listOnHomeScreens) {
-                if (listOnHomeScreenData.isCreated == 1) {
-                    HomeActivityListData data = new HomeActivityListData();
-                    data.setName(listOnHomeScreenData.getName());
-                    data.setPhoneNumber(listOnHomeScreenData.getPhoneNumber());
-                    data.setGroupMember(listOnHomeScreenData.isGroupMember());
-                    data.setIsCreated(listOnHomeScreenData.isCreated);
-                    data.setGroupName(listOnHomeScreenData.getGroupName());
-                    mDbManager.insertInBorqsDB(data, Util.adminEmail);
-                }
-            }
-        }
-        listOnHomeScreens.clear();
-        List<HomeActivityListData> listOnDashBoard = new ArrayList<>();
-        List<HomeActivityListData> alldata = mDbManager.getAlldata(Util.adminEmail);
-        for (HomeActivityListData homeActivityListData : alldata) {
-            if (homeActivityListData.isGroupMember() == true && homeActivityListData.getImeiNumber() == null) {
-                listOnDashBoard.add(homeActivityListData);
-            } else if (homeActivityListData.isGroupMember() == false && homeActivityListData.getImeiNumber() != null) {
-                listOnDashBoard.add(homeActivityListData);
-            }
-        }*/
         List<HomeActivityListData> listOnDashBoard = mDbManager.getAllGroupDetail();
         adapter = new TrackerDeviceListAdapter(listOnDashBoard);
         listView.setAdapter(adapter);
