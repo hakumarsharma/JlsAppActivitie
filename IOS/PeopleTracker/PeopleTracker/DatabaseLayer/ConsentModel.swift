@@ -1,5 +1,5 @@
 //
-//  UserModel.swift
+//  ConsentModel.swift
 //  PeopleTracker
 //
 /*************************************************************
@@ -25,15 +25,14 @@
 import Foundation
 import RealmSwift
 
-@objcMembers class UserModel : Object, Decodable {
+@objcMembers class  ConsentModel : Object, Decodable {
     
-        dynamic var code    : Int = 0
-        dynamic var message : String = ""
+    dynamic var code            : Int = 0
+    dynamic var message         : String = ""
     
     enum CodingKeys : String, CodingKey {
            case code,message
        }
-    
     required init(from decoder: Decoder) throws
     {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -48,5 +47,4 @@ import RealmSwift
     {
         super.init()
     }
-    
 }

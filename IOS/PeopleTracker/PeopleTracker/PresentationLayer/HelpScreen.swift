@@ -42,7 +42,6 @@ class HelpScreen: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
         self.initializeData()
-                
     }
     
     func initializeData() {

@@ -38,7 +38,10 @@ class Constants {
        static let VerifyTokenUrl = UserApisUrl + "tokens/verify"
        static let RegisterationUrl = UserApisUrl + "register"
        static let CreateGroupUrl = "/sessiongroups"
-       static let GroupListUrl = "/sessiongroups?isPopulateConsents=true"
+       static let GroupListUrl = "/sessiongroups?isPopulateConsents=true&status=scheduled"
+       static let CreateMultiple = "/sessiongroupconsents"
+       static let GenerateConsent = "/tokens"
+       static let ApproveConsent = "/status"
     }
     
     struct HelpScreen {
@@ -75,6 +78,7 @@ class Constants {
         static let LoginScreen = "LoginScreen"
         static let HomeScreen = "HomeScreen"
         static let AddDeviceScreen = "AddDeviceScreen"
+        static let AddPersonScreen = "AddPersonScreen"
         static let CreateGroupScreen = "CreateGroupScreen"
         static let GroupListScreen = "GroupListScreen"
         static let MapsScreen = "MapsScreen"
@@ -92,12 +96,6 @@ class Constants {
         static let Otp = "Please enter otp"
     }
     
-    struct UserDefaultConstants {
-        static let UgsToken = "ugsToken"
-        static let UserId = "userId"
-        static let UgsExpiryTime = "ugsExpiryTime"
-        static let GroupData = "groupData"
-    }
     
     struct HomScreenConstants {
         static let Select = "Select"
@@ -119,6 +117,12 @@ class Constants {
           static let Name = "Please enter name"
           static let Imei = "Please enter valid IMEI number"
           static let DeviceAddedSuccessfully = "Device added successfully"
+          static let SelectType = "Select device type"
+          static let AdultTracker = "Adult Tracker"
+          static let KidTracker = "Kid Tracker"
+          static let PetTracker = "Pet Tracker"
+          static let VehicleTracker = "Vehicle Tracker"
+          static let OwnerNumber = "Please enter valid owner number"
       }
     
     struct CreateGroupConstantts {
@@ -135,5 +139,11 @@ class Constants {
         static let DeviceCanotBeAssigned = "Device cannot be added, Please try again later"
         static let Somethingwentwrong = "Something went wrong"
         static let ExceededGroupLimit = "Limit has been exceeded to create a group"
+        static let MobileNumberExists = "Mobile number already exists"
+    }
+    
+    struct NotificationName {
+        static let GetGroupList = "GetGroupList"
+        static let GetMemebersInGroup = "GetMemebersInGroup"
     }
 }

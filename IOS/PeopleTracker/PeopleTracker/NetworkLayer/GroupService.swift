@@ -24,12 +24,13 @@
 
 
 import Foundation
+import RealmSwift
 
 class GroupService {
     public static let shared = GroupService()
     private init() {}
     
-    let accessKey = "bearer " + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UgsToken) ?? "")
+    let accessKey = "bearer " + Utils.shared.getUgsToken()
     
     
     // Api to create a group
@@ -47,6 +48,7 @@ class GroupService {
                             if let string = String(data: data, encoding: String.Encoding.utf8) {
                                 let jsonData = string.data(using: .utf8)!
                                 let groupdata = try! JSONDecoder().decode(GroupModel.self, from: jsonData)
+                                RealmManager.sharedInstance.addGroupData(object: groupdata)
                                 completion(.success(groupdata))
                             }
                         }
@@ -148,6 +150,107 @@ class GroupService {
                                 let jsonData = string.data(using: .utf8)!
                                 let groupdata = try! JSONDecoder().decode(GroupModel.self, from: jsonData)
                                 completion(.success(groupdata))
+                            }
+                        }
+                    }
+                }
+                catch {
+                    let msg = error.localizedDescription
+                    completion(.failure(error))
+                    print(msg)
+                }
+            case .failure(let error):
+                completion(.failure(error))
+                print(error)
+            }
+        }
+        
+    }
+    
+    // Api to add member in group
+    func addMemberToGroup(addMemberInGroupUrl: URL,memebrName : String, parameters: [String : Any], completion: @escaping (Result<GroupMemberModel, Error>) -> Void) -> Void  {
+        
+        let networkManager = NetworkManager.init(url: addMemberInGroupUrl)
+        let request = networkManager.buildRequest(method: NetworkManager.Method.post, accessKey: accessKey,parameters: parameters)
+        networkManager.sendRequest(request: request) { (result) in
+            switch result {
+            case .success(_, let data) :
+                do {
+                    if let resultdata = data {
+                        if let json = try JSONSerialization.jsonObject(with: resultdata) as? [String : Any] {
+                            let data = try JSONSerialization.data(withJSONObject: json, options: [])
+                            if let string = String(data: data, encoding: String.Encoding.utf8) {
+                                let jsonData = string.data(using: .utf8)!
+                                let memberData = try! JSONDecoder().decode(GroupMemberModel.self, from: jsonData)
+                                memberData.groupMemberData.first?.name = memebrName
+                                RealmManager.sharedInstance.addGroupMemeberData(object: memberData)
+                                completion(.success(memberData))
+                            }
+                        }
+                    }
+                }
+                catch {
+                    let msg = error.localizedDescription
+                    completion(.failure(error))
+                    print(msg)
+                }
+            case .failure(let error):
+                completion(.failure(error))
+                print(error)
+            }
+        }
+        
+    }
+    
+    // Api to get members in group
+       func getMembersFromGroup(getMembersInGroupUrl: URL, completion: @escaping (Result<GroupMemberModel, Error>) -> Void) -> Void  {
+           
+           let networkManager = NetworkManager.init(url: getMembersInGroupUrl)
+           let request = networkManager.buildRequest(method: NetworkManager.Method.get, accessKey: accessKey)
+           networkManager.sendRequest(request: request) { (result) in
+               switch result {
+               case .success(_, let data) :
+                   do {
+                       if let resultdata = data {
+                           if let json = try JSONSerialization.jsonObject(with: resultdata) as? [String : Any] {
+                               let data = try JSONSerialization.data(withJSONObject: json, options: [])
+                               if let string = String(data: data, encoding: String.Encoding.utf8) {
+                                   let jsonData = string.data(using: .utf8)!
+                                   let groupMemberData = try! JSONDecoder().decode(GroupMemberModel.self, from: jsonData)
+                                   completion(.success(groupMemberData))
+                               }
+                           }
+                       }
+                   }
+                   catch {
+                       let msg = error.localizedDescription
+                       completion(.failure(error))
+                       print(msg)
+                   }
+               case .failure(let error):
+                   completion(.failure(error))
+                   print(error)
+               }
+           }
+           
+       }
+    
+    // Api to get single member data from group
+    func getMemberDataFromGroup(getMemberDataUrl: URL, completion: @escaping (Result<GroupMemberModel, Error>) -> Void) -> Void  {
+        
+        let networkManager = NetworkManager.init(url: getMemberDataUrl)
+        let request = networkManager.buildRequest(method: NetworkManager.Method.get, accessKey: accessKey)
+        networkManager.sendRequest(request: request) { (result) in
+            switch result {
+            case .success(_, let data) :
+                do {
+                    if let resultdata = data {
+                        if let json = try JSONSerialization.jsonObject(with: resultdata) as? [String : Any] {
+                            let data = try JSONSerialization.data(withJSONObject: json, options: [])
+                            if let string = String(data: data, encoding: String.Encoding.utf8) {
+                                let jsonData = string.data(using: .utf8)!
+                                let groupMemberData = try! JSONDecoder().decode(GroupMemberModel.self, from: jsonData)
+                                completion(.success(groupMemberData))
                             }
                         }
                     }

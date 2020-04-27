@@ -14,6 +14,7 @@ class Utils {
     enum GroupStatus : String {
         case isActive = "active"
         case isClosed = "closed"
+        case isScheduled = "scheduled"
     }
     
     func handleError(error : NetworkManager.ErrorType) -> String {
@@ -36,12 +37,37 @@ class Utils {
     }
     
     func createCirculatImage(imageView : UIImageView) -> UIImageView{
-        imageView.layer.borderWidth = 1.0
+        imageView.layer.borderWidth = 3.0
         imageView.layer.masksToBounds = false
         imageView.layer.borderColor = UIColor.clear.cgColor
         imageView.layer.cornerRadius = imageView.frame.size.width / 2
         imageView.clipsToBounds = true
         return imageView
+    }
+    
+    func getUgsToken() -> String {
+        if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
+            let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
+            return loginData?.ugsToken ?? ""
+        }
+        return ""
+    }
+    
+    func getUserId() -> String {
+        
+        if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
+            let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
+            return loginData?.user?.userId ?? ""
+        }
+        return ""
+    }
+    
+    func getUgsTokenExpiryTime() -> Double {
+        if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
+            let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
+            return loginData?.ugsTokenexpiry ?? 0
+        }
+        return 0
     }
 }
 

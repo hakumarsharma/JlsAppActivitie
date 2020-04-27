@@ -8,12 +8,18 @@ PODS:
   - GoogleMaps/Maps (3.8.0):
     - GoogleMaps/Base
   - JJFloatingActionButton (2.4.0)
+  - Realm (4.4.1):
+    - Realm/Headers (= 4.4.1)
+  - Realm/Headers (4.4.1)
+  - RealmSwift (4.4.1):
+    - Realm (= 4.4.1)
   - SideMenu (6.4.8)
 
 DEPENDENCIES:
   - CocoaMQTT
   - GoogleMaps
   - JJFloatingActionButton
+  - RealmSwift
   - SideMenu
 
 SPEC REPOS:
@@ -22,6 +28,8 @@ SPEC REPOS:
     - CocoaMQTT
     - GoogleMaps
     - JJFloatingActionButton
+    - Realm
+    - RealmSwift
     - SideMenu
 
 SPEC CHECKSUMS:
@@ -29,8 +37,10 @@ SPEC CHECKSUMS:
   CocoaMQTT: a61490ed3b328011c5d75169a77781983e2bb221
   GoogleMaps: 7c8d66d70e4e8c300f43a7219d8fdaad7b325a9a
   JJFloatingActionButton: 0d21f5cdd2adde150e62c22c63762ab713c4e16f
+  Realm: 4eb04d7487bd43c0581256f40b424eafb711deff
+  RealmSwift: 3eb8924ff7100df5928c7602f71d0fec51e7c9c5
   SideMenu: 4a891be552d30bb6fa87ad404d62e485f8450c34
 
-PODFILE CHECKSUM: 8ca391f4515870578acaae53424fba376158c61d
+PODFILE CHECKSUM: 3d0ef188fc262e5cb8af795dafd9ee582bd5b173
 
 COCOAPODS: 1.9.1

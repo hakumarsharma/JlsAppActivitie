@@ -58,7 +58,7 @@ class CreateGroupScreen: UIViewController {
     // Create Group Api Call
     func callCreateGroupApi() {
         self.showActivityIndicator()
-        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UserId) ?? "") + Constants.ApiPath.CreateGroupUrl )!
+        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl )!
         let sessionParams : [String : Int64] = ["from" : 1587969892000, "to" : 1587969892000]
         let groupParams : [String : Any] = ["name" : groupName.text!, "session" : sessionParams, "type" : "one_to_one"]
         GroupService.shared.createGroup(createGroupUrl:  groupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
@@ -67,6 +67,7 @@ class CreateGroupScreen: UIViewController {
                   print(groupResponse)
                    DispatchQueue.main.async {
                   self.hideActivityIndicator()
+                  NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)              
                   self.navigationController?.popViewController(animated: true)
                   }
             case .failure(let error):
@@ -89,7 +90,7 @@ class CreateGroupScreen: UIViewController {
     func callUpdateGroupApi() {
         self.showActivityIndicator()
     
-        let updateGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UserId) ?? "") + Constants.ApiPath.CreateGroupUrl + "/"  +  UserDefaults.standard.string(forKey: name)! )!
+        let updateGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/"  +  UserDefaults.standard.string(forKey: name)! )!
         let groupParams : [String : Any] = ["name" : groupName.text!]
         GroupService.shared.updateGroup(updateGroupUrl:  updateGroupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
             switch result {
@@ -97,6 +98,7 @@ class CreateGroupScreen: UIViewController {
                   print(groupResponse)
                    DispatchQueue.main.async {
                   self.hideActivityIndicator()
+                  NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
                   self.navigationController?.popViewController(animated: true)
                   }
             case .failure(let error):

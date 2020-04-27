@@ -3,68 +3,139 @@
 //  PeopleTracker
 //
 /*************************************************************
-*
-* Reliance Digital Platform & Product Services Ltd.
-* CONFIDENTIAL
-* __________________
-*
-*  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
-*
-*  ALL RIGHTS RESERVED.
-*
-* NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
-* remains the property of Reliance Digital Platform & Product Services Ltd..  The
-* intellectual and technical concepts contained herein are
-* proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
-* copyright law or as trade secret under confidentiality obligations.
-* Dissemination, storage, transmission or reproduction of this information
-* in any part or full is strictly forbidden unless prior written
-* permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
-**************************************************************/
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
 
 import Foundation
+import RealmSwift
 
-public struct GroupListModel : Codable {
+@objcMembers class GroupListModel : Object, Decodable {
     
-    let code          : Int
-    let message       : String
-    let groupListData : [GroupListData]
+    dynamic var code          : Int = 0
+    dynamic var message       : String = ""
+    let groupListData = RealmSwift.List<GroupListData>()
     
-    private enum CodingKeys : String, CodingKey {
+    enum CodingKeys : String, CodingKey {
         case code,message,groupListData = "data"
     }
+    
+    required init(from decoder: Decoder) throws
+       {
+           let container = try decoder.container(keyedBy: CodingKeys.self)
+           
+           code = try container.decode(Int.self, forKey: .code)
+           message = try container.decode(String.self, forKey: .message)
+           let groupList = try container.decode([GroupListData].self, forKey: .groupListData)
+           groupListData.append(objectsIn: groupList)
+           
+           super.init()
+       }
+       
+       required init()
+       {
+           super.init()
+       }
 }
 
-public struct GroupListData : Codable {
+@objcMembers class  GroupListData : Object, Decodable {
     
-    let  status          : String
-    let  groupId         : String
-    let  name            : String
-    let  groupSession    : GroupSession
-    let  groupMember     : [GroupMember]
+    dynamic var  status          : String = ""
+    dynamic var  groupId         : String = ""
+    dynamic var  name            : String = ""
+    dynamic var  groupSession    : GroupSession? = nil
+    let groupMember = RealmSwift.List<GroupMember>()
     
-    private enum CodingKeys : String, CodingKey {
-           case status,groupId = "_id",name,groupSession = "session",groupMember = "consents"
-        }
-}
-
-public struct GroupSession : Codable{
+    enum CodingKeys : String, CodingKey {
+        case status,groupId = "_id",name,groupSession = "session",groupMember = "consents"
+    }
     
-    let  from  : Int64
-    let  to    : Int64
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        status = try container.decode(String.self, forKey: .status)
+        groupId = try container.decode(String.self, forKey: .groupId)
+        name = try container.decode(String.self, forKey: .name)
+        groupSession = try container.decode(GroupSession.self, forKey: .groupSession)
+        let groupMembersList = try container.decode([GroupMember].self, forKey: .groupMember)
+        groupMember.append(objectsIn: groupMembersList)
+        
+        super.init()
+    }
     
-    private enum CodingKeys : String, CodingKey {
-        case from,to
+    required init()
+    {
+        super.init()
+    }
+    override class func primaryKey() -> String? {
+        return "groupId"
     }
 }
 
-public struct GroupMember : Codable{
+@objcMembers class  GroupSession : Object, Decodable{
     
-    let  memberStatus       : String
-    let  memberPhone        : String
-    let  isGroupAdmin       : Bool
+    dynamic var  from  : Int64? = nil
+    dynamic var  to    : Int64? = nil
     
-    private enum CodingKeys : String, CodingKey {
+    enum CodingKeys : String, CodingKey {
+        case from,to
+    }
+    
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        from = try container.decode(Int64.self, forKey: .from)
+        to = try container.decode(Int64.self, forKey: .to)
+        
+        super.init()
+    }
+    
+    required init()
+    {
+        super.init()
+    }
+}
+
+@objcMembers class GroupMember : Object, Decodable{
+    
+    dynamic var  memberStatus       : String = ""
+    dynamic var  memberPhone        : String = ""
+    dynamic var  isGroupAdmin       : Bool? = nil
+    
+    enum CodingKeys : String, CodingKey {
         case memberStatus="status",memberPhone="phone",isGroupAdmin
+    }
+    
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        memberStatus = try container.decode(String.self, forKey: .memberStatus)
+        memberPhone = try container.decode(String.self, forKey: .memberPhone)
+        isGroupAdmin = try container.decode(Bool.self, forKey: .isGroupAdmin)
+        
+        super.init()
+    }
+    
+    required init()
+    {
+        super.init()
     }
 }

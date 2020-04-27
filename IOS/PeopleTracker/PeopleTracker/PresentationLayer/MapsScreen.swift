@@ -69,7 +69,7 @@ class MapsScreen: UIViewController {
     // API to get location details
     func callgetDeviceLocationDetails() {
         self.showActivityIndicator()
-        let deviceURL = URL(string:  Constants.ApiPath.DeviceApisUrl + "5e789ad0a789b5a7f632ff7e" + "?tsp=1585031229387&ugs_token=" + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UgsToken) ?? ""))!
+        let deviceURL = URL(string:  Constants.ApiPath.DeviceApisUrl + "5e789ad0a789b5a7f632ff7e" + "?tsp=1585031229387&ugs_token=" + Utils.shared.getUgsToken())!
         DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<LocationModel, Error>)) in
             switch result {
             case .success(let deviceResponse):

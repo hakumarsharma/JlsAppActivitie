@@ -1,5 +1,5 @@
 //
-//  GroupModel.swift
+//  GroupMemberModel.swift
 //  PeopleTracker
 //
 /*************************************************************
@@ -25,25 +25,25 @@
 import Foundation
 import RealmSwift
 
-@objcMembers class GroupModel : Object, Decodable {
+@objcMembers class GroupMemberModel : Object, Decodable {
     
-    dynamic var code      : Int = 0
-    dynamic var message   : String = ""
-    dynamic var tempId    : String? = nil
-    var groupData: GroupData? = GroupData()
+    dynamic var code            : Int = 0
+    dynamic var message         : String = ""
+    dynamic var tempId          : String? = nil
+    let groupMemberData = RealmSwift.List<GroupMemberData>()
     
     enum CodingKeys : String, CodingKey {
-        case code,message,groupData = "data"
+        case code,message,groupMemberData = "data"
     }
     
     required init(from decoder: Decoder) throws
     {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
         code = try container.decode(Int.self, forKey: .code)
         message = try container.decode(String.self, forKey: .message)
-        groupData = try container.decode(GroupData.self, forKey: .groupData)
-        tempId = groupData?.groupId
+        let memeberList = try container.decode([GroupMemberData].self, forKey: .groupMemberData)
+        groupMemberData.append(objectsIn: memeberList)
+        tempId = groupMemberData.first?.groupMemberId
         super.init()
     }
     
@@ -51,21 +51,23 @@ import RealmSwift
     {
         super.init()
     }
-    
     override class func primaryKey() -> String? {
         return "tempId"
     }
-    
 }
-@objcMembers class GroupData : Object, Decodable{
+
+@objcMembers class GroupMemberData : Object, Decodable {
     
-    dynamic var  status     : String? = nil
-    dynamic var  groupId    : String = ""
-    dynamic var  name       : String = ""
-    var session             : Session? = nil
+    dynamic var  status                : String  = ""
+    dynamic var  groupMemberId         : String  = ""
+    dynamic var  name                  : String  = ""
+    dynamic var  phone                 : String  = ""
+    dynamic var  user                  : String  = ""
+    dynamic var  device                : String  = ""
+    dynamic var  sessionGroup          : String  = ""
     
     enum CodingKeys : String, CodingKey {
-        case status,groupId = "_id",name,session
+        case status,groupMemberId = "_id",name,phone,user,device,sessionGroup
     }
     
     required init(from decoder: Decoder) throws
@@ -73,9 +75,12 @@ import RealmSwift
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         status = try container.decode(String.self, forKey: .status)
-        groupId = try container.decode(String.self, forKey: .groupId)
+        groupMemberId = try container.decode(String.self, forKey: .groupMemberId)
         name = try container.decode(String.self, forKey: .name)
-        session = try container.decode(Session.self, forKey: .session)
+        phone = try container.decode(String.self, forKey: .phone)
+        user = try container.decode(String.self, forKey: .user)
+        device = try container.decode(String.self, forKey: .device)
+        sessionGroup = try container.decode(String.self, forKey: .sessionGroup)
         
         super.init()
     }
@@ -84,33 +89,7 @@ import RealmSwift
     {
         super.init()
     }
-    
     override class func primaryKey() -> String? {
-           return "groupId"
-       }
-}
-
-@objcMembers class Session : Object, Decodable{
-    
-    dynamic var  from  : Int64 = 0
-    dynamic var  to    : Int64 = 0
-    
-    enum CodingKeys : String, CodingKey {
-        case from,to
-    }
-    
-    required init(from decoder: Decoder) throws
-    {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        from = try container.decode(Int64.self, forKey: .from)
-        to = try container.decode(Int64.self, forKey: .to)
-        
-        super.init()
-    }
-    
-    required init()
-    {
-        super.init()
+        return "groupMemberId"
     }
 }
