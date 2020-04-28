@@ -120,9 +120,12 @@
     <string name="login_send_otp">Send OTP</string>
     <string name="login_next">Next</string>
     <string name="login_btn_otp">Login</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="attach_device">Attach Device</string>
     <string name="login_otp_text">Please wait while we automatically retrieve the 6-digit verification code.\nYou can always enter it manually.</string>
     <string name="login_btn_enter_otp">Enter OTP</string>
     <string name="login_sms_otp_sent">SMS with OTP was sent</string>
+    <string name="qrcode_text">Align QR Code with in the \nframe to scan</string>
     <string name="login_sms_otp_sent_to">to</string>
     <string name="login_sms_otp_header_text">OTP</string>
     <string name="login_sms_otp_10digit">Enter 10 digit Mobile number</string>
@@ -131,6 +134,11 @@
     <string name="or">OR</string>
     <string name="email_confirmation_msg">Hey Riya, you are almost ready to\n \t\tadd your device. A verification \nemail is sent on your email-Id. After \n \t\tverify you will be able to login</string>
     <string name="email_confirmation_title">Email confirmation</string>
+    <string name="qrscan_instruction">A QR code will be available to \nthe back side of your device \nbox.</string>
+    <string name="add_manual">Add device manually</string>
+    <string name="jio_device_name">JioTags (Name of the device)</string>
+    <string name="jio_device_number">JioTags Number</string>
+    <string name="jio_device_imei">JioTags IMEI number</string>
     <string name="change_rmn">Change Registered mobile no.</string>
     <string name="password">Password</string>
     <string name="password_condition">Use 8 or more characters with a mix of letters,\nnumbers &amp; symbols</string>
@@ -162,6 +170,20 @@
     <string name="how_details3">Attached device to any asset and save the information to get it track.</string>
     <string name="facebook_app_id">1177666639249332</string>
     <string name="fb_login_protocol_scheme">fb1177666639249332</string>
+
+    <!-- Help Screen -->
+    <string name="location_help_title">Location tracking</string>
+    <string name="location_help_content">Locate your everyday essentials on \nMaps. View your favourite item on \nMaps when it is not connected to you</string>
+    <string name="ring_help_title">Find to ring</string>
+    <string name="ring_help_content">Application to ring the JioTag and \nfind your item.</string>
+    <string name="community_help_title">My Community</string>
+    <string name="community_help_content">In case a JioTag is lost, MyJio \nCommunity will help you find your \nlost item</string>
+    <string name="share_help_title">Share &amp; Transfer</string>
+    <string name="share_help_content">Share or Transfer your Jiotags with \nyour friends and family</string>
+    <string name="pagerindicater">&amp;#9673;</string>
+
+
+
 
 
 </resources>

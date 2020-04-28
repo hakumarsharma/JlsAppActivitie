@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.nutapp.util.Constant;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -38,6 +40,7 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
     private  CallbackManager callbackManager;
     private LoginButton loginButton;
     private Button signInButton;
+    private Button nextBtn;
     private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN =0;
 
@@ -48,12 +51,16 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
 
         setContentView(R.layout.activity_auth_login);
         TextView title = findViewById(R.id.toolbar_title);
+        Button backBtn = findViewById(R.id.back);
         TextView pass_condition_text = findViewById(R.id.password_condition);
-        title.setText(JioUtils.AUTH_LOGIN_TITLE);
+        backBtn.setVisibility(View.VISIBLE);
+        title.setText(Constant.AUTH_LOGIN_TITLE);
         emailEdittext = findViewById(R.id.login_edit_email);
         passEdittext = findViewById(R.id.login_edit_password);
         emailTitleText = findViewById(R.id.login_text_email);
         passTitleText = findViewById(R.id.login_text_password);
+        nextBtn = findViewById(R.id.login_btn);
+        nextBtn.setOnClickListener(this);
         pass_condition_text.setTypeface(JioUtils.mTypeface(this, 3));
 
         callbackManager = CallbackManager.Factory.create();
@@ -162,8 +169,32 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
             case R.id.google_login:
                 signIn();
                 break;
-            // ...
+            case R.id.login_btn:
+                validateEntry();
+                break;
+
+            default:
+                break;
         }
+    }
+
+    private void validateEntry() {
+        if(emailEdittext.getText().toString().isEmpty() || ! JioUtils.isValidEmailId(emailEdittext.getText().toString())){
+            emailEdittext.setError("Please enter the valid email-id");
+            return;
+        }
+        if(passEdittext.getText().toString().isEmpty() || ! JioUtils.isValidPassword(passEdittext.getText().toString())){
+            passEdittext.setError("Please enter the valid password");
+            return;
+        }
+
+        gotoEmailConfirmationScreen();
+
+    }
+
+    private void gotoEmailConfirmationScreen() {
+        Intent intent = new Intent(this,EmailConfirmationActivity.class);
+        startActivity(intent);
     }
 
     private void signIn() {

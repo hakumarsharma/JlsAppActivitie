@@ -25,7 +25,7 @@ public class JioUtils {
     public static final String MYPREFERENCES_PHONE_ALERTS = "SETTINGS_JIOTAGS_PHONE_ALERTS";
     public static final String MYPREFERENCES_PHONE_ALERT_REPEAT = "SETTINGS_JIOTAGS_PHONE_ALERTS_REPEAT";
     public static final int REQUEST_CHECK_SETTINGS_MAIN=555;
-    public static final String AUTH_LOGIN_TITLE = "User Details";
+    //public static final String AUTH_LOGIN_TITLE = "User Details";
 
     static SharedPreferences preferences;
 

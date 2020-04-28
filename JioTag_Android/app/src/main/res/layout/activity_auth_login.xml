@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/cardviewlayout_device_background_color"
     >
 
     <include
@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="22dp"
         android:layout_below="@+id/loginToolbar"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="22dp"
         android:layout_marginBottom="25dp"
         android:layout_alignParentBottom="true"

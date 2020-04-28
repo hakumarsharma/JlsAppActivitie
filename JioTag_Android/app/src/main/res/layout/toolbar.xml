@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/cardviewlayout_device_background_color"
     app:contentInsetStart="0dp"
     app:contentInsetEnd="0dp"
     app:contentInsetLeft="0dp"
@@ -25,14 +25,14 @@
             android:id="@+id/toolbar_title"/>
 
         <Button
-            android:id="@+id/track"
+            android:id="@+id/back"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="16dp"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_back"
-            android:visibility="visible" />
+            android:visibility="invisible" />
 
 
     </RelativeLayout>

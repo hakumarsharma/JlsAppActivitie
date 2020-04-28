@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    >
+
+    <include
+        android:id="@+id/emailConfirmToolbar"
+        layout="@layout/toolbar"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="22dp"
+        android:layout_below="@+id/emailConfirmToolbar"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginBottom="25dp"
+        android:layout_alignParentBottom="true"
+        card_view:cardCornerRadius="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/emailicon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/ic_email" />
+
+            <TextView
+                android:id="@+id/confirmation_title"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/emailicon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/sixteen_dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/email_confirmation_title"
+                android:textColor="@color/black"
+                android:textSize="@dimen/twenty_dp"
+                android:textStyle="bold"
+                />
+
+
+            <Button
+                android:id="@+id/login_btn"
+                android:layout_width="@dimen/adddevice_button_width"
+                android:layout_height="@dimen/adddevice_button_height"
+                android:layout_below="@+id/password_condition"
+                android:background="@drawable/button_frame_blue"
+                android:text="@string/login_btn_otp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textAllCaps="false"
+                android:layout_marginBottom="24dp"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/adddevice_content_font_size" />
+
+            <TextView
+                android:id="@+id/ortext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/confirmation_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/margin_24"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="@dimen/margin_24"
+                android:text="@string/email_confirmation_msg"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_size"
+                />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

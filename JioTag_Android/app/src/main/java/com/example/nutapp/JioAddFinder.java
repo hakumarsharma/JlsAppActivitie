@@ -14,13 +14,13 @@ public class JioAddFinder extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_jio_finder);
-        TextView addjio_app_header_text=(TextView)findViewById(R.id.addjio_app_header_text);
-        TextView addjiolink=(TextView)findViewById(R.id.addjiolink);
-        Button btn_search_devices=(Button)findViewById(R.id.addjio_btn_search_devices);
+        TextView addjio_app_header_text= findViewById(R.id.addjio_app_header_text);
+        TextView addjiolink= findViewById(R.id.addjiolink);
+        Button btn_search_devices= findViewById(R.id.addjio_btn_search_devices);
         btn_search_devices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startMain=new Intent(getApplicationContext(),JioPermissions.class);
+                Intent startMain=new Intent(getApplicationContext(),QRReaderInstruction.class);
                 startActivity(startMain);
             }
         });
