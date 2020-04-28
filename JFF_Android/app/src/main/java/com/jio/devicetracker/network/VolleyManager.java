@@ -60,7 +60,6 @@ public class VolleyManager extends StringRequest {
         this.mSucessListener = req.getSuccessListener();
         this.mErrorListener = req.getErrorListener();
         this.mHandleError = req.isHandleError();
-
     }
 
     @Override

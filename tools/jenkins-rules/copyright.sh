@@ -14,7 +14,7 @@ done
 flag=0
 cd $wkp
 
-for p in ` find . -type f \\( -name "*.py" -o -name "*.sh" -o -name "*.yaml" -o -name "*.yml" -o -name "*.java" -o -name "*.j2"  -o -name "*.MD"  -o -name "*.md"  -o -name "*.Md"  -o -name "*.c"  -o -name "*.h" -o -name "*.go"  \\) | cut -c3-  `
+for p in ` find . -type f \\( -name "*.py" -o -name "*.sh" -o -name "*.yaml" -o -name "*.yml" -o -name "*.java" -o -name "*.j2"  -o -name "*.MD"  -o -name "*.md"  -o -name "*.Md"  -o -name "*.c"  -o -name "*.h" -o -name "*.go" -o "*.swift" -o "*.m" \\) | cut -c3-  `
     do
 
         #git log -n 1 --pretty=oneline --name-status $i >test.log

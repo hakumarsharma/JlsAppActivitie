@@ -21,24 +21,18 @@
 
 package com.jio.devicetracker.view.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
-import com.jio.devicetracker.util.Constant;
-
-
 import java.util.List;
 
 /**
@@ -46,18 +40,15 @@ import java.util.List;
  */
 public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDeviceListAdapter.ViewHolder> {
 
-    private Context mContext;
     private List<HomeActivityListData> mData;
     private static RecyclerViewClickListener itemListener;
     private MultipleselectData mSelectData;
 
     /**
      * Constructor to add devices in home screen
-     * @param mContext
      * @param mData
      */
-    public TrackerDeviceListAdapter(Context mContext, List<HomeActivityListData> mData) {
-        this.mContext = mContext;
+    public TrackerDeviceListAdapter(List<HomeActivityListData> mData) {
         this.mData = mData;
     }
 
@@ -84,13 +75,16 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         HomeActivityListData data = mData.get(position);
-        holder.phone.setText(mData.get(position).getPhoneNumber());
+        holder.mIconImage.setImageResource(R.drawable.ic_group_button);
+        holder.name.setText(mData.get(position).getGroupName());
+        holder.mConsentStatus.setVisibility(View.INVISIBLE);
+        /*holder.phone.setText(mData.get(position).getPhoneNumber());
         holder.name.setText(mData.get(position).getGroupName());
         if (mData.get(position).isGroupMember() == true) {
             holder.mIconImage.setImageResource(R.drawable.ic_group_button);
-        } else if (mData.get(position).getDeviceType().equalsIgnoreCase("People Tracker")) {
+        } else if (mData.get(position).getDeviceType() != null && mData.get(position).getDeviceType().equalsIgnoreCase("People Tracker")) {
             holder.mIconImage.setImageResource(R.drawable.ic_user);
-        } else if (mData.get(position).getDeviceType().equalsIgnoreCase("Pet Tracker")) {
+        } else if (mData.get(position).getDeviceType() != null && mData.get(position).getDeviceType().equalsIgnoreCase("Pet Tracker")) {
             holder.mIconImage.setImageResource(R.drawable.ic_pet);
             holder.mConsentStatus.setVisibility(View.INVISIBLE);
         }
@@ -111,7 +105,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentNotSent));
             holder.mConsentStatus.setText(Constant.REQUEST_CONSENT);
             holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notsent, 0, 0, 0);
-        }
+        }*/
 
         if (!data.isGroupMember()) {
             holder.mConsentStatus.setOnClickListener(v -> {
@@ -150,7 +144,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         // holder.mEdit.setOnClickListener(v -> itemListener.recyclerviewEditList(mData.get(position).getRelation(),mData.get(position).getPhoneNumber()));
         // holder.mDelete.setOnClickListener(v -> itemListener.recyclerviewDeleteList(mData.get(position).getPhoneNumber(),position));
 
-        holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, mData.get(position).getGroupName(), mData.get(position).getPhoneNumber()));
+        holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, mData.get(position).getGroupName(), mData.get(position).getPhoneNumber(), mData.get(position).getGroupId()));
 
         holder.mListlayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -221,7 +215,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
         void consentClickForGroup(String selectedGroupName);
 
-        void onPopupMenuClicked(View v, int position, String name, String number);
+        void onPopupMenuClicked(View v, int position, String name, String number, String groupId);
     }
 
     /**

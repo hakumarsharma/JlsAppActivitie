@@ -22,78 +22,29 @@
 
 package com.jio.devicetracker.database.pojo;
 
-import com.google.gson.annotations.SerializedName;
-
+/**
+ * Used to send the User data to the borqs at the time of login
+ */
 public class Userdata {
-
-    @SerializedName("email")
-    private String emailId;
-
-    @SerializedName("password")
+    private String phone;
+    private String phoneCountryCode;
     private String password;
-
-    @SerializedName("mobileNumber")
-    private  String mobileNumber;
-
-    @SerializedName("userName")
-    private String userName;
-
-    @SerializedName("type")
     private String type;
 
-    public String getMobileNumber() {
-        return mobileNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getPhoneCountryCode() {
+        return phoneCountryCode;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getEmailId() {
-        return emailId;
-    }
-
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
-    /*  @SerializedName("email")
-    private String emailId;
-    @SerializedName("password")
-    private String password;
-    @SerializedName("type")
-    private String type;
-
-    public String getEmailId() {
-        return emailId;
-    }
-
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
+    public void setPhoneCountryCode(String phoneCountryCode) {
+        this.phoneCountryCode = phoneCountryCode;
     }
 
     public String getPassword() {
@@ -110,5 +61,5 @@ public class Userdata {
 
     public void setType(String type) {
         this.type = type;
-    }*/
+    }
 }

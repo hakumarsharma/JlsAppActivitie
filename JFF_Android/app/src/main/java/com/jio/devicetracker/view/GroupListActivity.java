@@ -35,7 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.GroupmemberListData;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -80,11 +80,11 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
      * Displays group members in a list
      */
     private void addDataInList() {
-        List<GroupmemberListData> mList = new ArrayList<>();
+        List<GroupMemberDataList> mList = new ArrayList<>();
         List<HomeActivityListData> listData = mDbmanager.getAllBorqsData(Util.adminEmail);
         for (HomeActivityListData homeActivityListData : listData) {
             if (homeActivityListData.getGroupName() != null && homeActivityListData.getGroupName().equalsIgnoreCase(DashboardActivity.groupName) && homeActivityListData.getName() != null) {
-                GroupmemberListData data = new GroupmemberListData();
+                GroupMemberDataList data = new GroupMemberDataList();
                 data.setName(homeActivityListData.getName());
                 data.setNumber(homeActivityListData.getPhoneNumber());
                 data.setProfileImage(R.drawable.ic_tracee_list);

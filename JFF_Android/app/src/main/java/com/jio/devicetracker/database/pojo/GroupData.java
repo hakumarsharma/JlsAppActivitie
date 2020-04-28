@@ -22,6 +22,9 @@
 
 package com.jio.devicetracker.database.pojo;
 
+/**
+ * Used to store Group Data
+ */
 public class GroupData {
     private String groupName;
     private String name;

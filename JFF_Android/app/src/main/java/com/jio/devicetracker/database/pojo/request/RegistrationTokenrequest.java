@@ -58,7 +58,7 @@ public class RegistrationTokenrequest implements IRequest {
 
     @Override
     public String getAction() {
-        return Constant.REGISTRATION_TOKEN_URL;
+        return Constant.REGISTRATION_URL;
     }
 
     @Override
