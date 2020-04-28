@@ -54,17 +54,22 @@ public class ActiveMemberActivity extends AppCompatActivity {
     private ActiveMemberListAdapter mAdapter;
     private String consentId;
     private int position;
+    private String errorMessage;
+    private String createdBy;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_member_list);
         mDbManager = new DBManager(this);
+        userId = mDbManager.getAdminLoginDetail().getUserId();
         addDataInList();
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Intent intent = getIntent();
-        toolbarTitle.setText(intent.getStringExtra("groupName"));
-        groupId = intent.getStringExtra("groupId");
+        toolbarTitle.setText(intent.getStringExtra(Constant.GROUPNAME));
+        groupId = intent.getStringExtra(Constant.GROUP_ID);
+        createdBy = intent.getStringExtra(Constant.CREATED_BY);
         RecyclerView mRecyclerList = findViewById(R.id.trackerList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
@@ -78,22 +83,24 @@ public class ActiveMemberActivity extends AppCompatActivity {
      */
     private void adapterEventListener() {
         if (mAdapter != null) {
-            mAdapter.setOnItemClickPagerListener((v, position, groupId, consentStatus, phoneNumber, consentId) -> {
+            mAdapter.setOnItemClickPagerListener((v, position, groupId, isGroupAdmin, phoneNumber, consentId) -> {
                 PopupMenu popup = new PopupMenu(ActiveMemberActivity.this, v);
                 this.consentId = consentId;
                 this.position = position;
-                if (consentStatus.equalsIgnoreCase("true")) {
+                if (isGroupAdmin == true && createdBy.equalsIgnoreCase(userId)) {
                     popup.getMenu().add(Menu.NONE, 1, 1, Constant.REMOVE);
+                    errorMessage = Constant.REMOVE_FROM_GROUP_FAILURE;
                 } else {
                     popup.getMenu().add(Menu.NONE, 2, 2, Constant.EXIT);
+                    errorMessage = Constant.EXIT_FROM_GROUP_FAILURE;
                 }
                 popup.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
                         case 1:
-//                            makeRemoveAPICall(phoneNumber);
+                            makeRemoveAPICall(phoneNumber);
                             break;
                         case 2:
-                                makeExitAPICall(phoneNumber);
+                            makeExitAPICall(phoneNumber);
                             break;
                         default:
                             break;
@@ -106,7 +113,7 @@ public class ActiveMemberActivity extends AppCompatActivity {
     }
 
     /**
-     * Make an Exit API Call
+     * make an Exit API Call
      */
     private void makeExitAPICall(String phoneNumber) {
         ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
@@ -115,7 +122,21 @@ public class ActiveMemberActivity extends AppCompatActivity {
         consent.setStatus(Constant.EXITED);
         exitRemovedGroupData.setConsent(consent);
         Util.getInstance().showProgressBarDialog(ActiveMemberActivity.this);
-        GroupRequestHandler.getInstance(this).handleRequest(new ExitRemovedGroupRequest(new ExitRemovedGroupRequestSuccessListener(), new ExitRemovedGroupRequestErrorListener(), exitRemovedGroupData, groupId, mDbManager.getAdminLoginDetail().getUserId()));
+        GroupRequestHandler.getInstance(this).handleRequest(new ExitRemovedGroupRequest(new ExitRemovedGroupRequestSuccessListener(), new ExitRemovedGroupRequestErrorListener(), exitRemovedGroupData, groupId, userId));
+    }
+
+    /**
+     * Make a Remove API Call
+     * @param phoneNumber
+     */
+    private void makeRemoveAPICall(String phoneNumber) {
+        ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
+        ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
+        consent.setPhone(phoneNumber);
+        consent.setStatus(Constant.REMOVED);
+        exitRemovedGroupData.setConsent(consent);
+        Util.getInstance().showProgressBarDialog(ActiveMemberActivity.this);
+        GroupRequestHandler.getInstance(this).handleRequest(new ExitRemovedGroupRequest(new ExitRemovedGroupRequestSuccessListener(), new ExitRemovedGroupRequestErrorListener(), exitRemovedGroupData, groupId, userId));
     }
 
     /**
@@ -138,7 +159,7 @@ public class ActiveMemberActivity extends AppCompatActivity {
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.EXIT_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+            Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
         }
     }
 
@@ -156,6 +177,7 @@ public class ActiveMemberActivity extends AppCompatActivity {
             groupMemberDataList.setNumber(data.getNumber());
             groupMemberDataList.setConsentStatus(data.getConsentStatus());
             groupMemberDataList.setGroupId(data.getGroupId());
+            groupMemberDataList.setGroupAdmin(data.isGroupAdmin());
             groupMemberDataList.setProfileImage(R.drawable.ic_tracee_list);
             memberList.add(groupMemberDataList);
         }

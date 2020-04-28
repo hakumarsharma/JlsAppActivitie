@@ -94,6 +94,7 @@ public class Constant {
     public static final String  SCHEDULED = "scheduled";
     public static final String APPROVED = "approved";
     public static final String EXIT_FROM_GROUP_FAILURE = "Exit from group failed!";
+    public static final String REMOVE_FROM_GROUP_FAILURE = "Remove from group failed!";
 
 
     // Login Activity constants
@@ -217,6 +218,8 @@ public class Constant {
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";
     public static final String GROUP_ID = "groupId";
+    public static final String GROUPNAME = "groupName";
+    public static final String QR_CODE_VALUE = "QRCodeValue";
     public static final String ACTIVE_SESSION_TITLE = "Active Sessions";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";
@@ -240,6 +243,13 @@ public class Constant {
     public static final String REMOVE = "Remove";
     public static final String EXIT = "Exit";
     public static final String EXITED = "exited";
+    public static final String REMOVED = "removed";
+    public static final String USER_ID= "userId";
+    public static final String OK = "OK";
+    public static final String CANCEL = "Cancel";
+    public static final String CREATED_BY = "createdBy";
+
+
 
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";

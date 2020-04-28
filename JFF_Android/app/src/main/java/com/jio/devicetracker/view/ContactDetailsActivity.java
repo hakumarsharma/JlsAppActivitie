@@ -74,7 +74,6 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private static String nameComingFromContactList = null;
     private Button addContactInGroupButon = null;
     private Toolbar toolbar = null;
-    private String phoneCountryCode;
     private String groupId;
     private String userId;
 
@@ -92,11 +91,10 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         Spinner deviceTypeSpinner = findViewById(R.id.deviceTypeSpinner);
         deviceTypeSpinner.setOnItemSelectedListener(this);
         mDbManager = new DBManager(this);
-        phoneCountryCode = mDbManager.getAdminLoginDetail().getPhoneCountryCode();
         Intent intent = getIntent();
-        String qrValue = intent.getStringExtra("QRCodeValue");
-        groupId = intent.getStringExtra("groupId");
-        userId = intent.getStringExtra("userId");
+        String qrValue = intent.getStringExtra(Constant.QR_CODE_VALUE);
+        groupId = intent.getStringExtra(Constant.GROUP_ID);
+        userId = intent.getStringExtra(Constant.USER_ID);
         setNameNumberImei(qrValue);
         changeButtonColorOnDataEntry();
         checkValidationOfFieldEntry();
@@ -362,5 +360,4 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     public void onNothingSelected(AdapterView<?> parent) {
         //To-Do
     }
-
 }

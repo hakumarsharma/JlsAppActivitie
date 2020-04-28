@@ -75,7 +75,7 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
         holder.phone.setText(mList.get(position).getNumber());
         holder.name.setText(mList.get(position).getName());
         holder.profile.setImageResource(mList.get(position).getProfileImage());
-        holder.activeSessionOptions.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.activeSessionOptions, position, mList.get(position).getGroupId(), mList.get(position).getConsentStatus(), mList.get(position).getNumber(), mList.get(position).getConsentId()));
+        holder.activeSessionOptions.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.activeSessionOptions, position, mList.get(position).getGroupId(), mList.get(position).isGroupAdmin(), mList.get(position).getNumber(), mList.get(position).getConsentId()));
     }
 
     /**
@@ -91,7 +91,7 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
      * Interface to override methods in Dashboard to call those methods on particular item click
      */
     public interface RecyclerViewClickListener {
-        void onPopupMenuClicked(View v, int position, String groupId, String consentStatus, String phoneNumber, String consentId);
+        void onPopupMenuClicked(View v, int position, String groupId, boolean isGroupAdmin, String phoneNumber, String consentId);
     }
 
     /**

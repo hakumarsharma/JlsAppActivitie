@@ -61,11 +61,12 @@ public class ActiveSessionActivity extends AppCompatActivity {
     }
 
     private void adapterEventListener() {
-        mAdapter.setOnItemClickPagerListener((image, groupName, groupId) -> {
+        mAdapter.setOnItemClickPagerListener((image, groupName, groupId, createdBy) -> {
             if (image == R.drawable.ic_group_button) {
                 Intent intent = new Intent(ActiveSessionActivity.this, ActiveMemberActivity.class);
-                intent.putExtra("groupName", groupName);
-                intent.putExtra("groupId", groupId);
+                intent.putExtra(Constant.GROUPNAME, groupName);
+                intent.putExtra(Constant.GROUP_ID, groupId);
+                intent.putExtra(Constant.CREATED_BY, createdBy);
                 ActiveSessionActivity.this.startActivity(intent);
             }
         });
@@ -81,6 +82,7 @@ public class ActiveSessionActivity extends AppCompatActivity {
             HomeActivityListData homeActivityListData = new HomeActivityListData();
             homeActivityListData.setGroupName(data.getGroupName());
             homeActivityListData.setGroupId(data.getGroupId());
+            homeActivityListData.setCreatedBy(data.getCreatedBy());
             homeActivityListData.setProfileImage(R.drawable.ic_group_button);
             mListWithIcon.add(homeActivityListData);
         }

@@ -240,8 +240,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      */
     private void goToGroupListActivity(String groupId, String userId) {
         Intent intent = new Intent(this, GroupListActivity.class);
-        intent.putExtra("groupId", groupId);
-        intent.putExtra("userId", userId);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.USER_ID, userId);
         startActivity(intent);
     }
 
@@ -372,10 +372,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         adb.setTitle(title);
         adb.setMessage(message);
         adb.setIcon(android.R.drawable.ic_dialog_alert);
-        adb.setPositiveButton("OK", (dialog, which) -> {
+        adb.setPositiveButton(Constant.OK, (dialog, which) -> {
             makeDeleteGroupAPICall(groupId);
         });
-        adb.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        adb.setNegativeButton(Constant.CANCEL, (dialog, which) -> dialog.cancel());
         adb.show();
     }
 
@@ -571,7 +571,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }*/
         }
         if (individualUserCount > 10) {
-            Util.alertDilogBox(Constant.USER_LIMITATION, "Jio Alert", this);
+            Util.alertDilogBox(Constant.USER_LIMITATION, Constant.ALERT_TITLE, this);
         } else {
             gotoContactsDetailsActivity();
         }
@@ -590,7 +590,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
 
         if (groupCount > 2) {
-            Util.alertDilogBox(Constant.GROUP_LIMITATION, "Jio Alert", this);
+            Util.alertDilogBox(Constant.GROUP_LIMITATION, Constant.ALERT_TITLE, this);
             return;
         } else {
             gotoGroupNameActivity();
@@ -623,7 +623,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }*/
         }
         if (individualUserCount > 10) {
-            Util.alertDilogBox(Constant.USER_LIMITATION, "Jio Alert", this);
+            Util.alertDilogBox(Constant.USER_LIMITATION, Constant.ALERT_TITLE, this);
         } else {
             startActivity(new Intent(this, ContactDetailsActivity.class));
         }

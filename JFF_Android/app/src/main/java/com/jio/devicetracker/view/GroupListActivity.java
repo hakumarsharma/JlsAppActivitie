@@ -72,8 +72,8 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         toolbarTitle.setText(Constant.GROUP_TITLE);
         mRecyclerList = findViewById(R.id.groupList);
         Intent intent = getIntent();
-        groupId = intent.getStringExtra("groupId");
-        userId = intent.getStringExtra("userId");
+        groupId = intent.getStringExtra(Constant.GROUP_ID);
+        userId = intent.getStringExtra(Constant.USER_ID);
         FloatingActionButton groupMembersListFloatButton = findViewById(R.id.groupMembersListFloatButton);
         groupMembersListFloatButton.setOnClickListener(this);
         makeGetGroupMemberAPICall();
@@ -148,8 +148,8 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
      */
     private void gotoContactDetailsActivity() {
         Intent intent = new Intent(this, ContactDetailsActivity.class);
-        intent.putExtra("groupId", groupId);
-        intent.putExtra("userId", userId);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.USER_ID, userId);
         startActivity(intent);
     }
 
