@@ -202,6 +202,11 @@
             android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
 
+        <activity android:name=".RescanQRCodeActivity"
+            android:theme="@style/NoActionBarTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+
         <!--<service android:name=".CameraAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:enabled="true"

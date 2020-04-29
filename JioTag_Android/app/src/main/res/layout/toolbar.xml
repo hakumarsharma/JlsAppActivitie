@@ -34,6 +34,16 @@
             android:background="@drawable/ic_back"
             android:visibility="invisible" />
 
+        <Button
+            android:id="@+id/close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="18dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_close"
+            android:visibility="invisible" />
+
 
     </RelativeLayout>
 

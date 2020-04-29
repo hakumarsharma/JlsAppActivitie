@@ -121,11 +121,13 @@
     <string name="login_next">Next</string>
     <string name="login_btn_otp">Login</string>
     <string name="scan_qr_code">Scan QR Code</string>
+    <string name="rescan_qr_code">Rescan </string>
     <string name="attach_device">Attach Device</string>
     <string name="login_otp_text">Please wait while we automatically retrieve the 6-digit verification code.\nYou can always enter it manually.</string>
     <string name="login_btn_enter_otp">Enter OTP</string>
     <string name="login_sms_otp_sent">SMS with OTP was sent</string>
     <string name="qrcode_text">Align QR Code with in the \nframe to scan</string>
+    <string name="rescan_qrcode_text">Scanned QR Code is not \nValid, please try again</string>
     <string name="login_sms_otp_sent_to">to</string>
     <string name="login_sms_otp_header_text">OTP</string>
     <string name="login_sms_otp_10digit">Enter 10 digit Mobile number</string>
