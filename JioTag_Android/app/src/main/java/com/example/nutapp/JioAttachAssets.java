@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
@@ -105,7 +104,7 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
 
     AlertDialog.Builder builder;
     AlertDialog m_disconnectAlert;
-    public void showCustomTextAlert(String nut_dev_address) {
+    public void showCustomTextAlert(String nutDevAddress) {
             //builder = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Dialog ));
             builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Theme_Holo_Dialog_Alert));
             builder.setMessage("Please Enter the Custom Asset Name").setTitle("Alert")
@@ -122,8 +121,8 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
             m_disconnectAlert.setTitle("Alert");
             //m_disconnectAlert.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.asset_dialog_round_bkgd));
             m_disconnectAlert.show();
-            Button b_negative = m_disconnectAlert.getButton(DialogInterface.BUTTON_NEGATIVE);
-            b_negative.setBackgroundColor(0xFFCCF2FD);
+            Button bNegative = m_disconnectAlert.getButton(DialogInterface.BUTTON_NEGATIVE);
+            bNegative.setBackgroundColor(0xFFCCF2FD);
     }
 
 
@@ -137,8 +136,8 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
         m_deviceAddress = receiveIntent.getStringExtra("POSITION_ADDR");
         m_deviceposName = receiveIntent.getStringExtra("POSITION_NAME");
 
-        final TextView filled_name_value = (TextView) findViewById(R.id.attach_asset_header);
-        filled_name_value.setTypeface(JioUtils.mTypeface(this, 5));
+        final TextView filledNameValue = (TextView) findViewById(R.id.attach_asset_header);
+        filledNameValue.setTypeface(JioUtils.mTypeface(this, 5));
 
         attach_asset_btn_add = (Button) findViewById(R.id.attach_asset_btn_add);
 /*        attach_asset_btn_add.setEnabled(false);
@@ -150,7 +149,7 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
                 friendly_name_key.setPressed(true);
                 attach_asset_btn_add.setEnabled(true);
                 attach_asset_btn_add.setBackgroundResource(R.drawable.button_frame_blue);
-                filled_name_value.setText(getResources().getString(R.string.friendly_key));
+                filledNameValue.setText(getResources().getString(R.string.friendly_key));
                 setHighlight("key");
             }
         });
@@ -161,7 +160,7 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
                 friendly_name_wallet.setPressed(true);
                 attach_asset_btn_add.setEnabled(true);
                 attach_asset_btn_add.setBackgroundResource(R.drawable.button_frame_blue);
-                filled_name_value.setText(getResources().getString(R.string.friendly_wallet));
+                filledNameValue.setText(getResources().getString(R.string.friendly_wallet));
                 setHighlight("wallet");
             }
         });
@@ -172,7 +171,7 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
                 friendly_name_laptop.setPressed(true);
                 attach_asset_btn_add.setEnabled(true);
                 attach_asset_btn_add.setBackgroundResource(R.drawable.button_frame_blue);
-                filled_name_value.setText(getResources().getString(R.string.friendly_laptops));
+                filledNameValue.setText(getResources().getString(R.string.friendly_laptops));
                 setHighlight("laptop");
             }
         });
@@ -183,7 +182,7 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
                 friendly_name_suitcase.setPressed(true);
                 attach_asset_btn_add.setEnabled(true);
                 attach_asset_btn_add.setBackgroundResource(R.drawable.button_frame_blue);
-                filled_name_value.setText(getResources().getString(R.string.friendly_suitcase));
+                filledNameValue.setText(getResources().getString(R.string.friendly_suitcase));
                 setHighlight("suitcase");
             }
         });
@@ -194,7 +193,7 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
                 friendly_name_others.setPressed(true);
                 attach_asset_btn_add.setEnabled(true);
                 attach_asset_btn_add.setBackgroundResource(R.drawable.button_frame_blue);
-                filled_name_value.setText(getResources().getString(R.string.friendly_others));
+                filledNameValue.setText(getResources().getString(R.string.friendly_others));
                 setHighlight("others");
             }
         });
@@ -206,12 +205,12 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
                 attach_asset_btn_add.setEnabled(true);
                 friendly_name_purse.setPressed(true);
                 attach_asset_btn_add.setBackgroundResource(R.drawable.button_frame_blue);
-                filled_name_value.setText(getResources().getString(R.string.friendly_purse));
+                filledNameValue.setText(getResources().getString(R.string.friendly_purse));
                 setHighlight("purse");
             }
         });
-        ImageButton attach_back = (ImageButton) findViewById(R.id.attach_back);
-        attach_back.setOnClickListener(new View.OnClickListener() {
+        ImageButton attachBack = (ImageButton) findViewById(R.id.attach_back);
+        attachBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -219,18 +218,18 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
                 finish();
             }
         });
-        ImageButton attach_save = (ImageButton) findViewById(R.id.attach_tick);
-        attach_save.setOnClickListener(new View.OnClickListener() {
+        ImageButton attachSave = (ImageButton) findViewById(R.id.attach_tick);
+        attachSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("FRNAME", filled_name_value.getText().toString());
+                Log.d("FRNAME", filledNameValue.getText().toString());
                 Intent intent = new Intent();
                 intent.putExtra("POSITION_NUT", nut_position);
-                intent.putExtra("POSITION_TYPE", filled_name_value.getText().toString());
+                intent.putExtra("POSITION_TYPE", filledNameValue.getText().toString());
                 intent.putExtra("POSITION_ADDR", m_deviceAddress);
                 intent.putExtra("IMAGEURI", m_cameraImageUri.toString());
                 intent.putExtra("CUSTOMNAME", asset_custom_name.getText().toString());
-                intent.putExtra("CUSTOMNAME_NEW", filled_name_value.getText().toString() + "." + asset_custom_name.getText().toString());
+                intent.putExtra("CUSTOMNAME_NEW", filledNameValue.getText().toString() + "." + asset_custom_name.getText().toString());
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -240,7 +239,7 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
         attach_asset_btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("FRNAME", filled_name_value.getText().toString());
+                Log.d("FRNAME", filledNameValue.getText().toString());
                 if (asset_custom_name.getText().toString().isEmpty()) {
                     //Custom names will be prefixed with key.custom etc
                     showCustomTextAlert(m_deviceAddress);
@@ -248,11 +247,11 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
                 } else {
                     Intent intent = new Intent();
                     intent.putExtra("POSITION_NUT", nut_position);
-                    intent.putExtra("POSITION_TYPE", filled_name_value.getText().toString());
+                    intent.putExtra("POSITION_TYPE", filledNameValue.getText().toString());
                     intent.putExtra("POSITION_ADDR", m_deviceAddress);
                     intent.putExtra("IMAGEURI", m_cameraImageUri.toString());
                     intent.putExtra("CUSTOMNAME", asset_custom_name.getText().toString());
-                    intent.putExtra("CUSTOMNAME_NEW", filled_name_value.getText().toString() + "." + asset_custom_name.getText().toString());
+                    intent.putExtra("CUSTOMNAME_NEW", filledNameValue.getText().toString() + "." + asset_custom_name.getText().toString());
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -268,10 +267,10 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
         });
 
         asset_custom_name = (EditText) findViewById(R.id.asset_custom_name);
-        String resourceId=m_deviceposName.toLowerCase().split("\\.")[0];
+        String resourceId=m_deviceposName.toLowerCase(Locale.ROOT).split("\\.")[0];
         setHighlight(resourceId);
         if(!resourceId.equalsIgnoreCase("JioTag")){
-            filled_name_value.setText(m_deviceposName.split("\\.")[0]);
+            filledNameValue.setText(m_deviceposName.split("\\.")[0]);
         }
         attach_asset_btn_add.setEnabled(true);
     }
@@ -305,6 +304,8 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
             case R.id.camera_open_gallery:
                 Log.d("CAMMENU", "open gallery");
                 launchGallery();
+                break;
+            default:
                 break;
         }
         return false;

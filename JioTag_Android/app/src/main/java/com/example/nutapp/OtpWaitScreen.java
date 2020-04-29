@@ -70,8 +70,8 @@ public class OtpWaitScreen extends AppCompatActivity {
         m_disconnectAlert.setTitle("Alert");
         //m_disconnectAlert.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.asset_dialog_round_bkgd));
         m_disconnectAlert.show();
-        Button b_negative = m_disconnectAlert.getButton(DialogInterface.BUTTON_NEGATIVE);
-        b_negative.setBackgroundColor(0xFFCCF2FD);
+        Button bNegative = m_disconnectAlert.getButton(DialogInterface.BUTTON_NEGATIVE);
+        bNegative.setBackgroundColor(0xFFCCF2FD);
     }
 
 
@@ -165,14 +165,14 @@ public class OtpWaitScreen extends AppCompatActivity {
                         //if(sender.equalsIgnoreCase("+919845087001")) {
                         //if(sender.equalsIgnoreCase("+917021075049")) {
                         //Toast.makeText(context, "SMS RECEIVED: " + messageBody, Toast.LENGTH_SHORT).show();
-                        String otp_number = (messageBody.split(":")[1].split(" ")[1]).trim();
-                        Log.d("OTPSMS",otp_number);
+                        String otpNumber = messageBody.split(":")[1].split(" ")[1].trim();
+                        Log.d("OTPSMS",otpNumber);
                         //Toast.makeText(context, "OTP RECEIVED: " + otp_number, Toast.LENGTH_SHORT).show();
-                        login_edit_number.setText(otp_number);
+                        login_edit_number.setText(otpNumber);
                         login_btn_otp.setEnabled(true);
                         login_edit_number.setEnabled(false);
                         login_btn_otp.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
-                        m_token = otp_number;
+                        m_token = otpNumber;
                     }
                 }
             }
@@ -213,23 +213,23 @@ public class OtpWaitScreen extends AppCompatActivity {
 
         login_edit_number = (EditText) findViewById(R.id.login_edit_number);
         m_handler = new Handler();
-        Runnable startNext = new Runnable() {
+       /* Runnable startNext = new Runnable() {
             public void run() {
                 login_edit_number.setText("No SMS!!! proceed");
                 login_btn_otp.setEnabled(true);
                 login_btn_otp.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
             }
-        };
+        };*/
         //m_handler.postDelayed(startNext, 60000);
-        TextView login_jioTags_enter_number_otp = (TextView) findViewById(R.id.login_jioTags_enter_number_otp);
-        login_jioTags_enter_number_otp.setText("to +91 " + m_publickey);
+        TextView loginJioTagsEnterNumberOtp = (TextView) findViewById(R.id.login_jioTags_enter_number_otp);
+        loginJioTagsEnterNumberOtp.setText("to +91 " + m_publickey);
 
-        TextView login_otp_textid = (TextView) findViewById(R.id.login_otp_textid);
-        login_otp_textid.setTypeface(JioUtils.mTypeface(this, 3));
+        TextView loginOtpTextid =  findViewById(R.id.login_otp_textid);
+        loginOtpTextid.setTypeface(JioUtils.mTypeface(this, 3));
 
-        TextView login_resend_otp = (TextView) findViewById(R.id.login_resend_otp);
+        TextView loginResendOtp =  findViewById(R.id.login_resend_otp);
 
-        login_resend_otp.setOnClickListener(new View.OnClickListener() {
+        loginResendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //if(true){
@@ -244,11 +244,11 @@ public class OtpWaitScreen extends AppCompatActivity {
             }
         });
 
-        TextView login_jioTags_registered_otp=(TextView)findViewById(R.id.login_jioTags_registered_otp);
-        login_jioTags_registered_otp.setTypeface(JioUtils.mTypeface(this, 2));
+        TextView loginJioTagsRegisteredOtp=(TextView)findViewById(R.id.login_jioTags_registered_otp);
+        loginJioTagsRegisteredOtp.setTypeface(JioUtils.mTypeface(this, 2));
 
-        login_resend_otp.setTypeface(JioUtils.mTypeface(this,2));
-        login_jioTags_enter_number_otp.setTypeface(JioUtils.mTypeface(this,3));
+        loginResendOtp.setTypeface(JioUtils.mTypeface(this,2));
+        loginJioTagsEnterNumberOtp.setTypeface(JioUtils.mTypeface(this,3));
     }
 
     public int generateSelfOtpWait() {

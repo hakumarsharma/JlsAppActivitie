@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.nutapp.util.Constant;
+import com.example.nutapp.util.JioConstant;
 
 public class RescanQRCodeActivity extends AppCompatActivity {
 
@@ -21,10 +21,10 @@ public class RescanQRCodeActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.toolbar_title);
         Button close = findViewById(R.id.close);
         close.setVisibility(View.VISIBLE);
-        title.setText(Constant.SCAN_QR_CODE_TITLE);
+        title.setText(JioConstant.SCAN_QR_CODE_TITLE);
         title.setTypeface(JioUtils.mTypeface(this, 5));
-        TextView rescan_text = findViewById(R.id.rescanText);
-        rescan_text.setTypeface(JioUtils.mTypeface(this, 5));
+        TextView rescanText = findViewById(R.id.rescanText);
+        rescanText.setTypeface(JioUtils.mTypeface(this, 5));
         rescanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -7,8 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,11 +38,11 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.BleViewHolder>
     @Override
     public void onBindViewHolder(@NonNull InfoAdapter.BleViewHolder holder, int position) {
 
-        Log.d("HEADING", BleDetails.get(position).m_settinsMain.toString());
-        holder.settingsHeader.setText(BleDetails.get(position).m_settinsMain.toString());
+        Log.d("HEADING", BleDetails.get(position).mSettinsMain.toString());
+        holder.settingsHeader.setText(BleDetails.get(position).mSettinsMain.toString());
         holder.settingsHeader.setTypeface(JioUtils.mTypeface(m_activity, 2));
         holder.settingsDetails.setTypeface(JioUtils.mTypeface(m_activity, 3));
-        holder.settingsDetails.setText(BleDetails.get(position).m_settingsDetails.toString());
+        holder.settingsDetails.setText(BleDetails.get(position).mSettingsDetails.toString());
 
         if (position != 1) {
             holder.itemView.setBackground(m_context.getResources().getDrawable(R.drawable.dialog_round_background));

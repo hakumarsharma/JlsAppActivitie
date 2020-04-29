@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.nutapp.util.Constant;
+import com.example.nutapp.util.JioConstant;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -38,9 +38,6 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
     private TextView emailTitleText;
     private TextView passTitleText;
     private  CallbackManager callbackManager;
-    private LoginButton loginButton;
-    private Button signInButton;
-    private Button nextBtn;
     private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN =0;
 
@@ -52,21 +49,21 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_auth_login);
         TextView title = findViewById(R.id.toolbar_title);
         Button backBtn = findViewById(R.id.back);
-        TextView pass_condition_text = findViewById(R.id.password_condition);
+        TextView passConditionText = findViewById(R.id.password_condition);
         backBtn.setVisibility(View.VISIBLE);
-        title.setText(Constant.AUTH_LOGIN_TITLE);
+        title.setText(JioConstant.AUTH_LOGIN_TITLE);
         emailEdittext = findViewById(R.id.login_edit_email);
         passEdittext = findViewById(R.id.login_edit_password);
         emailTitleText = findViewById(R.id.login_text_email);
         passTitleText = findViewById(R.id.login_text_password);
-        nextBtn = findViewById(R.id.login_btn);
+        Button nextBtn = findViewById(R.id.login_btn);
         nextBtn.setOnClickListener(this);
-        pass_condition_text.setTypeface(JioUtils.mTypeface(this, 3));
+        passConditionText.setTypeface(JioUtils.mTypeface(this, 3));
 
         callbackManager = CallbackManager.Factory.create();
 
-        loginButton = findViewById(R.id.fb_login);
-        signInButton = findViewById(R.id.google_login);
+        LoginButton loginButton = findViewById(R.id.fb_login);
+        Button signInButton = findViewById(R.id.google_login);
         signInButton.setOnClickListener(this);
 
         emailEdittext.addTextChangedListener(new TextWatcher() {

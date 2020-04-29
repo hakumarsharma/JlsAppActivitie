@@ -39,8 +39,8 @@ public class SettingsActivity extends AppCompatActivity {
         m_recyclerView.setHasFixedSize(true);
         m_recyclerView.setLayoutManager(new LinearLayoutManager(this));
         m_recyclerView.setAdapter(m_bleDetailsAdapter);
-        ImageButton attach_back = (ImageButton) findViewById(R.id.settings_back);
-        attach_back.setOnClickListener(new View.OnClickListener() {
+        ImageButton attachBack = (ImageButton) findViewById(R.id.settings_back);
+        attachBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -48,8 +48,8 @@ public class SettingsActivity extends AppCompatActivity {
                 finish();
             }
         });
-        ImageButton device_home = (ImageButton) findViewById(R.id.settings_home);
-        device_home.setOnClickListener(new View.OnClickListener() {
+        ImageButton deviceHome = (ImageButton) findViewById(R.id.settings_home);
+        deviceHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -61,15 +61,15 @@ public class SettingsActivity extends AppCompatActivity {
     public void addSettingsItems(){
         SettingsDetails photo= new SettingsDetails(getResources().getString(R.string.settings_header_photocapture),getResources().getString(R.string.settings_photocapture_details));
         //SettingsDetails SOS= new SettingsDetails(getResources().getString(R.string.settings_header_sos),getResources().getString(R.string.settings_sos_details));
-        SettingsDetails disconnection_alert= new SettingsDetails(getResources().getString(R.string.settings_header_disconnect),getResources().getString(R.string.settings_disconnect_details));
-        SettingsDetails information_act= new SettingsDetails(getResources().getString(R.string.information_header),"");
-        SettingsDetails how_toadd= new SettingsDetails(getResources().getString(R.string.how_header),"");
-        SettingsDetails feedback_act= new SettingsDetails(getResources().getString(R.string.feedback_header),"");
+        SettingsDetails disconnectionAlert= new SettingsDetails(getResources().getString(R.string.settings_header_disconnect),getResources().getString(R.string.settings_disconnect_details));
+        SettingsDetails informationAct= new SettingsDetails(getResources().getString(R.string.information_header),"");
+        SettingsDetails howToadd= new SettingsDetails(getResources().getString(R.string.how_header),"");
+        SettingsDetails feedbackAct= new SettingsDetails(getResources().getString(R.string.feedback_header),"");
         m_bleDetails.add(photo);
         //m_bleDetails.add(SOS);
-        m_bleDetails.add(disconnection_alert);
-        m_bleDetails.add(information_act);
-        m_bleDetails.add(how_toadd);
-        m_bleDetails.add(feedback_act);
+        m_bleDetails.add(disconnectionAlert);
+        m_bleDetails.add(informationAct);
+        m_bleDetails.add(howToadd);
+        m_bleDetails.add(feedbackAct);
     }
 }

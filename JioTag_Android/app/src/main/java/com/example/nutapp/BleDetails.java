@@ -8,17 +8,17 @@ public class BleDetails {
         return deviceAddress;
     }
 
-    String device_rssi;
-    int buzz_Photo_id;
-    int connect_photo_id;
-    double m_distance;
+    String deviceRssi;
+    int buzzPhotoId;
+    int connectPhotoId;
+    double mDistance;
 
-    public BleDetails(String deviceName, String deviceAddress, String device_rssi, int buzz_Photo_id, int connect_photo_id, double distance) {
+    public BleDetails(String deviceName, String deviceAddress, String deviceRssi, int buzzPhotoId, int connectPhotoId, double distance) {
         this.deviceName = deviceName;
         this.deviceAddress = deviceAddress;
-        this.device_rssi = device_rssi;
-        this.buzz_Photo_id = buzz_Photo_id;
-        this.connect_photo_id = connect_photo_id;
-        this.m_distance = distance;
+        this.deviceRssi = deviceRssi;
+        this.buzzPhotoId = buzzPhotoId;
+        this.connectPhotoId = connectPhotoId;
+        this.mDistance = distance;
     }
 }

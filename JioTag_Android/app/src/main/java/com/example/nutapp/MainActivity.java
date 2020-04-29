@@ -1,22 +1,12 @@
 package com.example.nutapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.nutspace.nut.api.BleDeviceConsumer;
-import com.nutspace.nut.api.BleDeviceManager;
-import com.nutspace.nut.api.callback.ScanResultCallback;
-import com.nutspace.nut.api.model.BleDevice;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -48,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
                 displayLocationToast(m_isLocOn);
+              break;
 
+            default:
+                break;
         }
     }
 
@@ -93,8 +86,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
 }

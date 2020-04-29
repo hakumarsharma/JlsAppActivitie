@@ -19,8 +19,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_layout);
-        TextView splash_text_view=(TextView)findViewById(R.id.splash_text_view);
-        splash_text_view.setTypeface(JioUtils.mTypeface(this, 5));
+        TextView splashTextView=(TextView)findViewById(R.id.splash_text_view);
+        splashTextView.setTypeface(JioUtils.mTypeface(this, 5));
 
         new Handler().postDelayed(new Runnable() {
 
@@ -29,9 +29,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                 // This method will be executed once the timer is over
                 // Start your app main activity
                 preferences = getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
-                String first_boot=preferences.getString("FIRSTBOOT", "true");
+                String firstBoot=preferences.getString("FIRSTBOOT", "true");
                 Intent i;
-                if(first_boot.toString().trim().equalsIgnoreCase("true")) {
+                if(firstBoot.toString().trim().equalsIgnoreCase("true")) {
                     i = new Intent(SplashScreenActivity.this, OtpRequest.class);
                 }else{
                     i = new Intent(SplashScreenActivity.this, MainActivity.class);

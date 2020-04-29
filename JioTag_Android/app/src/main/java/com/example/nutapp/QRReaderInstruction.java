@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.nutapp.util.Constant;
+import com.example.nutapp.util.JioConstant;
 
 public class QRReaderInstruction extends AppCompatActivity implements View.OnClickListener {
 
@@ -19,7 +19,7 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_qrscan_instruction);
         Button scanBtn = findViewById(R.id.scan_btn);
         TextView title = findViewById(R.id.toolbar_title);
-        title.setText(Constant.SCAN_QR_CODE_TITLE);
+        title.setText(JioConstant.SCAN_QR_CODE_TITLE);
         title.setTypeface(JioUtils.mTypeface(this, 5));
         TextView scanHelpText = findViewById(R.id.qrcode_scan_help_title);
         scanHelpText.setTypeface(JioUtils.mTypeface(this,3));
@@ -38,6 +38,10 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
 
             case R.id.manual_add:
                 gotoJioPermissionScreen();
+                break;
+
+            default:
+                break;
         }
     }
 

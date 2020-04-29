@@ -53,21 +53,21 @@ public class OtpRequest extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
     public boolean isPermissionAlreadyGranted() {
-        int send_sms= ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
-        int fine_location = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int sendSms= ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
+        int fineLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int camera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        int write_external_storage=ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int read_external_storage=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int coarse_location=ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        int read_phone_state=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
-        int read_phone_numbers=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS);
-        int read_sms=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
-        int receive_sms=ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
-        if((send_sms != PackageManager.PERMISSION_GRANTED)|| (fine_location !=PackageManager.PERMISSION_GRANTED) || (camera !=PackageManager.PERMISSION_GRANTED) ||
-        (write_external_storage !=PackageManager.PERMISSION_GRANTED) || (read_external_storage !=PackageManager.PERMISSION_GRANTED) ||
-        (coarse_location !=PackageManager.PERMISSION_GRANTED) || (read_phone_state != PackageManager.PERMISSION_GRANTED) ||
-        (read_phone_numbers !=PackageManager.PERMISSION_GRANTED) || (read_sms !=PackageManager.PERMISSION_GRANTED) ||
-        (receive_sms != PackageManager.PERMISSION_GRANTED)){
+        int writeExternalStorage=ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int readExternalStorage=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int coarseLocation=ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        int readPhoneState=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        int readPhoneNumbers=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS);
+        int readSms=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
+        int receiveSms=ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
+        if((sendSms != PackageManager.PERMISSION_GRANTED)|| (fineLocation !=PackageManager.PERMISSION_GRANTED) || (camera !=PackageManager.PERMISSION_GRANTED) ||
+        (writeExternalStorage !=PackageManager.PERMISSION_GRANTED) || (readExternalStorage !=PackageManager.PERMISSION_GRANTED) ||
+        (coarseLocation !=PackageManager.PERMISSION_GRANTED) || (readPhoneState != PackageManager.PERMISSION_GRANTED) ||
+        (readPhoneNumbers !=PackageManager.PERMISSION_GRANTED) || (readSms !=PackageManager.PERMISSION_GRANTED) ||
+        (receiveSms != PackageManager.PERMISSION_GRANTED)){
             return false;
         }else{
             return true;
@@ -102,7 +102,12 @@ public class OtpRequest extends AppCompatActivity {
                         finish();
                     }
                 }
+
+                break;
             }
+            default:
+                break;
+
         }
     }
 
@@ -141,20 +146,20 @@ public class OtpRequest extends AppCompatActivity {
         setContentView(R.layout.otp_view);
 
         TextView changeRmn = findViewById(R.id.email_login_option);
-        final CheckBox login_check = (CheckBox) findViewById(R.id.login_check_box);
-        login_check.setButtonDrawable(R.drawable.uncheckbox);
-        login_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CheckBox loginCheck = (CheckBox) findViewById(R.id.login_check_box);
+        loginCheck.setButtonDrawable(R.drawable.uncheckbox);
+        loginCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 m_login_check = isChecked;
                 Log.d("CHECK::", isChecked + "");
                 if (m_login_check) {
-                    login_check.setButtonDrawable(R.drawable.filled);
+                    loginCheck.setButtonDrawable(R.drawable.filled);
                     otp_send.setEnabled(true);
                     otp_send.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
                     Log.d("BUTTON::", "ENABLED" + "");
                 } else {
-                    login_check.setButtonDrawable(R.drawable.uncheckbox);
+                    loginCheck.setButtonDrawable(R.drawable.uncheckbox);
                     otp_send.setEnabled(false);
                     otp_send.setBackground(getResources().getDrawable(R.drawable.disabled_button));
                     Log.d("BUTTON::", "DISABLED" + "");
@@ -188,19 +193,19 @@ public class OtpRequest extends AppCompatActivity {
         login_edit_number = (EditText) findViewById(R.id.login_edit_number);
         login_edit_number.setTypeface(JioUtils.mTypeface(this, 5));
 
-        EditText prefix_text = (EditText) findViewById(R.id.prefix_text);
-        prefix_text.setTypeface(JioUtils.mTypeface(this, 5));
+        EditText prefixText = (EditText) findViewById(R.id.prefix_text);
+        prefixText.setTypeface(JioUtils.mTypeface(this, 5));
 
-        TextView login_terms = (TextView) findViewById(R.id.login_terms);
+        //TextView loginTerms = (TextView) findViewById(R.id.login_terms);
         //login_terms.setTypeface(JioUtils.mTypeface(this, 2));
-        TextView login_jioTags_enter_number = (TextView) findViewById(R.id.login_jioTags_enter_number);
-        login_jioTags_enter_number.setTypeface(JioUtils.mTypeface(this, 3));
-        TextView login_jioTags_registered_number = (TextView) findViewById(R.id.login_jioTags_registered_number);
-        login_jioTags_registered_number.setTypeface(JioUtils.mTypeface(this, 2));
+        TextView loginJioTagsEnterNumber = (TextView) findViewById(R.id.login_jioTags_enter_number);
+        loginJioTagsEnterNumber.setTypeface(JioUtils.mTypeface(this, 3));
+        TextView loginJioTagsRegisteredNumber = (TextView) findViewById(R.id.login_jioTags_registered_number);
+        loginJioTagsRegisteredNumber.setTypeface(JioUtils.mTypeface(this, 2));
 
         ///Skip login View///////
-        Button login_skip_btn_send_otp = (Button) findViewById(R.id.login_skip_btn_send_otp);
-        login_skip_btn_send_otp.setOnClickListener(new View.OnClickListener() {
+        Button loginSkipBtnSendOtp = (Button) findViewById(R.id.login_skip_btn_send_otp);
+        loginSkipBtnSendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent startMain = new Intent(getApplicationContext(), JioAddFinder.class);

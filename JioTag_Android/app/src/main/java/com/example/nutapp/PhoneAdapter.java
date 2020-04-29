@@ -1,6 +1,5 @@
 package com.example.nutapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -69,8 +68,8 @@ public class PhoneAdapter extends RecyclerView.Adapter<PhoneAdapter.BleViewHolde
 
     public void turnOnOffPhoneAlertDuration(Spinner spin, String selectedItem) {
 
-        String phonealert_duration_switch = preferences.getString(HEX_DEVICE_ADDRESS + "PHONE_ALERT_DURATION", "5sec");
-        Log.d("PHONE_ALERT_DURATION", "PHONE_ALERT_DURATION OLD" + phonealert_duration_switch);
+        String phonealertDurationSwitch = preferences.getString(HEX_DEVICE_ADDRESS + "PHONE_ALERT_DURATION", "5sec");
+        Log.d("PHONE_ALERT_DURATION", "PHONE_ALERT_DURATION OLD" + phonealertDurationSwitch);
         prefEditor.putString(HEX_DEVICE_ADDRESS + "PHONE_ALERT_DURATION", selectedItem);
         Log.d("PHONE_ALERT_DURATION", "PHONE_ALERT_DURATION NEW" + selectedItem);
         prefEditor.commit();
@@ -88,7 +87,7 @@ public class PhoneAdapter extends RecyclerView.Adapter<PhoneAdapter.BleViewHolde
     @Override
     public void onBindViewHolder(@NonNull BleViewHolder holder, int position) {
         final int pos = position;
-        final Spinner m_spinner;
+        final Spinner mSpinner;
 
         if (position == 0) {
             holder.phonealert_header.setText(m_context.getResources().getString(R.string.phonealert_main_header));
@@ -111,16 +110,16 @@ public class PhoneAdapter extends RecyclerView.Adapter<PhoneAdapter.BleViewHolde
            // holder.duration_switch.setBackgroundColor(Color.BLUE);
             holder.phonealert_switch.setVisibility(View.INVISIBLE);
             holder.phonealert_header.setText(m_context.getResources().getString(R.string.phonealert_header_duration));
-            String phonealert_duration_switch = preferences.getString(HEX_DEVICE_ADDRESS + "PHONE_ALERT_DURATION", "5sec");
-            int indexSpinner = getSpinnerIndex(holder.duration_switch, phonealert_duration_switch);
+            String phonealertDurationSwitch = preferences.getString(HEX_DEVICE_ADDRESS + "PHONE_ALERT_DURATION", "5sec");
+            int indexSpinner = getSpinnerIndex(holder.duration_switch, phonealertDurationSwitch);
             holder.duration_switch.setSelection(indexSpinner);
             //holder.duration_switch.setPopupBackgroundDrawable(holder.itemView.getContext().getDrawable(R.drawable.button_frame_blue));
             //holder.duration_switch.setBackground(holder.itemView.getContext().getDrawable(R.drawable.button_frame_blue));
-            m_spinner = holder.duration_switch;
+            mSpinner = holder.duration_switch;
             holder.duration_switch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    turnOnOffPhoneAlertDuration(m_spinner, (String) m_spinner.getSelectedItem());
+                    turnOnOffPhoneAlertDuration(mSpinner, (String) mSpinner.getSelectedItem());
                 }
 
                 @Override
@@ -130,8 +129,8 @@ public class PhoneAdapter extends RecyclerView.Adapter<PhoneAdapter.BleViewHolde
         } else if (position == 2) {
             holder.duration_switch.setVisibility(View.INVISIBLE);
             holder.phonealert_switch.setVisibility(View.VISIBLE);
-            boolean phonealert_repeat = Boolean.valueOf(preferences.getString(HEX_DEVICE_ADDRESS + "PHONE_ALERT_REPEAT", false + ""));
-            holder.phonealert_switch.setChecked(phonealert_repeat);
+            boolean phonealertRepeat = Boolean.valueOf(preferences.getString(HEX_DEVICE_ADDRESS + "PHONE_ALERT_REPEAT", false + ""));
+            holder.phonealert_switch.setChecked(phonealertRepeat);
             holder.phonealert_header.setText(m_context.getResources().getString(R.string.phonealert_header_repeat));
         }
 

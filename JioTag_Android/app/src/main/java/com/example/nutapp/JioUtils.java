@@ -29,52 +29,52 @@ public class JioUtils {
 
     static SharedPreferences preferences;
 
-    public static int getAlertDuration(Context ctx,String device_address,boolean isPhone) {
-        Log.d("DEVADD", device_address);
-        String phonealert_duration_switch;
+    public static int getAlertDuration(Context ctx,String deviceAddress,boolean isPhone) {
+        Log.d("DEVADD", deviceAddress);
+        String phonealertDurationSwitch;
         preferences = ctx.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
         if(isPhone == true) {
-            phonealert_duration_switch = preferences.getString(device_address + "PHONE_ALERT_DURATION", "5sec");
+            phonealertDurationSwitch = preferences.getString(deviceAddress + "PHONE_ALERT_DURATION", "5sec");
         }else{
-            phonealert_duration_switch = preferences.getString(device_address + "DEVICE_ALERT_DURATION", "5sec");
+            phonealertDurationSwitch = preferences.getString(deviceAddress + "DEVICE_ALERT_DURATION", "5sec");
         }
 
-        Log.d("duration_switch", phonealert_duration_switch);
-        int alert_duration = 5;
-        switch (phonealert_duration_switch) {
+        Log.d("duration_switch", phonealertDurationSwitch);
+        int alertDuration = 5;
+        switch (phonealertDurationSwitch) {
             case "5sec":
-                alert_duration = 5;
+                alertDuration = 5;
                 break;
             case "10sec":
-                alert_duration = 10;
+                alertDuration = 10;
                 break;
             case "15sec":
-                alert_duration = 15;
+                alertDuration = 15;
                 break;
             default:
-                alert_duration = 5;
+                alertDuration = 5;
                 break;
         }
-        return alert_duration;
+        return alertDuration;
     }
 
 
-    public static boolean getPhoneAlertRepeat(Context ctx,String device_address) {
+    public static boolean getPhoneAlertRepeat(Context ctx,String deviceAddress) {
         preferences = ctx.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
-        boolean phonealert_repeat = Boolean.valueOf(preferences.getString(device_address + "PHONE_ALERT_REPEAT", false + ""));
-        return phonealert_repeat;
+        boolean phonealertRepeat = Boolean.valueOf(preferences.getString(deviceAddress + "PHONE_ALERT_REPEAT", false + ""));
+        return phonealertRepeat;
     }
 
-    public static boolean getDeviceAlertRepeat(Context ctx,String device_address) {
+    public static boolean getDeviceAlertRepeat(Context ctx,String deviceAddress) {
         preferences = ctx.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
-        boolean oldVal = Boolean.valueOf(preferences.getString(device_address + "DEVICE_ALERT_REPEAT", false + ""));
+        boolean oldVal = Boolean.valueOf(preferences.getString(deviceAddress + "DEVICE_ALERT_REPEAT", false + ""));
         return oldVal;
     }
 
-    public static boolean getDeviceAlertReconnectionValue(Context ctx,String device_address){
+    public static boolean getDeviceAlertReconnectionValue(Context ctx,String deviceAddress){
         preferences = ctx.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
-        boolean devicealert_reconnection = Boolean.valueOf(preferences.getString(device_address + "DEVICE_ALERT_RECONNECTION", true + ""));
-        return devicealert_reconnection;
+        boolean devicealertReconnection = Boolean.valueOf(preferences.getString(deviceAddress + "DEVICE_ALERT_RECONNECTION", true + ""));
+        return devicealertReconnection;
     }
 
     public static boolean getPhoneAlertSetting(Context ctx, String deviceAddress) {

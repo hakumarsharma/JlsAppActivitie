@@ -6,12 +6,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.nutapp.util.Constant;
+import com.example.nutapp.util.JioConstant;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -28,7 +27,7 @@ public class QRCodeScannerActivity extends AppCompatActivity implements ZXingSca
         TextView scanCodeText =findViewById(R.id.scanText);
         Button closeBtn = findViewById(R.id.close);
         closeBtn.setVisibility(View.VISIBLE);
-        title.setText(Constant.SCAN_QR_CODE_TITLE);
+        title.setText(JioConstant.SCAN_QR_CODE_TITLE);
         title.setTypeface(JioUtils.mTypeface(this, 5));
         scanCodeText.setTypeface(JioUtils.mTypeface(this, 5));
         RelativeLayout scanView = findViewById(R.id.scanframe);

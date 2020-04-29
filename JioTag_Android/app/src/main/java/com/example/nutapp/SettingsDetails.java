@@ -1,27 +1,27 @@
 package com.example.nutapp;
 
 public class SettingsDetails {
-    String m_settinsMain;
-    String m_settingsDetails;
+    String mSettinsMain;
+    String mSettingsDetails;
 
-    public void setM_settinsMain(String m_settinsMain) {
-        this.m_settinsMain = m_settinsMain;
+    public void setmSettinsmain(String mSettinsMain) {
+        this.mSettinsMain = mSettinsMain;
     }
 
-    public void setM_settingsDetails(String m_settingsDetails) {
-        this.m_settingsDetails = m_settingsDetails;
+    public void setmSettingsdetails(String mSettingsDetails) {
+        this.mSettingsDetails = mSettingsDetails;
     }
 
-    public String getM_settinsMain() {
-        return m_settinsMain;
+    public String getmSettinsmain() {
+        return mSettinsMain;
     }
 
-    public String getM_settingsDetails() {
-        return m_settingsDetails;
+    public String getmSettingsdetails() {
+        return mSettingsDetails;
     }
 
-    public SettingsDetails(String m_settinsMain, String m_settingsDetails) {
-        this.m_settinsMain = m_settinsMain;
-        this.m_settingsDetails = m_settingsDetails;
+    public SettingsDetails(String mSettinsMain, String mSettingsDetails) {
+        this.mSettinsMain = mSettinsMain;
+        this.mSettingsDetails = mSettingsDetails;
     }
 }

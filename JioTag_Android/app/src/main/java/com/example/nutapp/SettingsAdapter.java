@@ -13,8 +13,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,10 +35,6 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.BleVie
     SharedPreferences.Editor prefEditor;
 
 
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-    }
 
     public SettingsAdapter(List<SettingsDetails> bledeviceDetails, Activity currentAct, RecyclerView rv) {
         this.BleDetails = bledeviceDetails;
@@ -88,12 +82,12 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.BleVie
     @Override
     public void onBindViewHolder(@NonNull final BleViewHolder holder, final int position) {
 
-        m_listProgressBar.put(BleDetails.get(position).m_settinsMain, holder);
-        Log.d("HEADING", BleDetails.get(position).m_settinsMain.toString());
-        holder.settingsHeader.setText(BleDetails.get(position).m_settinsMain.toString());
+        m_listProgressBar.put(BleDetails.get(position).mSettinsMain, holder);
+        Log.d("HEADING", BleDetails.get(position).mSettinsMain.toString());
+        holder.settingsHeader.setText(BleDetails.get(position).mSettinsMain.toString());
         holder.settingsHeader.setTypeface(JioUtils.mTypeface(m_activity, 2));
         holder.settingsDetails.setTypeface(JioUtils.mTypeface(m_activity, 3));
-        holder.settingsDetails.setText(BleDetails.get(position).m_settingsDetails.toString());
+        holder.settingsDetails.setText(BleDetails.get(position).mSettingsDetails.toString());
 
         if (position == 0) {
             holder.feedback_lefticon.setVisibility(View.GONE);

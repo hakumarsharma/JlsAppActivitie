@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.nutapp.util.Constant;
+import com.example.nutapp.util.JioConstant;
 
 public class JioTagDeviceInfoActivity extends AppCompatActivity {
     TextView deviceName;
@@ -23,7 +23,7 @@ public class JioTagDeviceInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_info_from_qrcode);
         TextView title = findViewById(R.id.toolbar_title);
-        title.setText(Constant.DEVICE_INFO_TITLE);
+        title.setText(JioConstant.DEVICE_INFO_TITLE);
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         title.setTypeface(JioUtils.mTypeface(this, 5));

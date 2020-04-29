@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.nutapp.util.Constant;
+import com.example.nutapp.util.JioConstant;
 
 public class EmailConfirmationActivity extends AppCompatActivity {
 
@@ -19,7 +19,7 @@ public class EmailConfirmationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_email_confirmation);
         Button lgnBtn = findViewById(R.id.login_btn);
         TextView title = findViewById(R.id.toolbar_title);
-        title.setText(Constant.EMAIL_VERIFICATION_TITLE);
+        title.setText(JioConstant.EMAIL_VERIFICATION_TITLE);
 
         lgnBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -18,8 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
@@ -85,6 +83,9 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
                 m_fragment.startActivityForResult(startAttach, REQUEST_ATTACH_ASSET);
                 break;
 
+            default:
+                break;
+
         }
         return false;
     }
@@ -92,7 +93,6 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
     public void setFragment(HomeFragment frag) {
         m_fragment = frag;
     }
-
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
@@ -128,10 +128,10 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
         return this.BleDetails.size();
     }
 
-    public void setCameraGalleryImage(String deviceAddress, Uri m_imageCamera) {
-        Log.d("SETCAMIMAGE", m_imageCamera.toString());
-        if (!m_imageCamera.equals(Uri.EMPTY)) {
-            m_listProgressBar.get(deviceAddress).m_lefticon.setImageURI(m_imageCamera);
+    public void setCameraGalleryImage(String deviceAddress, Uri mImageCamera) {
+        Log.d("SETCAMIMAGE", mImageCamera.toString());
+        if (!mImageCamera.equals(Uri.EMPTY)) {
+            m_listProgressBar.get(deviceAddress).m_lefticon.setImageURI(mImageCamera);
         }
     }
 
@@ -256,7 +256,7 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
 
         m_listProgressBar.put(BleDetails.get(position).deviceAddress, holder);
         holder.m_dev_address = BleDetails.get(position).deviceAddress;
-        setProgressBarForItem(BleDetails.get(position).deviceAddress, 100 + Integer.parseInt(BleDetails.get(position).device_rssi));
+        setProgressBarForItem(BleDetails.get(position).deviceAddress, 100 + Integer.parseInt(BleDetails.get(position).deviceRssi));
         //holder.deviceDetails.setText(BleDetails.get(position).deviceName + "-" + BleDetails.get(position).deviceAddress);
 
         //holder.deviceDetails.setText(BleDetails.get(position).deviceName + "." + position);
@@ -293,7 +293,7 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
         }
 
         String isFar = "Far";
-        if (BleDetails.get(position).m_distance > 5) {
+        if (BleDetails.get(position).mDistance > 5) {
             isFar = "Far";
         } else {
             isFar = "Nearby";

@@ -20,13 +20,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     Double m_latitude;
     Double m_longitude;
     String m_addr;
-    private GoogleMap mMap;
     double defVal=0.0;
 
     @Override
@@ -43,8 +41,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        ImageButton maps_back = (ImageButton) findViewById(R.id.maps_back);
-        maps_back.setOnClickListener(new View.OnClickListener() {
+        ImageButton mapsBack = (ImageButton) findViewById(R.id.maps_back);
+        mapsBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -53,8 +51,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        ImageButton maps_home = (ImageButton) findViewById(R.id.maps_home);
-        maps_home.setOnClickListener(new View.OnClickListener() {
+        ImageButton mapsHome = (ImageButton) findViewById(R.id.maps_home);
+        mapsHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -79,11 +77,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d("MAPS","onMAPREADY");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
+        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
         //String currentDateandTime = sdf.format(new Date());
         String currentDateandTime=getDateTime();
 
-        mMap=googleMap;
+        GoogleMap mMap=googleMap;
         mMap.clear();
         mMap.setMyLocationEnabled(true);
         LatLng post = new LatLng(m_latitude, m_longitude);

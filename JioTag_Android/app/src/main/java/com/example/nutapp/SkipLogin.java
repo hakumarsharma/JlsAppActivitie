@@ -18,16 +18,16 @@ public class SkipLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.skip_login);
 
-        final CheckBox login_check = (CheckBox) findViewById(R.id.skip_login_check_box);
-        login_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CheckBox loginCheck = (CheckBox) findViewById(R.id.skip_login_check_box);
+        loginCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 m_isChecked=isChecked;
             }
         });
 
-        Button skip_login_btn_send_otp = (Button) findViewById(R.id.skip_login_btn_send_otp);
-        skip_login_btn_send_otp.setOnClickListener(new View.OnClickListener() {
+        Button skipLoginBtnSendOtp = (Button) findViewById(R.id.skip_login_btn_send_otp);
+        skipLoginBtnSendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                if(m_isChecked){

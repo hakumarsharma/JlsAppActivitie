@@ -24,10 +24,10 @@ public class JioAttachFinder extends AppCompatActivity {
         preferences = this.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
         prefEditor = preferences.edit();
 
-        TextView app_header_text = (TextView) findViewById(R.id.app_header_text);
-        TextView attach_jio_finder_Header = (TextView) findViewById(R.id.attach_jio_finder_Header);
-        Button btn_search_devices = (Button) findViewById(R.id.btn_search_devices);
-        btn_search_devices.setOnClickListener(new View.OnClickListener() {
+        TextView appHeaderText = (TextView) findViewById(R.id.app_header_text);
+        TextView attachJioFinderHeader = (TextView) findViewById(R.id.attach_jio_finder_Header);
+        Button btnSearchDevices = (Button) findViewById(R.id.btn_search_devices);
+        btnSearchDevices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 prefEditor.putString("FIRSTBOOT", "false");
@@ -40,8 +40,8 @@ public class JioAttachFinder extends AppCompatActivity {
                 finishAffinity();
             }
         });
-        btn_search_devices.setTypeface(JioUtils.mTypeface(this, 5));
-        app_header_text.setTypeface(JioUtils.mTypeface(this, 5));
-        attach_jio_finder_Header.setTypeface(JioUtils.mTypeface(this, 3));
+        btnSearchDevices.setTypeface(JioUtils.mTypeface(this, 5));
+        appHeaderText.setTypeface(JioUtils.mTypeface(this, 5));
+        attachJioFinderHeader.setTypeface(JioUtils.mTypeface(this, 3));
     }
 }

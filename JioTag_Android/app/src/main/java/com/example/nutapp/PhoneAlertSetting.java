@@ -50,8 +50,8 @@ public class PhoneAlertSetting extends AppCompatActivity {
         m_recyclerView.setLayoutManager(new LinearLayoutManager(this));
         m_recyclerView.setAdapter(m_phoneAlertAdapter);
 
-        ImageButton attach_back = (ImageButton) findViewById(R.id.phonealert_back);
-        attach_back.setOnClickListener(new View.OnClickListener() {
+        ImageButton attachBack = (ImageButton) findViewById(R.id.phonealert_back);
+        attachBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -59,8 +59,8 @@ public class PhoneAlertSetting extends AppCompatActivity {
                 finish();
             }
         });
-        ImageButton device_home = (ImageButton) findViewById(R.id.phonealert_home);
-        device_home.setOnClickListener(new View.OnClickListener() {
+        ImageButton deviceHome = (ImageButton) findViewById(R.id.phonealert_home);
+        deviceHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();

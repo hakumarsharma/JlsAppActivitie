@@ -9,9 +9,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
-import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanSettings;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,10 +41,8 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +81,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -107,7 +102,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -134,10 +128,6 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
     boolean m_isReceiverRegistered = false;
 
     public BluetoothAdapter m_bluetoothAdpater = BluetoothAdapter.getDefaultAdapter();
-    public BluetoothLeScanner m_leScanner;
-
-
-    public ScanSettings m_scanSettings;
     public List<ScanFilter> m_sacnFilter = new ArrayList<ScanFilter>();
 
     public ArrayList<String> m_deviceAddress = new ArrayList<String>();
@@ -497,8 +487,8 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
         intent.putExtra("title", m_assetName + " ReConnected,successfully");
         intent.putExtra("text", receivedData);
         // Open NotificationView.java Activity
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        /*PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT);*/
 
         final int notificationId = 3;
         String channelId = "channel-03";
@@ -1403,7 +1393,12 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                     enableBT();
                     // m_sacanPending=false;
                 }
+
+                break;
             }
+
+            default :
+                break;
         }
     }
 
@@ -1452,10 +1447,10 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
 
         getContext().registerReceiver(m_nutAppNotificationReceiver, nutFiler);
 
-        IntentFilter filter_gps = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
-        filter_gps.addAction(Intent.ACTION_PROVIDER_CHANGED);
-        filter_gps.addAction("com.nutapp.notifications_location_turn_on");
-        getContext().registerReceiver(m_locationStateReceiver, filter_gps);
+        IntentFilter filterGps = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
+        filterGps.addAction(Intent.ACTION_PROVIDER_CHANGED);
+        filterGps.addAction("com.nutapp.notifications_location_turn_on");
+        getContext().registerReceiver(m_locationStateReceiver, filterGps);
 
         m_isReceiverRegistered = true;
         dialogp = new ProgressDialog(getContext());
@@ -1514,6 +1509,9 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                             Log.d("BELL", "EXCEPTIONNNNN");
                             e.printStackTrace();
                         }
+                        break;
+
+                    default:
                         break;
                 }
                 return false;
@@ -1586,7 +1584,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                 public void onSuccess(Location location) {
                     if (location != null) {
                         Log.d("LOCATION:", location.getLatitude() + " " + location.getLongitude());
-                        LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+                        //LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
                         List<Address> addresses = null;
                         Geocoder geocoder;
                         Locale loc = Locale.getDefault();
@@ -1633,7 +1631,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                 public void onSuccess(Location location) {
                     if (location != null) {
                         Log.d("LOCATION:", location.getLatitude() + " " + location.getLongitude());
-                        LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+                        //LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
                         List<Address> addresses = null;
                         Geocoder geocoder;
                         Locale loc = Locale.getDefault();

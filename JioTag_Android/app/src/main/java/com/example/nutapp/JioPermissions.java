@@ -26,7 +26,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -84,6 +83,9 @@ public class JioPermissions extends AppCompatActivity {
                         Log.d("BTCONNECTIONSTATUS", "BT DISCONNECTED");
                         Toast.makeText(getApplicationContext(), "Bluetooth is disabled", Toast.LENGTH_LONG).show();
                         break;
+
+                    default:
+                        break;
                 }
             }
         }
@@ -100,7 +102,7 @@ public class JioPermissions extends AppCompatActivity {
     }
 
 
-    public void ShowGPS(){
+    public void showGPS(){
         Log.d("SHOWGPS","GPS");
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequestHighAccuracy);
@@ -137,6 +139,9 @@ public class JioPermissions extends AppCompatActivity {
                             // Location settings are not satisfied. However, we have no way to fix the
                             // settings so we won't show the dialog.
                             break;
+
+                        default:
+                            break;
                     }
                 }
             }
@@ -146,7 +151,7 @@ public class JioPermissions extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
-        final LocationSettingsStates states = LocationSettingsStates.fromIntent(data);
+        //final LocationSettingsStates states = LocationSettingsStates.fromIntent(data);
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS:
                 switch (resultCode) {
@@ -162,6 +167,9 @@ public class JioPermissions extends AppCompatActivity {
                         break;
                 }
                 break;
+
+            default :
+                break;
         }
     }
 
@@ -175,21 +183,21 @@ public class JioPermissions extends AppCompatActivity {
         IntentFilter intFilter = new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED");
         this.registerReceiver(m_bluetoothReceiver, intFilter);
 
-        TextView jiopermissions_app_header_text = (TextView) findViewById(R.id.jiopermissions_app_header_text);
-        TextView jiopermissions_before_activate = (TextView) findViewById(R.id.jiopermissions_before_activate);
-        TextView jiopermissions_turnon_bt = (TextView) findViewById(R.id.jiopermissions_turnon_bt);
-        TextView jiopermissions_turnon_bt_details = (TextView) findViewById(R.id.jiopermissions_turnon_bt_details);
-        TextView jiopermissions_turnon_bt_details_enable = (TextView) findViewById(R.id.jiopermissions_turnon_bt_details_enable);
-        TextView jiopermissions_turnon_location = (TextView) findViewById(R.id.jiopermissions_turnon_location);
-        TextView jiopermissions_turnon_location_details = (TextView) findViewById(R.id.jiopermissions_turnon_location_details);
-        TextView jiopermissions_turnon_location_details_enable = (TextView) findViewById(R.id.jiopermissions_turnon_location_details_enable);
+        TextView jiopermissionsAppHeaderText = (TextView) findViewById(R.id.jiopermissions_app_header_text);
+        TextView jiopermissionsBeforeActivate = (TextView) findViewById(R.id.jiopermissions_before_activate);
+        TextView jiopermissionsTurnonBt = (TextView) findViewById(R.id.jiopermissions_turnon_bt);
+        TextView jiopermissionsTurnonBtDetails = (TextView) findViewById(R.id.jiopermissions_turnon_bt_details);
+        TextView jiopermissionsTurnonBtDetailsEnable = (TextView) findViewById(R.id.jiopermissions_turnon_bt_details_enable);
+        TextView jiopermissionsTurnonLocation = (TextView) findViewById(R.id.jiopermissions_turnon_location);
+        TextView jiopermissionsTurnonLocationDetails = (TextView) findViewById(R.id.jiopermissions_turnon_location_details);
+        TextView jiopermissionsTurnonLocationDetailsEnable = (TextView) findViewById(R.id.jiopermissions_turnon_location_details_enable);
 
 
-        Button btn_next = (Button) findViewById(R.id.jiopermissions_next);
-        btn_next.setOnClickListener(new View.OnClickListener() {
+        Button btnNext = (Button) findViewById(R.id.jiopermissions_next);
+        btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((isLocationEnabled(v.getContext()) == false) || (m_bluetoothAdpater.isEnabled() == false)){
+                if (isLocationEnabled(v.getContext()) == false || m_bluetoothAdpater.isEnabled() == false){
                     Toast.makeText(getApplicationContext(), "Location/Bluetooth is not enabled pls click enable to proceed!!", Toast.LENGTH_LONG).show();
                 }else {
                     Intent startMain = new Intent(getApplicationContext(), JioAttachFinder.class);
@@ -197,29 +205,29 @@ public class JioPermissions extends AppCompatActivity {
                 }
             }
         });
-        btn_next.setTypeface(JioUtils.mTypeface(this, 5));
-        jiopermissions_app_header_text.setTypeface(JioUtils.mTypeface(this, 5));
-        jiopermissions_before_activate.setTypeface(JioUtils.mTypeface(this, 5));
-        jiopermissions_turnon_bt.setTypeface(JioUtils.mTypeface(this, 5));
-        jiopermissions_turnon_bt_details.setTypeface(JioUtils.mTypeface(this, 3));
-        jiopermissions_turnon_bt_details_enable.setTypeface(JioUtils.mTypeface(this, 2));
-        jiopermissions_turnon_location.setTypeface(JioUtils.mTypeface(this, 5));
-        jiopermissions_turnon_location_details.setTypeface(JioUtils.mTypeface(this, 3));
-        jiopermissions_turnon_location_details_enable.setTypeface(JioUtils.mTypeface(this, 2));
+        btnNext.setTypeface(JioUtils.mTypeface(this, 5));
+        jiopermissionsAppHeaderText.setTypeface(JioUtils.mTypeface(this, 5));
+        jiopermissionsBeforeActivate.setTypeface(JioUtils.mTypeface(this, 5));
+        jiopermissionsTurnonBt.setTypeface(JioUtils.mTypeface(this, 5));
+        jiopermissionsTurnonBtDetails.setTypeface(JioUtils.mTypeface(this, 3));
+        jiopermissionsTurnonBtDetailsEnable.setTypeface(JioUtils.mTypeface(this, 2));
+        jiopermissionsTurnonLocation.setTypeface(JioUtils.mTypeface(this, 5));
+        jiopermissionsTurnonLocationDetails.setTypeface(JioUtils.mTypeface(this, 3));
+        jiopermissionsTurnonLocationDetailsEnable.setTypeface(JioUtils.mTypeface(this, 2));
 
-        jiopermissions_turnon_bt_details_enable.setOnClickListener(new View.OnClickListener() {
+        jiopermissionsTurnonBtDetailsEnable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enableBluetooth();
             }
         });
-        jiopermissions_turnon_location_details_enable.setOnClickListener(new View.OnClickListener() {
+        jiopermissionsTurnonLocationDetailsEnable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isLocationEnabled(v.getContext()) == false) {
                     /*Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(intent);*/
-                    ShowGPS();
+                    showGPS();
                 }else{
                     Toast.makeText(getApplicationContext(), "Location is already enabled", Toast.LENGTH_LONG).show();
                 }
