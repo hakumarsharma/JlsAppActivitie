@@ -28,8 +28,8 @@ public class Information extends AppCompatActivity {
         m_recyclerView.setHasFixedSize(true);
         m_recyclerView.setLayoutManager(new LinearLayoutManager(this));
         m_recyclerView.setAdapter(m_bleDetailsAdapter);
-        ImageButton info_back = (ImageButton) findViewById(R.id.info_back);
-        info_back.setOnClickListener(new View.OnClickListener() {
+        ImageButton infoBack = (ImageButton) findViewById(R.id.info_back);
+        infoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -37,8 +37,8 @@ public class Information extends AppCompatActivity {
                 finish();
             }
         });
-        ImageButton info_home = (ImageButton) findViewById(R.id.info_home);
-        info_home.setOnClickListener(new View.OnClickListener() {
+        ImageButton infoHome = (ImageButton) findViewById(R.id.info_home);
+        infoHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -49,14 +49,14 @@ public class Information extends AppCompatActivity {
     }
 
     public void addSettingsItems() {
-        SettingsDetails info_about = new SettingsDetails(getResources().getString(R.string.info_aboutjio_header), getResources().getString(R.string.info_aboutjio_details));
-        SettingsDetails info_feature = new SettingsDetails(getResources().getString(R.string.info_features_header), "");
-        SettingsDetails info_conn = new SettingsDetails(getResources().getString(R.string.info_connectionsetup_header), getResources().getString(R.string.info_connectionsetup_details));
-        SettingsDetails info_photo = new SettingsDetails(getResources().getString(R.string.info_photoclick_header), getResources().getString(R.string.info_photoclick_details));
-        m_bleDetails.add(info_about);
-        m_bleDetails.add(info_feature);
-        m_bleDetails.add(info_conn);
-        m_bleDetails.add(info_photo);
+        SettingsDetails infoAbout = new SettingsDetails(getResources().getString(R.string.info_aboutjio_header), getResources().getString(R.string.info_aboutjio_details));
+        SettingsDetails infoFeature = new SettingsDetails(getResources().getString(R.string.info_features_header), "");
+        SettingsDetails infoConn = new SettingsDetails(getResources().getString(R.string.info_connectionsetup_header), getResources().getString(R.string.info_connectionsetup_details));
+        SettingsDetails infoPhoto = new SettingsDetails(getResources().getString(R.string.info_photoclick_header), getResources().getString(R.string.info_photoclick_details));
+        m_bleDetails.add(infoAbout);
+        m_bleDetails.add(infoFeature);
+        m_bleDetails.add(infoConn);
+        m_bleDetails.add(infoPhoto);
     }
 
 }

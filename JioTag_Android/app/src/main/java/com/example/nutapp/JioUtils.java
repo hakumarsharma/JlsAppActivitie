@@ -61,20 +61,20 @@ public class JioUtils {
 
     public static boolean getPhoneAlertRepeat(Context ctx,String deviceAddress) {
         preferences = ctx.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
-        boolean phonealertRepeat = Boolean.valueOf(preferences.getString(deviceAddress + "PHONE_ALERT_REPEAT", false + ""));
-        return phonealertRepeat;
+        return Boolean.valueOf(preferences.getString(deviceAddress + "PHONE_ALERT_REPEAT", false + ""));
+
     }
 
     public static boolean getDeviceAlertRepeat(Context ctx,String deviceAddress) {
         preferences = ctx.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
-        boolean oldVal = Boolean.valueOf(preferences.getString(deviceAddress + "DEVICE_ALERT_REPEAT", false + ""));
-        return oldVal;
+        return Boolean.valueOf(preferences.getString(deviceAddress + "DEVICE_ALERT_REPEAT", false + ""));
+
     }
 
     public static boolean getDeviceAlertReconnectionValue(Context ctx,String deviceAddress){
         preferences = ctx.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
-        boolean devicealertReconnection = Boolean.valueOf(preferences.getString(deviceAddress + "DEVICE_ALERT_RECONNECTION", true + ""));
-        return devicealertReconnection;
+        return Boolean.valueOf(preferences.getString(deviceAddress + "DEVICE_ALERT_RECONNECTION", true + ""));
+
     }
 
     public static boolean getPhoneAlertSetting(Context ctx, String deviceAddress) {
@@ -93,8 +93,8 @@ public class JioUtils {
 
     public static boolean getDisconnectionAlertSetting(Context ctx) {
         preferences = ctx.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
-        boolean disconnectionAlert = preferences.getBoolean(JioUtils.MYPREFERENCES_DISCONNECTION_ALERT, false);
-        return disconnectionAlert;
+        return preferences.getBoolean(JioUtils.MYPREFERENCES_DISCONNECTION_ALERT, false);
+
     }
 
     public static Typeface mTypeface(Context ctx, int typeface) {

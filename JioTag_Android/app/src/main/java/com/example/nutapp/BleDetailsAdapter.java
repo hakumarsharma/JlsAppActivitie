@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.BleViewHolder> implements PopupMenu.OnMenuItemClickListener {
@@ -93,10 +94,6 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
     public void setFragment(HomeFragment frag) {
         m_fragment = frag;
     }
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-    }
 
     List<BleDetails> BleDetails = new ArrayList<BleDetails>();
 
@@ -136,7 +133,7 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
     }
 
     public void setCustomImage(String customName, ImageView leftIcon) {
-        String prefix = customName.split("\\.")[0].trim().toLowerCase();
+        String prefix = customName.split("\\.")[0].trim().toLowerCase(Locale.ROOT);
         switch (prefix) {
             case "key":
                 leftIcon.setImageResource(R.drawable.key_purple);
@@ -162,9 +159,9 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
         }
     }
 
-    public void setImageAsset(String deviceAddress, String friendly_name, int pos, String customName) {
-        Log.d("CHANGEASSET", friendly_name.toLowerCase() + "$" + deviceAddress + "$" + pos);
-        switch (friendly_name.toLowerCase()) {
+    public void setImageAsset(String deviceAddress, String friendlyName, int pos, String customName) {
+        Log.d("CHANGEASSET", friendlyName.toLowerCase(Locale.ROOT) + "$" + deviceAddress + "$" + pos);
+        switch (friendlyName.toLowerCase(Locale.ROOT)) {
             case "key":
                 m_listProgressBar.get(deviceAddress).m_lefticon.setImageResource(R.drawable.key_purple);
                 if (customName.isEmpty()) {
@@ -213,15 +210,18 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
                     m_listProgressBar.get(deviceAddress).deviceDetails.setText("Others." + customName);
                 }
                 break;
+
+            default:
+                break;
         }
     }
 
-    public void setFriendlyName(String deviceAddress, String friendly_name) {
-        m_listProgressBar.get(deviceAddress).deviceDetails.setText(friendly_name);
+    public void setFriendlyName(String deviceAddress, String friendlyName) {
+        m_listProgressBar.get(deviceAddress).deviceDetails.setText(friendlyName);
     }
 
-    public void setProgressBarForItem(String deviceAddress, int RSSI) {
-        Log.d("RSSI", deviceAddress + ":::" + RSSI);
+    public void setProgressBarForItem(String deviceAddress, int rssi) {
+        Log.d("RSSI", deviceAddress + ":::" + rssi);
     }
 
 
@@ -260,10 +260,10 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
         //holder.deviceDetails.setText(BleDetails.get(position).deviceName + "-" + BleDetails.get(position).deviceAddress);
 
         //holder.deviceDetails.setText(BleDetails.get(position).deviceName + "." + position);
-        String custom_name = preferences.getString(holder.m_dev_address + "CUSTOMNAME", "JioTag" + "." + position);
+        String customName = preferences.getString(holder.m_dev_address + "CUSTOMNAME", "JioTag" + "." + position);
         //holder.deviceDetails.setText("JioTag" + "." + position);
-        holder.deviceDetails.setText(custom_name);
-        setCustomImage(custom_name,holder.m_lefticon);
+        holder.deviceDetails.setText(customName);
+        setCustomImage(customName,holder.m_lefticon);
 
         holder.deviceDetails.setTypeface(JioUtils.mTypeface(m_fragment.getContext(), 5));
         now = Calendar.getInstance();
@@ -400,10 +400,10 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
 
     }
 
-    public void setAlarmStatus(boolean status, int position) {
+    /*public void setAlarmStatus(boolean status, int position) {
         Log.d("DEVSTATINADAPT", status + "");
         final boolean stat = status;
-    }
+    }*/
 
     public void setDistanceOfNut(final BleDevice dev, final String isDist) {
         Log.d("DISTANCE", isDist);
@@ -411,7 +411,7 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
             @Override
             public void run() {
                 Log.d("DISTANCE", "addr" + dev.address + ":" + isDist);
-                if (m_listProgressBar.get(dev.address).deviceStatus.getText().toString().toLowerCase().contains("connected")) {
+                if (m_listProgressBar.get(dev.address).deviceStatus.getText().toString().toLowerCase(Locale.ROOT).contains("connected")) {
                     m_listProgressBar.get(dev.address).deviceStatus.setText("Connected | " + isDist);
                 } else {
                     m_listProgressBar.get(dev.address).deviceStatus.setText("Disconnected | " + isDist);
@@ -429,7 +429,7 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
                 public void run() {
                     String isDistance = "";
                     if (m_listProgressBar.get(dev.address) != null) {
-                        if (m_listProgressBar.get(dev.address).deviceStatus.toString().toLowerCase().contains("far")) {
+                        if (m_listProgressBar.get(dev.address).deviceStatus.toString().toLowerCase(Locale.ROOT).contains("far")) {
                             isDistance = "Far";
                         } else {
                             isDistance = "Nearby";

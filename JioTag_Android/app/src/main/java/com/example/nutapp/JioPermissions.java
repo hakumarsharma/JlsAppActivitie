@@ -114,6 +114,7 @@ public class JioPermissions extends AppCompatActivity {
             public void onComplete(Task<LocationSettingsResponse> task) {
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
+                    Log.d("JioPermission","response value=="+response);
                     // All location settings are satisfied. The client can initialize location
                     // requests here.
                 } catch (ApiException exception) {
@@ -130,8 +131,10 @@ public class JioPermissions extends AppCompatActivity {
                                         m_currentAct,
                                         REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException e) {
+                                Log.d("JioPermission","Error value=="+e);
                                 // Ignore the error.
                             } catch (ClassCastException e) {
+                                Log.d("JioPermission","Error value=="+e);
                                 // Ignore, should be an impossible error.
                             }
                             break;

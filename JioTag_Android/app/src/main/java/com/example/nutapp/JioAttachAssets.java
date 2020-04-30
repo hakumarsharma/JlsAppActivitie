@@ -269,7 +269,7 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
         asset_custom_name = (EditText) findViewById(R.id.asset_custom_name);
         String resourceId=m_deviceposName.toLowerCase(Locale.ROOT).split("\\.")[0];
         setHighlight(resourceId);
-        if(!resourceId.equalsIgnoreCase("JioTag")){
+        if(!"JioTag".equalsIgnoreCase(resourceId)){
             filledNameValue.setText(m_deviceposName.split("\\.")[0]);
         }
         attach_asset_btn_add.setEnabled(true);
@@ -378,6 +378,7 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
             try {
                 Log.d("CAMTAG", "PICTAKEN");
                 mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                Log.d("JioAttachAssets", "value of mImageBitmap"+mImageBitmap);
                 m_cameraImageUri = Uri.parse(mCurrentPhotoPath);
                 attach_asset_camera.setImageURI(m_cameraImageUri);
                 //mImageView.setImageBitmap(mImageBitmap);

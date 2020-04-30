@@ -13,8 +13,8 @@ public class Howtoadd extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.how_toadd);
-        ImageButton how_back = (ImageButton) findViewById(R.id.how_card_attach_back);
-        how_back.setOnClickListener(new View.OnClickListener() {
+        ImageButton howBack = (ImageButton) findViewById(R.id.how_card_attach_back);
+        howBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -23,8 +23,8 @@ public class Howtoadd extends AppCompatActivity {
             }
         });
 
-        ImageButton how_home = (ImageButton) findViewById(R.id.how_card_attach_tick);
-        how_home.setOnClickListener(new View.OnClickListener() {
+        ImageButton howHome = (ImageButton) findViewById(R.id.how_card_attach_tick);
+        howHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();

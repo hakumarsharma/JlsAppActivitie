@@ -63,11 +63,11 @@ public class OtpRequest extends AppCompatActivity {
         int readPhoneNumbers=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS);
         int readSms=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
         int receiveSms=ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
-        if((sendSms != PackageManager.PERMISSION_GRANTED)|| (fineLocation !=PackageManager.PERMISSION_GRANTED) || (camera !=PackageManager.PERMISSION_GRANTED) ||
-        (writeExternalStorage !=PackageManager.PERMISSION_GRANTED) || (readExternalStorage !=PackageManager.PERMISSION_GRANTED) ||
-        (coarseLocation !=PackageManager.PERMISSION_GRANTED) || (readPhoneState != PackageManager.PERMISSION_GRANTED) ||
-        (readPhoneNumbers !=PackageManager.PERMISSION_GRANTED) || (readSms !=PackageManager.PERMISSION_GRANTED) ||
-        (receiveSms != PackageManager.PERMISSION_GRANTED)){
+        if(sendSms != PackageManager.PERMISSION_GRANTED|| fineLocation !=PackageManager.PERMISSION_GRANTED || camera !=PackageManager.PERMISSION_GRANTED ||
+        writeExternalStorage !=PackageManager.PERMISSION_GRANTED || readExternalStorage !=PackageManager.PERMISSION_GRANTED ||
+        coarseLocation !=PackageManager.PERMISSION_GRANTED || readPhoneState != PackageManager.PERMISSION_GRANTED ||
+        readPhoneNumbers !=PackageManager.PERMISSION_GRANTED || readSms !=PackageManager.PERMISSION_GRANTED ||
+        receiveSms != PackageManager.PERMISSION_GRANTED){
             return false;
         }else{
             return true;
@@ -268,7 +268,7 @@ public class OtpRequest extends AppCompatActivity {
             };
             queue.add(req);
         } catch (Exception e) {
-
+            Log.d("onRequest", "Error"+e);
         }
     }
 }

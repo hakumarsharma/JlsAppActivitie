@@ -26,7 +26,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -41,6 +40,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 public class CardDetails extends AppCompatActivity {
     int position_nut_val = 0;
@@ -108,14 +108,14 @@ public class CardDetails extends AppCompatActivity {
         finish();
     }
 
-    public boolean getDeviceDisconnectionReminder(String DEVICE_HEX_DEVICE_ADDRESS) {
-        boolean connectionReminder = Boolean.valueOf(preferences.getString(DEVICE_HEX_DEVICE_ADDRESS + "DEVICE_ALERT_REMINDER", true + ""));
-        return connectionReminder;
+    public boolean getDeviceDisconnectionReminder(String deviceHexDeviceAddress) {
+        return Boolean.valueOf(preferences.getString(deviceHexDeviceAddress + "DEVICE_ALERT_REMINDER", true + ""));
+
     }
 
     public static boolean m_alertDialogActive = false;
 
-    public void createDisconnectAlertDialog(String nut_dev_address) {
+    public void createDisconnectAlertDialog(String nutDevAddress) {
         boolean disconnectAlertVal = JioUtils.getDisconnectionAlertSetting(this);
         if (disconnectAlertVal) {
             if (m_alertDialogActive == true) {
@@ -150,15 +150,15 @@ public class CardDetails extends AppCompatActivity {
             m_disconnectAlert.setTitle(m_assetName);
             //m_disconnectAlert.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.asset_dialog_round_bkgd));
             m_disconnectAlert.show();
-            Button b_negative = m_disconnectAlert.getButton(DialogInterface.BUTTON_NEGATIVE);
-            Button b_positive = m_disconnectAlert.getButton(DialogInterface.BUTTON_POSITIVE);
-            b_negative.setBackgroundColor(0xFFCCF2FD);
-            b_positive.setBackgroundColor(0xFF00BFF2);
-            b_positive.setTextColor(Color.WHITE);
+            Button bNegative = m_disconnectAlert.getButton(DialogInterface.BUTTON_NEGATIVE);
+            Button bPositive = m_disconnectAlert.getButton(DialogInterface.BUTTON_POSITIVE);
+            bNegative.setBackgroundColor(0xFFCCF2FD);
+            bPositive.setBackgroundColor(0xFF00BFF2);
+            bPositive.setTextColor(Color.WHITE);
         }
     }
 
-    public void showAlertOnReconnection(String device_address) {
+    public void showAlertOnReconnection(String deviceAddress) {
         Log.d("JIO", "RECONNECT ALERT");
         String receivedData = m_assetName + "ReConnect success Alert";
         Context context = m_context_main;
@@ -167,8 +167,8 @@ public class CardDetails extends AppCompatActivity {
         intent.putExtra("title", m_assetName + " ReConnected,successfully");
         intent.putExtra("text", receivedData);
         // Open NotificationView.java Activity
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+       /* PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT);*/
 
         final int notificationId = 3;
         String channelId = "channel-03";
@@ -188,11 +188,11 @@ public class CardDetails extends AppCompatActivity {
             nm.createNotificationChannel(mChannel);
         }
         // NotificationManagerCompat nm = NotificationManagerCompat.from(this);
-        Notification m_notif = nbuilder.build();
-        nm.notify(notificationId, m_notif);
+        Notification mNotif = nbuilder.build();
+        nm.notify(notificationId, mNotif);
     }
 
-    public void showConnectReminderNotification(String device_address) {
+    public void showConnectReminderNotification(String deviceAddress) {
         Log.d("JIO", "CONNECTION REMINDER");
         String receivedData = m_assetName + " Reconnect Reminder";
         Context context = m_context_main;
@@ -201,8 +201,8 @@ public class CardDetails extends AppCompatActivity {
         intent.putExtra("title", m_assetName + " disconnected,Please reconnect");
         intent.putExtra("text", receivedData);
         // Open NotificationView.java Activity
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        /*PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT);*/
 
         final int notificationId = 2;
         String channelId = "channel-02";
@@ -223,8 +223,8 @@ public class CardDetails extends AppCompatActivity {
             nm.createNotificationChannel(mChannel);
         }
         // NotificationManagerCompat nm = NotificationManagerCompat.from(this);
-        Notification m_notif = nbuilder.build();
-        nm.notify(notificationId, m_notif);
+        Notification mNotif = nbuilder.build();
+        nm.notify(notificationId, mNotif);
     }
 
     public void createSoundLessNotification() {
@@ -236,8 +236,8 @@ public class CardDetails extends AppCompatActivity {
         intent.putExtra("title", m_assetName+" Disconnected");
         intent.putExtra("text", receivedData);
         // Open NotificationView.java Activity
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+        /*PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);*/
 
         final int notificationId = 1;
         String channelId = "channel-01";
@@ -258,11 +258,11 @@ public class CardDetails extends AppCompatActivity {
             nm.createNotificationChannel(mChannel);
         }
         // NotificationManagerCompat nm = NotificationManagerCompat.from(this);
-        Notification m_notif = nbuilder.build();
-        nm.notify(notificationId, m_notif);
+        Notification mNotif = nbuilder.build();
+        nm.notify(notificationId, mNotif);
     }
 
-    public void showJioDisconnectNotification(String device_address) {
+    public void showJioDisconnectNotification(String deviceAddress) {
         Log.d("JIO", "NOTIFICATION PRINTED");
         String receivedData = m_assetName+ " Disconnected";
         Context context = m_context_main;
@@ -271,8 +271,8 @@ public class CardDetails extends AppCompatActivity {
         intent.putExtra("title", m_assetName+" Disconnected");
         intent.putExtra("text", receivedData);
         // Open NotificationView.java Activity
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        /*PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT);*/
 
         final int notificationId = 1;
         String channelId = "channel-01";
@@ -295,23 +295,23 @@ public class CardDetails extends AppCompatActivity {
             nm.createNotificationChannel(mChannel);
         }
         // NotificationManagerCompat nm = NotificationManagerCompat.from(this);
-        Notification m_notif = nbuilder.build();
-        m_notif.flags = Notification.FLAG_INSISTENT;
-        nm.notify(notificationId, m_notif);
+        Notification mNotif = nbuilder.build();
+        mNotif.flags = Notification.FLAG_INSISTENT;
+        nm.notify(notificationId, mNotif);
 
 
-        final boolean connectionReminder = getDeviceDisconnectionReminder(device_address);
-        final String addr_device = device_address;
+        final boolean connectionReminder = getDeviceDisconnectionReminder(deviceAddress);
+        final String addrDevice = deviceAddress;
         final Runnable sendConnectReminder = new Runnable() {
             public void run() {
                 if (connectionReminder == true) {
-                    showConnectReminderNotification(addr_device);
+                    showConnectReminderNotification(addrDevice);
                 }
             }
         };
 
-        int duration_ms = JioUtils.getAlertDuration(m_context_main, device_address, true);
-        Log.d("DURATIONN", "Notificationnn duration is" + duration_ms);
+        int durationMs = JioUtils.getAlertDuration(m_context_main, deviceAddress, true);
+        Log.d("DURATIONN", "Notificationnn duration is" + durationMs);
         final Runnable stopSoundR = new Runnable() {
             public void run() {
                 nm.cancel(notificationId);
@@ -320,9 +320,9 @@ public class CardDetails extends AppCompatActivity {
             }
         };
 
-        boolean phone_alert_repeat = JioUtils.getPhoneAlertRepeat(m_context_main, device_address);
-        if (phone_alert_repeat == false) {
-            m_handler.postDelayed(stopSoundR, duration_ms * 1000);
+        boolean phoneAlertRepeat = JioUtils.getPhoneAlertRepeat(m_context_main, deviceAddress);
+        if (phoneAlertRepeat == false) {
+            m_handler.postDelayed(stopSoundR, durationMs * 1000);
         }
 
         /*Log.d("DURATION", "PHONEALERT DURATION::" + duration_ms);
@@ -432,7 +432,7 @@ public class CardDetails extends AppCompatActivity {
                     isConnected = true;
                     rel_detail_device_alert_switch.setClickable(false);
                     rel_detail_phone_alert_switch.setClickable(false);
-                    if (JioUtils.getDeviceAlertReconnectionValue(m_context_main, nut_device_address) && (is_auto_reconnect == true)) {
+                    if (JioUtils.getDeviceAlertReconnectionValue(m_context_main, nut_device_address) && is_auto_reconnect == true) {
                         is_auto_reconnect=false;
                         showAlertOnReconnection(nut_device_address);
                     }
@@ -440,7 +440,7 @@ public class CardDetails extends AppCompatActivity {
             } else if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_disconnected_device")) {
                 nut_device_address = intent.getStringExtra("DEV_ADDRESS");
                 Log.d("NUTRECEIVER", "DISCONNECTEDMSG::" + nut_device_address);
-                if (ADDRRESS.equalsIgnoreCase(nut_device_address) && (isConnected == true)) {
+                if (ADDRRESS.equalsIgnoreCase(nut_device_address) && isConnected == true) {
                     is_auto_reconnect=true;
                     rel_detail_device_status.setText("Disconnected" + " | " + farnear_val);
                     rel_detail_device_status.setTextColor(0xCCCCCCCC);
@@ -459,7 +459,7 @@ public class CardDetails extends AppCompatActivity {
             } else if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_alarm_disabled")) {
                 nut_device_address = intent.getStringExtra("DEV_ADDRESS");
                 Log.d("NUTRECEIVER", "DISCONNECTEDMSG::" + nut_device_address);
-                if (ADDRRESS.equalsIgnoreCase(nut_device_address) && (isAlarmOn == true)) {
+                if (ADDRRESS.equalsIgnoreCase(nut_device_address) && isAlarmOn == true) {
                     Runnable startScanr = new Runnable() {
                         public void run() {
                             isAlarmOn = false;
@@ -473,7 +473,7 @@ public class CardDetails extends AppCompatActivity {
             } else if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_alarm_enabled")) {
                 nut_device_address = intent.getStringExtra("DEV_ADDRESS");
                 Log.d("NUTRECEIVER", "DISCONNECTEDMSG::" + nut_device_address);
-                if (ADDRRESS.equalsIgnoreCase(nut_device_address) && (isAlarmOn == false)) {
+                if (ADDRRESS.equalsIgnoreCase(nut_device_address) && isAlarmOn == false) {
                     Runnable startScanr = new Runnable() {
                         public void run() {
                             isAlarmOn = true;
@@ -482,9 +482,9 @@ public class CardDetails extends AppCompatActivity {
                             alarm.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_frame_blue));
                         }
                     };
-                    int device_alert_duration_ms = JioUtils.getAlertDuration(m_context_main, nut_device_address, false);
-                    Log.d("DEVICEALERTDUR", device_alert_duration_ms + "");
-                    m_handler.postDelayed(startScanr, device_alert_duration_ms * 1000);
+                    int deviceAlertDurationMs = JioUtils.getAlertDuration(m_context_main, nut_device_address, false);
+                    Log.d("DEVICEALERTDUR", deviceAlertDurationMs + "");
+                    m_handler.postDelayed(startScanr, deviceAlertDurationMs * 1000);
                 }
             } else if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_maps_home_key")) {
                 Log.d("MAPSHOME", "HOME FROM MAPS");
@@ -511,19 +511,19 @@ public class CardDetails extends AppCompatActivity {
         LOCADDRRESS = receiveIntent.getStringExtra("LOCATION");
         STATUS = receiveIntent.getStringExtra("STATUS");
         Log.d("STATUSS", STATUS);
-        String status_val = "";
+        String statusVal = "";
 
 
-        if (STATUS.toLowerCase().contains("|")) {
-            status_val = STATUS.split("\\|")[0];
+        if (STATUS.toLowerCase(Locale.ROOT).contains("|")) {
+            statusVal = STATUS.split("\\|")[0];
             farnear_val = STATUS.split("\\|")[1];
         } else {
-            status_val = STATUS;
+            statusVal = STATUS;
         }
         //Log.d("STATUSVAL",status_val+":::Hello");
         //Toast.makeText(this.getApplicationContext(), "RENTRY"+STATUS, Toast.LENGTH_LONG).show();
 
-        if (status_val.trim().equalsIgnoreCase("connected")) {
+        if (statusVal.trim().equalsIgnoreCase("connected")) {
             isConnected = true;
             //Log.d("RENTRY", "reentry connected");
             //Toast.makeText(this.getApplicationContext(), "RENTRY CONNECTED "+status_val, Toast.LENGTH_LONG).show();
@@ -542,25 +542,25 @@ public class CardDetails extends AppCompatActivity {
         intFilterConnected.addAction("com.nutapp.notifications_maps_home_key");
         registerReceiver(m_nutConnectionReceiver, intFilterConnected);
 
-        ImageView rel_detail_lefticon = (ImageView) findViewById(R.id.rel_detail_lefticon);
-        switch (ICON.toLowerCase()) {
+        ImageView relDetailLefticon = (ImageView) findViewById(R.id.rel_detail_lefticon);
+        switch (ICON.toLowerCase(Locale.ROOT)) {
             case "key":
-                rel_detail_lefticon.setImageResource(R.drawable.key);
+                relDetailLefticon.setImageResource(R.drawable.key);
                 break;
             case "wallet":
-                rel_detail_lefticon.setImageResource(R.drawable.wallet);
+                relDetailLefticon.setImageResource(R.drawable.wallet);
                 break;
             case "laptop":
-                rel_detail_lefticon.setImageResource(R.drawable.laptop_home);
+                relDetailLefticon.setImageResource(R.drawable.laptop_home);
                 break;
             case "suitcase":
-                rel_detail_lefticon.setImageResource(R.drawable.suitcase);
+                relDetailLefticon.setImageResource(R.drawable.suitcase);
                 break;
             case "purse":
-                rel_detail_lefticon.setImageResource(R.drawable.purse);
+                relDetailLefticon.setImageResource(R.drawable.purse);
                 break;
             default:
-                rel_detail_lefticon.setImageResource(R.drawable.others);
+                relDetailLefticon.setImageResource(R.drawable.others);
                 break;
         }
 
@@ -572,8 +572,8 @@ public class CardDetails extends AppCompatActivity {
             rel_detail_device_status.setTextColor(getResources().getColor(R.color.cardview_device_status_color));
         }
 
-        TextView Location_text = (TextView) findViewById(R.id.rel_detail_device_distance);
-        Location_text.setText(LOCADDRRESS);
+        TextView locationText = (TextView) findViewById(R.id.rel_detail_device_distance);
+        locationText.setText(LOCADDRRESS);
 
         preferences = this.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
         prefEditor = preferences.edit();
@@ -586,7 +586,7 @@ public class CardDetails extends AppCompatActivity {
         deviceAddr.setText(receiveIntent.getStringExtra("ICON"));
         alarm = (Button) findViewById(R.id.rel_detail_btn_search_devices);
 
-        if (isConnected == false && status_val.trim().toLowerCase().equalsIgnoreCase("disconnected")) {
+        if (isConnected == false && statusVal.trim().toLowerCase(Locale.ROOT).equalsIgnoreCase("disconnected")) {
             alarm.setEnabled(false);
             alarm.setBackgroundDrawable(getResources().getDrawable(R.drawable.disabled_button));
         }
@@ -623,26 +623,26 @@ public class CardDetails extends AppCompatActivity {
             }
         });
 
-        final RelativeLayout rel_detail_header_item_phone_alert = (RelativeLayout) findViewById(R.id.rel_detail_header_item_phone_alert);
-        rel_detail_header_item_phone_alert.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout relDetailHeaderItemPhoneAlert = (RelativeLayout) findViewById(R.id.rel_detail_header_item_phone_alert);
+        relDetailHeaderItemPhoneAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isConnected == false) {
                     Intent hello = new Intent(v.getContext(), PhoneAlertSetting.class);
                     hello.putExtra("HEXADDR", ADDRRESS);
                     startActivityForResult(hello, JioUtils.LAUNCH_PHONE_ALERT_SETTING);
-                    rel_detail_header_item_phone_alert.setPressed(true);
+                    relDetailHeaderItemPhoneAlert.setPressed(true);
                 } else {
                     Toast.makeText(v.getContext(), "Device is connected, Please disconnect and Change the setting!!!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        final RelativeLayout rel_detail_header_item_device_alert = (RelativeLayout) findViewById(R.id.rel_detail_header_item_device_alert);
-        rel_detail_header_item_device_alert.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout relDetailHeaderItemDeviceAlert = (RelativeLayout) findViewById(R.id.rel_detail_header_item_device_alert);
+        relDetailHeaderItemDeviceAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rel_detail_header_item_device_alert.setPressed(true);
+                relDetailHeaderItemDeviceAlert.setPressed(true);
                 if (isConnected == false) {
                     Intent hello = new Intent(v.getContext(), DeviceAlertSetting.class);
                     hello.putExtra("HEXADDR", ADDRRESS);
@@ -653,12 +653,12 @@ public class CardDetails extends AppCompatActivity {
             }
         });
 
-        final RelativeLayout rel_detail_header_item_pair = (RelativeLayout) findViewById(R.id.rel_detail_header_item_pair);
-        rel_detail_header_item_pair.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout relDetailHeaderItemPair = (RelativeLayout) findViewById(R.id.rel_detail_header_item_pair);
+        relDetailHeaderItemPair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("CONNECT", "CONNECT DEVICE:" + position_nut_val);
-                rel_detail_header_item_pair.setPressed(true);
+                relDetailHeaderItemPair.setPressed(true);
                 if (isConnected == false) {
                     is_auto_reconnect=false;
                     Intent inte = new Intent();
@@ -674,12 +674,12 @@ public class CardDetails extends AppCompatActivity {
             }
         });
 
-        final RelativeLayout rel_detail_header_item_unpair = (RelativeLayout) findViewById(R.id.rel_detail_header_item_unpair);
-        rel_detail_header_item_unpair.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout relDetailHeaderItemUnpair = (RelativeLayout) findViewById(R.id.rel_detail_header_item_unpair);
+        relDetailHeaderItemUnpair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("DISCONNECT", "DISCONNECT DEVICE:" + position_nut_val);
-                rel_detail_header_item_unpair.setPressed(true);
+                relDetailHeaderItemUnpair.setPressed(true);
                 if (isConnected == true) {
                     if (isAlarmOn == true) {
                         Toast.makeText(v.getContext(), "Please Stop the alarm before disconnecting...", Toast.LENGTH_SHORT).show();
@@ -698,11 +698,11 @@ public class CardDetails extends AppCompatActivity {
         });
 
 
-        TextView rel_detail_unpair_text = (TextView) findViewById(R.id.rel_detail_unpair_text);
+        //TextView rel_detail_unpair_text = (TextView) findViewById(R.id.rel_detail_unpair_text);
 
 
-        TextView rel_detail_tView = (TextView) findViewById(R.id.rel_detail_tView);
-        rel_detail_tView.setText(getTime());
+        TextView relDetailTView = (TextView) findViewById(R.id.rel_detail_tView);
+        relDetailTView.setText(getTime());
 
 
         rel_detail_phone_alert_switch = (Switch) findViewById(R.id.rel_detail_phone_alert_switch);
@@ -737,8 +737,8 @@ public class CardDetails extends AppCompatActivity {
         }
 
 
-        ImageButton attach_back = (ImageButton) findViewById(R.id.card_attach_back);
-        attach_back.setOnClickListener(new View.OnClickListener() {
+        ImageButton attachBack = (ImageButton) findViewById(R.id.card_attach_back);
+        attachBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -747,8 +747,8 @@ public class CardDetails extends AppCompatActivity {
                 finish();
             }
         });
-        ImageButton device_home = (ImageButton) findViewById(R.id.card_attach_tick);
-        device_home.setOnClickListener(new View.OnClickListener() {
+        ImageButton deviceHome = (ImageButton) findViewById(R.id.card_attach_tick);
+        deviceHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -758,22 +758,22 @@ public class CardDetails extends AppCompatActivity {
             }
         });
 
-        final RelativeLayout rel_detail_header_item_jio_comm_find = (RelativeLayout) findViewById(R.id.rel_detail_header_item_jio_comm_find);
-        rel_detail_header_item_jio_comm_find.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout relDetailHeaderItemJioCommFind = (RelativeLayout) findViewById(R.id.rel_detail_header_item_jio_comm_find);
+        relDetailHeaderItemJioCommFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("JIOCOMMFIND", "rel_detail_header_item_jio_comm_find clicked:");
-                rel_detail_header_item_jio_comm_find.setPressed(true);
+                relDetailHeaderItemJioCommFind.setPressed(true);
                 Toast.makeText(v.getContext(), "Jio Community Finder Coming Soon!!!!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        final RelativeLayout rel_detail_header_item_software_update = (RelativeLayout) findViewById(R.id.rel_detail_header_item_software_update);
-        rel_detail_header_item_software_update.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout relDetailHeaderItemSoftwareUpdate = (RelativeLayout) findViewById(R.id.rel_detail_header_item_software_update);
+        relDetailHeaderItemSoftwareUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("SUPDATE", "rel_detail_header_item_software_update clicked:");
-                rel_detail_header_item_software_update.setPressed(true);
+                relDetailHeaderItemSoftwareUpdate.setPressed(true);
                 Toast.makeText(v.getContext(), "Software Update Feature Coming Soon!!!!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -788,6 +788,9 @@ public class CardDetails extends AppCompatActivity {
                         inte.setAction("com.nutapp.notifications_showlocation");
                         sendBroadcast(inte);
                         break;
+
+                    default:
+                        break;
                 }
                 return false;
             }
@@ -800,7 +803,7 @@ public class CardDetails extends AppCompatActivity {
         Calendar now;
         now = Calendar.getInstance();
         String am = "AM";
-        String time_str = "10.00 AM";
+        String timeStr = "10.00 AM";
         try {
             int hour = now.get(Calendar.HOUR);
             if (hour == 0) {
@@ -815,13 +818,13 @@ public class CardDetails extends AppCompatActivity {
                 am = "  PM...";
             }
             if (minute < 10) {
-                time_str = hour + ":" + "0" + minute + am;
+                timeStr = hour + ":" + "0" + minute + am;
             } else {
-                time_str = hour + ":" + minute + am;
+                timeStr = hour + ":" + minute + am;
             }
         } catch (Exception e) {
             Log.d("TIME EXCEPTION", "NO TIME");
         }
-        return time_str;
+        return timeStr;
     }
 }

@@ -28,17 +28,17 @@ public class DeviceAlertSetting extends AppCompatActivity {
 
     public void addDeviceAlertItems() {
         SettingsDetails mainAlert = new SettingsDetails(getResources().getString(R.string.devicealert_header),"");
-        SettingsDetails alert_settings_header = new SettingsDetails(getResources().getString(R.string.devicealert_alerts_header),"");
+        SettingsDetails alertSettingsHeader = new SettingsDetails(getResources().getString(R.string.devicealert_alerts_header),"");
         SettingsDetails duration = new SettingsDetails(getResources().getString(R.string.devicealert_header_duration), getResources().getString(R.string.devicealert_header_duration_details));
         SettingsDetails repeat = new SettingsDetails(getResources().getString(R.string.devicealert_repeat), getResources().getString(R.string.devicealert_repeat_details));
-        SettingsDetails alert_notification_header = new SettingsDetails(getResources().getString(R.string.devicealert_notifications_header),"");
+        SettingsDetails alertNotificationHeader = new SettingsDetails(getResources().getString(R.string.devicealert_notifications_header),"");
         SettingsDetails reminder = new SettingsDetails(getResources().getString(R.string.devicealert_reminder_for_connection), getResources().getString(R.string.devicealert_reminder_for_connection_details));
         SettingsDetails alertOnReconnection = new SettingsDetails(getResources().getString(R.string.devicealert_alert_on_reconnection), getResources().getString(R.string.devicealert_alert_on_reconnection_details));
         m_bleDetails.add(mainAlert);
-        m_bleDetails.add(alert_settings_header);
+        m_bleDetails.add(alertSettingsHeader);
         m_bleDetails.add(duration);
         m_bleDetails.add(repeat);
-        m_bleDetails.add(alert_notification_header);
+        m_bleDetails.add(alertNotificationHeader);
         m_bleDetails.add(reminder);
         m_bleDetails.add(alertOnReconnection);
     }
@@ -57,8 +57,8 @@ public class DeviceAlertSetting extends AppCompatActivity {
         m_recyclerView.setHasFixedSize(true);
         m_recyclerView.setLayoutManager(new LinearLayoutManager(this));
         m_recyclerView.setAdapter(m_deviceAlertAdapter);
-        ImageButton attach_back = (ImageButton) findViewById(R.id.devicealert_back);
-        attach_back.setOnClickListener(new View.OnClickListener() {
+        ImageButton attachBack = (ImageButton) findViewById(R.id.devicealert_back);
+        attachBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -66,8 +66,8 @@ public class DeviceAlertSetting extends AppCompatActivity {
                 finish();
             }
         });
-        ImageButton device_home = (ImageButton) findViewById(R.id.devicealert_home);
-        device_home.setOnClickListener(new View.OnClickListener() {
+        ImageButton deviceHome = (ImageButton) findViewById(R.id.devicealert_home);
+        deviceHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();

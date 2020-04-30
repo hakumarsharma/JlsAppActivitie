@@ -143,12 +143,13 @@ public class OtpWaitScreen extends AppCompatActivity {
             queue.add(req);
         } catch (Exception e) {
 
+            Log.e("MSGFROMSERVER", "FAILURE"+e);
         }
     }
 
 
     public BroadcastReceiver m_smsConnectionReceiver = new BroadcastReceiver() {
-        String nut_device_address = "";
+        String nutDeviceAddress = "";
 
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -36,7 +36,7 @@ public class Feedback extends AppCompatActivity {
             finish();
             Log.i("Finish", "EMAIL CHOOSER OPENED");
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(Feedback.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -80,8 +80,8 @@ public class Feedback extends AppCompatActivity {
             }
         });
 
-        ImageButton feedback_attach_back = (ImageButton) findViewById(R.id.feedback_attach_back);
-        feedback_attach_back.setOnClickListener(new View.OnClickListener() {
+        ImageButton feedbackAttachBack = (ImageButton) findViewById(R.id.feedback_attach_back);
+        feedbackAttachBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -89,8 +89,8 @@ public class Feedback extends AppCompatActivity {
                 finish();
             }
         });
-        ImageButton feedback_attach_tick = (ImageButton) findViewById(R.id.feedback_attach_tick);
-        feedback_attach_tick.setOnClickListener(new View.OnClickListener() {
+        ImageButton feedbackAttachTick = (ImageButton) findViewById(R.id.feedback_attach_tick);
+        feedbackAttachTick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();

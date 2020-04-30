@@ -124,6 +124,7 @@ public class PhoneAdapter extends RecyclerView.Adapter<PhoneAdapter.BleViewHolde
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
+                    Log.e("PhoneAdater", "parent"+parent);
                 }
             });
         } else if (position == 2) {

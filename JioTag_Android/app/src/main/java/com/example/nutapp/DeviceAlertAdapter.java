@@ -1,6 +1,5 @@
 package com.example.nutapp;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -9,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -86,8 +84,8 @@ public class DeviceAlertAdapter extends RecyclerView.Adapter<DeviceAlertAdapter.
 
     public void turnOnOffDeviceAlertDuration(Spinner spin, String selectedItem) {
 
-        String devicealert_duration_switch = preferences.getString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_DURATION", "5sec");
-        Log.d("DEVICE_ALERT_DURATION", "DEVICE_ALERT_DURATION OLD" + devicealert_duration_switch);
+        String devicealertDurationSwitch = preferences.getString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_DURATION", "5sec");
+        Log.d("DEVICE_ALERT_DURATION", "DEVICE_ALERT_DURATION OLD" + devicealertDurationSwitch);
         prefEditor.putString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_DURATION", selectedItem);
         Log.d("DEVICE_ALERT_DURATION", "DEVICE_ALERT_DURATION NEW" + selectedItem);
         prefEditor.commit();
@@ -105,7 +103,7 @@ public class DeviceAlertAdapter extends RecyclerView.Adapter<DeviceAlertAdapter.
     @Override
     public void onBindViewHolder(@NonNull BleViewHolder holder, int position) {
         final int pos = position;
-        final Spinner m_spinner;
+        final Spinner mSpinner;
         if (position == 0) {
             holder.devicealert_header.setText(m_context.getResources().getString(R.string.devicealert_main_header));
             holder.itemView.setBackground(m_context.getResources().getDrawable(R.drawable.attach_asset_round));
@@ -145,9 +143,9 @@ public class DeviceAlertAdapter extends RecyclerView.Adapter<DeviceAlertAdapter.
             holder.devicealert_duration_switch.setVisibility(View.VISIBLE);
             holder.devicealert_switch.setVisibility(View.INVISIBLE);
             holder.devicealert_header.setText(m_context.getResources().getString(R.string.devicealert_header_duration));
-            String devicealert_duration_switch = preferences.getString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_DURATION", "5sec");
+            String devicealertDurationSwitch = preferences.getString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_DURATION", "5sec");
             //String selectedItem = (String) holder.devicealert_duration_switch.getSelectedItem();
-            int indexSpinner = getSpinnerIndex(holder.devicealert_duration_switch, devicealert_duration_switch);
+            int indexSpinner = getSpinnerIndex(holder.devicealert_duration_switch, devicealertDurationSwitch);
             holder.devicealert_duration_switch.setSelection(indexSpinner);
             //turnOnOffDeviceAlertDuration(holder.devicealert_duration_switch, selectedItem);
 
@@ -155,11 +153,11 @@ public class DeviceAlertAdapter extends RecyclerView.Adapter<DeviceAlertAdapter.
             String sel = (String) holder.devicealert_duration_switch.getSelectedItem();
             int position_spin = getSpinnerIndex(m_spinner, sel);
             holder.devicealert_duration_switch.setSelection(position_spin);*/
-            m_spinner = holder.devicealert_duration_switch;
+            mSpinner = holder.devicealert_duration_switch;
             holder.devicealert_duration_switch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    turnOnOffDeviceAlertDuration(m_spinner, (String) m_spinner.getSelectedItem());
+                    turnOnOffDeviceAlertDuration(mSpinner, (String) mSpinner.getSelectedItem());
                 }
 
                 @Override
@@ -170,20 +168,20 @@ public class DeviceAlertAdapter extends RecyclerView.Adapter<DeviceAlertAdapter.
         } else if (position == 3) {
             holder.devicealert_duration_switch.setVisibility(View.INVISIBLE);
             holder.devicealert_switch.setVisibility(View.VISIBLE);
-            boolean devicealert_repeat = Boolean.valueOf(preferences.getString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_REPEAT", false + ""));
-            holder.devicealert_switch.setChecked(devicealert_repeat);
+            boolean devicealertRepeat = Boolean.valueOf(preferences.getString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_REPEAT", false + ""));
+            holder.devicealert_switch.setChecked(devicealertRepeat);
             holder.devicealert_header.setText(m_context.getResources().getString(R.string.devicealert_repeat));
         } else if (position == 5) {
             holder.devicealert_duration_switch.setVisibility(View.INVISIBLE);
             holder.devicealert_switch.setVisibility(View.VISIBLE);
-            boolean devicealert_reminder = Boolean.valueOf(preferences.getString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_REMINDER", true + ""));
-            holder.devicealert_switch.setChecked(devicealert_reminder);
+            boolean devicealertReminder = Boolean.valueOf(preferences.getString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_REMINDER", true + ""));
+            holder.devicealert_switch.setChecked(devicealertReminder);
             holder.devicealert_header.setText(m_context.getResources().getString(R.string.devicealert_reminder_for_connection));
         } else if (position == 6) {
             holder.devicealert_duration_switch.setVisibility(View.INVISIBLE);
             holder.devicealert_switch.setVisibility(View.VISIBLE);
-            boolean devicealert_reconnection = Boolean.valueOf(preferences.getString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_RECONNECTION", true + ""));
-            holder.devicealert_switch.setChecked(devicealert_reconnection);
+            boolean devicealertReconnection = Boolean.valueOf(preferences.getString(HEX_DEVICE_ADDRESS + "DEVICE_ALERT_RECONNECTION", true + ""));
+            holder.devicealert_switch.setChecked(devicealertReconnection);
             holder.devicealert_header.setText(m_context.getResources().getString(R.string.devicealert_alert_on_reconnection));
         }
         if (position == 2) {
@@ -221,12 +219,15 @@ public class DeviceAlertAdapter extends RecyclerView.Adapter<DeviceAlertAdapter.
                         //alert on reconnection
                         turnOnOffDeviceAlertReconnection(isChecked);
                         break;
+
+                    default:
+                        break;
                 }
             }
         });
 
         if(position!=0) {
-            if( (position!=1) && (position !=4)){
+            if( position!=1 && position !=4){
                 holder.itemView.setBackground(m_context.getResources().getDrawable(R.drawable.dialog_round_background));
                 holder.cv.setBackground(m_context.getResources().getDrawable(R.drawable.dialog_round_background));
             }

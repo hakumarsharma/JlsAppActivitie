@@ -1,7 +1,6 @@
 package com.example.nutapp;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.media.MediaActionSound;
 import android.net.Uri;
@@ -99,7 +98,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
     public void startProcessing() {
         startCamera1();
-        Handler m_handler = new Handler();
+        Handler mHandler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
                 try {
@@ -110,7 +109,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
                 }
             }
         };
-        m_handler.postDelayed(r, 3000);
+        mHandler.postDelayed(r, 3000);
     }
 
 

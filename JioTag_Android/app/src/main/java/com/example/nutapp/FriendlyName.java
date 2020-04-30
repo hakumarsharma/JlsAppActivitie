@@ -23,67 +23,67 @@ public class FriendlyName extends AppCompatActivity {
         dev_address = receiveIntent.getStringExtra("ADDR_DEV");
         Log.d("INTENTADDR",dev_address);
 
-        final EditText filled_name_value = (EditText) findViewById(R.id.filled_name);
-        Button friendly_name_key = (Button) findViewById(R.id.button_key);
-        friendly_name_key.setOnClickListener(new View.OnClickListener() {
+        final EditText filledNameValue = (EditText) findViewById(R.id.filled_name);
+        Button friendlyNameKey = (Button) findViewById(R.id.button_key);
+        friendlyNameKey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filled_name_value.setText(getResources().getString(R.string.friendly_key));
+                filledNameValue.setText(getResources().getString(R.string.friendly_key));
             }
         });
-        Button friendly_name_wallet = (Button) findViewById(R.id.button_wallet);
-        friendly_name_wallet.setOnClickListener(new View.OnClickListener() {
+        Button friendlyNameWallet = (Button) findViewById(R.id.button_wallet);
+        friendlyNameWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filled_name_value.setText(getResources().getString(R.string.friendly_wallet));
+                filledNameValue.setText(getResources().getString(R.string.friendly_wallet));
             }
         });
-        Button friendly_name_laptop = (Button) findViewById(R.id.button_laptops);
-        friendly_name_laptop.setOnClickListener(new View.OnClickListener() {
+        Button friendlyNameLaptop = (Button) findViewById(R.id.button_laptops);
+        friendlyNameLaptop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filled_name_value.setText(getResources().getString(R.string.friendly_laptops));
+                filledNameValue.setText(getResources().getString(R.string.friendly_laptops));
             }
         });
-        Button friendly_name_suitcase = (Button) findViewById(R.id.button_suitcase);
-        friendly_name_suitcase.setOnClickListener(new View.OnClickListener() {
+        Button friendlyNameSuitcase = (Button) findViewById(R.id.button_suitcase);
+        friendlyNameSuitcase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filled_name_value.setText(getResources().getString(R.string.friendly_suitcase));
+                filledNameValue.setText(getResources().getString(R.string.friendly_suitcase));
             }
         });
-        Button friendly_name_satchel = (Button) findViewById(R.id.button_satchel);
-        friendly_name_satchel.setOnClickListener(new View.OnClickListener() {
+        Button friendlyNameSatchel = (Button) findViewById(R.id.button_satchel);
+        friendlyNameSatchel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filled_name_value.setText(getResources().getString(R.string.friendly_satchel));
+                filledNameValue.setText(getResources().getString(R.string.friendly_satchel));
             }
         });
-        Button friendly_name_others = (Button) findViewById(R.id.button_others);
-        friendly_name_others.setOnClickListener(new View.OnClickListener() {
+        Button friendlyNameOthers = (Button) findViewById(R.id.button_others);
+        friendlyNameOthers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filled_name_value.setText(getResources().getString(R.string.friendly_others));
+                filledNameValue.setText(getResources().getString(R.string.friendly_others));
             }
         });
 
-        Button dialog_cancel = (Button) findViewById(R.id.button_cancel);
-        dialog_cancel.setOnClickListener(new View.OnClickListener(){
+        Button dialogCancel = (Button) findViewById(R.id.button_cancel);
+        dialogCancel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        Button dialog_finish = (Button) findViewById(R.id.button_finish);
-        dialog_finish.setOnClickListener(new View.OnClickListener() {
+        Button dialogFinish = (Button) findViewById(R.id.button_finish);
+        dialogFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra("ADDR_DEV", dev_address);
-                intent.putExtra("ADDR_DEV_NAME", filled_name_value.getText().toString());
+                intent.putExtra("ADDR_DEV_NAME", filledNameValue.getText().toString());
                 Log.d("FRADD",dev_address);
-                Log.d("FRNAME",filled_name_value.getText().toString());
+                Log.d("FRNAME",filledNameValue.getText().toString());
                 setResult(RESULT_OK, intent);
                 finish();
             }

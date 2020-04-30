@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
@@ -130,10 +129,10 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
     public BluetoothAdapter m_bluetoothAdpater = BluetoothAdapter.getDefaultAdapter();
     public List<ScanFilter> m_sacnFilter = new ArrayList<ScanFilter>();
 
-    public ArrayList<String> m_deviceAddress = new ArrayList<String>();
-    public ArrayList<String> m_btDeviceNames = new ArrayList<String>();
-    public ArrayList<String> m_btDeviceRssi = new ArrayList<String>();
-    public ArrayList<Double> m_btDeviceDistance = new ArrayList<Double>();
+    public List<String> m_deviceAddress = new ArrayList<String>();
+    public List<String> m_btDeviceNames = new ArrayList<String>();
+    public List<String> m_btDeviceRssi = new ArrayList<String>();
+    public List<Double> m_btDeviceDistance = new ArrayList<Double>();
     public List<String> m_deviceTags = new ArrayList<String>();
 
     List<BleDetails> m_bleDetails = new ArrayList<BleDetails>();
@@ -156,7 +155,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
 
     //NUT related Callbacks
     BleDeviceManager mManager;
-    ArrayList<BleDevice> mBleDeviceList = new ArrayList<>();
+    List<BleDevice> mBleDeviceList = new ArrayList<>();
 
     //ALert
     UUID ITAG_ALARM_SERVICE_UUID = convertFromInteger(0x1802);
@@ -169,7 +168,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
     public Set<String> m_auto_reconnect_list= new HashSet<String>();
     LocationRequest mLocationRequestHighAccuracy;
 
-    public void ShowGPS_Status(){
+    public void showGPSStatus(){
         Log.d("SHOWGPS","GPS");
         //Toast.makeText(getApplicationContext(),"LOCATION IS TURNED OFF PLEASE TURN ON",Toast.LENGTH_SHORT).show();
         mLocationRequestHighAccuracy= LocationRequest.create();
@@ -183,6 +182,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             public void onComplete(Task<LocationSettingsResponse> task) {
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
+                    Log.d("HomeFragment","response"+response);
                     // All location settings are satisfied. The client can initialize location
                     // requests here.
                 } catch (ApiException exception) {
@@ -200,13 +200,18 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                                         JioUtils.REQUEST_CHECK_SETTINGS_MAIN);
                             } catch (IntentSender.SendIntentException e) {
                                 // Ignore the error.
+                                Log.d("HomeFragment","Error"+e);
                             } catch (ClassCastException e) {
+                                Log.d("HomeFragment","Error"+e);
                                 // Ignore, should be an impossible error.
                             }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             // Location settings are not satisfied. However, we have no way to fix the
                             // settings so we won't show the dialog.
+                            break;
+
+                        default:
                             break;
                     }
                 }
@@ -221,7 +226,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
         public void onReceive(Context context, Intent intent) {
 
                 if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_location_turn_on")) {
-                    ShowGPS_Status();
+                    showGPSStatus();
                     return;
                 }
 
@@ -251,21 +256,21 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
 
     public boolean isPermissionAlreadyGrantedInMain() {
         Log.d("ENTERP", "isPermissionAlreadyGrantedInMain");
-        int send_sms = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS);
-        int fine_location = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+        int sendSms = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS);
+        int fineLocation = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
         int camera = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA);
-        int write_external_storage = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int read_external_storage = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
-        int coarse_location = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
-        int read_phone_state = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE);
-        int read_phone_numbers = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_NUMBERS);
-        int read_sms = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_SMS);
-        int receive_sms = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECEIVE_SMS);
-        if ((send_sms != PackageManager.PERMISSION_GRANTED) || (fine_location != PackageManager.PERMISSION_GRANTED) || (camera != PackageManager.PERMISSION_GRANTED) ||
-                (write_external_storage != PackageManager.PERMISSION_GRANTED) || (read_external_storage != PackageManager.PERMISSION_GRANTED) ||
-                (coarse_location != PackageManager.PERMISSION_GRANTED) || (read_phone_state != PackageManager.PERMISSION_GRANTED) ||
-                (read_phone_numbers != PackageManager.PERMISSION_GRANTED) || (read_sms != PackageManager.PERMISSION_GRANTED) ||
-                (receive_sms != PackageManager.PERMISSION_GRANTED)) {
+        int writeExternalStorage = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int readExternalStorage = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
+        int coarseLocation = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
+        int readPhoneState = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE);
+        int readPhoneNumbers = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_NUMBERS);
+        int readSms = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_SMS);
+        int receiveSms = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECEIVE_SMS);
+        if (sendSms != PackageManager.PERMISSION_GRANTED || fineLocation != PackageManager.PERMISSION_GRANTED || camera != PackageManager.PERMISSION_GRANTED ||
+                writeExternalStorage != PackageManager.PERMISSION_GRANTED || readExternalStorage != PackageManager.PERMISSION_GRANTED ||
+                coarseLocation != PackageManager.PERMISSION_GRANTED || readPhoneState != PackageManager.PERMISSION_GRANTED ||
+                readPhoneNumbers != PackageManager.PERMISSION_GRANTED || readSms != PackageManager.PERMISSION_GRANTED ||
+                receiveSms != PackageManager.PERMISSION_GRANTED) {
             return false;
         } else {
             return true;
@@ -314,8 +319,8 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_alarm_start")) {
                 Log.d("NUTRECEIVER", "Start Alarm");
                 position_nut = intent.getIntExtra("POSITION_NUT", 0);
-                String DEVICE_ADDRESS = intent.getStringExtra("DEVICE_ADDRESS");
-                startAlarm(position_nut, DEVICE_ADDRESS);
+                String deviceAddress = intent.getStringExtra("DEVICE_ADDRESS");
+                startAlarm(position_nut, deviceAddress);
             } else if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_disconnect")) {
                 Log.d("NUTRECEIVER", "DISCONNECT");
                 position_nut = intent.getIntExtra("POSITION_NUT", 0);
@@ -323,14 +328,14 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             } else if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_alarm_stop")) {
                 Log.d("NUTRECEIVER", "ALARM STOP");
                 position_nut = intent.getIntExtra("POSITION_NUT", 0);
-                String DEVICE_ADDRESS = intent.getStringExtra("DEVICE_ADDRESS");
-                stopAlarm(position_nut, DEVICE_ADDRESS);
+                String deviceAddress = intent.getStringExtra("DEVICE_ADDRESS");
+                stopAlarm(position_nut, deviceAddress);
             } else if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_connect")) {
                 Log.d("NUTRECEIVER", "CONNECT");
                 position_nut = intent.getIntExtra("POSITION_NUT", 0);
                 String devaddress = intent.getStringExtra("DEV_ADDRESS");
                 startConnecting(position_nut, devaddress);
-            } else if (intent.getAction().equalsIgnoreCase(("com.nutapp.notifications_showlocation"))) {
+            } else if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_showlocation")) {
                 Log.d("NUTRECEIVER", "SHOWLOCATION");
                 readLocationDetails();
             }
@@ -342,11 +347,6 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
     public void onDestroy() {
         super.onDestroy();
         Log.d("DESTROY","ondestroy");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     @Override
@@ -428,10 +428,10 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
 
         List<ResolveInfo> pkgList = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
-        if (pkgList != null && pkgList.size() > 0) {
+        if (pkgList != null && !pkgList.isEmpty()) {
             cameraInfo = pkgList.get(0);
         }
-        return (cameraInfo);
+        return cameraInfo;
     }
 
     @Override
@@ -477,14 +477,14 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
         }
     }
 
-    public void showAlertOnReconnectionFromMain(String device_address) {
+    public void showAlertOnReconnectionFromMain(String deviceAddress) {
         Log.d("JIO", "RECONNECT ALERT");
-        String m_assetName = preferences.getString(device_address + "CUSTOMNAME", " ");
-        String receivedData = m_assetName + "ReConnect success Alert";
+        String mAssetName = preferences.getString(deviceAddress + "CUSTOMNAME", " ");
+        String receivedData = mAssetName + "ReConnect success Alert";
         Context context = getContext();
         Intent intent = new Intent(context, CardDetails.class);
         // Send data to NotificationView Class
-        intent.putExtra("title", m_assetName + " ReConnected,successfully");
+        intent.putExtra("title", mAssetName + " ReConnected,successfully");
         intent.putExtra("text", receivedData);
         // Open NotificationView.java Activity
         /*PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
@@ -496,7 +496,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
         NotificationCompat.Builder nbuilder = new NotificationCompat.Builder(context, channelId)
-                .setContentTitle(m_assetName + "  ReConnected successfully")
+                .setContentTitle(mAssetName + "  ReConnected successfully")
                 .setSmallIcon(R.drawable.ic_action_settings_remote)
                 .setAutoCancel(false)
                 .setColor(0x00b359)
@@ -508,8 +508,8 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             nm.createNotificationChannel(mChannel);
         }
         // NotificationManagerCompat nm = NotificationManagerCompat.from(this);
-        Notification m_notif = nbuilder.build();
-        nm.notify(notificationId, m_notif);
+        Notification mNotif = nbuilder.build();
+        nm.notify(notificationId, mNotif);
     }
 
 
@@ -608,25 +608,25 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             //m_disconnectAlert.setTitle(bleDevice.name + " Disconnected");
             m_disconnectAlert.setTitle("Alert");
             m_disconnectAlert.show();
-            Button b_negative = m_disconnectAlert.getButton(DialogInterface.BUTTON_NEGATIVE);
-            Button b_positive = m_disconnectAlert.getButton(DialogInterface.BUTTON_POSITIVE);
+            Button bNegative = m_disconnectAlert.getButton(DialogInterface.BUTTON_NEGATIVE);
+            Button bPositive = m_disconnectAlert.getButton(DialogInterface.BUTTON_POSITIVE);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     200,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
             params.setMargins(20, 0, 0, 0);
 
-            if (b_negative != null) {
-                b_negative.setLayoutParams(params);
+            if (bNegative != null) {
+                bNegative.setLayoutParams(params);
                 //b_negative.setWidth(200);
-                b_negative.setTextColor(Color.WHITE);
-                b_negative.setBackgroundDrawable(getResources().getDrawable(R.drawable.square_blue_frame));
+                bNegative.setTextColor(Color.WHITE);
+                bNegative.setBackgroundDrawable(getResources().getDrawable(R.drawable.square_blue_frame));
             }
-            if (b_positive != null) {
+            if (bPositive != null) {
                 //b_positive.setWidth(200);
-                b_positive.setLayoutParams(params);
-                b_positive.setTextColor(Color.WHITE);
-                b_positive.setBackgroundDrawable(getResources().getDrawable(R.drawable.square_blue_frame));
+                bPositive.setLayoutParams(params);
+                bPositive.setTextColor(Color.WHITE);
+                bPositive.setBackgroundDrawable(getResources().getDrawable(R.drawable.square_blue_frame));
             }
         }
 
@@ -720,9 +720,9 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
         m_animationWaitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         m_animationWaitDialog.setContentView(R.layout.jio_please_wait);
         m_animationWaitDialog.show();
-        final ImageView img_loading_frame = (ImageView) m_animationWaitDialog.findViewById(R.id.jiopleasewait_img_location);
-        final AnimationDrawable frameAnimation = (AnimationDrawable) img_loading_frame.getBackground();
-        img_loading_frame.post(new Runnable() {
+        final ImageView imgLoadingFrame = (ImageView) m_animationWaitDialog.findViewById(R.id.jiopleasewait_img_location);
+        final AnimationDrawable frameAnimation = (AnimationDrawable) imgLoadingFrame.getBackground();
+        imgLoadingFrame.post(new Runnable() {
             @Override
             public void run() {
                 Log.d("START", "ANIMATION");
@@ -767,7 +767,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
 
     public void checkAndLaunchNodeviceFound() {
         Log.d("SCANNEDNO", "checkAndLaunchNodeviceFound" + " : " + m_bleDetails.size());
-        if (m_bleDetails.size() == 0) {
+        if (m_bleDetails.isEmpty()) {
             Intent startNotFound = new Intent(getContext(), JioFinderNotFound.class);
             startActivity(startNotFound);
             getActivity().getFragmentManager().popBackStack();
@@ -783,7 +783,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
     }
 
     ///////////////////////////////////////////////////////////
-    public void updateJioPushNotification(String device_address) {
+    public void updateJioPushNotification(String deviceAddress) {
         Log.d("JIO", "NOTIFICATION PRINTED");
         String receivedData = "Jio Tag: Device Notification";
         Context context = getContext();
@@ -792,14 +792,14 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
         intent.putExtra("title", "Jio Tag: Device Notification");
         intent.putExtra("text", receivedData);
         // Open NotificationView.java Activity
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+        /*PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);*/
 
         final int notificationId = 1;
         String channelId = "channel-01";
         String channelName = "Channel Name";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        //Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder nbuilder = new NotificationCompat.Builder(context, channelId)
                 .setContentTitle("Jio Tag: Device Notification")
@@ -815,11 +815,11 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             nm.createNotificationChannel(mChannel);
         }
 
-        Notification m_notif = nbuilder.build();
-        nm.notify(notificationId, m_notif);
+        Notification mNotif = nbuilder.build();
+        nm.notify(notificationId, mNotif);
     }
 
-    public void showJioPushNotification(String device_address) {
+    public void showJioPushNotification(String deviceAddress) {
         Log.d("JIO", "NOTIFICATION PRINTED");
         String receivedData = "Jio Tag: Device Notification";
         Context context = getContext();
@@ -828,8 +828,8 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
         intent.putExtra("title", "Jio Tag: Device Notification");
         intent.putExtra("text", receivedData);
         // Open NotificationView.java Activity
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        /*PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT);*/
 
         final int notificationId = 1;
         String channelId = "channel-01";
@@ -852,23 +852,23 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             nm.createNotificationChannel(mChannel);
         }
         // NotificationManagerCompat nm = NotificationManagerCompat.from(this);
-        Notification m_notif = nbuilder.build();
-        m_notif.flags = Notification.FLAG_INSISTENT;
-        nm.notify(notificationId, m_notif);
+        Notification mNotif = nbuilder.build();
+        mNotif.flags = Notification.FLAG_INSISTENT;
+        nm.notify(notificationId, mNotif);
 
-        int duration_ms = JioUtils.getAlertDuration(getContext(),device_address,true);
-        Log.d("DURATIONN","Device single click duration is" + duration_ms);
-        final String dev_addr_final=device_address;
+        int durationMs = JioUtils.getAlertDuration(getContext(),deviceAddress,true);
+        Log.d("DURATIONN","Device single click duration is" + durationMs);
+        final String devAddrFinal=deviceAddress;
         final Runnable stopSoundR = new Runnable() {
             public void run() {
                 nm.cancel(notificationId);
-                updateJioPushNotification(dev_addr_final);
+                updateJioPushNotification(devAddrFinal);
             }
         };
 
-        boolean phone_alert_repeat=JioUtils.getPhoneAlertRepeat(getContext(),device_address);
-        if(phone_alert_repeat == false) {
-            m_handler.postDelayed(stopSoundR, duration_ms * 1000);
+        boolean phoneAlertRepeat=JioUtils.getPhoneAlertRepeat(getContext(),deviceAddress);
+        if(phoneAlertRepeat == false) {
+            m_handler.postDelayed(stopSoundR, durationMs * 1000);
         }
 
     }
@@ -889,43 +889,43 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
     }
 
     public UUID convertFromInteger(int i) {
-        final long MSB = 0x0000000000001000L;
-        final long LSB = 0x800000805f9b34fbL;
+        final long msb = 0x0000000000001000L;
+        final long lsb = 0x800000805f9b34fbL;
         long value = i & 0xFFFFFFFF;
-        return new UUID(MSB | (value << 32), LSB);
+        return new UUID(msb | (value << 32), lsb);
     }
 
-    public BleDevice getDeviceMatch(String dev_address) {
-        boolean found = false;
+    public BleDevice getDeviceMatch(String devAddress) {
+        //boolean found = false;
         for (BleDevice device : mBleDeviceList) {
-            if (device.address.equals(dev_address)) {
-                found = true;
+            if (device.address.equals(devAddress)) {
+               // found = true;
                 return device;
             }
         }
         return null;
     }
 
-    public void stopAlarm(int pos, String device_address) {
+    public void stopAlarm(int pos, String deviceAddress) {
         Log.d("stopAlarm", "stopAlarm called");
         Intent inte = new Intent();
         inte.setAction("com.nutapp.notifications_alarm_disabled");
-        inte.putExtra("DEV_ADDRESS", device_address);
+        inte.putExtra("DEV_ADDRESS", deviceAddress);
         m_sharedPrefContext.sendBroadcast(inte);
         //mManager.changeRingState(mBleDeviceList.get(pos), BleDevice.STATE_QUIT);
-        mManager.changeRingState(getDeviceMatch(device_address), BleDevice.STATE_QUIT);
+        mManager.changeRingState(getDeviceMatch(deviceAddress), BleDevice.STATE_QUIT);
     }
 
-    public void startAlarm(int pos, String DEVICE_ADDRESS) {
+    public void startAlarm(int pos, String deviceAddress) {
         Log.d("startAlarm", "startAlarm called");
-        boolean deviceAlertValue = JioUtils.getDeviceAlertSetting(m_sharedPrefContext, DEVICE_ADDRESS);
+        boolean deviceAlertValue = JioUtils.getDeviceAlertSetting(m_sharedPrefContext, deviceAddress);
         Intent inte = new Intent();
-        inte.putExtra("DEV_ADDRESS", DEVICE_ADDRESS);
+        inte.putExtra("DEV_ADDRESS", deviceAddress);
         if (deviceAlertValue) {
             inte.setAction("com.nutapp.notifications_alarm_enabled");
             m_sharedPrefContext.sendBroadcast(inte);
             //mManager.changeRingState(mBleDeviceList.get(pos), BleDevice.STATE_RING);
-            mManager.changeRingState(getDeviceMatch(DEVICE_ADDRESS), BleDevice.STATE_RING);
+            mManager.changeRingState(getDeviceMatch(deviceAddress), BleDevice.STATE_RING);
         } else {
             inte.setAction("com.nutapp.notifications_alarm_disabled");
             m_sharedPrefContext.sendBroadcast(inte);
@@ -1046,19 +1046,19 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             Log.d("GOTASSET", "NAME ACT" + data.getStringExtra("POSITION_TYPE").toString());
 
             String assetType = data.getStringExtra("POSITION_TYPE");
-            String dev_addr = data.getStringExtra("POSITION_ADDR");
+            String devAddr = data.getStringExtra("POSITION_ADDR");
             int positionAsset = data.getIntExtra("POSITION_NUT", 0);
             String customName = data.getStringExtra("CUSTOMNAME");
-            String customName_new = data.getStringExtra("CUSTOMNAME_NEW");
+            String customNameNew = data.getStringExtra("CUSTOMNAME_NEW");
             //save custom Name
-            prefEditor.putString(dev_addr + "CUSTOMNAME", customName_new);
-            Log.d("CUSTOMNAME", "CUSTOMNAME" + "=" + customName_new);
+            prefEditor.putString(devAddr + "CUSTOMNAME", customNameNew);
+            Log.d("CUSTOMNAME", "CUSTOMNAME" + "=" + customNameNew);
             prefEditor.commit();
 
             Log.d("RESULTACT", assetType + "$" + positionAsset);
-            m_bleDetailsAdapter.setImageAsset(dev_addr, assetType, positionAsset, customName);
-            Uri uri_image = Uri.parse(data.getStringExtra("IMAGEURI"));
-            m_bleDetailsAdapter.setCameraGalleryImage(dev_addr, uri_image);
+            m_bleDetailsAdapter.setImageAsset(devAddr, assetType, positionAsset, customName);
+            Uri uriImage = Uri.parse(data.getStringExtra("IMAGEURI"));
+            m_bleDetailsAdapter.setCameraGalleryImage(devAddr, uriImage);
         }
 
         if (requestCode == 111 && resultCode == RESULT_OK) {
@@ -1072,6 +1072,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             try {
                 Log.d("CAMTAG", "PICTAKEN");
                 mImageBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                Log.d("HomeFragment", "mImageBitmap value"+mImageBitmap);
                 //mImageView.setImageBitmap(mImageBitmap);
 /*                Intent i = new Intent(Intent.ACTION_VIEW);
 
@@ -1113,8 +1114,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
         int referenceRssi = -65;
         float propagationConstant = 3;
         float exponent = (referenceRssi - rssi) / (10 * propagationConstant);
-        double distance = Math.pow(10, exponent);
-        return distance;
+        return  Math.pow(10, exponent);
     }
 
     ////////
@@ -1157,6 +1157,9 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             case R.id.navigation_location:
                 Log.d("MENU", "LOCATION");
 
+                break;
+
+            default:
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -1220,12 +1223,12 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
         m_disconnectAlert_exit.setTitle("BT Alert");
         //m_disconnectAlert.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.asset_dialog_round_bkgd));
         m_disconnectAlert_exit.show();
-        Button b_negative = m_disconnectAlert_exit.getButton(DialogInterface.BUTTON_NEGATIVE);
-        b_negative.setBackgroundColor(0xFFCCF2FD);
+        Button bNegative = m_disconnectAlert_exit.getButton(DialogInterface.BUTTON_NEGATIVE);
+        bNegative.setBackgroundColor(0xFFCCF2FD);
     }
 
 
-    private HomeViewModel homeViewModel;
+    //private HomeViewModel homeViewModel;
 
     public BroadcastReceiver m_btReceiver = new BroadcastReceiver() {
         @Override
@@ -1245,7 +1248,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                 switch (m_bluetoothAdpater.getState()) {
                     case BluetoothAdapter.STATE_ON:
                         Log.d("BTCONNECTIONCALLBACK", "BT CONNECTED");
-                        if (m_bleDetails.size() == 0) {
+                        if (m_bleDetails.isEmpty()) {
                             m_waitingForScan = false;
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
@@ -1270,6 +1273,9 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                         btIntent.setAction("com.nutapp.notifications_bt_turn_on_from_any");
                         getContext().sendBroadcast(btIntent);
                        break;
+
+                    default:
+                        break;
                 }
             }
         }
@@ -1415,7 +1421,7 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                              ViewGroup container, Bundle savedInstanceState) {
 
 
-        homeViewModel =
+        HomeViewModel homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         /*View root = inflater.inflate(R.layout.fragment_home, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
