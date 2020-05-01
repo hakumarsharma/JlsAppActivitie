@@ -21,6 +21,7 @@
 
 package com.jio.devicetracker.view.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,11 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
+import com.jio.devicetracker.util.Constant;
 
 import java.util.List;
 
@@ -43,16 +47,15 @@ import java.util.List;
  */
 public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDeviceListAdapter.ViewHolder> {
 
-    private List<HomeActivityListData> mData;
+    private List mData;
     private static RecyclerViewClickListener itemListener;
-    private MultipleselectData mSelectData;
 
     /**
      * Constructor to add devices in home screen
      *
      * @param mData
      */
-    public TrackerDeviceListAdapter(List<HomeActivityListData> mData) {
+    public TrackerDeviceListAdapter(List mData) {
         this.mData = mData;
     }
 
@@ -80,9 +83,37 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
      */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        HomeActivityListData data = mData.get(position);
-        holder.mIconImage.setImageResource(R.drawable.ic_group_button);
-        holder.name.setText(mData.get(position).getGroupName());
+        if(mData.get(position).getClass().getName().equalsIgnoreCase("com.jio.devicetracker.database.pojo.HomeActivityListData")) {
+            HomeActivityListData data = (HomeActivityListData)mData.get(position);
+            if(data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                holder.mIconImage.setImageResource(R.drawable.ic_user);
+                holder.name.setText(data.getName());
+            } else {
+                holder.mIconImage.setImageResource(R.drawable.ic_group_button);
+                holder.name.setText(data.getGroupName());
+            }
+            holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, data.getGroupName(), data.getPhoneNumber(), data.getGroupId()));
+
+            holder.mListlayout.setOnLongClickListener(v -> true);
+            holder.mListlayout.setOnClickListener(v -> {
+                itemListener.clickonListLayout(data.getGroupName(), data.getGroupId(), data.getProfileImage());
+                return;
+            });
+        }
+        else if(mData.get(position).getClass().getName().equalsIgnoreCase("com.jio.devicetracker.database.pojo.GroupMemberDataList")) {
+            GroupMemberDataList data = (GroupMemberDataList) mData.get(position);
+            holder.mIconImage.setImageResource(R.drawable.ic_user);
+            holder.name.setText(data.getName());
+            holder.phone.setText(data.getNumber());
+            holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, data.getName(), data.getNumber(), data.getGroupId()));
+
+            holder.mListlayout.setOnLongClickListener(v -> true);
+            holder.mListlayout.setOnClickListener(v -> {
+                itemListener.clickonListLayout(data.getName(), data.getConsentId(), data.getProfileImage());
+                return;
+            });
+        }
+
         /*holder.phone.setText(mData.get(position).getPhoneNumber());
         holder.name.setText(mData.get(position).getGroupName());
         if (mData.get(position).isGroupMember() == true) {
@@ -148,19 +179,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
         // holder.mEdit.setOnClickListener(v -> itemListener.recyclerviewEditList(mData.get(position).getRelation(),mData.get(position).getPhoneNumber()));
         // holder.mDelete.setOnClickListener(v -> itemListener.recyclerviewDeleteList(mData.get(position).getPhoneNumber(),position));
-
-        holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, mData.get(position).getGroupName(), mData.get(position).getPhoneNumber(), mData.get(position).getGroupId()));
-
-        holder.mListlayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
-        holder.mListlayout.setOnClickListener(v -> {
-            itemListener.clickonListLayout(mData.get(position).getGroupName(), mData.get(position).getGroupId());
-            return;
-        });
     }
 
 
@@ -180,7 +198,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView phone;
         public TextView name;
-        public TextView relation;
         public TextView status;
         public CardView mListlayout;
         public Button mConsent;
@@ -214,7 +231,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
         // void recyclerviewEditList(String relation,String phoneNumber);
         // void recyclerviewDeleteList(String phoneNuber,int position);
-        void clickonListLayout(String selectedGroupName, String groupId);
+        void clickonListLayout(String selectedGroupName, String groupId, int profileImage);
 
         void consetClick(String phoneNumber);
 

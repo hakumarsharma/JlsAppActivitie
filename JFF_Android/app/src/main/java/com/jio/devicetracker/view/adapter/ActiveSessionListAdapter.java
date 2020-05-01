@@ -76,7 +76,8 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
         holder.expirytime.setText(mList.get(position).getExpiryTime());*/
         holder.profile.setImageResource(mList.get(position).getProfileImage());
         holder.relativeLayout.setOnClickListener(v -> {
-            itemListener.clickOnListLayout(mList.get(position).getProfileImage(), mList.get(position).getGroupName(), mList.get(position).getGroupId(), mList.get(position).getCreatedBy());
+            itemListener.clickOnListLayout(mList.get(position).getProfileImage(), mList.get(position).getGroupName(), mList.get(position).getGroupId()
+                    ,mList.get(position).getCreatedBy(), mList.get(position).getUpdatedBy());
             return;
         });
     }
@@ -120,7 +121,7 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
      * Interface to override methods in ActiveSessionActivity to call this methods on particular item click
      */
     public interface RecyclerViewClickListener {
-        void clickOnListLayout(int selectedGroupName, String name, String groupId, String createdBy);
+        void clickOnListLayout(int selectedGroupName, String name, String groupId, String createdBy, String updatedBy);
     }
 
     /**

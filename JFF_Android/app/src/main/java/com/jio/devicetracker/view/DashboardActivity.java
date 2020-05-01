@@ -76,11 +76,14 @@ import com.android.volley.VolleyError;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupData;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
+import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
+import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceStatusResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -111,7 +114,6 @@ import java.util.concurrent.TimeUnit;
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView listView;
-    //    private static String userToken = null;
     public static List<MultipleselectData> selectedData;
     public static List<TrackerdeviceResponse.Data> data;
     private TrackerDeviceListAdapter adapter;
@@ -119,7 +121,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private static DBManager mDbManager;
     public static Map<String, Map<Double, Double>> namingMap = null;
     private static Context context = null;
-    //    public static String adminEmail;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
     private List<SubscriptionInfo> subscriptionInfos;
@@ -136,11 +137,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public static List<GroupData> specificGroupMemberData = null;
     public static List<HomeActivityListData> listOnHomeScreens;
     public static String groupName = "";
-    public static boolean isAddIndividual = false;
-    public static boolean isComingFromGroupList = false;
     private String userId;
     private String grpId;
     private int listPosition;
+    private List listOnDashBoard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,8 +157,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 //        startService();
         registerReceiver();
         deepLinkingURICheck();
-        addDataInHomeScreen();
-        adapterEventListener();
+        makeGroupInfoPerUserRequestAPICall();
     }
 
    /* private void isPermissionGranted() {
@@ -193,9 +192,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 @Override
-                public void clickonListLayout(String selectedGroupName, String groupId) {
-                    groupName = selectedGroupName;
-                    goToGroupListActivity(groupId, userId);
+                public void clickonListLayout(String selectedGroupName, String groupId, int profileImage) {
+                    if (profileImage != R.drawable.ic_user) {
+                        groupName = selectedGroupName;
+                        goToGroupListActivity(groupId, userId);
+                    }
                 }
 
                 @Override
@@ -220,7 +221,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                                 gotoEditScreen(name, number, groupId);
                                 break;
                             case R.id.deleteOnCardView:
-                                alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, groupId, position);
+                                alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, groupId);
                                 grpId = groupId;
                                 listPosition = position;
                                 break;
@@ -365,9 +366,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * @param message
      * @param title
      * @param groupId
-     * @param position
      */
-    public void alertDilogBoxWithCancelbtn(String message, String title, String groupId, int position) {
+    public void alertDilogBoxWithCancelbtn(String message, String title, String groupId) {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setTitle(title);
         adb.setMessage(message);
@@ -377,6 +377,39 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         });
         adb.setNegativeButton(Constant.CANCEL, (dialog, which) -> dialog.cancel());
         adb.show();
+    }
+
+    /**
+     * Get All Group info per user API Call
+     */
+    private void makeGroupInfoPerUserRequestAPICall() {
+        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
+    }
+
+    /**
+     * GetGroupInfoPerUserRequest Success listener
+     */
+    private class GetGroupInfoPerUserRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
+            new LoginActivity().parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
+            addDataInHomeScreen();
+            adapterEventListener();
+            isDevicePresent();
+        }
+    }
+
+    /**
+     * GetGroupInfoPerUserRequest Error listener
+     */
+    private class GetGroupInfoPerUserRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error.networkResponse.statusCode == 409) {
+                Util.alertDilogBox(Constant.GROUP_LIMITATION, Constant.ALERT_TITLE, DashboardActivity.this);
+            }
+        }
     }
 
     /**
@@ -395,6 +428,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         public void onResponse(Object response) {
             Util.progressDialog.dismiss();
             mDbManager.deleteSelectedDataFromGroup(grpId);
+            mDbManager.deleteSelectedDataFromGroupMember(grpId);
             adapter.removeItem(listPosition);
             addDataInHomeScreen();
             isDevicePresent();
@@ -523,8 +557,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      */
     private void isDevicePresent() {
         TextView devicePresent = findViewById(R.id.devicePresent);
-        List<HomeActivityListData> alldata = mDbManager.getAllGroupDetail();
-        if (alldata.isEmpty()) {
+        if (listOnDashBoard.isEmpty()) {
             listView.setVisibility(View.INVISIBLE);
             devicePresent.setVisibility(View.VISIBLE);
         } else {
@@ -542,7 +575,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.createGroup:
-                checkNumberOfGroups();
+                startActivity(new Intent(this, GroupNameActivity.class));
                 break;
             case R.id.track:
                 trackDevice();
@@ -551,7 +584,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 gotoQRScannerScreen();
                 break;
             case R.id.addContact:
-                checkNumberOfIndividualUser();
+                gotoContactsDetailsActivity();
                 break;
             default:
 //                Log.d("TAG", "Some other button is clicked");
@@ -560,83 +593,24 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Count number of individual aaded user, If it is more than 10 then display alert dialog
-     */
-    private void checkNumberOfIndividualUser() {
-        int individualUserCount = 1;
-        List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
-        for (HomeActivityListData homeActivityListData : allDevicedata) {
-           /* if (homeActivityListData.isGroupMember() == false) {
-                individualUserCount++;
-            }*/
-        }
-        if (individualUserCount > 10) {
-            Util.alertDilogBox(Constant.USER_LIMITATION, Constant.ALERT_TITLE, this);
-        } else {
-            gotoContactsDetailsActivity();
-        }
-    }
-
-    /**
-     * Count number of created groups, If it is more than 2 then display alert dialog
-     */
-    private void checkNumberOfGroups() {
-        List<HomeActivityListData> allDevicedata = mDbManager.getAlldata(Util.adminEmail);
-        int groupCount = 1;
-        for (HomeActivityListData homeActivityListData : allDevicedata) {
-           /* if (homeActivityListData.isGroupMember() == true && homeActivityListData.getImeiNumber() == null) {
-                groupCount++;
-            }*/
-        }
-
-        if (groupCount > 2) {
-            Util.alertDilogBox(Constant.GROUP_LIMITATION, Constant.ALERT_TITLE, this);
-            return;
-        } else {
-            gotoGroupNameActivity();
-        }
-    }
-
-    /**
-     * Navigates to the Group name acivity
-     */
-    private void gotoGroupNameActivity() {
-        isAddIndividual = false;
-        isComingFromGroupList = true;
-        startActivity(new Intent(this, GroupNameActivity.class));
-    }
-
-    /**
      * Navigates to the ContactDetailsActivity activity by counting individual device
      * which should be less than equal to ten.
      */
     private void gotoQRScannerScreen() {
-        isAddIndividual = false;
-        isComingFromGroupList = false;
-        groupName = null;
-        int individualUserCount = 1;
-
-        List<HomeActivityListData> allDevicedata = mDbManager.getAllBorqsData(Util.adminEmail);
-        for (HomeActivityListData homeActivityListData : allDevicedata) {
-           /* if (homeActivityListData.isGroupMember() == false && homeActivityListData.getImeiNumber() != null) {
-                individualUserCount++;
-            }*/
-        }
-        if (individualUserCount > 10) {
-            Util.alertDilogBox(Constant.USER_LIMITATION, Constant.ALERT_TITLE, this);
-        } else {
-            startActivity(new Intent(this, ContactDetailsActivity.class));
-        }
+        Intent intent = new Intent(this, ContactDetailsActivity.class);
+        intent.putExtra(Constant.IS_COMING_FROM_ADD_DEVICE, true);
+        intent.putExtra(Constant.USER_ID, userId);
+        startActivity(intent);
     }
 
     /**
      * Navigates to the Contact Details Activity
      */
     private void gotoContactsDetailsActivity() {
-        isAddIndividual = true;
-        isComingFromGroupList = false;
-        groupName = null;
-        startActivity(new Intent(this, ContactDetailsActivity.class));
+        Intent intent = new Intent(this, ContactDetailsActivity.class);
+        intent.putExtra(Constant.IS_COMING_FROM_ADD_CONTACT, true);
+        intent.putExtra(Constant.USER_ID, userId);
+        startActivity(intent);
     }
 
     /**
@@ -821,15 +795,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         super.onBackPressed();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-    }
-
-    /**
-     * Called when you come back to the activity
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        isDevicePresent();
     }
 
     /**
@@ -1083,7 +1048,53 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Adds data in Home screen using Recycler view, It is the main method to display devices in Home screen
      */
     private void addDataInHomeScreen() {
-        List<HomeActivityListData> listOnDashBoard = mDbManager.getAllGroupDetail();
+        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
+        listOnDashBoard = new ArrayList<>();
+        for (HomeActivityListData data : groupDetailList) {
+            if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(userId)) {
+                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                    HomeActivityListData homeActivityListData = new HomeActivityListData();
+                    homeActivityListData.setGroupName(data.getGroupName());
+                    homeActivityListData.setGroupId(data.getGroupId());
+                    homeActivityListData.setStatus(data.getStatus());
+                    homeActivityListData.setCreatedBy(data.getCreatedBy());
+                    homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+                    homeActivityListData.setProfileImage(data.getProfileImage());
+                    listOnDashBoard.add(homeActivityListData);
+                }
+            } else if (data.getUpdatedBy() != null && data.getUpdatedBy().equalsIgnoreCase(userId)) {
+                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                    HomeActivityListData homeActivityListData = new HomeActivityListData();
+                    homeActivityListData.setGroupName(data.getGroupName());
+                    homeActivityListData.setGroupId(data.getGroupId());
+                    homeActivityListData.setStatus(data.getStatus());
+                    homeActivityListData.setCreatedBy(data.getCreatedBy());
+                    homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+                    homeActivityListData.setProfileImage(data.getProfileImage());
+                    listOnDashBoard.add(homeActivityListData);
+                }
+            }
+        }
+        for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
+            GroupMemberDataList data = new GroupMemberDataList();
+            if (mDbManager.getGroupName(groupMemberDataList.getGroupId()).equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                data.setName(groupMemberDataList.getName());
+                data.setNumber(groupMemberDataList.getNumber());
+                data.setConsentStatus(groupMemberDataList.getConsentStatus());
+                data.setConsentId(groupMemberDataList.getConsentId());
+                data.setUserId(groupMemberDataList.getUserId());
+                data.setDeviceId(groupMemberDataList.getDeviceId());
+                data.setGroupId(groupMemberDataList.getGroupId());
+                data.setProfileImage(groupMemberDataList.getProfileImage());
+                if (groupMemberDataList.isGroupAdmin() == true) {
+                    data.setGroupAdmin(true);
+                } else {
+                    data.setGroupAdmin(false);
+                }
+                listOnDashBoard.add(data);
+            }
+        }
         adapter = new TrackerDeviceListAdapter(listOnDashBoard);
         listView.setAdapter(adapter);
     }

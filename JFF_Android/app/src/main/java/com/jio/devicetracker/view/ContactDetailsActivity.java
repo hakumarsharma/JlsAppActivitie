@@ -47,9 +47,12 @@ import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
+import com.jio.devicetracker.database.pojo.CreateGroupData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
+import com.jio.devicetracker.database.pojo.request.CreateGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupMemberRequest;
+import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
@@ -69,13 +72,14 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private EditText mNumber;
     private DBManager mDbManager;
     private String deviceType;
-    private boolean isDataMatched = false;
     private static String numberComingFromContactList = null;
     private static String nameComingFromContactList = null;
     private Button addContactInGroupButon = null;
     private Toolbar toolbar = null;
     private String groupId;
     private String userId;
+    private boolean isComingFromAddContact;
+    private boolean isComingFromAddDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +97,8 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         mDbManager = new DBManager(this);
         Intent intent = getIntent();
         String qrValue = intent.getStringExtra(Constant.QR_CODE_VALUE);
+        isComingFromAddDevice = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_DEVICE, false);
+        isComingFromAddContact = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_CONTACT, false);
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         userId = intent.getStringExtra(Constant.USER_ID);
         setNameNumberImei(qrValue);
@@ -105,11 +111,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
      * or else display the QR code on toolbar when Add device is clicked
      */
     private void checkValidationOfFieldEntry() {
-        if (DashboardActivity.isComingFromGroupList || DashboardActivity.isAddIndividual) {
+        if (isComingFromAddContact == true) {
             ImageView contactBtn = toolbar.findViewById(R.id.contactAdd);
             contactBtn.setVisibility(View.VISIBLE);
             contactBtn.setOnClickListener(this);
-        } else {
+        } else if (isComingFromAddDevice == true) {
             ImageView scanner = toolbar.findViewById(R.id.qrScanner);
             scanner.setVisibility(View.VISIBLE);
             scanner.setOnClickListener(this);
@@ -176,7 +182,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             }
             name = mName.getText().toString().trim();
             number = mNumber.getText().toString().trim();
-            if (deviceType.equalsIgnoreCase(Constant.PEOPLE_TRACKER_DEVICE_TYPE)) {
+            /*if (deviceType.equalsIgnoreCase(Constant.PEOPLE_TRACKER_DEVICE_TYPE)) {
                 if (Util.isValidMobileNumberForPet(number)) {
                     mNumber.setError(Constant.PEOPLE_NUMBER_VALIDATION_PET_NUMBER_ENTERED);
                     return;
@@ -192,8 +198,12 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     mNumber.setError(Constant.PET_NUMBER_VALIDATION);
                     return;
                 }
+            }*/
+            if (isComingFromAddDevice || isComingFromAddContact) {
+                createGroupAndAddContactAPICall();
+            } else {
+                addMemberInGroupAPICall();
             }
-            addMemberInGroupAPICall();
         }
 
         if (v.getId() == R.id.qrScanner) {
@@ -202,14 +212,75 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     }
 
     /**
-     * Add Members in Group API Call
+     * Adds individual contact in Dashboard, but it adds as a member of group.
+     * Group Name is hardcoded as a Individual_User
+     */
+    private void createGroupAndAddContactAPICall() {
+        CreateGroupData createGroupData = new CreateGroupData();
+        createGroupData.setName(Constant.INDIVIDUAL_USER_GROUP_NAME);
+        createGroupData.setType(Constant.ONE_TO_ONE);
+        CreateGroupData.Session session = new CreateGroupData().new Session();
+        session.setFrom(Util.getTimeEpochFormatAfterCertainTime(1));
+        session.setTo(Util.getTimeEpochFormatAfterCertainTime(15));
+        createGroupData.setSession(session);
+        Util.getInstance().showProgressBarDialog(this);
+        GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, userId));
+    }
+
+    /**
+     * Create Group Success Listener
+     */
+    private class CreateGroupSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            CreateGroupResponse createGroupResponse = Util.getInstance().getPojoObject(String.valueOf(response), CreateGroupResponse.class);
+            if (createGroupResponse.getCode() == 200) {
+                mDbManager.insertIntoGroupTable(createGroupResponse);
+                groupId = createGroupResponse.getData().getId();
+                addIndividualUserInGroupAPICall();
+            }
+        }
+    }
+
+    /**
+     * Create Group error Listener
+     */
+    private class CreateGroupErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
+                Util.alertDilogBox(Constant.ADDING_INDIVIDUAL_USER_FAILED, Constant.ALERT_TITLE, ContactDetailsActivity.this);
+            }
+        }
+    }
+
+    /**
+     * Adds individual member inside Group Called Individual_User
+     */
+    private void addIndividualUserInGroupAPICall() {
+        AddMemberInGroupData addMemberInGroupData = new AddMemberInGroupData();
+        AddMemberInGroupData.Consents consents = new AddMemberInGroupData().new Consents();
+        List<AddMemberInGroupData.Consents> consentList = new ArrayList<>();
+        List<String> mList = new ArrayList<>();
+        mList.add(Constant.EVENTS);
+        consents.setEntities(mList);
+        consents.setPhone(number);
+        consents.setName(name);
+        consentList.add(consents);
+        addMemberInGroupData.setConsents(consentList);
+        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new AddMemberInGroupRequestSuccessListener(), new AddMemberInGroupRequestErrorListener(), addMemberInGroupData, groupId, userId));
+    }
+
+    /**
+     * Add Members in Group API Call, member will be part of group
      */
     public void addMemberInGroupAPICall() {
         AddMemberInGroupData addMemberInGroupData = new AddMemberInGroupData();
         AddMemberInGroupData.Consents consents = new AddMemberInGroupData().new Consents();
         List<AddMemberInGroupData.Consents> consentList = new ArrayList<>();
         List<String> mList = new ArrayList<>();
-        mList.add("events");
+        mList.add(Constant.EVENTS);
         consents.setEntities(mList);
         consents.setPhone(number);
         consents.setName(name);
@@ -267,7 +338,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
-                gotoGroupListActivity();
+                if (isComingFromAddContact || isComingFromAddDevice) {
+                    gotoDashboardActivity();
+                } else {
+                    gotoGroupListActivity();
+                }
             }
         }
     }
@@ -279,27 +354,6 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-        }
-    }
-
-    /**
-     * If data is matched then update device type and group name in database
-     *
-     * @param mName
-     * @param mNumber
-     * @param mIMEINumber
-     */
-    private void checkValidationOfUser(String mName, String mNumber, String mIMEINumber) {
-        List<HomeActivityListData> homeListData = mDbManager.getAllBorqsData(Util.adminEmail);
-        for (HomeActivityListData homeActivityListData : homeListData) {
-            if (homeActivityListData.getImeiNumber() != null && homeActivityListData.getImeiNumber().equalsIgnoreCase(mIMEINumber) && homeActivityListData.getPhoneNumber().equalsIgnoreCase(mNumber)) {
-                mDbManager.updateDeviceTypeAndGroupName(deviceType, homeActivityListData.getGroupName(), homeActivityListData.getImeiNumber(), mName, 1);
-                isDataMatched = true;
-            }
-        }
-        if (!isDataMatched) {
-            Util.alertDilogBox(Constant.DEVICE_DETAIL_VALIDATION, Constant.ALERT_TITLE, this);
-            return;
         }
     }
 
@@ -338,8 +392,8 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
     private void gotoGroupListActivity() {
         Intent intent = new Intent(this, GroupListActivity.class);
-        intent.putExtra("groupId", groupId);
-        intent.putExtra("userId", userId);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.USER_ID, userId);
         startActivity(intent);
     }
 

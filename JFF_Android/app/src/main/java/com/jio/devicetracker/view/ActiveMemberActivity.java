@@ -56,6 +56,7 @@ public class ActiveMemberActivity extends AppCompatActivity {
     private int position;
     private String errorMessage;
     private String createdBy;
+    private String updatedBy;
     private String userId;
 
     @Override
@@ -70,6 +71,7 @@ public class ActiveMemberActivity extends AppCompatActivity {
         toolbarTitle.setText(intent.getStringExtra(Constant.GROUPNAME));
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         createdBy = intent.getStringExtra(Constant.CREATED_BY);
+        updatedBy = intent.getStringExtra(Constant.UPDATED_BY);
         RecyclerView mRecyclerList = findViewById(R.id.trackerList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
@@ -87,7 +89,7 @@ public class ActiveMemberActivity extends AppCompatActivity {
                 PopupMenu popup = new PopupMenu(ActiveMemberActivity.this, v);
                 this.consentId = consentId;
                 this.position = position;
-                if (isGroupAdmin == true && createdBy.equalsIgnoreCase(userId)) {
+                if (createdBy != null && createdBy.equalsIgnoreCase(userId) || updatedBy.equalsIgnoreCase(userId)) { // Check through updated by not by isGroupAdmin
                     popup.getMenu().add(Menu.NONE, 1, 1, Constant.REMOVE);
                     errorMessage = Constant.REMOVE_FROM_GROUP_FAILURE;
                 } else {

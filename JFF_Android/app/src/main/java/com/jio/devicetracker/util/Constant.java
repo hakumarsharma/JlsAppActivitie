@@ -93,8 +93,10 @@ public class Constant {
     public static final String ACTIVE = "active";
     public static final String  SCHEDULED = "scheduled";
     public static final String APPROVED = "approved";
-    public static final String EXIT_FROM_GROUP_FAILURE = "Exit from group failed!";
-    public static final String REMOVE_FROM_GROUP_FAILURE = "Remove from group failed!";
+    public static final String COMPLETED = "completed";
+    public static final String EXIT_FROM_GROUP_FAILURE = "Exit from group failed, Please try again!";
+    public static final String REMOVE_FROM_GROUP_FAILURE = "Remove from group failed, Please try again!";
+    public static final String ADDING_INDIVIDUAL_USER_FAILED = "Adding individual user failed, Please try again!";
 
 
     // Login Activity constants
@@ -165,7 +167,7 @@ public class Constant {
     public static final String GENERATE_TOKEN_REQUEST_URL = "/accounts/api/users/tokens";
     public static final String ACCOUNTS_API_USER_URL = "/accounts/api/users/";
     public static final String SESSION_GROUPS_URL = "/sessiongroups/";
-    public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true&status=scheduled";
+    public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true";
     public static final String SESSION_GROUP_CONSENTS_URL = "/sessiongroupconsents";
     public static final String SESSION_GROUP_CONSENTS_TOKEN_URL = "/sessiongroupconsents/tokens";
     public static final String APPROVE_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";
@@ -248,6 +250,13 @@ public class Constant {
     public static final String OK = "OK";
     public static final String CANCEL = "Cancel";
     public static final String CREATED_BY = "createdBy";
+    public static final String UPDATED_BY = "updatedBy";
+    public static final String EVENTS = "events";
+    public static final String ONE_TO_ONE = "one_to_one";
+    public static final String INDIVIDUAL_USER_GROUP_NAME = "Individual_User";
+    public static final String IS_COMING_FROM_ADD_DEVICE = "isComingFromAddDevice";
+    public static final String IS_COMING_FROM_ADD_CONTACT = "isComingFromAddContact";
+    public static final String CLOSED = "closed";
 
 
 

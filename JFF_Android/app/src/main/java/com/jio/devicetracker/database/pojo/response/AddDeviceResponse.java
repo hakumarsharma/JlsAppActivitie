@@ -29,7 +29,7 @@ import java.util.List;
 
 public class AddDeviceResponse implements Serializable {
     @SerializedName("code")
-    private String code;
+    private int code;
     @SerializedName("message")
     private String message;
     @SerializedName("data")
@@ -43,11 +43,11 @@ public class AddDeviceResponse implements Serializable {
         this.data = data;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 

@@ -43,12 +43,18 @@ import androidx.core.content.res.ResourcesCompat;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.RegisterRequestData;
+import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.RegistrationTokenrequest;
 import com.jio.devicetracker.database.pojo.response.RegistrationResponse;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.Manifest.permission.READ_PHONE_NUMBERS;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.READ_SMS;
@@ -179,6 +185,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         registerRequestData.setPhoneCountryCode(countryCode);
         registerRequestData.setMetaprofile(metaProfile);
         registerRequestData.setToken(token);
+        Util.getInstance().showProgressBarDialog(this, Constant.LOADING_DATA);
         RequestHandler.getInstance(getApplicationContext()).handleRequest(new RegistrationTokenrequest(new SuccessListener(), new ErrorListener(), registerRequestData));
     }
 

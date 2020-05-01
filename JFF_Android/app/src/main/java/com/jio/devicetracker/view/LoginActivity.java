@@ -50,16 +50,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GenerateTokenData;
 import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.Userdata;
+import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
 import com.jio.devicetracker.database.pojo.request.GetDeviceLocationRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
+import com.jio.devicetracker.database.pojo.response.AddDeviceResponse;
 import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
 import com.jio.devicetracker.database.pojo.response.GetDeviceLocationResponse;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
@@ -94,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String mbNumber;
     private String number;
     public static String userName;
-    private DBManager mDbManager;
+    private static DBManager mDbManager;
     private List<SubscriptionInfo> subscriptionInfos;
     public static boolean isReadPhoneStatePermissionGranted = false;
     public static boolean isAccessCoarsePermissionGranted = false;
@@ -102,6 +105,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Locale locale = Locale.ENGLISH;
     public static GetDeviceLocationResponse getDeviceLocationResponse = null;
     public static String ugsToken;
+    private String userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,6 +171,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     /**
      * Sends OTP to the user mobile number
+     *
      * @param randomNumberForOTP
      */
     protected void sendSMSMessage(int randomNumberForOTP) {
@@ -187,13 +193,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     /**
      * Gets called when you click on login button
+     *
      * @param v
      */
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.login) {
             validateNumber();
-        } else if(v.getId() == R.id.registedHere) {
+        } else if (v.getId() == R.id.registedHere) {
             checkJioSIMSlot1GotoRegistrationActivity();
         }
     }
@@ -202,15 +209,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * Validate mobile number
      */
     private void validateNumber() {
-        if("".equals(jioUserNameEditText.getText().toString())) {
+        if ("".equals(jioUserNameEditText.getText().toString())) {
             jioUserNameEditText.setError(Constant.NAME_EMPTY);
             return;
         }
-        if("".equals(loginOtpEditText.getText().toString())) {
+        if ("".equals(loginOtpEditText.getText().toString())) {
             loginOtpEditText.setError(Constant.EMPTY_OTP);
             return;
-        }
-        else {
+        } else {
             getssoToken();
         }
     }
@@ -236,7 +242,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String carierName = subscriptionInfos.get(0).getCarrierName().toString();
             String number = subscriptionInfos.get(0).getNumber();
             if (number != null && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
-                if(carierName.toLowerCase(locale).contains(Constant.JIO)) {
+                if (carierName.toLowerCase(locale).contains(Constant.JIO)) {
                     onLoginButtonClick();
                 } else if (!carierName.contains(Constant.JIO)) {
                     Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
@@ -268,7 +274,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
             if (!carrierNameSlot1.toLowerCase(locale).contains(Constant.JIO)) {
                 Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
-            } else if(carrierNameSlot1.toLowerCase(locale).contains(Constant.JIO)) {
+            } else if (carrierNameSlot1.toLowerCase(locale).contains(Constant.JIO)) {
                 generateTokenGotoRegistrationActivity();
             }
         }
@@ -301,7 +307,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void generateTokenGotoRegistrationActivity() {
         GenerateTokenData generateTokenData = new GenerateTokenData();
         generateTokenData.setType(Constant.REGISTRATION);
-        if(number != null) {
+        if (number != null) {
             generateTokenData.setPhoneCountryCode(number.substring(0, 2));
             generateTokenData.setPhone(number.substring(2));
             RequestHandler.getInstance(getApplicationContext()).handleRequest(new GenerateTokenRequest(new GenerateTokenSuccessListener(), new GenerateTokenErrorListener(), generateTokenData));
@@ -315,7 +321,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onResponse(Object response) {
             GenerateTokenResponse generateTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
-            if(generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.GENERATE_TOKEN_SUCCESS)) {
+            if (generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.GENERATE_TOKEN_SUCCESS)) {
                 Toast.makeText(LoginActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, BorqsTokenActivity.class);
                 intent.putExtra("countryCode", number.substring(0, 2));
@@ -331,7 +337,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private class GenerateTokenErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if(error.networkResponse.statusCode == 409) {
+            if (error.networkResponse.statusCode == 409) {
                 Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, LoginActivity.this);
                 jioMobileNumberEditText.setError(Constant.REGISTRAION_ALERT_409);
                 return;
@@ -358,7 +364,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void onLoginButtonClick() {
         Util.getInstance().showProgressBarDialog(this);
         makeMQTTConnection();
-        userName = jioUserNameEditText.getText().toString();
+        userName = jioUserNameEditText.getText().toString().trim();
         Userdata data = new Userdata();
 //        data.setToken(loginOtpEditText.getText().toString());
         data.setPassword("Borqs@1234");
@@ -375,11 +381,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onResponse(Object response) {
             logindetailResponse = Util.getInstance().getPojoObject(String.valueOf(response), LogindetailResponse.class);
-            String userId = logindetailResponse.getUser().getId();
+            userId = logindetailResponse.getUser().getId();
             ugsToken = logindetailResponse.getUgsToken();
             if (logindetailResponse.getUgsToken() != null) {
                 new DBManager(LoginActivity.this).insertLoginData(logindetailResponse);
             }
+            // Verify and assign API Call
+            makeVerifyAndAssignAPICall();
             // Get All Group info per user API Call
             GroupRequestHandler.getInstance(LoginActivity.this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
         }
@@ -420,7 +428,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private class GetGroupInfoPerUserRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if(error.networkResponse.statusCode == 409) {
+            if (error.networkResponse.statusCode == 409) {
                 Util.alertDilogBox(Constant.GROUP_LIMITATION, Constant.ALERT_TITLE, LoginActivity.this);
             }
         }
@@ -429,29 +437,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     /**
      * Parse the response and store in DB(Group Table and Member table)
      */
-    private void parseResponseStoreInDatabase(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
+    public void parseResponseStoreInDatabase(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
         List<HomeActivityListData> groupList = new ArrayList<>();
         List<GroupMemberDataList> mGroupMemberDataLists = new ArrayList<>();
         for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-            HomeActivityListData homeActivityListData = new HomeActivityListData();
-            homeActivityListData.setGroupName(data.getGroupName());
-            homeActivityListData.setCreatedBy(data.getCreatedBy());
-            homeActivityListData.setGroupId(data.getId());
-            homeActivityListData.setStatus(data.getStatus());
-            groupList.add(homeActivityListData);
+                HomeActivityListData homeActivityListData = new HomeActivityListData();
+                homeActivityListData.setGroupName(data.getGroupName());
+                homeActivityListData.setCreatedBy(data.getCreatedBy());
+                homeActivityListData.setGroupId(data.getId());
+                homeActivityListData.setStatus(data.getStatus());
+                homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+                groupList.add(homeActivityListData);
         }
         for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-            for(GetGroupInfoPerUserResponse.Consents mConsents : data.getConsents()) {
-                GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
-                groupMemberDataList.setConsentId(mConsents.getConsentId());
-                groupMemberDataList.setNumber(mConsents.getPhone());
-                groupMemberDataList.setGroupAdmin(mConsents.isGroupAdmin());
-                groupMemberDataList.setGroupId(data.getId());
-                groupMemberDataList.setConsentStatus(mConsents.getStatus());
-                groupMemberDataList.setName(mConsents.getName());
-                mGroupMemberDataLists.add(groupMemberDataList);
+            if(! data.getStatus().equalsIgnoreCase(Constant.CLOSED)) {
+                for (GetGroupInfoPerUserResponse.Consents mConsents : data.getConsents()) {
+                    GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+                    groupMemberDataList.setConsentId(mConsents.getConsentId());
+                    groupMemberDataList.setNumber(mConsents.getPhone());
+                    groupMemberDataList.setGroupAdmin(mConsents.isGroupAdmin());
+                    groupMemberDataList.setGroupId(data.getId());
+                    groupMemberDataList.setConsentStatus(mConsents.getStatus());
+                    groupMemberDataList.setName(mConsents.getName());
+                    mGroupMemberDataLists.add(groupMemberDataList);
+                }
             }
-
         }
         mDbManager.insertAllDataIntoGroupTable(groupList);
         mDbManager.insertGroupMemberDataInListFormat(mGroupMemberDataLists);
@@ -672,6 +682,59 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             default:
                 break;
+        }
+    }
+
+
+    /**
+     * Verify and assign API Call for the white-listing of device
+     */
+    private void makeVerifyAndAssignAPICall() {
+        AddDeviceData addDeviceData = new AddDeviceData();
+        List<AddDeviceData.Devices> mList = new ArrayList<>();
+        AddDeviceData.Devices devices = new AddDeviceData().new Devices();
+        devices.setAge("31");
+        devices.setGender("Male");
+        devices.setHeight("6");
+        devices.setWeight("70");
+        devices.setMac(phoneNumber.substring(2));
+        devices.setPhone(phoneNumber.substring(2));
+        devices.setIdentifier("imei");
+        devices.setName(userName);
+        devices.setType("watch");
+        devices.setModel("watch");
+        AddDeviceData.Devices.Metaprofile metaprofile = new AddDeviceData().new Devices().new Metaprofile();
+        metaprofile.setFirst(userName);
+        metaprofile.setSecond("success");
+        devices.setMetaprofile(metaprofile);
+        AddDeviceData.Flags flags = new AddDeviceData().new Flags();
+        flags.setSkipAddDeviceToGroup(false);
+        addDeviceData.setFlags(flags);
+        mList.add(devices);
+        addDeviceData.setDevices(mList);
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new AddDeviceRequestSuccessListener(), new AddDeviceRequestErrorListener(), ugsToken, userId, addDeviceData));
+    }
+
+    /**
+     * Verify & Assign API call success listener
+     */
+    private class AddDeviceRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            AddDeviceResponse addDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), AddDeviceResponse.class);
+            if (addDeviceResponse.getCode() == 200) {
+                Toast.makeText(LoginActivity.this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Verify & Assign API call error listener
+     */
+    private class AddDeviceRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Toast.makeText(LoginActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
         }
     }
 }

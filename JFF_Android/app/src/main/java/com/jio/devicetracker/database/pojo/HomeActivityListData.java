@@ -42,6 +42,15 @@ public class HomeActivityListData {
     private String status;
     private int profileImage;
     public String createdBy;
+    public String updatedBy;
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
     public String getGroupId() {
         return groupId;

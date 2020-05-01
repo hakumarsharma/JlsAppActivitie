@@ -70,6 +70,16 @@ public class GetGroupInfoPerUserResponse implements Serializable {
         private List<Consents> consents;
         @SerializedName("createdBy")
         private String createdBy;
+        @SerializedName("updatedBy")
+        private String updatedBy;
+
+        public String getUpdatedBy() {
+            return updatedBy;
+        }
+
+        public void setUpdatedBy(String updatedBy) {
+            this.updatedBy = updatedBy;
+        }
 
         public String getCreatedBy() {
             return createdBy;
