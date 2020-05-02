@@ -60,19 +60,19 @@
 
             />
         <Button
-            android:id="@+id/consentstatus"
+            android:id="@+id/requestConsentButton"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/consent"
+            android:layout_toLeftOf="@id/consentCheckButton"
             android:layout_weight="1"
             android:backgroundTint="@color/colorButtonBackground"
             android:text="Request consent"
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/consent"
+            android:id="@+id/consentCheckButton"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignTop="@+id/phoneNumber"
@@ -87,7 +87,7 @@
             android:layout_height="30dp"
             android:layout_marginTop="18dp"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/consent"
+            android:layout_below="@id/consentCheckButton"
             android:text="&#8942;"
             android:textAppearance="?android:textAppearanceLarge" />
 -->

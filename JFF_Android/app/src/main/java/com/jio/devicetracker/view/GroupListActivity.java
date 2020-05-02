@@ -57,6 +57,8 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
     private DBManager mDbManager;
     private String groupId;
     private String userId;
+    private List<GroupMemberDataList> listData;
+    private String groupName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,11 +71,12 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         createGroupButtonOnToolbar.setText(Constant.CREATE_GROUP_LIST);
         createGroupButtonOnToolbar.setVisibility(View.VISIBLE);
         createGroupButtonOnToolbar.setOnClickListener(this);
-        toolbarTitle.setText(Constant.GROUP_TITLE);
         mRecyclerList = findViewById(R.id.groupList);
         Intent intent = getIntent();
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         userId = intent.getStringExtra(Constant.USER_ID);
+        groupName = intent.getStringExtra(Constant.GROUPNAME);
+        toolbarTitle.setText(groupName);
         FloatingActionButton groupMembersListFloatButton = findViewById(R.id.groupMembersListFloatButton);
         groupMembersListFloatButton.setOnClickListener(this);
         makeGetGroupMemberAPICall();
@@ -101,6 +104,19 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
             }
             showDataInList();
+            isMemberPresent();
+        }
+    }
+
+    private void isMemberPresent() {
+        TextView instruction = findViewById(R.id.groupListMember);
+        if (listData.isEmpty()) {
+            mRecyclerList.setVisibility(View.INVISIBLE);
+            instruction.setVisibility(View.VISIBLE);
+            instruction.setText(Constant.ADD_GROUP_MEMBER_INSTRUCTION1 + groupName + Constant.ADD_GROUP_MEMBER_INSTRUCTION2);
+        } else {
+            mRecyclerList.setVisibility(View.VISIBLE);
+            instruction.setVisibility(View.GONE);
         }
     }
 
@@ -109,9 +125,9 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
      */
     private void showDataInList() {
         List<GroupMemberDataList> mList = new ArrayList<>();
-        List<GroupMemberDataList> listData = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+        listData = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
         for (GroupMemberDataList groupMemberDataList : listData) {
-            if(groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
+            if (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
                 GroupMemberDataList data = new GroupMemberDataList();
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());

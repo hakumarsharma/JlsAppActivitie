@@ -88,6 +88,7 @@ public class Constant {
     public static final String LOADING_DATA = "Please wait loading data...";
     public static final String GROUP_CREATION_FAILURE = "You have exceeded maximum allowed active groups, Please delete one of the group members to add any other group.";
     public static final String GROUP_UPDATION_FAILURE = "Group name updation failed";
+    public static final String INDIVIDUAL_USER_EDIT_FAILURE = "User name updation failed!, Please try again";
     public static final String NO_GROUP_FOUND = "No Group found, Please try again.";
     public static final String GROUP_DELETION_FAILURE = "Group Deletion failed";
     public static final String ACTIVE = "active";
@@ -97,8 +98,11 @@ public class Constant {
     public static final String EXIT_FROM_GROUP_FAILURE = "Exit from group failed, Please try again!";
     public static final String REMOVE_FROM_GROUP_FAILURE = "Remove from group failed, Please try again!";
     public static final String ADDING_INDIVIDUAL_USER_FAILED = "Adding individual user failed, Please try again!";
-
-
+    public static final String GROUP_MEMBER_CLASS_NAME = "com.jio.devicetracker.database.pojo.GroupMemberDataList";
+    public static final String GROUP_NAME_CLASS_NAME = "com.jio.devicetracker.database.pojo.HomeActivityListData";
+    public static final String GROUP = "group";
+    public static final String INDIVIDUAL_MEMBER = "individualMember";
+    public static final String IS_GROUP_MEMBER = "isGroupMember";
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
     public static final String EMAILID_VALIDATION = "Email id cannot be left blank.";
@@ -130,6 +134,8 @@ public class Constant {
     public static final String PROGRESSBAR_MSG = "Please wait adding device";
     public static final String PET_TRACKER_DEVICE_TYPE = "Pet Tracker";
     public static final String PEOPLE_TRACKER_DEVICE_TYPE = "People Tracker";
+    public static final String ADD_GROUP_MEMBER_INSTRUCTION1 = "* Click on + button to add member inside the group  ";
+    public static final String ADD_GROUP_MEMBER_INSTRUCTION2 = "\n* Once added go to Home screen, select the group  from list and click on Track button to know the location of group members";
 
     // MAPs Activity constants
     public static final String MAP_TITLE = "      Location";

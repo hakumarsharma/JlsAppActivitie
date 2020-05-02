@@ -322,7 +322,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     }
 
     /**
-     * Get all members of a particular group
+     * Get all members of a particular group and update the database
      */
     public void getAllForOneGroupAPICall() {
         GroupRequestHandler.getInstance(this).handleRequest(new GetGroupMemberRequest(new GetGroupMemberRequestSuccessListener(), new GetGroupMemberRequestErrorListener(), groupId, userId));

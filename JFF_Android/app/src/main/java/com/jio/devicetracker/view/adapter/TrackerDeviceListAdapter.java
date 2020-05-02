@@ -21,7 +21,6 @@
 
 package com.jio.devicetracker.view.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
@@ -83,7 +81,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
      */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(mData.get(position).getClass().getName().equalsIgnoreCase("com.jio.devicetracker.database.pojo.HomeActivityListData")) {
+        if(mData.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_NAME_CLASS_NAME)) {
             HomeActivityListData data = (HomeActivityListData)mData.get(position);
             if(data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                 holder.mIconImage.setImageResource(R.drawable.ic_user);
@@ -92,25 +90,49 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 holder.mIconImage.setImageResource(R.drawable.ic_group_button);
                 holder.name.setText(data.getGroupName());
             }
-            holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, data.getGroupName(), data.getPhoneNumber(), data.getGroupId()));
+            holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, data.getGroupName(), data.getPhoneNumber(), data.getGroupId(), Constant.GROUP));
 
             holder.mListlayout.setOnLongClickListener(v -> true);
             holder.mListlayout.setOnClickListener(v -> {
                 itemListener.clickonListLayout(data.getGroupName(), data.getGroupId(), data.getProfileImage());
                 return;
             });
+            holder.mConsentCheckButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    // To do
+                }
+            });
+            holder.mConsentStatusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.consentClick(data.getGroupId(), data.getPhoneNumber());
+                }
+            });
         }
-        else if(mData.get(position).getClass().getName().equalsIgnoreCase("com.jio.devicetracker.database.pojo.GroupMemberDataList")) {
+        else if(mData.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
             GroupMemberDataList data = (GroupMemberDataList) mData.get(position);
             holder.mIconImage.setImageResource(R.drawable.ic_user);
             holder.name.setText(data.getName());
             holder.phone.setText(data.getNumber());
-            holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, data.getName(), data.getNumber(), data.getGroupId()));
+            holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, data.getName(), data.getNumber(), data.getGroupId(), Constant.INDIVIDUAL_MEMBER));
 
             holder.mListlayout.setOnLongClickListener(v -> true);
             holder.mListlayout.setOnClickListener(v -> {
                 itemListener.clickonListLayout(data.getName(), data.getConsentId(), data.getProfileImage());
                 return;
+            });
+            holder.mConsentCheckButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    // To do
+                }
+            });
+            holder.mConsentStatusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.consentClick(data.getGroupId(), data.getNumber());
+                }
             });
         }
 
@@ -200,8 +222,8 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         public TextView name;
         public TextView status;
         public CardView mListlayout;
-        public Button mConsent;
-        public Button mConsentStatus;
+        public Button mConsentCheckButton;
+        public Button mConsentStatusButton;
         public TextView viewOptionMenu;
         public ImageView mIconImage;
 
@@ -215,8 +237,8 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             phone = itemView.findViewById(R.id.phoneNumber);
             name = itemView.findViewById(R.id.nameDeviceTracker);
             mListlayout = itemView.findViewById(R.id.listLayout);
-            mConsent = itemView.findViewById(R.id.consent);
-            mConsentStatus = itemView.findViewById(R.id.consentstatus);
+            mConsentCheckButton = itemView.findViewById(R.id.consentCheckButton);
+            mConsentStatusButton = itemView.findViewById(R.id.requestConsentButton);
             viewOptionMenu = itemView.findViewById(R.id.textViewOptions);
             status = itemView.findViewById(R.id.statusView);
             mIconImage = itemView.findViewById(R.id.contactImage);
@@ -233,11 +255,11 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         // void recyclerviewDeleteList(String phoneNuber,int position);
         void clickonListLayout(String selectedGroupName, String groupId, int profileImage);
 
-        void consetClick(String phoneNumber);
+        void consentClick(String groupId, String phoneNumber);
 
         void consentClickForGroup(String selectedGroupName);
 
-        void onPopupMenuClicked(View v, int position, String name, String number, String groupId);
+        void onPopupMenuClicked(View v, int position, String name, String number, String groupId, String groupMember);
     }
 
     /**

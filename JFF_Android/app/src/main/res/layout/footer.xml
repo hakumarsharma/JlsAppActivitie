@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         >
         <Button
-            android:id="@+id/consent"
+            android:id="@+id/consentCheckButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/ic_consent"

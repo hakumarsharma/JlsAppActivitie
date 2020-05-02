@@ -30,4 +30,17 @@
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
+    <TextView
+        android:id="@+id/groupListMember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:lineSpacingExtra="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="15sp"
+        android:visibility="invisible" />
+
 </RelativeLayout>

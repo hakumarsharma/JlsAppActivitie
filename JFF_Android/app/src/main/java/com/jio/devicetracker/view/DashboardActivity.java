@@ -75,12 +75,14 @@ import com.android.volley.VolleyError;
 
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.GenerateConsentTokenData;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
+import com.jio.devicetracker.database.pojo.request.GenerateConsentTokenRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
@@ -146,8 +148,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        //consentRequestBox(intent.getBooleanExtra("flag", false), intent.getStringExtra("name"));
-        //isPermissionGranted();
         setLayoutData();
         setNavigationData();
         initializeDataMember();
@@ -200,8 +200,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 @Override
-                public void consetClick(String phoneNumber) {
-                    showSpinnerforConsentTime(phoneNumber);
+                public void consentClick(String groupId, String phoneNumber) {
+                    generateConsentToken(groupId, phoneNumber);
                 }
 
                 @Override
@@ -212,13 +212,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 @Override
-                public void onPopupMenuClicked(View v, int position, String name, String number, String groupId) {
+                public void onPopupMenuClicked(View v, int position, String name, String number, String groupId, String isGroupMember) {
                     PopupMenu popup = new PopupMenu(DashboardActivity.this, v);
                     popup.inflate(R.menu.options_menu);
                     popup.setOnMenuItemClickListener(item -> {
                         switch (item.getItemId()) {
                             case R.id.editOnCardView:
-                                gotoEditScreen(name, number, groupId);
+                                gotoEditScreen(name, number, groupId, isGroupMember);
                                 break;
                             case R.id.deleteOnCardView:
                                 alertDilogBoxWithCancelbtn(Constant.DELETC_DEVICE, Constant.ALERT_TITLE, groupId);
@@ -237,12 +237,44 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
+     * Generate Consent token request API Call
+     */
+    private void generateConsentToken(String groupId, String phoneNumber) {
+        GenerateConsentTokenData generateConsentTokenData = new GenerateConsentTokenData();
+        GenerateConsentTokenData.Consent consent = new GenerateConsentTokenData().new Consent();
+        consent.setPhone(phoneNumber);
+        generateConsentTokenData.setConsent(consent);
+        GroupRequestHandler.getInstance(this).handleRequest(new GenerateConsentTokenRequest(new GenerateConsentTokenRequestSuccessListener(), new GenerateConsentTokenRequestErrorListener(), generateConsentTokenData, groupId, userId));
+    }
+
+    /**
+     * Generate Consent token request API Call success listener
+     */
+    private class GenerateConsentTokenRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            // To do
+        }
+    }
+
+    /**
+     * Generate Consent token request API Call error listener
+     */
+    private class GenerateConsentTokenRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            // To do
+        }
+    }
+
+    /**
      * Goto Group List Activity
      */
     private void goToGroupListActivity(String groupId, String userId) {
         Intent intent = new Intent(this, GroupListActivity.class);
         intent.putExtra(Constant.GROUP_ID, groupId);
         intent.putExtra(Constant.USER_ID, userId);
+        intent.putExtra(Constant.GROUPNAME, groupName);
         startActivity(intent);
     }
 
@@ -544,11 +576,17 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * @param name
      * @param phonenumber
      */
-    private void gotoEditScreen(String name, String phonenumber, String groupId) {
+    private void gotoEditScreen(String name, String phonenumber, String groupId, String isGroupMember) {
         Intent intent = new Intent(this, EditActivity.class);
         intent.putExtra(Constant.NAME, name);
         intent.putExtra(Constant.NUMBER_CARRIER, phonenumber);
         intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.USER_ID, userId);
+        if(isGroupMember.equalsIgnoreCase(Constant.GROUP)) {
+            intent.putExtra(Constant.IS_GROUP_MEMBER, isGroupMember);
+        } else {
+            intent.putExtra(Constant.IS_GROUP_MEMBER, isGroupMember);
+        }
         startActivity(intent);
     }
 

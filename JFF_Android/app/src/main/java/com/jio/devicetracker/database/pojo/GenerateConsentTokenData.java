@@ -33,11 +33,9 @@ public class GenerateConsentTokenData {
 
     public class Consent {
         private String phone;
-
         public String getPhone() {
             return phone;
         }
-
         public void setPhone(String phone) {
             this.phone = phone;
         }
