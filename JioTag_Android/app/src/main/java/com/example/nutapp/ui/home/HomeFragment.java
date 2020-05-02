@@ -198,13 +198,11 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                                 resolvable.startResolutionForResult(
                                         getActivity(),
                                         JioUtils.REQUEST_CHECK_SETTINGS_MAIN);
-                            } catch (IntentSender.SendIntentException e) {
+                            } catch (IntentSender.SendIntentException | ClassCastException e) {
                                 // Ignore the error.
                                 Log.d("HomeFragment","Error"+e);
-                            } catch (ClassCastException e) {
-                                Log.d("HomeFragment","Error"+e);
-                                // Ignore, should be an impossible error.
-                            }
+                            } // Ignore, should be an impossible error.
+
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             // Location settings are not satisfied. However, we have no way to fix the

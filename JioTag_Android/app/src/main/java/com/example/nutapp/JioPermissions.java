@@ -130,13 +130,11 @@ public class JioPermissions extends AppCompatActivity {
                                 resolvable.startResolutionForResult(
                                         m_currentAct,
                                         REQUEST_CHECK_SETTINGS);
-                            } catch (IntentSender.SendIntentException e) {
+                            } catch (IntentSender.SendIntentException | ClassCastException e) {
                                 Log.d("JioPermission","Error value=="+e);
                                 // Ignore the error.
-                            } catch (ClassCastException e) {
-                                Log.d("JioPermission","Error value=="+e);
-                                // Ignore, should be an impossible error.
-                            }
+                            } // Ignore, should be an impossible error.
+
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             // Location settings are not satisfied. However, we have no way to fix the

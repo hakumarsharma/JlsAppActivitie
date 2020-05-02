@@ -60,7 +60,7 @@ public class Feedback extends AppCompatActivity {
         feedback_email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                Log.d("Feedback","before method");
             }
 
             @Override
@@ -76,7 +76,7 @@ public class Feedback extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                Log.d("Feedback","afterTextChanged method");
             }
         });
 

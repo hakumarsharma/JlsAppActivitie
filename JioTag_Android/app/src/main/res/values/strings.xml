@@ -134,7 +134,7 @@
     <string name="login_resend_otp">Resend OTP</string>
     <string name="email_id">Email-Id</string>
     <string name="or">OR</string>
-    <string name="email_confirmation_msg">Hey Riya, you are almost ready to\n \t\tadd your device. A verification \nemail is sent on your email-Id. After \n \t\tverify you will be able to login</string>
+    <string name="email_confirmation_msg">Hey Ashish, you are almost ready \n \t\tto add your device. A verification \nemail is sent on your email-Id. After \n \t\tverify you will be able to login</string>
     <string name="email_confirmation_title">Email confirmation</string>
     <string name="qrscan_instruction">A QR code will be available to \nthe back side of your device \nbox.</string>
     <string name="add_manual">Add device manually</string>

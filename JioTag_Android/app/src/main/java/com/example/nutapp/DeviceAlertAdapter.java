@@ -162,6 +162,7 @@ public class DeviceAlertAdapter extends RecyclerView.Adapter<DeviceAlertAdapter.
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
+                    Log.d("DeviceAlert","onNothingSelected method");
                 }
             });
 

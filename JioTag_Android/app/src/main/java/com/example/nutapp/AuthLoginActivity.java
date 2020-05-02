@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 
 public class AuthLoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private String TAG = "AuthLoginActivity";
     private EditText emailEdittext;
     private EditText passEdittext;
     private TextView emailTitleText;
@@ -69,12 +70,13 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
         emailEdittext.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.d(TAG,"before method");
 
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                Log.d(TAG,"onText method");
             }
 
             @Override
@@ -91,12 +93,12 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
         passEdittext.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                Log.d(TAG,"before method");
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                Log.d(TAG,"onText method");
             }
 
             @Override
@@ -203,6 +205,7 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            Log.d(TAG,"account value"+account);
 
             Toast.makeText(this,"Google login successful now",Toast.LENGTH_SHORT).show();
             // Signed in successfully, show authenticated UI.
