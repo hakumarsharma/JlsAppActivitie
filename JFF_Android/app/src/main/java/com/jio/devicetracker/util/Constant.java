@@ -103,6 +103,9 @@ public class Constant {
     public static final String GROUP = "group";
     public static final String INDIVIDUAL_MEMBER = "individualMember";
     public static final String IS_GROUP_MEMBER = "isGroupMember";
+    public static final String LOCATION = "location";
+    public static final String SOS = "sos";
+
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
     public static final String EMAILID_VALIDATION = "Email id cannot be left blank.";
@@ -179,6 +182,7 @@ public class Constant {
     public static final String APPROVE_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";
     public static final String STATUS_URL = "/status";
     public static final String SESSION_GROUP_CONSENTS_URL1 = "/sessiongroupconsents/";
+    public static final String GET_LOCATION_URL = "/events/search";
 
     //Privacy Policy
     public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";

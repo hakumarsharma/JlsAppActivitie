@@ -20,21 +20,20 @@
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
  **************************************************************/
 
-package com.jio.devicetracker.database.pojo.request;
+package com.jio.devicetracker.database.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class SearchEventData implements Serializable {
     @SerializedName("device")
     private Device device;
-    @SerializedName("from")
-    private Long from;
-    @SerializedName("to")
-    private Long to;
-    @SerializedName("flags")
-    private Flags flags;
+    @SerializedName("types")
+    private List<String> types;
+    @SerializedName("time")
+    private Time time;
 
     public Device getDevice() {
         return device;
@@ -44,63 +43,56 @@ public class SearchEventData implements Serializable {
         this.device = device;
     }
 
-    public Long getFrom() {
-        return from;
+    public List<String> getTypes() {
+        return types;
     }
 
-    public void setFrom(Long from) {
-        this.from = from;
+    public void setTypes(List<String> types) {
+        this.types = types;
     }
 
-    public Long getTo() {
-        return to;
+    public Time getTime() {
+        return time;
     }
 
-    public void setTo(Long to) {
-        this.to = to;
+    public void setTime(Time time) {
+        this.time = time;
     }
 
-    public Flags getFlags() {
-        return flags;
-    }
-
-    public void setFlags(Flags flags) {
-        this.flags = flags;
-    }
-
-    public class Device implements Serializable {
+    public class Device {
         @SerializedName("_id")
-        private String id;
+        private String deviceId;
 
-        public String getId() {
-            return id;
+        public String getDeviceId() {
+            return deviceId;
         }
 
-        public void setId(String id) {
-            this.id = id;
+        public void setDeviceId(String deviceId) {
+            this.deviceId = deviceId;
+        }
+    }
+
+    public class Time {
+        @SerializedName("from")
+        private Long from;
+        @SerializedName("to")
+        private Long to;
+
+        public Long getFrom() {
+            return from;
+        }
+
+        public void setFrom(Long from) {
+            this.from = from;
+        }
+
+        public Long getTo() {
+            return to;
+        }
+
+        public void setTo(Long to) {
+            this.to = to;
         }
     }
 
-    public class Flags implements Serializable {
-        @SerializedName("isPopulateGeofence")
-        private boolean isPopulateGeofence;
-        @SerializedName("isPopulateRoute")
-        private boolean isPopulateRoute;
-
-        public boolean isPopulateGeofence() {
-            return isPopulateGeofence;
-        }
-
-        public void setPopulateGeofence(boolean populateGeofence) {
-            isPopulateGeofence = populateGeofence;
-        }
-
-        public boolean isPopulateRoute() {
-            return isPopulateRoute;
-        }
-
-        public void setPopulateRoute(boolean populateRoute) {
-            isPopulateRoute = populateRoute;
-        }
-    }
 }

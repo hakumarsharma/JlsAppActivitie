@@ -97,18 +97,17 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 itemListener.clickonListLayout(data.getGroupName(), data.getGroupId(), data.getProfileImage());
                 return;
             });
-            holder.mConsentCheckButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    // To do
+            holder.mConsentCheckButton.setOnClickListener(v -> {
+                data.setSelected(!data.isSelected());
+                if(data.isSelected()) {
+                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkmark);
+                    itemListener.checkBoxClicked(data.getGroupId());
+                } else {
+                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkboxempty);
+                    itemListener.checkBoxClicked(data.getGroupId());
                 }
             });
-            holder.mConsentStatusButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.consentClick(data.getGroupId(), data.getPhoneNumber());
-                }
-            });
+            holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentClick(data.getGroupId(), data.getPhoneNumber()));
         }
         else if(mData.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
             GroupMemberDataList data = (GroupMemberDataList) mData.get(position);
@@ -122,18 +121,17 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 itemListener.clickonListLayout(data.getName(), data.getConsentId(), data.getProfileImage());
                 return;
             });
-            holder.mConsentCheckButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    // To do
+            holder.mConsentCheckButton.setOnClickListener(v -> {
+                data.setSelected(!data.isSelected());
+                if(data.isSelected()) {
+                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkmark);
+                    itemListener.checkBoxClicked(data.getGroupId());
+                } else {
+                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkboxempty);
+                    itemListener.checkBoxClicked(data.getGroupId());
                 }
             });
-            holder.mConsentStatusButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.consentClick(data.getGroupId(), data.getNumber());
-                }
-            });
+            holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentClick(data.getGroupId(), data.getNumber()));
         }
 
         /*holder.phone.setText(mData.get(position).getPhoneNumber());
@@ -257,7 +255,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
         void consentClick(String groupId, String phoneNumber);
 
-        void consentClickForGroup(String selectedGroupName);
+        void checkBoxClicked(String groupId);
 
         void onPopupMenuClicked(View v, int position, String name, String number, String groupId, String groupMember);
     }

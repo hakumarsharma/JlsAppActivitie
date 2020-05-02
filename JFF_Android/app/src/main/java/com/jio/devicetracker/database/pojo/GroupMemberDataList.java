@@ -35,6 +35,15 @@ public class GroupMemberDataList {
     private String groupId;
     private String userId;
     private String deviceId;
+    private boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public String getDeviceId() {
         return deviceId;

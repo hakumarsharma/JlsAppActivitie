@@ -81,10 +81,12 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
+import com.jio.devicetracker.database.pojo.SearchEventData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateConsentTokenRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
+import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceStatusResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
@@ -205,10 +207,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 @Override
-                public void consentClickForGroup(String selectedGroupName) {
-                    groupName = selectedGroupName;
-                    List<HomeActivityListData> data = mDbManager.getGroupdata(groupName);
-                    showSpinnerforGroupConsentTime(data);
+                public void checkBoxClicked(String groupId) {
+                    grpId = groupId;
                 }
 
                 @Override
@@ -582,7 +582,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         intent.putExtra(Constant.NUMBER_CARRIER, phonenumber);
         intent.putExtra(Constant.GROUP_ID, groupId);
         intent.putExtra(Constant.USER_ID, userId);
-        if(isGroupMember.equalsIgnoreCase(Constant.GROUP)) {
+        if (isGroupMember.equalsIgnoreCase(Constant.GROUP)) {
             intent.putExtra(Constant.IS_GROUP_MEMBER, isGroupMember);
         } else {
             intent.putExtra(Constant.IS_GROUP_MEMBER, isGroupMember);
@@ -652,49 +652,46 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Track the device
+     * Search Event API call
      */
     private void trackDevice() {
         if (selectedData.isEmpty()) {
             Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
         } else {
             Util.getInstance().showProgressBarDialog(this);
-            List<HomeActivityListData> hmActivityListData = mDbManager.getAlldata(Util.adminEmail);
-            boolean isConsentApproved = false;
-            for (HomeActivityListData homeActivityListData : hmActivityListData) {
-                for (MultipleselectData multipleselectData : selectedData) {
-                    if (multipleselectData.getPhone().equalsIgnoreCase(homeActivityListData.getPhoneNumber()) && homeActivityListData.getDeviceType().equalsIgnoreCase("People Tracker")) {
-                        if (homeActivityListData.getConsentStaus().equalsIgnoreCase("") || homeActivityListData.getConsentStaus().equalsIgnoreCase(Constant.CONSENT_PENDING) || homeActivityListData.getConsentStaus().equalsIgnoreCase(Constant.REQUEST_CONSENT)) {
-                            Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED, Constant.ALERT_TITLE, this);
-                            Util.progressDialog.dismiss();
-                            return;
-                        }
-                    }
-                    if (homeActivityListData.getConsentStaus().equalsIgnoreCase(Constant.CONSENT_APPROVED_STATUS) &&
-                            multipleselectData.getPhone().equalsIgnoreCase(homeActivityListData.getPhoneNumber()) ||
-                            multipleselectData.getPhone().equalsIgnoreCase(homeActivityListData.getPhoneNumber()) && homeActivityListData.getDeviceType().equalsIgnoreCase("Pet Tracker")) {
-                        isConsentApproved = true;
-                    }
-                }
-            }
+            SearchEventData searchEventData = new SearchEventData();
+            SearchEventData.Device device = new SearchEventData().new Device();
+            SearchEventData.Time time = new SearchEventData().new Time();
+            List<String> mList = new ArrayList<>();
+            mList.add(Constant.LOCATION);
+            mList.add(Constant.SOS);
+            time.setFrom(Util.getTimeEpochFormatAfterCertainTime(1));
+            time.setTo(Util.getTimeEpochFormatAfterCertainTime(15));
+            device.setDeviceId("To do");
+            searchEventData.setDevice(device);
+            searchEventData.setTime(time);
+            searchEventData.setTypes(mList);
+            GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, userId, grpId));
+        }
+    }
 
-            if (isConsentApproved) {
-                for (MultipleselectData multipleselectData : selectedData) {
-                    Map<Double, Double> latLngMap = new HashMap<>();
-                    if (multipleselectData.getLat() != null) {
-                        latLngMap.put(Double.valueOf(multipleselectData.getLat()),
-                                Double.valueOf(multipleselectData.getLng()));
-                        namingMap.put(multipleselectData.getName(), latLngMap);
-                    }
-                }
-                Util.progressDialog.dismiss();
-                if (!namingMap.isEmpty()) {
-                    goToMapActivity();
-                }
-            } else {
-                Util.alertDilogBox(Constant.CONSENT_NOTAPPROVED, Constant.ALERT_TITLE, this);
-                Util.progressDialog.dismiss();
-            }
+    /**
+     * Search Event Request API call Success Listener
+     */
+    private class SearchEventRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+
+        }
+    }
+
+    /**
+     * Search Event Request API Call Error listener
+     */
+    private class SearchEventRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
         }
     }
 

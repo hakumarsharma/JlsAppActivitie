@@ -104,8 +104,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginButton;
     private Locale locale = Locale.ENGLISH;
     public static GetDeviceLocationResponse getDeviceLocationResponse = null;
-    public static String ugsToken;
     private String userId;
+    public static String ugsToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
