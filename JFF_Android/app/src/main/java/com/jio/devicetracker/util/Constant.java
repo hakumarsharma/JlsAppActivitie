@@ -105,6 +105,7 @@ public class Constant {
     public static final String IS_GROUP_MEMBER = "isGroupMember";
     public static final String LOCATION = "location";
     public static final String SOS = "sos";
+    public static final String SELECTION_ERROR = "You cannot track more than one group/user at a time, Please uncheck one to select others";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";

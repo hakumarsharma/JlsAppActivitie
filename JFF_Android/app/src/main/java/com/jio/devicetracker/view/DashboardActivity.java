@@ -109,6 +109,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 
@@ -145,6 +146,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private String grpId;
     private int listPosition;
     private List listOnDashBoard;
+    public static List<GroupMemberDataList> grpMemberDataList;
+    public static List<HomeActivityListData> grpDataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,8 +210,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 @Override
-                public void checkBoxClicked(String groupId) {
-                    grpId = groupId;
+                public void checkBoxClickedForGroupMember(GroupMemberDataList mDataList) {
+                    grpId = mDataList.getGroupId();
+                    grpMemberDataList.add(mDataList);
+                }
+
+                @Override
+                public void checkBoxClickedForGroup(HomeActivityListData homeActivityListData) {
+                    grpId = homeActivityListData.getGroupId();
+                    grpDataList.add(homeActivityListData);
                 }
 
                 @Override
@@ -298,6 +308,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         client = LocationServices.getFusedLocationProviderClient(this);
         userId = mDbManager.getAdminLoginDetail().getUserId();
         new Thread(new SendLocation()).start();
+        grpMemberDataList = new CopyOnWriteArrayList<>();
+        grpDataList = new CopyOnWriteArrayList<>();
         if (specificGroupMemberData == null) {
             specificGroupMemberData = new ArrayList<>();
         }
@@ -1130,7 +1142,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 listOnDashBoard.add(data);
             }
         }
-        adapter = new TrackerDeviceListAdapter(listOnDashBoard);
+        adapter = new TrackerDeviceListAdapter(listOnDashBoard, this);
         listView.setAdapter(adapter);
     }
 }

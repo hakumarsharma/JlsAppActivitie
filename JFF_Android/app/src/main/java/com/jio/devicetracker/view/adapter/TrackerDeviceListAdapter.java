@@ -21,12 +21,14 @@
 
 package com.jio.devicetracker.view.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -37,6 +39,7 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.view.DashboardActivity;
 
 import java.util.List;
 
@@ -47,14 +50,18 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     private List mData;
     private static RecyclerViewClickListener itemListener;
+    private int count;
+    private int groupCount;
+    private Context mContext;
 
     /**
      * Constructor to add devices in home screen
      *
      * @param mData
      */
-    public TrackerDeviceListAdapter(List mData) {
+    public TrackerDeviceListAdapter(List mData, Context mContext) {
         this.mData = mData;
+        this.mContext = mContext;
     }
 
     /**
@@ -81,9 +88,9 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
      */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(mData.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_NAME_CLASS_NAME)) {
-            HomeActivityListData data = (HomeActivityListData)mData.get(position);
-            if(data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+        if (mData.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_NAME_CLASS_NAME)) {
+            HomeActivityListData data = (HomeActivityListData) mData.get(position);
+            if (data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                 holder.mIconImage.setImageResource(R.drawable.ic_user);
                 holder.name.setText(data.getName());
             } else {
@@ -98,18 +105,37 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 return;
             });
             holder.mConsentCheckButton.setOnClickListener(v -> {
-                data.setSelected(!data.isSelected());
-                if(data.isSelected()) {
-                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkmark);
-                    itemListener.checkBoxClicked(data.getGroupId());
-                } else {
+                // Check If any group Member is already checked
+                for (GroupMemberDataList list : DashboardActivity.grpMemberDataList) {
+                    if (list.isSelected()) {
+                        Toast.makeText(mContext, Constant.SELECTION_ERROR, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                // If Already checked then uncheck it
+                if (data.isSelected() == true) {
                     holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkboxempty);
-                    itemListener.checkBoxClicked(data.getGroupId());
+                    data.setSelected(false);
+                    DashboardActivity.grpDataList.remove(data);
+                    return;
+                }
+                data.setSelected(!data.isSelected());
+                if (data.isSelected()) {
+                    for (HomeActivityListData list : DashboardActivity.grpDataList) {
+                        if (list.isSelected() == true && groupCount > 0) {
+                            Toast.makeText(mContext, Constant.SELECTION_ERROR, Toast.LENGTH_LONG).show();
+                            data.setSelected(false);
+                            DashboardActivity.grpDataList.remove(data);
+                            return;
+                        }
+                    }
+                    itemListener.checkBoxClickedForGroup(data);
+                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkmark);
+                    groupCount ++;
                 }
             });
             holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentClick(data.getGroupId(), data.getPhoneNumber()));
-        }
-        else if(mData.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
+        } else if (mData.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
             GroupMemberDataList data = (GroupMemberDataList) mData.get(position);
             holder.mIconImage.setImageResource(R.drawable.ic_user);
             holder.name.setText(data.getName());
@@ -122,13 +148,36 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 return;
             });
             holder.mConsentCheckButton.setOnClickListener(v -> {
-                data.setSelected(!data.isSelected());
-                if(data.isSelected()) {
-                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkmark);
-                    itemListener.checkBoxClicked(data.getGroupId());
-                } else {
+                // Check If any group is already checked
+                for (HomeActivityListData list : DashboardActivity.grpDataList) {
+                    if (list.isSelected()) {
+                        Toast.makeText(mContext, Constant.SELECTION_ERROR, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+
+                // If Already checked then uncheck it
+                if (data.isSelected() == true) {
                     holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkboxempty);
-                    itemListener.checkBoxClicked(data.getGroupId());
+                    data.setSelected(false);
+                    DashboardActivity.grpMemberDataList.remove(data);
+                    return;
+                }
+
+                // marrked the checked box as selected
+                data.setSelected(!data.isSelected());
+                if (data.isSelected()) {
+                    for (GroupMemberDataList list : DashboardActivity.grpMemberDataList) {
+                        if (list.isSelected() == true && count > 0) {
+                            Toast.makeText(mContext, Constant.SELECTION_ERROR, Toast.LENGTH_LONG).show();
+                            data.setSelected(false);
+                            DashboardActivity.grpMemberDataList.remove(data);
+                            return;
+                        }
+                    }
+                    itemListener.checkBoxClickedForGroupMember(data);
+                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkmark);
+                    count ++;
                 }
             });
             holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentClick(data.getGroupId(), data.getNumber()));
@@ -255,8 +304,8 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
         void consentClick(String groupId, String phoneNumber);
 
-        void checkBoxClicked(String groupId);
-
+        void checkBoxClickedForGroupMember(GroupMemberDataList groupMemberDataList);
+        void checkBoxClickedForGroup(HomeActivityListData homeActivityListData);
         void onPopupMenuClicked(View v, int position, String name, String number, String groupId, String groupMember);
     }
 
