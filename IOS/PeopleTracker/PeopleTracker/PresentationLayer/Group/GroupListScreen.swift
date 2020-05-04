@@ -29,11 +29,13 @@ import JJFloatingActionButton
 class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
      var navtitle : String = ""
+     var groupId  : String = ""
      @IBOutlet weak var groupListTableView: UITableView!
-       
+     @IBOutlet weak var instructionLbl: UILabel!
+    
        let actionButton = JJFloatingActionButton()
-       let names: [String] = ["Sree", "Maruti", "Harish", "Ashish", "Satish"] // TODO: remove once api is integrated
-       let numbers: [String] = ["8088422893", "9019022684", "7200706845", "9949442884", "9848367485"]  // TODO: remove once api is integrated
+       var groupMemberData: [GroupMemberData] = []
+       var dbMemberData: [GroupMemberData] = []
        
        override func viewDidLoad() {
            super.viewDidLoad()
@@ -41,27 +43,49 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
            groupListTableView.delegate = self
            groupListTableView.dataSource = self
            let trackBtn : UIBarButtonItem = UIBarButtonItem.init(title: "Track", style: .plain, target: self, action: #selector(trackButton(sender:)))
-               self.navigationItem.setRightBarButton(trackBtn, animated: true)
+           trackBtn.tintColor = UIColor.white
+           self.navigationItem.setRightBarButton(trackBtn, animated: true)
            floatingActionButton()
-           
+           groupListTableView.tableFooterView = UIView()
+           self.createNotification()
+           self.getMemberInGroupApi()
        }
+    
+      func createNotification() {
+           NotificationCenter.default.addObserver(self, selector: #selector(callgetMembersIngroupApi(notification:)), name: NSNotification.Name(rawValue: Constants.NotificationName.GetMemebersInGroup), object: nil)
+       }
+       
+       @objc func callgetMembersIngroupApi(notification: NSNotification) {
+           self.getMemberInGroupApi()
+       }
+       
+    func showHideTableView() {
+        
+        if self.groupMemberData.count > 0 {
+                          self.instructionLbl.isHidden = true
+                          self.groupListTableView.isHidden = false
+                      } else {
+                          self.instructionLbl.isHidden = false
+                          self.groupListTableView.isHidden = true
+                      }
+    }
        
        // MARK: UITableView Delegate and DataSource methods
        
        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-           return self.names.count
+           return self.groupMemberData.count
        }
        
        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-           return 120.0
+           return 135.0
        }
        
        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
            
            let cell = tableView.dequeueReusableCell(withIdentifier: "cellIdentifier") as! GroupCell
            cell.selectionStyle = .none
-           cell.name.text = self.names[indexPath.row];
-           cell.phoneNumber.text = self.numbers[indexPath.row];
+           let memberData = groupMemberData[indexPath.row]
+           cell.setUserData(memberData: memberData)
            return cell
        }
        
@@ -87,7 +111,14 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
              addDeviceViewController.navtitle = title
              self.navigationController?.pushViewController(addDeviceViewController, animated: true)
          }
-       
+       func navigateToAddPersonScreen(title : String) {
+              let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+              let addPersonViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.AddPersonScreen) as! AddPersonScreen
+              addPersonViewController.navtitle = title
+              addPersonViewController.groupId = self.groupId
+              self.navigationController?.pushViewController(addPersonViewController, animated: true)
+          }
+    
        func navigateToCreateGroupScreen() {
               let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.CreateGroupScreen) as! CreateGroupScreen
@@ -101,9 +132,9 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
             self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.AddDevice)
            }
            
-        actionButton.addItem(title: Constants.HomScreenConstants.AddPerson, image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.AddPerson, image: UIImage(named: "ic_user")?.withRenderingMode(.alwaysTemplate)) { item in
                // do something
-            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.AddPerson)
+            self.navigateToAddPersonScreen(title: Constants.HomScreenConstants.AddPerson)
            }
          
            view.addSubview(actionButton)
@@ -113,5 +144,49 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
        }
     
        
+    // Get memebers in group Api Call
+    func getMemberInGroupApi() {
+        self.showActivityIndicator()
+        let getListOfMembersUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + self.groupId + Constants.ApiPath.CreateMultiple )!
+        GroupService.shared.getMembersFromGroup(getMembersInGroupUrl:  getListOfMembersUrl) { (result : Result<GroupMemberModel, Error>) in
+            switch result {
+            case .success(let groupResponse):
+               self.groupMemberData.removeAll()
+//               let memberData = RealmManager.sharedInstance.getGroupMemeberDataFromDB()
+               for response in groupResponse.groupMemberData {
+                if (response.status != Utils.GroupStatus.isRemoved.rawValue && response.status != Utils.GroupStatus.isExited.rawValue) {
+//                    for member in memberData {
+//                        let memberArr = member.groupMemberData.filter { $0.groupMemberId == response.groupMemberId }
+//                        response.name = memberArr.first?.name
+//                        print(memberArr)
+//                    }
+                    self.groupMemberData.append(response)
+                }
+                }
+                DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                    self.showHideTableView()
+                    self.groupListTableView.reloadData()
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        if error as! NetworkManager.ErrorType == NetworkManager.ErrorType.ExceededGroupLimit{
+                            self.ShowALert(title: Constants.ErrorMessage.MobileNumberExists)
+                        } else {
+                          self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                        }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+                self.showHideTableView()
+            }
+        }
+    }
     
 }

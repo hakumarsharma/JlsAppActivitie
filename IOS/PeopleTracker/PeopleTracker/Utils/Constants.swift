@@ -39,6 +39,9 @@ class Constants {
        static let RegisterationUrl = UserApisUrl + "register"
        static let CreateGroupUrl = "/sessiongroups"
        static let GroupListUrl = "/sessiongroups?isPopulateConsents=true"
+       static let CreateMultiple = "/sessiongroupconsents"
+       static let GenerateConsent = "/tokens"
+       static let ApproveConsent = "/status"
     }
     
     struct HelpScreen {
@@ -75,6 +78,7 @@ class Constants {
         static let LoginScreen = "LoginScreen"
         static let HomeScreen = "HomeScreen"
         static let AddDeviceScreen = "AddDeviceScreen"
+        static let AddPersonScreen = "AddPersonScreen"
         static let CreateGroupScreen = "CreateGroupScreen"
         static let GroupListScreen = "GroupListScreen"
         static let MapsScreen = "MapsScreen"
@@ -92,12 +96,6 @@ class Constants {
         static let Otp = "Please enter otp"
     }
     
-    struct UserDefaultConstants {
-        static let UgsToken = "ugsToken"
-        static let UserId = "userId"
-        static let UgsExpiryTime = "ugsExpiryTime"
-        static let GroupData = "groupData"
-    }
     
     struct HomScreenConstants {
         static let Select = "Select"
@@ -105,23 +103,37 @@ class Constants {
         static let Delete = "Delete"
         static let Dismiss = "Dismiss"
         static let AddDevice = "Add Device"
-        static let AddPerson = "Add Person"
+        static let EditDevice = "Edit Device"
+        static let AddPerson = "Add Contact"
+        static let EditPerson = "Edit Contact"
         static let CreateGroup = "Create Group"
         static let EditGroup = "Edit Group"
-        static let DeleteDevice = "Are you sure do you want to delete ?"
+        static let DeleteGroup = "Are you sure do you want to delete complete group ?"
+        static let DeleteContact = "Are you sure do you want to delete ?"
         static let RequestConsent = "Request Consent"
         static let ConsentApproved = "Consent Approved"
         static let ConsentPending = "Consent Pending"
+        static let ConsentSent = "Consent Sent"
         static let SelectDevice = "Select any added device to track"
+       
     }
     
     struct AddDeviceConstants {
           static let Name = "Please enter name"
           static let Imei = "Please enter valid IMEI number"
           static let DeviceAddedSuccessfully = "Device added successfully"
+          static let SelectType = "Select device type"
+          static let AdultTracker = "Adult Tracker"
+          static let KidTracker = "Kid Tracker"
+          static let PetTracker = "Pet Tracker"
+          static let VehicleTracker = "Vehicle Tracker"
+          static let PeopleTracker = "People Tracker"
+          static let OwnerNumber = "Please enter valid owner number"
+          static let Individual = "Individual"
+          static let ChooseDeviceType = "Please choose type of device"
       }
     
-    struct CreateGroupConstantts {
+    struct CreateGroupConstants {
         static let CreateGroup = "Please enter group name"
     }
     
@@ -135,5 +147,11 @@ class Constants {
         static let DeviceCanotBeAssigned = "Device cannot be added, Please try again later"
         static let Somethingwentwrong = "Something went wrong"
         static let ExceededGroupLimit = "Limit has been exceeded to create a group"
+        static let MobileNumberExists = "Mobile number already exists"
+    }
+    
+    struct NotificationName {
+        static let GetGroupList = "GetGroupList"
+        static let GetMemebersInGroup = "GetMemebersInGroup"
     }
 }

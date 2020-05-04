@@ -24,32 +24,72 @@
 
 
 import Foundation
+import RealmSwift
 
-public struct DeviceModel : Codable {
+@objcMembers class DeviceModel : Object, Decodable {
     
-    let code          : Int
-    let message       : String
-    let devicedata    : [DeviceData]?
+    dynamic var code          : Int = 0
+    dynamic var message       : String = ""
+    var devicedata  = RealmSwift.List<DeviceData>()
     
-    private enum CodingKeys : String, CodingKey {
+    enum CodingKeys : String, CodingKey {
         case code,message,devicedata = "data"
     }
     
-}
-public struct DeviceData : Codable{
+    required init(from decoder: Decoder) throws
+       {
+           let container = try decoder.container(keyedBy: CodingKeys.self)
+           
+           code = try container.decode(Int.self, forKey: .code)
+           message = try container.decode(String.self, forKey: .message)
+           let deviceList = try container.decode([DeviceData].self, forKey: .devicedata)
+           devicedata.append(objectsIn: deviceList)
+           
+           super.init()
+       }
+       
+       required init()
+       {
+           super.init()
+       }
     
-    let  deviceId         : String
-    let  imei             : String
-    let  identifier       : String?
-    let  type             : String?
-    let  model            : String?
-    let  name             : String
-    let  phoneCountryCode : String?
-    let  phone            : String
-    let  userid           : String
+}
+@objcMembers class DeviceData : Object, Decodable{
+    
+    dynamic var  deviceId         : String = ""
+    dynamic var  imei             : String = ""
+    dynamic var  identifier       : String? = nil
+    dynamic var  type             : String? = nil
+    dynamic var  model            : String? = nil
+    dynamic var  name             : String = ""
+    dynamic var  phoneCountryCode : String? = nil
+    dynamic var  phone            : String = ""
+    dynamic var  userId           : String = ""
 
-     private enum CodingKeys : String, CodingKey {
-        case deviceId = "_id",imei,identifier,type,model,name,phoneCountryCode,phone,userid = "user"
+    enum CodingKeys : String, CodingKey {
+        case deviceId = "_id",imei,identifier,type,model,name,phoneCountryCode,phone,userId = "user"
      }
+    
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        deviceId = try container.decode(String.self, forKey: .deviceId)
+        imei = try container.decode(String.self, forKey: .imei)
+        identifier = try container.decode(String.self, forKey: .identifier)
+        type = try container.decode(String.self, forKey: .type)
+        model = try container.decode(String.self, forKey: .model)
+        name = try container.decode(String.self, forKey: .name)
+        phoneCountryCode = try container.decode(String.self, forKey: .phoneCountryCode)
+        phone = try container.decode(String.self, forKey: .phone)
+        userId = try container.decode(String.self, forKey: .userId)
+        
+        super.init()
+    }
+    
+    required init()
+    {
+        super.init()
+    }
 }
 

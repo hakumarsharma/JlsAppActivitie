@@ -24,6 +24,8 @@
 
 
 import Foundation
+import UIKit
+import RealmSwift
 
 class UserService {
     public static let shared = UserService()
@@ -127,7 +129,7 @@ class UserService {
     }
     
     // Api to check login data
-    func loginRequest(with loginurl: URL, parameters: [String : Any], completion: @escaping (Result<LoginModel, Error>) -> Void) -> Void {
+    func loginRequest(with loginurl: URL,userName : String, parameters: [String : Any], completion: @escaping (Result<LoginModel, Error>) -> Void) -> Void {
         
         let networkManager = NetworkManager.init(url: loginurl)
         let request = networkManager.buildRequest(method: NetworkManager.Method.post, parameters: parameters)
@@ -141,6 +143,8 @@ class UserService {
                             if let string = String(data: data, encoding: String.Encoding.utf8) {
                                 let jsonData = string.data(using: .utf8)!
                                 let logindata = try! JSONDecoder().decode(LoginModel.self, from: jsonData)
+                                logindata.user?.name = userName
+                                RealmManager.sharedInstance.addUserData(object: logindata)
                                 completion(.success(logindata))
                             }
                         }

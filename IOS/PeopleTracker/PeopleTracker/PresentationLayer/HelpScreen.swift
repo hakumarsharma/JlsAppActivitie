@@ -42,7 +42,8 @@ class HelpScreen: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
         self.initializeData()
-                
+        print(Utils.shared.getFromEpochTime())
+        print(Utils.shared.getToEpochTime())
     }
     
     func initializeData() {
@@ -73,10 +74,6 @@ class HelpScreen: UIViewController, UIScrollViewDelegate {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let privacyViewController = storyBoard.instantiateViewController(withIdentifier: "PrivacyPolicyScreen") as! PrivacyPolicyScreen
         self.navigationController?.pushViewController(privacyViewController, animated: true)
-    }
-    
-    
-    @IBAction func nextButtonAction(_ sender: Any) {
     }
     
     // MARK: UIScrollView Delegate methods

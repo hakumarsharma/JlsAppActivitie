@@ -12,10 +12,17 @@ class Utils {
     static let shared = Utils()
     
     enum GroupStatus : String {
-        case isActive = "active"
-        case isClosed = "closed"
+        case isActive    = "active"
+        case isClosed    = "closed"
+        case isScheduled = "scheduled"
+        case isCompleted = "completed"
+        case isRemoved   = "removed"
+        case isPending   = "pending"
+        case isApproved  = "approved"
+        case isExited    = "exited"
     }
     
+    // Server error handling and displaying of error message
     func handleError(error : NetworkManager.ErrorType) -> String {
         if error == NetworkManager.ErrorType.Unauthorized {
             return Constants.ErrorMessage.Unauthorized
@@ -35,14 +42,75 @@ class Utils {
         return formatter.string(from: date)
     }
     
-    func createCirculatImage(imageView : UIImageView) -> UIImageView{
-        imageView.layer.borderWidth = 1.0
+    // creates a circular imageview
+    func createCirculatImage(imageView : UIImageView, borderColor : UIColor, borderWidth : CGFloat) -> UIImageView{
+        imageView.layer.borderWidth = borderWidth
         imageView.layer.masksToBounds = false
-        imageView.layer.borderColor = UIColor.clear.cgColor
+        imageView.layer.borderColor = borderColor.cgColor
         imageView.layer.cornerRadius = imageView.frame.size.width / 2
         imageView.clipsToBounds = true
         return imageView
     }
+    
+    // creates a circular view
+    func createCirculatView(view : UIView, borderColor : UIColor, borderWidth : CGFloat) -> UIView{
+        view.layer.borderWidth = borderWidth
+        view.layer.masksToBounds = false
+        view.layer.borderColor = borderColor.cgColor
+        view.layer.cornerRadius = view.frame.size.width / 2
+        view.clipsToBounds = true
+        return view
+    }
+    
+    func getUgsToken() -> String {
+        if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
+            let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
+            return loginData?.ugsToken ?? ""
+        }
+        return ""
+    }
+    
+    func getUserId() -> String {
+        
+        if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
+            let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
+            return loginData?.user?.userId ?? ""
+        }
+        return ""
+    }
+    
+    func getUgsTokenExpiryTime() -> Double {
+        if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
+            let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
+            return loginData?.ugsTokenexpiry ?? 0
+        }
+        return 0
+    }
+    
+    func getFromEpochTime() -> Int64 {
+        return self.getEpochTime(val: 5)
+    }
+    
+    func getToEpochTime() -> Int64 {
+        return self.getEpochTime(val: 10)
+    }
+    
+    func getEpochTime(val : Int) -> Int64 {
+        let newData = NSCalendar.current.date(byAdding: .minute, value: val, to: NSDate() as Date)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd yyyy HH:mm:ss.SSS zzz"
+        let dateStr = dateFormatter.string(from: newData!)
+        let myTimeStamp = Int64(floor(dateFormatter.date(from: dateStr)!.timeIntervalSince1970 * 1000))
+        return myTimeStamp
+    }
+    
+    func getCurrentDate(val : Int) -> String {
+        let newData = NSCalendar.current.date(byAdding: .minute, value: val, to: NSDate() as Date)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZ"
+        return dateFormatter.string(from: newData!)
+    }
+    
 }
 
 extension UIViewController {

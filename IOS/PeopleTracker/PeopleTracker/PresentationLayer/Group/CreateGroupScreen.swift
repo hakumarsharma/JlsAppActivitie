@@ -28,8 +28,7 @@ import UIKit
 class CreateGroupScreen: UIViewController {
     
     var navtitle : String = ""
-    var name : String = ""
-    
+    var groupData = GroupListData()
     @IBOutlet weak var createGroup: UIButton!
     
     @IBOutlet weak var groupName: UITextField!
@@ -37,8 +36,8 @@ class CreateGroupScreen: UIViewController {
     override func viewDidLoad() {
              super.viewDidLoad()
              self.title = navtitle
-        if name.count > 0 {
-            self.groupName.text = name
+        if groupData.groupId.count > 0 {
+            self.groupName.text = groupData.name
             self.createGroup.setTitle("Update Group", for: .normal)
         } else {
              self.createGroup.setTitle("Create Group", for: .normal)
@@ -47,19 +46,19 @@ class CreateGroupScreen: UIViewController {
     
     @IBAction func createGroupButtonAction(_ sender: Any) {
         if groupName.text?.count == 0 {
-            self.ShowALert(title: Constants.CreateGroupConstantts.CreateGroup)
+            self.ShowALert(title: Constants.CreateGroupConstants.CreateGroup)
             return
         }
         
-        (name.count > 0) ? self.callUpdateGroupApi() : self.callCreateGroupApi()
+        (groupData.groupId.count > 0) ? self.callUpdateGroupApi() : self.callCreateGroupApi()
      
     }
     
     // Create Group Api Call
     func callCreateGroupApi() {
         self.showActivityIndicator()
-        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UserId) ?? "") + Constants.ApiPath.CreateGroupUrl )!
-        let sessionParams : [String : Int64] = ["from" : 1587969892000, "to" : 1587969892000]
+        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl )!
+        let sessionParams : [String : Int64] = ["from" : Utils.shared.getFromEpochTime(), "to" : Utils.shared.getToEpochTime()]
         let groupParams : [String : Any] = ["name" : groupName.text!, "session" : sessionParams, "type" : "one_to_one"]
         GroupService.shared.createGroup(createGroupUrl:  groupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
             switch result {
@@ -67,6 +66,7 @@ class CreateGroupScreen: UIViewController {
                   print(groupResponse)
                    DispatchQueue.main.async {
                   self.hideActivityIndicator()
+                  NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)              
                   self.navigationController?.popViewController(animated: true)
                   }
             case .failure(let error):
@@ -89,7 +89,7 @@ class CreateGroupScreen: UIViewController {
     func callUpdateGroupApi() {
         self.showActivityIndicator()
     
-        let updateGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + (UserDefaults.standard.string(forKey: Constants.UserDefaultConstants.UserId) ?? "") + Constants.ApiPath.CreateGroupUrl + "/"  +  UserDefaults.standard.string(forKey: name)! )!
+        let updateGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/"  +  groupData.groupId )!
         let groupParams : [String : Any] = ["name" : groupName.text!]
         GroupService.shared.updateGroup(updateGroupUrl:  updateGroupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
             switch result {
@@ -97,6 +97,7 @@ class CreateGroupScreen: UIViewController {
                   print(groupResponse)
                    DispatchQueue.main.async {
                   self.hideActivityIndicator()
+                  NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
                   self.navigationController?.popViewController(animated: true)
                   }
             case .failure(let error):

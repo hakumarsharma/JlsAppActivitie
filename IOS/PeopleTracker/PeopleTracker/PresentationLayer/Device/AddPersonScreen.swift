@@ -27,9 +27,105 @@ import UIKit
 
 class AddPersonScreen: UIViewController {
     
+    @IBOutlet weak var nameTxt: UITextField!
+    @IBOutlet weak var mobileNumberTxt: UITextField!
+    
     var navtitle : String = ""
+    var groupId : String = ""
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = navtitle
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+         NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
+    }
+    
+    @IBAction func addPersonButtonAction(_ sender: Any) {
+        
+       if nameTxt.text?.count == 0 {
+            self.ShowALert(title: Constants.AddDeviceConstants.Name)
+            return
+        }
+        if mobileNumberTxt.text?.count == 0 || !(mobileNumberTxt.text?.isValidPhone ?? true){
+            self.ShowALert(title: Constants.LoginScreenConstants.PhoneNumber)
+            return
+        }
+        if groupId.count > 0 {
+            self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetMemebersInGroup)
+        } else {
+            self.callCreateGroupApi()
+        }
+    }
+    
+    
+    // Add member to group Api Call
+    func addMemberToGroupApi(notificationName : String) {
+        self.showActivityIndicator()
+        let addMemberUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + self.groupId + Constants.ApiPath.CreateMultiple )!
+        let sessionParams : [String] = ["events"]
+        let groupParams : [String : Any] = ["name": nameTxt.text!,"phone" : self.mobileNumberTxt.text! ,"entities" : sessionParams]
+        let params : [String : Any] = ["consents" : [groupParams]]
+        GroupService.shared.addMemberToGroup(addMemberInGroupUrl:  addMemberUrl,parameters: params) { (result : Result<GroupMemberModel, Error>) in
+            switch result {
+            case .success(let groupResponse):
+                print(groupResponse)
+                DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                    NotificationCenter.default.post(name: Notification.Name(notificationName), object: nil)
+                    self.navigationController?.popViewController(animated: true)
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Create Group Api Call
+    func callCreateGroupApi() {
+        self.showActivityIndicator()
+        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl )!
+        let sessionParams : [String : Int64] = ["from" : Utils.shared.getFromEpochTime(), "to" : Utils.shared.getToEpochTime()]
+        let groupParams : [String : Any] = ["name" : Constants.AddDeviceConstants.Individual+"+"+Constants.AddDeviceConstants.PeopleTracker, "session" : sessionParams, "type" : "one_to_one"]
+        GroupService.shared.createGroup(createGroupUrl:  groupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
+            switch result {
+            case .success(let groupResponse):
+                self.groupId = groupResponse.groupData?.groupId ?? ""
+                if self.groupId.count > 0 {
+                     DispatchQueue.main.async {
+                        self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetGroupList)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Constants.ErrorMessage.Somethingwentwrong)
+                    }
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
 }

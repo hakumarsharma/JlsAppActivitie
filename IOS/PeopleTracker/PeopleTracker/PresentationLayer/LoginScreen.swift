@@ -36,7 +36,6 @@ class LoginScreen: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         self.navigationItem.setHidesBackButton(true, animated: true)
         // self.setUpMQTT()
-        
     }
     
     @IBAction func continueBtnAction(_ sender: Any) {
@@ -110,7 +109,7 @@ class LoginScreen: UIViewController {
     // Verification Api Call
     func registrationApiCall(){
         self.showActivityIndicator()
-        UserService.shared.registerUser(registerTokenUrl: URL(string: Constants.ApiPath.VerifyTokenUrl)!, parameters: ["token": "62178","phone": "9019930385","phoneCountryCode": "91","type": "registration"]) { (result : Result<UserModel, Error>) in
+        UserService.shared.registerUser(registerTokenUrl: URL(string: Constants.ApiPath.VerifyTokenUrl)!, parameters: ["token": "62178","phone": "9019930384","phoneCountryCode": "91","type": "registration"]) { (result : Result<UserModel, Error>) in
             switch result {
             case .success(let userResponse):
                 print(userResponse)
@@ -135,11 +134,9 @@ class LoginScreen: UIViewController {
     // TODO :  Change API call based on phone registration process
     func callLoginApi() {
         self.showActivityIndicator()
-        UserService.shared.loginRequest(with:  URL(string: Constants.ApiPath.LoginUrl)!, parameters: ["phone": "9019930384",
-        "phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
+        UserService.shared.loginRequest(with:URL(string: Constants.ApiPath.LoginUrl)!,userName : self.userNameTxt.text!, parameters: ["phone": "9019930384","phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
             switch result {
-            case .success(let loginResponse):
-                self.saveDataInUserDefaults(response: loginResponse)
+            case .success( _):
                 DispatchQueue.main.async {
                     self.hideActivityIndicator()
                     self.navigateToHomeScreen()
@@ -158,12 +155,6 @@ class LoginScreen: UIViewController {
                 }
             }
         }
-    }
-    
-    func saveDataInUserDefaults(response : LoginModel) {
-        UserDefaults.standard.set(response.ugsToken, forKey: Constants.UserDefaultConstants.UgsToken)
-        UserDefaults.standard.set(response.user?.userId ?? "", forKey: Constants.UserDefaultConstants.UserId)
-        UserDefaults.standard.set(response.ugsTokenexpiry, forKey: Constants.UserDefaultConstants.UgsExpiryTime)
     }
     
     // navigate to home screen upon succesful login

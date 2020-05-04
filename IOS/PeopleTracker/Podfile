@@ -9,6 +9,7 @@ target 'PeopleTracker' do
   pod 'JJFloatingActionButton'
   pod 'CocoaMQTT'
   pod 'SideMenu'
+  pod 'RealmSwift'
   # Pods for PeopleTracker
 
   target 'PeopleTrackerTests' do

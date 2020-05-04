@@ -33,14 +33,19 @@
 		1845D686242A0AE700584FB4 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D685242A0AE700584FB4 /* LoginModel.swift */; };
 		1845D688242A118500584FB4 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
 		185A044B244990540087FD9F /* GroupListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185A044A244990540087FD9F /* GroupListModel.swift */; };
+		185B2C6C245AA478005A3B61 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185B2C6B245AA478005A3B61 /* ColorExtensions.swift */; };
 		186321F024371236001E2E53 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186321EF24371236001E2E53 /* LocationModel.swift */; };
 		18708C422434A14C00940011 /* DeviceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C412434A14C00940011 /* DeviceService.swift */; };
 		18708C442434A5D200940011 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C432434A5D200940011 /* DeviceModel.swift */; };
 		188D44E5242887CE001D8CF0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188D44E4242887CE001D8CF0 /* UserCell.swift */; };
+		188ECB91244DC761007260D1 /* GroupMemberModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188ECB90244DC761007260D1 /* GroupMemberModel.swift */; };
+		188ECB93244DCB3F007260D1 /* ConsentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188ECB92244DCB3F007260D1 /* ConsentService.swift */; };
+		188ECB95244DCDC1007260D1 /* ConsentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188ECB94244DCDC1007260D1 /* ConsentModel.swift */; };
 		18A06A802431FD4E00E72E93 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
 		18A06A812431FD4E00E72E93 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
 		18A1C8552449807B00BD365A /* GroupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A1C8542449807B00BD365A /* GroupService.swift */; };
 		18A1C857244980F500BD365A /* GroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A1C856244980F500BD365A /* GroupModel.swift */; };
+		18AAAFC324504A220009DE31 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AAAFC224504A220009DE31 /* RealmManager.swift */; };
 		18B905552445D442006ECCD1 /* SideMenuScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B905542445D442006ECCD1 /* SideMenuScreen.swift */; };
 		18CC651E24472100003736BC /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC651D24472100003736BC /* ProfileCell.swift */; };
 		18CC652024472109003736BC /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC651F24472109003736BC /* MenuCell.swift */; };
@@ -106,12 +111,17 @@
 		1845D685242A0AE700584FB4 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		1845D687242A118500584FB4 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		185A044A244990540087FD9F /* GroupListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListModel.swift; sourceTree = "<group>"; };
+		185B2C6B245AA478005A3B61 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		186321EF24371236001E2E53 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		18708C412434A14C00940011 /* DeviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceService.swift; sourceTree = "<group>"; };
 		18708C432434A5D200940011 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
 		188D44E4242887CE001D8CF0 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		188ECB90244DC761007260D1 /* GroupMemberModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberModel.swift; sourceTree = "<group>"; };
+		188ECB92244DCB3F007260D1 /* ConsentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentService.swift; sourceTree = "<group>"; };
+		188ECB94244DCDC1007260D1 /* ConsentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentModel.swift; sourceTree = "<group>"; };
 		18A1C8542449807B00BD365A /* GroupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupService.swift; sourceTree = "<group>"; };
 		18A1C856244980F500BD365A /* GroupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupModel.swift; sourceTree = "<group>"; };
+		18AAAFC224504A220009DE31 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
 		18B905542445D442006ECCD1 /* SideMenuScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuScreen.swift; sourceTree = "<group>"; };
 		18CC651D24472100003736BC /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		18CC651F24472109003736BC /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
@@ -242,6 +252,10 @@
 				18CC652D24484121003736BC /* UserModel.swift */,
 				18A1C856244980F500BD365A /* GroupModel.swift */,
 				185A044A244990540087FD9F /* GroupListModel.swift */,
+				188ECB90244DC761007260D1 /* GroupMemberModel.swift */,
+				188ECB94244DCDC1007260D1 /* ConsentModel.swift */,
+				18AAAFC224504A220009DE31 /* RealmManager.swift */,
+				186321EF24371236001E2E53 /* LocationModel.swift */,
 			);
 			path = DatabaseLayer;
 			sourceTree = "<group>";
@@ -253,6 +267,7 @@
 				1836E51A2433092B0078E572 /* NetowrkManager.swift */,
 				18708C412434A14C00940011 /* DeviceService.swift */,
 				18A1C8542449807B00BD365A /* GroupService.swift */,
+				188ECB92244DCB3F007260D1 /* ConsentService.swift */,
 			);
 			path = NetworkLayer;
 			sourceTree = "<group>";
@@ -300,6 +315,7 @@
 			children = (
 				1836E51D24346D400078E572 /* StringExtensions.swift */,
 				181ACFE42444337000EACCC5 /* LoginExtension.swift */,
+				185B2C6B245AA478005A3B61 /* ColorExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -311,7 +327,6 @@
 				18CC652124472EC9003736BC /* ActiveSessionsScreen.swift */,
 				18CC652324472F17003736BC /* ProfileScreen.swift */,
 				18CC652524472F42003736BC /* SettingsScreen.swift */,
-				186321EF24371236001E2E53 /* LocationModel.swift */,
 				18CC652724472F5B003736BC /* HelpPrivacyScreen.swift */,
 				18CC652924473184003736BC /* AboutScreen.swift */,
 			);
@@ -620,23 +635,28 @@
 				18A1C857244980F500BD365A /* GroupModel.swift in Sources */,
 				1816ACB12421EB2600589CD9 /* AddPersonScreen.swift in Sources */,
 				18CC652024472109003736BC /* MenuCell.swift in Sources */,
+				188ECB93244DCB3F007260D1 /* ConsentService.swift in Sources */,
 				1845D688242A118500584FB4 /* UserService.swift in Sources */,
 				18CC652224472EC9003736BC /* ActiveSessionsScreen.swift in Sources */,
 				186321F024371236001E2E53 /* LocationModel.swift in Sources */,
 				1816AC692421E34E00589CD9 /* AppDelegate.swift in Sources */,
 				18CC652A24473184003736BC /* AboutScreen.swift in Sources */,
 				1816ACB32421EB3200589CD9 /* CreateGroupScreen.swift in Sources */,
+				188ECB95244DCDC1007260D1 /* ConsentModel.swift in Sources */,
 				18CC652824472F5B003736BC /* HelpPrivacyScreen.swift in Sources */,
 				18CC652E24484121003736BC /* UserModel.swift in Sources */,
 				18708C422434A14C00940011 /* DeviceService.swift in Sources */,
 				1816ACA72421E98700589CD9 /* HomeScreen.swift in Sources */,
 				1845D686242A0AE700584FB4 /* LoginModel.swift in Sources */,
+				18AAAFC324504A220009DE31 /* RealmManager.swift in Sources */,
 				1845D6842428FAFC00584FB4 /* Utils.swift in Sources */,
 				1816ACBB2421EC8F00589CD9 /* HelpScreen.swift in Sources */,
+				188ECB91244DC761007260D1 /* GroupMemberModel.swift in Sources */,
 				183F9674242CCFD900235065 /* GroupCell.swift in Sources */,
 				18B905552445D442006ECCD1 /* SideMenuScreen.swift in Sources */,
 				18CC651E24472100003736BC /* ProfileCell.swift in Sources */,
 				188D44E5242887CE001D8CF0 /* UserCell.swift in Sources */,
+				185B2C6C245AA478005A3B61 /* ColorExtensions.swift in Sources */,
 				1816ACAF2421EB1A00589CD9 /* AddDeviceScreen.swift in Sources */,
 				1836E51E24346D400078E572 /* StringExtensions.swift in Sources */,
 				1816ACB52421EB3D00589CD9 /* GroupListScreen.swift in Sources */,

@@ -35,7 +35,7 @@ class SideMenuScreen: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.tintColor = UIColor.init(red: 56.0/255.0, green: 86.0/255.0, blue: 133.0/255.0, alpha: 1.0)
+        self.navigationController?.navigationBar.tintColor = UIColor.AppTheme.PrimaryColor
         self.sideMenuTable.separatorColor = .clear
     }
     
@@ -79,6 +79,7 @@ class SideMenuScreen: UITableViewController {
             switch indexPath.row {
                 case 0:
                     if isFromHomevc {
+                        NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
                         dismiss(animated: true, completion: nil)
                     }else {
                         self.navigateToHomeScreen()
