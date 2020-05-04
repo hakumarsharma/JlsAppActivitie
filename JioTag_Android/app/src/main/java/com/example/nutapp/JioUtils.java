@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.util.regex.Pattern;
 
+@SuppressWarnings("PMD")
 public class JioUtils {
     public static final String MYPREFERENCES = "SETTINGS_JIOTAGS";
     public static final String MYPREFERENCES_PHOTO_CPATURE = "SETTINGS_JIOTAGS_PHOTO_CPATURE";
