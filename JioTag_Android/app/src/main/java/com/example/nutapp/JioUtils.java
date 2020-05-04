@@ -29,6 +29,11 @@ public class JioUtils {
 
     static SharedPreferences preferences;
 
+    private JioUtils()
+    {
+
+    }
+
     public static int getAlertDuration(Context ctx,String deviceAddress,boolean isPhone) {
         Log.d("DEVADD", deviceAddress);
         String phonealertDurationSwitch;

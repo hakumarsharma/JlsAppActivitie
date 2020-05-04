@@ -108,6 +108,8 @@ import static android.app.Activity.RESULT_OK;
 
 //Nut related Imports
 
+@SuppressWarnings("PMD")
+
 public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanResultCallback, ConnectStateChangedCallback, EventCallback {
 
     View root;

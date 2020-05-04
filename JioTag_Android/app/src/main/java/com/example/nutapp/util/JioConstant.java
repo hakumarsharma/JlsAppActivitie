@@ -1,5 +1,7 @@
 package com.example.nutapp.util;
 
+
+@SuppressWarnings("PMD")
 public class JioConstant {
 
     public static final String AUTH_LOGIN_TITLE = "User Details";

@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+@SuppressWarnings("PMD")
 public class OtpRequest extends AppCompatActivity {
 
     static boolean m_login_check = false;
