@@ -33,6 +33,7 @@
 		1845D686242A0AE700584FB4 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D685242A0AE700584FB4 /* LoginModel.swift */; };
 		1845D688242A118500584FB4 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
 		185A044B244990540087FD9F /* GroupListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185A044A244990540087FD9F /* GroupListModel.swift */; };
+		185B2C6C245AA478005A3B61 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185B2C6B245AA478005A3B61 /* ColorExtensions.swift */; };
 		186321F024371236001E2E53 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186321EF24371236001E2E53 /* LocationModel.swift */; };
 		18708C422434A14C00940011 /* DeviceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C412434A14C00940011 /* DeviceService.swift */; };
 		18708C442434A5D200940011 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C432434A5D200940011 /* DeviceModel.swift */; };
@@ -110,6 +111,7 @@
 		1845D685242A0AE700584FB4 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		1845D687242A118500584FB4 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		185A044A244990540087FD9F /* GroupListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListModel.swift; sourceTree = "<group>"; };
+		185B2C6B245AA478005A3B61 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		186321EF24371236001E2E53 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		18708C412434A14C00940011 /* DeviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceService.swift; sourceTree = "<group>"; };
 		18708C432434A5D200940011 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 				188ECB90244DC761007260D1 /* GroupMemberModel.swift */,
 				188ECB94244DCDC1007260D1 /* ConsentModel.swift */,
 				18AAAFC224504A220009DE31 /* RealmManager.swift */,
+				186321EF24371236001E2E53 /* LocationModel.swift */,
 			);
 			path = DatabaseLayer;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 			children = (
 				1836E51D24346D400078E572 /* StringExtensions.swift */,
 				181ACFE42444337000EACCC5 /* LoginExtension.swift */,
+				185B2C6B245AA478005A3B61 /* ColorExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -323,7 +327,6 @@
 				18CC652124472EC9003736BC /* ActiveSessionsScreen.swift */,
 				18CC652324472F17003736BC /* ProfileScreen.swift */,
 				18CC652524472F42003736BC /* SettingsScreen.swift */,
-				186321EF24371236001E2E53 /* LocationModel.swift */,
 				18CC652724472F5B003736BC /* HelpPrivacyScreen.swift */,
 				18CC652924473184003736BC /* AboutScreen.swift */,
 			);
@@ -653,6 +656,7 @@
 				18B905552445D442006ECCD1 /* SideMenuScreen.swift in Sources */,
 				18CC651E24472100003736BC /* ProfileCell.swift in Sources */,
 				188D44E5242887CE001D8CF0 /* UserCell.swift in Sources */,
+				185B2C6C245AA478005A3B61 /* ColorExtensions.swift in Sources */,
 				1816ACAF2421EB1A00589CD9 /* AddDeviceScreen.swift in Sources */,
 				1836E51E24346D400078E572 /* StringExtensions.swift in Sources */,
 				1816ACB52421EB3D00589CD9 /* GroupListScreen.swift in Sources */,

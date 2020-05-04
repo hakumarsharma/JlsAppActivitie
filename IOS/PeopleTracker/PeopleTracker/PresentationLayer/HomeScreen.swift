@@ -26,63 +26,43 @@
 import UIKit
 import JJFloatingActionButton
 import SideMenu
-import RealmSwift
 
-class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
+class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, UserCellDelegate {
+    
     
     @IBOutlet weak var usersTableView: UITableView!
     
     @IBOutlet weak var instructionsLabel: UILabel!
-    let actionButton = JJFloatingActionButton()
-    var selectedCell : [String] = []
-    let names: [String] = ["Office Group","Sree", "Maruti", "Harish", "Ashish", "Satish"] // TODO: remove after api call is integrated
-    //    var listOfDevices : [DeviceData]    = []
+    let actionButton  = JJFloatingActionButton()
+    var selectedCell  : [String] = []
     var deviceDetails : [GroupListData] = []
     var groupList     : [GroupListData] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initialiseData()
-        floatingActionButton()
-        self.getGroupListApi()
+        self.getAllGroupsApi()
     }
     
     func initialiseData() {
         self.title = "Home"
         self.navigationItem.setHidesBackButton(true, animated: true)
+        usersTableView.delegate = self
+        usersTableView.dataSource = self
+        usersTableView.tableFooterView = UIView()
+        self.createNavBarItems()
+        self.createNotification()
+        self.floatingActionButton()
+    }
+    
+    // creating navigation bar left and right items for menu and track
+    func createNavBarItems(){
         let menuBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "Menu"), style: .plain, target: self, action: #selector(menuButton(sender:)))
         menuBtn.tintColor = .white
         self.navigationItem.setLeftBarButton(menuBtn, animated: true)
         let trackBtn : UIBarButtonItem = UIBarButtonItem.init(title: "Track", style: .plain, target: self, action: #selector(trackButton(sender:)))
         trackBtn.setTitleTextAttributes( [NSAttributedString.Key.foregroundColor : UIColor.white], for: .normal)
         self.navigationItem.setRightBarButton(trackBtn, animated: true)
-        usersTableView.delegate = self
-        usersTableView.dataSource = self
-        usersTableView.tableFooterView = UIView()
-        self.createNotification()
-    }
-    
-    func createNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(callgroupListApi(notification:)), name: NSNotification.Name(rawValue: Constants.NotificationName.GetGroupList), object: nil)
-    }
-    
-    @objc func callgroupListApi(notification: NSNotification) {
-        self.getGroupListApi()
-    }
-    
-    func showHideTableView() {
-        
-        if self.groupList.count > 0 {
-            DispatchQueue.main.async {
-                          self.instructionsLabel.isHidden = true
-                          self.usersTableView.isHidden = false
-            }
-                      } else {
-            DispatchQueue.main.async {
-                          self.instructionsLabel.isHidden = false
-                          self.usersTableView.isHidden = true
-            }
-                      }
     }
     
     // MARK: UITableView Delegate and DataSource methods
@@ -101,51 +81,47 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         let groupListDetails = self.groupList[indexPath.row]
         cell.setGroupData(groupData: groupListDetails)
-        cell.optionsButton.addTarget(self, action: #selector(showActionSheet(sender:)), for: .touchUpInside)
-        cell.checkBoxButton.addTarget(self, action: #selector(checkmarkSelection(sender:)), for: .touchUpInside)
-        cell.checkBoxButton.tag = indexPath.row
-        cell.checkBoxButton.isHidden = true
-        // TODO: Remove after grouping and consent mechanisam is integrated
-//        if indexPath.row == 0{
-//            cell.checkBoxButton.isHidden = true
-//            cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
-//            cell.requestConsentButton.setTitle(Constants.HomScreenConstants.RequestConsent, for: .normal)
-//        } else
-//            if indexPath.row % 2 == 0{
-//                cell.consentstatusColor.backgroundColor = UIColor(red: 132/255.0, green: 222/255.0, blue: 2/255.0, alpha: 1.0)
-//                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentApproved, for: .normal)
-//            } else {
-//                cell.consentstatusColor.backgroundColor = .orange
-//                cell.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentPending, for: .normal)
-//        }
-        
+        cell.usercelldelegate = self
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let groupListDetails = self.groupList[indexPath.row]
-//        if groupListDetails.groupMember.count > 1 {
+        let groupName = groupListDetails.name.components(separatedBy: "+")
+        if groupName[0] == Constants.AddDeviceConstants.Individual  {
+            // do nothing
+        }else {
             navigateToGroupListScreen(title: groupListDetails.name,groupId: groupListDetails.groupId)
-//        }
+        }
     }
     
-    // MARK: Bar button action items
-    @objc func checkmarkSelection(sender:UIButton) {
-        let tempBtn : UIButton = sender
-        if tempBtn.isSelected {
+    // MARK: Customcell delegate methods
+    func checkMarkClicked(cell: UserCell) {
+        let indexpath = self.usersTableView.indexPath(for: cell)
+        let groupData = self.groupList[indexpath!.row]
+        if cell.checkBoxButton.isSelected {
             selectedCell = selectedCell.filter({ (item) -> Bool in
-                return item != self.groupList[tempBtn.tag].groupId
+                return item != groupData.groupId
             })
             deviceDetails = deviceDetails.filter({ (item) -> Bool in
-                return item.groupId != self.groupList[tempBtn.tag].groupId
+                return item.groupId != groupData.groupId
             })
         } else {
-            selectedCell.append(self.groupList[tempBtn.tag].groupId)
+            selectedCell.append(groupData.groupId)
             
         }
-        tempBtn.isSelected = !tempBtn.isSelected
+        cell.checkBoxButton.isSelected = !cell.checkBoxButton.isSelected
     }
     
+    func editOptionsClicked(cell: UserCell) {
+        let indexpath = self.usersTableView.indexPath(for: cell)
+        let groupData = self.groupList[indexpath!.row]
+        self.showActionSheet(groupData: groupData)
+    }
+    
+    // MARK: NavigationBar button item action methods
+    
+    // To display side menu
     @objc func menuButton(sender: UIBarButtonItem) {
         
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
@@ -164,17 +140,17 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
     @objc func trackButton(sender: UIBarButtonItem) {
         if selectedCell.count > 0 {
-        self.callgetDeviceLocationDetails { (success) in
-            if success && self.deviceDetails.count > 0  {
-                DispatchQueue.main.async {
-                    self.navigateToMapsScreen()
-                }
-            }else {
-                DispatchQueue.main.async {
-                    self.ShowALert(title: Constants.LocationConstants.LocationDetailsNotFound)
+            self.callgetDeviceLocationDetails { (success) in
+                if success && self.deviceDetails.count > 0  {
+                    DispatchQueue.main.async {
+                        self.navigateToMapsScreen()
+                    }
+                }else {
+                    DispatchQueue.main.async {
+                        self.ShowALert(title: Constants.LocationConstants.LocationDetailsNotFound)
+                    }
                 }
             }
-        }
         } else {
             self.ShowALert(title: Constants.HomScreenConstants.SelectDevice)
         }
@@ -189,28 +165,28 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         self.navigationController?.pushViewController(mapsViewController, animated: true)
     }
     
-    func navigateToAddDeviceScreen(title : String) {
+    func navigateToAddDeviceScreen(title : String, groupData : GroupListData?) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let addDeviceViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.AddDeviceScreen) as! AddDeviceScreen
         addDeviceViewController.navtitle = title
-        addDeviceViewController.userid = Utils.shared.getUserId()
-        addDeviceViewController.ugsToken = Utils.shared.getUgsToken()
+        addDeviceViewController.groupId = groupData?.groupId ?? ""
         self.navigationController?.pushViewController(addDeviceViewController, animated: true)
     }
     
-    func navigateToAddPersonScreen(title : String) {
+    func navigateToAddPersonScreen(title : String, groupData : GroupListData?) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let addPersonViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.AddPersonScreen) as! AddPersonScreen
         addPersonViewController.navtitle = title
+        addPersonViewController.groupId = groupData?.groupId ?? ""
         self.navigationController?.pushViewController(addPersonViewController, animated: true)
     }
     
-    func navigateToCreateGroupScreen(title : String, isEdit : Bool) {
+    func navigateToCreateGroupScreen(title : String, groupData : GroupListData?) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let createGroupViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.CreateGroupScreen) as! CreateGroupScreen
         createGroupViewController.navtitle = title
-        if isEdit {
-            createGroupViewController.name = self.groupList[0].name
+        if let groupdata = groupData {
+            createGroupViewController.groupData = groupdata
         }
         self.navigationController?.pushViewController(createGroupViewController, animated: true)
     }
@@ -227,25 +203,66 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     // MARK: Show floating button
     func floatingActionButton () {
         actionButton.addItem(title: Constants.HomScreenConstants.AddDevice, image: UIImage(named: "device")?.withRenderingMode(.alwaysTemplate)) { item in
-            // do something
-            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.AddDevice)
+            self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.AddDevice, groupData: nil)
         }
         
-        actionButton.addItem(title: Constants.HomScreenConstants.AddPerson, image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
-            // do something
-            self.navigateToAddPersonScreen(title: Constants.HomScreenConstants.AddPerson)
+        actionButton.addItem(title: Constants.HomScreenConstants.AddPerson, image: UIImage(named: "ic_user")?.withRenderingMode(.alwaysTemplate)) { item in
+            self.navigateToAddPersonScreen(title: Constants.HomScreenConstants.AddPerson, groupData: nil)
         }
         
-        actionButton.addItem(title: Constants.HomScreenConstants.CreateGroup, image: UIImage(named: "group")?.withRenderingMode(.alwaysTemplate)) { item in
-            // do something
-            self.navigateToCreateGroupScreen(title: Constants.HomScreenConstants.CreateGroup, isEdit: false)
+        actionButton.addItem(title: Constants.HomScreenConstants.CreateGroup, image: UIImage(named: "ic_group")?.withRenderingMode(.alwaysTemplate)) { item in
+            self.navigateToCreateGroupScreen(title: Constants.HomScreenConstants.CreateGroup, groupData: nil)
         }
-        
+        actionButton.tintColor = .black
         view.addSubview(actionButton)
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         actionButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
         actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
     }
+    
+    // MARK: Notification Methods
+    
+    func createNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(callgroupListApi(notification:)), name: NSNotification.Name(rawValue: Constants.NotificationName.GetGroupList), object: nil)
+    }
+    
+    @objc func callgroupListApi(notification: NSNotification) {
+        self.getAllGroupsApi()
+    }
+    
+    // MARK: Display ActionSheet
+    
+    @objc func showActionSheet(groupData : GroupListData){
+        let groupName = groupData.name.components(separatedBy: "+")
+        
+        let isGroup = (groupName[0] == Constants.AddDeviceConstants.Individual) ? false : true
+        let alert = UIAlertController(title: Constants.HomScreenConstants.Select, message: "", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.Edit, style: .default , handler:{ (UIAlertAction)in
+            if isGroup {
+                self.navigateToCreateGroupScreen(title: Constants.HomScreenConstants.EditGroup, groupData: groupData)
+            } else {
+                self.navigateToAddPersonScreen(title: Constants.HomScreenConstants.EditPerson, groupData: groupData)
+            }
+        }))
+        
+        alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Delete, style: .default , handler:{ (UIAlertAction)in
+            if isGroup {
+                self.ShowDeleteAlertWithButtonAction(title: Constants.HomScreenConstants.DeleteGroup,groupData : groupData)
+            } else {
+                self.ShowDeleteAlertWithButtonAction(title: Constants.HomScreenConstants.DeleteContact,groupData : groupData)
+            }
+        }))
+        alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.Dismiss, style: .cancel, handler:{ (UIAlertAction)in
+            
+        }))
+        
+        self.present(alert, animated: true, completion: {
+            print("completion block")
+        })
+    }
+    
+    // MARK: Common Methods
     
     // Alert with button action
     func ShowALertWithButtonAction(title: String){
@@ -259,11 +276,11 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     }
     
     // Alert with button action
-    func ShowDeleteAlertWithButtonAction(title: String){
+    func ShowDeleteAlertWithButtonAction(title: String,groupData : GroupListData){
         let alert = UIAlertController(title: Constants.AlertConstants.Alert, message: title, preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: Constants.AlertConstants.Delete, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
             DispatchQueue.main.async {
-                self.callDeleteGroupApi()
+                self.callDeleteGroupApi(groupData : groupData)
             }
         }))
         alert.addAction(UIAlertAction(title: Constants.AlertConstants.CancelButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
@@ -274,33 +291,23 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         self.present(alert, animated: true, completion: nil)
     }
     
-    // MARK: Display ActionSheet
-    
-    @objc func showActionSheet(sender : UIButton){
-        
-//        let buttonPosition = sender.convert(CGPoint.zero, to: self.usersTableView)
-//        let indexPath = self.usersTableView.indexPathForRow(at:buttonPosition)
-//        let cell = self.usersTableView.cellForRow(at: indexPath!) as! UserCell
-
-        let alert = UIAlertController(title: Constants.HomScreenConstants.Select, message: "", preferredStyle: .actionSheet)
-        
-        alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.Edit, style: .default , handler:{ (UIAlertAction)in
-            self.navigateToCreateGroupScreen(title: Constants.HomScreenConstants.EditGroup, isEdit: true)
-        }))
-        
-        alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Delete, style: .default , handler:{ (UIAlertAction)in
-            self.ShowDeleteAlertWithButtonAction(title: Constants.HomScreenConstants.DeleteDevice)
-        }))
-        alert.addAction(UIAlertAction(title: Constants.HomScreenConstants.Dismiss, style: .cancel, handler:{ (UIAlertAction)in
-            
-        }))
-        
-        self.present(alert, animated: true, completion: {
-            print("completion block")
-        })
+    // show or hide tablew view to display instructiona whene there is no data
+    func showHideTableView() {
+        if self.groupList.count > 0 {
+            DispatchQueue.main.async {
+                self.instructionsLabel.isHidden = true
+                self.usersTableView.isHidden = false
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.instructionsLabel.isHidden = false
+                self.usersTableView.isHidden = true
+            }
+        }
     }
     
     // MARK: Service Calls
+    
     // API to add device details
     func callgetDeviceApi() {
         self.showActivityIndicator()
@@ -309,9 +316,9 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
         DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
             switch result {
             case .success(let deviceResponse):
-//                guard let deviceData = deviceResponse.devicedata else {
-//                    return
-//                }
+                //                guard let deviceData = deviceResponse.devicedata else {
+                //                    return
+                //                }
                 print(deviceResponse)
                 //                for device in deviceData {
                 //                    self.listOfDevices.append(device)
@@ -377,21 +384,24 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
     
     // Create GroupList Api Call
-    func getGroupListApi() {
-       self.showActivityIndicator()
+    func getAllGroupsApi() {
+        self.showActivityIndicator()
         let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.GroupListUrl )!
         GroupService.shared.getGroupListData(groupListUrl:  groupUrl) { (result : Result<GroupListModel, Error>) in
             switch result {
             case .success(let groupResponse):
                 self.groupList.removeAll()
+                let groupMembers : [GroupMemberModel]  = Array(RealmManager.sharedInstance.getGroupMemeberDataFromDB())
                 for groupdata in groupResponse.groupListData {
-                    if groupdata.status == Utils.GroupStatus.isScheduled.rawValue {
-                        UserDefaults.standard.set(groupdata.groupId, forKey: groupdata.name)
+                    if (groupdata.status == Utils.GroupStatus.isActive.rawValue || groupdata.status == Utils.GroupStatus.isCompleted.rawValue || groupdata.status == Utils.GroupStatus.isScheduled.rawValue) {
+                        for member in groupdata.groupMember {
+                            let memberArr = groupMembers.filter { $0.groupMemberData.first?.groupMemberId == member.memberId }
+                            member.deviceType = memberArr.first?.groupMemberData.first?.deviceType
+                        }
                         self.groupList.append(groupdata)
                     }
-                   
                 }
-               DispatchQueue.main.async {
+                DispatchQueue.main.async {
                     self.hideActivityIndicator()
                     self.showHideTableView()
                     self.usersTableView.reloadData()
@@ -408,24 +418,24 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource {
                         self.ShowALert(title: error.localizedDescription)
                     }
                 }
-                 self.showHideTableView()
+                self.showHideTableView()
             }
         }
     }
     
     // Delete Group Api Call
-    func callDeleteGroupApi() {
+    func callDeleteGroupApi(groupData : GroupListData) {
         self.showActivityIndicator()
-    
-        let deleteGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/"  +  UserDefaults.standard.string(forKey: self.groupList[0].name)! )!
+        
+        let deleteGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/"  +  groupData.groupId )!
         GroupService.shared.deleteGroup(deleteGroupUrl:  deleteGroupUrl) { (result : Result<GroupModel, Error>) in
             switch result {
             case .success(let groupResponse):
-                  print(groupResponse)
-                   DispatchQueue.main.async {
+                print(groupResponse)
+                DispatchQueue.main.async {
                     self.hideActivityIndicator()
-                    self.getGroupListApi()
-                  }
+                    self.getAllGroupsApi()
+                }
             case .failure(let error):
                 if type(of: error) == NetworkManager.ErrorType.self {
                     DispatchQueue.main.async {

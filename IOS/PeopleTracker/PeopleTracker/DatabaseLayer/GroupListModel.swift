@@ -59,10 +59,11 @@ import RealmSwift
     dynamic var  groupId         : String = ""
     dynamic var  name            : String = ""
     dynamic var  groupSession    : GroupSession? = nil
+    dynamic var  groupupdatedBy  : String = ""
     let groupMember = RealmSwift.List<GroupMember>()
     
     enum CodingKeys : String, CodingKey {
-        case status,groupId = "_id",name,groupSession = "session",groupMember = "consents"
+        case status,groupId = "_id",name,groupSession = "session",groupMember = "consents",groupupdatedBy="updatedBy"
     }
     
     required init(from decoder: Decoder) throws
@@ -73,6 +74,7 @@ import RealmSwift
         groupId = try container.decode(String.self, forKey: .groupId)
         name = try container.decode(String.self, forKey: .name)
         groupSession = try container.decode(GroupSession.self, forKey: .groupSession)
+        groupupdatedBy = try container.decode(String.self, forKey: .groupupdatedBy)
         let groupMembersList = try container.decode([GroupMember].self, forKey: .groupMember)
         groupMember.append(objectsIn: groupMembersList)
         
@@ -115,22 +117,27 @@ import RealmSwift
 
 @objcMembers class GroupMember : Object, Decodable{
     
-    dynamic var  memberStatus       : String = ""
-    dynamic var  memberPhone        : String = ""
+    dynamic var  memberStatus       : String? = nil
+    dynamic var  memberPhone        : String? = nil
+    dynamic var  memberName         : String? = nil
     dynamic var  isGroupAdmin       : Bool? = nil
+    dynamic var  memberId           : String? = nil
+    dynamic var  deviceType          : String? = nil
     
     enum CodingKeys : String, CodingKey {
-        case memberStatus="status",memberPhone="phone",isGroupAdmin
+        case memberStatus="status",memberPhone="phone",isGroupAdmin,memberId="_id",memberName = "name",deviceType
     }
     
     required init(from decoder: Decoder) throws
     {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        memberStatus = try container.decode(String.self, forKey: .memberStatus)
-        memberPhone = try container.decode(String.self, forKey: .memberPhone)
-        isGroupAdmin = try container.decode(Bool.self, forKey: .isGroupAdmin)
-        
+        memberStatus = try? container.decode(String.self, forKey: .memberStatus)
+        memberPhone = try? container.decode(String.self, forKey: .memberPhone)
+        isGroupAdmin = try? container.decode(Bool.self, forKey: .isGroupAdmin)
+        memberName = try? container.decode(String.self, forKey: .memberName)
+        memberId = try? container.decode(String.self, forKey: .memberId)
+        deviceType = try? container.decode(String.self, forKey: .deviceType)
         super.init()
     }
     

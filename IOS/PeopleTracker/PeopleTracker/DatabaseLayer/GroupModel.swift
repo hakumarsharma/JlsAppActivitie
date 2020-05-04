@@ -30,7 +30,7 @@ import RealmSwift
     dynamic var code      : Int = 0
     dynamic var message   : String = ""
     dynamic var tempId    : String? = nil
-    var groupData: GroupData? = GroupData()
+    dynamic var groupData         : GroupData? = nil
     
     enum CodingKeys : String, CodingKey {
         case code,message,groupData = "data"

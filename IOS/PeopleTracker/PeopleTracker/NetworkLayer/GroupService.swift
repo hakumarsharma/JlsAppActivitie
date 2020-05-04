@@ -168,7 +168,7 @@ class GroupService {
     }
     
     // Api to add member in group
-    func addMemberToGroup(addMemberInGroupUrl: URL,memebrName : String, parameters: [String : Any], completion: @escaping (Result<GroupMemberModel, Error>) -> Void) -> Void  {
+    func addMemberToGroup(addMemberInGroupUrl: URL, parameters: [String : Any], completion: @escaping (Result<GroupMemberModel, Error>) -> Void) -> Void  {
         
         let networkManager = NetworkManager.init(url: addMemberInGroupUrl)
         let request = networkManager.buildRequest(method: NetworkManager.Method.post, accessKey: accessKey,parameters: parameters)
@@ -182,7 +182,6 @@ class GroupService {
                             if let string = String(data: data, encoding: String.Encoding.utf8) {
                                 let jsonData = string.data(using: .utf8)!
                                 let memberData = try! JSONDecoder().decode(GroupMemberModel.self, from: jsonData)
-                                memberData.groupMemberData.first?.name = memebrName
                                 RealmManager.sharedInstance.addGroupMemeberData(object: memberData)
                                 completion(.success(memberData))
                             }

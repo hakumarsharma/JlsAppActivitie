@@ -132,7 +132,7 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
             self.navigateToAddDeviceScreen(title: Constants.HomScreenConstants.AddDevice)
            }
            
-        actionButton.addItem(title: Constants.HomScreenConstants.AddPerson, image: UIImage(named: "user4")?.withRenderingMode(.alwaysTemplate)) { item in
+        actionButton.addItem(title: Constants.HomScreenConstants.AddPerson, image: UIImage(named: "ic_user")?.withRenderingMode(.alwaysTemplate)) { item in
                // do something
             self.navigateToAddPersonScreen(title: Constants.HomScreenConstants.AddPerson)
            }
@@ -154,7 +154,7 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
                self.groupMemberData.removeAll()
 //               let memberData = RealmManager.sharedInstance.getGroupMemeberDataFromDB()
                for response in groupResponse.groupMemberData {
-                if response.status != "removed" {
+                if (response.status != Utils.GroupStatus.isRemoved.rawValue && response.status != Utils.GroupStatus.isExited.rawValue) {
 //                    for member in memberData {
 //                        let memberArr = member.groupMemberData.filter { $0.groupMemberId == response.groupMemberId }
 //                        response.name = memberArr.first?.name

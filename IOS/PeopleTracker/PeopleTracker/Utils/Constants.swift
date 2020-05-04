@@ -38,7 +38,7 @@ class Constants {
        static let VerifyTokenUrl = UserApisUrl + "tokens/verify"
        static let RegisterationUrl = UserApisUrl + "register"
        static let CreateGroupUrl = "/sessiongroups"
-       static let GroupListUrl = "/sessiongroups?isPopulateConsents=true&status=scheduled"
+       static let GroupListUrl = "/sessiongroups?isPopulateConsents=true"
        static let CreateMultiple = "/sessiongroupconsents"
        static let GenerateConsent = "/tokens"
        static let ApproveConsent = "/status"
@@ -103,14 +103,19 @@ class Constants {
         static let Delete = "Delete"
         static let Dismiss = "Dismiss"
         static let AddDevice = "Add Device"
-        static let AddPerson = "Add Person"
+        static let EditDevice = "Edit Device"
+        static let AddPerson = "Add Contact"
+        static let EditPerson = "Edit Contact"
         static let CreateGroup = "Create Group"
         static let EditGroup = "Edit Group"
-        static let DeleteDevice = "Are you sure do you want to delete ?"
+        static let DeleteGroup = "Are you sure do you want to delete complete group ?"
+        static let DeleteContact = "Are you sure do you want to delete ?"
         static let RequestConsent = "Request Consent"
         static let ConsentApproved = "Consent Approved"
         static let ConsentPending = "Consent Pending"
+        static let ConsentSent = "Consent Sent"
         static let SelectDevice = "Select any added device to track"
+       
     }
     
     struct AddDeviceConstants {
@@ -122,10 +127,13 @@ class Constants {
           static let KidTracker = "Kid Tracker"
           static let PetTracker = "Pet Tracker"
           static let VehicleTracker = "Vehicle Tracker"
+          static let PeopleTracker = "People Tracker"
           static let OwnerNumber = "Please enter valid owner number"
+          static let Individual = "Individual"
+          static let ChooseDeviceType = "Please choose type of device"
       }
     
-    struct CreateGroupConstantts {
+    struct CreateGroupConstants {
         static let CreateGroup = "Please enter group name"
     }
     
