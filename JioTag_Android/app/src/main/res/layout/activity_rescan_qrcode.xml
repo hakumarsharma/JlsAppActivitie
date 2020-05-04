@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardviewlayout_device_background_color"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/qrscanToolbar"
+        layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/scanFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/qrscanToolbar">
+
+        <TextView
+            android:id="@+id/rescanText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fifty_dp"
+            android:gravity="center"
+            android:text="@string/rescan_qrcode_text"
+            android:textColor="@color/white"
+            android:textSize="@dimen/twenty_dp" />
+
+        <ImageView
+            android:id="@+id/scanImage"
+            android:layout_width="270dp"
+            android:layout_height="280dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_qrcodescan" />
+
+        <Button
+            android:id="@+id/rescan_btn"
+            android:layout_width="@dimen/adddevice_button_width"
+            android:layout_height="@dimen/adddevice_button_height"
+            android:layout_above="@+id/manual_add"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_frame_blue"
+            android:text="@string/rescan_qr_code"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/adddevice_content_font_size" />
+
+        <TextView
+            android:id="@+id/manual_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/margin_24"
+            android:layout_marginRight="@dimen/margin_24"
+            android:layout_marginBottom="20dp"
+            android:text="@string/add_manual"
+            android:textColor="@color/cardviewlayout_contenttext_color"
+            android:textSize="@dimen/adddevice_content_font_size" />
+
+    </RelativeLayout>
+</RelativeLayout>

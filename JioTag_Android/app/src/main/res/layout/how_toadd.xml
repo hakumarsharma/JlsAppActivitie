@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    android:id="@+id/how_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:paddingBottom="@dimen/adddevice_heading_height"
+    app:ignore="NamespaceTypo">
+    <!-- Header aligned to top -->
+    <RelativeLayout
+        android:id="@+id/how_appheader"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_52"
+        android:layout_marginLeft="@dimen/five_dp"
+        android:layout_marginTop="@dimen/three_dp"
+        android:layout_marginRight="@dimen/five_dp"
+        android:background="#F8F8F8"
+        android:padding="5dp">
+
+        <ImageButton
+            android:id="@+id/how_card_attach_back"
+            android:layout_width="@dimen/twenty_five_dp"
+            android:layout_height="@dimen/twenty_five_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:background="#F8F8F8"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/how_card_attach_asset_texts"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/twenty_five_dp"
+
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/ten_dp"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:background="#F8F8F8"
+            android:fontFamily="Bold"
+            android:freezesText="true"
+            android:text="@string/how_header"
+            android:textColor="@color/black"
+            android:textSize="@dimen/twenty_sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/how_card_attach_tick"
+            android:layout_width="@dimen/twenty_five_dp"
+            android:layout_height="@dimen/twenty_five_dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:background="#F8F8F8"
+            android:src="@drawable/home"
+            android:textAlignment="center" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/how_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/how_appheader"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/twenty_five_dp"
+        android:layout_marginRight="@dimen/twenty_five_dp"
+        android:background="@drawable/dialog_round_background"
+        android:gravity="center"
+        android:paddingBottom="@dimen/twenty_dp">
+
+        <TextView
+            android:id="@+id/how_attach_jio_finder_Header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/twenty_five_dp"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:layout_marginRight="@dimen/header_text"
+            android:text="@string/attach_jio_finder_Header"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/seventeen_sp" />
+
+        <ImageView
+            android:id="@+id/how_img_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/how_attach_jio_finder_Header"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:src="@drawable/attachfinder_how" />
+
+        <TextView
+            android:id="@+id/how_details2_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/how_img_location"
+            android:layout_marginLeft="@dimen/twenty_five_dp"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:layout_marginRight="@dimen/header_text"
+            android:text="@string/how_details2"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/seventeen_sp" />
+        <ImageView
+            android:id="@+id/how_img_location_second"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/how_details2_header"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:src="@drawable/howtoadd_2" />
+        <TextView
+            android:id="@+id/how_details3_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/how_img_location_second"
+            android:layout_marginLeft="@dimen/twenty_five_dp"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:layout_marginRight="@dimen/header_text"
+            android:text="@string/how_details3"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/seventeen_sp" />
+    </RelativeLayout>
+</RelativeLayout>
