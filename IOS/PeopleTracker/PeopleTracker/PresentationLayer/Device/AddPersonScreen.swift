@@ -24,27 +24,65 @@
 
 
 import UIKit
+import ContactsUI
 
-class AddPersonScreen: UIViewController {
+class AddPersonScreen: UIViewController,CNContactPickerDelegate {
     
     @IBOutlet weak var nameTxt: UITextField!
     @IBOutlet weak var mobileNumberTxt: UITextField!
     
     var navtitle : String = ""
     var groupId : String = ""
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = navtitle
+        self.createNavBarItems()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-         NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
+        NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
+    }
+    
+    // creating navigation bar right item for adding contact
+    func createNavBarItems(){
+        let contactsBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "contact"), style: .plain, target: self, action: #selector(contactsButtonAction(sender:)))
+        contactsBtn.setTitleTextAttributes( [NSAttributedString.Key.foregroundColor : UIColor.white], for: .normal)
+        self.navigationItem.setRightBarButton(contactsBtn, animated: true)
+    }
+    
+    @objc func contactsButtonAction(sender: UIBarButtonItem) {
+        let store = CNContactStore()
+        store.requestAccess(for: .contacts) { granted, error in
+            guard granted else {
+                DispatchQueue.main.async {
+                    self.ShowALert(title: "")
+                }
+                return
+            }
+            DispatchQueue.main.async {
+                let contacVC = CNContactPickerViewController()
+                contacVC.delegate = self
+                self.present(contacVC, animated: true, completion: nil)
+            }
+        }
+        
+    }
+    
+    // MARK: Delegate method CNContectPickerDelegate
+    func contactPicker(_ picker: CNContactPickerViewController, didSelect contact: CNContact) {
+        let numbers = ((contact.phoneNumbers.first)?.value)?.stringValue ?? ""
+        let phoneNumber = numbers.replacingOccurrences(of: "[() -]", with: "", options: .regularExpression, range: nil)
+        self.nameTxt.text = contact.givenName + contact.familyName
+        self.mobileNumberTxt.text = phoneNumber
+    }
+    
+    func contactPickerDidCancel(_ picker: CNContactPickerViewController) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func addPersonButtonAction(_ sender: Any) {
-        
-       if nameTxt.text?.count == 0 {
+        if nameTxt.text?.count == 0 {
             self.ShowALert(title: Constants.AddDeviceConstants.Name)
             return
         }
@@ -103,7 +141,7 @@ class AddPersonScreen: UIViewController {
             case .success(let groupResponse):
                 self.groupId = groupResponse.groupData?.groupId ?? ""
                 if self.groupId.count > 0 {
-                     DispatchQueue.main.async {
+                    DispatchQueue.main.async {
                         self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetGroupList)
                     }
                 } else {

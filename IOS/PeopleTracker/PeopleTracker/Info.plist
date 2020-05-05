@@ -2,11 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>googlechromes</string>
-		<string>comgooglemaps</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -23,8 +18,23 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>GoggleApiKey</key>
+	<string>AIzaSyCL18AjsFlIRWkG5_BcHEZsOnFDE0aok2w</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>googlechromes</string>
+		<string>comgooglemaps</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSContactsUsageDescription</key>
+	<string>People Tracker wants to access your contacts. Please accept to add contacts directly from contact list</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>People Tracker  wants to access your location details. Please accept to track or to be tracked</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>People Tracker  wants to access your location details. Please accept to track or to be tracked</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>People Tracker  wants to access your location details. Please accept to track or to be tracked</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -65,13 +75,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>GoggleApiKey</key>
-	<string>AIzaSyCL18AjsFlIRWkG5_BcHEZsOnFDE0aok2w</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>PeopleTracks wants to access your location details. Please accept to track or to be tracked</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>PeopleTracks wants to access your location details. Please accept to track or to be tracked</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>PeopleTracks wants to access your location details. Please accept to track or to be tracked</string>
 </dict>
 </plist>
