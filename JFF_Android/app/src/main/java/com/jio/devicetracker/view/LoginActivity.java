@@ -51,23 +51,18 @@ import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddDeviceData;
-import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GenerateTokenData;
-import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.Userdata;
 import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
-import com.jio.devicetracker.database.pojo.request.GetDeviceLocationRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.AddDeviceResponse;
 import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
-import com.jio.devicetracker.database.pojo.response.GetDeviceLocationResponse;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
-import com.jio.devicetracker.database.pojo.response.SearchDeviceResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
@@ -89,10 +84,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText jioMobileNumberEditText = null;
     private EditText jioUserNameEditText = null;
     private static EditText loginOtpEditText = null;
-    private AdminLoginData adminData;
     public static String phoneNumber = null;
     public static LogindetailResponse logindetailResponse = null;
-    public static SearchDeviceResponse searchdeviceResponse = null;
     private static final int PERMIT_ALL = 1;
     private String mbNumber;
     private String number;
@@ -103,7 +96,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static boolean isAccessCoarsePermissionGranted = false;
     private Button loginButton;
     private Locale locale = Locale.ENGLISH;
-    public static GetDeviceLocationResponse getDeviceLocationResponse = null;
     private String userId;
     public static String ugsToken;
 
@@ -128,7 +120,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         jioMobileNumberEditText = findViewById(R.id.jioNumber);
         jioMobileNumberEditText.setEnabled(false);
         jioMobileNumberEditText.setOnClickListener(this);
-        adminData = new AdminLoginData();
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
         loginOtpEditText = findViewById(R.id.loginOtp);
@@ -169,11 +160,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    /**
+   /* *//**
      * Sends OTP to the user mobile number
      *
      * @param randomNumberForOTP
-     */
+     *//*
     protected void sendSMSMessage(int randomNumberForOTP) {
         String phoneNo = number;
         String message = Constant.OTP_MESSAGE + randomNumberForOTP;
@@ -190,10 +181,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
     }
-
+*/
     /**
      * Gets called when you click on login button
-     *
      * @param v
      */
     @Override
@@ -363,7 +353,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void onLoginButtonClick() {
         Util.getInstance().showProgressBarDialog(this);
-        makeMQTTConnection();
         userName = jioUserNameEditText.getText().toString().trim();
         Userdata data = new Userdata();
 //        data.setToken(loginOtpEditText.getText().toString());
@@ -387,6 +376,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 new DBManager(LoginActivity.this).insertLoginData(logindetailResponse);
             }
             // Verify and assign API Call
+            makeMQTTConnection();
             makeVerifyAndAssignAPICall();
             // Get All Group info per user API Call
             GroupRequestHandler.getInstance(LoginActivity.this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
@@ -534,80 +524,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mqttManager.getMQTTClient(this);
         mqttManager.connetMQTT();
     }
-
-    /*
-     * Search device Success Listener(Gets all the device available under that particular user)
-     */
-    private class SuccessListenerSearchDevice implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            List<HomeActivityListData> mlist = new ArrayList<>();
-            searchdeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchDeviceResponse.class);
-            List<SearchDeviceResponse.SearchDeviceData> deviceData = searchdeviceResponse.getmData();
-            for (SearchDeviceResponse.SearchDeviceData devData : deviceData) {
-                HomeActivityListData data = new HomeActivityListData();
-                data.setPhoneNumber(devData.getPhoneNumber());
-                data.setName(devData.getName());
-                String consentStatus = mDbManager.getConsentStatusBorqs(devData.getPhoneNumber());
-                data.setConsentStaus(consentStatus);
-                data.setImeiNumber(devData.getImeiNumber());
-                data.setDeviceId(devData.getDeviceId());
-                mlist.add(data);
-            }
-            Util.setAutologinStatus(LoginActivity.this, true);
-            adminData = mDbManager.getAdminLoginDetail();
-            mDbManager.insertInBorqsDB(mlist, adminData.getEmail());
-            List<HomeActivityListData> getallDeviceData = mDbManager.getAllBorqsData(adminData.getEmail());
-            for (HomeActivityListData getDeviceId : getallDeviceData) {
-                RequestHandler.getInstance(getApplicationContext()).handleRequest(new GetDeviceLocationRequest(new SuccessListenerDeviceLocation(), new ErrorListenerDeviceLocation(), logindetailResponse.getUgsToken(), getDeviceId.getDeviceId()));
-            }
-            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-            startActivity(intent);
-            Util.getInstance().dismissProgressBarDialog();
-        }
-    }
-
-    /**
-     * this class is handling the getDevice location api's success response
-     */
-    private class SuccessListenerDeviceLocation implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            getDeviceLocationResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetDeviceLocationResponse.class);
-            if (getDeviceLocationResponse != null && getDeviceLocationResponse.getData().getDeviceStatus().getLocation() != null) {
-                GetDeviceLocationData latlangdata = new GetDeviceLocationData();
-                latlangdata.setDeviceId(getDeviceLocationResponse.getData().getPhoneNumber());
-                latlangdata.setLat(getDeviceLocationResponse.getData().getDeviceStatus().getLocation().getLat());
-                latlangdata.setLang(getDeviceLocationResponse.getData().getDeviceStatus().getLocation().getLng());
-                mDbManager.updateLatLangInBorqsDB(getDeviceLocationResponse.getData().getPhoneNumber(), latlangdata);
-            }
-        }
-    }
-
-    /**
-     * this class is handling the getDevice location api's error response
-     */
-    private class ErrorListenerDeviceLocation implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.getInstance().dismissProgressBarDialog();
-        }
-    }
-
-    /**
-     * this class is handling the search device api's error response
-     */
-    private class ErrorListenerSearchDevice implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.getInstance().dismissProgressBarDialog();
-        }
-    }
-
-    /*private void gotoRegisterScreen() {
-        Intent intent = new Intent(this, RegistrationDetailActivity.class);
-        startActivity(intent);
-    }*/
 
     @Override
     public void onBackPressed() {

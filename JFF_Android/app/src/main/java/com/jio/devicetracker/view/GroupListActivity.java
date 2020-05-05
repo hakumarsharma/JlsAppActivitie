@@ -166,6 +166,7 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         Intent intent = new Intent(this, ContactDetailsActivity.class);
         intent.putExtra(Constant.GROUP_ID, groupId);
         intent.putExtra(Constant.USER_ID, userId);
+        intent.putExtra(Constant.IS_COMING_FROM_GROUP_LIST, true);
         startActivity(intent);
     }
 

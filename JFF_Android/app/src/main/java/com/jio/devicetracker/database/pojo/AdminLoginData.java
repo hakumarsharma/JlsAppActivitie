@@ -33,6 +33,15 @@ public class AdminLoginData {
     private String userId;
     private String name;
     private String phoneCountryCode;
+    private String phoneNumber;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getPhoneCountryCode() {
         return phoneCountryCode;

@@ -134,12 +134,27 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                     groupCount ++;
                 }
             });
-            holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentClick(data.getGroupId(), data.getPhoneNumber()));
+            holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentClick(data.getGroupId(), data.getPhoneNumber(), null)); // consentId is null for Group
         } else if (mData.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
             GroupMemberDataList data = (GroupMemberDataList) mData.get(position);
             holder.mIconImage.setImageResource(R.drawable.ic_user);
             holder.name.setText(data.getName());
             holder.phone.setText(data.getNumber());
+            /**
+             * Disable the Consent status button and change the icon of button if consent is sent for group Member
+             * Disable the Consent status button and change the icon of button if consent is approved for group Member
+             */
+            if(data.getConsentStatus().equalsIgnoreCase(Constant.PENDING)) {
+                holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
+                holder.mConsentStatusButton.setText(Constant.CONSENT_PENDING);
+                holder.mConsentStatusButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending, 0, 0, 0);
+                holder.mConsentStatusButton.setEnabled(false);
+            } else if(data.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
+                holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
+                holder.mConsentStatusButton.setText(Constant.APPROVED);
+                holder.mConsentStatusButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved, 0, 0, 0);
+                holder.mConsentStatusButton.setEnabled(false);
+            }
             holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, data.getName(), data.getNumber(), data.getGroupId(), Constant.INDIVIDUAL_MEMBER));
 
             holder.mListlayout.setOnLongClickListener(v -> true);
@@ -180,7 +195,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                     count ++;
                 }
             });
-            holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentClick(data.getGroupId(), data.getNumber()));
+            holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentClick(data.getGroupId(), data.getNumber(), data.getConsentId()));
         }
 
         /*holder.phone.setText(mData.get(position).getPhoneNumber());
@@ -302,7 +317,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         // void recyclerviewDeleteList(String phoneNuber,int position);
         void clickonListLayout(String selectedGroupName, String groupId, int profileImage);
 
-        void consentClick(String groupId, String phoneNumber);
+        void consentClick(String groupId, String phoneNumber, String consentId);
 
         void checkBoxClickedForGroupMember(GroupMemberDataList groupMemberDataList);
         void checkBoxClickedForGroup(HomeActivityListData homeActivityListData);

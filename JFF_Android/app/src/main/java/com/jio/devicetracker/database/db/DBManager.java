@@ -50,7 +50,6 @@ public class DBManager {
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDatabase;
 
-
     public DBManager(Context context) {
         mDBHelper = new DatabaseHelper(context);
     }
@@ -126,6 +125,7 @@ public class DBManager {
         contentValue.put(DatabaseHelper.EMAIL, data.getUser().getEmail());
         contentValue.put(DatabaseHelper.USER_NAME, LoginActivity.userName);
         contentValue.put(DatabaseHelper.PHONE_COUNTRY_CODE, data.getUser().getPhoneCountryCode());
+        contentValue.put(DatabaseHelper.DEVICE_NUM, data.getUser().getPhoneNumber());
         return mDatabase.replace(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
     }
 
@@ -221,7 +221,6 @@ public class DBManager {
 
     /**
      * Update consent in TABLE_NAME_BORQS table
-     *
      * @param phoneNumber
      * @param message
      */
@@ -334,7 +333,7 @@ public class DBManager {
     public AdminLoginData getAdminLoginDetail() {
         mDatabase = mDBHelper.getWritableDatabase();
         AdminLoginData adminData = null;
-        String[] column = {DatabaseHelper.EMAIL, DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME, DatabaseHelper.PHONE_COUNTRY_CODE};
+        String[] column = {DatabaseHelper.EMAIL, DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME, DatabaseHelper.PHONE_COUNTRY_CODE, DatabaseHelper.DEVICE_NUM};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_USER_LOGIN, column, null, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -345,6 +344,7 @@ public class DBManager {
                 adminData.setTokenExpirytime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TOKEN_EXPIRY_TIME)));
                 adminData.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_NAME)));
                 adminData.setPhoneCountryCode(cursor.getString(cursor.getColumnIndex(DatabaseHelper.PHONE_COUNTRY_CODE)));
+                adminData.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
             }
             cursor.close();
         }
@@ -739,4 +739,15 @@ public class DBManager {
         mDatabase.delete(DatabaseHelper.TABLE_GROUP_MEMBER, DatabaseHelper.GROUPID + "= '" + groupId + "';", null);
     }
 
+    /**
+     * Update consent in TABLE_NAME_BORQS table
+     * @param consentId
+     * @param message
+     */
+    public void updateConsentInGroupMemberTable(String consentId, String message) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.STATUS, message);
+        mDatabase.update(DatabaseHelper.TABLE_GROUP_MEMBER, values, DatabaseHelper.CONSENT_ID + "= '" + consentId + "';", null);
+    }
 }

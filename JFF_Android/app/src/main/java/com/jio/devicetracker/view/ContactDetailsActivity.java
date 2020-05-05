@@ -48,7 +48,6 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
 import com.jio.devicetracker.database.pojo.CreateGroupData;
-import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
 import com.jio.devicetracker.database.pojo.request.CreateGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupMemberRequest;
@@ -76,10 +75,12 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private static String nameComingFromContactList = null;
     private Button addContactInGroupButon = null;
     private Toolbar toolbar = null;
-    private String groupId;
-    private String userId;
+    private static String groupId;
+    private static String userId;
     private boolean isComingFromAddContact;
     private boolean isComingFromAddDevice;
+    private boolean isComingFromGroupList;
+    private boolean isComingFromContactList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +98,10 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         mDbManager = new DBManager(this);
         Intent intent = getIntent();
         String qrValue = intent.getStringExtra(Constant.QR_CODE_VALUE);
+        isComingFromContactList = intent.getBooleanExtra(Constant.IS_COMING_FROM_CONTACT_LIST, false);
         isComingFromAddDevice = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_DEVICE, false);
         isComingFromAddContact = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_CONTACT, false);
+        isComingFromGroupList = intent.getBooleanExtra(Constant.IS_COMING_FROM_GROUP_LIST, false);
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         userId = intent.getStringExtra(Constant.USER_ID);
         setNameNumberImei(qrValue);
@@ -107,11 +110,36 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     }
 
     /**
+     * To save data before going into the other activity
+     *
+     * @param savedInstanceState
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString(Constant.GROUP_ID, groupId);
+        savedInstanceState.putString(Constant.USER_ID, userId);
+        savedInstanceState.putBoolean(Constant.IS_COMING_FROM_ADD_CONTACT, isComingFromAddContact);
+        savedInstanceState.putBoolean(Constant.IS_COMING_FROM_ADD_DEVICE, isComingFromAddDevice);
+        savedInstanceState.putBoolean(Constant.IS_COMING_FROM_GROUP_LIST, isComingFromGroupList);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        groupId = savedInstanceState.getString(Constant.GROUP_ID);
+        userId = savedInstanceState.getString(Constant.USER_ID);
+        isComingFromAddDevice = savedInstanceState.getBoolean(Constant.IS_COMING_FROM_ADD_DEVICE, false);
+        isComingFromAddContact = savedInstanceState.getBoolean(Constant.IS_COMING_FROM_ADD_CONTACT, false);
+        isComingFromGroupList = savedInstanceState.getBoolean(Constant.IS_COMING_FROM_GROUP_LIST, false);
+    }
+
+    /**
      * If coming to this activity after clicking on Add Contact or Create group from floating button, then display the contact icon on toolbar
      * or else display the QR code on toolbar when Add device is clicked
      */
     private void checkValidationOfFieldEntry() {
-        if (isComingFromAddContact == true) {
+        if (isComingFromAddContact == true || isComingFromGroupList || isComingFromContactList) {
             ImageView contactBtn = toolbar.findViewById(R.id.contactAdd);
             contactBtn.setVisibility(View.VISIBLE);
             contactBtn.setOnClickListener(this);
@@ -121,10 +149,16 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             scanner.setOnClickListener(this);
         }
 
-        if ("".equals(numberComingFromContactList) && "".equals(nameComingFromContactList)) {
+        if (numberComingFromContactList != null && nameComingFromContactList != null) {
             mName.setText(nameComingFromContactList);
             mNumber.setText(numberComingFromContactList);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, DashboardActivity.class));
     }
 
     /**
@@ -182,7 +216,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
             }
             name = mName.getText().toString().trim();
             number = mNumber.getText().toString().trim();
-            /*if (deviceType.equalsIgnoreCase(Constant.PEOPLE_TRACKER_DEVICE_TYPE)) {
+            if (deviceType.equalsIgnoreCase(Constant.PEOPLE_TRACKER_DEVICE_TYPE)) {
                 if (Util.isValidMobileNumberForPet(number)) {
                     mNumber.setError(Constant.PEOPLE_NUMBER_VALIDATION_PET_NUMBER_ENTERED);
                     return;
@@ -198,7 +232,9 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     mNumber.setError(Constant.PET_NUMBER_VALIDATION);
                     return;
                 }
-            }*/
+            }
+
+            // If user is coming from Add device/Add Contact then create group called individual_user and add member in the group else directly add member in the group.
             if (isComingFromAddDevice || isComingFromAddContact) {
                 createGroupAndAddContactAPICall();
             } else {
@@ -208,6 +244,9 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
 
         if (v.getId() == R.id.qrScanner) {
             gotoQRScannerScreen();
+            nameComingFromContactList = null;
+            numberComingFromContactList = null;
+            isComingFromAddDevice = true;
         }
     }
 
@@ -317,6 +356,9 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                 // Make Verify and Assign call
                 Util.progressDialog.dismiss();
                 Util.alertDilogBox(Constant.DEVICE_NOT_FOUND, Constant.ALERT_TITLE, ContactDetailsActivity.this);
+            } else {
+                Util.progressDialog.dismiss();
+                Util.alertDilogBox(Constant.GROUP_MEMBER_ADDITION_FAILURE, Constant.ALERT_TITLE, ContactDetailsActivity.this);
             }
         }
     }
@@ -367,7 +409,6 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 Uri contactData = data.getData();
@@ -385,7 +426,14 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
                     numberComingFromContactList = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                     nameComingFromContactList = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 }
-                startActivity(new Intent(this, ContactDetailsActivity.class));
+                Intent intent = new Intent(this, ContactDetailsActivity.class);
+                intent.putExtra(Constant.IS_COMING_FROM_CONTACT_LIST, true);
+                intent.putExtra(Constant.IS_COMING_FROM_ADD_CONTACT, isComingFromAddContact);
+                intent.putExtra(Constant.IS_COMING_FROM_ADD_DEVICE, isComingFromAddDevice);
+                intent.putExtra(Constant.IS_COMING_FROM_GROUP_LIST, isComingFromGroupList);
+                intent.putExtra(Constant.GROUP_ID, groupId);
+                intent.putExtra(Constant.USER_ID, userId);
+                startActivity(intent);
             }
         }
     }
@@ -402,7 +450,14 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     }
 
     private void gotoQRScannerScreen() {
-        startActivity(new Intent(this, QRCodeReaderActivity.class));
+        Intent intent = new Intent(this, QRCodeReaderActivity.class);
+        intent.putExtra(Constant.IS_COMING_FROM_CONTACT_LIST, true);
+        intent.putExtra(Constant.IS_COMING_FROM_ADD_CONTACT, isComingFromAddContact);
+        intent.putExtra(Constant.IS_COMING_FROM_ADD_DEVICE, isComingFromAddDevice);
+        intent.putExtra(Constant.IS_COMING_FROM_GROUP_LIST, isComingFromGroupList);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.USER_ID, userId);
+        startActivity(intent);
     }
 
     @Override
@@ -414,4 +469,5 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     public void onNothingSelected(AdapterView<?> parent) {
         //To-Do
     }
+
 }

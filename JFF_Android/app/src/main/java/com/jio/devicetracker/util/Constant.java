@@ -105,6 +105,7 @@ public class Constant {
     public static final String IS_GROUP_MEMBER = "isGroupMember";
     public static final String LOCATION = "location";
     public static final String SOS = "sos";
+    public static final String CONSENT_ID = "consentId";
     public static final String SELECTION_ERROR = "You cannot track more than one group/user at a time, Please uncheck one to select others";
 
     // Login Activity constants
@@ -208,6 +209,8 @@ public class Constant {
     public static final String CONSENT_PENDING = "Consent Pending";
     public static final String REQUEST_CONSENT = "Request Consent";
     public static final String NUMBER_CARRIER = "number";
+    public static final String CONSENT_APPROVED_MESSAGE = "Thanks! you have approved the the group invitation request";
+    public static final String CONSENT_NOT_APPROVED_MESSAGE = "Consent is not approved please try gain!";
     public static final String CONSENT_STATUS_MSG = "Yes JioTracker";
     public static final String CONSENT_MSG_SENT = "Consent sent";
     public static final String CONSENT_MSG_TO_TRACKEE = " wants to track your location. Click below link to reply. https://peopletracker/home?data=";
@@ -267,6 +270,8 @@ public class Constant {
     public static final String INDIVIDUAL_USER_GROUP_NAME = "Individual_User";
     public static final String IS_COMING_FROM_ADD_DEVICE = "isComingFromAddDevice";
     public static final String IS_COMING_FROM_ADD_CONTACT = "isComingFromAddContact";
+    public static final String IS_COMING_FROM_GROUP_LIST = "isComingFromGroupList";
+    public static final String IS_COMING_FROM_CONTACT_LIST = "isComingFromContactList";
     public static final String CLOSED = "closed";
 
 

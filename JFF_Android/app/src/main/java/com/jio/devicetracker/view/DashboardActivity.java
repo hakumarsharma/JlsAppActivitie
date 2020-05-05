@@ -37,6 +37,7 @@ import androidx.work.WorkManager;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.jio.devicetracker.R;
 
@@ -49,6 +50,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -75,6 +77,7 @@ import com.android.volley.VolleyError;
 
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.ApproveRejectConsentData;
 import com.jio.devicetracker.database.pojo.GenerateConsentTokenData;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
@@ -82,16 +85,20 @@ import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
 import com.jio.devicetracker.database.pojo.SearchEventData;
+import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateConsentTokenRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
+import com.jio.devicetracker.database.pojo.response.ApproveRejectAPIResponse;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.SearchDeviceStatusResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
+import com.jio.devicetracker.network.MessageListener;
+import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.ConsentTimeUpdate;
@@ -116,7 +123,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Implementation of Dashboard Screen to show the trackee list and hamburger menu.
  */
-public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
+public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
 
     private RecyclerView listView;
     public static List<MultipleselectData> selectedData;
@@ -144,6 +151,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public static String groupName = "";
     private String userId;
     private String grpId;
+    private String userPhoneNumber;
+    private String consentId;
     private int listPosition;
     private List listOnDashBoard;
     public static List<GroupMemberDataList> grpMemberDataList;
@@ -164,12 +173,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         deepLinkingURICheck();
         makeGroupInfoPerUserRequestAPICall();
     }
-
-   /* private void isPermissionGranted() {
-        if (LoginActivity.isAccessCoarsePermissionGranted == false) {
-            Util.alertDilogBox(Constant.ACCESS_COARSE_PERMISSION_ALERT, Constant.ALERT_TITLE, this);
-        }
-    }*/
 
     /**
      * Adapter Listener
@@ -205,8 +208,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 @Override
-                public void consentClick(String groupId, String phoneNumber) {
-                    generateConsentToken(groupId, phoneNumber);
+                public void consentClick(String groupId, String phoneNumber, String consentId) {
+                    generateConsentToken(groupId, phoneNumber, consentId);
                 }
 
                 @Override
@@ -249,7 +252,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     /**
      * Generate Consent token request API Call
      */
-    private void generateConsentToken(String groupId, String phoneNumber) {
+    private void generateConsentToken(String groupId, String phoneNumber, String consentId) {
+        this.consentId = consentId;
         GenerateConsentTokenData generateConsentTokenData = new GenerateConsentTokenData();
         GenerateConsentTokenData.Consent consent = new GenerateConsentTokenData().new Consent();
         consent.setPhone(phoneNumber);
@@ -263,7 +267,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private class GenerateConsentTokenRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            // To do
+            mDbManager.updateConsentInGroupMemberTable(consentId, Constant.PENDING);
+            addDataInHomeScreen();
         }
     }
 
@@ -307,9 +312,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         client = LocationServices.getFusedLocationProviderClient(this);
         userId = mDbManager.getAdminLoginDetail().getUserId();
+        userPhoneNumber = mDbManager.getAdminLoginDetail().getPhoneNumber();
         new Thread(new SendLocation()).start();
         grpMemberDataList = new CopyOnWriteArrayList<>();
         grpDataList = new CopyOnWriteArrayList<>();
+        MessageListener messageListener = new DashboardActivity();
+        MessageReceiver.bindListener(messageListener);
         if (specificGroupMemberData == null) {
             specificGroupMemberData = new ArrayList<>();
         }
@@ -361,6 +369,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private void gotoActiveSessionActivity() {
         Intent intent = new Intent(this, ActiveSessionActivity.class);
         startActivity(intent);
+    }
+
+    // Gets called when app receives message
+    @Override
+    public void messageReceived(String message, String phoneNum) {
+        if (message != null || message != "") {
+            makeGroupInfoPerUserRequestAPICall();
+        }
     }
 
     /**
@@ -518,10 +534,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      */
     private void getLocation() {
         if (client != null) {
-            client.getLastLocation().addOnSuccessListener(this, location -> {
-                if (location != null) {
-                    latitude = location.getLatitude();
-                    longitude = location.getLongitude();
+            client.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                    }
                 }
             });
         }
@@ -576,9 +595,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      */
     public void publishMessage() {
         getLocation();
-        String message = "{\"imi\":\"" + Util.imeiNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
+        String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + 12.935562 + "\",\"lon\":\"" + 77.680888 + "\",\"ltd\":\"0\",\n" +
                 "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
-        String topic = "jioiot/svcd/jiophone/" + Util.imeiNumber + "/uc/fwd/locinfo";
+        String topic = "jioiot/svcd/jiophone/" + userPhoneNumber + "/uc/fwd/locinfo";
+        System.out.println("Message --> " + message);
+        System.out.println("Topic -->" + topic);
         new MQTTManager().publishMessage(topic, message);
     }
 
@@ -924,7 +945,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             while (true) {
                 try {
                     makeMQTTConnection();
-                    Thread.sleep(15000);
+                    Thread.sleep(60000);
                     publishMessage();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -988,16 +1009,54 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private void deepLinkingURICheck() {
         Intent intent = getIntent();
         Uri data = intent.getData();
-        if (data != null && data.toString().contains(getString(R.string.yesjff))) {
-            String number = data.toString().substring(data.toString().length() - 10);
-            mDbManager.updateConsentInDeviceBors(number, Constant.CONSENT_APPROVED_STATUS);
-            addDataInHomeScreen();
-        } else if (data != null && data.toString().contains(getString(R.string.nojff))) {
-            String number = data.toString().substring(data.toString().length() - 10);
-            mDbManager.updateConsentInDeviceBors(number, Constant.REQUEST_CONSENT);
-            addDataInHomeScreen();
+        if (data != null && data.toString().contains(getString(R.string.approveURI))) {
+            approveConsentRequestAPICall(data.toString().substring(data.toString().length() - 5, data.toString().length()), data.toString().substring(data.toString().indexOf(Constant.CONSENT_ID) + 10, data.toString().indexOf("&")));
         }
     }
+
+    /**
+     * Approve Consent Request API Call
+     *
+     * @param consentId
+     * @param token
+     */
+    private void approveConsentRequestAPICall(String token, String consentId) {
+        this.consentId = consentId;
+        ApproveRejectConsentData approveRejectConsentData = new ApproveRejectConsentData();
+        ApproveRejectConsentData.Consent consent = new ApproveRejectConsentData().new Consent();
+        ApproveRejectConsentData.Token tokenData = new ApproveRejectConsentData().new Token();
+        tokenData.setValue(token);
+        consent.setStatus(Constant.APPROVED);
+        consent.setToken(tokenData);
+        approveRejectConsentData.setConsent(consent);
+        GroupRequestHandler.getInstance(this).handleRequest(new ApproveConsentRequest(new ApproveConsentRequestSuccessListener(), new ApproveConsentRequestErrorListener(), approveRejectConsentData, consentId));
+    }
+
+    /**
+     * Approve Consent Request Success Listener
+     */
+    private class ApproveConsentRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            ApproveRejectAPIResponse approveRejectAPIResponse = Util.getInstance().getPojoObject(String.valueOf(response), ApproveRejectAPIResponse.class);
+            if (approveRejectAPIResponse.getCode() == 200) {
+                mDbManager.updateConsentInGroupMemberTable(consentId, Constant.APPROVED);
+                Toast.makeText(DashboardActivity.this, Constant.CONSENT_APPROVED_MESSAGE, Toast.LENGTH_SHORT).show();
+                addDataInHomeScreen();
+            }
+        }
+    }
+
+    /**
+     * Approve Consent Request error Listener
+     */
+    private class ApproveConsentRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Toast.makeText(DashboardActivity.this, Constant.CONSENT_NOT_APPROVED_MESSAGE, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     /**
      * Displays Consent time for URI check
