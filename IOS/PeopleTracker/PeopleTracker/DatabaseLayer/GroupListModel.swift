@@ -59,7 +59,7 @@ import RealmSwift
     dynamic var  groupId         : String = ""
     dynamic var  name            : String = ""
     dynamic var  groupSession    : GroupSession? = nil
-    dynamic var  groupupdatedBy  : String = ""
+    dynamic var  groupupdatedBy  : String? = nil
     let groupMember = RealmSwift.List<GroupMember>()
     
     enum CodingKeys : String, CodingKey {
@@ -74,7 +74,7 @@ import RealmSwift
         groupId = try container.decode(String.self, forKey: .groupId)
         name = try container.decode(String.self, forKey: .name)
         groupSession = try container.decode(GroupSession.self, forKey: .groupSession)
-        groupupdatedBy = try container.decode(String.self, forKey: .groupupdatedBy)
+        groupupdatedBy = try? container.decode(String.self, forKey: .groupupdatedBy)
         let groupMembersList = try container.decode([GroupMember].self, forKey: .groupMember)
         groupMember.append(objectsIn: groupMembersList)
         

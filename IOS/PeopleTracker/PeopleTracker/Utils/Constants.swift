@@ -131,6 +131,7 @@ class Constants {
           static let OwnerNumber = "Please enter valid owner number"
           static let Individual = "Individual"
           static let ChooseDeviceType = "Please choose type of device"
+          static let ContactsPermission = "Please accept access to contacts permission to choose a contact from contact list."
       }
     
     struct CreateGroupConstants {
