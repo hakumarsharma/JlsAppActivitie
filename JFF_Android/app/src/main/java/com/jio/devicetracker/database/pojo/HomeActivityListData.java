@@ -41,8 +41,26 @@ public class HomeActivityListData {
     private String groupId;
     private String status;
     private int profileImage;
-    public String createdBy;
-    public String updatedBy;
+    private String createdBy;
+    private String updatedBy;
+    private Long from;
+    private Long to;
+
+    public Long getFrom() {
+        return from;
+    }
+
+    public void setFrom(Long from) {
+        this.from = from;
+    }
+
+    public Long getTo() {
+        return to;
+    }
+
+    public void setTo(Long to) {
+        this.to = to;
+    }
 
     public String getUpdatedBy() {
         return updatedBy;

@@ -74,14 +74,14 @@ public class Constant {
     public static final String DEVICE_JIONUMBER = "Please use Jio number in SIM slot 1 to operate this application";
     public static final String REGISTRAION_ALERT_409 = "User is already registered";
     public static final String REGISTRAION_FAILED = "Register failed ,Please contact your admin";
-    public static final String LOCATION_NOT_FOUND = "Location not found";
+    public static final String LOCATION_NOT_FOUND = "Location not found for the selected device.";
     public static final String TOKEN_SMS = "Hi, please use the token : ";
 
     // Dashboard Activity constants
     public static final String DASHBOARD_TITLE = "Home               ";
     public static final String DELETC_DEVICE = "Do you want to delete ?";
     public static final String CHOOSE_DEVICE = "Please select the number for tracking";
-    public static final String CONSENT_NOTAPPROVED = "Consent is not apporoved for phone number ";
+    public static final String CONSENT_NOT_APPROVED = "Consent is not apporoved for the selected phone number ";
     public static final String CONSENT_APPROVED = "Consent status is already approved for this number";
     public static final String FMS_SERVERISSUE = "FMS server is down please call back after some time";
     public static final String TOKEN_NULL = "Token is null";
@@ -107,6 +107,8 @@ public class Constant {
     public static final String SOS = "sos";
     public static final String CONSENT_ID = "consentId";
     public static final String SELECTION_ERROR = "You cannot track more than one group/user at a time, Please uncheck one to select others";
+    public static final String NO_EVENTS_FOUND_RESPONSE = "No events found matching the search keys.";
+    public static final String FETCH_LOCATION_ERROR = "Unable to get location, Please try again!";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
@@ -184,7 +186,7 @@ public class Constant {
     public static final String APPROVE_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";
     public static final String STATUS_URL = "/status";
     public static final String SESSION_GROUP_CONSENTS_URL1 = "/sessiongroupconsents/";
-    public static final String GET_LOCATION_URL = "/events/search";
+    public static final String GET_LOCATION_URL = "/events/search?limit=1";
 
     //Privacy Policy
     public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
@@ -267,7 +269,7 @@ public class Constant {
     public static final String UPDATED_BY = "updatedBy";
     public static final String EVENTS = "events";
     public static final String ONE_TO_ONE = "one_to_one";
-    public static final String INDIVIDUAL_USER_GROUP_NAME = "Individual_User";
+    public static final String INDIVIDUAL_USER_GROUP_NAME = "Individual+People Tracker";
     public static final String IS_COMING_FROM_ADD_DEVICE = "isComingFromAddDevice";
     public static final String IS_COMING_FROM_ADD_CONTACT = "isComingFromAddContact";
     public static final String IS_COMING_FROM_GROUP_LIST = "isComingFromGroupList";

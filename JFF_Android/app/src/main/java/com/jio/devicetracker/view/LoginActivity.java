@@ -437,6 +437,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 homeActivityListData.setGroupId(data.getId());
                 homeActivityListData.setStatus(data.getStatus());
                 homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+                homeActivityListData.setFrom(data.getSession().getFrom());
+                homeActivityListData.setTo(data.getSession().getTo());
                 groupList.add(homeActivityListData);
         }
         for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {

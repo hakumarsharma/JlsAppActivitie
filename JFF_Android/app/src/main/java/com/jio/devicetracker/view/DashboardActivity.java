@@ -93,7 +93,7 @@ import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
 import com.jio.devicetracker.database.pojo.response.ApproveRejectAPIResponse;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
-import com.jio.devicetracker.database.pojo.response.SearchDeviceStatusResponse;
+import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
@@ -125,10 +125,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
 
-    private RecyclerView listView;
+    private static RecyclerView listView;
     public static List<MultipleselectData> selectedData;
     public static List<TrackerdeviceResponse.Data> data;
-    private TrackerDeviceListAdapter adapter;
+    private static TrackerDeviceListAdapter adapter;
     public static List<String> consentListPhoneNumber = null;
     private static DBManager mDbManager;
     public static Map<String, Map<Double, Double>> namingMap = null;
@@ -152,11 +152,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private String userId;
     private String grpId;
     private String userPhoneNumber;
+    private String deviceId;
     private String consentId;
+    private String groupMemberName;
     private int listPosition;
     private List listOnDashBoard;
     public static List<GroupMemberDataList> grpMemberDataList;
     public static List<HomeActivityListData> grpDataList;
+    private static TextView devicePresent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,12 +218,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 @Override
                 public void checkBoxClickedForGroupMember(GroupMemberDataList mDataList) {
                     grpId = mDataList.getGroupId();
+                    deviceId = mDataList.getDeviceId();
+                    groupMemberName = mDataList.getName();
                     grpMemberDataList.add(mDataList);
                 }
 
                 @Override
                 public void checkBoxClickedForGroup(HomeActivityListData homeActivityListData) {
                     grpId = homeActivityListData.getGroupId();
+                    deviceId = homeActivityListData.getDeviceId();
                     grpDataList.add(homeActivityListData);
                 }
 
@@ -316,6 +322,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         new Thread(new SendLocation()).start();
         grpMemberDataList = new CopyOnWriteArrayList<>();
         grpDataList = new CopyOnWriteArrayList<>();
+        devicePresent = findViewById(R.id.devicePresent);
         MessageListener messageListener = new DashboardActivity();
         MessageReceiver.bindListener(messageListener);
         if (specificGroupMemberData == null) {
@@ -627,7 +634,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Checks device is present or not, if not present show the help text otherwise display the added devices
      */
     private void isDevicePresent() {
-        TextView devicePresent = findViewById(R.id.devicePresent);
         if (listOnDashBoard.isEmpty()) {
             listView.setVisibility(View.INVISIBLE);
             devicePresent.setVisibility(View.VISIBLE);
@@ -688,8 +694,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Search Event API call
      */
     private void trackDevice() {
-        if (selectedData.isEmpty()) {
+        if (grpMemberDataList.isEmpty() && grpDataList.isEmpty()) {
             Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
+            return;
+        } else if(!grpMemberDataList.isEmpty() && grpMemberDataList.get(0).getConsentStatus().equalsIgnoreCase(Constant.PENDING)) {
+            Util.alertDilogBox(Constant.CONSENT_NOT_APPROVED, Constant.ALERT_TITLE, this);
+            return;
+        } else if(!grpDataList.isEmpty() && grpDataList.get(0).getStatus().equalsIgnoreCase(Constant.PENDING)) {
+            Util.alertDilogBox(Constant.CONSENT_NOT_APPROVED, Constant.ALERT_TITLE, this);
+            return;
         } else {
             Util.getInstance().showProgressBarDialog(this);
             SearchEventData searchEventData = new SearchEventData();
@@ -698,9 +711,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             List<String> mList = new ArrayList<>();
             mList.add(Constant.LOCATION);
             mList.add(Constant.SOS);
-            time.setFrom(Util.getTimeEpochFormatAfterCertainTime(1));
-            time.setTo(Util.getTimeEpochFormatAfterCertainTime(15));
-            device.setDeviceId("To do");
+            time.setFrom(mDbManager.getGroupDetail(grpId).getFrom());
+            time.setTo(mDbManager.getGroupDetail(grpId).getTo());
+            device.setDeviceId(deviceId);
             searchEventData.setDevice(device);
             searchEventData.setTime(time);
             searchEventData.setTypes(mList);
@@ -714,7 +727,21 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private class SearchEventRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-
+            Util.progressDialog.dismiss();
+            SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
+            if (searchEventResponse.getMessage().equalsIgnoreCase(Constant.NO_EVENTS_FOUND_RESPONSE)) {
+                Util.alertDilogBox(Constant.LOCATION_NOT_FOUND, Constant.ALERT_TITLE, DashboardActivity.this);
+            } else {
+                Map<Double, Double> latLngMap = new HashMap<>();
+                List<SearchEventResponse.Data> mList = searchEventResponse.getData();
+                for(SearchEventResponse.Data data : mList) {
+                    latLngMap.put(data.getLocation().getLat(), data.getLocation().getLng());
+                    namingMap.put(groupMemberName, latLngMap);
+                }
+                if (!namingMap.isEmpty()) {
+                    goToMapActivity();
+                }
+            }
         }
     }
 
@@ -724,7 +751,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private class SearchEventRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            Util.progressDialog.dismiss();
+            Util.alertDilogBox(Constant.FETCH_LOCATION_ERROR, Constant.ALERT_TITLE, DashboardActivity.this);
         }
     }
 
@@ -750,10 +778,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private class SearchDeviceStatusAfterTimeIntervalSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            SearchDeviceStatusResponse searchDeviceStatusResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchDeviceStatusResponse.class);
+            /*SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
             if (!selectedData.isEmpty()) {
                 namingMap.clear();
-                for (SearchDeviceStatusResponse.Data data : searchDeviceStatusResponse.getData()) {
+                for (SearchEventResponse.Data data : searchEventResponse.getData()) {
                     for (MultipleselectData multipleselectData : selectedData) {
                         if (data.getDevice().getImei() != null) {
                             if (multipleselectData.getImeiNumber().equalsIgnoreCase(data.getDevice().getImei())) {
@@ -767,7 +795,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
                     }
                 }
-            }
+            }*/
         }
     }
 
@@ -826,8 +854,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Navigates to the Map activity
      */
     private void goToMapActivity() {
-        Util.setLocationFlagStatus(this, true);
-        Util.clearAutologinstatus(this);
+        /*Util.setLocationFlagStatus(this, true);
+        Util.clearAutologinstatus(this);*/
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
@@ -1167,24 +1195,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     homeActivityListData.setCreatedBy(data.getCreatedBy());
                     homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                     homeActivityListData.setProfileImage(data.getProfileImage());
-                    listOnDashBoard.add(homeActivityListData);
-                }
-            } else if (data.getUpdatedBy() != null && data.getUpdatedBy().equalsIgnoreCase(userId)) {
-                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
-                    HomeActivityListData homeActivityListData = new HomeActivityListData();
-                    homeActivityListData.setGroupName(data.getGroupName());
-                    homeActivityListData.setGroupId(data.getGroupId());
-                    homeActivityListData.setStatus(data.getStatus());
-                    homeActivityListData.setCreatedBy(data.getCreatedBy());
-                    homeActivityListData.setUpdatedBy(data.getUpdatedBy());
-                    homeActivityListData.setProfileImage(data.getProfileImage());
+                    homeActivityListData.setFrom(data.getFrom());
+                    homeActivityListData.setTo(data.getTo());
                     listOnDashBoard.add(homeActivityListData);
                 }
             }
         }
         for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
             GroupMemberDataList data = new GroupMemberDataList();
-            if (mDbManager.getGroupName(groupMemberDataList.getGroupId()).equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());
                 data.setConsentStatus(groupMemberDataList.getConsentStatus());
