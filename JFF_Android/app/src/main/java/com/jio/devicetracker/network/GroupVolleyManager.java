@@ -28,6 +28,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.view.DashboardActivity;
 import com.jio.devicetracker.view.LoginActivity;
 
 import java.io.UnsupportedEncodingException;
@@ -46,10 +48,11 @@ public class GroupVolleyManager extends StringRequest {
         mStatusCodes.put(500, "");
     }
 
-    private  Response.Listener<String> mSucessListener;
-    private  Response.ErrorListener mErrorListener;
+    private Response.Listener<String> mSucessListener;
+    private Response.ErrorListener mErrorListener;
     private String mParams;
     private boolean mHandleError;
+    private Context context;
 
     @SuppressWarnings("PMD.UnusedFormalParameter")
     public GroupVolleyManager(Context context, int method, String url, IRequest req) {
@@ -58,13 +61,14 @@ public class GroupVolleyManager extends StringRequest {
         this.mSucessListener = req.getSuccessListener();
         this.mErrorListener = req.getErrorListener();
         this.mHandleError = req.isHandleError();
+        this.context = context;
     }
 
     @Override
-    public Map<String, String> getHeaders(){
+    public Map<String, String> getHeaders() {
         Map<String, String> header = new HashMap<String, String>();
         header.put("Content-Type", "application/json");
-        header.put("Authorization", "bearer " + LoginActivity.ugsToken);
+        header.put("Authorization", "bearer " + new DBManager(context).getAdminLoginDetail().getUserToken());
         return header;
 
     }

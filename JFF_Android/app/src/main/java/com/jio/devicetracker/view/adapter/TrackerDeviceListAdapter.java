@@ -52,7 +52,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
     private static RecyclerViewClickListener itemListener;
     private int count;
     private int groupCount;
-    private Context mContext;
+    private static Context mContext;
 
     /**
      * Constructor to add devices in home screen

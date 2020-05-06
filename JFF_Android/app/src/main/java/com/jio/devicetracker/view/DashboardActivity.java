@@ -149,7 +149,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public static List<GroupData> specificGroupMemberData = null;
     public static List<HomeActivityListData> listOnHomeScreens;
     public static String groupName = "";
-    private String userId;
+    private static String userId;
     private String grpId;
     private String userPhoneNumber;
     private String deviceId;
@@ -308,7 +308,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         consentListPhoneNumber = new LinkedList<>();
         namingMap = new HashMap<>();
         Util.getInstance().getIMEI(this);
-        mDbManager = new DBManager(this);
+        context = getApplicationContext();
+        mDbManager = new DBManager(context);
         thread = new Thread(new RefreshMap());
         //thread.start();
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -382,7 +383,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void messageReceived(String message, String phoneNum) {
         if (message != null || message != "") {
-            makeGroupInfoPerUserRequestAPICall();
+//            makeGroupInfoPerUserRequestAPICall();
         }
     }
 
@@ -411,7 +412,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        context = getApplicationContext();
     }
 
     /**
@@ -460,7 +460,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         @Override
         public void onResponse(Object response) {
             GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
-            new LoginActivity().parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
+            parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
             addDataInHomeScreen();
             adapterEventListener();
             isDevicePresent();
@@ -477,6 +477,41 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 Util.alertDilogBox(Constant.GROUP_LIMITATION, Constant.ALERT_TITLE, DashboardActivity.this);
             }
         }
+    }
+
+    /**
+     * Parse the response and store in DB(Group Table and Member table)
+     */
+    public void parseResponseStoreInDatabase(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
+        List<HomeActivityListData> groupList = new ArrayList<>();
+        List<GroupMemberDataList> mGroupMemberDataLists = new ArrayList<>();
+        for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
+            HomeActivityListData homeActivityListData = new HomeActivityListData();
+            homeActivityListData.setGroupName(data.getGroupName());
+            homeActivityListData.setCreatedBy(data.getCreatedBy());
+            homeActivityListData.setGroupId(data.getId());
+            homeActivityListData.setStatus(data.getStatus());
+            homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+            homeActivityListData.setFrom(data.getSession().getFrom());
+            homeActivityListData.setTo(data.getSession().getTo());
+            groupList.add(homeActivityListData);
+        }
+        for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
+            if(! data.getStatus().equalsIgnoreCase(Constant.CLOSED)) {
+                for (GetGroupInfoPerUserResponse.Consents mConsents : data.getConsents()) {
+                    GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+                    groupMemberDataList.setConsentId(mConsents.getConsentId());
+                    groupMemberDataList.setNumber(mConsents.getPhone());
+                    groupMemberDataList.setGroupAdmin(mConsents.isGroupAdmin());
+                    groupMemberDataList.setGroupId(data.getId());
+                    groupMemberDataList.setConsentStatus(mConsents.getStatus());
+                    groupMemberDataList.setName(mConsents.getName());
+                    mGroupMemberDataLists.add(groupMemberDataList);
+                }
+            }
+        }
+        mDbManager.insertAllDataIntoGroupTable(groupList);
+        mDbManager.insertGroupMemberDataInListFormat(mGroupMemberDataLists);
     }
 
     /**
@@ -1037,9 +1072,32 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private void deepLinkingURICheck() {
         Intent intent = getIntent();
         Uri data = intent.getData();
-        if (data != null && data.toString().contains(getString(R.string.approveURI))) {
-            approveConsentRequestAPICall(data.toString().substring(data.toString().length() - 5, data.toString().length()), data.toString().substring(data.toString().indexOf(Constant.CONSENT_ID) + 10, data.toString().indexOf("&")));
+        if(data != null) {
+            showDialog(data);
         }
+    }
+
+    /**
+     * Display Dialog when you click on Deep link URI
+     */
+    public void showDialog(Uri data) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.number_display_dialog);
+        dialog.setTitle(Constant.TITLE);
+        dialog.getWindow().setLayout(1000, 500);
+        final Button yes = dialog.findViewById(R.id.positive);
+        Button no = dialog.findViewById(R.id.negative);
+        yes.setOnClickListener(v -> {
+            if (data != null && data.toString().contains(getString(R.string.approveURI))) {
+                approveConsentRequestAPICall(data.toString().substring(data.toString().length() - 5, data.toString().length()), data.toString().substring(data.toString().indexOf(Constant.CONSENT_ID) + 10, data.toString().indexOf("&")));
+            }
+            dialog.dismiss();
+        });
+
+        no.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        dialog.show();
     }
 
     /**
@@ -1220,7 +1278,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 listOnDashBoard.add(data);
             }
         }
-        adapter = new TrackerDeviceListAdapter(listOnDashBoard, this);
+        adapter = new TrackerDeviceListAdapter(listOnDashBoard, context);
         listView.setAdapter(adapter);
     }
 }
