@@ -23,31 +23,45 @@
 **************************************************************/
 
 import UIKit
-class GroupCell: UITableViewCell {
+protocol GroupCellDelegate {
+    func deleteButtonClicked(cell: GroupCell)
+}
+class GroupCell: UITableViewCell  {
+    
     @IBOutlet weak var name        : UILabel!
     @IBOutlet weak var phoneNumber : UILabel!
     @IBOutlet weak var userImg     : UIImageView!
     @IBOutlet weak var status: UILabel!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var customView: UIView!
+    @IBOutlet weak var deleteButton: UIButton!
+    var groupcellDelegate : GroupCellDelegate?
     
-    func setUserData(memberData : GroupMemberData) {
+    func setUserData(memberData : GroupMemberData, groupData : GroupListData) {
         customView.layer.cornerRadius = 10
         self.bgView  = Utils.shared.createCirculatView(view: bgView, borderColor:  UIColor.clear, borderWidth: 3.0)
-        
-        if memberData.status ==  Utils.GroupStatus.isApproved.rawValue {
-            bgView.layer.borderColor = UIColor.Consent.ConsentApproved.cgColor
-        } else if memberData.status == Utils.GroupStatus.isPending.rawValue {
-            bgView.layer.borderColor = UIColor.Consent.ConsentPending.cgColor
-        } else {
-            bgView.layer.borderColor = UIColor.lightGray.cgColor
-        }
-        
         self.userImg = Utils.shared.createCirculatImage(imageView: self.userImg, borderColor: UIColor.clear, borderWidth: 3.0)
         self.name.text = memberData.name
         self.phoneNumber.text = memberData.phone
-        self.status.text = "Status : " + memberData.status.capitalizingFirstLetter()
+        
+      if groupData.status == Utils.GroupStatus.isCompleted.rawValue {
+        bgView.layer.borderColor = UIColor.lightGray.cgColor
+        self.status.text = "Status : " + "Request Consent"
+      } else {
+        if memberData.status ==  Utils.GroupStatus.isApproved.rawValue {
+                  bgView.layer.borderColor = UIColor.Consent.ConsentApproved.cgColor
+              } else if memberData.status == Utils.GroupStatus.isPending.rawValue {
+                  bgView.layer.borderColor = UIColor.Consent.ConsentPending.cgColor
+              } else {
+                  bgView.layer.borderColor = UIColor.lightGray.cgColor
+              }
+              self.status.text = "Status : " + memberData.status.capitalizingFirstLetter()
+        }
+        
     }
     
+    @IBAction func deleteButtonAction(_ sender: Any) {
+        groupcellDelegate?.deleteButtonClicked(cell: self)
+    }
     
 }

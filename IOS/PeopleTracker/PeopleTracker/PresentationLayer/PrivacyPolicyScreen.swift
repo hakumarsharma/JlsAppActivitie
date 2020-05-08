@@ -54,6 +54,7 @@ class PrivacyPolicyScreen: UIViewController {
     
     @IBAction func acceptButtonAction(_ sender: Any) {
         if isPrivacySelected {
+            UserDefaults.standard.set(isPrivacySelected, forKey: Constants.PrivacyScreen.AcceptPrivacy)
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let loginViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.LoginScreen) as! LoginScreen
         self.navigationController?.pushViewController(loginViewController, animated: true)

@@ -54,7 +54,8 @@ struct NetworkManager {
         case Unauthorized                   = 401
         case Forbidden                      = 403
         case NotFound                       = 404
-        case ExceededGroupLimit             = 409
+        case MobileNumberAlreadyExists      = 409
+        case ExceededGroupLimit             = 429
     }
 
 
@@ -113,6 +114,9 @@ struct NetworkManager {
                     completion?(.failure(ErrorType.Unauthorized))
                     return
                 } else if (httpResponse.statusCode == 409) {
+                    completion?(.failure(ErrorType.MobileNumberAlreadyExists))
+                    return
+                }else if (httpResponse.statusCode == 429) {
                     completion?(.failure(ErrorType.ExceededGroupLimit))
                     return
                 }

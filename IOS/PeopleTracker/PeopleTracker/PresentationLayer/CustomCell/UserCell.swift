@@ -27,6 +27,7 @@ import UIKit
 protocol UserCellDelegate {
     func checkMarkClicked(cell: UserCell)
     func editOptionsClicked(cell: UserCell)
+    func requestConsentClicked(cell: UserCell)
 }
 
 class UserCell: UITableViewCell {
@@ -61,12 +62,13 @@ class UserCell: UITableViewCell {
         } else {
             self.name.text = groupData.name
             self.checkBoxButton.isHidden = true
-            self.phoneNumber.text = "Memebers : " + String(groupData.groupMember.count)
-            self.setUserIcon(val: groupData.groupMember.first?.deviceType ?? "")
+            let memebersArr = groupData.groupMember.filter { $0.memberStatus == Utils.GroupStatus.isApproved.rawValue || $0.memberStatus == Utils.GroupStatus.isPending.rawValue}
+            self.phoneNumber.text = "Members : " + String(memebersArr.count)
+            self.userIcon.image = UIImage(named: "group")
         }
         
         
-        if groupData.groupupdatedBy != Utils.shared.getUserId() {
+        if groupData.groupCreatedBy != Utils.shared.getUserId() {
             self.requestConsentButton.isHidden = true
             self.optionsButton.isHidden = true
             self.consentstatusColor.backgroundColor = UIColor.Consent.ConsentApproved
@@ -74,7 +76,13 @@ class UserCell: UITableViewCell {
             if isIndividual {
                 self.setConsentStatusForIndividual(groupData : groupData)
             } else {
-                self.setConsentStatusForGroup(status : groupData.status)
+                let memebersArr = groupData.groupMember.filter { $0.memberStatus == Utils.GroupStatus.isApproved.rawValue || $0.memberStatus == Utils.GroupStatus.isPending.rawValue}
+                if memebersArr.count > 0 {
+                   self.setConsentStatusForGroup(groupData : groupData)
+                } else {
+                    self.requestConsentButton.setTitle(Constants.HomScreenConstants.RequestConsent, for: .normal)
+                    self.consentstatusColor.backgroundColor = UIColor.Consent.RequestConsent
+                }
             }
         }
     }
@@ -116,8 +124,8 @@ class UserCell: UITableViewCell {
     }
     
     // Consent for group will be based group status
-    func setConsentStatusForGroup(status : String){
-        switch status {
+    func setConsentStatusForGroup(groupData : GroupListData){
+        switch groupData.status {
         case Utils.GroupStatus.isActive.rawValue:
             self.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentSent, for: .normal)
             self.consentstatusColor.backgroundColor = UIColor.Consent.ConsentApproved
@@ -141,4 +149,7 @@ class UserCell: UITableViewCell {
         usercelldelegate?.editOptionsClicked(cell: self)
     }
     
+    @IBAction func requestConsentButtonAction(_ sender: Any) {
+        usercelldelegate?.requestConsentClicked(cell: self)
+    }
 }

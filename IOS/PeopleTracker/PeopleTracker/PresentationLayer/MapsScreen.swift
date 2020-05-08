@@ -33,50 +33,63 @@ class MapsScreen: UIViewController {
     
     let googleApiKey = Bundle.main.infoDictionary?["GoggleApiKey"]
     let regionRadius: CLLocationDistance = 1000
-    var deviceId : String = ""
     var deviceDetails : [DeviceDetails] = []
-    //    var deviceIdsArr : [String] = []
+    var groupData : [GroupListData] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.title = "Location"
-        
-        self.createMapViewMarker()
-        
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        self.createBackBarButtonItem()
+        self.callgetLocationDetails()
         
     }
     
+    func createBackBarButtonItem() {
+        let backBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(backButton(sender:)))
+        backBtn.tintColor = .white
+        self.navigationItem.setLeftBarButton(backBtn, animated: true)
+    }
+    
+    @objc func backButton(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
+    }
     // Create marker to display pindrop over map
-    func createMapViewMarker() {
-        let camera = GMSCameraPosition.camera(withLatitude: deviceDetails[0].deviceStatus?.location?.latitude ?? 12.3456, longitude: deviceDetails[0].deviceStatus?.location?.longitude ?? 27.5467, zoom: 6.0)
-        let mapView = GMSMapView.map(withFrame: self.view.frame, camera: camera)
+    func createMapViewMarker(deviceData :  DeviceDetails) {
+        let camera = GMSCameraPosition.camera(withLatitude:  deviceData.location!.latitude , longitude: deviceData.location!.longitude, zoom: 6.0)
+        let mapView = GMSMapView.map(withFrame: self.view.bounds, camera: camera)
         mapView.settings.zoomGestures = true
         self.view.addSubview(mapView)
-        for (index, element) in self.deviceDetails.enumerated() {
-            let marker = GMSMarker()
-            marker.position = CLLocationCoordinate2D(latitude: deviceDetails[index].deviceStatus?.location?.latitude ?? 12.3456, longitude:deviceDetails[index].deviceStatus?.location?.longitude ?? 27.5467)
-            marker.title = element.name
-            let img = UIImage.init(named: "avatar1")
-            let markerView = UIImageView(image: img)
-            markerView.tintColor = UIColor.red
-            marker.iconView = markerView
-            marker.map = mapView
-            
-        }
+        //        for (index, element) in self.deviceDetails.enumerated() {
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2D(latitude: deviceData.location!.latitude, longitude: deviceData.location!.longitude)
+        marker.title = "Avatar"
+        let img = UIImage.init(named: "avatar1")
+        let markerView = UIImageView(image: img)
+        markerView.tintColor = UIColor.red
+        marker.iconView = markerView
+        marker.map = mapView
+        
+        //        }
         
     }
-    // API to get location details
-    func callgetDeviceLocationDetails() {
+    
+    
+    func callgetLocationDetails() {
         self.showActivityIndicator()
-        let deviceURL = URL(string:  Constants.ApiPath.DeviceApisUrl + "5e789ad0a789b5a7f632ff7e" + "?tsp=1585031229387&ugs_token=" + Utils.shared.getUgsToken())!
-        DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<LocationModel, Error>)) in
+        let locationURL = URL(string:  Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" +  self.groupData.first!.groupId + Constants.ApiPath.LocationUrl)!
+        let types : [String] = ["location","sos"]
+        let sessionTime : [String : Any] = ["from" : self.groupData.first!.groupSession!.from!, "to" : self.groupData.first!.groupSession!.to!]
+        let parameters : [String : Any] = ["types" : types, "time" : sessionTime]
+        
+        LocationService.shared.getLocationDetails(locationUrl: locationURL, parameters: parameters) { (result : (Result<LocationModel, Error>)) in
+            
             switch result {
             case .success(let deviceResponse):
-                if let _ = deviceResponse.devicedata {
+                if deviceResponse.devicedata.count > 0 {
                     DispatchQueue.main.async {
                         self.hideActivityIndicator()
-                        //self.createmapView()
+                        self.createMapViewMarker(deviceData: deviceResponse.devicedata.first!)
                     }
                 } else {
                     self.ShowALert(title: Constants.LocationConstants.NoLatLong)
