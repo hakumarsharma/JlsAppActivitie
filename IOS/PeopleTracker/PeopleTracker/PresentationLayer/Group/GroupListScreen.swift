@@ -41,23 +41,26 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = navtitle
+        self.navigationItem.setHidesBackButton(true, animated: true)
         self.initialiseData()
     }
     
     func initialiseData() {
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)   
         groupListTableView.delegate = self
         groupListTableView.dataSource = self
         groupListTableView.tableFooterView = UIView()
         self.createNotification()
         self.getMemberInGroupApi()
         self.createLeftBarButtonItem()
-        if groupData.groupMember.count < 10 {
+        if !isActiveSession && groupData.groupMember.count < 10 {
           floatingActionButton()
         }
     }
     
     func createLeftBarButtonItem(){
+        let backBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(backButton(sender:)))
+        backBtn.tintColor = .white
+        self.navigationItem.setLeftBarButton(backBtn, animated: true)
         let trackBtn : UIBarButtonItem = UIBarButtonItem.init(title: "Track", style: .plain, target: self, action: #selector(trackButton(sender:)))
         trackBtn.tintColor = UIColor.white
         self.navigationItem.setRightBarButton(trackBtn, animated: true)
@@ -133,6 +136,9 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     
     @objc func trackButton(sender: UIBarButtonItem) {
         navigateToMapsScreen()
+    }
+    @objc func backButton(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
     }
     
     func navigateToMapsScreen() {
