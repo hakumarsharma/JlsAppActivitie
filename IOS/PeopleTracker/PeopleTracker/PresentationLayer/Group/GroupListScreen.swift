@@ -45,17 +45,19 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     }
     
     func initialiseData() {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)   
         groupListTableView.delegate = self
         groupListTableView.dataSource = self
-        floatingActionButton()
         groupListTableView.tableFooterView = UIView()
         self.createNotification()
         self.getMemberInGroupApi()
         self.createLeftBarButtonItem()
+        if groupData.groupMember.count < 10 {
+          floatingActionButton()
+        }
     }
     
     func createLeftBarButtonItem(){
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         let trackBtn : UIBarButtonItem = UIBarButtonItem.init(title: "Track", style: .plain, target: self, action: #selector(trackButton(sender:)))
         trackBtn.tintColor = UIColor.white
         self.navigationItem.setRightBarButton(trackBtn, animated: true)
@@ -97,7 +99,7 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
         cell.groupcellDelegate = self
         cell.setUserData(memberData: memberData, groupData: self.groupData)
         cell.deleteButton.isHidden = true
-        if isActiveSession && groupData.groupCreatedBy == Utils.shared.getUserId(){
+        if isActiveSession {
             cell.deleteButton.isHidden = false
         }
         return cell
@@ -109,15 +111,19 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     }
     
     func deleteButtonClicked(cell: GroupCell) {
-        self.ShowALertWithButtonAction(title: Constants.HomScreenConstants.DeleteMemeber)
+        if groupData.groupCreatedBy == Utils.shared.getUserId() {
+            self.ShowALertWithButtonAction(title: Constants.HomScreenConstants.DeleteMemeber, status: Utils.GroupStatus.isRemoved.rawValue)
+        } else {
+            self.ShowALertWithButtonAction(title: Constants.HomScreenConstants.ExitMemeber, status: Utils.GroupStatus.isExited.rawValue)
+        }
     }
     
     // Alert with button action
-    func ShowALertWithButtonAction(title: String){
+    func ShowALertWithButtonAction(title: String, status : String){
         let alert = UIAlertController(title: Constants.AlertConstants.Alert, message: title, preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: Constants.AlertConstants.Yes, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
             DispatchQueue.main.async {
-                self.callExitorRemoveMemberFromGroupApi(groupData: self.groupData, status: "removed")
+                self.callExitorRemoveMemberFromGroupApi(groupData: self.groupData, status: status)
             }
         }))
         alert.addAction(UIAlertAction(title: Constants.AlertConstants.No, style: UIAlertAction.Style.cancel, handler: {(_: UIAlertAction!) in

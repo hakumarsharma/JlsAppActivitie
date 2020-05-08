@@ -47,11 +47,7 @@ class ActiveSessionCell: UITableViewCell {
               self.nameLbl.text = groupData.groupMember.first?.memberName
               self.mobileNumberLbl.text = groupData.groupMember.first?.memberPhone
               self.setUserIcon(val: groupName[1])
-              let isAdmin = (groupData.groupCreatedBy == Utils.shared.getUserId())
-                if !isAdmin {
-                    self.optionsBtn.isHidden = false
-                }
-            
+              self.optionsBtn.isHidden = false
           } else {
               self.nameLbl.text = groupData.name
             let memebersArr = groupData.groupMember.filter { $0.memberStatus == Utils.GroupStatus.isApproved.rawValue || $0.memberStatus == Utils.GroupStatus.isPending.rawValue}

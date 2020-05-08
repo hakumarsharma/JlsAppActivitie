@@ -120,11 +120,13 @@ class Constants {
         static let DeleteGroup = "Are you sure do you want to delete complete group ?"
         static let DeleteContact = "Are you sure do you want to delete ?"
         static let DeleteMemeber = "Are you sure do you want to delete this member from group ?"
+        static let ExitMemeber = "Are you sure do you want to exit from this group ?"
         static let RequestConsent = "Request Consent"
         static let ConsentApproved = "Consent Approved"
         static let ConsentPending = "Consent Pending"
         static let ConsentSent = "Consent Sent"
-        static let SelectDevice = "Select any added device to track"
+        static let SelectDevice = "Select consent approved devices to track"
+        static let ConsentAlredySent = "Consent already sent."
         static let ConsentAlert = "Consent sent successfully. To track, Please wait till the consent gets approved."
     }
     

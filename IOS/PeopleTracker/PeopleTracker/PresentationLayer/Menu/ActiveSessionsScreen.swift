@@ -113,11 +113,18 @@ class ActiveSessionsScreen: UIViewController,UITableViewDelegate, UITableViewDat
     // MARK: Display ActionSheet
     
     @objc func showActionSheet(groupData : GroupListData){
+        let isAdmin = (groupData.groupCreatedBy == Utils.shared.getUserId())
+        
         let alert = UIAlertController(title: Constants.HomScreenConstants.Select, message: "", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Exit, style: .default , handler:{ (UIAlertAction)in
-                self.callExitorRemoveMemberFromGroupApi(groupData: groupData, status: "exited")
+        if isAdmin {
+            alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Remove, style: .default , handler:{ (UIAlertAction)in
+                          self.callExitorRemoveMemberFromGroupApi(groupData: groupData, status: Utils.GroupStatus.isRemoved.rawValue)
+                      }))
+        } else {
+          alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Exit, style: .default , handler:{ (UIAlertAction)in
+                self.callExitorRemoveMemberFromGroupApi(groupData: groupData, status: Utils.GroupStatus.isExited.rawValue)
             }))
- 
+        }
         alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Track, style: .default , handler:{ (UIAlertAction)in
             self.navigateToMapsScreen()
         }))
@@ -189,7 +196,7 @@ class ActiveSessionsScreen: UIViewController,UITableViewDelegate, UITableViewDat
                 for groupdata in groupResponse.groupListData {
                     if groupdata.status == Utils.GroupStatus.isActive.rawValue {
                         let groupName = groupdata.name.components(separatedBy: "+")
-                        if groupName.count == 2 && groupName[0] == Constants.AddDeviceConstants.Individual && groupdata.groupMember.first?.memberStatus != Utils.GroupStatus.isExited.rawValue {
+                        if groupName.count == 2 && groupName[0] == Constants.AddDeviceConstants.Individual && groupdata.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue {
                              self.groupList.append(groupdata)
                         } else if groupName.count != 2{
                             self.groupList.append(groupdata)
