@@ -71,7 +71,6 @@ class Utils {
     }
     
     func getUserId() -> String {
-        
         if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
             let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
             return loginData?.user?.userId ?? ""
@@ -86,7 +85,6 @@ class Utils {
         }
         return 0
     }
-    
     func isUgsTokenExpired() -> Bool {
         if self.getUgsTokenExpiryTime() != 0 && self.getUgsTokenExpiryTime() > self.getTokenEpochTime(val: 10){
             return false

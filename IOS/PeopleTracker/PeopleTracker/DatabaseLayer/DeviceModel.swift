@@ -30,10 +30,10 @@ import RealmSwift
     
     dynamic var code          : Int = 0
     dynamic var message       : String = ""
-    var devicedata  = RealmSwift.List<DeviceData>()
+    dynamic var tempId        : String? = nil
     
     enum CodingKeys : String, CodingKey {
-        case code,message,devicedata = "data"
+        case code,message,tempId
     }
     
     required init(from decoder: Decoder) throws
@@ -42,9 +42,7 @@ import RealmSwift
            
            code = try container.decode(Int.self, forKey: .code)
            message = try container.decode(String.self, forKey: .message)
-           let deviceList = try container.decode([DeviceData].self, forKey: .devicedata)
-           devicedata.append(objectsIn: deviceList)
-           
+           tempId = Utils.shared.getCurrentDate(val: 1)
            super.init()
        }
        
@@ -53,43 +51,9 @@ import RealmSwift
            super.init()
        }
     
-}
-@objcMembers class DeviceData : Object, Decodable{
-    
-    dynamic var  deviceId         : String = ""
-    dynamic var  imei             : String = ""
-    dynamic var  identifier       : String? = nil
-    dynamic var  type             : String? = nil
-    dynamic var  model            : String? = nil
-    dynamic var  name             : String = ""
-    dynamic var  phoneCountryCode : String? = nil
-    dynamic var  phone            : String = ""
-    dynamic var  userId           : String = ""
-
-    enum CodingKeys : String, CodingKey {
-        case deviceId = "_id",imei,identifier,type,model,name,phoneCountryCode,phone,userId = "user"
-     }
-    
-    required init(from decoder: Decoder) throws
-    {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        deviceId = try container.decode(String.self, forKey: .deviceId)
-        imei = try container.decode(String.self, forKey: .imei)
-        identifier = try container.decode(String.self, forKey: .identifier)
-        type = try container.decode(String.self, forKey: .type)
-        model = try container.decode(String.self, forKey: .model)
-        name = try container.decode(String.self, forKey: .name)
-        phoneCountryCode = try container.decode(String.self, forKey: .phoneCountryCode)
-        phone = try container.decode(String.self, forKey: .phone)
-        userId = try container.decode(String.self, forKey: .userId)
-        
-        super.init()
+    override class func primaryKey() -> String? {
+        return "tempId"
     }
     
-    required init()
-    {
-        super.init()
-    }
 }
 

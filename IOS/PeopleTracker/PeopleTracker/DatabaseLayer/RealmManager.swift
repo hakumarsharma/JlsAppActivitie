@@ -104,4 +104,18 @@ class RealmManager {
               realm.delete(object)
           }
       }
+    
+    // Device whitelisting data
+    func getDeviceDataFromDB() ->   Results<DeviceModel> {
+        let devicerealm = try! Realm()
+        let results: Results<DeviceModel> =   devicerealm.objects(DeviceModel.self)
+      return results
+    }
+    func addDeviceData(object: DeviceModel)   {
+        let devicerealm = try! Realm()
+        try! devicerealm.write {
+            devicerealm.add(object, update: .modified)
+        }
+    }
+    
 }

@@ -36,7 +36,17 @@ class LoginScreen: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         self.navigationItem.setHidesBackButton(true, animated: true)
         // self.setUpMQTT()
-
+        self.mobileNumberTxt.isUserInteractionEnabled = true
+        self.checkIfUserExistsInDatabaseAndFetchDetails()
+    }
+    
+    func checkIfUserExistsInDatabaseAndFetchDetails(){
+        if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
+            let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
+            userNameTxt.text = loginData?.user?.name ?? ""
+            mobileNumberTxt.text = loginData?.user?.phone ?? ""
+            self.mobileNumberTxt.isUserInteractionEnabled = false
+        }
     }
     
     @IBAction func continueBtnAction(_ sender: Any) {
@@ -83,53 +93,7 @@ class LoginScreen: UIViewController {
             }
         }
     }
-    
-    //Verification Api Call
-    func verificationApiCall(){
-        self.showActivityIndicator()
-        UserService.shared.verifyRegistartionTokenwith(verifyTokenUrl: URL(string: Constants.ApiPath.VerifyTokenUrl)!, parameters: ["token": "62178","phone": "9019930385","phoneCountryCode": "91","type": "registration"]) { (result : Result<UserModel, Error>) in
-            switch result {
-            case .success(let userResponse):
-                print(userResponse)
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
-    
-    // Verification Api Call
-    func registrationApiCall(){
-        self.showActivityIndicator()
-        UserService.shared.registerUser(registerTokenUrl: URL(string: Constants.ApiPath.VerifyTokenUrl)!, parameters: ["token": "62178","phone": "9019930384","phoneCountryCode": "91","type": "registration"]) { (result : Result<UserModel, Error>) in
-            switch result {
-            case .success(let userResponse):
-                print(userResponse)
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
-    
+
     
     // Login Api Call
     // TODO :  Change API call based on phone registration process
@@ -138,10 +102,24 @@ class LoginScreen: UIViewController {
         UserService.shared.loginRequest(with:URL(string: Constants.ApiPath.LoginUrl)!,userName : self.userNameTxt.text!, parameters: ["phone": self.mobileNumberTxt.text!,"phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
             switch result {
             case .success( _):
-                DispatchQueue.main.async {
-                    self.hideActivityIndicator()
-                    self.navigateToHomeScreen()
-                }
+                    if RealmManager.sharedInstance.getDeviceDataFromDB().count > 0{
+                         let deviceData = RealmManager.sharedInstance.getDeviceDataFromDB().first
+                          if deviceData?.code == 200 {
+                            DispatchQueue.main.async {
+                                self.hideActivityIndicator()
+                                self.navigateToHomeScreen()
+                            }
+                          } else {
+                            DispatchQueue.main.async {
+                               self.callAddDeviceApi()
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                           self.callAddDeviceApi()
+                        }
+                    }
+                
             case .failure(let error):
                 if type(of: error) == NetworkManager.ErrorType.self {
                     DispatchQueue.main.async {
@@ -157,6 +135,28 @@ class LoginScreen: UIViewController {
             }
         }
     }
+    
+    //  API to add device details
+    func callAddDeviceApi() {
+            let deviceURL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.AddDeviceUrl + Utils.shared.getUgsToken())!
+            let deviceDetails : [[String : String]] = [["mac": self.mobileNumberTxt.text!,"identifier": "imei","name": self.userNameTxt.text! ,"phone": self.mobileNumberTxt.text!]]
+            let flagDetails : [String : Bool] = ["isSkipAddDeviceToGroup" : false]
+            let deviceParams :  [String : Any] = ["devices" : deviceDetails, "flags": flagDetails]
+            DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
+                switch result {
+                case .success( _):
+                    DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                    self.navigateToHomeScreen()
+                    }
+                case .failure(_):
+                    DispatchQueue.main.async {
+                     self.hideActivityIndicator()
+                     self.navigateToHomeScreen()
+                    }
+                }
+            }
+        }
     
     // navigate to home screen upon succesful login
     func navigateToHomeScreen() {
