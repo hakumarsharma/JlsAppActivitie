@@ -24,7 +24,6 @@
 		1816ACB92421EB7A00589CD9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1816ACB82421EB7A00589CD9 /* Constants.swift */; };
 		1816ACBB2421EC8F00589CD9 /* HelpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1816ACBA2421EC8F00589CD9 /* HelpScreen.swift */; };
 		1816ACBD2421ECAF00589CD9 /* PrivacyPolicyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1816ACBC2421ECAF00589CD9 /* PrivacyPolicyScreen.swift */; };
-		1816ACBF2421F0B900589CD9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1816ACBE2421F0B900589CD9 /* SceneDelegate.swift */; };
 		181ACFE52444337000EACCC5 /* LoginExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 181ACFE42444337000EACCC5 /* LoginExtension.swift */; };
 		1836E51B2433092B0078E572 /* NetowrkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1836E51A2433092B0078E572 /* NetowrkManager.swift */; };
 		1836E51E24346D400078E572 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1836E51D24346D400078E572 /* StringExtensions.swift */; };
@@ -32,11 +31,14 @@
 		1845D6842428FAFC00584FB4 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D6832428FAFC00584FB4 /* Utils.swift */; };
 		1845D686242A0AE700584FB4 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D685242A0AE700584FB4 /* LoginModel.swift */; };
 		1845D688242A118500584FB4 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1845D687242A118500584FB4 /* UserService.swift */; };
+		1857970B246291210029282A /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857970A246291210029282A /* MainNavigationController.swift */; };
 		185A044B244990540087FD9F /* GroupListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185A044A244990540087FD9F /* GroupListModel.swift */; };
 		185B2C6C245AA478005A3B61 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185B2C6B245AA478005A3B61 /* ColorExtensions.swift */; };
 		186321F024371236001E2E53 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186321EF24371236001E2E53 /* LocationModel.swift */; };
 		18708C422434A14C00940011 /* DeviceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C412434A14C00940011 /* DeviceService.swift */; };
 		18708C442434A5D200940011 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C432434A5D200940011 /* DeviceModel.swift */; };
+		188AAA802462C56F002F8E09 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188AAA7F2462C56F002F8E09 /* LocationService.swift */; };
+		188AAA8224640875002F8E09 /* ActiveSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188AAA8124640875002F8E09 /* ActiveSessionCell.swift */; };
 		188D44E5242887CE001D8CF0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188D44E4242887CE001D8CF0 /* UserCell.swift */; };
 		188ECB91244DC761007260D1 /* GroupMemberModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188ECB90244DC761007260D1 /* GroupMemberModel.swift */; };
 		188ECB93244DCB3F007260D1 /* ConsentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188ECB92244DCB3F007260D1 /* ConsentService.swift */; };
@@ -102,7 +104,6 @@
 		1816ACB82421EB7A00589CD9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		1816ACBA2421EC8F00589CD9 /* HelpScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpScreen.swift; sourceTree = "<group>"; };
 		1816ACBC2421ECAF00589CD9 /* PrivacyPolicyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyScreen.swift; sourceTree = "<group>"; };
-		1816ACBE2421F0B900589CD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		181ACFE42444337000EACCC5 /* LoginExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginExtension.swift; sourceTree = "<group>"; };
 		1836E51A2433092B0078E572 /* NetowrkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetowrkManager.swift; sourceTree = "<group>"; };
 		1836E51D24346D400078E572 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
@@ -110,11 +111,15 @@
 		1845D6832428FAFC00584FB4 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		1845D685242A0AE700584FB4 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		1845D687242A118500584FB4 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		18579709246178150029282A /* PeopleTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PeopleTracker.entitlements; sourceTree = "<group>"; };
+		1857970A246291210029282A /* MainNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationController.swift; sourceTree = "<group>"; };
 		185A044A244990540087FD9F /* GroupListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListModel.swift; sourceTree = "<group>"; };
 		185B2C6B245AA478005A3B61 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		186321EF24371236001E2E53 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		18708C412434A14C00940011 /* DeviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceService.swift; sourceTree = "<group>"; };
 		18708C432434A5D200940011 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
+		188AAA7F2462C56F002F8E09 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		188AAA8124640875002F8E09 /* ActiveSessionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionCell.swift; sourceTree = "<group>"; };
 		188D44E4242887CE001D8CF0 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		188ECB90244DC761007260D1 /* GroupMemberModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberModel.swift; sourceTree = "<group>"; };
 		188ECB92244DCB3F007260D1 /* ConsentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentService.swift; sourceTree = "<group>"; };
@@ -194,18 +199,19 @@
 		1816AC672421E34E00589CD9 /* PeopleTracker */ = {
 			isa = PBXGroup;
 			children = (
+				18579709246178150029282A /* PeopleTracker.entitlements */,
 				1836E51C24346D220078E572 /* Extensions */,
 				1816AC9D2421E3C100589CD9 /* NetworkLayer */,
 				1816AC9C2421E3B700589CD9 /* DatabaseLayer */,
 				1816AC9B2421E39E00589CD9 /* PresentationLayer */,
 				1816AC9E2421E3D200589CD9 /* Utils */,
 				1816AC682421E34E00589CD9 /* AppDelegate.swift */,
-				1816ACBE2421F0B900589CD9 /* SceneDelegate.swift */,
 				1816AC6E2421E34E00589CD9 /* Main.storyboard */,
 				1816AC742421E34E00589CD9 /* Assets.xcassets */,
 				1816AC762421E34E00589CD9 /* LaunchScreen.storyboard */,
 				1816AC792421E34E00589CD9 /* Info.plist */,
 				1816AC712421E34E00589CD9 /* PeopleTracker.xcdatamodeld */,
+				1857970A246291210029282A /* MainNavigationController.swift */,
 			);
 			path = PeopleTracker;
 			sourceTree = "<group>";
@@ -268,6 +274,7 @@
 				18708C412434A14C00940011 /* DeviceService.swift */,
 				18A1C8542449807B00BD365A /* GroupService.swift */,
 				188ECB92244DCB3F007260D1 /* ConsentService.swift */,
+				188AAA7F2462C56F002F8E09 /* LocationService.swift */,
 			);
 			path = NetworkLayer;
 			sourceTree = "<group>";
@@ -306,6 +313,7 @@
 				183F9673242CCFD900235065 /* GroupCell.swift */,
 				18CC651D24472100003736BC /* ProfileCell.swift */,
 				18CC651F24472109003736BC /* MenuCell.swift */,
+				188AAA8124640875002F8E09 /* ActiveSessionCell.swift */,
 			);
 			path = CustomCell;
 			sourceTree = "<group>";
@@ -649,6 +657,7 @@
 				1816ACA72421E98700589CD9 /* HomeScreen.swift in Sources */,
 				1845D686242A0AE700584FB4 /* LoginModel.swift in Sources */,
 				18AAAFC324504A220009DE31 /* RealmManager.swift in Sources */,
+				1857970B246291210029282A /* MainNavigationController.swift in Sources */,
 				1845D6842428FAFC00584FB4 /* Utils.swift in Sources */,
 				1816ACBB2421EC8F00589CD9 /* HelpScreen.swift in Sources */,
 				188ECB91244DC761007260D1 /* GroupMemberModel.swift in Sources */,
@@ -658,9 +667,9 @@
 				188D44E5242887CE001D8CF0 /* UserCell.swift in Sources */,
 				185B2C6C245AA478005A3B61 /* ColorExtensions.swift in Sources */,
 				1816ACAF2421EB1A00589CD9 /* AddDeviceScreen.swift in Sources */,
+				188AAA802462C56F002F8E09 /* LocationService.swift in Sources */,
 				1836E51E24346D400078E572 /* StringExtensions.swift in Sources */,
 				1816ACB52421EB3D00589CD9 /* GroupListScreen.swift in Sources */,
-				1816ACBF2421F0B900589CD9 /* SceneDelegate.swift in Sources */,
 				1816AC732421E34E00589CD9 /* PeopleTracker.xcdatamodeld in Sources */,
 				1836E51B2433092B0078E572 /* NetowrkManager.swift in Sources */,
 				1816ACB72421EB5C00589CD9 /* MapsScreen.swift in Sources */,
@@ -668,6 +677,7 @@
 				18CC652424472F17003736BC /* ProfileScreen.swift in Sources */,
 				181ACFE52444337000EACCC5 /* LoginExtension.swift in Sources */,
 				1816ACA32421E94D00589CD9 /* LoginScreen.swift in Sources */,
+				188AAA8224640875002F8E09 /* ActiveSessionCell.swift in Sources */,
 				18A1C8552449807B00BD365A /* GroupService.swift in Sources */,
 				185A044B244990540087FD9F /* GroupListModel.swift in Sources */,
 				18CC652624472F42003736BC /* SettingsScreen.swift in Sources */,
@@ -847,16 +857,19 @@
 			baseConfigurationReference = E777C587E63BEBBC0E877072 /* Pods-PeopleTracker.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PeopleTracker/PeopleTracker.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8PVH2NGH42;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = PeopleTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jio.PeopleTracker;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jio.peopltracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -867,16 +880,19 @@
 			baseConfigurationReference = 4062F81057CFA54509C942FE /* Pods-PeopleTracker.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PeopleTracker/PeopleTracker.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8PVH2NGH42;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = PeopleTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jio.PeopleTracker;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jio.peopltracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

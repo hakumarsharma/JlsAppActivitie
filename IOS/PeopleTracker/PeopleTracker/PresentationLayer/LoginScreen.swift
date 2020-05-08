@@ -36,6 +36,7 @@ class LoginScreen: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         self.navigationItem.setHidesBackButton(true, animated: true)
         // self.setUpMQTT()
+
     }
     
     @IBAction func continueBtnAction(_ sender: Any) {
@@ -134,7 +135,7 @@ class LoginScreen: UIViewController {
     // TODO :  Change API call based on phone registration process
     func callLoginApi() {
         self.showActivityIndicator()
-        UserService.shared.loginRequest(with:URL(string: Constants.ApiPath.LoginUrl)!,userName : self.userNameTxt.text!, parameters: ["phone": "9019930384","phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
+        UserService.shared.loginRequest(with:URL(string: Constants.ApiPath.LoginUrl)!,userName : self.userNameTxt.text!, parameters: ["phone": self.mobileNumberTxt.text!,"phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
             switch result {
             case .success( _):
                 DispatchQueue.main.async {

@@ -42,6 +42,7 @@ class Constants {
        static let CreateMultiple = "/sessiongroupconsents"
        static let GenerateConsent = "/tokens"
        static let ApproveConsent = "/status"
+       static let LocationUrl = "/events/search"
     }
     
     struct HelpScreen {
@@ -57,6 +58,7 @@ class Constants {
     struct PrivacyScreen {
         static let PrivacyPolicy = "<font size='4'><p><strong>This document is an electronic record in terms of Information Technology&nbsp;Act, 2000 and rules there under as applicable and the amended provisions pertaining to electronic records in various statutes as amended by the</strong>&nbsp;<strong>Information Technology Act, 2000. This electronic record is generated</strong>&nbsp;<strong>by a computer system and does not require any physical or digital</strong>&nbsp;<strong>signatures.</strong></p><p>For the purpose of these Privacy policies, wherever the context so requires&nbsp;<strong>\"You\"</strong>&nbsp;or&nbsp;<strong>\"User\"</strong>&nbsp;shall mean any natural or legal person who uses our <strong>People Tracker app</strong> to track location information of other users of the app with a mutual consent. The term&nbsp;<strong>\"We\"</strong>,&nbsp;<strong>\"Us\"</strong>,&nbsp;<strong>\"Our\"</strong>&nbsp;shall mean Reliance Jio Infocomm Limited.</p><p>&nbsp;</p><p><strong><u>Definitions</u></strong></p><p>&ldquo;<strong>App(s)</strong>&rdquo; shall mean applications for mobile and includes People Tracker App.</p><p>&ldquo;<strong>Device(s)</strong>&rdquo; shall mean a desktop computer, laptop computer, tablet, mobile phone, smart watch or such other electronic equipment.</p><p>&ldquo;<strong>Force Majeure Event</strong>&rdquo; shall mean any event that is beyond our reasonable control and shall include, without limitation, sabotage, fire, flood, explosion, acts of God, civil commotion, strikes or industrial action or any kind, riots, insurrection, war, acts of government, computer hacking, unauthorized access to your mobile or storage device, crashes, breach of security and encryption.</p><p>&ldquo;<strong>Personal Information</strong>&rdquo; refers to any information that identifies or can be used to identify, contact or locate the person, to whom such information pertains including, but not limited to, name, address, phone number and email address disclosed by you in relation to the services available on the Platform.</p><p>&ldquo;<strong>Sensitive personal data or information</strong>&rdquo; consists of information relating to the following:</p><ol><li>passwords;</li><li>financial information such as bank account or credit card or debit card or other payment instrument details;</li><li>physical, physiological and mental health condition;</li><li>sexual orientation;</li><li>medical records and history;</li><li>Biometric information;</li><li>any detail relating to the above clauses as provided to body corporate for providing service; and</li><li>any of the information received under above clauses by body corporate for processing, stored or processed under lawful contract or otherwise.</li></ol><p><strong>&ldquo;Third Party</strong>&rdquo; refers to any person or entity other than you or us.</p><p><strong>SECTION 1&nbsp;&ndash; WHAT INFORMATION DO WE COLLECT</strong></p><p><strong>Personal Information provided by you in relation to the registration process:&nbsp;</strong>We collect personal data from you when you voluntarily provide such information, such as e-mail and phone number.&nbsp; Wherever possible, we indicate which fields are required and which fields are optional. You always have the option to not provide information for the fields that are optional.</p><p>&nbsp;</p><p><strong>Personal Information provided by you in relation to the use of the app:&nbsp;</strong>In order for us to enable location tracking by your family and friends, we collect your location only after you allow the app to use location in the settings and when you provide your consent to track.</p><p>In connection with facilitating this service, we access SMS messages, the parties&rsquo; phone numbers, and the content of the SMS message such as OTP, etc.</p><p><strong>Collection of Sensitive personal data or information:</strong>&nbsp;We do not collect, store or process Sensitive personal data or information as part of our services on our Platform.</p><p><strong>Cookies:</strong>&nbsp;We do not collect any information from cookies</p><p><strong>SECTION 2:&nbsp;WHAT DO WE DO WITH YOUR INFORMATION</strong></p><p>2.1 We use your information for security purpose to allow you to login into the app, and to take your consent before you track location of others or allow others to track your location. We also use content of SMS to take your consent for tracking and also to read OTP. Once consent is given, your location information will be sent to our server so that your relatives and friends can track your location provided you have given your consent to them.</p><p><strong>SECTION&nbsp;3 &ndash;&nbsp;CONSENT</strong></p><p>3.1 When You&nbsp;provide&nbsp;Us&nbsp;with personal information for registration and provide consent through SMS for others to track your location, it is deemed that You have consented to the use of your personal information by Us to track your location.</p><p>3.2 In the course of business, if your personal information for any secondary reason, We shall specify the reason for requiring such information. Upon such request, You shall have the option to refrain from revealing such information to Us.</p><p>3.3 Each consent request to track your location is tied with a time duration. After that time duration, others will be not be allowed track you. For others to continue tracking you, they have to take your consent again for the time duration mutually agreed by you and the person who is tracking your location. You may decide not to approve your consent by selecting &ldquo;Decline&rdquo;.</p><p><strong>SECTION&nbsp;4 &ndash;&nbsp;SECURITY</strong></p><p>4.1&nbsp;To protect your personal information, we take reasonable precautions and follow industry best practices to make sure it is not inappropriately lost, misused, accessed, disclosed, altered or destroyed.</p><p>4.2 If You&nbsp;provide&nbsp;Us&nbsp;with your sensitive information, the information is encrypted using secure socket layer technology (SSL) and stored with a AES-256 encryption. Although,&nbsp;no method of transmission over the Internet or electronic storage is 100% secure, we follow all PCI-DSS requirements and implement additional generally accepted industry standards.</p><p><strong>SECTION 5 - AGE OF CONSENT</strong></p><p>5.1&nbsp;By using this site,&nbsp;You&nbsp;represent that&nbsp;You&nbsp;are at least the age of majority in your state or province of residence&nbsp;and you have given us your consent to allow any of your minor dependents to use this app.</p><p><strong>SECTION 6 - CHANGES TO THIS PRIVACY POLICY</strong></p><p>6.1&nbsp;We reserve the right to modify this privacy policy at any time, so please review it frequently. Changes and clarifications will take effect immediately upon their posting on the&nbsp;App/Website. If&nbsp;We&nbsp;make material changes to this policy,&nbsp;We&nbsp;will notify&nbsp;You&nbsp;here that it has been updated, so that&nbsp;You&nbsp;are aware of what information&nbsp;We&nbsp;collect, how we use it, and under what circumstances, if any,&nbsp;We&nbsp;use and/or disclose it.</p><p>6.2&nbsp;If our&nbsp;App/Website&nbsp;is acquired or merged with another company, your information may be&nbsp;transferred to the new owners so that we may continue to sell products to&nbsp;You.</p><p>CONTACT INFORMATION :</p><p>For any query, grievance, complaint or any other information that may be required by You, You may contact Our Privacy Compliance Officer at&nbsp;<a href=\"mailto:info@ril.com\">info@ril.com</a>&nbsp;and We shall ensure that We help resolve the same within a period of 48 (forty eight) hours.</p></font>"
         static let DeclineAlert = "Please accept privacy policy to continue."
+        static let AcceptPrivacy = "AcceptPrivacy"
     }
     
     struct MqttConstants {
@@ -70,11 +72,14 @@ class Constants {
         static let OkButton = "Ok"
         static let CancelButton = "Cancel"
         static let Delete = "Delete"
+        static let Yes = "Yes"
+        static let No = "No"
     }
     
     
     struct  ScreenNames {
         static let PrivacyScreen = "PrivacyPolicyScreen"
+        static let HelpScreen = "HelpScreen"
         static let LoginScreen = "LoginScreen"
         static let HomeScreen = "HomeScreen"
         static let AddDeviceScreen = "AddDeviceScreen"
@@ -101,6 +106,10 @@ class Constants {
         static let Select = "Select"
         static let Edit = "Edit"
         static let Delete = "Delete"
+        static let Exit   = "Exit"
+        static let Track   = "Track"
+        static let Remove   = "Remove"
+        static let View   = "View"
         static let Dismiss = "Dismiss"
         static let AddDevice = "Add Device"
         static let EditDevice = "Edit Device"
@@ -110,12 +119,13 @@ class Constants {
         static let EditGroup = "Edit Group"
         static let DeleteGroup = "Are you sure do you want to delete complete group ?"
         static let DeleteContact = "Are you sure do you want to delete ?"
+        static let DeleteMemeber = "Are you sure do you want to delete this member from group ?"
         static let RequestConsent = "Request Consent"
         static let ConsentApproved = "Consent Approved"
         static let ConsentPending = "Consent Pending"
         static let ConsentSent = "Consent Sent"
         static let SelectDevice = "Select any added device to track"
-       
+        static let ConsentAlert = "Consent sent successfully. To track, Please wait till the consent gets approved."
     }
     
     struct AddDeviceConstants {

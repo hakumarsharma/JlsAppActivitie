@@ -28,8 +28,8 @@ class Utils {
             return Constants.ErrorMessage.Unauthorized
         } else if error == NetworkManager.ErrorType.SomethingWentWrong {
             return Constants.ErrorMessage.Somethingwentwrong
-        } else if error == NetworkManager.ErrorType.ExceededGroupLimit {
-            return Constants.ErrorMessage.ExceededGroupLimit
+        } else if error == NetworkManager.ErrorType.MobileNumberAlreadyExists {
+            return Constants.ErrorMessage.MobileNumberExists
         }else {
             return Constants.ErrorMessage.Somethingwentwrong
         }
@@ -79,7 +79,7 @@ class Utils {
         return ""
     }
     
-    func getUgsTokenExpiryTime() -> Double {
+    func getUgsTokenExpiryTime() -> Int64 {
         if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
             let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
             return loginData?.ugsTokenexpiry ?? 0
@@ -87,12 +87,28 @@ class Utils {
         return 0
     }
     
+    func isUgsTokenExpired() -> Bool {
+        if self.getUgsTokenExpiryTime() != 0 && self.getUgsTokenExpiryTime() > self.getTokenEpochTime(val: 10){
+            return false
+        }
+        return true
+    }
+    
     func getFromEpochTime() -> Int64 {
         return self.getEpochTime(val: 5)
     }
     
     func getToEpochTime() -> Int64 {
-        return self.getEpochTime(val: 10)
+        return self.getEpochTime(val: 1000)
+    }
+    
+    func getTokenEpochTime(val : Int) -> Int64 {
+        let newData = NSCalendar.current.date(byAdding: .minute, value: val, to: NSDate() as Date)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd yyyy HH:mm"
+        let dateStr = dateFormatter.string(from: newData!)
+        let myTimeStamp = Int64(floor(dateFormatter.date(from: dateStr)!.timeIntervalSince1970))
+        return myTimeStamp
     }
     
     func getEpochTime(val : Int) -> Int64 {
@@ -110,7 +126,6 @@ class Utils {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZ"
         return dateFormatter.string(from: newData!)
     }
-    
 }
 
 extension UIViewController {

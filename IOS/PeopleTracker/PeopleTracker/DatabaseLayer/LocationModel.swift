@@ -24,51 +24,90 @@
 
 
 import Foundation
+import RealmSwift
 
-public struct LocationModel : Codable {
+@objcMembers class LocationModel : Object, Decodable {
     
-    let code    : Int
-    let message : String
-    let devicedata    : DeviceDetails?
+    dynamic var code    : Int = 0
+    dynamic var message : String = ""
+    dynamic var devicedata    = RealmSwift.List<DeviceDetails>()
+    dynamic var tempId    : String? = nil
     
-    private enum CodingKeys : String, CodingKey {
+    enum CodingKeys : String, CodingKey {
         case code,message,devicedata = "data"
     }
     
+    required init(from decoder: Decoder) throws
+       {
+           let container = try decoder.container(keyedBy: CodingKeys.self)
+           
+           code = try container.decode(Int.self, forKey: .code)
+           message = try container.decode(String.self, forKey: .message)
+           let devicesList = try container.decode([DeviceDetails].self, forKey: .devicedata)
+           devicedata.append(objectsIn: devicesList)
+           tempId = devicedata.first?.deviceId
+           super.init()
+       }
+       
+       required init()
+       {
+           super.init()
+       }
+       
+       override class func primaryKey() -> String? {
+           return "tempId"
+       }
 }
 
-public struct DeviceDetails : Codable{
+@objcMembers class DeviceDetails : Object, Decodable{
     
-    let  deviceId         : String
-    let  imei             : String
-    let  identifier       : String?
-    let  type             : String?
-    let  model            : String?
-    let  name             : String
-    let  phoneCountryCode : String?
-    let  phone            : String
-    let  userid           : String
-    let  deviceStatus     : DeviceStatus?
-    private enum CodingKeys : String, CodingKey {
-        case deviceId = "_id",imei,identifier,type,model,name,phoneCountryCode,phone,userid = "user",deviceStatus = "devicestatus"
+    dynamic var  locationId       : String = ""
+    dynamic var  deviceId         : String = ""
+    dynamic var  type             : String = ""
+    dynamic var  location         : Location? = nil
+    
+    enum CodingKeys : String, CodingKey {
+        case locationId="_id",deviceId = "device",identifier,type,location = "location"
      }
-}
-
-struct DeviceStatus : Codable {
     
-    let location : location?
-     
-    private enum CodingKeys : String, CodingKey {
-        case location
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        locationId = try container.decode(String.self, forKey: .locationId)
+        deviceId = try container.decode(String.self, forKey: .deviceId)
+        type = try container.decode(String.self, forKey: .type)
+        location = try container.decode(Location.self, forKey: .location)
+               
+        super.init()
+    }
+    
+    required init()
+    {
+        super.init()
     }
 }
 
-struct location : Codable {
+@objcMembers class Location :  Object, Decodable {
     
-    let latitude : Double?
-    let longitude : Double?
+    dynamic var latitude : Double = 0
+    dynamic var longitude : Double = 0
      
-    private enum CodingKeys : String, CodingKey {
+    enum CodingKeys : String, CodingKey {
         case latitude = "lat",longitude = "lng"
     }
+    
+    required init(from decoder: Decoder) throws
+       {
+           let container = try decoder.container(keyedBy: CodingKeys.self)
+           
+           latitude = try container.decode(Double.self, forKey: .latitude)
+           longitude = try container.decode(Double.self, forKey: .longitude)
+           super.init()
+       }
+       
+       required init()
+       {
+           super.init()
+       }
 }

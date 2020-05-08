@@ -41,8 +41,9 @@ class RealmManager {
         return results
     }
     func addUserData(object: LoginModel)   {
-        try! realm.write {
-            realm.add(object, update: .modified)
+        let userrealm = try! Realm(configuration: Realm.Configuration.defaultConfiguration)
+        try! userrealm.write {
+            userrealm.add(object, update: .modified)
         }
     }
     func deleteAllUserDataFromDatabase()  {

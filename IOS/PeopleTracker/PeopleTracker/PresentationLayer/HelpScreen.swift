@@ -37,11 +37,14 @@ class HelpScreen: UIViewController, UIScrollViewDelegate {
     var screenTitle : [String] = [Constants.HelpScreen.LoginTitle, Constants.HelpScreen.HomeTitle, Constants.HelpScreen.HomeTitle, Constants.HelpScreen.LocationTitle]
     var screenDescription : [String] = [Constants.HelpScreen.LoginText, Constants.HelpScreen.HomeText, Constants.HelpScreen.HomeText2, Constants.HelpScreen.LocationText]
     var frame = CGRect.zero
-    
+    var params : [String : String] = [:]
+    var url : String = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
         self.initializeData()
+        
+        // TODO: Remove Print statement
         print(Utils.shared.getFromEpochTime())
         print(Utils.shared.getToEpochTime())
     }

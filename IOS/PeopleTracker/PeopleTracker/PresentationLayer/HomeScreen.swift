@@ -34,8 +34,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     
     @IBOutlet weak var instructionsLabel: UILabel!
     let actionButton  = JJFloatingActionButton()
-    var selectedCell  : [String] = []
-    var deviceDetails : [GroupListData] = []
+    var selectedCell  : [GroupListData] = []
     var groupList     : [GroupListData] = []
     
     override func viewDidLoad() {
@@ -91,7 +90,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
         if groupName[0] == Constants.AddDeviceConstants.Individual  {
             // do nothing
         }else {
-            navigateToGroupListScreen(title: groupListDetails.name,groupId: groupListDetails.groupId)
+            navigateToGroupListScreen(title: groupListDetails.name,groupData: groupListDetails)
         }
     }
     
@@ -101,14 +100,10 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
         let groupData = self.groupList[indexpath!.row]
         if cell.checkBoxButton.isSelected {
             selectedCell = selectedCell.filter({ (item) -> Bool in
-                return item != groupData.groupId
-            })
-            deviceDetails = deviceDetails.filter({ (item) -> Bool in
                 return item.groupId != groupData.groupId
             })
         } else {
-            selectedCell.append(groupData.groupId)
-            
+            selectedCell.append(groupData)
         }
         cell.checkBoxButton.isSelected = !cell.checkBoxButton.isSelected
     }
@@ -117,6 +112,16 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
         let indexpath = self.usersTableView.indexPath(for: cell)
         let groupData = self.groupList[indexpath!.row]
         self.showActionSheet(groupData: groupData)
+    }
+    
+    func requestConsentClicked(cell: UserCell) {
+        let indexpath = self.usersTableView.indexPath(for: cell)
+        let groupData = self.groupList[indexpath!.row]
+        let groupName = groupData.name.components(separatedBy: "+")
+        let isIndividual = (groupName[0] == Constants.AddDeviceConstants.Individual) ? true : false
+        if isIndividual {
+            self.callRequestConsentApi(groupData: groupData)
+        }
     }
     
     // MARK: NavigationBar button item action methods
@@ -140,17 +145,8 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     
     @objc func trackButton(sender: UIBarButtonItem) {
         if selectedCell.count > 0 {
-            self.callgetDeviceLocationDetails { (success) in
-                if success && self.deviceDetails.count > 0  {
-                    DispatchQueue.main.async {
-                        self.navigateToMapsScreen()
-                    }
-                }else {
-                    DispatchQueue.main.async {
-                        self.ShowALert(title: Constants.LocationConstants.LocationDetailsNotFound)
-                    }
-                }
-            }
+            self.navigateToMapsScreen()
+
         } else {
             self.ShowALert(title: Constants.HomScreenConstants.SelectDevice)
         }
@@ -160,8 +156,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     func navigateToMapsScreen() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.MapsScreen) as! MapsScreen
-        mapsViewController.deviceId = Utils.shared.getUserId()
-        //        mapsViewController.deviceDetails = self.deviceDetails
+        mapsViewController.groupData = selectedCell
         self.navigationController?.pushViewController(mapsViewController, animated: true)
     }
     
@@ -191,11 +186,12 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
         self.navigationController?.pushViewController(createGroupViewController, animated: true)
     }
     
-    func navigateToGroupListScreen(title : String, groupId :  String) {
+    func navigateToGroupListScreen(title : String, groupData :  GroupListData) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let groupListViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.GroupListScreen) as! GroupListScreen
         groupListViewController.navtitle = title
-        groupListViewController.groupId = groupId
+        groupListViewController.groupData = groupData
+        groupListViewController.isActiveSession = false
         self.navigationController?.pushViewController(groupListViewController, animated: true)
     }
     
@@ -308,80 +304,6 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: Service Calls
     
-    // API to add device details
-    func callgetDeviceApi() {
-        self.showActivityIndicator()
-        let deviceURL = URL(string:  Constants.ApiPath.DeviceDetails + Utils.shared.getUgsToken())!
-        let deviceParams :  [String : Any] = ["usersAssigned":Utils.shared.getUserId()]
-        DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
-            switch result {
-            case .success(let deviceResponse):
-                //                guard let deviceData = deviceResponse.devicedata else {
-                //                    return
-                //                }
-                print(deviceResponse)
-                //                for device in deviceData {
-                //                    self.listOfDevices.append(device)
-                //                }
-                DispatchQueue.main.async {
-                    self.hideActivityIndicator()
-                    self.usersTableView.reloadData()
-                }
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
-    
-    // API to get location details
-    // TODO: check and change api call to track multiple devices
-    func callgetDeviceLocationDetails(completion: @escaping(_ success: Bool) -> Void) {
-        self.showActivityIndicator()
-        for (index,element) in selectedCell.enumerated() {
-            let deviceURL = URL(string:  Constants.ApiPath.DeviceApisUrl + element + "?tsp=1585031229387&ugs_token=" + Utils.shared.getUgsToken())! // TODO: Save tsp in user defaults
-            DeviceService.shared.getDeviceLocationDetails(with: deviceURL) { (result : (Result<LocationModel, Error>)) in
-                switch result {
-                case .success(let deviceResponse):
-                    print(index)
-                    print(deviceResponse)
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                    }
-                    //                    if let device = deviceResponse.devicedata , let _ = deviceResponse.devicedata?.deviceStatus?.location {
-                    ////                        self.deviceDetails.append(device)
-                    //                    }
-                    //                    if index == self.selectedCell.count - 1 {
-                    //                        completion(true)
-                    //                    }
-                    
-                case .failure(let error):
-                    if type(of: error) == NetworkManager.ErrorType.self {
-                        DispatchQueue.main.async {
-                            self.hideActivityIndicator()
-                            self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            self.hideActivityIndicator()
-                            self.ShowALert(title: error.localizedDescription)
-                        }
-                    }
-                }
-            }
-            
-        }
-    }
-    
     
     // Create GroupList Api Call
     func getAllGroupsApi() {
@@ -393,11 +315,11 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
                 self.groupList.removeAll()
                 let groupMembers : [GroupMemberModel]  = Array(RealmManager.sharedInstance.getGroupMemeberDataFromDB())
                 for groupdata in groupResponse.groupListData {
-                    if (groupdata.status == Utils.GroupStatus.isActive.rawValue || groupdata.status == Utils.GroupStatus.isCompleted.rawValue || groupdata.status == Utils.GroupStatus.isScheduled.rawValue) {
-                        for member in groupdata.groupMember {
-                            let memberArr = groupMembers.filter { $0.groupMemberData.first?.groupMemberId == member.memberId }
-                            member.deviceType = memberArr.first?.groupMemberData.first?.deviceType
-                        }
+                    if ((groupdata.status == Utils.GroupStatus.isActive.rawValue || groupdata.status == Utils.GroupStatus.isCompleted.rawValue || groupdata.status == Utils.GroupStatus.isScheduled.rawValue) && groupdata.groupCreatedBy == Utils.shared.getUserId()) {
+//                        for member in groupdata.groupMember {
+//                            let memberArr = groupMembers.filter { $0.groupMemberData.first?.groupMemberId == member.memberId }
+//                            member.deviceType = memberArr.first?.groupMemberData.first?.deviceType
+//                        }
                         self.groupList.append(groupdata)
                     }
                 }
@@ -449,6 +371,40 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
                     }
                 }
             }
+        }
+    }
+    
+    
+    // Request Consent APi call
+    func callRequestConsentApi(groupData : GroupListData) {
+         self.showActivityIndicator()
+        let requestConsentUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + groupData.groupId + Constants.ApiPath.CreateMultiple + Constants.ApiPath.GenerateConsent)!
+        let consentNumber : [String : Any] = ["phone" : groupData.groupMember.first?.memberPhone ?? ""]
+        let parameters : [String : Any] = ["consent" : consentNumber]
+        ConsentService.shared.generateConsentToken(generateConsentUrl: requestConsentUrl, parameters: parameters) { (result : Result<ConsentModel, Error>) in
+            switch result {
+            case .success(let groupResponse):
+                print(groupResponse)
+                DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                    self.ShowALert(title: Constants.HomScreenConstants.ConsentAlert)
+                    self.getAllGroupsApi()
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+
+            
         }
     }
     

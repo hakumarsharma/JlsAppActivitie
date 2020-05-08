@@ -29,7 +29,7 @@ import RealmSwift
 @objcMembers class LoginModel : Object, Decodable {
     
     dynamic var ugsToken        : String = ""
-    dynamic var ugsTokenexpiry  : Double = 0
+    dynamic var ugsTokenexpiry  : Int64 = 0
     dynamic var user            : User? = nil
     
     enum CodingKeys : String, CodingKey {
@@ -41,7 +41,7 @@ import RealmSwift
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         ugsToken = try container.decode(String.self, forKey: .ugsToken)
-        ugsTokenexpiry = try container.decode(Double.self, forKey: .ugsTokenexpiry)
+        ugsTokenexpiry = try container.decode(Int64.self, forKey: .ugsTokenexpiry)
         user = try container.decode(User.self, forKey: .user)
         super.init()
     }
@@ -63,10 +63,9 @@ import RealmSwift
     dynamic var usertype      : String  = ""
     dynamic var name          : String  = ""
     dynamic var phone         : String  = ""
-    let wearableUsers = RealmSwift.List<WearableUsers>()
     
     enum CodingKeys : String, CodingKey {
-        case userId = "_id", usertype = "type", name, phone,wearableUsers
+        case userId = "_id", usertype = "type", name, phone
     }
     
     required init(from decoder: Decoder) throws
@@ -77,8 +76,6 @@ import RealmSwift
         usertype = try container.decode(String.self, forKey: .usertype)
         name = try container.decode(String.self, forKey: .name)
         phone = try container.decode(String.self, forKey: .phone)
-        let wearbleList = try container.decode([WearableUsers].self, forKey: .wearableUsers)
-        wearableUsers.append(objectsIn: wearbleList)
         
         super.init()
     }
@@ -94,29 +91,4 @@ import RealmSwift
     
     
 }
-@objcMembers class WearableUsers : Object, Decodable {
-    
-    dynamic var wearableDeviceId : String? = nil
-    dynamic var deviceId         : String? = nil
-    
-    enum CodingKeys: String, CodingKey {
-        case wearableDeviceId = "_id", deviceId = "deviceId"
-    }
-    
-    required init(from decoder: Decoder) throws
-    {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        wearableDeviceId = try container.decode(String.self, forKey: .wearableDeviceId)
-        deviceId = try container.decode(String.self, forKey: .deviceId)
-        
-        super.init()
-    }
-    
-    required init()
-    {
-        super.init()
-    }
-    
-    
-}
+

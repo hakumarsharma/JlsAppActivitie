@@ -59,11 +59,11 @@ import RealmSwift
     dynamic var  groupId         : String = ""
     dynamic var  name            : String = ""
     dynamic var  groupSession    : GroupSession? = nil
-    dynamic var  groupupdatedBy  : String? = nil
+    dynamic var  groupCreatedBy  : String? = nil
     let groupMember = RealmSwift.List<GroupMember>()
     
     enum CodingKeys : String, CodingKey {
-        case status,groupId = "_id",name,groupSession = "session",groupMember = "consents",groupupdatedBy="updatedBy"
+        case status,groupId = "_id",name,groupSession = "session",groupMember = "consents",groupCreatedBy="createdBy"
     }
     
     required init(from decoder: Decoder) throws
@@ -74,7 +74,7 @@ import RealmSwift
         groupId = try container.decode(String.self, forKey: .groupId)
         name = try container.decode(String.self, forKey: .name)
         groupSession = try container.decode(GroupSession.self, forKey: .groupSession)
-        groupupdatedBy = try? container.decode(String.self, forKey: .groupupdatedBy)
+        groupCreatedBy = try? container.decode(String.self, forKey: .groupCreatedBy)
         let groupMembersList = try container.decode([GroupMember].self, forKey: .groupMember)
         groupMember.append(objectsIn: groupMembersList)
         
