@@ -40,7 +40,20 @@ class AddDeviceScreen: UIViewController {
         deviceType.layer.borderWidth = 1.0
         deviceType.layer.borderColor = UIColor.Common.TextFieldBorderColor.cgColor
         deviceType.layer.cornerRadius = 4.0
-        
+        self.createNavBarItems()
+    }
+    
+    func createNavBarItems(){
+        let qrscannerBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "qr"), style: .plain, target: self, action: #selector(qrscannerBtnButtonAction(sender:)))
+        qrscannerBtn.setTitleTextAttributes( [NSAttributedString.Key.foregroundColor : UIColor.white], for: .normal)
+        self.navigationItem.setRightBarButton(qrscannerBtn, animated: true)
+    }
+    
+    @objc func qrscannerBtnButtonAction(sender: UIBarButtonItem) {
+      
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let qrScannerViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.QRCodeScanner) as! QRCodeScanner
+        self.navigationController?.pushViewController(qrScannerViewController, animated: true)
     }
     
     @IBAction func deviceTypeButtonAction(_ sender: Any) {
@@ -86,69 +99,69 @@ class AddDeviceScreen: UIViewController {
             return
         }
         
-       if groupId.count > 0 {
+        if groupId.count > 0 {
             self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetMemebersInGroup)
         } else {
             self.callCreateGroupApi()
         }
     }
     
-//    // API to add device details
-//    func callAddDeviceApi() {
-//        let deviceURL = URL(string: Constants.ApiPath.UserApisUrl + userid + Constants.ApiPath.AddDeviceUrl + ugsToken)!
-//        let deviceDetails : [[String : String]] = [["mac": deviceNumberTxt.text ?? "","identifier": "imei","name": nameTxt.text ?? "","phone": ownerNumberTxt.text ?? ""]]
-//        let flagDetails : [String : Bool] = ["isSkipAddDeviceToGroup" : false]
-//        let deviceParams :  [String : Any] = ["devices" : deviceDetails, "flags": flagDetails]
-//        DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
-//            switch result {
-//            case .success(let deviceResponse):
-//                print(deviceResponse)
-//                self.ShowALertWithButtonAction(title: Constants.AddDeviceConstants.DeviceAddedSuccessfully)
-//            case .failure(let error):
-//                if type(of: error) == NetworkManager.ErrorType.self {
-//                    DispatchQueue.main.async {
-//                        self.ShowALertWithButtonAction(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-//                    }
-//                } else {
-//                    DispatchQueue.main.async {
-//                        self.ShowALertWithButtonAction(title: error.localizedDescription)
-//                    }
-//                }
-//            }
-//        }
-//    }
+    //    // API to add device details
+    //    func callAddDeviceApi() {
+    //        let deviceURL = URL(string: Constants.ApiPath.UserApisUrl + userid + Constants.ApiPath.AddDeviceUrl + ugsToken)!
+    //        let deviceDetails : [[String : String]] = [["mac": deviceNumberTxt.text ?? "","identifier": "imei","name": nameTxt.text ?? "","phone": ownerNumberTxt.text ?? ""]]
+    //        let flagDetails : [String : Bool] = ["isSkipAddDeviceToGroup" : false]
+    //        let deviceParams :  [String : Any] = ["devices" : deviceDetails, "flags": flagDetails]
+    //        DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
+    //            switch result {
+    //            case .success(let deviceResponse):
+    //                print(deviceResponse)
+    //                self.ShowALertWithButtonAction(title: Constants.AddDeviceConstants.DeviceAddedSuccessfully)
+    //            case .failure(let error):
+    //                if type(of: error) == NetworkManager.ErrorType.self {
+    //                    DispatchQueue.main.async {
+    //                        self.ShowALertWithButtonAction(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+    //                    }
+    //                } else {
+    //                    DispatchQueue.main.async {
+    //                        self.ShowALertWithButtonAction(title: error.localizedDescription)
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
     
     // Add member to group Api Call
-       func addMemberToGroupApi(notificationName : String) {
-           self.showActivityIndicator()
-           let addMemberUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + self.groupId + Constants.ApiPath.CreateMultiple )!
-           let sessionParams : [String] = ["events"]
-           let groupParams : [String : Any] = ["name": nameTxt.text!,"phone" : self.deviceNumberTxt.text! ,"entities" : sessionParams]
-           let params : [String : Any] = ["consents" : [groupParams]]
+    func addMemberToGroupApi(notificationName : String) {
+        self.showActivityIndicator()
+        let addMemberUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + self.groupId + Constants.ApiPath.CreateMultiple )!
+        let sessionParams : [String] = ["events"]
+        let groupParams : [String : Any] = ["name": nameTxt.text!,"phone" : self.deviceNumberTxt.text! ,"entities" : sessionParams]
+        let params : [String : Any] = ["consents" : [groupParams]]
         GroupService.shared.addMemberToGroup(addMemberInGroupUrl:  addMemberUrl,parameters: params) { (result : Result<GroupMemberModel, Error>) in
-               switch result {
-               case .success(let groupResponse):
-                   print(groupResponse)
-                   DispatchQueue.main.async {
-                       self.hideActivityIndicator()
-                       NotificationCenter.default.post(name: Notification.Name(notificationName), object: nil)
-                       self.navigationController?.popViewController(animated: true)
-                   }
-               case .failure(let error):
-                   if type(of: error) == NetworkManager.ErrorType.self {
-                       DispatchQueue.main.async {
-                           self.hideActivityIndicator()
-                           self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                       }
-                   } else {
-                       DispatchQueue.main.async {
-                           self.hideActivityIndicator()
-                           self.ShowALert(title: error.localizedDescription)
-                       }
-                   }
-               }
-           }
-       }
+            switch result {
+            case .success(let groupResponse):
+                print(groupResponse)
+                DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                    NotificationCenter.default.post(name: Notification.Name(notificationName), object: nil)
+                    self.navigationController?.popViewController(animated: true)
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
     
     // Create Group Api Call
     func callCreateGroupApi() {
@@ -161,7 +174,7 @@ class AddDeviceScreen: UIViewController {
             case .success(let groupResponse):
                 self.groupId = groupResponse.groupData?.groupId ?? ""
                 if self.groupId.count > 0 {
-                     DispatchQueue.main.async {
+                    DispatchQueue.main.async {
                         self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetGroupList)
                     }
                 } else {

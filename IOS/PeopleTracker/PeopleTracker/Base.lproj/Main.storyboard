@@ -62,7 +62,7 @@
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="360" id="u4P-h0-sWc"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done" textContentType="one-time-code"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c67-OI-bCr">
                                                 <rect key="frame" x="82" y="450" width="250" height="40"/>
@@ -350,6 +350,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LFx-94-m0z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4090" y="108"/>
+        </scene>
+        <!--Code Scanner-->
+        <scene sceneID="Z2T-EF-G8m">
+            <objects>
+                <viewController storyboardIdentifier="QRCodeScanner" id="h8F-fz-7w5" customClass="QRCodeScanner" customModule="PeopleTracker" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="KLR-kT-cwf">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="FYb-X4-acb"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Wda-Kh-YSV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4796" y="108"/>
         </scene>
         <!--Add Device Screen-->
         <scene sceneID="c3m-Z1-gQW">
