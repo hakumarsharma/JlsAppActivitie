@@ -89,6 +89,7 @@ import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateConsentTokenRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
+import com.jio.devicetracker.database.pojo.request.RejectConsentRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
 import com.jio.devicetracker.database.pojo.response.ApproveRejectAPIResponse;
@@ -450,7 +451,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Get All Group info per user API Call
      */
     private void makeGroupInfoPerUserRequestAPICall() {
-        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
+        GroupRequestHandler.getInstance(context).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
     }
 
     /**
@@ -497,7 +498,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             groupList.add(homeActivityListData);
         }
         for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-            if(! data.getStatus().equalsIgnoreCase(Constant.CLOSED)) {
+            if (!data.getStatus().equalsIgnoreCase(Constant.CLOSED)) {
                 for (GetGroupInfoPerUserResponse.Consents mConsents : data.getConsents()) {
                     GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
                     groupMemberDataList.setConsentId(mConsents.getConsentId());
@@ -637,7 +638,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      */
     public void publishMessage() {
         getLocation();
-        String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + 12.935562 + "\",\"lon\":\"" + 77.680888 + "\",\"ltd\":\"0\",\n" +
+        String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                 "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
         String topic = "jioiot/svcd/jiophone/" + userPhoneNumber + "/uc/fwd/locinfo";
         System.out.println("Message --> " + message);
@@ -732,24 +733,21 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         if (grpMemberDataList.isEmpty() && grpDataList.isEmpty()) {
             Util.alertDilogBox(Constant.CHOOSE_DEVICE, Constant.ALERT_TITLE, this);
             return;
-        } else if(!grpMemberDataList.isEmpty() && grpMemberDataList.get(0).getConsentStatus().equalsIgnoreCase(Constant.PENDING)) {
+        } else if (!grpMemberDataList.isEmpty() && grpMemberDataList.get(0).getConsentStatus().equalsIgnoreCase(Constant.PENDING)) {
             Util.alertDilogBox(Constant.CONSENT_NOT_APPROVED, Constant.ALERT_TITLE, this);
             return;
-        } else if(!grpDataList.isEmpty() && grpDataList.get(0).getStatus().equalsIgnoreCase(Constant.PENDING)) {
+        } else if (!grpDataList.isEmpty() && grpDataList.get(0).getStatus().equalsIgnoreCase(Constant.PENDING)) {
             Util.alertDilogBox(Constant.CONSENT_NOT_APPROVED, Constant.ALERT_TITLE, this);
             return;
         } else {
             Util.getInstance().showProgressBarDialog(this);
             SearchEventData searchEventData = new SearchEventData();
-            SearchEventData.Device device = new SearchEventData().new Device();
             SearchEventData.Time time = new SearchEventData().new Time();
             List<String> mList = new ArrayList<>();
             mList.add(Constant.LOCATION);
             mList.add(Constant.SOS);
             time.setFrom(mDbManager.getGroupDetail(grpId).getFrom());
             time.setTo(mDbManager.getGroupDetail(grpId).getTo());
-            device.setDeviceId(deviceId);
-            searchEventData.setDevice(device);
             searchEventData.setTime(time);
             searchEventData.setTypes(mList);
             GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, userId, grpId));
@@ -769,7 +767,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             } else {
                 Map<Double, Double> latLngMap = new HashMap<>();
                 List<SearchEventResponse.Data> mList = searchEventResponse.getData();
-                for(SearchEventResponse.Data data : mList) {
+                for (SearchEventResponse.Data data : mList) {
                     latLngMap.put(data.getLocation().getLat(), data.getLocation().getLng());
                     namingMap.put(groupMemberName, latLngMap);
                 }
@@ -1072,7 +1070,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private void deepLinkingURICheck() {
         Intent intent = getIntent();
         Uri data = intent.getData();
-        if(data != null) {
+        if (data != null) {
             showDialog(data);
         }
     }
@@ -1086,7 +1084,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         dialog.setTitle(Constant.TITLE);
         dialog.getWindow().setLayout(1000, 500);
         final Button yes = dialog.findViewById(R.id.positive);
-        Button no = dialog.findViewById(R.id.negative);
+        final Button no = dialog.findViewById(R.id.negative);
         yes.setOnClickListener(v -> {
             if (data != null && data.toString().contains(getString(R.string.approveURI))) {
                 approveConsentRequestAPICall(data.toString().substring(data.toString().length() - 5, data.toString().length()), data.toString().substring(data.toString().indexOf(Constant.CONSENT_ID) + 10, data.toString().indexOf("&")));
@@ -1095,6 +1093,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         });
 
         no.setOnClickListener(v -> {
+            if (data != null && data.toString().contains(getString(R.string.approveURI))) {
+                makeGroupInfoPerUserRequestAPICall();
+                rejectConsentRequestAPICall(data.toString().substring(data.toString().length() - 5, data.toString().length()), data.toString().substring(data.toString().indexOf(Constant.CONSENT_ID) + 10, data.toString().indexOf("&")));
+            }
             dialog.dismiss();
         });
         dialog.show();
@@ -1128,7 +1130,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             if (approveRejectAPIResponse.getCode() == 200) {
                 mDbManager.updateConsentInGroupMemberTable(consentId, Constant.APPROVED);
                 Toast.makeText(DashboardActivity.this, Constant.CONSENT_APPROVED_MESSAGE, Toast.LENGTH_SHORT).show();
-                addDataInHomeScreen();
+                makeGroupInfoPerUserRequestAPICall();
             }
         }
     }
@@ -1140,6 +1142,48 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         @Override
         public void onErrorResponse(VolleyError error) {
             Toast.makeText(DashboardActivity.this, Constant.CONSENT_NOT_APPROVED_MESSAGE, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     *
+     */
+    private void rejectConsentRequestAPICall(String token, String consentId) {
+        this.consentId = consentId;
+        ApproveRejectConsentData approveRejectConsentData = new ApproveRejectConsentData();
+        ApproveRejectConsentData.Consent consent = new ApproveRejectConsentData().new Consent();
+        ApproveRejectConsentData.Token tokenData = new ApproveRejectConsentData().new Token();
+        tokenData.setValue(token);
+        consent.setStatus(Constant.REJECTED);
+        consent.setToken(tokenData);
+        approveRejectConsentData.setConsent(consent);
+        if (mDbManager.getGroupMemberDetailByConsentId(consentId) != null) {
+            GroupRequestHandler.getInstance(this).handleRequest(new RejectConsentRequest(new RejectConsentRequestSuccessListener(), new RejectConsentRequestErrorListener(), approveRejectConsentData, mDbManager.getGroupMemberDetailByConsentId(consentId).getGroupId(), userId, consentId));
+        }
+    }
+
+    /**
+     * Approve Consent Request Success Listener
+     */
+    private class RejectConsentRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            ApproveRejectAPIResponse approveRejectAPIResponse = Util.getInstance().getPojoObject(String.valueOf(response), ApproveRejectAPIResponse.class);
+            if (approveRejectAPIResponse.getCode() == 200) {
+                mDbManager.updateConsentInGroupMemberTable(consentId, Constant.REJECTED);
+                Toast.makeText(DashboardActivity.this, Constant.CONSENT_REJECTED_MESSAGE, Toast.LENGTH_SHORT).show();
+                addDataInHomeScreen();
+            }
+        }
+    }
+
+    /**
+     * Approve Consent Request error Listener
+     */
+    private class RejectConsentRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Toast.makeText(DashboardActivity.this, Constant.CONSENT_NOT_REJECTED_MESSAGE, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1261,7 +1305,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
         for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
             GroupMemberDataList data = new GroupMemberDataList();
-            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                    && (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(userId))
+                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());
                 data.setConsentStatus(groupMemberDataList.getConsentStatus());

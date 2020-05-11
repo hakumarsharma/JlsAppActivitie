@@ -10,31 +10,27 @@
         android:layout_height="60dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
-        android:text="Harish Kumar"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:id="@+id/name"
-        android:layout_toRightOf="@+id/activeSessionImage"
-        />
+        android:layout_toRightOf="@+id/activeSessionImage" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_alignLeft="@+id/name"
-        android:text="9019020584"
-        android:visibility="gone"
         android:layout_below="@+id/name"
         android:textStyle="bold"
         android:id="@+id/mobileNumber"
-        android:textSize="12sp"
-
-        />
+        android:textSize="12sp"/>
 
     <TextView
         android:id="@+id/durationTitle"
@@ -46,9 +42,7 @@
         android:layout_toLeftOf="@+id/expiryTitle"
         android:text="Duration"
         android:textSize="14sp"
-        android:textStyle="bold"
-
-        />
+        android:textStyle="bold" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,10 +53,8 @@
         android:textStyle="bold"
         android:id="@+id/durationTime"
         android:textSize="12sp"
-        android:layout_alignLeft="@+id/durationTitle"
+        android:layout_alignLeft="@+id/durationTitle" />
 
-
-        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,8 +65,8 @@
         android:textSize="14sp"
         android:layout_marginRight="10dp"
         android:id="@+id/expiryTitle"
-        android:layout_alignParentRight="true"
-        />
+        android:layout_alignParentRight="true" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,9 +78,17 @@
         android:textStyle="bold"
         android:id="@+id/expiryTime"
         android:layout_alignLeft="@+id/expiryTitle"
-        android:textSize="12sp"
+        android:textSize="12sp" />
 
-        />
+    <TextView
+        android:id="@+id/activeSessionOptions"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentRight="true"
+        android:text="&#8942;"
+        android:textAppearance="?android:textAppearanceLarge" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"

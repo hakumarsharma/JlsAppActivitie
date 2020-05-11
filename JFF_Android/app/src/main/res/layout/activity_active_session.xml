@@ -8,6 +8,20 @@
         android:id="@+id/customToolbar"
         layout="@layout/toolbar" />
 
+    <TextView
+        android:id="@+id/activeMemberPresent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/instructionOnActiveSession"
+        android:lineSpacingExtra="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="18sp"
+        android:visibility="invisible" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/activeSessionsList"
         android:layout_width="match_parent"

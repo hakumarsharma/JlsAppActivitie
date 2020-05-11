@@ -766,7 +766,6 @@ public class DBManager {
 
     /**
      * Update consent in TABLE_NAME_BORQS table
-     *
      * @param consentId
      * @param message
      */
@@ -775,5 +774,35 @@ public class DBManager {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.STATUS, message);
         mDatabase.update(DatabaseHelper.TABLE_GROUP_MEMBER, values, DatabaseHelper.CONSENT_ID + "= '" + consentId + "';", null);
+    }
+
+    /**
+     *
+     * @param consentId
+     * @return Group Member details
+     */
+    public GroupMemberDataList getGroupMemberDetailByConsentId(String consentId) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        if(consentId != null) {
+            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.STATUS,
+                    DatabaseHelper.CONSENT_ID, DatabaseHelper.USER_ID, DatabaseHelper.DEVICE_ID, DatabaseHelper.GROUPID, DatabaseHelper.PROFILE_IMAGE};
+            String[] arg = {consentId};
+            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP_MEMBER, column, DatabaseHelper.CONSENT_ID + " = ? ", arg, null, null, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                if(cursor.moveToNext()) {
+                    GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+                    groupMemberDataList.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
+                    groupMemberDataList.setNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                    groupMemberDataList.setConsentStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)));
+                    groupMemberDataList.setConsentId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_ID)));
+                    groupMemberDataList.setUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_ID)));
+                    groupMemberDataList.setDeviceId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_ID)));
+                    groupMemberDataList.setGroupId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUPID)));
+                    groupMemberDataList.setProfileImage(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.PROFILE_IMAGE)));
+                    return groupMemberDataList;
+                }
+            }
+        }
+        return null;
     }
 }

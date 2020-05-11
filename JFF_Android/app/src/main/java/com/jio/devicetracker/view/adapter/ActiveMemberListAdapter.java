@@ -75,7 +75,7 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
         holder.phone.setText(mList.get(position).getNumber());
         holder.name.setText(mList.get(position).getName());
         holder.profile.setImageResource(mList.get(position).getProfileImage());
-        holder.activeSessionOptions.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.activeSessionOptions, position, mList.get(position).getGroupId(), mList.get(position).isGroupAdmin(), mList.get(position).getNumber(), mList.get(position).getConsentId()));
+        holder.activeMemberOptions.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.activeMemberOptions, position, mList.get(position).getGroupId(), mList.get(position).isGroupAdmin(), mList.get(position).getNumber(), mList.get(position).getConsentId()));
     }
 
     /**
@@ -112,7 +112,7 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
         public TextView durationtime;
         public TextView expirytime;
         public ImageView profile;
-        public TextView activeSessionOptions;
+        public TextView activeMemberOptions;
 
         /**
          * Constructor where we find element from .xml file
@@ -125,13 +125,12 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
             durationtime = itemView.findViewById(R.id.durationTime);
             expirytime = itemView.findViewById(R.id.expiryTime);
             profile = itemView.findViewById(R.id.traceeImage);
-            activeSessionOptions = itemView.findViewById(R.id.activeSessionOptions);
+            activeMemberOptions = itemView.findViewById(R.id.activeMemberOptions);
         }
     }
 
     /**
-     * Called when we remove device from home screen
-     *
+     * Called when we remove device from active member screen
      * @param adapterPosition
      */
     public void removeItem(int adapterPosition) {

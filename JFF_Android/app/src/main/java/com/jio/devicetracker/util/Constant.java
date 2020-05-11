@@ -94,9 +94,12 @@ public class Constant {
     public static final String ACTIVE = "active";
     public static final String  SCHEDULED = "scheduled";
     public static final String APPROVED = "approved";
+    public static final String REJECTED = "rejected";
     public static final String COMPLETED = "completed";
     public static final String EXIT_FROM_GROUP_FAILURE = "Exit from group failed, Please try again!";
     public static final String REMOVE_FROM_GROUP_FAILURE = "Remove from group failed, Please try again!";
+    public static final String EXIT_FROM_GROUP_SUCCESS = "Sucessfully exited from Group!";
+    public static final String REMOVE_FROM_GROUP_SUCCESS = "Sucessfully removed from the Group!";
     public static final String ADDING_INDIVIDUAL_USER_FAILED = "Adding individual user failed, Please try again!";
     public static final String GROUP_MEMBER_CLASS_NAME = "com.jio.devicetracker.database.pojo.GroupMemberDataList";
     public static final String GROUP_NAME_CLASS_NAME = "com.jio.devicetracker.database.pojo.HomeActivityListData";
@@ -212,7 +215,9 @@ public class Constant {
     public static final String REQUEST_CONSENT = "Request Consent";
     public static final String NUMBER_CARRIER = "number";
     public static final String CONSENT_APPROVED_MESSAGE = "Thanks! you have approved the the group invitation request";
+    public static final String CONSENT_REJECTED_MESSAGE = "You have rejected the consent.";
     public static final String CONSENT_NOT_APPROVED_MESSAGE = "Consent is not approved please try gain!";
+    public static final String CONSENT_NOT_REJECTED_MESSAGE = "Consent rejection failed!";
     public static final String CONSENT_STATUS_MSG = "Yes JioTracker";
     public static final String CONSENT_MSG_SENT = "Consent sent";
     public static final String CONSENT_MSG_TO_TRACKEE = " wants to track your location. Click below link to reply. https://peopletracker/home?data=";
@@ -260,7 +265,12 @@ public class Constant {
     public static final String DEVICE_NOT_FOUND = "Device not found, Please try again!";
     public static final String REMOVE = "Remove";
     public static final String EXIT = "Exit";
+    public static final String SESSION_GROUPS = "sessiongroups";
+    public static final String TRACK = "Track";
     public static final String EXITED = "exited";
+    public static final String BEARER = "bearer ";
+    public static final String MEDIA_TYPE = "text/plain";
+    public static final String APPLICATION_JSON = "application/json";
     public static final String REMOVED = "removed";
     public static final String USER_ID= "userId";
     public static final String OK = "OK";

@@ -70,7 +70,6 @@ public class GroupVolleyManager extends StringRequest {
         header.put("Content-Type", "application/json");
         header.put("Authorization", "bearer " + new DBManager(context).getAdminLoginDetail().getUserToken());
         return header;
-
     }
 
 

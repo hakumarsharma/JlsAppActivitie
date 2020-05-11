@@ -57,8 +57,8 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
     private DBManager mDbManager;
     private String groupId;
     private String userId;
-    private List<GroupMemberDataList> listData;
     private String groupName;
+    private List<GroupMemberDataList> mList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,7 +110,7 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
 
     private void isMemberPresent() {
         TextView instruction = findViewById(R.id.groupListMember);
-        if (listData.isEmpty()) {
+        if (mList.isEmpty()) {
             mRecyclerList.setVisibility(View.INVISIBLE);
             instruction.setVisibility(View.VISIBLE);
             instruction.setText(Constant.ADD_GROUP_MEMBER_INSTRUCTION1 + groupName + Constant.ADD_GROUP_MEMBER_INSTRUCTION2);
@@ -124,10 +124,11 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
      * Displays group members of group
      */
     private void showDataInList() {
-        List<GroupMemberDataList> mList = new ArrayList<>();
-        listData = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+        mList = new ArrayList<>();
+        List<GroupMemberDataList> listData = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
         for (GroupMemberDataList groupMemberDataList : listData) {
-            if (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
+            if (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)
+            || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXITED)) {
                 GroupMemberDataList data = new GroupMemberDataList();
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());

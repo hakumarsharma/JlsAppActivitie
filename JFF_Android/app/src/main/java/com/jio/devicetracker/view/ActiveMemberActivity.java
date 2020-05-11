@@ -56,8 +56,9 @@ public class ActiveMemberActivity extends AppCompatActivity {
     private int position;
     private String errorMessage;
     private String createdBy;
-    private String updatedBy;
     private String userId;
+    private List<GroupMemberDataList> memberList;
+    private RecyclerView mRecyclerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,19 +66,18 @@ public class ActiveMemberActivity extends AppCompatActivity {
         setContentView(R.layout.activity_active_member_list);
         mDbManager = new DBManager(this);
         userId = mDbManager.getAdminLoginDetail().getUserId();
-        addDataInList();
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Intent intent = getIntent();
         toolbarTitle.setText(intent.getStringExtra(Constant.GROUPNAME));
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         createdBy = intent.getStringExtra(Constant.CREATED_BY);
-        updatedBy = intent.getStringExtra(Constant.UPDATED_BY);
-        RecyclerView mRecyclerList = findViewById(R.id.trackerList);
+        mRecyclerList = findViewById(R.id.trackerList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
         mAdapter = new ActiveMemberListAdapter(addDataInList());
         mRecyclerList.setAdapter(mAdapter);
         adapterEventListener();
+        isAnyMemberActive();
     }
 
     /**
@@ -85,31 +85,34 @@ public class ActiveMemberActivity extends AppCompatActivity {
      */
     private void adapterEventListener() {
         if (mAdapter != null) {
-            mAdapter.setOnItemClickPagerListener((v, position, groupId, isGroupAdmin, phoneNumber, consentId) -> {
-                PopupMenu popup = new PopupMenu(ActiveMemberActivity.this, v);
-                this.consentId = consentId;
-                this.position = position;
-                if (createdBy != null && createdBy.equalsIgnoreCase(userId) || updatedBy.equalsIgnoreCase(userId)) { // Check through updated by not by isGroupAdmin
-                    popup.getMenu().add(Menu.NONE, 1, 1, Constant.REMOVE);
-                    errorMessage = Constant.REMOVE_FROM_GROUP_FAILURE;
-                } else {
-                    popup.getMenu().add(Menu.NONE, 2, 2, Constant.EXIT);
-                    errorMessage = Constant.EXIT_FROM_GROUP_FAILURE;
-                }
-                popup.setOnMenuItemClickListener(item -> {
-                    switch (item.getItemId()) {
-                        case 1:
-                            makeRemoveAPICall(phoneNumber);
-                            break;
-                        case 2:
-                            makeExitAPICall(phoneNumber);
-                            break;
-                        default:
-                            break;
+            mAdapter.setOnItemClickPagerListener(new ActiveMemberListAdapter.RecyclerViewClickListener() {
+                @Override
+                public void onPopupMenuClicked(View v, int position, String groupId, boolean isGroupAdmin, String phoneNumber, String consentId) {
+                    PopupMenu popup = new PopupMenu(ActiveMemberActivity.this, v);
+                    ActiveMemberActivity.this.consentId = consentId;
+                    ActiveMemberActivity.this.position = position;
+                    if (createdBy != null && createdBy.equalsIgnoreCase(userId)) { // Check through updated by not by isGroupAdmin
+                        popup.getMenu().add(Menu.NONE, 1, 1, Constant.REMOVE);
+                        errorMessage = Constant.REMOVE_FROM_GROUP_FAILURE;
+                    } else {
+                        popup.getMenu().add(Menu.NONE, 2, 2, Constant.EXIT);
+                        errorMessage = Constant.EXIT_FROM_GROUP_FAILURE;
                     }
-                    return false;
-                });
-                popup.show();
+                    popup.setOnMenuItemClickListener(item -> {
+                        switch (item.getItemId()) {
+                            case 1:
+                                ActiveMemberActivity.this.makeRemoveAPICall(phoneNumber);
+                                break;
+                            case 2:
+                                ActiveMemberActivity.this.makeExitAPICall(phoneNumber);
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    });
+                    popup.show();
+                }
             });
         }
     }
@@ -123,12 +126,13 @@ public class ActiveMemberActivity extends AppCompatActivity {
         consent.setPhone(phoneNumber);
         consent.setStatus(Constant.EXITED);
         exitRemovedGroupData.setConsent(consent);
-        Util.getInstance().showProgressBarDialog(ActiveMemberActivity.this);
-        GroupRequestHandler.getInstance(this).handleRequest(new ExitRemovedGroupRequest(new ExitRemovedGroupRequestSuccessListener(), new ExitRemovedGroupRequestErrorListener(), exitRemovedGroupData, groupId, userId));
+        Util.getInstance().showProgressBarDialog(this);
+        GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new ExitRemovedGroupRequest(new ExitFromGroupRequestSuccessListener(), new ExitFromGroupRequestErrorListener(), exitRemovedGroupData, groupId, userId));
     }
 
     /**
      * Make a Remove API Call
+     *
      * @param phoneNumber
      */
     private void makeRemoveAPICall(String phoneNumber) {
@@ -138,13 +142,13 @@ public class ActiveMemberActivity extends AppCompatActivity {
         consent.setStatus(Constant.REMOVED);
         exitRemovedGroupData.setConsent(consent);
         Util.getInstance().showProgressBarDialog(ActiveMemberActivity.this);
-        GroupRequestHandler.getInstance(this).handleRequest(new ExitRemovedGroupRequest(new ExitRemovedGroupRequestSuccessListener(), new ExitRemovedGroupRequestErrorListener(), exitRemovedGroupData, groupId, userId));
+        GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new ExitRemovedGroupRequest(new RemovedFromGroupRequestSuccessListener(), new RemovedFromGroupRequestErrorListener(), exitRemovedGroupData, groupId, userId));
     }
 
     /**
      * Exit API Call Success Listener
      */
-    private class ExitRemovedGroupRequestSuccessListener implements Response.Listener {
+    private class ExitFromGroupRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
             Util.progressDialog.dismiss();
@@ -157,11 +161,49 @@ public class ActiveMemberActivity extends AppCompatActivity {
     /**
      * Exit API Call Error Listener
      */
-    private class ExitRemovedGroupRequestErrorListener implements Response.ErrorListener {
+    private class ExitFromGroupRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
             Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+        }
+    }
+
+    /**
+     * Exit API Call Success Listener
+     */
+    private class RemovedFromGroupRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
+            mDbManager.deleteSelectedDataFromGroup(consentId);
+            mAdapter.removeItem(position);
+            addDataInList();
+        }
+    }
+
+    /**
+     * Exit API Call Error Listener
+     */
+    private class RemovedFromGroupRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+        }
+    }
+
+    /**
+     * Checks if any member inside the group is active if not display no active member found
+     */
+    private void isAnyMemberActive() {
+        TextView instructionOnActiveMember = findViewById(R.id.activeMemberInGroupPresent);
+        if (memberList.isEmpty()) {
+            mRecyclerList.setVisibility(View.INVISIBLE);
+            instructionOnActiveMember.setVisibility(View.VISIBLE);
+        } else {
+            instructionOnActiveMember.setVisibility(View.GONE);
+            mRecyclerList.setVisibility(View.VISIBLE);
         }
     }
 
@@ -172,16 +214,18 @@ public class ActiveMemberActivity extends AppCompatActivity {
      */
     private List<GroupMemberDataList> addDataInList() {
         List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
-        List<GroupMemberDataList> memberList = new ArrayList<>();
+        memberList = new ArrayList<>();
         for (GroupMemberDataList data : mList) {
-            GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
-            groupMemberDataList.setName(data.getName());
-            groupMemberDataList.setNumber(data.getNumber());
-            groupMemberDataList.setConsentStatus(data.getConsentStatus());
-            groupMemberDataList.setGroupId(data.getGroupId());
-            groupMemberDataList.setGroupAdmin(data.isGroupAdmin());
-            groupMemberDataList.setProfileImage(R.drawable.ic_tracee_list);
-            memberList.add(groupMemberDataList);
+            if (!data.getConsentStatus().equalsIgnoreCase(Constant.EXITED)) {
+                GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+                groupMemberDataList.setName(data.getName());
+                groupMemberDataList.setNumber(data.getNumber());
+                groupMemberDataList.setConsentStatus(data.getConsentStatus());
+                groupMemberDataList.setGroupId(data.getGroupId());
+                groupMemberDataList.setGroupAdmin(data.isGroupAdmin());
+                groupMemberDataList.setProfileImage(R.drawable.ic_tracee_list);
+                memberList.add(groupMemberDataList);
+            }
         }
         return memberList;
     }
