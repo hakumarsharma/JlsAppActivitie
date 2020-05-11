@@ -20,7 +20,6 @@
 
 package com.jio.devicetracker.view;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
@@ -35,9 +34,17 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.material.navigation.NavigationView;
 import com.jio.devicetracker.R;
 
@@ -49,18 +56,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.SubscriptionInfo;
-import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -124,7 +132,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Implementation of Dashboard Screen to show the trackee list and hamburger menu.
  */
-public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
+public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, MessageListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
     private static RecyclerView listView;
     public static List<MultipleselectData> selectedData;
@@ -139,12 +149,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private List<SubscriptionInfo> subscriptionInfos;
     private Locale locale = Locale.ENGLISH;
     private static int batteryLevel;
-    private static FusedLocationProviderClient client;
     private DrawerLayout drawerLayout;
     private static Double latitude;
     private static Double longitude;
     private static int signalStrengthValue;
-    public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 101;
     private WorkManager mWorkManager = null;
     private static Thread thread = null;
     public static List<GroupData> specificGroupMemberData = null;
@@ -161,6 +169,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public static List<GroupMemberDataList> grpMemberDataList;
     public static List<HomeActivityListData> grpDataList;
     private static TextView devicePresent;
+    private GoogleApiClient googleApiClient;
+    private Location currentLocation;
+    private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
+    private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +181,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         setLayoutData();
         setNavigationData();
         initializeDataMember();
-        checkPermission();
         Util.getAdminDetail(this);
         setConstaint();
 //        startService();
@@ -315,10 +326,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         //thread.start();
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         this.registerReceiver(broadcastreceiver, intentFilter);
-        MyPhoneStateListener myPhoneStateListener = new MyPhoneStateListener();
-        TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-        client = LocationServices.getFusedLocationProviderClient(this);
+        setUpGClient();
         userId = mDbManager.getAdminLoginDetail().getUserId();
         userPhoneNumber = mDbManager.getAdminLoginDetail().getPhoneNumber();
         new Thread(new SendLocation()).start();
@@ -573,23 +581,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     };
 
     /**
-     * To get the lat and long of the current device
-     */
-    private void getLocation() {
-        if (client != null) {
-            client.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                    }
-                }
-            });
-        }
-    }
-
-    /**
      * Navigates to the profile Activity
      */
     private void gotoProfileActivity() {
@@ -637,13 +628,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Publish the MQTT message along with battery level, signal strength and time format
      */
     public void publishMessage() {
-        getLocation();
-        String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
-                "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
-        String topic = "jioiot/svcd/jiophone/" + userPhoneNumber + "/uc/fwd/locinfo";
-        System.out.println("Message --> " + message);
-        System.out.println("Topic -->" + topic);
-        new MQTTManager().publishMessage(topic, message);
+        if(getCurrentLocation() != null) {
+            latitude = getCurrentLocation().getLatitude();
+            longitude = getCurrentLocation().getLongitude();
+            String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
+                    "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
+            String topic = "jioiot/svcd/jiophone/" + userPhoneNumber + "/uc/fwd/locinfo";
+            System.out.println("Message --> " + message);
+            System.out.println("Topic -->" + topic);
+            new MQTTManager().publishMessage(topic, message);
+        }
     }
 
     /**
@@ -950,55 +944,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Permissions check
-     */
-    public void checkPermission() {
-        int fineLocation = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
-        int fineLocationCoarse = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        int readphoneState = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
-        List<String> listPermissionsNeeded = new ArrayList<>();
-        if (fineLocation != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (readphoneState != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.READ_PHONE_STATE);
-        }
-        if (fineLocationCoarse != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-        if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
-        } else {
-            subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_ID_MULTIPLE_PERMISSIONS: {
-                if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-                // If request is cancelled, the result arrays are empty.
-                for (int grantResult : grantResults) {
-                    if (grantResults.length > 0 && grantResult == PackageManager.PERMISSION_GRANTED) {
-                        System.out.println("Permission granted");
-                    }
-                }
-            }
-            default:
-//                Log.d("TAG", "Something went wrong");
-                break;
-        }
-    }
-
-    /**
      * Send location to the borqs every 15 seconds
      */
     public class SendLocation implements Runnable {
@@ -1185,6 +1130,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         public void onErrorResponse(VolleyError error) {
             Toast.makeText(DashboardActivity.this, Constant.CONSENT_NOT_REJECTED_MESSAGE, Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
@@ -1326,5 +1272,129 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
         adapter = new TrackerDeviceListAdapter(listOnDashBoard, context);
         listView.setAdapter(adapter);
+    }
+
+    /**
+     * Location Google API Connect
+     */
+    private synchronized void setUpGClient() {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, 0, this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLocation = location;
+        if (currentLocation != null) {
+            latitude = currentLocation.getLatitude();
+            longitude = currentLocation.getLongitude();
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        checkPermissions();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        //Do whatever you need
+        //You can display a message here
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        //You can display a message here
+    }
+
+    private void checkPermissions() {
+        int permissionLocation = ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+            if (!listPermissionsNeeded.isEmpty()) {
+                ActivityCompat.requestPermissions(this,
+                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
+            }
+        } else {
+            getCurrentLocation();
+            MyPhoneStateListener myPhoneStateListener = new MyPhoneStateListener();
+            TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        int permissionLocation = ContextCompat.checkSelfPermission(DashboardActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+            getCurrentLocation();
+            MyPhoneStateListener myPhoneStateListener = new MyPhoneStateListener();
+            TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        }
+    }
+
+    /**
+     * Returns the current Location
+     */
+    private Location getCurrentLocation() {
+        if (googleApiClient != null) {
+            if (googleApiClient.isConnected()) {
+                int permissionLocation = ContextCompat.checkSelfPermission(DashboardActivity.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION);
+                if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+                    currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                    LocationRequest locationRequest = new LocationRequest();
+                    locationRequest.setInterval(3000);
+                    locationRequest.setFastestInterval(3000);
+                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                            .addLocationRequest(locationRequest);
+                    builder.setAlwaysShow(true);
+                    LocationServices.FusedLocationApi
+                            .requestLocationUpdates(googleApiClient, locationRequest, DashboardActivity.this, Looper.getMainLooper());
+                    PendingResult<LocationSettingsResult> result =
+                            LocationServices.SettingsApi
+                                    .checkLocationSettings(googleApiClient, builder.build());
+                    result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+
+                        @Override
+                        public void onResult(LocationSettingsResult result) {
+                            final Status status = result.getStatus();
+                            switch (status.getStatusCode()) {
+                                case LocationSettingsStatusCodes.SUCCESS:
+                                    int permissionLocation = ContextCompat
+                                            .checkSelfPermission(DashboardActivity.this,
+                                                    Manifest.permission.ACCESS_FINE_LOCATION);
+                                    if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+                                        currentLocation = LocationServices.FusedLocationApi
+                                                .getLastLocation(googleApiClient);
+                                    }
+                                    break;
+                                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                    try {
+                                        status.startResolutionForResult(DashboardActivity.this,
+                                                REQUEST_CHECK_SETTINGS_GPS);
+                                    } catch (IntentSender.SendIntentException e) {
+                                        // Ignore the error.
+                                    }
+                                    break;
+                                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                    break;
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        return currentLocation;
     }
 }

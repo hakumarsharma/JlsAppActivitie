@@ -341,7 +341,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             requestPermissions(new String[]{Manifest.permission.READ_SMS,
                     Manifest.permission.READ_PHONE_NUMBERS,
                     Manifest.permission.SEND_SMS,
-                    Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.READ_PHONE_STATE,
                     Manifest.permission.CAMERA,
                     Manifest.permission.RECEIVE_SMS,
                     Manifest.permission.READ_CONTACTS}, PERMIT_ALL);
@@ -579,15 +579,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                     isReadPhoneStatePermissionGranted = false;
                 }
-                if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    isAccessCoarsePermissionGranted = false;
-                }
                 if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     isReadPhoneStatePermissionGranted = true;
-                }
-
-                if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    isAccessCoarsePermissionGranted = true;
                 }
                 subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
                 // If request is cancelled, the result arrays are empty.
