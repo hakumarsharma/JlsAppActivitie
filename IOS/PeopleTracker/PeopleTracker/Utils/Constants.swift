@@ -92,6 +92,7 @@ class Constants {
         static let Settings = "SettingsScreen"
         static let HelpPrivacy = "HelpPrivacyScreen"
         static let About = "AboutScreen"
+        static let QRCodeScanner = "QRCodeScanner"
     }
     
     struct LoginScreenConstants {
