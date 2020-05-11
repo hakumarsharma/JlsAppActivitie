@@ -28,13 +28,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSContactsUsageDescription</key>
-	<string>People Tracker wants to access your contacts. Please accept to add contacts directly from contact list</string>
+	<string>People Tracker wants to access your contacts. Please accept to add contacts directly from contact list.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>People Tracker  wants to access your location details. Please accept to track or to be tracked</string>
+	<string>People Tracker  wants to access your location details. Please accept to track or to be tracked.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>People Tracker  wants to access your location details. Please accept to track or to be tracked</string>
+	<string>People Tracker  wants to access your location details. Please accept to track or to be tracked.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>People Tracker  wants to access your location details. Please accept to track or to be tracked</string>
+	<string>People Tracker  wants to access your location details. Please accept to track or to be tracked.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -56,5 +56,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>People Tracker wants to access your camera. Please accept to scan QRCode.</string>
 </dict>
 </plist>

@@ -57,6 +57,7 @@
 		18CC652824472F5B003736BC /* HelpPrivacyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652724472F5B003736BC /* HelpPrivacyScreen.swift */; };
 		18CC652A24473184003736BC /* AboutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652924473184003736BC /* AboutScreen.swift */; };
 		18CC652E24484121003736BC /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC652D24484121003736BC /* UserModel.swift */; };
+		18EF318D2469267700E3BDC2 /* QRCodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EF318C2469267700E3BDC2 /* QRCodeScanner.swift */; };
 		341FD4D5A42EEAA0F3ADF682 /* Pods_PeopleTrackerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCFA2046750A007C2D0B6E1 /* Pods_PeopleTrackerTests.framework */; };
 		B02417F2B72A1DCDF388C6A3 /* Pods_PeopleTracker_PeopleTrackerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F564BF8112588BCFEE328CD8 /* Pods_PeopleTracker_PeopleTrackerUITests.framework */; };
 		CED90390BA1ECF5CD66B1A28 /* Pods_PeopleTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F33F9A1ECF37C7294435877 /* Pods_PeopleTracker.framework */; };
@@ -136,6 +137,7 @@
 		18CC652724472F5B003736BC /* HelpPrivacyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpPrivacyScreen.swift; sourceTree = "<group>"; };
 		18CC652924473184003736BC /* AboutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutScreen.swift; sourceTree = "<group>"; };
 		18CC652D24484121003736BC /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		18EF318C2469267700E3BDC2 /* QRCodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanner.swift; sourceTree = "<group>"; };
 		1D06A41AB10B7A158607EC5E /* Pods-PeopleTrackerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeopleTrackerTests.debug.xcconfig"; path = "Target Support Files/Pods-PeopleTrackerTests/Pods-PeopleTrackerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4062F81057CFA54509C942FE /* Pods-PeopleTracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeopleTracker.release.xcconfig"; path = "Target Support Files/Pods-PeopleTracker/Pods-PeopleTracker.release.xcconfig"; sourceTree = "<group>"; };
 		8726BFA3D79D73A1F648C7BB /* Pods-PeopleTracker-PeopleTrackerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeopleTracker-PeopleTrackerUITests.debug.xcconfig"; path = "Target Support Files/Pods-PeopleTracker-PeopleTrackerUITests/Pods-PeopleTracker-PeopleTrackerUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 			children = (
 				1816ACAE2421EB1A00589CD9 /* AddDeviceScreen.swift */,
 				1816ACB02421EB2600589CD9 /* AddPersonScreen.swift */,
+				18EF318C2469267700E3BDC2 /* QRCodeScanner.swift */,
 			);
 			path = Device;
 			sourceTree = "<group>";
@@ -677,6 +680,7 @@
 				18CC652424472F17003736BC /* ProfileScreen.swift in Sources */,
 				181ACFE52444337000EACCC5 /* LoginExtension.swift in Sources */,
 				1816ACA32421E94D00589CD9 /* LoginScreen.swift in Sources */,
+				18EF318D2469267700E3BDC2 /* QRCodeScanner.swift in Sources */,
 				188AAA8224640875002F8E09 /* ActiveSessionCell.swift in Sources */,
 				18A1C8552449807B00BD365A /* GroupService.swift in Sources */,
 				185A044B244990540087FD9F /* GroupListModel.swift in Sources */,
