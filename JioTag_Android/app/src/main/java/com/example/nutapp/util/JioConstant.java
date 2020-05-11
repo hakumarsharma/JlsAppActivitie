@@ -30,4 +30,12 @@ public class JioConstant {
     public static final String EMAIL_VERIFICATION_TITLE = "Email Verification";
     public static final String SCAN_QR_CODE_TITLE = "Scan QR Code";
     public static final String DEVICE_INFO_TITLE = "Device";
+    public static final String AUTO_LOGIN_STATUS = "AutoLoginStatus";
+    public static String AUTO_LOGIN = "Autologin";
+    public static String QR_SCAN_FLAG_PREFERENCE = "QRScanPreference";
+    public static String QR_SCAN_FLAG = "QRScanFlag";
+    public static String SLIENT_MODE_TITLE = "Slient Mode";
+    public static String NOTIFICATION_MODE_TITLE = "Notification";
+    public static String FORGOT_PASS_TITLE = "Change Mobile Number";
+
 }

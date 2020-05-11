@@ -34,4 +34,5 @@
     <color name="cardviewlayout_contenttext_color">#00B5B4</color>
     <color name="alert_dialog_location_color">#00BFF2</color>
     <color name="alert_dialog_ok_color">#CCF2FD</color>
+    <color name="navigate_profile_color">#6766B2</color>
 </resources>

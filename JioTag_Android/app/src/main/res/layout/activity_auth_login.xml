@@ -120,6 +120,20 @@
                 android:background="@color/lite_grey"
                 android:layout_height="2dp">
             </View>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/password_edit_line"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/size_18"
+                android:textSize="@dimen/fourteen_dp"
+                android:text="@string/forgot_password"
+                android:id="@+id/forgot_password"
+                android:layout_marginTop="@dimen/eigh_dp"
+                android:textStyle="bold"
+                android:textColor="@color/cardviewlayout_contenttext_color"
+                />
             <TextView
                 android:id="@+id/password_condition"
                 android:layout_width="match_parent"
@@ -129,36 +143,10 @@
                 android:textSize="@dimen/twelve_sp"
                 android:layout_marginLeft="@dimen/sixteen_dp"
                 android:layout_marginTop="@dimen/car_corner_4dp"
-                android:layout_below="@+id/password_edit_line"
+                android:layout_below="@+id/forgot_password"
                 android:textColor="@color/cardview_device_status_color_gray"
+                android:visibility="invisible"
                 />
-           <!-- <EditText
-                android:id="@+id/emailId"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="144dp"
-                android:layout_marginRight="10dp"
-                android:hint="@string/email_id_hint"
-                android:inputType="text"
-                android:textColor="#000000"
-                />-->
-
-           <!-- <EditText
-                android:id="@+id/password"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/emailId"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="50dp"
-                android:layout_marginRight="10dp"
-                android:backgroundTint="@color/colorLogin"
-                android:hint="Jio Number"
-                android:inputType="phone"
-                android:longClickable="false"
-                android:textColor="#000000"
-                android:imeOptions="actionDone"
-                android:textCursorDrawable="@color/colorLogin" />-->
 
             <Button
                 android:id="@+id/login_btn"
