@@ -38,7 +38,18 @@ class AddPersonScreen: UIViewController,CNContactPickerDelegate {
         super.viewDidLoad()
         self.title = navtitle
         self.createNavBarItems()
+        self.navigationItem.setHidesBackButton(true, animated: true)
+               self.createBackBarButtonItem()
     }
+    func createBackBarButtonItem() {
+           let backBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(backButton(sender:)))
+           backBtn.tintColor = .white
+           self.navigationItem.setLeftBarButton(backBtn, animated: true)
+       }
+       
+       @objc func backButton(sender: UIBarButtonItem) {
+           self.navigationController?.popViewController(animated: true)
+       }
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)

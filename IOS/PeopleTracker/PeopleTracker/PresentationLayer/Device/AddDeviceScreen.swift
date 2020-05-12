@@ -37,6 +37,8 @@ class AddDeviceScreen: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = navtitle
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        self.createBackBarButtonItem()
         deviceType.layer.borderWidth = 1.0
         deviceType.layer.borderColor = UIColor.Common.TextFieldBorderColor.cgColor
         deviceType.layer.cornerRadius = 4.0
@@ -54,7 +56,17 @@ class AddDeviceScreen: UIViewController {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let qrScannerViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.QRCodeScanner) as! QRCodeScanner
         self.navigationController?.pushViewController(qrScannerViewController, animated: true)
+       
     }
+    func createBackBarButtonItem() {
+           let backBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(backButton(sender:)))
+           backBtn.tintColor = .white
+           self.navigationItem.setLeftBarButton(backBtn, animated: true)
+       }
+       
+       @objc func backButton(sender: UIBarButtonItem) {
+           self.navigationController?.popViewController(animated: true)
+       }
     
     @IBAction func deviceTypeButtonAction(_ sender: Any) {
         

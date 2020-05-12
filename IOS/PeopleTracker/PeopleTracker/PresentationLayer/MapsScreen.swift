@@ -55,25 +55,24 @@ class MapsScreen: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     // Create marker to display pindrop over map
-    func createMapViewMarker(deviceData :  DeviceDetails) {
-        let camera = GMSCameraPosition.camera(withLatitude:  deviceData.location!.latitude , longitude: deviceData.location!.longitude, zoom: 6.0)
+    func createMapViewMarker(deviceData :  [DeviceDetails]) {
+        let camera = GMSCameraPosition.camera(withLatitude:  deviceData.first?.location?.latitude ?? 0 , longitude: deviceData.first?.location?.longitude ?? 0, zoom: 6.0)
         let mapView = GMSMapView.map(withFrame: self.view.bounds, camera: camera)
         mapView.settings.zoomGestures = true
         self.view.addSubview(mapView)
-        //        for (index, element) in self.deviceDetails.enumerated() {
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: deviceData.location!.latitude, longitude: deviceData.location!.longitude)
-        marker.title = "Avatar"
-        let img = UIImage.init(named: "avatar1")
-        let markerView = UIImageView(image: img)
-        markerView.tintColor = UIColor.red
-        marker.iconView = markerView
-        marker.map = mapView
-        
-        //        }
+        for device in deviceData {
+            let marker = GMSMarker()
+            marker.position = CLLocationCoordinate2D(latitude: device.location?.latitude ?? 0, longitude: device.location?.longitude ?? 0)
+            marker.title = self.groupData.first?.groupMember.first?.memberName
+            let img = UIImage.init(named: "pindrop")
+            let markerView = UIImageView(image: img)
+            markerView.tintColor = UIColor.red
+            marker.iconView = markerView
+            marker.map = mapView
+            
+        }
         
     }
-    
     
     func callgetLocationDetails() {
         self.showActivityIndicator()
@@ -86,14 +85,17 @@ class MapsScreen: UIViewController {
             
             switch result {
             case .success(let deviceResponse):
-                if deviceResponse.devicedata.count > 0 {
+                
                     DispatchQueue.main.async {
                         self.hideActivityIndicator()
-                        self.createMapViewMarker(deviceData: deviceResponse.devicedata.first!)
+                        if deviceResponse.devicedata.count > 0 {
+                        self.createMapViewMarker(deviceData: Array(deviceResponse.devicedata))
+                        }else {
+                            self.ShowALert(title: Constants.LocationConstants.NoLatLong)
+                        }
+                        
                     }
-                } else {
-                    self.ShowALert(title: Constants.LocationConstants.NoLatLong)
-                }
+              
             case .failure(let error):
                 if type(of: error) == NetworkManager.ErrorType.self {
                     DispatchQueue.main.async {

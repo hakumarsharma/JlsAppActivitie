@@ -40,6 +40,7 @@ class LoginScreen: UIViewController {
         self.checkIfUserExistsInDatabaseAndFetchDetails()
     }
     
+    // checking if user exists blocking user to enter new number to avoid db issues
     func checkIfUserExistsInDatabaseAndFetchDetails(){
         if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
             let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
@@ -66,11 +67,13 @@ class LoginScreen: UIViewController {
             self.ShowALert(title: Constants.LoginScreenConstants.Otp);
             return
         }
-        //self.registerationApiCall()
+        // TODO : Have to integrate registration API flow
         self.callLoginApi()
         
     }
     
+    // MARK: Service Calls
+      
     //Regsiteration Api Call
     func registerationApiCall() {
         self.showActivityIndicator()
@@ -102,23 +105,28 @@ class LoginScreen: UIViewController {
         UserService.shared.loginRequest(with:URL(string: Constants.ApiPath.LoginUrl)!,userName : self.userNameTxt.text!, parameters: ["phone": self.mobileNumberTxt.text!,"phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
             switch result {
             case .success( _):
-                    if RealmManager.sharedInstance.getDeviceDataFromDB().count > 0{
-                         let deviceData = RealmManager.sharedInstance.getDeviceDataFromDB().first
-                          if deviceData?.code == 200 {
-                            DispatchQueue.main.async {
-                                self.hideActivityIndicator()
-                                self.navigateToHomeScreen()
-                            }
-                          } else {
-                            DispatchQueue.main.async {
-                               self.callAddDeviceApi()
-                            }
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                           self.callAddDeviceApi()
-                        }
-                    }
+                DispatchQueue.main.async {
+                self.navigateToHomeScreen()
+                }
+                    // checking if device is whitelisted using verify and assign or not
+//                    if RealmManager.sharedInstance.getDeviceDataFromDB().count > 0{
+//                         let deviceData = RealmManager.sharedInstance.getDeviceDataFromDB().first
+//                        // status code is device added successfully and 409 is if we are trying to add same device again
+//                          if deviceData?.code == 200  {
+//                            DispatchQueue.main.async {
+//                                self.hideActivityIndicator()
+//                                self.navigateToHomeScreen()
+//                            }
+//                          } else {
+//                            DispatchQueue.main.async {
+//                               self.callAddDeviceApi()
+//                            }
+//                        }
+//                    } else {
+//                        DispatchQueue.main.async {
+//                           self.callAddDeviceApi()
+//                        }
+//                    }
                 
             case .failure(let error):
                 if type(of: error) == NetworkManager.ErrorType.self {
@@ -136,7 +144,7 @@ class LoginScreen: UIViewController {
         }
     }
     
-    //  API to add device details
+    //  API to add device using verify and assign
     func callAddDeviceApi() {
             let deviceURL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.AddDeviceUrl + Utils.shared.getUgsToken())!
             let deviceDetails : [[String : String]] = [["mac": self.mobileNumberTxt.text!,"identifier": "imei","name": self.userNameTxt.text! ,"phone": self.mobileNumberTxt.text!]]

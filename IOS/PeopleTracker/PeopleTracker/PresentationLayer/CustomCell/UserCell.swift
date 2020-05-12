@@ -108,12 +108,11 @@ class UserCell: UITableViewCell {
     
     // Consent for individual will be based on group status and member status
     func setConsentStatusForIndividual(groupData : GroupListData){
-        
         if groupData.status == Utils.GroupStatus.isCompleted.rawValue {
             self.requestConsentButton.setTitle(Constants.HomScreenConstants.RequestConsent, for: .normal)
             self.consentstatusColor.backgroundColor = UIColor.Consent.RequestConsent
         } else {
-            if (groupData.status == Utils.GroupStatus.isApproved.rawValue) {
+            if (groupData.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue) {
                 self.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentApproved, for: .normal)
                 self.consentstatusColor.backgroundColor = UIColor.Consent.ConsentApproved
             } else {

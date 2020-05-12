@@ -947,7 +947,7 @@
                                                                 <constraint firstAttribute="height" constant="25" id="LyV-WF-eWC"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tracking Expires In : 5min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ziw-KP-ciq">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tracking ExpiresIn : 15min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ziw-KP-ciq">
                                                             <rect key="frame" x="238" y="103" width="160" height="20"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="Lvh-HU-Q1O"/>
@@ -995,6 +995,8 @@
                                             <outlet property="ImgBgView" destination="Y0r-RD-IWo" id="bnA-LR-oep"/>
                                             <outlet property="avatar" destination="VcT-2j-5ds" id="27Y-6w-Hbp"/>
                                             <outlet property="customView" destination="bN6-cl-LtD" id="nPu-aV-On9"/>
+                                            <outlet property="durationLbl" destination="zIg-yy-XwV" id="NWa-S9-Mcz"/>
+                                            <outlet property="expiryTimeLbl" destination="Ziw-KP-ciq" id="19d-5i-bGQ"/>
                                             <outlet property="mobileNumberLbl" destination="XdW-dR-Gd7" id="qUl-vB-Cjk"/>
                                             <outlet property="nameLbl" destination="xOM-xd-hsn" id="GRE-sV-1T1"/>
                                             <outlet property="optionsBtn" destination="Rni-kb-v2O" id="FUr-xj-MVp"/>

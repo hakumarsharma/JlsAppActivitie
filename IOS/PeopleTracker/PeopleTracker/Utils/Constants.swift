@@ -42,7 +42,7 @@ class Constants {
        static let CreateMultiple = "/sessiongroupconsents"
        static let GenerateConsent = "/tokens"
        static let ApproveConsent = "/status"
-       static let LocationUrl = "/events/search"
+       static let LocationUrl = "/events/search?limit=1"
     }
     
     struct HelpScreen {
@@ -127,6 +127,7 @@ class Constants {
         static let ConsentPending = "Consent Pending"
         static let ConsentSent = "Consent Sent"
         static let SelectDevice = "Select consent approved devices to track"
+        static let SessionTime = "User can be tracked only during scheduled time"
         static let ConsentAlredySent = "Consent already sent."
         static let ConsentAlert = "Consent sent successfully. To track, Please wait till the consent gets approved."
     }

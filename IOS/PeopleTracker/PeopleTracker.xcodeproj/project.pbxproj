@@ -39,6 +39,7 @@
 		18708C442434A5D200940011 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18708C432434A5D200940011 /* DeviceModel.swift */; };
 		188AAA802462C56F002F8E09 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188AAA7F2462C56F002F8E09 /* LocationService.swift */; };
 		188AAA8224640875002F8E09 /* ActiveSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188AAA8124640875002F8E09 /* ActiveSessionCell.swift */; };
+		188AAA8424659707002F8E09 /* GroupBaseClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188AAA8324659707002F8E09 /* GroupBaseClass.swift */; };
 		188D44E5242887CE001D8CF0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188D44E4242887CE001D8CF0 /* UserCell.swift */; };
 		188ECB91244DC761007260D1 /* GroupMemberModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188ECB90244DC761007260D1 /* GroupMemberModel.swift */; };
 		188ECB93244DCB3F007260D1 /* ConsentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188ECB92244DCB3F007260D1 /* ConsentService.swift */; };
@@ -121,6 +122,7 @@
 		18708C432434A5D200940011 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
 		188AAA7F2462C56F002F8E09 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		188AAA8124640875002F8E09 /* ActiveSessionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionCell.swift; sourceTree = "<group>"; };
+		188AAA8324659707002F8E09 /* GroupBaseClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupBaseClass.swift; sourceTree = "<group>"; };
 		188D44E4242887CE001D8CF0 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		188ECB90244DC761007260D1 /* GroupMemberModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberModel.swift; sourceTree = "<group>"; };
 		188ECB92244DCB3F007260D1 /* ConsentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentService.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 				1816ACB62421EB5C00589CD9 /* MapsScreen.swift */,
 				1816ACBA2421EC8F00589CD9 /* HelpScreen.swift */,
 				1816ACBC2421ECAF00589CD9 /* PrivacyPolicyScreen.swift */,
+				188AAA8324659707002F8E09 /* GroupBaseClass.swift */,
 			);
 			path = PresentationLayer;
 			sourceTree = "<group>";
@@ -684,6 +687,7 @@
 				188AAA8224640875002F8E09 /* ActiveSessionCell.swift in Sources */,
 				18A1C8552449807B00BD365A /* GroupService.swift in Sources */,
 				185A044B244990540087FD9F /* GroupListModel.swift in Sources */,
+				188AAA8424659707002F8E09 /* GroupBaseClass.swift in Sources */,
 				18CC652624472F42003736BC /* SettingsScreen.swift in Sources */,
 				1816ACB92421EB7A00589CD9 /* Constants.swift in Sources */,
 			);

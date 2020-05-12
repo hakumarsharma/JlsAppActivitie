@@ -27,7 +27,7 @@ import UIKit
 import JJFloatingActionButton
 import SideMenu
 
-class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, UserCellDelegate {
+class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, UserCellDelegate {
     
     
     @IBOutlet weak var usersTableView: UITableView!
@@ -149,11 +149,16 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     
     @objc func trackButton(sender: UIBarButtonItem) {
         if selectedCell.count > 0 {
-        let activeGroupsArr = selectedCell.filter({$0.status == Utils.GroupStatus.isActive.rawValue && $0.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue})
+            let activeGroupsArr = selectedCell.filter({$0.status == Utils.GroupStatus.isActive.rawValue})
             if activeGroupsArr.count > 0 {
-               self.navigateToMapsScreen()
+               let approvedArr = activeGroupsArr.filter({$0.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue})
+                 if approvedArr.count > 0 {
+                    self.navigateToMapsScreen(activegroupArr: activeGroupsArr)
+                 } else {
+                    self.ShowALert(title: Constants.HomScreenConstants.SelectDevice)
+                }
             } else {
-                self.ShowALert(title: Constants.HomScreenConstants.SelectDevice)
+                self.ShowALert(title: Constants.HomScreenConstants.SessionTime)
             }
         } else {
             self.ShowALert(title: Constants.HomScreenConstants.SelectDevice)
@@ -161,10 +166,10 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     }
     
     // MARK : Navigatation screens
-    func navigateToMapsScreen() {
+    func navigateToMapsScreen(activegroupArr : [GroupListData]) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.MapsScreen) as! MapsScreen
-        mapsViewController.groupData = selectedCell
+        mapsViewController.groupData = activegroupArr
         self.navigationController?.pushViewController(mapsViewController, animated: true)
     }
     
@@ -312,7 +317,6 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: Service Calls
     
-    
     // Create GroupList Api Call
     func getAllGroupsApi() {
         self.showActivityIndicator()
@@ -321,13 +325,8 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
             switch result {
             case .success(let groupResponse):
                 self.groupList.removeAll()
-//                let groupMembers : [GroupMemberModel]  = Array(RealmManager.sharedInstance.getGroupMemeberDataFromDB())
                 for groupdata in groupResponse.groupListData {
                     if ((groupdata.status == Utils.GroupStatus.isActive.rawValue || groupdata.status == Utils.GroupStatus.isCompleted.rawValue || groupdata.status == Utils.GroupStatus.isScheduled.rawValue) && groupdata.groupCreatedBy == Utils.shared.getUserId()) {
-//                        for member in groupdata.groupMember {
-//                            let memberArr = groupMembers.filter { $0.groupMemberData.first?.groupMemberId == member.memberId }
-//                            member.deviceType = memberArr.first?.groupMemberData.first?.deviceType
-//                        }
                      let groupName = groupdata.name.components(separatedBy: "+")
                         if groupName.count == 2 && groupName[0] == Constants.AddDeviceConstants.Individual && (groupdata.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue || groupdata.groupMember.first?.memberStatus == Utils.GroupStatus.isPending.rawValue ) {
                              self.groupList.append(groupdata)
@@ -420,5 +419,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
             
         }
     }
+    
+  
     
 }

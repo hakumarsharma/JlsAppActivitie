@@ -49,6 +49,7 @@ class HelpScreen: UIViewController, UIScrollViewDelegate {
         print(Utils.shared.getToEpochTime())
     }
     
+    
     func initializeData() {
         pageControl.numberOfPages = screens.count
         setupScreens()
