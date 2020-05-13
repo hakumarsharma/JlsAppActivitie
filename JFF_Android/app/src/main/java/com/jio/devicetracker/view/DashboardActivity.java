@@ -64,6 +64,7 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
 import android.telephony.PhoneStateListener;
@@ -90,6 +91,7 @@ import com.jio.devicetracker.database.pojo.GenerateConsentTokenData;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
 import com.jio.devicetracker.database.pojo.SearchEventData;
@@ -139,10 +141,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private static RecyclerView listView;
     public static List<MultipleselectData> selectedData;
     public static List<TrackerdeviceResponse.Data> data;
+    private String groupMemberName;
     private static TrackerDeviceListAdapter adapter;
     public static List<String> consentListPhoneNumber = null;
     private static DBManager mDbManager;
-    public static Map<String, Map<Double, Double>> namingMap = null;
     private static Context context = null;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
@@ -160,9 +162,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private static String userId;
     private String grpId;
     private String userPhoneNumber;
-    private String deviceId;
     private String consentId;
-    private String groupMemberName;
     private int listPosition;
     private List listOnDashBoard;
     public static List<GroupMemberDataList> grpMemberDataList;
@@ -172,6 +172,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private Location currentLocation;
     private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
+    private int counter = 0;
+    private List<MapData> mapDataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,16 +230,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
                 @Override
                 public void checkBoxClickedForGroupMember(GroupMemberDataList mDataList) {
-                    grpId = mDataList.getGroupId();
-                    deviceId = mDataList.getDeviceId();
-                    groupMemberName = mDataList.getName();
                     grpMemberDataList.add(mDataList);
                 }
 
                 @Override
                 public void checkBoxClickedForGroup(HomeActivityListData homeActivityListData) {
                     grpId = homeActivityListData.getGroupId();
-                    deviceId = homeActivityListData.getDeviceId();
                     grpDataList.add(homeActivityListData);
                 }
 
@@ -317,7 +315,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         selectedData = new ArrayList<>();
         mWorkManager = WorkManager.getInstance();
         consentListPhoneNumber = new LinkedList<>();
-        namingMap = new HashMap<>();
+        mapDataList = new ArrayList<>();
         Util.getInstance().getIMEI(this);
         context = getApplicationContext();
         mDbManager = new DBManager(context);
@@ -482,7 +480,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GROUP_LIMITATION, Constant.ALERT_TITLE, DashboardActivity.this);
+                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, DashboardActivity.this);
             }
         }
     }
@@ -630,7 +628,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         if (getCurrentLocation() != null) {
             latitude = getCurrentLocation().getLatitude();
             longitude = getCurrentLocation().getLongitude();
-            String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
+            String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + 12.924812 + "\",\"lon\":\"" + 77.663832 + "\",\"ltd\":\"0\",\n" +
                     "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
             String topic = "jioiot/svcd/jiophone/" + userPhoneNumber + "/uc/fwd/locinfo";
             System.out.println("Message --> " + message);
@@ -681,15 +679,27 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.createGroup:
+                if (checkLimitationInGroupIndividualCreation()) {
+                    Util.alertDilogBox(Constant.USER_LIMITATION, Constant.ALERT_TITLE, this);
+                    return;
+                }
                 startActivity(new Intent(this, GroupNameActivity.class));
                 break;
             case R.id.track:
                 trackDevice();
                 break;
             case R.id.addDevice:
+                if (checkLimitationInGroupIndividualCreation()) {
+                    Util.alertDilogBox(Constant.USER_LIMITATION, Constant.ALERT_TITLE, this);
+                    return;
+                }
                 gotoQRScannerScreen();
                 break;
             case R.id.addContact:
+                if (checkLimitationInGroupIndividualCreation()) {
+                    Util.alertDilogBox(Constant.USER_LIMITATION, Constant.ALERT_TITLE, this);
+                    return;
+                }
                 gotoContactsDetailsActivity();
                 break;
             default:
@@ -733,17 +743,21 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             Util.alertDilogBox(Constant.CONSENT_NOT_APPROVED, Constant.ALERT_TITLE, this);
             return;
         } else {
-            Util.getInstance().showProgressBarDialog(this);
-            SearchEventData searchEventData = new SearchEventData();
-            SearchEventData.Time time = new SearchEventData().new Time();
-            List<String> mList = new ArrayList<>();
-            mList.add(Constant.LOCATION);
-            mList.add(Constant.SOS);
-            time.setFrom(mDbManager.getGroupDetail(grpId).getFrom());
-            time.setTo(mDbManager.getGroupDetail(grpId).getTo());
-            searchEventData.setTime(time);
-            searchEventData.setTypes(mList);
-            GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, userId, grpId));
+            // Make a count of number of selected devices and call the API that many times
+            if(counter < grpMemberDataList.size()) {
+                groupMemberName = grpMemberDataList.get(counter).getName();
+                Util.getInstance().showProgressBarDialog(this);
+                SearchEventData searchEventData = new SearchEventData();
+                SearchEventData.Time time = new SearchEventData().new Time();
+                List<String> mList = new ArrayList<>();
+                mList.add(Constant.LOCATION);
+                mList.add(Constant.SOS);
+                time.setFrom(mDbManager.getGroupDetail(grpMemberDataList.get(counter).getGroupId()).getFrom());
+                time.setTo(mDbManager.getGroupDetail(grpMemberDataList.get(counter).getGroupId()).getTo());
+                searchEventData.setTime(time);
+                searchEventData.setTypes(mList);
+                GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, userId, grpMemberDataList.get(counter).getGroupId()));
+            }
         }
     }
 
@@ -758,14 +772,20 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             if (searchEventResponse.getMessage().equalsIgnoreCase(Constant.NO_EVENTS_FOUND_RESPONSE)) {
                 Util.alertDilogBox(Constant.LOCATION_NOT_FOUND, Constant.ALERT_TITLE, DashboardActivity.this);
             } else {
-                Map<Double, Double> latLngMap = new HashMap<>();
+                MapData mapData = new MapData();
                 List<SearchEventResponse.Data> mList = searchEventResponse.getData();
                 for (SearchEventResponse.Data data : mList) {
-                    latLngMap.put(data.getLocation().getLat(), data.getLocation().getLng());
-                    namingMap.put(groupMemberName, latLngMap);
+                    mapData.setLatitude(data.getLocation().getLat());
+                    mapData.setLongitude(data.getLocation().getLng());
+                    mapData.setName(groupMemberName);
+                    mapDataList.add(mapData);
                 }
-                if (!namingMap.isEmpty()) {
+                if (!mapDataList.isEmpty() && grpMemberDataList.size() == mapDataList.size()) {
+                    counter = 0;
                     goToMapActivity();
+                } else {
+                    counter ++;
+                    trackDevice();
                 }
             }
         }
@@ -880,9 +900,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Navigates to the Map activity
      */
     private void goToMapActivity() {
-        /*Util.setLocationFlagStatus(this, true);
-        Util.clearAutologinstatus(this);*/
         Intent intent = new Intent(this, MapsActivity.class);
+        intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         startActivity(intent);
     }
 
@@ -1151,7 +1170,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 listOnDashBoard.add(data);
             }
         }
-        adapter = new TrackerDeviceListAdapter(listOnDashBoard, context);
+        adapter = new TrackerDeviceListAdapter(listOnDashBoard, this);
         listView.setAdapter(adapter);
     }
 
@@ -1277,5 +1296,36 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }
         }
         return currentLocation;
+    }
+
+    /**
+     * To check How many individual/user has been created
+     *
+     * @return true if it crosses the limit that is 10 or else returns false
+     */
+    private boolean checkLimitationInGroupIndividualCreation() {
+        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
+        int count = 1;
+        for (HomeActivityListData data : groupDetailList) {
+            if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(userId)) {
+                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                    count++;
+                }
+            }
+        }
+        for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
+            GroupMemberDataList data = new GroupMemberDataList();
+            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                    && (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(userId))
+                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
+                count++;
+            }
+        }
+        if (count > 10) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

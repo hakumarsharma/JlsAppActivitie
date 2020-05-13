@@ -102,6 +102,7 @@ public class Constant {
     public static final String REMOVE_FROM_GROUP_SUCCESS = "Sucessfully removed from the Group!";
     public static final String ADDING_INDIVIDUAL_USER_FAILED = "Adding individual user failed, Please try again!";
     public static final String GROUP_MEMBER_CLASS_NAME = "com.jio.devicetracker.database.pojo.GroupMemberDataList";
+    public static final String GET_GROUP_INFO_PER_USER_ERROR = "Unable to retrieve information from server, please try gain!";
     public static final String GROUP_NAME_CLASS_NAME = "com.jio.devicetracker.database.pojo.HomeActivityListData";
     public static final String GROUP = "group";
     public static final String INDIVIDUAL_MEMBER = "individualMember";
@@ -109,7 +110,7 @@ public class Constant {
     public static final String LOCATION = "location";
     public static final String SOS = "sos";
     public static final String CONSENT_ID = "consentId";
-    public static final String SELECTION_ERROR = "You cannot track more than one group/user at a time, Please uncheck one to select others";
+    public static final String SELECTION_ERROR = "You cannot track individual user and group at the same time, Please uncheck one of them to track.";
     public static final String NO_EVENTS_FOUND_RESPONSE = "No events found matching the search keys.";
     public static final String FETCH_LOCATION_ERROR = "Unable to get location, Please try again!";
 
@@ -120,7 +121,7 @@ public class Constant {
     public static final String EMAIL_VALIDATION = "Please provide the correct Email Id!";
     public static final String LOGIN_VALIDATION = "Please enter correct email and password";
     public static final String GENERATE_TOKEN_SUCCESS = "Token generated successfully and sent to user.";
-    public static final String GENERATE_TOKEN_FAILURE = "Token generation failed, please try again!";
+    public static final String GENERATE_TOKEN_FAILURE = "Cannot generate token as your account is not yet activated. Please register the number first!";
     public static final String EMAIL_LOCKED = "Account is locked";
     public static final String VALID_USER = "Please enter valid user";
     public static final String PASSWORD_VALIDATION2 = "Password must have a minimum of 8 characters and a maximum of 16 characters. Also, must contain atleast one lowercase alphabet, one uppercase alphabet, one numeric and one special character";
@@ -129,6 +130,8 @@ public class Constant {
     public static final String ADMIN_EMAIL_ID = "Shivakumar.jagalur@ril.com";
     public static final String ADMIN_PASSWORD = "Ril@12345";
     public static final String BORQS_TOKEN_ACTIVITY_TITLE = "Token Verification";
+    public static final String RESEND_OTP = "Resend OTP";
+    public static final String REQUEST_OTP = "Request OTP";
 
     // New Device Activity Constants
     public static final String ADD_DEVICE_TITLE = "Add";
@@ -157,6 +160,7 @@ public class Constant {
     public static final long FREQUENCY_FOR_LOCATION_UPDATE = 10;
     public static final long PRIORITY_BALANCED_POWER_ACCURACY = 10;
     public static final int EPOCH_TIME_DURATION = 15;
+    public static final String MAP_DATA = "Map_Data";
     // Forgot Activity
     public static final String FORGOT_TITLE = "Forgot password";
     public static final String RESET_TITLE = "Reset password";
@@ -258,8 +262,7 @@ public class Constant {
     public static final String REFRESH_INTERVAL_SETTING = "Settings";
     public static final String MAP_UPDATION_MSG = "Map will be updated after every ";
     public static final String PENDING = "Pending";
-    public static final String GROUP_LIMITATION = "You can't create more than two groups, please add it as a individual trackee";
-    public static final String USER_LIMITATION = "You can't add more than ten individual users";
+    public static final String USER_LIMITATION = "You cannot create more than ten individual user and groups";
     public static final String GROUP_NAME_VALIDATION_ERROR = "Group name cannot be left empty";
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";

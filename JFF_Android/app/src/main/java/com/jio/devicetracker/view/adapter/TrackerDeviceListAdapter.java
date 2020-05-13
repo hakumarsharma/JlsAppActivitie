@@ -39,6 +39,7 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.DashboardActivity;
 
 import java.util.List;
@@ -108,7 +109,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 // Check If any group Member is already checked
                 for (GroupMemberDataList list : DashboardActivity.grpMemberDataList) {
                     if (list.isSelected()) {
-                        Toast.makeText(mContext, Constant.SELECTION_ERROR, Toast.LENGTH_LONG).show();
+                        Util.alertDilogBox(Constant.SELECTION_ERROR, Constant.ALERT_TITLE, mContext);
                         return;
                     }
                 }
@@ -166,7 +167,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 // Check If any group is already checked
                 for (HomeActivityListData list : DashboardActivity.grpDataList) {
                     if (list.isSelected()) {
-                        Toast.makeText(mContext, Constant.SELECTION_ERROR, Toast.LENGTH_LONG).show();
+                        Util.alertDilogBox(Constant.SELECTION_ERROR, Constant.ALERT_TITLE, mContext);
                         return;
                     }
                 }
@@ -181,7 +182,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
                 // marked the checked box as selected
                 data.setSelected(!data.isSelected());
-                if (data.isSelected()) {
+                /*if (data.isSelected()) {
                     for (GroupMemberDataList list : DashboardActivity.grpMemberDataList) {
                         if (list.isSelected() == true && count > 0) {
                             Toast.makeText(mContext, Constant.SELECTION_ERROR, Toast.LENGTH_LONG).show();
@@ -189,11 +190,11 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                             DashboardActivity.grpMemberDataList.remove(data);
                             return;
                         }
-                    }
+                    }*/
                     itemListener.checkBoxClickedForGroupMember(data);
                     holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkmark);
-                    count ++;
-                }
+//                    count ++;
+
             });
             holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentClick(data.getGroupId(), data.getNumber(), data.getConsentId()));
         }

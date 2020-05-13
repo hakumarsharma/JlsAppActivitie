@@ -38,8 +38,9 @@ import androidx.core.content.res.ResourcesCompat;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,7 +76,6 @@ import com.jio.devicetracker.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Implementation of Splash Screen.This class creates splash screen for JFF application
@@ -97,6 +97,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginButton;
     private String userId;
     public static String ugsToken;
+    private TextView requestOTP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +122,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
         loginOtpEditText = findViewById(R.id.loginOtp);
-        TextView registerHereTextView = findViewById(R.id.registedHere);
+        TextView registerHereTextView = findViewById(R.id.registerHere);
+        requestOTP = findViewById(R.id.requestOTP);
+        requestOTP.setOnClickListener(this);
         registerHereTextView.setOnClickListener(this);
         MessageListener messageListener = new LoginActivity();
         MessageReceiver.bindListener(messageListener);
@@ -153,6 +156,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     loginButton.setTextColor(Color.WHITE);
                 } else {
                     jioMobileNumberEditText.setError(null);
+                    SpannableString content = new SpannableString(Constant.REQUEST_OTP);
+                    content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                    requestOTP.setText(content);
                 }
             }
         });
@@ -165,27 +171,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.login) {
-            validateNumber();
-        } else if (v.getId() == R.id.registedHere) {
-            generateTokenGotoRegistrationActivity();
-        }
+            if (v.getId() == R.id.login) {
+                if(validateNumber()) {
+                    onLoginButtonClick();
+                }
+            } else if (v.getId() == R.id.registerHere) {
+                if (!Util.isValidMobileNumber(jioMobileNumberEditText.getText().toString().substring(2))) {
+                    jioMobileNumberEditText.setError(Constant.MOBILENUMBER_VALIDATION);
+                    return;
+                }
+                generateTokenGotoRegistrationActivity();
+            } else if (v.getId() == R.id.requestOTP) {
+                if (!Util.isValidMobileNumber(jioMobileNumberEditText.getText().toString().substring(2))) {
+                    jioMobileNumberEditText.setError(Constant.MOBILENUMBER_VALIDATION);
+                    return;
+                }
+                generateLoginTokenAPICall();
+            }
     }
 
     /*
-     * Validate mobile number
+     * Validate mobile number, user name and OTP
      */
-    private void validateNumber() {
+    private boolean validateNumber() {
         if ("".equals(jioUserNameEditText.getText().toString())) {
             jioUserNameEditText.setError(Constant.NAME_EMPTY);
-            return;
-        }
-        if ("".equals(loginOtpEditText.getText().toString())) {
+            return false;
+        } else if ("".equals(loginOtpEditText.getText().toString())) {
             loginOtpEditText.setError(Constant.EMPTY_OTP);
-            return;
-        } else {
-            onLoginButtonClick();
+            return false;
+        } else if (!Util.isValidMobileNumber(jioMobileNumberEditText.getText().toString().substring(2))) {
+            jioMobileNumberEditText.setError(Constant.MOBILENUMBER_VALIDATION);
+            return false;
         }
+        return true;
     }
 
     /**
@@ -201,9 +220,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
         jioMobileNumberEditText.setText(subscriptionInfos.get(0).getNumber());
         number = jioMobileNumberEditText.getText().toString();
-        if (!number.equalsIgnoreCase("")) {
-            generateLoginTokenAPICall();
-        }
     }
 
 
@@ -333,7 +349,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GROUP_LIMITATION, Constant.ALERT_TITLE, LoginActivity.this);
+                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, LoginActivity.this);
             }
         }
     }
@@ -563,7 +579,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     /**
-     * Verify & Assign API call success listener
+     * Generate Login token API call success listener
      */
     private class GenerateLoginTokenSuccessListener implements Response.Listener {
         @Override
@@ -571,17 +587,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             GenerateTokenResponse generateLoginTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
             if (generateLoginTokenResponse.getCode() == 200) {
                 Toast.makeText(LoginActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+                SpannableString content = new SpannableString(Constant.RESEND_OTP);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                requestOTP.setText(content);
             }
         }
     }
 
     /**
-     * Verify & Assign API call error listener
+     * Generate Login Token API call error listener
      */
     private class GenerateLoginTokenErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-//            Toast.makeText(LoginActivity.this, Constant.GENERATE_TOKEN_FAILURE, Toast.LENGTH_SHORT).show();
+            if (error.networkResponse.statusCode == 403) {
+                jioMobileNumberEditText.setError(Constant.GENERATE_TOKEN_FAILURE);
+            }
         }
     }
 }

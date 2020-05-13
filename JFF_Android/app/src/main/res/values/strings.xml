@@ -8,6 +8,7 @@
     <string name="loginSubText">Login/Sign up</string>
     <string name="title_activity_login">Login</string>
     <string name="register_here"> <b>Register Here</b></string>
+    <string name="request_otp"><u>Request OTP</u></string>
     <string name="forget_password"> <b>Click Here</b></string>
     <string name="pagerindicater">&amp;#9673;</string>
     <string name="Open">Open</string>

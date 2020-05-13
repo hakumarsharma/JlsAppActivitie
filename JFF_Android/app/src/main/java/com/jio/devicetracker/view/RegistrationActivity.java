@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -29,7 +27,9 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,9 +44,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AddDeviceData;
+import com.jio.devicetracker.database.pojo.GenerateTokenData;
 import com.jio.devicetracker.database.pojo.RegisterRequestData;
 import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
+import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
 import com.jio.devicetracker.database.pojo.request.RegistrationTokenrequest;
+import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
 import com.jio.devicetracker.database.pojo.response.RegistrationResponse;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
@@ -73,6 +76,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     private String phoneNumber;
     private String countryCode;
     private static EditText tokenEditText;
+    private TextView requestOTPRegistration;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,11 +97,13 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         mPhone = findViewById(R.id.deviceNumber);
         mRegister = findViewById(R.id.register);
         tokenEditText = findViewById(R.id.tokenEditText);
+        requestOTPRegistration = findViewById(R.id.requestOTPRegistration);
+        requestOTPRegistration.setOnClickListener(this);
         mRegister.setOnClickListener(this);
         Intent intent = getIntent();
         phoneNumber = intent.getStringExtra("phoneNumber");
         countryCode = intent.getStringExtra("countryCode");
-        mPhone.setText(countryCode+phoneNumber);
+        mPhone.setText(countryCode + phoneNumber);
         MessageListener messageListener = new RegistrationActivity();
         MessageReceiver.bindListener(messageListener);
     }
@@ -111,6 +117,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // Unused empty method
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!mName.getText().toString().equals("")) {
@@ -118,43 +125,77 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                     mRegister.setTextColor(Color.WHITE);
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
-                String emailId = mName.getText().toString();
-                if (emailId.isEmpty()) {
+                String name = mName.getText().toString();
+                if (name.isEmpty()) {
                     mRegister.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
                     mRegister.setTextColor(Color.WHITE);
                 }
+            }
+        });
+        mPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Unused empty method
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!mPhone.getText().toString().equals("")) {
+                    mRegister.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                    mRegister.setTextColor(Color.WHITE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String phoneNumber = mPhone.getText().toString();
+                if (phoneNumber.isEmpty()) {
+                    mRegister.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
+                    mRegister.setTextColor(Color.WHITE);
+                }
+                SpannableString content = new SpannableString(Constant.REQUEST_OTP);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                requestOTPRegistration.setText(content);
             }
         });
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.register) {
-            validate();
-        }
+            if (v.getId() == R.id.register) {
+                if(validate()) {
+                    getServicecall();
+                }
+            } else if (v.getId() == R.id.requestOTPRegistration) {
+                if (!Util.isValidMobileNumber(mPhone.getText().toString().substring(2))) {
+                    mPhone.setError(Constant.MOBILENUMBER_VALIDATION);
+                    return;
+                }
+                generateTokenForRegistrationActivity();
+            }
     }
 
     /**
-     * Validation check for the fields
+     * Validate mobile number, user name and OTP
      */
-    private void validate() {
+    private boolean validate() {
         if (mName.getText().toString().length() == 0) {
             mName.setError(Constant.NAME_EMPTY);
-            return;
-        }
-        if (mPhone.getText().toString().length() == 0) {
+            return false;
+        } else if (mPhone.getText().toString().length() == 0) {
             mPhone.setError(Constant.MOBILE_NUMBER_EMPTY);
-            return;
+            return false;
+        } else if(tokenEditText.getText().toString().length() == 0)  {
+            tokenEditText.setError(Constant.EMPTY_OTP);
+            return false;
+        } else if(! Util.isValidMobileNumber(mPhone.getText().toString().substring(2))) {
+            mPhone.setError(Constant.MOBILENUMBER_VALIDATION);
+            return false;
         }
-
-        if (mPhone.getText().toString().length() < 10) {
-            mPhone.setError(Constant.VALID_PHONE_NUMBER);
-            return;
-        }
-
-        getServicecall();
+        return true;
     }
 
     /**
@@ -178,11 +219,12 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
     /**
      * To receive token
+     *
      * @param message
      * @param phoneNum
      */
     public void messageReceived(String message, String phoneNum) {
-        if(message.contains(Constant.TOKEN_SMS) && tokenEditText != null) {
+        if (message.contains(Constant.TOKEN_SMS) && tokenEditText != null) {
             String[] splitMessage = message.split(":");
             tokenEditText.setText(splitMessage[1].substring(1, 6));
         }
@@ -195,7 +237,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         @Override
         public void onResponse(Object response) {
             RegistrationResponse registrationResponse = Util.getInstance().getPojoObject(String.valueOf(response), RegistrationResponse.class);
-            if(registrationResponse.getCode() == Constant.SUCCESS_CODE_200 && registrationResponse.getMessage().equalsIgnoreCase(Constant.REGISTARTION_SUCCESS_MESSAGE)) {
+            if (registrationResponse.getCode() == Constant.SUCCESS_CODE_200 && registrationResponse.getMessage().equalsIgnoreCase(Constant.REGISTARTION_SUCCESS_MESSAGE)) {
                 Toast.makeText(RegistrationActivity.this, Constant.REGISTARTION_SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
             }
@@ -231,6 +273,48 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                     PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                     READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+    }
+
+    /**
+     * Used to generate register Token
+     */
+    private void generateTokenForRegistrationActivity() {
+        if (phoneNumber != null) {
+            GenerateTokenData generateTokenData = new GenerateTokenData();
+            generateTokenData.setType(Constant.REGISTRATION);
+            generateTokenData.setPhoneCountryCode(countryCode);
+            generateTokenData.setPhone(phoneNumber);
+            RequestHandler.getInstance(getApplicationContext()).handleRequest(new GenerateTokenRequest(new GenerateTokenSuccessListener(), new GenerateTokenErrorListener(), generateTokenData));
+        }
+    }
+
+    /**
+     * Generate Token Success Listener
+     */
+    private class GenerateTokenSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GenerateTokenResponse generateTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
+            if (generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.GENERATE_TOKEN_SUCCESS)) {
+                Toast.makeText(RegistrationActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+                SpannableString content = new SpannableString(Constant.RESEND_OTP);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                requestOTPRegistration.setText(content);
+            }
+        }
+    }
+
+    /**
+     * Generate Token error Listener
+     */
+    private class GenerateTokenErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error.networkResponse.statusCode == 409) {
+                Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, RegistrationActivity.this);
                 return;
             }
         }

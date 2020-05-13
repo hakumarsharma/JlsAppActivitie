@@ -97,7 +97,7 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
                 itemListener.clickOnListLayout(data.getProfileImage(), data.getName(), data.getConsentId(), "");
                 return;
             });
-            holder.activeSessionOptions.setOnClickListener(v -> itemListener.onPopupMenuClickedForMember(holder.activeSessionOptions, position, data.getNumber(), data.getGroupId(), data.getConsentId()));
+            holder.activeSessionOptions.setOnClickListener(v -> itemListener.onPopupMenuClickedForMember(holder.activeSessionOptions, position, data));
         }
         /*holder.durationtime.setText(mList.get(position).getDurationTime());
         holder.expirytime.setText(mList.get(position).getExpiryTime());*/
@@ -147,7 +147,7 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
      */
     public interface RecyclerViewClickListener {
         void clickOnListLayout(int selectedGroupName, String name, String groupId, String createdBy);
-        void onPopupMenuClickedForMember(View v, int position, String phoneNumber, String groupId, String consentId);
+        void onPopupMenuClickedForMember(View v, int position, GroupMemberDataList groupMemberDataList);
         void onPopupMenuClickedForGroup(View v, int position, String createdBy, String groupId);
     }
 
