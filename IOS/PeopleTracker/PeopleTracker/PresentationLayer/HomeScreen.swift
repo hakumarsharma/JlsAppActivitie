@@ -119,10 +119,17 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
         let groupData = self.groupList[indexpath!.row]
         let groupName = groupData.name.components(separatedBy: "+")
         let isIndividual = (groupName[0] == Constants.AddDeviceConstants.Individual) ? true : false
-        if isIndividual && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent {
+       
+        if isIndividual && (groupData.status == Utils.GroupStatus.isActive.rawValue) && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent {
             self.callRequestConsentApi(groupData: groupData)
-        } else if !isIndividual && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent {
-           // call create group and add memeber api
+        } else if isIndividual && (groupData.status == Utils.GroupStatus.isCompleted.rawValue) && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent{
+            self.groupname = groupData.name
+            self.memebrName = groupData.groupMember.first?.memberName ?? ""
+            self.callDeleteGroupApi(groupData: groupData, isFromRequestConsent: true)
+        }
+        else if !isIndividual && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent {
+            self.groupname = groupData.name
+            self.callDeleteGroupApi(groupData: groupData,isFromRequestConsent: true)
         } else {
             self.ShowALertWithButtonAction(title: Constants.HomScreenConstants.ConsentAlredySent)
         }
@@ -149,16 +156,16 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
     
     @objc func trackButton(sender: UIBarButtonItem) {
         if selectedCell.count > 0 {
-            let activeGroupsArr = selectedCell.filter({$0.status == Utils.GroupStatus.isActive.rawValue})
-            if activeGroupsArr.count > 0 {
-               let approvedArr = activeGroupsArr.filter({$0.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue})
-                 if approvedArr.count > 0 {
+            let approvedArr = selectedCell.filter({$0.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue})
+            if approvedArr.count > 0 {
+               let activeGroupsArr = selectedCell.filter({$0.status == Utils.GroupStatus.isActive.rawValue})
+                 if activeGroupsArr.count > 0 {
                     self.navigateToMapsScreen(activegroupArr: activeGroupsArr)
                  } else {
-                    self.ShowALert(title: Constants.HomScreenConstants.SelectDevice)
+                    self.ShowALert(title: Constants.GroupConstants.SessionStart)
                 }
             } else {
-                self.ShowALert(title: Constants.HomScreenConstants.SessionTime)
+                self.ShowALert(title: Constants.HomScreenConstants.SelectDevice)
             }
         } else {
             self.ShowALert(title: Constants.HomScreenConstants.SelectDevice)
@@ -289,7 +296,7 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
         let alert = UIAlertController(title: Constants.AlertConstants.Alert, message: title, preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: Constants.AlertConstants.Delete, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
             DispatchQueue.main.async {
-                self.callDeleteGroupApi(groupData : groupData)
+                self.callDeleteGroupApi(groupData : groupData, isFromRequestConsent: false)
             }
         }))
         alert.addAction(UIAlertAction(title: Constants.AlertConstants.CancelButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
@@ -358,7 +365,7 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
     }
     
     // Delete Group Api Call
-    func callDeleteGroupApi(groupData : GroupListData) {
+    func callDeleteGroupApi(groupData : GroupListData, isFromRequestConsent : Bool) {
         self.showActivityIndicator()
         
         let deleteGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/"  +  groupData.groupId )!
@@ -367,8 +374,12 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
             case .success(let groupResponse):
                 print(groupResponse)
                 DispatchQueue.main.async {
+                    if isFromRequestConsent {
+                        self.callCreateGroupApi(methodType: NetworkManager.Method.post.rawValue, isFromCreateGroup: false, groupMemebers: Array(groupData.groupMember))
+                    } else {
                     self.hideActivityIndicator()
                     self.getAllGroupsApi()
+                    }
                 }
             case .failure(let error):
                 if type(of: error) == NetworkManager.ErrorType.self {

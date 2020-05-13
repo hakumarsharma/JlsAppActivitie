@@ -33,6 +33,7 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     var isActiveSession : Bool = false
     @IBOutlet weak var groupListTableView: UITableView!
     @IBOutlet weak var instructionLbl: UILabel!
+    var isMemeberAdded : Bool = false
     
     let actionButton = JJFloatingActionButton()
     var groupMemberData: [GroupMemberData] = []
@@ -43,6 +44,9 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
         self.title = navtitle
         self.navigationItem.setHidesBackButton(true, animated: true)
         self.initialiseData()
+        if groupData.status == Utils.GroupStatus.isCompleted.rawValue {
+            self.ShowALert(title: Constants.GroupConstants.SessionEnd)
+        }
     }
     
     func initialiseData() {
@@ -52,8 +56,15 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
         self.createNotification()
         self.getMemberInGroupApi()
         self.createLeftBarButtonItem()
-        if !isActiveSession && groupData.groupMember.count < 10 {
-          floatingActionButton()
+        let currentEpochTime = Utils.shared.getEpochTime(val:0)
+        if !isActiveSession && groupData.groupMember.count < 10 && !(groupData.groupSession!.from! <= currentEpochTime && groupData.groupSession!.to! >= currentEpochTime) {
+            floatingActionButton()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if isMemeberAdded {
+            NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
         }
     }
     
@@ -71,6 +82,7 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     }
     
     @objc func callgetMembersIngroupApi(notification: NSNotification) {
+        self.isMemeberAdded = true
         self.getMemberInGroupApi()
     }
     
@@ -135,7 +147,23 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     }
     
     @objc func trackButton(sender: UIBarButtonItem) {
-        navigateToMapsScreen()
+        if groupMemberData.count > 0 {
+            let approvedArr = groupMemberData.filter({$0.status == Utils.GroupStatus.isApproved.rawValue})
+            if approvedArr.count > 0 {
+                let currentEpochTime = Utils.shared.getEpochTime(val:0)
+                if(groupData.groupSession!.from! <= currentEpochTime && groupData.groupSession!.to! >= currentEpochTime) {
+                    navigateToMapsScreen()
+                }else if groupData.groupSession!.from! >= currentEpochTime {
+                    self.ShowALert(title: Constants.GroupConstants.SessionStart)
+                }else {
+                    self.ShowALert(title: Constants.GroupConstants.SessionEnd)
+                }
+            }else {
+                self.ShowALert(title:  Constants.GroupConstants.ConsentApprovalStatus)
+            }
+        } else {
+            self.ShowALert(title:  Constants.GroupConstants.AddMemeber)
+        }
     }
     @objc func backButton(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)

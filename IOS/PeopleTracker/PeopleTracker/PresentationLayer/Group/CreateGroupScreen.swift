@@ -25,7 +25,7 @@
 
 import UIKit
 
-class CreateGroupScreen: UIViewController {
+class CreateGroupScreen: GroupBaseClass {
     
     var navtitle : String = ""
     var groupData = GroupListData()
@@ -49,71 +49,71 @@ class CreateGroupScreen: UIViewController {
             self.ShowALert(title: Constants.CreateGroupConstants.CreateGroup)
             return
         }
-        
-        (groupData.groupId.count > 0) ? self.callUpdateGroupApi() : self.callCreateGroupApi()
+        self.groupname = groupName.text!
+        (groupData.groupId.count > 0) ? self.callCreateGroupApi(methodType: NetworkManager.Method.put.rawValue, isFromCreateGroup : true, groupId: groupData.groupId) : self.callCreateGroupApi(methodType: NetworkManager.Method.post.rawValue, isFromCreateGroup: true)
      
     }
     
-    // Create Group Api Call
-    func callCreateGroupApi() {
-        self.showActivityIndicator()
-        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl )!
-        let sessionParams : [String : Int64] = ["from" : Utils.shared.getFromEpochTime(), "to" : Utils.shared.getToEpochTime()]
-        let groupParams : [String : Any] = ["name" : groupName.text!, "session" : sessionParams, "type" : "one_to_one"]
-        GroupService.shared.createGroup(createGroupUrl:  groupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
-            switch result {
-            case .success(let groupResponse):
-                  print(groupResponse)
-                   DispatchQueue.main.async {
-                  self.hideActivityIndicator()
-                  NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)              
-                  self.navigationController?.popViewController(animated: true)
-                  }
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
+//    // Create Group Api Call
+//    func callCreateGroupApi() {
+//        self.showActivityIndicator()
+//        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl )!
+//        let sessionParams : [String : Int64] = ["from" : Utils.shared.getFromEpochTime(), "to" : Utils.shared.getToEpochTime()]
+//        let groupParams : [String : Any] = ["name" : groupName.text!, "session" : sessionParams, "type" : "one_to_one"]
+//        GroupService.shared.createGroup(createGroupUrl:  groupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
+//            switch result {
+//            case .success(let groupResponse):
+//                  print(groupResponse)
+//                   DispatchQueue.main.async {
+//                  self.hideActivityIndicator()
+//                  NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
+//                  self.navigationController?.popViewController(animated: true)
+//                  }
+//            case .failure(let error):
+//                if type(of: error) == NetworkManager.ErrorType.self {
+//                    DispatchQueue.main.async {
+//                        self.hideActivityIndicator()
+//                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+//                    }
+//                } else {
+//                    DispatchQueue.main.async {
+//                        self.hideActivityIndicator()
+//                        self.ShowALert(title: error.localizedDescription)
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     // Update Group Api Call
-    func callUpdateGroupApi() {
-        self.showActivityIndicator()
-    
-        let updateGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/"  +  groupData.groupId )!
-        let groupParams : [String : Any] = ["name" : groupName.text!]
-        GroupService.shared.updateGroup(updateGroupUrl:  updateGroupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
-            switch result {
-            case .success(let groupResponse):
-                  print(groupResponse)
-                   DispatchQueue.main.async {
-                  self.hideActivityIndicator()
-                  NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
-                  self.navigationController?.popViewController(animated: true)
-                  }
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
+//    func callUpdateGroupApi() {
+//        self.showActivityIndicator()
+//    
+//        let updateGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/"  +  groupData.groupId )!
+//        let groupParams : [String : Any] = ["name" : groupName.text!]
+//        GroupService.shared.updateGroup(updateGroupUrl:  updateGroupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
+//            switch result {
+//            case .success(let groupResponse):
+//                  print(groupResponse)
+//                   DispatchQueue.main.async {
+//                  self.hideActivityIndicator()
+//                  NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
+//                  self.navigationController?.popViewController(animated: true)
+//                  }
+//            case .failure(let error):
+//                if type(of: error) == NetworkManager.ErrorType.self {
+//                    DispatchQueue.main.async {
+//                        self.hideActivityIndicator()
+//                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+//                    }
+//                } else {
+//                    DispatchQueue.main.async {
+//                        self.hideActivityIndicator()
+//                        self.ShowALert(title: error.localizedDescription)
+//                    }
+//                }
+//            }
+//        }
+//    }
     
 }

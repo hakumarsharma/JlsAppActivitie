@@ -28,52 +28,79 @@ import UIKit
 
 class GroupBaseClass: UIViewController {
     
-    var name : String = ""
-    var mobileNumber : String = ""
+    var groupname : String = ""
+    var memebrName : String = ""
+    var memberNumber : String = ""
     
     // Create Group Api Call
-      func callCreateGroupApi() {
-          self.showActivityIndicator()
-          let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl )!
-          let sessionParams : [String : Int64] = ["from" : Utils.shared.getFromEpochTime(), "to" : Utils.shared.getToEpochTime()]
-          let groupParams : [String : Any] = ["name" : Constants.AddDeviceConstants.Individual+"+"+Constants.AddDeviceConstants.PeopleTracker, "session" : sessionParams, "type" : "one_to_one"]
-          GroupService.shared.createGroup(createGroupUrl:  groupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
-              switch result {
-              case .success(let groupResponse):
-                  let groupId = groupResponse.groupData?.groupId ?? ""
-                  if groupId.count > 0 {
-                      DispatchQueue.main.async {
-                          self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetGroupList,groupId: groupId)
-                      }
-                  } else {
-                      DispatchQueue.main.async {
-                          self.hideActivityIndicator()
-                          self.ShowALert(title: Constants.ErrorMessage.Somethingwentwrong)
-                      }
-                  }
-              case .failure(let error):
-                  if type(of: error) == NetworkManager.ErrorType.self {
-                      DispatchQueue.main.async {
-                          self.hideActivityIndicator()
-                          self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                      }
-                  } else {
-                      DispatchQueue.main.async {
-                          self.hideActivityIndicator()
-                          self.ShowALert(title: error.localizedDescription)
-                      }
-                  }
-              }
-          }
-      }
+    func callCreateGroupApi(methodType : String, isFromCreateGroup : Bool, groupId : String? = nil,groupMemebers : [GroupMember]? = nil) {
+        self.showActivityIndicator()
+        var groupUrl: String = ""
+        var groupParams : [String : Any] = [:]
+        if groupId != nil{
+            groupUrl = Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + groupId!
+            groupParams = ["name" : self.groupname]
+        } else {
+            groupUrl = Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl
+            let sessionParams : [String : Int64] = ["from" : Utils.shared.getFromEpochTime(), "to" : Utils.shared.getToEpochTime()]
+            groupParams  = ["name" : self.groupname, "session" : sessionParams, "type" : "one_to_one"]
+            
+        }
+        GroupService.shared.createGroup(createGroupUrl:  URL(string: groupUrl)!, parameters: groupParams, methodType: methodType) { (result : Result<GroupModel, Error>) in
+            switch result {
+            case .success(let groupResponse):
+                if isFromCreateGroup {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                } else {
+                    let groupId = groupResponse.groupData?.groupId ?? ""
+                    if groupId.count > 0 {
+                        DispatchQueue.main.async {
+                            self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetGroupList,groupId: groupId,groupMemebers : groupMemebers)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.hideActivityIndicator()
+                            self.ShowALert(title: Constants.ErrorMessage.Somethingwentwrong)
+                        }
+                    }
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
     
     // Add member to group Api Call
-    func addMemberToGroupApi(notificationName : String, groupId : String) {
+    func addMemberToGroupApi(notificationName : String, groupId : String,groupMemebers : [GroupMember]? = nil) {
         self.showActivityIndicator()
         let addMemberUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + groupId + Constants.ApiPath.CreateMultiple )!
         let sessionParams : [String] = ["events"]
-        let groupParams : [String : Any] = ["name": self.name,"phone" : self.mobileNumber ,"entities" : sessionParams]
-        let params : [String : Any] = ["consents" : [groupParams]]
+        var params : [String : Any] = [:]
+        if groupMemebers != nil {
+            var memebersArr : [[String : Any]] = []
+            for memeber in groupMemebers! {
+                memebersArr.append(["name": memeber.memberName ?? "" ,"phone" : memeber.memberPhone ?? "" ,"entities" : sessionParams])
+            }
+            params = ["consents" : memebersArr]
+        } else {
+            let groupParams  : [String : Any] = ["name": self.memebrName,"phone" : self.memberNumber ,"entities" : sessionParams]
+             params = ["consents" : [groupParams]]
+        }
+       
         GroupService.shared.addMemberToGroup(addMemberInGroupUrl:  addMemberUrl,parameters: params) { (result : Result<GroupMemberModel, Error>) in
             switch result {
             case .success(let groupResponse):
@@ -81,7 +108,9 @@ class GroupBaseClass: UIViewController {
                 DispatchQueue.main.async {
                     self.hideActivityIndicator()
                     NotificationCenter.default.post(name: Notification.Name(notificationName), object: nil)
+                    if groupMemebers == nil {
                     self.navigationController?.popViewController(animated: true)
+                    }
                 }
             case .failure(let error):
                 if type(of: error) == NetworkManager.ErrorType.self {

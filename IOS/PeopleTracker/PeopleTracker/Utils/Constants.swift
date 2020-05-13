@@ -126,8 +126,7 @@ class Constants {
         static let ConsentApproved = "Consent Approved"
         static let ConsentPending = "Consent Pending"
         static let ConsentSent = "Consent Sent"
-        static let SelectDevice = "Select consent approved devices to track"
-        static let SessionTime = "User can be tracked only during scheduled time"
+        static let SelectDevice = "Select consent approved devices to start tracking"
         static let ConsentAlredySent = "Consent already sent."
         static let ConsentAlert = "Consent sent successfully. To track, Please wait till the consent gets approved."
     }
@@ -150,6 +149,13 @@ class Constants {
     
     struct CreateGroupConstants {
         static let CreateGroup = "Please enter group name"
+    }
+    
+    struct GroupConstants {
+        static let SessionStart = "Please wait till your clock ticks the scheduled time."
+        static let SessionEnd = "Tracking duration is lapsed. Please schedule it again by clicking on request consent at group."
+        static let ConsentApprovalStatus = "No user has accepted your consent.Please wait till consent gets approved."
+        static let AddMemeber = "Please add memebers to start tracking."
     }
     
     struct LocationConstants {
