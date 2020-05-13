@@ -23,13 +23,12 @@
 package com.jio.devicetracker.database.pojo;
 
 /**
- * Class, used to send data at the time of verification of token
+ * Used to send the User data to the borqs at the time of login
  */
-public class VerifyTokenData {
+public class LoginUserdata {
     private String token;
     private String phone;
-    private String phoneCountryCode;
-    private String type;
+    private Role role;
 
     public String getToken() {
         return token;
@@ -47,19 +46,23 @@ public class VerifyTokenData {
         this.phone = phone;
     }
 
-    public String getPhoneCountryCode() {
-        return phoneCountryCode;
+    public Role getRole() {
+        return role;
     }
 
-    public void setPhoneCountryCode(String phoneCountryCode) {
-        this.phoneCountryCode = phoneCountryCode;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public String getType() {
-        return type;
-    }
+    public class Role {
+        private String code;
 
-    public void setType(String type) {
-        this.type = type;
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
     }
 }

@@ -65,7 +65,7 @@ public class Constant {
     public static final String INVALID_OTP = "Invalid OTP Provided";
     public static final String OTP_SENT = "OTP sent.";
     public static final String SMS_SEND_FAILED = "SMS failed, please try again.";
-    public static final String OTP_MESSAGE = "PeopleTracker OTP :";
+    public static final String OTP_MESSAGE = "Hi, please use the token ";
     public static final String PHONE_VALIDATION = "Phone number cannot be left empty!";
     public static final String MOBILE_NETWORKCHECK = "Please use your mobile data";
     public static final String JIO_NUMBER = "Please use Jio number";
@@ -120,6 +120,7 @@ public class Constant {
     public static final String EMAIL_VALIDATION = "Please provide the correct Email Id!";
     public static final String LOGIN_VALIDATION = "Please enter correct email and password";
     public static final String GENERATE_TOKEN_SUCCESS = "Token generated successfully and sent to user.";
+    public static final String GENERATE_TOKEN_FAILURE = "Token generation failed, please try again!";
     public static final String EMAIL_LOCKED = "Account is locked";
     public static final String VALID_USER = "Please enter valid user";
     public static final String PASSWORD_VALIDATION2 = "Password must have a minimum of 8 characters and a maximum of 16 characters. Also, must contain atleast one lowercase alphabet, one uppercase alphabet, one numeric and one special character";
@@ -166,7 +167,7 @@ public class Constant {
 
 
     //Rest API URL
-    public static final String LOGIN_URL = "/accounts/api/users/login?isResponseDataAsUser=true&isPopulateGroup=true&isPopulateGroupUsers=true&isPopulateUserDevices=true&isPopulateUserDevicesAsWearableUsers=true";
+    public static final String LOGIN_URL = "/accounts/api/users/tokens/verify/login";
     public static final String REGISTRATION_TOKEN_URL = "/accounts/api/users/tokens";
     public static final String REGISTRATION_URL = "/accounts/api/users/register";
     public static final String FORGOT_PASS_URL = "/accounts/api/users/resetpassword";
@@ -181,12 +182,13 @@ public class Constant {
     public static final String GET_DEVICE_LOCATION_URL_2 = "?tsp=1585031229387&ugs_token=";
     public static final String REGISTRATION_URL_VERIFY = "/accounts/api/users/tokens/verify";
     public static final String GENERATE_TOKEN_REQUEST_URL = "/accounts/api/users/tokens";
+    public static final String GENERATE_LOGIN_TOKEN_REQUEST_URL = "/accounts/api/users/tokens/login";
     public static final String ACCOUNTS_API_USER_URL = "/accounts/api/users/";
     public static final String SESSION_GROUPS_URL = "/sessiongroups/";
     public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true";
     public static final String SESSION_GROUP_CONSENTS_URL = "/sessiongroupconsents";
     public static final String SESSION_GROUP_CONSENTS_TOKEN_URL = "/sessiongroupconsents/tokens";
-    public static final String APPROVE_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";
+    public static final String APPROVE_REJECT_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";
     public static final String STATUS_URL = "/status";
     public static final String SESSION_GROUP_CONSENTS_URL1 = "/sessiongroupconsents/";
     public static final String GET_LOCATION_URL = "/events/search?limit=1";

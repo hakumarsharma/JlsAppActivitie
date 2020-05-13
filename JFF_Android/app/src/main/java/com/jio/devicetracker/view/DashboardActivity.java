@@ -146,7 +146,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private static Context context = null;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
-    private List<SubscriptionInfo> subscriptionInfos;
     private Locale locale = Locale.ENGLISH;
     private static int batteryLevel;
     private DrawerLayout drawerLayout;
@@ -628,7 +627,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Publish the MQTT message along with battery level, signal strength and time format
      */
     public void publishMessage() {
-        if(getCurrentLocation() != null) {
+        if (getCurrentLocation() != null) {
             latitude = getCurrentLocation().getLatitude();
             longitude = getCurrentLocation().getLongitude();
             String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
@@ -887,28 +886,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
     }
 
-    /**
-     * Sends SMS and update the Consent to the Pending state for the particular device
-     *
-     * @param phoneNumber
-     */
-    private void sendSMS(String phoneNumber) {
-        String userName = mDbManager.getAdminDetail();
-        String imei = Util.getInstance().getIMEI(this);
-        String consentStatus = mDbManager.getConsentStatusBorqs(phoneNumber);
-        if (Constant.CONSENT_APPROVED_STATUS.equalsIgnoreCase(consentStatus)) {
-            Util.alertDilogBox(Constant.CONSENT_APPROVED, Constant.ALERT_TITLE, this);
-        } else {
-            String phoneNumber1 = null;
-            if (subscriptionInfos != null) {
-                phoneNumber1 = subscriptionInfos.get(0).getNumber();
-            }
-            new SendSMSTask().execute(phoneNumber, userName + Constant.CONSENT_MSG_TO_TRACKEE + phoneNumber1.trim().substring(2, phoneNumber1.length()) + "&" + userName + "&" + imei);
-            Toast.makeText(this, Constant.CONSENT_MSG_SENT, Toast.LENGTH_SHORT).show();
-            mDbManager.updatependingConsent(phoneNumber);
-            addDataInHomeScreen();
-        }
-    }
 
     /**
      * Called when you press back
@@ -1091,7 +1068,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     *
+     * Reject Consent Request API Call
      */
     private void rejectConsentRequestAPICall(String token, String consentId) {
         this.consentId = consentId;
@@ -1102,13 +1079,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         consent.setStatus(Constant.REJECTED);
         consent.setToken(tokenData);
         approveRejectConsentData.setConsent(consent);
-        if (mDbManager.getGroupMemberDetailByConsentId(consentId) != null) {
-            GroupRequestHandler.getInstance(this).handleRequest(new RejectConsentRequest(new RejectConsentRequestSuccessListener(), new RejectConsentRequestErrorListener(), approveRejectConsentData, mDbManager.getGroupMemberDetailByConsentId(consentId).getGroupId(), userId, consentId));
-        }
+        GroupRequestHandler.getInstance(this).handleRequest(new RejectConsentRequest(new RejectConsentRequestSuccessListener(), new RejectConsentRequestErrorListener(), approveRejectConsentData, consentId));
     }
 
     /**
-     * Approve Consent Request Success Listener
+     * Reject Consent Request API Success Listener
      */
     private class RejectConsentRequestSuccessListener implements Response.Listener {
         @Override
@@ -1123,107 +1098,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Approve Consent Request error Listener
+     * Reject Consent Request API error Listener
      */
     private class RejectConsentRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             Toast.makeText(DashboardActivity.this, Constant.CONSENT_NOT_REJECTED_MESSAGE, Toast.LENGTH_SHORT).show();
         }
-
-    }
-
-
-    /**
-     * Displays Consent time for URI check
-     *
-     * @param phoneNumber
-     */
-    private void showSpinnerforConsentTime(String phoneNumber) {
-        String time[] = {Constant.MIN_15, Constant.MIN_25, Constant.MIN_30, Constant.MIN_40};
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_consent_time);
-        dialog.setTitle(Constant.DIALOG_TITLE);
-        dialog.getWindow().setLayout(1000, 500);
-        ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, time);
-        Spinner spinner = dialog.findViewById(R.id.consentSpinner);
-        Button close = dialog.findViewById(R.id.close);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int consentTimeApproval;
-                String value = (String) parent.getItemAtPosition(position);
-                if (value.contains("15")) {
-                    consentTimeApproval = 14;
-                } else if (value.contains("25")) {
-                    consentTimeApproval = 23;
-                } else if (value.contains("30")) {
-                    consentTimeApproval = 28;
-
-                } else {
-                    consentTimeApproval = 38;
-                }
-                storeConsentTime(phoneNumber, consentTimeApproval);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // To do
-            }
-        });
-        close.setOnClickListener(v -> {
-            sendSMS(phoneNumber);
-            dialog.dismiss();
-        });
-        dialog.show();
-    }
-
-    /**
-     * Displays spinner for Group Consent time
-     *
-     * @param data
-     */
-    private void showSpinnerforGroupConsentTime(List<HomeActivityListData> data) {
-        String time[] = {Constant.MIN_15, Constant.MIN_25, Constant.MIN_30, Constant.MIN_40};
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_consent_time);
-        dialog.setTitle(Constant.DIALOG_TITLE);
-        dialog.getWindow().setLayout(1000, 500);
-        ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, time);
-        Spinner spinner = dialog.findViewById(R.id.consentSpinner);
-        Button close = dialog.findViewById(R.id.close);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                /*int consentTimeApproval;
-                String value = (String) parent.getItemAtPosition(position);
-                if (value.contains("15")) {
-                    consentTimeApproval = 14;
-                } else if (value.contains("25")) {
-                    consentTimeApproval = 23;
-                } else if (value.contains("30")) {
-                    consentTimeApproval = 28;
-
-                } else {
-                    consentTimeApproval = 38;
-                }*/
-                //storeConsentTime(phoneNumber, consentTimeApproval);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // To do
-            }
-        });
-        close.setOnClickListener(v -> {
-            for (HomeActivityListData homeActivityListData : data) {
-                sendSMS(homeActivityListData.getPhoneNumber());
-            }
-            dialog.dismiss();
-        });
-        dialog.show();
     }
 
     /**

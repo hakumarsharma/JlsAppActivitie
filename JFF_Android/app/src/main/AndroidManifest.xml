@@ -92,9 +92,6 @@
             android:name=".view.PrivacyPolicyActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.BorqsTokenActivity"
-            android:label="@string/map_name" />
-        <activity
             android:name=".view.RegistrationActivity"
             android:label="@string/map_name" />
         <activity

@@ -24,7 +24,7 @@ package com.jio.devicetracker.database.pojo.request;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.jio.devicetracker.database.pojo.Userdata;
+import com.jio.devicetracker.database.pojo.LoginUserdata;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -36,9 +36,9 @@ public class LoginDataRequest implements IRequest {
 
     private Response.Listener sucessListener;
     private Response.ErrorListener errorListener;
-    private Userdata user;
+    private LoginUserdata user;
 
-    public LoginDataRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, Userdata object)
+    public LoginDataRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, LoginUserdata object)
     {
         this.sucessListener = sucessListener;
         this.errorListener = errorListener;

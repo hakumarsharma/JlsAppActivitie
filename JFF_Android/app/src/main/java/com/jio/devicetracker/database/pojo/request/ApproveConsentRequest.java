@@ -52,7 +52,7 @@ public class ApproveConsentRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return Constant.APPROVE_CONSENT_URL1 + consentId + Constant.STATUS_URL;
+        return Constant.APPROVE_REJECT_CONSENT_URL1 + consentId + Constant.STATUS_URL;
     }
 
     @Override

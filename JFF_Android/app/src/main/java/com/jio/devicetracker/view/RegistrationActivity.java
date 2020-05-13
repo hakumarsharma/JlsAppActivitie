@@ -48,6 +48,8 @@ import com.jio.devicetracker.database.pojo.RegisterRequestData;
 import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.RegistrationTokenrequest;
 import com.jio.devicetracker.database.pojo.response.RegistrationResponse;
+import com.jio.devicetracker.network.MessageListener;
+import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -62,17 +64,15 @@ import static android.Manifest.permission.READ_SMS;
 /**
  * Implementation of Registration screen for admin registration.
  */
-public class RegistrationActivity extends Activity implements View.OnClickListener {
+public class RegistrationActivity extends Activity implements View.OnClickListener, MessageListener {
 
     private EditText mName;
     private EditText mPhone;
     private int permissionRequestCode = 100;
-    private EditText mPass;
-    private EditText mRepass;
     private Button mRegister;
     private String phoneNumber;
     private String countryCode;
-    private String receivedToken;
+    private static EditText tokenEditText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,15 +91,15 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         title.setText(Constant.REGISTRATION_TITLE);
         mName = findViewById(R.id.memberName);
         mPhone = findViewById(R.id.deviceNumber);
-        mPass = findViewById(R.id.password);
-        mRepass = findViewById(R.id.repassword);
         mRegister = findViewById(R.id.register);
+        tokenEditText = findViewById(R.id.tokenEditText);
         mRegister.setOnClickListener(this);
         Intent intent = getIntent();
         phoneNumber = intent.getStringExtra("phoneNumber");
         countryCode = intent.getStringExtra("countryCode");
-        receivedToken = intent.getStringExtra("token");
         mPhone.setText(countryCode+phoneNumber);
+        MessageListener messageListener = new RegistrationActivity();
+        MessageReceiver.bindListener(messageListener);
     }
 
     /**
@@ -148,24 +148,12 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             mPhone.setError(Constant.MOBILE_NUMBER_EMPTY);
             return;
         }
-        if (mPass.getText().toString().length() == 0) {
-            mPass.setError(Constant.PASSWORD_EMPTY);
-            return;
-        }
-        if (mRepass.getText().toString().length() == 0 || !mRepass.getText().toString().equals(mPass.getText().toString())) {
-            mRepass.setError(Constant.PASSWORD_NOT_MATCHED);
-            return;
-        }
 
         if (mPhone.getText().toString().length() < 10) {
             mPhone.setError(Constant.VALID_PHONE_NUMBER);
             return;
         }
 
-        if (mPass.getText().toString().length() != 0 && !Util.isValidPassword(mPass.getText().toString())) {
-            mPass.setError(Constant.PASSWORD_VALIDATION2);
-            return;
-        }
         getServicecall();
     }
 
@@ -176,17 +164,28 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         String name = mName.getText().toString();
         RegisterRequestData registerRequestData = new RegisterRequestData();
         RegisterRequestData.Token token = new RegisterRequestData().new Token();
-        token.setValue(receivedToken);
+        token.setValue(tokenEditText.getText().toString().trim());
         RegisterRequestData.MetaProfile metaProfile = new RegisterRequestData().new MetaProfile();
         metaProfile.setName(name);
         registerRequestData.setName(name);
-        registerRequestData.setPassword(mPass.getText().toString());
         registerRequestData.setPhone(phoneNumber);
         registerRequestData.setPhoneCountryCode(countryCode);
         registerRequestData.setMetaprofile(metaProfile);
         registerRequestData.setToken(token);
         Util.getInstance().showProgressBarDialog(this, Constant.LOADING_DATA);
         RequestHandler.getInstance(getApplicationContext()).handleRequest(new RegistrationTokenrequest(new SuccessListener(), new ErrorListener(), registerRequestData));
+    }
+
+    /**
+     * To receive token
+     * @param message
+     * @param phoneNum
+     */
+    public void messageReceived(String message, String phoneNum) {
+        if(message.contains(Constant.TOKEN_SMS) && tokenEditText != null) {
+            String[] splitMessage = message.split(":");
+            tokenEditText.setText(splitMessage[1].substring(1, 6));
+        }
     }
 
     /**

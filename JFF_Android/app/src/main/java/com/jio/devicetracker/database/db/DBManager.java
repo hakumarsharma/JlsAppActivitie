@@ -119,13 +119,12 @@ public class DBManager {
     public long insertLoginData(LogindetailResponse data) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.USER_TOKEN, data.getUgsToken());
-        contentValue.put(DatabaseHelper.USER_ID, data.getUser().getId());
-        contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, data.getUgsTokenExpiry());
-        contentValue.put(DatabaseHelper.EMAIL, data.getUser().getEmail());
+        contentValue.put(DatabaseHelper.USER_TOKEN, data.getData().getUgsToken());
+        contentValue.put(DatabaseHelper.USER_ID, data.getData().getId());
+        contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, "");
         contentValue.put(DatabaseHelper.USER_NAME, LoginActivity.userName);
-        contentValue.put(DatabaseHelper.PHONE_COUNTRY_CODE, data.getUser().getPhoneCountryCode());
-        contentValue.put(DatabaseHelper.DEVICE_NUM, data.getUser().getPhoneNumber());
+        contentValue.put(DatabaseHelper.PHONE_COUNTRY_CODE, data.getData().getPhoneCountryCode());
+        contentValue.put(DatabaseHelper.DEVICE_NUM, data.getData().getPhone());
         return mDatabase.replace(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
     }
 
@@ -334,12 +333,11 @@ public class DBManager {
     public AdminLoginData getAdminLoginDetail() {
         mDatabase = mDBHelper.getWritableDatabase();
         AdminLoginData adminData = null;
-        String[] column = {DatabaseHelper.EMAIL, DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME, DatabaseHelper.PHONE_COUNTRY_CODE, DatabaseHelper.DEVICE_NUM};
+        String[] column = {DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME, DatabaseHelper.PHONE_COUNTRY_CODE, DatabaseHelper.DEVICE_NUM};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_USER_LOGIN, column, null, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 adminData = new AdminLoginData();
-                adminData.setEmail(cursor.getString(cursor.getColumnIndex(DatabaseHelper.EMAIL)));
                 adminData.setUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_ID)));
                 adminData.setUserToken(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_TOKEN)));
                 adminData.setTokenExpirytime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TOKEN_EXPIRY_TIME)));

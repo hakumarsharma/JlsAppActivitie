@@ -27,7 +27,6 @@ package com.jio.devicetracker.database.pojo;
  */
 public class AdminLoginData {
 
-    private String email;
     private String userToken;
     private String tokenExpirytime;
     private String userId;
@@ -57,14 +56,6 @@ public class AdminLoginData {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUserToken() {

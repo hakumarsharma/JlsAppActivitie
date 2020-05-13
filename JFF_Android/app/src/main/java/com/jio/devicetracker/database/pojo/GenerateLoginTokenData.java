@@ -22,14 +22,9 @@
 
 package com.jio.devicetracker.database.pojo;
 
-/**
- * Used to send the User data to the borqs at the time of login
- */
-public class Userdata {
+public class GenerateLoginTokenData {
     private String phone;
-    private String phoneCountryCode;
-    private String password;
-    private String type;
+    private Role role;
 
     public String getPhone() {
         return phone;
@@ -39,27 +34,23 @@ public class Userdata {
         this.phone = phone;
     }
 
-    public String getPhoneCountryCode() {
-        return phoneCountryCode;
+    public Role getRole() {
+        return role;
     }
 
-    public void setPhoneCountryCode(String phoneCountryCode) {
-        this.phoneCountryCode = phoneCountryCode;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public String getPassword() {
-        return password;
-    }
+    public class Role {
+        private String code;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+        public String getCode() {
+            return code;
+        }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+        public void setCode(String code) {
+            this.code = code;
+        }
     }
 }

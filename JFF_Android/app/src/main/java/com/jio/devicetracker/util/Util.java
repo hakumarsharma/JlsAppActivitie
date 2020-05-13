@@ -399,7 +399,6 @@ public final class Util extends AppCompatActivity {
         AdminLoginData adminLoginData = new DBManager(context).getAdminLoginDetail();
         if (adminLoginData != null) {
             userToken = adminLoginData.getUserToken();
-            adminEmail = adminLoginData.getEmail();
             userName = adminLoginData.getName();
             userId = adminLoginData.getUserId();
         }

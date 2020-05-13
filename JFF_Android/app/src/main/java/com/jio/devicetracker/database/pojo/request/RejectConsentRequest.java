@@ -31,17 +31,13 @@ public class RejectConsentRequest implements IRequest {
     private Response.Listener sucessListener;
     private Response.ErrorListener errorListener;
     private ApproveRejectConsentData approveRejectConsentData;
-    private String groupId;
-    private String userId;
     private String consentId;
 
-    public RejectConsentRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, ApproveRejectConsentData approveRejectConsentData, String groupId, String userId, String consentId)
+    public RejectConsentRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, ApproveRejectConsentData approveRejectConsentData, String consentId)
     {
         this.sucessListener = sucessListener;
         this.errorListener = errorListener;
         this.approveRejectConsentData = approveRejectConsentData;
-        this.groupId = groupId;
-        this.userId = userId;
         this.consentId = consentId;
     }
     @Override
@@ -56,8 +52,7 @@ public class RejectConsentRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return Constant.ACCOUNTS_API_USER_URL + userId + Constant.SESSION_GROUPS_URL + groupId
-                + Constant.SESSION_GROUP_CONSENTS_URL1 + consentId + Constant.STATUS_URL;
+        return Constant.APPROVE_REJECT_CONSENT_URL1 + consentId + Constant.STATUS_URL;
     }
 
     @Override

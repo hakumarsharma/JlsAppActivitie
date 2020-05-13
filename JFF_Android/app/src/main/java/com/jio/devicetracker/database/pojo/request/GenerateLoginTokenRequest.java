@@ -22,37 +22,39 @@
 
 package com.jio.devicetracker.database.pojo.request;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.jio.devicetracker.database.pojo.VerifyTokenData;
+import com.jio.devicetracker.database.pojo.GenerateLoginTokenData;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
-public class TokenVerifyRequest implements IRequest {
+import static com.android.volley.Request.Method.POST;
+
+public class GenerateLoginTokenRequest implements IRequest {
     private Response.Listener sucessListener;
     private Response.ErrorListener errorListener;
-    private VerifyTokenData user;
+    private GenerateLoginTokenData data;
 
-    public TokenVerifyRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, VerifyTokenData object)
-    {
+    public GenerateLoginTokenRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, GenerateLoginTokenData data) {
         this.sucessListener = sucessListener;
         this.errorListener = errorListener;
-        this.user = object;
+        this.data = data;
+
     }
+
     @Override
     public String getReqParams() {
-        return Util.getInstance().toJSON(user);
+        return Util.getInstance().toJSON(data);
     }
 
     @Override
     public int getMethod() {
-        return Request.Method.POST;
+        return POST;
     }
 
     @Override
     public String getAction() {
-        return Constant.REGISTRATION_URL_VERIFY;
+        return Constant.GENERATE_LOGIN_TOKEN_REQUEST_URL;
     }
 
     @Override
@@ -75,3 +77,5 @@ public class TokenVerifyRequest implements IRequest {
         return true;
     }
 }
+
+

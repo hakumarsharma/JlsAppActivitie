@@ -179,7 +179,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                     return;
                 }
 
-                // marrked the checked box as selected
+                // marked the checked box as selected
                 data.setSelected(!data.isSelected());
                 if (data.isSelected()) {
                     for (GroupMemberDataList list : DashboardActivity.grpMemberDataList) {
