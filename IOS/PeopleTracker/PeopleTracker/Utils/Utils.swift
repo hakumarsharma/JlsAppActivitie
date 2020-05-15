@@ -43,7 +43,7 @@ class Utils {
     }
     
     // creates a circular imageview
-    func createCirculatImage(imageView : UIImageView, borderColor : UIColor, borderWidth : CGFloat) -> UIImageView{
+    func createCircularImage(imageView : UIImageView, borderColor : UIColor, borderWidth : CGFloat) -> UIImageView{
         imageView.layer.borderWidth = borderWidth
         imageView.layer.masksToBounds = false
         imageView.layer.borderColor = borderColor.cgColor
@@ -53,7 +53,7 @@ class Utils {
     }
     
     // creates a circular view
-    func createCirculatView(view : UIView, borderColor : UIColor, borderWidth : CGFloat) -> UIView{
+    func createCircularView(view : UIView, borderColor : UIColor, borderWidth : CGFloat) -> UIView{
         view.layer.borderWidth = borderWidth
         view.layer.masksToBounds = false
         view.layer.borderColor = borderColor.cgColor
@@ -107,7 +107,7 @@ class Utils {
     }
     
     func getToEpochTime() -> Int64 {
-        return self.getEpochTime(val: 2)
+        return self.getEpochTime(val: 300)
     }
     
     // get epoch time to pass during creation of groups
@@ -139,6 +139,7 @@ class Utils {
         let components = Calendar.current.dateComponents([.day, .hour, .minute], from: fromdate, to: todate)
         return (components.day!, components.hour!, components.minute!)
     }
+    
 }
 
 extension UIViewController {

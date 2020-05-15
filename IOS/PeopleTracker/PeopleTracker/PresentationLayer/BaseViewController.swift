@@ -26,11 +26,59 @@
 
 import UIKit
 
-class GroupBaseClass: UIViewController {
+class BaseViewController: UIViewController {
     
     var groupname : String = ""
-    var memebrName : String = ""
+    var memberName : String = ""
     var memberNumber : String = ""
+    
+    
+    //Regsiteration Api Call
+    func generateTokenApiCall(tokenUrl : String, params : [String : Any]) {
+        self.showActivityIndicator()
+        UserService.shared.generateRegistartionTokenwith(generateTokenUrl: URL(string: tokenUrl)!, parameters: params) { (result : Result<UserModel, Error>) in
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+    //  API to add device using verify and assign
+    func callAddDeviceApi() {
+        let deviceURL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.AddDeviceUrl + Utils.shared.getUgsToken())!
+        let deviceDetails : [[String : String]] = [["mac": self.memberNumber,"identifier": "imei","name": self.memberName ,"phone": self.memberNumber,"type": "watch","model": "watch",]]
+        let flagDetails : [String : Bool] = ["isSkipAddDeviceToGroup" : false]
+        let deviceParams :  [String : Any] = ["devices" : deviceDetails, "flags": flagDetails]
+        DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
+            switch result {
+            case .success( _):
+                DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                    NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.NavigateToHome), object: nil)
+                }
+            case .failure(_):
+                DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                    NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.NavigateToHome), object: nil)
+                }
+            }
+        }
+    }
     
     // Create Group Api Call
     func callCreateGroupApi(methodType : String, isFromCreateGroup : Bool, groupId : String? = nil,groupMemebers : [GroupMember]? = nil) {
@@ -97,10 +145,10 @@ class GroupBaseClass: UIViewController {
             }
             params = ["consents" : memebersArr]
         } else {
-            let groupParams  : [String : Any] = ["name": self.memebrName,"phone" : self.memberNumber ,"entities" : sessionParams]
-             params = ["consents" : [groupParams]]
+            let groupParams  : [String : Any] = ["name": self.memberName,"phone" : self.memberNumber ,"entities" : sessionParams]
+            params = ["consents" : [groupParams]]
         }
-       
+        
         GroupService.shared.addMemberToGroup(addMemberInGroupUrl:  addMemberUrl,parameters: params) { (result : Result<GroupMemberModel, Error>) in
             switch result {
             case .success(let groupResponse):
@@ -109,7 +157,7 @@ class GroupBaseClass: UIViewController {
                     self.hideActivityIndicator()
                     NotificationCenter.default.post(name: Notification.Name(notificationName), object: nil)
                     if groupMemebers == nil {
-                    self.navigationController?.popViewController(animated: true)
+                        self.navigationController?.popViewController(animated: true)
                     }
                 }
             case .failure(let error):
@@ -125,6 +173,35 @@ class GroupBaseClass: UIViewController {
                     }
                 }
             }
+        }
+    }
+    
+    // Approve consent
+    func callApproveOrRejectConsent(consentId: String, token : String, status : String) {
+        self.showActivityIndicator()
+        let consentUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + "sessiongroupconsents" + "/" + consentId + Constants.ApiPath.ApproveConsent)!
+        let parameters : [String : Any] = ["consent" : ["token" : ["value" : token]],"status":status]
+        ConsentService.shared.approveOrRejectConsentWithToken(consentUrl: consentUrl, parameters: parameters) { (result : Result<ConsentModel, Error>) in
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+            
+            
         }
     }
     

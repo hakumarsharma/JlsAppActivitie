@@ -99,17 +99,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     //        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     //    }
     
-    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        if let url = URLContexts.first?.url{
-            print(url)
-            let message = url.host?.removingPercentEncoding
-            let alertController = UIAlertController(title: "Incoming Message", message: message, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil)
-            alertController.addAction(okAction)
-            let window : UIWindow = UIWindow(frame: UIScreen.main.bounds)
-            window.rootViewController?.present(alertController, animated: true, completion: nil)
-        }
-    }
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         print(url)
         let message = url.host?.removingPercentEncoding

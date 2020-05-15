@@ -37,7 +37,6 @@ class PrivacyPolicyScreen: UIViewController {
     func intialiseData() {
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.setHidesBackButton(true, animated: true)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         self.title = "Privacy Policy"
         textView.attributedText = Constants.PrivacyScreen.PrivacyPolicy.htmlToAttributedString
     }

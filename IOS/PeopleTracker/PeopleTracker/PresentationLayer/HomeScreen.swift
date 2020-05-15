@@ -27,7 +27,7 @@ import UIKit
 import JJFloatingActionButton
 import SideMenu
 
-class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, UserCellDelegate {
+class HomeScreen: BaseViewController,UITableViewDelegate, UITableViewDataSource, UserCellDelegate {
     
     
     @IBOutlet weak var usersTableView: UITableView!
@@ -36,11 +36,14 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
     let actionButton  = JJFloatingActionButton()
     var selectedCell  : [GroupListData] = []
     var groupList     : [GroupListData] = []
+    var refreshControl = UIRefreshControl()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initialiseData()
         self.getAllGroupsApi()
+        //self.ShowALertWithButtonAction(title: "Approve/Reject Consent")
     }
     
     func initialiseData() {
@@ -52,8 +55,16 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
         self.createNavBarItems()
         self.createNotification()
         self.floatingActionButton()
+        
+
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        usersTableView.addSubview(refreshControl) 
+
     }
-    
+    @objc func refresh(_ sender: AnyObject) {
+        self.getAllGroupsApi()
+    }
     // creating navigation bar left and right items for menu and track
     func createNavBarItems(){
         let menuBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "Menu"), style: .plain, target: self, action: #selector(menuButton(sender:)))
@@ -119,19 +130,18 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
         let groupData = self.groupList[indexpath!.row]
         let groupName = groupData.name.components(separatedBy: "+")
         let isIndividual = (groupName[0] == Constants.AddDeviceConstants.Individual) ? true : false
-       
         if isIndividual && (groupData.status == Utils.GroupStatus.isActive.rawValue) && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent {
             self.callRequestConsentApi(groupData: groupData)
         } else if isIndividual && (groupData.status == Utils.GroupStatus.isCompleted.rawValue) && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent{
             self.groupname = groupData.name
-            self.memebrName = groupData.groupMember.first?.memberName ?? ""
+            self.memberName = groupData.groupMember.first?.memberName ?? ""
             self.callDeleteGroupApi(groupData: groupData, isFromRequestConsent: true)
         }
         else if !isIndividual && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent {
             self.groupname = groupData.name
             self.callDeleteGroupApi(groupData: groupData,isFromRequestConsent: true)
         } else {
-            self.ShowALertWithButtonAction(title: Constants.HomScreenConstants.ConsentAlredySent)
+            self.ShowALert(title: Constants.HomScreenConstants.ConsentAlredySent)
         }
     }
     
@@ -160,7 +170,7 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
             if approvedArr.count > 0 {
                let activeGroupsArr = selectedCell.filter({$0.status == Utils.GroupStatus.isActive.rawValue})
                  if activeGroupsArr.count > 0 {
-                    self.navigateToMapsScreen(activegroupArr: activeGroupsArr)
+                    self.navigateToMapsScreen(activegroupArr: approvedArr)
                  } else {
                     self.ShowALert(title: Constants.GroupConstants.SessionStart)
                 }
@@ -233,7 +243,7 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
         view.addSubview(actionButton)
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         actionButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-        actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+        actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
     }
     
     // MARK: Notification Methods
@@ -283,9 +293,14 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
     // Alert with button action
     func ShowALertWithButtonAction(title: String){
         let alert = UIAlertController(title: Constants.AlertConstants.Alert, message: title, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: Constants.AlertConstants.OkButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.No, style: UIAlertAction.Style.cancel, handler: {(_: UIAlertAction!) in
             DispatchQueue.main.async {
-                
+                self.callApproveOrRejectConsent(consentId:"5ebbd42c09f9466784735f8e",token :"15329",status: "rejected")
+            }
+        }))
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.Yes, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+            DispatchQueue.main.async {
+                 self.callApproveOrRejectConsent(consentId:"5ebbd42c09f9466784735f8e",token :"15329",status: "approved")
             }
         }))
         self.present(alert, animated: true, completion: nil)
@@ -345,6 +360,7 @@ class HomeScreen: GroupBaseClass,UITableViewDelegate, UITableViewDataSource, Use
                 DispatchQueue.main.async {
                     self.hideActivityIndicator()
                     self.showHideTableView()
+                    self.refreshControl.endRefreshing()
                     self.usersTableView.reloadData()
                 }
             case .failure(let error):

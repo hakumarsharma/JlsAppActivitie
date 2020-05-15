@@ -37,10 +37,11 @@ class GroupCell: UITableViewCell  {
     @IBOutlet weak var deleteButton: UIButton!
     var groupcellDelegate : GroupCellDelegate?
     
-    func setUserData(memberData : GroupMemberData, groupData : GroupListData) {
+    func setUserData(memberData : GroupMemberData, groupData : GroupListData, imgStr : String) {
         customView.layer.cornerRadius = 10
-        self.bgView  = Utils.shared.createCirculatView(view: bgView, borderColor:  UIColor.clear, borderWidth: 3.0)
-        self.userImg = Utils.shared.createCirculatImage(imageView: self.userImg, borderColor: UIColor.clear, borderWidth: 3.0)
+        self.bgView  = Utils.shared.createCircularView(view: bgView, borderColor:  UIColor.clear, borderWidth: 3.0)
+        self.userImg = Utils.shared.createCircularImage(imageView: self.userImg, borderColor: UIColor.clear, borderWidth: 3.0)
+        self.userImg.image = UIImage.init(named: imgStr)
         self.name.text = memberData.name
         self.phoneNumber.text = memberData.phone
         

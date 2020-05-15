@@ -30,7 +30,7 @@ class ProfileCell: UITableViewCell {
     @IBOutlet weak var userName: UILabel!
     
     func setProfileData()  {
-        self.userImage = Utils.shared.createCirculatImage(imageView: self.userImage, borderColor: UIColor.clear, borderWidth: 3.0)
+        self.userImage = Utils.shared.createCircularImage(imageView: self.userImage, borderColor: UIColor.clear, borderWidth: 3.0)
         self.userName.text = "Teja"
     }
 }

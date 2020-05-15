@@ -34,7 +34,8 @@ class Constants {
        static let LoginUrl = UserApisUrl + "login?isResponseDataAsUser=true&isPopulateGroup=true&isPopulateGroupUsers=true&isPopulateUserDevices=true&isPopulateUserDevicesAsWearableUsers=true"
        static let AddDeviceUrl = "/devices/verifyandassign?ugs_token="
        static let DeviceDetails = DeviceApisUrl + "v2/search?skip=0&limit=10&ugs_token="
-       static let GenerateTokenUrl = UserApisUrl + "tokens"
+       static let GenerateRegistrationTokenUrl = UserApisUrl + "tokens"
+       static let GenerateLoginTokenUrl = UserApisUrl + "tokens/login"
        static let VerifyTokenUrl = UserApisUrl + "tokens/verify"
        static let RegisterationUrl = UserApisUrl + "register"
        static let CreateGroupUrl = "/sessiongroups"
@@ -62,9 +63,14 @@ class Constants {
     }
     
     struct MqttConstants {
-        static let HostName = "tcp://v.dev.tnt.cats.jvts.net"
-        static let UserName = "borqs-sit"
-        static let Password = "borqs-sit@987"
+        // Stg Details
+        static let HostName = "tcp://bocats.tnt.jiophone.net"
+        static let UserName = "trackNT"
+        static let Password = "trackNT"
+        // SIT Details
+//        static let HostName = "tcp://v.dev.tnt.cats.jvts.net"
+//        static let UserName = "borqs-sit"
+//        static let Password = "borqs-sit@987"
     }
     
     struct AlertConstants {
@@ -145,6 +151,7 @@ class Constants {
           static let Individual = "Individual"
           static let ChooseDeviceType = "Please choose type of device"
           static let ContactsPermission = "Please accept access to contacts permission to choose a contact from contact list."
+          static let QrIncorrectData = "Incorrect data, Please scan again."
       }
     
     struct CreateGroupConstants {
@@ -174,5 +181,7 @@ class Constants {
     struct NotificationName {
         static let GetGroupList = "GetGroupList"
         static let GetMemebersInGroup = "GetMemebersInGroup"
+        static let NavigateToHome = "NavigateToHome"
+        static let QRdata = "QRdata"
     }
 }

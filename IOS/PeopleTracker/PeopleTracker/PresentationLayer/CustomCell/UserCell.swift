@@ -46,7 +46,8 @@ class UserCell: UITableViewCell {
     func setGroupData(groupData : GroupListData){
         customView.layer.cornerRadius           = 10
         requestConsentButton.layer.cornerRadius = 10
-        self.ImgBgView = Utils.shared.createCirculatView(view: ImgBgView, borderColor:  UIColor.lightGray, borderWidth: 3.0)
+        self.ImgBgView = Utils.shared.createCircularView(view: ImgBgView, borderColor:  UIColor.black, borderWidth: 3.0)
+        self.userIcon = Utils.shared.createCircularImage(imageView: self.userIcon, borderColor:  UIColor.clear, borderWidth: 1.0)
         self.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkempty"), for: .normal)
         self.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkmark"), for: .selected)
         self.requestConsentButton.isHidden = false
@@ -89,7 +90,7 @@ class UserCell: UITableViewCell {
     
     // set icon based device type
     func setUserIcon(val : String){
-        self.userIcon = Utils.shared.createCirculatImage(imageView: self.userIcon, borderColor: UIColor.clear, borderWidth: 3.0)
+        self.userIcon = Utils.shared.createCircularImage(imageView: self.userIcon, borderColor: UIColor.clear, borderWidth: 3.0)
         switch val {
         case Constants.AddDeviceConstants.PeopleTracker:
             self.userIcon.image = UIImage(named: "user4")

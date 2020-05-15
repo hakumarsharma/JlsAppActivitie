@@ -120,12 +120,13 @@ import RealmSwift
     dynamic var  memberStatus       : String? = nil
     dynamic var  memberPhone        : String? = nil
     dynamic var  memberName         : String? = nil
+    dynamic var  memberDevice       : String? = nil
     dynamic var  isGroupAdmin       : Bool? = nil
     dynamic var  memberId           : String? = nil
-    dynamic var  deviceType          : String? = nil
+    dynamic var  deviceType         : String? = nil
     
     enum CodingKeys : String, CodingKey {
-        case memberStatus="status",memberPhone="phone",isGroupAdmin,memberId="_id",memberName = "name",deviceType
+        case memberStatus="status",memberPhone="phone",isGroupAdmin,memberId="_id",memberName = "name",deviceType,memberDevice="device"
     }
     
     required init(from decoder: Decoder) throws
@@ -136,6 +137,7 @@ import RealmSwift
         memberPhone = try? container.decode(String.self, forKey: .memberPhone)
         isGroupAdmin = try? container.decode(Bool.self, forKey: .isGroupAdmin)
         memberName = try? container.decode(String.self, forKey: .memberName)
+        memberDevice = try? container.decode(String.self, forKey: .memberDevice)
         memberId = try? container.decode(String.self, forKey: .memberId)
         deviceType = try? container.decode(String.self, forKey: .deviceType)
         super.init()

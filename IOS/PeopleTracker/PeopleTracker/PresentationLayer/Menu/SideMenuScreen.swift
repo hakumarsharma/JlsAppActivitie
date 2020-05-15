@@ -25,6 +25,7 @@
 
 import UIKit
 import SideMenu
+import RealmSwift
 
 class SideMenuScreen: UITableViewController {
     
@@ -77,24 +78,24 @@ class SideMenuScreen: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             switch indexPath.row {
-                case 0:
-                    if isFromHomevc {
-                        NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
-                        dismiss(animated: true, completion: nil)
-                    }else {
-                        self.navigateToHomeScreen()
-                    }
-                case 1:
+            case 0:
+                if isFromHomevc {
+                    NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
+                    dismiss(animated: true, completion: nil)
+                }else {
+                    self.navigateToHomeScreen()
+                }
+            case 1:
                 self.navigateToActiveSession()
-                case 2:
+            case 2:
                 self.navigateToProfileScreen()
-                case 3:
+            case 3:
                 self.navigateToSettingsScreen()
-                case 4:
+            case 4:
                 self.navigateToAboutScreen()
-                case 5:
+            case 5:
                 self.navigateToHelpScreen()
-                case 6:
+            case 6:
                 self.navigateToLoginScreen()
             default:
                 dismiss(animated: true, completion: nil)
@@ -116,10 +117,10 @@ class SideMenuScreen: UITableViewController {
     }
     
     func navigateToProfileScreen() {
-         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-         let profileViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.Profile) as! ProfileScreen
-         self.navigationController?.pushViewController(profileViewController, animated: true)
-     }
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let profileViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.Profile) as! ProfileScreen
+        self.navigationController?.pushViewController(profileViewController, animated: true)
+    }
     
     func navigateToSettingsScreen() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
@@ -140,10 +141,17 @@ class SideMenuScreen: UITableViewController {
     }
     
     func navigateToLoginScreen() {
-           let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-           let loginViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.LoginScreen) as! LoginScreen
-           self.navigationController?.pushViewController(loginViewController, animated: true)
-       }
+        if let loginData = RealmManager.sharedInstance.getUserDataFromDB().first {
+            let realm = try! Realm()
+            try! realm.write {
+                 loginData.ugsTokenexpiry = Utils.shared.getTokenEpochTime(val: 0)
+            }
+            RealmManager.sharedInstance.addUserData(object: loginData)
+        }
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let loginViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.LoginScreen) as! LoginScreen
+        self.navigationController?.pushViewController(loginViewController, animated: true)
+    }
     
 }
 

@@ -32,6 +32,7 @@ class ActiveSessionsScreen: UIViewController,UITableViewDelegate, UITableViewDat
     @IBOutlet weak var usersTableView: UITableView!
     @IBOutlet weak var instructionsLabel: UILabel!
     var groupList     : [GroupListData] = []
+    var refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,8 +46,14 @@ class ActiveSessionsScreen: UIViewController,UITableViewDelegate, UITableViewDat
         usersTableView.dataSource = self
         usersTableView.tableFooterView = UIView()
         self.createNotification()
+        
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        usersTableView.addSubview(refreshControl)
     }
-    
+    @objc func refresh(_ sender: AnyObject) {
+        self.getAllGroupsApi()
+    }
     // MARK: UITableView Delegate and DataSource methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -118,10 +125,10 @@ class ActiveSessionsScreen: UIViewController,UITableViewDelegate, UITableViewDat
         let alert = UIAlertController(title: Constants.HomScreenConstants.Select, message: "", preferredStyle: .actionSheet)
         if isAdmin {
             alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Remove, style: .default , handler:{ (UIAlertAction)in
-                          self.callExitorRemoveMemberFromGroupApi(groupData: groupData, status: Utils.GroupStatus.isRemoved.rawValue)
-                      }))
+                self.callExitorRemoveMemberFromGroupApi(groupData: groupData, status: Utils.GroupStatus.isRemoved.rawValue)
+            }))
         } else {
-          alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Exit, style: .default , handler:{ (UIAlertAction)in
+            alert.addAction(UIAlertAction(title:Constants.HomScreenConstants.Exit, style: .default , handler:{ (UIAlertAction)in
                 self.callExitorRemoveMemberFromGroupApi(groupData: groupData, status: Utils.GroupStatus.isExited.rawValue)
             }))
         }
@@ -197,7 +204,7 @@ class ActiveSessionsScreen: UIViewController,UITableViewDelegate, UITableViewDat
                     if groupdata.status == Utils.GroupStatus.isActive.rawValue {
                         let groupName = groupdata.name.components(separatedBy: "+")
                         if groupName.count == 2 && groupName[0] == Constants.AddDeviceConstants.Individual && groupdata.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue {
-                             self.groupList.append(groupdata)
+                            self.groupList.append(groupdata)
                         } else if groupName.count != 2{
                             self.groupList.append(groupdata)
                         }
@@ -206,6 +213,7 @@ class ActiveSessionsScreen: UIViewController,UITableViewDelegate, UITableViewDat
                 DispatchQueue.main.async {
                     self.hideActivityIndicator()
                     self.showHideTableView()
+                    self.refreshControl.endRefreshing()
                     self.usersTableView.reloadData()
                 }
             case .failure(let error):
@@ -256,35 +264,35 @@ class ActiveSessionsScreen: UIViewController,UITableViewDelegate, UITableViewDat
     
     // Exit from group APi call
     func callExitorRemoveMemberFromGroupApi(groupData : GroupListData,status : String) {
-          self.showActivityIndicator()
-          let exitGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + groupData.groupId + Constants.ApiPath.CreateMultiple + Constants.ApiPath.ApproveConsent)!
-          let consentNumber : [String : Any] = ["phone" : groupData.groupMember.first?.memberPhone ?? "","status": status]
-          let parameters : [String : Any] = ["consent" : consentNumber]
+        self.showActivityIndicator()
+        let exitGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + groupData.groupId + Constants.ApiPath.CreateMultiple + Constants.ApiPath.ApproveConsent)!
+        let consentNumber : [String : Any] = ["phone" : groupData.groupMember.first?.memberPhone ?? "","status": status]
+        let parameters : [String : Any] = ["consent" : consentNumber]
         GroupService.shared.exitOrRemoveFromGroup(exitGroupUrl: exitGroupUrl, parameters: parameters) { (result : Result<UserModel, Error>) in
-              switch result {
-              case .success(let groupResponse):
-                  print(groupResponse)
-                  DispatchQueue.main.async {
-                      self.hideActivityIndicator()
-                      self.getAllGroupsApi()
-                  }
-              case .failure(let error):
-                  if type(of: error) == NetworkManager.ErrorType.self {
-                      DispatchQueue.main.async {
-                          self.hideActivityIndicator()
-                          self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                      }
-                  } else {
-                      DispatchQueue.main.async {
-                          self.hideActivityIndicator()
-                          self.ShowALert(title: error.localizedDescription)
-                      }
-                  }
-              }
-
-              
-          }
-      }
+            switch result {
+            case .success(let groupResponse):
+                print(groupResponse)
+                DispatchQueue.main.async {
+                    self.hideActivityIndicator()
+                    self.getAllGroupsApi()
+                }
+            case .failure(let error):
+                if type(of: error) == NetworkManager.ErrorType.self {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.hideActivityIndicator()
+                        self.ShowALert(title: error.localizedDescription)
+                    }
+                }
+            }
+            
+            
+        }
+    }
     
     
 }

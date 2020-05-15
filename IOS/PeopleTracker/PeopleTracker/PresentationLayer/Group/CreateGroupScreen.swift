@@ -25,7 +25,7 @@
 
 import UIKit
 
-class CreateGroupScreen: GroupBaseClass {
+class CreateGroupScreen: BaseViewController,UITextFieldDelegate {
     
     var navtitle : String = ""
     var groupData = GroupListData()
@@ -34,13 +34,18 @@ class CreateGroupScreen: GroupBaseClass {
     @IBOutlet weak var groupName: UITextField!
     
     override func viewDidLoad() {
-             super.viewDidLoad()
-             self.title = navtitle
+        super.viewDidLoad()
+        self.title = navtitle
+        self.initialiseData()
+    }
+    
+    func initialiseData() {
+        self.groupName.delegate = self
         if groupData.groupId.count > 0 {
             self.groupName.text = groupData.name
             self.createGroup.setTitle("Update Group", for: .normal)
         } else {
-             self.createGroup.setTitle("Create Group", for: .normal)
+            self.createGroup.setTitle("Create Group", for: .normal)
         }
     }
     
@@ -51,69 +56,14 @@ class CreateGroupScreen: GroupBaseClass {
         }
         self.groupname = groupName.text!
         (groupData.groupId.count > 0) ? self.callCreateGroupApi(methodType: NetworkManager.Method.put.rawValue, isFromCreateGroup : true, groupId: groupData.groupId) : self.callCreateGroupApi(methodType: NetworkManager.Method.post.rawValue, isFromCreateGroup: true)
-     
+        
     }
     
-//    // Create Group Api Call
-//    func callCreateGroupApi() {
-//        self.showActivityIndicator()
-//        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl )!
-//        let sessionParams : [String : Int64] = ["from" : Utils.shared.getFromEpochTime(), "to" : Utils.shared.getToEpochTime()]
-//        let groupParams : [String : Any] = ["name" : groupName.text!, "session" : sessionParams, "type" : "one_to_one"]
-//        GroupService.shared.createGroup(createGroupUrl:  groupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
-//            switch result {
-//            case .success(let groupResponse):
-//                  print(groupResponse)
-//                   DispatchQueue.main.async {
-//                  self.hideActivityIndicator()
-//                  NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
-//                  self.navigationController?.popViewController(animated: true)
-//                  }
-//            case .failure(let error):
-//                if type(of: error) == NetworkManager.ErrorType.self {
-//                    DispatchQueue.main.async {
-//                        self.hideActivityIndicator()
-//                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-//                    }
-//                } else {
-//                    DispatchQueue.main.async {
-//                        self.hideActivityIndicator()
-//                        self.ShowALert(title: error.localizedDescription)
-//                    }
-//                }
-//            }
-//        }
-//    }
+    // MARK: UITextField Delegate
     
-    // Update Group Api Call
-//    func callUpdateGroupApi() {
-//        self.showActivityIndicator()
-//    
-//        let updateGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/"  +  groupData.groupId )!
-//        let groupParams : [String : Any] = ["name" : groupName.text!]
-//        GroupService.shared.updateGroup(updateGroupUrl:  updateGroupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
-//            switch result {
-//            case .success(let groupResponse):
-//                  print(groupResponse)
-//                   DispatchQueue.main.async {
-//                  self.hideActivityIndicator()
-//                  NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
-//                  self.navigationController?.popViewController(animated: true)
-//                  }
-//            case .failure(let error):
-//                if type(of: error) == NetworkManager.ErrorType.self {
-//                    DispatchQueue.main.async {
-//                        self.hideActivityIndicator()
-//                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-//                    }
-//                } else {
-//                    DispatchQueue.main.async {
-//                        self.hideActivityIndicator()
-//                        self.ShowALert(title: error.localizedDescription)
-//                    }
-//                }
-//            }
-//        }
-//    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
     
 }

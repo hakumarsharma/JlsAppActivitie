@@ -34,6 +34,8 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var groupListTableView: UITableView!
     @IBOutlet weak var instructionLbl: UILabel!
     var isMemeberAdded : Bool = false
+    var refreshControl = UIRefreshControl()
+
     
     let actionButton = JJFloatingActionButton()
     var groupMemberData: [GroupMemberData] = []
@@ -60,6 +62,12 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
         if !isActiveSession && groupData.groupMember.count < 10 && !(groupData.groupSession!.from! <= currentEpochTime && groupData.groupSession!.to! >= currentEpochTime) {
             floatingActionButton()
         }
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        groupListTableView.addSubview(refreshControl)
+    }
+    @objc func refresh(_ sender: AnyObject) {
+        self.getMemberInGroupApi()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -112,7 +120,15 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
         cell.selectionStyle = .none
         let memberData = groupMemberData[indexPath.row]
         cell.groupcellDelegate = self
-        cell.setUserData(memberData: memberData, groupData: self.groupData)
+        var imgstr : String = ""
+        if indexPath.row % 2 == 0{
+            imgstr = "user0"
+        }else if indexPath.row % 3 == 0 {
+            imgstr = "user1"
+        }else {
+            imgstr = "user2"
+        }
+        cell.setUserData(memberData: memberData, groupData: self.groupData, imgStr : imgstr)
         cell.deleteButton.isHidden = true
         if isActiveSession {
             cell.deleteButton.isHidden = false
@@ -212,7 +228,7 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
         view.addSubview(actionButton)
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         actionButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-        actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+        actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
     }
     
     
@@ -238,6 +254,7 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
                 DispatchQueue.main.async {
                     self.hideActivityIndicator()
                     self.showHideTableView()
+                    self.refreshControl.endRefreshing()
                     self.groupListTableView.reloadData()
                 }
             case .failure(let error):
