@@ -145,8 +145,8 @@ public class EditActivity extends Activity implements View.OnClickListener {
         createGroupData.setName(Constant.INDIVIDUAL_USER_GROUP_NAME);
         createGroupData.setType(Constant.ONE_TO_ONE);
         CreateGroupData.Session session = new CreateGroupData().new Session();
-        session.setFrom(Util.getTimeEpochFormatAfterCertainTime(1));
-        session.setTo(Util.getTimeEpochFormatAfterCertainTime(15));
+        session.setFrom(Util.getInstance().getTimeEpochFormatAfterCertainTime(1));
+        session.setTo(Util.getInstance().getTimeEpochFormatAfterCertainTime(15));
         createGroupData.setSession(session);
         GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, userId));
     }

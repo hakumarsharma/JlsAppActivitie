@@ -30,8 +30,6 @@ import java.util.List;
 public class SearchEventData implements Serializable {
     @SerializedName("types")
     private List<String> types;
-    @SerializedName("time")
-    private Time time;
 
     public List<String> getTypes() {
         return types;
@@ -39,37 +37,6 @@ public class SearchEventData implements Serializable {
 
     public void setTypes(List<String> types) {
         this.types = types;
-    }
-
-    public Time getTime() {
-        return time;
-    }
-
-    public void setTime(Time time) {
-        this.time = time;
-    }
-
-    public class Time {
-        @SerializedName("from")
-        private Long from;
-        @SerializedName("to")
-        private Long to;
-
-        public Long getFrom() {
-            return from;
-        }
-
-        public void setFrom(Long from) {
-            this.from = from;
-        }
-
-        public Long getTo() {
-            return to;
-        }
-
-        public void setTo(Long to) {
-            this.to = to;
-        }
     }
 
 }

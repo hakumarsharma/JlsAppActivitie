@@ -70,6 +70,16 @@ public class SearchEventResponse implements Serializable {
         private String groupId;
         @SerializedName("location")
         private Location location;
+        @SerializedName("parentId")
+        private String userId;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
 
         public String getId() {
             return id;

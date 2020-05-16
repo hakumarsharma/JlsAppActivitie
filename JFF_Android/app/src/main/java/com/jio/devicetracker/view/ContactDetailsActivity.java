@@ -259,8 +259,8 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
         createGroupData.setName(Constant.INDIVIDUAL_USER_GROUP_NAME);
         createGroupData.setType(Constant.ONE_TO_ONE);
         CreateGroupData.Session session = new CreateGroupData().new Session();
-        session.setFrom(Util.getTimeEpochFormatAfterCertainTime(1));
-        session.setTo(Util.getTimeEpochFormatAfterCertainTime(60));
+        session.setFrom(Util.getInstance().getTimeEpochFormatAfterCertainTime(1));
+        session.setTo(Util.getInstance().getTimeEpochFormatAfterCertainTime(60));
         createGroupData.setSession(session);
         Util.getInstance().showProgressBarDialog(this);
         GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, userId));

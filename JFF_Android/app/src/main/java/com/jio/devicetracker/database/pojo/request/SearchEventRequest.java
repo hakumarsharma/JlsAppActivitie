@@ -38,14 +38,16 @@ public class SearchEventRequest implements IRequest {
     private SearchEventData searchEventData;
     private String userId;
     private String groupId;
+    private String appendingLocationURL;
 
-    public SearchEventRequest(Response.Listener mListner, Response.ErrorListener errorListener, SearchEventData searchEventData, String userId, String groupId)
+    public SearchEventRequest(Response.Listener mListner, Response.ErrorListener errorListener, SearchEventData searchEventData, String userId, String groupId, String appendingLocationURL)
     {
         this.sucessListener = mListner;
         this.errorListener = errorListener;
         this.searchEventData = searchEventData;
         this.userId = userId;
         this.groupId = groupId;
+        this.appendingLocationURL = appendingLocationURL;
     }
     @Override
     public String getReqParams() {
@@ -59,7 +61,7 @@ public class SearchEventRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return Constant.ACCOUNTS_API_USER_URL + userId + Constant.SESSION_GROUPS_URL + groupId + Constant.GET_LOCATION_URL;
+        return Constant.ACCOUNTS_API_USER_URL + userId + Constant.SESSION_GROUPS_URL + groupId + appendingLocationURL;
     }
 
     @Override

@@ -303,11 +303,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             logindetailResponse = Util.getInstance().getPojoObject(String.valueOf(response), LogindetailResponse.class);
             userId = logindetailResponse.getData().getId();
             ugsToken = logindetailResponse.getData().getUgsToken();
-            if (logindetailResponse.getData().getUgsToken() != null) {
-                new DBManager(LoginActivity.this).insertLoginData(logindetailResponse);
+
+            // Verify and assign API Call if number is not already added on server
+            if(mDbManager.getAdminLoginDetail() != null && mDbManager.getAdminLoginDetail().getPhoneNumber() != null
+                    && logindetailResponse.getData().getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())) {
+                // To do
+            } else {
+                makeVerifyAndAssignAPICall();
             }
-            // Verify and assign API Call
-            makeVerifyAndAssignAPICall();
+
+            if (logindetailResponse.getData().getUgsToken() != null) {
+                mDbManager.deleteAllPreviousData();
+                mDbManager.insertLoginData(logindetailResponse);
+            }
             // Get All Group info per user API Call
             GroupRequestHandler.getInstance(LoginActivity.this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
         }

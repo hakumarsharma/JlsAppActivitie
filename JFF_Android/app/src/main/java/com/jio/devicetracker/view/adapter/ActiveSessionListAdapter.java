@@ -21,6 +21,7 @@
 
 package com.jio.devicetracker.view.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import com.jio.devicetracker.database.pojo.ActiveSessionData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 
 import java.util.List;
 
@@ -77,22 +79,21 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
             HomeActivityListData data = (HomeActivityListData) mList.get(position);
             holder.profile.setImageResource(R.drawable.ic_group_button);
             holder.name.setText(data.getGroupName());
+            holder.durationtime.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(), data.getTo()));
+            holder.expirytime.setText(Util.getInstance().getTrackingExpirirationDuration(Util.getInstance().convertTimeToEpochtime(), data.getTo()));
             holder.relativeLayout.setOnClickListener(v -> {
                 itemListener.clickOnListLayout(data.getProfileImage(), data.getGroupName(), data.getGroupId()
                         , data.getCreatedBy());
                 return;
             });
-            holder.activeSessionOptions.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.onPopupMenuClickedForGroup(holder.activeSessionOptions, position, data.getCreatedBy(), data.getGroupId());
-                }
-            });
+            holder.activeSessionOptions.setOnClickListener(v -> itemListener.onPopupMenuClickedForGroup(holder.activeSessionOptions, position, data));
         } else if (mList.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
             GroupMemberDataList data = (GroupMemberDataList) mList.get(position);
             holder.profile.setImageResource(R.drawable.ic_user);
             holder.name.setText(data.getName());
             holder.phone.setText(data.getNumber());
+            holder.durationtime.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(), data.getTo()));
+            holder.expirytime.setText(Util.getInstance().getTrackingExpirirationDuration(Util.getInstance().convertTimeToEpochtime(), data.getTo()));
             holder.relativeLayout.setOnClickListener(v -> {
                 itemListener.clickOnListLayout(data.getProfileImage(), data.getName(), data.getConsentId(), "");
                 return;
@@ -148,7 +149,7 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
     public interface RecyclerViewClickListener {
         void clickOnListLayout(int selectedGroupName, String name, String groupId, String createdBy);
         void onPopupMenuClickedForMember(View v, int position, GroupMemberDataList groupMemberDataList);
-        void onPopupMenuClickedForGroup(View v, int position, String createdBy, String groupId);
+        void onPopupMenuClickedForGroup(View v, int position, HomeActivityListData homeActivityListData);
     }
 
     /**

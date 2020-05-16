@@ -31,14 +31,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.request.ExitRemovedGroupRequest;
+import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -46,6 +49,14 @@ import com.jio.devicetracker.view.adapter.ActiveMemberListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ActiveMemberActivity extends AppCompatActivity {
 
@@ -87,9 +98,9 @@ public class ActiveMemberActivity extends AppCompatActivity {
         if (mAdapter != null) {
             mAdapter.setOnItemClickPagerListener(new ActiveMemberListAdapter.RecyclerViewClickListener() {
                 @Override
-                public void onPopupMenuClicked(View v, int position, String groupId, boolean isGroupAdmin, String phoneNumber, String consentId) {
+                public void onPopupMenuClicked(View v, int position, GroupMemberDataList groupMemberDataList) {
                     PopupMenu popup = new PopupMenu(ActiveMemberActivity.this, v);
-                    ActiveMemberActivity.this.consentId = consentId;
+                    ActiveMemberActivity.this.consentId = groupMemberDataList.getConsentId();
                     ActiveMemberActivity.this.position = position;
                     if (createdBy != null && createdBy.equalsIgnoreCase(userId)) { // Check through updated by not by isGroupAdmin
                         popup.getMenu().add(Menu.NONE, 1, 1, Constant.REMOVE);
@@ -101,10 +112,10 @@ public class ActiveMemberActivity extends AppCompatActivity {
                     popup.setOnMenuItemClickListener(item -> {
                         switch (item.getItemId()) {
                             case 1:
-                                ActiveMemberActivity.this.makeRemoveAPICall(phoneNumber);
+                                ActiveMemberActivity.this.makeRemoveAPICall(groupMemberDataList.getNumber());
                                 break;
                             case 2:
-                                ActiveMemberActivity.this.makeExitAPICall(phoneNumber);
+                                ActiveMemberActivity.this.makeExitAPICall(groupMemberDataList.getNumber());
                                 break;
                             default:
                                 break;
@@ -121,13 +132,42 @@ public class ActiveMemberActivity extends AppCompatActivity {
      * make an Exit API Call
      */
     private void makeExitAPICall(String phoneNumber) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
         ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
         ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
         consent.setPhone(phoneNumber);
         consent.setStatus(Constant.EXITED);
         exitRemovedGroupData.setConsent(consent);
+        RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
+        Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mDbManager.getAdminLoginDetail().getUserToken(),
+                Constant.APPLICATION_JSON, mDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, groupId, body);
         Util.getInstance().showProgressBarDialog(this);
-        GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new ExitRemovedGroupRequest(new ExitFromGroupRequestSuccessListener(), new ExitFromGroupRequestErrorListener(), exitRemovedGroupData, groupId, userId));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    Util.progressDialog.dismiss();
+                    Toast.makeText(ActiveMemberActivity.this, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
+                    mDbManager.deleteSelectedDataFromGroupMember(groupId);
+                    mAdapter.removeItem(position);
+                    addDataInList();
+                    isAnyMemberActive();
+                } else {
+                    Util.progressDialog.dismiss();
+                    Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Util.progressDialog.dismiss();
+                Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+            }
+        });
     }
 
     /**
@@ -136,13 +176,43 @@ public class ActiveMemberActivity extends AppCompatActivity {
      * @param phoneNumber
      */
     private void makeRemoveAPICall(String phoneNumber) {
+        DBManager mDbManager = new DBManager(this);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
         ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
         ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
         consent.setPhone(phoneNumber);
         consent.setStatus(Constant.REMOVED);
         exitRemovedGroupData.setConsent(consent);
-        Util.getInstance().showProgressBarDialog(ActiveMemberActivity.this);
-        GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new ExitRemovedGroupRequest(new RemovedFromGroupRequestSuccessListener(), new RemovedFromGroupRequestErrorListener(), exitRemovedGroupData, groupId, userId));
+        RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
+        Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mDbManager.getAdminLoginDetail().getUserToken(),
+                Constant.APPLICATION_JSON, mDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, groupId, body);
+        Util.getInstance().showProgressBarDialog(this);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    Util.progressDialog.dismiss();
+                    Toast.makeText(ActiveMemberActivity.this, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
+                    mDbManager.deleteSelectedDataFromGroupMember(groupId);
+                    mAdapter.removeItem(position);
+                    addDataInList();
+                    isAnyMemberActive();
+                } else {
+                    Util.progressDialog.dismiss();
+                    Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Util.progressDialog.dismiss();
+                Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+            }
+        });
     }
 
     /**
@@ -169,29 +239,6 @@ public class ActiveMemberActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Exit API Call Success Listener
-     */
-    private class RemovedFromGroupRequestSuccessListener implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            Util.progressDialog.dismiss();
-            mDbManager.deleteSelectedDataFromGroup(consentId);
-            mAdapter.removeItem(position);
-            addDataInList();
-        }
-    }
-
-    /**
-     * Exit API Call Error Listener
-     */
-    private class RemovedFromGroupRequestErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.progressDialog.dismiss();
-            Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
-        }
-    }
 
     /**
      * Checks if any member inside the group is active if not display no active member found
@@ -216,7 +263,7 @@ public class ActiveMemberActivity extends AppCompatActivity {
         List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
         memberList = new ArrayList<>();
         for (GroupMemberDataList data : mList) {
-            if (!data.getConsentStatus().equalsIgnoreCase(Constant.EXITED)) {
+            if (!data.getConsentStatus().equalsIgnoreCase(Constant.EXITED) && !data.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
                 GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
                 groupMemberDataList.setName(data.getName());
                 groupMemberDataList.setNumber(data.getNumber());
@@ -224,6 +271,8 @@ public class ActiveMemberActivity extends AppCompatActivity {
                 groupMemberDataList.setGroupId(data.getGroupId());
                 groupMemberDataList.setGroupAdmin(data.isGroupAdmin());
                 groupMemberDataList.setProfileImage(R.drawable.ic_tracee_list);
+                groupMemberDataList.setFrom(mDbManager.getGroupDetail(data.getGroupId()).getFrom());
+                groupMemberDataList.setTo(mDbManager.getGroupDetail(data.getGroupId()).getTo());
                 memberList.add(groupMemberDataList);
             }
         }

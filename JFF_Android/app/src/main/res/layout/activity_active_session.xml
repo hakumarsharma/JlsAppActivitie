@@ -19,7 +19,7 @@
         android:lineSpacingExtra="5dp"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:visibility="invisible" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -28,8 +28,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/customToolbar"
         android:divider="#806326"
-        android:dividerHeight="1dp"
-
-        />
+        android:dividerHeight="1dp" />
 
 </RelativeLayout>

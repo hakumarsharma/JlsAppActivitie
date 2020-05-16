@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
+import com.jio.devicetracker.util.Util;
 
 import java.util.List;
 
@@ -75,7 +76,9 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
         holder.phone.setText(mList.get(position).getNumber());
         holder.name.setText(mList.get(position).getName());
         holder.profile.setImageResource(mList.get(position).getProfileImage());
-        holder.activeMemberOptions.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.activeMemberOptions, position, mList.get(position).getGroupId(), mList.get(position).isGroupAdmin(), mList.get(position).getNumber(), mList.get(position).getConsentId()));
+        holder.durationtime.setText(Util.getInstance().getTrackingExpirirationDuration(mList.get(position).getFrom(), mList.get(position).getTo()));
+        holder.expirytime.setText(Util.getInstance().getTrackingExpirirationDuration(Util.getInstance().convertTimeToEpochtime(), mList.get(position).getTo()));
+        holder.activeMemberOptions.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.activeMemberOptions, position, mList.get(position)));
     }
 
     /**
@@ -91,7 +94,7 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
      * Interface to override methods in Dashboard to call those methods on particular item click
      */
     public interface RecyclerViewClickListener {
-        void onPopupMenuClicked(View v, int position, String groupId, boolean isGroupAdmin, String phoneNumber, String consentId);
+        void onPopupMenuClicked(View v, int position, GroupMemberDataList groupMemberDataList);
     }
 
     /**

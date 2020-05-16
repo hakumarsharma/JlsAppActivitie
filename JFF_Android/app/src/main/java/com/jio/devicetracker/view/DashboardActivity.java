@@ -69,15 +69,11 @@ import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
-import android.telephony.SubscriptionInfo;
 import android.telephony.TelephonyManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -111,7 +107,6 @@ import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
-import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.ConsentTimeUpdate;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -121,7 +116,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -382,6 +376,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      */
     private void gotoActiveSessionActivity() {
         Intent intent = new Intent(this, ActiveSessionActivity.class);
+        intent.putExtra(Constant.USER_ID, userId);
         startActivity(intent);
     }
 
@@ -389,7 +384,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void messageReceived(String message, String phoneNum) {
         if (message != null || message != "") {
-//            makeGroupInfoPerUserRequestAPICall();
+            makeGroupInfoPerUserRequestAPICall();
         }
     }
 
@@ -455,7 +450,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     /**
      * Get All Group info per user API Call
      */
-    private void makeGroupInfoPerUserRequestAPICall() {
+    protected void makeGroupInfoPerUserRequestAPICall() {
         GroupRequestHandler.getInstance(context).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
     }
 
@@ -512,6 +507,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     groupMemberDataList.setGroupId(data.getId());
                     groupMemberDataList.setConsentStatus(mConsents.getStatus());
                     groupMemberDataList.setName(mConsents.getName());
+                    groupMemberDataList.setUserId(mConsents.getUserId());
                     mGroupMemberDataLists.add(groupMemberDataList);
                 }
             }
@@ -628,7 +624,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         if (getCurrentLocation() != null) {
             latitude = getCurrentLocation().getLatitude();
             longitude = getCurrentLocation().getLongitude();
-            String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + 12.924812 + "\",\"lon\":\"" + 77.663832 + "\",\"ltd\":\"0\",\n" +
+            String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                     "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
             String topic = "jioiot/svcd/jiophone/" + userPhoneNumber + "/uc/fwd/locinfo";
             System.out.println("Message --> " + message);
@@ -660,7 +656,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     /**
      * Checks device is present or not, if not present show the help text otherwise display the added devices
      */
-    private void isDevicePresent() {
+    protected void isDevicePresent() {
         if (listOnDashBoard.isEmpty()) {
             listView.setVisibility(View.INVISIBLE);
             devicePresent.setVisibility(View.VISIBLE);
@@ -743,20 +739,27 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             Util.alertDilogBox(Constant.CONSENT_NOT_APPROVED, Constant.ALERT_TITLE, this);
             return;
         } else {
-            // Make a count of number of selected devices and call the API that many times
-            if(counter < grpMemberDataList.size()) {
-                groupMemberName = grpMemberDataList.get(counter).getName();
+            // If Group is selected for tracking
+            if (grpDataList.size() > 0) {
                 Util.getInstance().showProgressBarDialog(this);
                 SearchEventData searchEventData = new SearchEventData();
-                SearchEventData.Time time = new SearchEventData().new Time();
                 List<String> mList = new ArrayList<>();
                 mList.add(Constant.LOCATION);
                 mList.add(Constant.SOS);
-                time.setFrom(mDbManager.getGroupDetail(grpMemberDataList.get(counter).getGroupId()).getFrom());
-                time.setTo(mDbManager.getGroupDetail(grpMemberDataList.get(counter).getGroupId()).getTo());
-                searchEventData.setTime(time);
                 searchEventData.setTypes(mList);
-                GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, userId, grpMemberDataList.get(counter).getGroupId()));
+                GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, userId, grpDataList.get(0).getGroupId(), Constant.GET_LOCATION_URL));
+            }
+            // Make a count of number of selected devices and call the API that many times
+            // If group members are selected for tracking
+            else if (counter < grpMemberDataList.size()) {
+                groupMemberName = grpMemberDataList.get(counter).getName();
+                Util.getInstance().showProgressBarDialog(this);
+                SearchEventData searchEventData = new SearchEventData();
+                List<String> mList = new ArrayList<>();
+                mList.add(Constant.LOCATION);
+                mList.add(Constant.SOS);
+                searchEventData.setTypes(mList);
+                GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, userId, grpMemberDataList.get(counter).getGroupId(), Constant.GET_LOCATION_URL));
             }
         }
     }
@@ -772,15 +775,37 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             if (searchEventResponse.getMessage().equalsIgnoreCase(Constant.NO_EVENTS_FOUND_RESPONSE)) {
                 Util.alertDilogBox(Constant.LOCATION_NOT_FOUND, Constant.ALERT_TITLE, DashboardActivity.this);
             } else {
-                MapData mapData = new MapData();
                 List<SearchEventResponse.Data> mList = searchEventResponse.getData();
-                for (SearchEventResponse.Data data : mList) {
-                    mapData.setLatitude(data.getLocation().getLat());
-                    mapData.setLongitude(data.getLocation().getLng());
-                    mapData.setName(groupMemberName);
-                    mapDataList.add(mapData);
+                if (grpDataList.size() > 0) {
+                    List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(grpDataList.get(0).getGroupId());
+                    for (SearchEventResponse.Data data : mList) {
+                        for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
+                            if (grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
+                                MapData mapData = new MapData();
+                                mapData.setLatitude(data.getLocation().getLat());
+                                mapData.setLongitude(data.getLocation().getLng());
+                                mapData.setName(grpMembers.getName());
+                                mapDataList.add(mapData);
+                                if (mapDataList.size() == grpMembersOfParticularGroupId.size()) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    for (SearchEventResponse.Data data : mList) {
+                        MapData mapData = new MapData();
+                        mapData.setLatitude(data.getLocation().getLat());
+                        mapData.setLongitude(data.getLocation().getLng());
+                        mapData.setName(groupMemberName);
+                        mapDataList.add(mapData);
+                        break;
+                    }
                 }
                 if (!mapDataList.isEmpty() && grpMemberDataList.size() == mapDataList.size()) {
+                    counter = 0;
+                    goToMapActivity();
+                } else if (!mapDataList.isEmpty() && grpDataList.size() > 0) {
                     counter = 0;
                     goToMapActivity();
                 } else {
@@ -956,19 +981,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    /**
-     * Store consent time in database
-     *
-     * @param phoneNumber
-     * @param approvalTime
-     */
-    private void storeConsentTime(String phoneNumber, int approvalTime) {
-        Date currentTime = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String currentDateandTime = sdf.format(currentTime);
-        mDbManager.updateConsentTime(phoneNumber, currentDateandTime.trim(), approvalTime);
-    }
-
     public void setConstaint() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiresBatteryNotLow(false)
@@ -1127,54 +1139,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Adds data in Home screen using Recycler view, It is the main method to display devices in Home screen
-     */
-    private void addDataInHomeScreen() {
-        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
-        List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
-        listOnDashBoard = new ArrayList<>();
-        for (HomeActivityListData data : groupDetailList) {
-            if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(userId)) {
-                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
-                    HomeActivityListData homeActivityListData = new HomeActivityListData();
-                    homeActivityListData.setGroupName(data.getGroupName());
-                    homeActivityListData.setGroupId(data.getGroupId());
-                    homeActivityListData.setStatus(data.getStatus());
-                    homeActivityListData.setCreatedBy(data.getCreatedBy());
-                    homeActivityListData.setUpdatedBy(data.getUpdatedBy());
-                    homeActivityListData.setProfileImage(data.getProfileImage());
-                    homeActivityListData.setFrom(data.getFrom());
-                    homeActivityListData.setTo(data.getTo());
-                    listOnDashBoard.add(homeActivityListData);
-                }
-            }
-        }
-        for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
-            GroupMemberDataList data = new GroupMemberDataList();
-            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
-                    && (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(userId))
-                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
-                data.setName(groupMemberDataList.getName());
-                data.setNumber(groupMemberDataList.getNumber());
-                data.setConsentStatus(groupMemberDataList.getConsentStatus());
-                data.setConsentId(groupMemberDataList.getConsentId());
-                data.setUserId(groupMemberDataList.getUserId());
-                data.setDeviceId(groupMemberDataList.getDeviceId());
-                data.setGroupId(groupMemberDataList.getGroupId());
-                data.setProfileImage(groupMemberDataList.getProfileImage());
-                if (groupMemberDataList.isGroupAdmin() == true) {
-                    data.setGroupAdmin(true);
-                } else {
-                    data.setGroupAdmin(false);
-                }
-                listOnDashBoard.add(data);
-            }
-        }
-        adapter = new TrackerDeviceListAdapter(listOnDashBoard, this);
-        listView.setAdapter(adapter);
-    }
-
-    /**
      * Location Google API Connect
      */
     private synchronized void setUpGClient() {
@@ -1328,4 +1292,54 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             return false;
         }
     }
+
+    /**
+     * Adds data in Home screen using Recycler view, It is the main method to display devices in Home screen
+     */
+    protected void addDataInHomeScreen() {
+        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
+        listOnDashBoard = new ArrayList<>();
+        for (HomeActivityListData data : groupDetailList) {
+            if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(userId)) {
+                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                    HomeActivityListData homeActivityListData = new HomeActivityListData();
+                    homeActivityListData.setGroupName(data.getGroupName());
+                    homeActivityListData.setGroupId(data.getGroupId());
+                    homeActivityListData.setStatus(data.getStatus());
+                    homeActivityListData.setCreatedBy(data.getCreatedBy());
+                    homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+                    homeActivityListData.setProfileImage(data.getProfileImage());
+                    homeActivityListData.setFrom(data.getFrom());
+                    homeActivityListData.setTo(data.getTo());
+                    listOnDashBoard.add(homeActivityListData);
+                }
+            }
+        }
+        for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
+            GroupMemberDataList data = new GroupMemberDataList();
+            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                    && (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(userId))
+                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)
+                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXITED)) {
+                data.setName(groupMemberDataList.getName());
+                data.setNumber(groupMemberDataList.getNumber());
+                data.setConsentStatus(groupMemberDataList.getConsentStatus());
+                data.setConsentId(groupMemberDataList.getConsentId());
+                data.setUserId(groupMemberDataList.getUserId());
+                data.setDeviceId(groupMemberDataList.getDeviceId());
+                data.setGroupId(groupMemberDataList.getGroupId());
+                data.setProfileImage(groupMemberDataList.getProfileImage());
+                if (groupMemberDataList.isGroupAdmin() == true) {
+                    data.setGroupAdmin(true);
+                } else {
+                    data.setGroupAdmin(false);
+                }
+                listOnDashBoard.add(data);
+            }
+        }
+        adapter = new TrackerDeviceListAdapter(listOnDashBoard, context);
+        listView.setAdapter(adapter);
+    }
+
 }

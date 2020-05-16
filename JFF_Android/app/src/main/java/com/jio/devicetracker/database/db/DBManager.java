@@ -696,7 +696,8 @@ public class DBManager {
     public List<GroupMemberDataList> getAllGroupMemberDataBasedOnGroupId(String groupId) {
         List<GroupMemberDataList> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
-        String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.STATUS, DatabaseHelper.GROUPID, DatabaseHelper.CONSENT_ID, DatabaseHelper.IS_GROUP_ADMIN, DatabaseHelper.PROFILE_IMAGE};
+        String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.STATUS, DatabaseHelper.GROUPID, DatabaseHelper.CONSENT_ID, DatabaseHelper.IS_GROUP_ADMIN,
+                DatabaseHelper.PROFILE_IMAGE, DatabaseHelper.GROUPID, DatabaseHelper.DEVICE_ID, DatabaseHelper.USER_ID};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP_MEMBER, column, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -707,6 +708,9 @@ public class DBManager {
                     data.setConsentStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)));
                     data.setConsentId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_ID)));
                     data.setProfileImage(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.PROFILE_IMAGE)));
+                    data.setGroupId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUPID)));
+                    data.setDeviceId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_ID)));
+                    data.setUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_ID)));
                     if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_GROUP_ADMIN)) == 1) {
                         data.setGroupAdmin(true);
                     } else {
@@ -803,4 +807,12 @@ public class DBManager {
         }
         return null;
     }
+
+    public void deleteAllPreviousData() {
+        mDatabase = mDBHelper.getWritableDatabase();
+        mDatabase.delete(DatabaseHelper.TABLE_USER_LOGIN, null, null);
+        mDatabase.delete(DatabaseHelper.TABLE_GROUP_MEMBER, null, null);
+        mDatabase.delete(DatabaseHelper.TABLE_GROUP, null, null);
+    }
+
 }

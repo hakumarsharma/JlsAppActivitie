@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -40,6 +38,7 @@ import com.google.gson.Gson;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -66,6 +65,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Singleton which returns single instance of a Util class
+     *
      * @return
      */
     public synchronized static Util getInstance() {
@@ -77,6 +77,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Converts class to JSON object
+     *
      * @param pojo
      * @return
      */
@@ -87,6 +88,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Returns Pojo class objects
+     *
      * @param response
      * @param pojo
      * @param <T>
@@ -99,6 +101,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Method to check Mobile network
+     *
      * @param mContext
      * @return
      */
@@ -118,6 +121,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Common alerts dialog box
+     *
      * @param message
      * @param title
      * @param context
@@ -134,6 +138,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Returns IMEI number of the phone
+     *
      * @param context
      * @return
      */
@@ -158,6 +163,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Email id validation through RegEx
+     *
      * @param email
      * @return
      */
@@ -176,6 +182,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Password validation through RegEx
+     *
      * @param pass
      * @return
      */
@@ -193,7 +200,7 @@ public final class Util extends AppCompatActivity {
      * Convert current time to epoch time
      * @return
      */
-    public static long convertTimeToEpochtime() {
+    public long convertTimeToEpochtime() {
         long epochTime = 0;
         Date today = Calendar.getInstance().getTime();
         SimpleDateFormat simpleFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
@@ -204,7 +211,6 @@ public final class Util extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return epochTime;
     }
 
@@ -213,7 +219,7 @@ public final class Util extends AppCompatActivity {
      * @param min
      * @return
      */
-    public static long getTimeEpochFormatAfterCertainTime(int min) {
+    public long getTimeEpochFormatAfterCertainTime(int min) {
         long epochTime = 0;
         Date today = Calendar.getInstance().getTime();
         SimpleDateFormat simpleFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
@@ -229,7 +235,38 @@ public final class Util extends AppCompatActivity {
     }
 
     /**
+     * Get Difference between two epoch time
+     * @param fromTime
+     * @param toTime
+     */
+    public String getTrackingExpirirationDuration(long fromTime, long toTime) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
+            Date fromDate = sdf.parse(sdf.format(new Date(fromTime)));
+            Date toDate = sdf.parse(sdf.format(new Date(toTime)));
+            long diff = toDate.getTime() - fromDate.getTime();
+            DecimalFormat crunchifyFormatter = new DecimalFormat("###,###");
+            int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+            int diffhours = (int) (diff / (60 * 60 * 1000));
+            int diffmin = (int) (diff / (60 * 1000));
+            int diffsec = (int) (diff / (1000));
+            if (diffDays > 0) {
+                return crunchifyFormatter.format(diffDays) + "day";
+            } else if (diffhours > 0) {
+                return crunchifyFormatter.format(diffhours) + "hour";
+            } else if (diffmin > 0) {
+                return crunchifyFormatter.format(diffmin) + "min";
+            }
+            return crunchifyFormatter.format(diffsec) + "sec";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
      * Common progress bar dialog with message
+     *
      * @param context
      * @param message
      */
@@ -240,6 +277,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * To show common progress bar dialog
+     *
      * @param context
      */
     public void showProgressBarDialog(Context context) {
@@ -258,6 +296,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Sets the terms and condition flag
+     *
      * @param mContext
      * @param flag
      */
@@ -270,6 +309,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * returns the terms and condition flag
+     *
      * @param mContext
      * @return
      */
@@ -284,6 +324,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Sets Login status
+     *
      * @param mContext
      * @param flag
      */
@@ -296,6 +337,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Returns Login status
+     *
      * @param mContext
      * @return
      */
@@ -306,6 +348,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Clear Login status
+     *
      * @param mContext
      */
     public static void clearAutologinstatus(Context mContext) {
@@ -317,6 +360,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Returns MQTT time format
+     *
      * @return
      */
     public String getMQTTTimeFormat() {
@@ -327,6 +371,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * IMEI number validation through Regex
+     *
      * @param imei
      * @return
      */
@@ -338,6 +383,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Mobile Number validation through RegEx
+     *
      * @param mobile
      * @return
      */
@@ -349,6 +395,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Device Number validation through RegEx for pet
+     *
      * @param mobile
      * @return
      */
@@ -360,6 +407,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * To set location flag status in Shared Prefrences variable
+     *
      * @param mContext
      * @param flag
      */
@@ -372,6 +420,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Returns Login status
+     *
      * @param mContext
      * @return
      */
@@ -382,6 +431,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Clear Login status
+     *
      * @param mContext
      */
     public static void clearLocationFlagstatus(Context mContext) {
@@ -393,6 +443,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Returns the loged in user token and his email id
+     *
      * @param context
      */
     public static void getAdminDetail(Context context) {

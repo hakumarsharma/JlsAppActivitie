@@ -44,7 +44,9 @@ import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.database.pojo.SearchEventData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
+import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
+import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -72,12 +74,12 @@ public class ActiveSessionActivity extends AppCompatActivity {
     private RecyclerView mRecyclerList;
     private ArrayList listOnActiveSession;
     private TextView activeMemberPresent;
-    private String consentId;
     private int position;
     private String errorMessage;
     private String groupId;
     private String groupMemberName;
     private DBManager mDbManager;
+    private boolean isGroup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,9 +92,10 @@ public class ActiveSessionActivity extends AppCompatActivity {
         mDbManager = new DBManager(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
-        addDatainList();
+        /*addDatainList();
         adapterEventListener();
-        isAnyMemberActive();
+        isAnyMemberActive();*/
+        makeGroupInfoPerUserRequestAPICall();
     }
 
     private void adapterEventListener() {
@@ -112,18 +115,17 @@ public class ActiveSessionActivity extends AppCompatActivity {
              * Exit or Remove API call for Group
              * @param v
              * @param position
-             * @param createdBy
-             * @param groupId
+             * @param homeActivityListData
              */
             @Override
-            public void onPopupMenuClickedForGroup(View v, int position, String createdBy, String groupId) {
+            public void onPopupMenuClickedForGroup(View v, int position, HomeActivityListData homeActivityListData) {
                 PopupMenu popup = new PopupMenu(ActiveSessionActivity.this, v);
                 ActiveSessionActivity.this.position = position;
                 DBManager mDbManager = new DBManager(ActiveSessionActivity.this);
                 String userId = mDbManager.getAdminLoginDetail().getUserId();
-                ActiveSessionActivity.this.groupId = groupId;
+                ActiveSessionActivity.this.groupId = homeActivityListData.getGroupId();
                 popup.getMenu().add(Menu.NONE, 1, 1, Constant.TRACK);
-                if (createdBy != null && createdBy.equalsIgnoreCase(userId)) { // Check through updated by not by isGroupAdmin
+                if (homeActivityListData.getCreatedBy() != null && homeActivityListData.getCreatedBy().equalsIgnoreCase(userId)) { // Check through updated by not by isGroupAdmin
                     popup.getMenu().add(Menu.NONE, 2, 2, Constant.REMOVE);
                     errorMessage = Constant.REMOVE_FROM_GROUP_FAILURE;
                 } else {
@@ -132,11 +134,14 @@ public class ActiveSessionActivity extends AppCompatActivity {
                 }
                 popup.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
+                        case 1:
+                            trackUserForGroup(homeActivityListData);
+                            break;
                         case 2:
-                            ActiveSessionActivity.this.makeDeleteGroupAPICall(userId, groupId);
+                            ActiveSessionActivity.this.makeDeleteGroupAPICall(userId, homeActivityListData.getGroupId());
                             break;
                         case 3:
-                            ActiveSessionActivity.this.makeExitAPICall(mDbManager.getAdminLoginDetail().getPhoneNumber(), groupId);
+                            ActiveSessionActivity.this.makeExitAPICall(mDbManager.getAdminLoginDetail().getPhoneNumber(), homeActivityListData.getGroupId());
                             break;
                         default:
                             break;
@@ -155,7 +160,6 @@ public class ActiveSessionActivity extends AppCompatActivity {
             @Override
             public void onPopupMenuClickedForMember(View v, int position, GroupMemberDataList groupMemberDataList) {
                 PopupMenu popup = new PopupMenu(ActiveSessionActivity.this, v);
-                ActiveSessionActivity.this.consentId = groupMemberDataList.getConsentId();
                 ActiveSessionActivity.this.position = position;
                 DBManager mDbManager = new DBManager(ActiveSessionActivity.this);
                 String userId = mDbManager.getAdminLoginDetail().getUserId();
@@ -190,21 +194,34 @@ public class ActiveSessionActivity extends AppCompatActivity {
     }
 
     /**
-     * Track User
+     * Track the group
+     *
+     * @param homeActivityListData
+     */
+    private void trackUserForGroup(HomeActivityListData homeActivityListData) {
+        Util.getInstance().showProgressBarDialog(this);
+        SearchEventData searchEventData = new SearchEventData();
+        List<String> mList = new ArrayList<>();
+        mList.add(Constant.LOCATION);
+        mList.add(Constant.SOS);
+        searchEventData.setTypes(mList);
+        isGroup = true;
+        GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, mDbManager.getAdminLoginDetail().getUserId(), homeActivityListData.getGroupId(), Constant.GET_LOCATION_URL));
+    }
+
+    /**
+     * Track User for group Member
      */
     private void trackUser(GroupMemberDataList groupMemberDataList) {
         groupMemberName = groupMemberDataList.getName();
         Util.getInstance().showProgressBarDialog(this);
         SearchEventData searchEventData = new SearchEventData();
-        SearchEventData.Time time = new SearchEventData().new Time();
         List<String> mList = new ArrayList<>();
         mList.add(Constant.LOCATION);
         mList.add(Constant.SOS);
-        time.setFrom(mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getFrom());
-        time.setTo(mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getTo());
-        searchEventData.setTime(time);
         searchEventData.setTypes(mList);
-        GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, groupMemberDataList.getUserId(), groupMemberDataList.getGroupId()));
+        isGroup = false;
+        GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, groupMemberDataList.getUserId(), groupMemberDataList.getGroupId(), Constant.GET_LOCATION_URL));
     }
 
     /**
@@ -218,14 +235,30 @@ public class ActiveSessionActivity extends AppCompatActivity {
             if (searchEventResponse.getMessage().equalsIgnoreCase(Constant.NO_EVENTS_FOUND_RESPONSE)) {
                 Util.alertDilogBox(Constant.LOCATION_NOT_FOUND, Constant.ALERT_TITLE, ActiveSessionActivity.this);
             } else {
-                MapData mapData = new MapData();
                 List<MapData> mapDataList = new ArrayList<>();
                 List<SearchEventResponse.Data> mList = searchEventResponse.getData();
-                for (SearchEventResponse.Data data : mList) {
-                    mapData.setLatitude(data.getLocation().getLat());
-                    mapData.setLongitude(data.getLocation().getLng());
-                    mapData.setName(groupMemberName);
-                    mapDataList.add(mapData);
+                if (isGroup) {
+                    List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+                    for (SearchEventResponse.Data data : mList) {
+                        for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
+                            if (grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
+                                MapData mapData = new MapData();
+                                mapData.setLatitude(data.getLocation().getLat());
+                                mapData.setLongitude(data.getLocation().getLng());
+                                mapData.setName(grpMembers.getName());
+                                mapDataList.add(mapData);
+                            }
+                        }
+                    }
+                } else {
+                    for (SearchEventResponse.Data data : mList) {
+                        MapData mapData = new MapData();
+                        mapData.setLatitude(data.getLocation().getLat());
+                        mapData.setLongitude(data.getLocation().getLng());
+                        mapData.setName(groupMemberName);
+                        mapDataList.add(mapData);
+                        break;
+                    }
                 }
                 Intent intent = new Intent(ActiveSessionActivity.this, MapsActivity.class);
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
@@ -386,6 +419,52 @@ public class ActiveSessionActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * To Refresh our Home page call Get all for one user API Call
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        makeGroupInfoPerUserRequestAPICall();
+    }
+
+    /**
+     * Get All Group info per user API Call
+     */
+    protected void makeGroupInfoPerUserRequestAPICall() {
+        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserId()));
+    }
+
+    /**
+     * GetGroupInfoPerUserRequest Success listener
+     */
+    private class GetGroupInfoPerUserRequestSuccessListener implements com.android.volley.Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
+            DashboardActivity dashboardActivity = new DashboardActivity();
+            dashboardActivity.parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
+            dashboardActivity.addDataInHomeScreen();
+            dashboardActivity.isDevicePresent();
+            addDatainList();
+            adapterEventListener();
+            isAnyMemberActive();
+        }
+    }
+
+    /**
+     * GetGroupInfoPerUserRequest Error listener
+     */
+    private class GetGroupInfoPerUserRequestErrorListener implements com.android.volley.Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error.networkResponse.statusCode == 409) {
+                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, ActiveSessionActivity.this);
+            }
+        }
+    }
+
     /**
      * Adds data in List
      */
@@ -402,6 +481,8 @@ public class ActiveSessionActivity extends AppCompatActivity {
                 homeActivityListData.setCreatedBy(data.getCreatedBy());
                 homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                 homeActivityListData.setProfileImage(R.drawable.ic_group_button);
+                homeActivityListData.setFrom(data.getFrom());
+                homeActivityListData.setTo(data.getTo());
                 listOnActiveSession.add(homeActivityListData);
             }
         }
@@ -419,6 +500,8 @@ public class ActiveSessionActivity extends AppCompatActivity {
                 data.setDeviceId(groupMemberDataList.getDeviceId());
                 data.setGroupId(groupMemberDataList.getGroupId());
                 data.setProfileImage(groupMemberDataList.getProfileImage());
+                data.setFrom(mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getFrom());
+                data.setTo(mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getTo());
                 if (groupMemberDataList.isGroupAdmin() == true) {
                     data.setGroupAdmin(true);
                 } else {
