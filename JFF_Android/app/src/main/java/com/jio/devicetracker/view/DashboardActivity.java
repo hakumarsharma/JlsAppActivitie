@@ -112,15 +112,11 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.TrackerDeviceListAdapter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -1248,10 +1244,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                                         status.startResolutionForResult(DashboardActivity.this,
                                                 REQUEST_CHECK_SETTINGS_GPS);
                                     } catch (IntentSender.SendIntentException e) {
-                                        // Ignore the error.
+                                        e.printStackTrace();
                                     }
                                     break;
                                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                    break;
+                                default:
+                                    // To do
                                     break;
                             }
                         }

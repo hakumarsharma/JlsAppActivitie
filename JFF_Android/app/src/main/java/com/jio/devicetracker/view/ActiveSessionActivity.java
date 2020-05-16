@@ -72,7 +72,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ActiveSessionActivity extends AppCompatActivity {
     private ActiveSessionListAdapter mAdapter;
     private RecyclerView mRecyclerList;
-    private ArrayList listOnActiveSession;
+    private List listOnActiveSession;
     private TextView activeMemberPresent;
     private int position;
     private String errorMessage;

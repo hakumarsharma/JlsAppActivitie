@@ -29,8 +29,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.view.DashboardActivity;
-import com.jio.devicetracker.view.LoginActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;

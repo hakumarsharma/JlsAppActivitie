@@ -43,10 +43,8 @@ import androidx.core.content.res.ResourcesCompat;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.GenerateTokenData;
 import com.jio.devicetracker.database.pojo.RegisterRequestData;
-import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
 import com.jio.devicetracker.database.pojo.request.RegistrationTokenrequest;
 import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
@@ -57,8 +55,6 @@ import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import static android.Manifest.permission.READ_PHONE_NUMBERS;
 import static android.Manifest.permission.READ_PHONE_STATE;
