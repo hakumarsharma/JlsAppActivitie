@@ -579,7 +579,6 @@ public class DBManager {
 
     /**
      * Get group detail based on group id from Group Table
-     *
      * @param groupId
      * @return Entire group detail
      */
@@ -688,7 +687,6 @@ public class DBManager {
 
     /**
      * Get all group member of a group based on group id
-     *
      * @param groupId
      */
     public List<GroupMemberDataList> getAllGroupMemberDataBasedOnGroupId(String groupId) {

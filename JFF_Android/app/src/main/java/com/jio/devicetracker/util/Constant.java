@@ -90,9 +90,12 @@ public class Constant {
     public static final String GROUP_UPDATION_FAILURE = "Group name updation failed";
     public static final String INDIVIDUAL_USER_EDIT_FAILURE = "User name updation failed!, Please try again";
     public static final String NO_GROUP_FOUND = "No Group found, Please try again.";
+    public static final String REQUEST_CONSENT_FAILED = "Request consent failed, Please try again.";
     public static final String GROUP_DELETION_FAILURE = "Group Deletion failed";
     public static final String ACTIVE = "active";
+    public static final String ACTIVE_CAPS = "Active";
     public static final String  SCHEDULED = "scheduled";
+    public static final String SCHEDULED_CAPS = "Scheduled";
     public static final String APPROVED = "approved";
     public static final String REJECTED = "rejected";
     public static final String COMPLETED = "completed";
@@ -113,6 +116,9 @@ public class Constant {
     public static final String SELECTION_ERROR = "You cannot track individual user and group at the same time, Please uncheck one of them to track.";
     public static final String NO_EVENTS_FOUND_RESPONSE = "No events found matching the search keys.";
     public static final String FETCH_LOCATION_ERROR = "Unable to get location, Please try again!";
+    public static final String GROUP_NOT_ACTIVE = "Group is scheduled, please wait until it doesn't become active";
+    public static final String SESSION_COMPLETED = "Please request consent to track the group members";
+    public static final String CONSENT_PENDING_STATUS= "Consent is pending, please ask the user to accept consent for tracking";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";

@@ -38,6 +38,15 @@ public class GroupMemberDataList {
     private boolean isSelected;
     private Long from;
     private Long to;
+    private String groupStatus;
+
+    public String getGroupStatus() {
+        return groupStatus;
+    }
+
+    public void setGroupStatus(String groupStatus) {
+        this.groupStatus = groupStatus;
+    }
 
     public Long getFrom() {
         return from;

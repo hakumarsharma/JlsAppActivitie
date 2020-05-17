@@ -81,8 +81,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ApproveRejectConsentData;
+import com.jio.devicetracker.database.pojo.CreateGroupData;
 import com.jio.devicetracker.database.pojo.GenerateConsentTokenData;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
@@ -91,7 +93,9 @@ import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
 import com.jio.devicetracker.database.pojo.SearchEventData;
+import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
 import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
+import com.jio.devicetracker.database.pojo.request.CreateGroupRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateConsentTokenRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
@@ -99,7 +103,9 @@ import com.jio.devicetracker.database.pojo.request.RejectConsentRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
 import com.jio.devicetracker.database.pojo.response.ApproveRejectAPIResponse;
+import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
+import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.database.pojo.response.TrackerdeviceResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -164,6 +170,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
     private int counter = 0;
     private List<MapData> mapDataList;
+    private List<GroupMemberDataList> mGroupMemberList;
+    private HomeActivityListData mHomeActivityListData;
+    private boolean isConsentButtonClicked;
+    private GroupMemberDataList mGroupMemberDataList;
+    private boolean isConsentButtonClickedForGroupMember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,8 +225,24 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 @Override
-                public void consentClick(String groupId, String phoneNumber, String consentId) {
-                    generateConsentToken(groupId, phoneNumber, consentId);
+                public void consentClickForGroupMember(GroupMemberDataList groupMemberDataList) {
+                    mGroupMemberList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupMemberDataList.getGroupId());
+                    isConsentButtonClicked = false;
+                    isConsentButtonClickedForGroupMember = true;
+                    grpId = groupMemberDataList.getGroupId();
+                    mGroupMemberDataList = groupMemberDataList;
+                    makeDeleteGroupAPICall(groupMemberDataList.getGroupId());
+                }
+
+                // Delete the existing group create new group wih same details
+                @Override
+                public void consentButtonClickForGroup(HomeActivityListData homeActivityListData) {
+                    mHomeActivityListData = homeActivityListData;
+                    grpId = homeActivityListData.getGroupId();
+                    mGroupMemberList = mDbManager.getAllGroupMemberDataBasedOnGroupId(homeActivityListData.getGroupId());
+                    makeDeleteGroupAPICall(homeActivityListData.getGroupId());
+                    isConsentButtonClicked = true;
+                    isConsentButtonClickedForGroupMember = false;
                 }
 
                 @Override
@@ -255,25 +282,98 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Generate Consent token request API Call
+     * Create Group API call
      */
-    private void generateConsentToken(String groupId, String phoneNumber, String consentId) {
-        this.consentId = consentId;
-        GenerateConsentTokenData generateConsentTokenData = new GenerateConsentTokenData();
-        GenerateConsentTokenData.Consent consent = new GenerateConsentTokenData().new Consent();
-        consent.setPhone(phoneNumber);
-        generateConsentTokenData.setConsent(consent);
-        GroupRequestHandler.getInstance(this).handleRequest(new GenerateConsentTokenRequest(new GenerateConsentTokenRequestSuccessListener(), new GenerateConsentTokenRequestErrorListener(), generateConsentTokenData, groupId, userId));
+    private void createGroupAPICall(String groupName) {
+        CreateGroupData createGroupData = new CreateGroupData();
+        createGroupData.setName(groupName);
+        createGroupData.setType("one_to_one");
+        CreateGroupData.Session session = new CreateGroupData().new Session();
+        session.setFrom(Util.getInstance().getTimeEpochFormatAfterCertainTime(1));
+        session.setTo(Util.getInstance().getTimeEpochFormatAfterCertainTime(2));
+        createGroupData.setSession(session);
+        GroupRequestHandler.getInstance(this).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, mDbManager.getAdminLoginDetail().getUserId()));
     }
 
     /**
-     * Generate Consent token request API Call success listener
+     * Create Group Success Listener
      */
-    private class GenerateConsentTokenRequestSuccessListener implements Response.Listener {
+    private class CreateGroupSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            mDbManager.updateConsentInGroupMemberTable(consentId, Constant.PENDING);
-            addDataInHomeScreen();
+            CreateGroupResponse createGroupResponse = Util.getInstance().getPojoObject(String.valueOf(response), CreateGroupResponse.class);
+            mDbManager.insertIntoGroupTable(createGroupResponse);
+            addUsersInsideGroup(createGroupResponse.getData().getId());
+        }
+    }
+
+    /**
+     * Create Group error Listener
+     */
+    private class CreateGroupErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            Util.alertDilogBox(Constant.REQUEST_CONSENT_FAILED, Constant.ALERT_TITLE, DashboardActivity.this);
+        }
+    }
+
+    /**
+     * Adds all the existing user inside the group
+     *
+     * @param groupId
+     */
+    private void addUsersInsideGroup(String groupId) {
+        AddMemberInGroupData addMemberInGroupData = new AddMemberInGroupData();
+        List<AddMemberInGroupData.Consents> consentList = new ArrayList<>();
+        if (isConsentButtonClicked && mGroupMemberList.size() > 0) {
+            for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
+                AddMemberInGroupData.Consents consents = new AddMemberInGroupData().new Consents();
+                List<String> mList = new ArrayList<>();
+                mList.add(Constant.EVENTS);
+                consents.setEntities(mList);
+                consents.setPhone(groupMemberDataList.getNumber());
+                consents.setName(groupMemberDataList.getName());
+                consentList.add(consents);
+            }
+        } else if (isConsentButtonClickedForGroupMember && mGroupMemberList.size() > 0) {
+            for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
+                AddMemberInGroupData.Consents consents = new AddMemberInGroupData().new Consents();
+                List<String> mList = new ArrayList<>();
+                mList.add(Constant.EVENTS);
+                consents.setEntities(mList);
+                consents.setPhone(groupMemberDataList.getNumber());
+                consents.setName(groupMemberDataList.getName());
+                consentList.add(consents);
+            }
+        }
+        addMemberInGroupData.setConsents(consentList);
+        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new AddMemberInGroupRequestSuccessListener(), new AddMemberInGroupRequestErrorListener(), addMemberInGroupData, groupId, userId));
+    }
+
+    /**
+     * Add Member in group Success Listener
+     */
+    private class AddMemberInGroupRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
+            GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
+            if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
+                mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
+                makeGroupInfoPerUserRequestAPICall();
+            }
+        }
+    }
+
+    /**
+     * Add Member in Group Error Listener
+     */
+    private class AddMemberInGroupRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            Util.alertDilogBox(Constant.REQUEST_CONSENT_FAILED, Constant.ALERT_TITLE, DashboardActivity.this);
         }
     }
 
@@ -296,6 +396,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         intent.putExtra(Constant.USER_ID, userId);
         intent.putExtra(Constant.GROUPNAME, groupName);
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -438,6 +539,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         adb.setIcon(android.R.drawable.ic_dialog_alert);
         adb.setPositiveButton(Constant.OK, (dialog, which) -> {
             makeDeleteGroupAPICall(groupId);
+            isConsentButtonClicked = false;
+            isConsentButtonClickedForGroupMember = false;
         });
         adb.setNegativeButton(Constant.CANCEL, (dialog, which) -> dialog.cancel());
         adb.show();
@@ -521,17 +624,28 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Delete Group Request API Call Success Listener
+     * Delete Group Request API Call Success Listener and create new group if Session time is completed and Request Consent button is clicked
      */
     private class DeleteGroupRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            Util.progressDialog.dismiss();
-            mDbManager.deleteSelectedDataFromGroup(grpId);
-            mDbManager.deleteSelectedDataFromGroupMember(grpId);
-            adapter.removeItem(listPosition);
-            addDataInHomeScreen();
-            isDevicePresent();
+            if (isConsentButtonClicked) {
+                mDbManager.deleteSelectedDataFromGroup(grpId);
+                mDbManager.deleteSelectedDataFromGroupMember(grpId);
+                createGroupAPICall(mHomeActivityListData.getGroupName());
+            } else if (isConsentButtonClickedForGroupMember) {
+                createGroupAPICall(mDbManager.getGroupDetail(mGroupMemberDataList.getGroupId()).getGroupName());
+                mDbManager.deleteSelectedDataFromGroup(grpId);
+                mDbManager.deleteSelectedDataFromGroupMember(grpId);
+            } else {
+                mDbManager.deleteSelectedDataFromGroup(grpId);
+                mDbManager.deleteSelectedDataFromGroupMember(grpId);
+                Util.progressDialog.dismiss();
+                adapter.removeItem(listPosition);
+                isDevicePresent();
+                addDataInHomeScreen();
+            }
+
         }
     }
 
@@ -805,7 +919,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     counter = 0;
                     goToMapActivity();
                 } else {
-                    counter ++;
+                    counter++;
                     trackDevice();
                 }
             }
@@ -1324,6 +1438,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());
                 data.setConsentStatus(groupMemberDataList.getConsentStatus());
+                data.setGroupStatus(mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus());
                 data.setConsentId(groupMemberDataList.getConsentId());
                 data.setUserId(groupMemberDataList.getUserId());
                 data.setDeviceId(groupMemberDataList.getDeviceId());
@@ -1340,5 +1455,4 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         adapter = new TrackerDeviceListAdapter(listOnDashBoard, context);
         listView.setAdapter(adapter);
     }
-
 }
