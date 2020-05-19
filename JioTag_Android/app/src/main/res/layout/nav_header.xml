@@ -3,6 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="200dp"
+    android:layout_marginTop="@dimen/btton_margin_40"
+    android:id="@+id/navigation_header"
     android:background="@color/navigate_profile_color">
     <ImageView
         android:layout_width="88dp"

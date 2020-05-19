@@ -37,5 +37,9 @@ public class JioConstant {
     public static String SLIENT_MODE_TITLE = "Slient Mode";
     public static String NOTIFICATION_MODE_TITLE = "Notification";
     public static String FORGOT_PASS_TITLE = "Change Mobile Number";
+    public static String USER_DETAIL = "User Details";
+    public static String JIO_TAG_TITLE = "JioTags";
+    public static String SHARE_TAG_TITLE = "ShareTag";
+    public static String SHARE_INVITE_TITLE = "Share Invite";
 
 }

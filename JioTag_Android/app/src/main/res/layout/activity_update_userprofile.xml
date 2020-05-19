@@ -57,7 +57,7 @@
                 android:layout_height="@dimen/dimen_11sp">
             </TextView>
             <EditText
-                android:id="@+id/login_edit_email"
+                android:id="@+id/login_edit_phone"
                 android:layout_below="@+id/mobileNumber"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/five_dp"
@@ -65,7 +65,6 @@
                 android:layout_toRightOf="@+id/prefix_text"
                 android:text="+9100000000"
                 android:textSize="@dimen/seventeen_sp"
-
                 android:inputType="text"
                 android:background="@android:color/transparent"
                 android:focusedByDefault="true"
@@ -76,17 +75,17 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/five_dp"
-                android:id="@+id/email_edit_line"
+                android:id="@+id/phone_edit_line"
                 android:layout_alignStart="@+id/prefix_text"
                 android:layout_marginRight="@dimen/layout_margin_16"
                 android:layout_marginLeft="@dimen/layout_margin_16"
-                android:layout_below="@+id/login_edit_email"
+                android:layout_below="@+id/login_edit_phone"
                 android:background="@color/white"
                 android:layout_height="2dp">
             </View>
 
             <TextView
-                android:id="@+id/login_text_password"
+                android:id="@+id/update_text_email"
                 android:layout_width="match_parent"
                 android:text="@string/email_id"
                 android:gravity="left"
@@ -94,20 +93,19 @@
                 android:textSize="@dimen/margin_10dp"
                 android:layout_marginLeft="@dimen/margin_12dp"
                 android:layout_marginTop="@dimen/size_18"
-                android:layout_below="@+id/email_edit_line"
+                android:layout_below="@+id/phone_edit_line"
                 android:textColor="@color/white"
                 android:visibility="visible"
                 android:layout_height="@dimen/dimen_11sp">
             </TextView>
             <EditText
-                android:id="@+id/login_edit_password"
-                android:layout_below="@+id/login_text_password"
+                android:id="@+id/update_edit_email"
+                android:layout_below="@+id/update_text_email"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/five_dp"
                 android:layout_marginLeft="@dimen/margin_24"
                 android:layout_toRightOf="@+id/prefix_text"
                 android:text="abc@gmail.com"
-                android:hint="@string/password_hint"
                 android:inputType="text"
                 android:background="@android:color/transparent"
                 android:focusedByDefault="true"
@@ -122,7 +120,7 @@
                 android:layout_marginRight="@dimen/layout_margin_16"
                 android:layout_marginLeft="@dimen/layout_margin_16"
                 android:id="@+id/password_edit_line"
-                android:layout_below="@+id/login_edit_password"
+                android:layout_below="@+id/update_edit_email"
                 android:background="@color/white"
                 android:layout_height="2dp">
             </View>

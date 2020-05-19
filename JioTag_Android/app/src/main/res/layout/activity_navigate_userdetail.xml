@@ -20,7 +20,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
 
             <ImageView
                 android:id="@+id/profile_icon"
@@ -103,11 +104,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/shareDevice"
-        android:id="@+id/shareDeviceList"
-        android:layout_marginLeft="@dimen/layout_margin_16"
-        android:layout_marginRight="@dimen/layout_margin_16"
         android:layout_marginTop="@dimen/margin_12dp"
-        android:layout_marginBottom="@dimen/layout_margin_16"
+        android:id="@+id/shareDeviceList"
+
         />
 
 

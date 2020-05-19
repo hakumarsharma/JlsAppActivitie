@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_white"
+    >
+
+    <include
+        android:id="@+id/emailConfirmToolbar"
+        layout="@layout/navigation_toolbar"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="22dp"
+        android:layout_below="@+id/emailConfirmToolbar"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginBottom="25dp"
+        android:layout_alignParentBottom="true"
+        card_view:cardCornerRadius="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/shareicon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/ic_share" />
+
+            <TextView
+                android:id="@+id/confirmation_title"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/shareicon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/sixteen_dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/share_confirmation_title"
+                android:textColor="@color/black"
+                android:textSize="@dimen/twenty_dp"
+                android:textStyle="bold"
+                />
+
+
+            <Button
+                android:id="@+id/share_btn"
+                android:layout_width="@dimen/adddevice_button_width"
+                android:layout_height="@dimen/adddevice_button_height"
+                android:layout_below="@+id/password_condition"
+                android:background="@drawable/button_frame_blue"
+                android:text="@string/share_button"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textAllCaps="false"
+                android:layout_marginBottom="24dp"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/adddevice_content_font_size" />
+
+            <TextView
+                android:id="@+id/sharetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/confirmation_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/margin_24"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:layout_marginRight="@dimen/margin_24"
+                android:text="@string/share_tag_msg"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_size"
+                />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addContactIcon"
+                android:layout_below="@+id/contact_text"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin_20"
+                android:background="@drawable/addcontact"
+                android:layout_marginTop="@dimen/five_dp"
+                />
+
+            <TextView
+                android:id="@+id/contact_text"
+                android:layout_width="match_parent"
+                android:text="@string/contact_number"
+                android:gravity="left"
+                android:textStyle="bold"
+                android:textSize="@dimen/margin_10dp"
+                android:layout_marginLeft="@dimen/margin_12dp"
+                android:layout_marginTop="@dimen/btton_margin_40"
+                android:textColor="@color/cardview_device_status_color_gray"
+                android:layout_below="@+id/sharetext"
+                android:visibility="invisible"
+                android:layout_height="@dimen/dimen_11sp">
+            </TextView>
+            <EditText
+                android:id="@+id/addcontact"
+                android:layout_below="@+id/contact_text"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/five_dp"
+                android:layout_marginLeft="@dimen/margin_24"
+                android:layout_toRightOf="@+id/prefix_text"
+                android:text=""
+                android:hint="@string/add_contact_hint"
+                android:background="@android:color/transparent"
+                android:focusedByDefault="true"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_size"
+                android:textStyle="bold"
+                android:layout_height="wrap_content">
+            </EditText>
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/five_dp"
+                android:layout_alignStart="@+id/prefix_text"
+                android:layout_marginRight="@dimen/layout_margin_16"
+                android:layout_marginLeft="@dimen/layout_margin_16"
+                android:id="@+id/contact_edit_line"
+                android:layout_below="@+id/addcontact"
+                android:background="@color/lite_grey"
+                android:layout_height="2dp">
+            </View>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

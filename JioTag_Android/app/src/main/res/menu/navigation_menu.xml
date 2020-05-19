@@ -22,6 +22,10 @@
         android:icon="@drawable/ic_information"
         />
 
+    <item android:id="@+id/assets"
+        android:title="Assets"
+        android:icon="@drawable/ic_feedback"
+        />
     <item android:id="@+id/feedback"
         android:title="Feedback"
         android:icon="@drawable/ic_feedback"

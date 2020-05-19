@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/oprationLayout"
+    android:background="@drawable/dialog_lightblue_background"
+    >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close"
+        android:id="@+id/close"
+        android:layout_marginTop="@dimen/margin_10dp"
+        android:layout_marginRight="@dimen/margin_10dp"
+        android:layout_alignParentRight="true"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size"
+        android:layout_marginTop="@dimen/margin_30"
+        android:layout_marginLeft="@dimen/margin_20"
+        android:text="Edit"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/layout_margin_16"
+        android:id="@+id/editLine"
+        android:background="@color/light_hash"
+        android:layout_marginLeft="@dimen/twenty_dp"
+        android:layout_marginRight="@dimen/fourteen_dp"
+        android:layout_below="@+id/edit"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/delete"
+        android:textSize="@dimen/text_size"
+        android:layout_marginLeft="@dimen/margin_20"
+        android:text="Delete"
+        android:layout_marginTop="@dimen/layout_margin_16"
+        android:layout_below="@+id/editLine"
+        android:textColor="@color/white"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/layout_margin_16"
+        android:id="@+id/deleteLine"
+        android:layout_marginLeft="@dimen/twenty_dp"
+        android:layout_marginRight="@dimen/fourteen_dp"
+        android:background="@color/light_hash"
+        android:layout_below="@+id/delete"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/disconnect"
+        android:layout_marginLeft="@dimen/margin_20"
+        android:layout_below="@+id/deleteLine"
+        android:textSize="@dimen/text_size"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/layout_margin_16"
+        android:text="Disconnect"
+        android:paddingBottom="@dimen/margin_22"
+        />
+
+</RelativeLayout>
