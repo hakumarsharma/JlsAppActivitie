@@ -46,7 +46,7 @@ class UserCell: UITableViewCell {
     func setGroupData(groupData : GroupListData){
         customView.layer.cornerRadius           = 10
         requestConsentButton.layer.cornerRadius = 10
-        self.ImgBgView = Utils.shared.createCircularView(view: ImgBgView, borderColor:  UIColor.black, borderWidth: 3.0)
+        self.ImgBgView = Utils.shared.createCircularView(view: ImgBgView, borderColor:  UIColor.black, borderWidth: 2.0)
         self.userIcon = Utils.shared.createCircularImage(imageView: self.userIcon, borderColor:  UIColor.clear, borderWidth: 1.0)
         self.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkempty"), for: .normal)
         self.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkmark"), for: .selected)
@@ -75,6 +75,8 @@ class UserCell: UITableViewCell {
             self.consentstatusColor.backgroundColor = UIColor.Consent.ConsentApproved
         } else {
             if isIndividual {
+//                self.name.text = groupData.groupOwner?.ownerName ?? ""
+//                self.phoneNumber.text = groupData.groupOwner?.ownerPhone ?? ""
                 self.setConsentStatusForIndividual(groupData : groupData)
             } else {
                 let memebersArr = groupData.groupMember.filter { $0.memberStatus == Utils.GroupStatus.isApproved.rawValue || $0.memberStatus == Utils.GroupStatus.isPending.rawValue}

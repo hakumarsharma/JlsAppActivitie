@@ -43,11 +43,11 @@ class MapsScreen: UIViewController {
         self.navigationItem.setHidesBackButton(true, animated: true)
         self.createBackBarButtonItem()
         
-        for (index,group) in groupData.enumerated() {
+        for group in groupData {
             self.callgetLocationDetails(groupDetails: group) { (val) in
             }
         }
-
+        
     }
     func createBackBarButtonItem() {
         let backBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(backButton(sender:)))
@@ -73,64 +73,64 @@ class MapsScreen: UIViewController {
             marker.zIndex = Int32(index)
             var img : UIImage? = nil
             if index % 2 == 0 {
-              img = UIImage.init(named: "pindropr")
+                img = UIImage.init(named: "pindropr")
             } else if index % 3 == 0{
-              img = UIImage.init(named: "pindropb")
+                img = UIImage.init(named: "pindropb")
             } else {
-               img = UIImage.init(named: "pindropg")
+                img = UIImage.init(named: "pindropg")
             }
             let markerView = UIImageView(image: img)
             markerView.tintColor = UIColor.red
             marker.iconView = markerView
             marker.map = mapView
             marakers.append(marker)
-           
+            
         }
-       
+        
         self.focusMapToShowAllMarkers(markers: marakers, mapView: mapView)
         
     }
-//    // Create marker to display pindrop over map
-//    func createMapViewMarker(deviceData :  [DeviceDetails]) {
-//        let camera = `GMSCameraPosition`.camera(withLatitude:  self.lat.first! , longitude: self.long.first!, zoom: 8.0)
-//        let mapView = GMSMapView.map(withFrame: self.view.bounds, camera: camera)
-//        mapView.settings.zoomGestures = true
-//        self.view.addSubview(mapView)
-//        var marakers:[Any] = []
-//        for (index,_) in lat.enumerated() {
-//            let marker = GMSMarker()
-//            marker.position = CLLocationCoordinate2D(latitude: lat[index] , longitude: long[index] )
-//            marker.title = "Avatar:" + "8088422893"
-//            marker.isTappable = true
-//            marker.zIndex = Int32(index)
-//            var img : UIImage? = nil
-//            if index % 2 == 0 {
-//              img = UIImage.init(named: "pindropr")
-//            } else if index % 3 == 0{
-//              img = UIImage.init(named: "pindropb")
-//            } else {
-//               img = UIImage.init(named: "pindropg")
-//            }
-//            let markerView = UIImageView(image: img)
-//            markerView.tintColor = UIColor.red
-//            marker.iconView = markerView
-//            marker.map = mapView
-//            marakers.append(marker)
-//
-//        }
-//
-//        self.focusMapToShowAllMarkers(markers: marakers, mapView: mapView)
-//
-//    }
+    //    // Create marker to display pindrop over map
+    //    func createMapViewMarker(deviceData :  [DeviceDetails]) {
+    //        let camera = `GMSCameraPosition`.camera(withLatitude:  self.lat.first! , longitude: self.long.first!, zoom: 8.0)
+    //        let mapView = GMSMapView.map(withFrame: self.view.bounds, camera: camera)
+    //        mapView.settings.zoomGestures = true
+    //        self.view.addSubview(mapView)
+    //        var marakers:[Any] = []
+    //        for (index,_) in lat.enumerated() {
+    //            let marker = GMSMarker()
+    //            marker.position = CLLocationCoordinate2D(latitude: lat[index] , longitude: long[index] )
+    //            marker.title = "Avatar:" + "8088422893"
+    //            marker.isTappable = true
+    //            marker.zIndex = Int32(index)
+    //            var img : UIImage? = nil
+    //            if index % 2 == 0 {
+    //              img = UIImage.init(named: "pindropr")
+    //            } else if index % 3 == 0{
+    //              img = UIImage.init(named: "pindropb")
+    //            } else {
+    //               img = UIImage.init(named: "pindropg")
+    //            }
+    //            let markerView = UIImageView(image: img)
+    //            markerView.tintColor = UIColor.red
+    //            marker.iconView = markerView
+    //            marker.map = mapView
+    //            marakers.append(marker)
+    //
+    //        }
+    //
+    //        self.focusMapToShowAllMarkers(markers: marakers, mapView: mapView)
+    //
+    //    }
     
     func focusMapToShowAllMarkers(markers : [Any], mapView : GMSMapView) {
-         let bounds = markers.reduce(GMSCoordinateBounds()) {
+        let bounds = markers.reduce(GMSCoordinateBounds()) {
             $0.includingCoordinate(($1 as AnyObject).position)
-           }
-
-           mapView.animate(with: .fit(bounds, withPadding: 30.0))
-
-     }
+        }
+        
+        mapView.animate(with: .fit(bounds, withPadding: 30.0))
+        
+    }
     
     func callgetLocationDetails(groupDetails : GroupListData, completionHandler: @escaping (Bool) -> Void) {
         self.showActivityIndicator()
@@ -146,26 +146,27 @@ class MapsScreen: UIViewController {
                 DispatchQueue.main.async {
                     self.hideActivityIndicator()
                     if deviceResponse.devicedata.count > 0 {
-//                        for memeber in Array(groupDetails.groupMember) {
-//                            self.count = self.count + 1
-                        for (index,device) in Array(deviceResponse.devicedata).enumerated() {
-//                                if memeber.memberId == device.deviceId {
-                                    self.count = self.count + 1
-                                    let memeber = Array(groupDetails.groupMember)
-                                    device.name = memeber[index].memberName!
-                                    device.phone = memeber[index].memberPhone
+                        for member in Array(groupDetails.groupMember) {
+                            self.count = self.count + 1
+                            for device in Array(deviceResponse.devicedata) {
+                                if member.memberDevice == device.deviceId {
+                                    device.name = member.memberName
+                                    device.phone = member.memberPhone
                                     self.deviceDetails.append(device)
-                                
-//                                }
+                                    
+                                }
                             }
-//                        }
+                        }
+                        if self.groupData.count > 1 {
+                            self.checkGroupData(dataCount: self.groupData.count)
+                        }else{
+                            self.checkGroupData(dataCount: self.groupData.first?.groupMember.count ?? 0)
+                        }
                     }else {
                         self.ShowALert(title: Constants.LocationConstants.NoLatLong)
                     }
-                    if self.deviceDetails.count == self.count{
-                        self.createMapViewMarker(deviceData: self.deviceDetails)
-                    }
-                     completionHandler(true)
+                    
+                    completionHandler(true)
                 }
                 
             case .failure(let error):
@@ -180,8 +181,17 @@ class MapsScreen: UIViewController {
                         self.ShowALert(title: error.localizedDescription)
                     }
                 }
-                 completionHandler(true)
+                completionHandler(true)
             }
+        }
+    }
+    
+    func checkGroupData(dataCount : Int){
+        if self.count == dataCount{
+            print(self.deviceDetails)
+            self.createMapViewMarker(deviceData: self.deviceDetails)
+        } else {
+            self.ShowALert(title: Constants.LocationConstants.NoLatLong)
         }
     }
     

@@ -35,19 +35,21 @@ extension LoginScreen : CocoaMQTTDelegate {
     
     func setUpMqtt() {
         //v.dev.tnt.cats.jvts.net
-        cocomqtt.mqtt = CocoaMQTT(clientID: "8088422893", host: Constants.MqttConstants.HostName, port: 1883)
+        cocomqtt.mqtt = CocoaMQTT(clientID: "9019930384", host: Constants.MqttConstants.HostName, port: 1883)
         cocomqtt.mqtt.username = Constants.MqttConstants.UserName
         cocomqtt.mqtt.password = Constants.MqttConstants.Password
         cocomqtt.mqtt.keepAlive = 60
         cocomqtt.mqtt.delegate = self
-        
-        let messageString : String =  "{\"imi\":\"" + "8088422893" + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + "13.9488667" + "\",\"lon\":\"" + "78.7024609" + "\"," ;
-        let messageStr2 : String = "\"ltd\":\"0\",\n" + "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + "12" + "\",\"tms\":\"" +  Utils.shared.getCurrentDate(val:0) + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + "40" + "\",\"sig\":\"" + "-80" + "\"}";
+       let isconnected = cocomqtt.mqtt.connect()
+        if isconnected {
+        let messageString : String =  "{\"imi\":\"" + "9019930384" + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + "15.9488667" + "\",\"lon\":\"" + "78.7024609" + "\"," ;
+        let messageStr2 : String = "\"ltd\":\"0\",\n" + "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + "12" + "\",\"tms\":\"" +  Utils.shared.getCurrentDate(val:2) + "\",\"odo\":\"0\",\"ios\":\"1\",\"bat\":\"" + "40" + "\",\"sig\":\"" + "-80" + "\"}";
         let myStr = messageString + messageStr2
         print(myStr)
-        cocomqtt.mqtt.publish("jioiot/svcd/jiophone/8088422893/uc/fwd/locinfo", withString: myStr)
+        cocomqtt.mqtt.publish("jioiot/svcd/jiophone/9019930384/uc/fwd/locinfo", withString: myStr)
+        }
     }
-    
+     
     
     // Optional ssl CocoaMQTTDelegate
     func mqtt(_ mqtt: CocoaMQTT, didReceive trust: SecTrust, completionHandler: @escaping (Bool) -> Void) {

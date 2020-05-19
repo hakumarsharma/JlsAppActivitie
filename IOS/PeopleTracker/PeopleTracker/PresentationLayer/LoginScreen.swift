@@ -43,7 +43,7 @@ class LoginScreen: BaseViewController, UITextFieldDelegate {
     }
  
     func initialiseData() {
-       // self.setUpMqtt()
+        //self.setUpMqtt()
         self.userNameTxt.delegate = self
         self.mobileNumberTxt.delegate = self
         self.otpTxt.delegate = self
@@ -77,7 +77,13 @@ class LoginScreen: BaseViewController, UITextFieldDelegate {
     
     func createNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(navigateToHome(notification:)), name: NSNotification.Name(rawValue: Constants.NotificationName.NavigateToHome), object: nil)
+//        NotificationCenter.default.addObserver( self,selector:#selector(self.keyboardDidShow), name: UITextField.textDidChangeNotification, object: otpTxt)
     }
+//    @objc func keyboardDidShow(notifcation: NSNotification) {
+//        if otpTxt.text?.count == 4 {
+//            self.view.endEditing(true)
+//        }
+//    }
     
     @objc func navigateToHome(notification: NSNotification) {
         self.navigateToHomeScreen()
@@ -131,7 +137,7 @@ class LoginScreen: BaseViewController, UITextFieldDelegate {
     // TODO :  Change API call based on phone registration process
     func callLoginApi() {
         self.showActivityIndicator()
-        UserService.shared.loginRequest(with:URL(string: Constants.ApiPath.LoginUrl)!, parameters: ["phone": "9019930385","phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
+        UserService.shared.loginRequest(with:URL(string: Constants.ApiPath.LoginUrl)!, parameters: ["phone": self.mobileNumberTxt.text!,"phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
             switch result {
             case .success( _):
                 // checking if device is whitelisted using verify and assign or not

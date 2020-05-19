@@ -142,6 +142,7 @@ class AddDeviceScreen: BaseViewController,UITextFieldDelegate {
     }
     
     @IBAction func addDeviceButtonAction(_ sender: Any) {
+         self.view.endEditing(true)
         if nameTxt.text?.count == 0 {
             self.ShowALert(title: Constants.AddDeviceConstants.Name)
             return

@@ -39,7 +39,7 @@ class Constants {
        static let VerifyTokenUrl = UserApisUrl + "tokens/verify"
        static let RegisterationUrl = UserApisUrl + "register"
        static let CreateGroupUrl = "/sessiongroups"
-       static let GroupListUrl = "/sessiongroups?isPopulateConsents=true"
+       static let GroupListUrl = "/sessiongroups?isPopulateConsents=true&isPopulateGroupOwner=true"
        static let CreateMultiple = "/sessiongroupconsents"
        static let GenerateConsent = "/tokens"
        static let ApproveConsent = "/status"

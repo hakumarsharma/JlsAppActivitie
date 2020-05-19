@@ -36,21 +36,21 @@ import RealmSwift
     }
     
     required init(from decoder: Decoder) throws
-       {
-           let container = try decoder.container(keyedBy: CodingKeys.self)
-           
-           code = try container.decode(Int.self, forKey: .code)
-           message = try container.decode(String.self, forKey: .message)
-           let groupList = try container.decode([GroupListData].self, forKey: .groupListData)
-           groupListData.append(objectsIn: groupList)
-           
-           super.init()
-       }
-       
-       required init()
-       {
-           super.init()
-       }
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        code = try container.decode(Int.self, forKey: .code)
+        message = try container.decode(String.self, forKey: .message)
+        let groupList = try container.decode([GroupListData].self, forKey: .groupListData)
+        groupListData.append(objectsIn: groupList)
+        
+        super.init()
+    }
+    
+    required init()
+    {
+        super.init()
+    }
 }
 
 @objcMembers class  GroupListData : Object, Decodable {
@@ -77,7 +77,6 @@ import RealmSwift
         groupCreatedBy = try? container.decode(String.self, forKey: .groupCreatedBy)
         let groupMembersList = try container.decode([GroupMember].self, forKey: .groupMember)
         groupMember.append(objectsIn: groupMembersList)
-        
         super.init()
     }
     
@@ -89,7 +88,6 @@ import RealmSwift
         return "groupId"
     }
 }
-
 @objcMembers class  GroupSession : Object, Decodable{
     
     dynamic var  from  : Int64? = nil

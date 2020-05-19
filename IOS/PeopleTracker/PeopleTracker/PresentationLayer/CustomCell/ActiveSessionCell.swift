@@ -43,7 +43,7 @@ class ActiveSessionCell: UITableViewCell {
     
     func setGroupData(groupData : GroupListData){
         customView.layer.cornerRadius           = 10
-        self.ImgBgView = Utils.shared.createCircularView(view: ImgBgView, borderColor:  UIColor.black, borderWidth: 3.0)
+        self.ImgBgView = Utils.shared.createCircularView(view: ImgBgView, borderColor:  UIColor.black, borderWidth: 2.0)
          self.avatar = Utils.shared.createCircularImage(imageView: self.avatar, borderColor:  UIColor.clear, borderWidth: 1.0)
         self.optionsBtn.isHidden = true
         let groupName = groupData.name.components(separatedBy: "+")
@@ -58,8 +58,8 @@ class ActiveSessionCell: UITableViewCell {
             self.mobileNumberLbl.text = "Members : " + String(memebersArr.count)
             self.avatar.image = UIImage(named: "group")
         }
-        self.durationLbl.text = "Tracking Duration: " + self.getTrackingDuration(epochFromTime: groupData.groupSession!.from!, epochToTime:  groupData.groupSession!.to!)
-        self.expiryTimeLbl.text = "Tracking ExpiresIn: " + self.getTrackingExpiresIn( epochToTime:  groupData.groupSession!.to!)
+        self.durationLbl.text = "Tracking Duration : " + self.getTrackingDuration(epochFromTime: groupData.groupSession!.from!, epochToTime:  groupData.groupSession!.to!)
+        self.expiryTimeLbl.text = "Tracking Expires In : " + self.getTrackingExpiresIn( epochToTime:  groupData.groupSession!.to!)
         
     }
     
