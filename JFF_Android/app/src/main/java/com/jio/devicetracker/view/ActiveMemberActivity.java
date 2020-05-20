@@ -40,6 +40,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.ExitRemovedGroupRequest;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -261,6 +262,7 @@ public class ActiveMemberActivity extends AppCompatActivity {
      */
     private List<GroupMemberDataList> addDataInList() {
         List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+        HomeActivityListData homeActivityListData = mDbManager.getGroupDetail(groupId);
         memberList = new ArrayList<>();
         for (GroupMemberDataList data : mList) {
             if (!data.getConsentStatus().equalsIgnoreCase(Constant.EXITED) && !data.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
@@ -276,6 +278,11 @@ public class ActiveMemberActivity extends AppCompatActivity {
                 memberList.add(groupMemberDataList);
             }
         }
+        GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+        groupMemberDataList.setGroupOwnerName(homeActivityListData.getGroupOwnerName());
+        groupMemberDataList.setGroupOwnerNumber(homeActivityListData.getGroupOwnerPhoneNumber());
+        groupMemberDataList.setGroupOwnerUserId(homeActivityListData.getGroupOwnerUserId());
+        memberList.add(groupMemberDataList);
         return memberList;
     }
 }

@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -46,14 +44,16 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
 
     /**
      * Constructor to add devices inside group
+     *
      * @param mList
      */
-    public ActiveMemberListAdapter(List<GroupMemberDataList> mList){
+    public ActiveMemberListAdapter(List<GroupMemberDataList> mList) {
         this.mList = mList;
     }
 
     /**
      * Binds the given View to the position
+     *
      * @param parent
      * @param viewType
      * @return View Holder object
@@ -68,16 +68,23 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
 
     /**
      * A new ViewHolder that holds a View of the given view type
+     *
      * @param holder
      * @param position
      */
     @Override
     public void onBindViewHolder(@NonNull ActiveMemberListAdapter.ViewHolder holder, int position) {
-        holder.phone.setText(mList.get(position).getNumber());
-        holder.name.setText(mList.get(position).getName());
-        holder.profile.setImageResource(mList.get(position).getProfileImage());
-        holder.durationtime.setText(Util.getInstance().getTrackingExpirirationDuration(mList.get(position).getFrom(), mList.get(position).getTo()));
-        holder.expirytime.setText(Util.getInstance().getTrackingExpirirationDuration(Util.getInstance().convertTimeToEpochtime(), mList.get(position).getTo()));
+        if (mList.get(position).getGroupOwnerName() != null) {
+            holder.phone.setText(mList.get(position).getGroupOwnerNumber());
+            holder.name.setText(mList.get(position).getGroupOwnerName());
+            holder.profile.setImageResource(mList.get(position).getProfileImage());
+        } else {
+            holder.phone.setText(mList.get(position).getNumber());
+            holder.name.setText(mList.get(position).getName());
+            holder.profile.setImageResource(mList.get(position).getProfileImage());
+            holder.durationtime.setText(Util.getInstance().getTrackingExpirirationDuration(mList.get(position).getFrom(), mList.get(position).getTo()));
+            holder.expirytime.setText(Util.getInstance().getTrackingExpirirationDuration(Util.getInstance().convertTimeToEpochtime(), mList.get(position).getTo()));
+        }
         holder.activeMemberOptions.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.activeMemberOptions, position, mList.get(position)));
     }
 
@@ -99,6 +106,7 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
 
     /**
      * return The total number of items in this adapter
+     *
      * @return size
      */
     @Override
@@ -119,6 +127,7 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
 
         /**
          * Constructor where we find element from .xml file
+         *
          * @param itemView
          */
         public ViewHolder(@NonNull View itemView) {
@@ -134,6 +143,7 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
 
     /**
      * Called when we remove device from active member screen
+     *
      * @param adapterPosition
      */
     public void removeItem(int adapterPosition) {

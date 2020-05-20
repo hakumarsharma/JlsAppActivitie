@@ -39,6 +39,33 @@ public class GroupMemberDataList {
     private Long from;
     private Long to;
     private String groupStatus;
+    private String groupOwnerName;
+    private String groupOwnerNumber;
+    private String groupOwnerUserId;
+
+    public String getGroupOwnerNumber() {
+        return groupOwnerNumber;
+    }
+
+    public void setGroupOwnerNumber(String groupOwnerNumber) {
+        this.groupOwnerNumber = groupOwnerNumber;
+    }
+
+    public String getGroupOwnerUserId() {
+        return groupOwnerUserId;
+    }
+
+    public void setGroupOwnerUserId(String groupOwnerUserId) {
+        this.groupOwnerUserId = groupOwnerUserId;
+    }
+
+    public String getGroupOwnerName() {
+        return groupOwnerName;
+    }
+
+    public void setGroupOwnerName(String groupOwnerName) {
+        this.groupOwnerName = groupOwnerName;
+    }
 
     public String getGroupStatus() {
         return groupStatus;

@@ -81,7 +81,6 @@
                 android:layout_below="@+id/tokenEditText"
                 android:layout_marginLeft="270dp"
                 android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/newUserText"
                 android:text="@string/request_otp"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="15sp" />

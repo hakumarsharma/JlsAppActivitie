@@ -45,6 +45,33 @@ public class HomeActivityListData {
     private String updatedBy;
     private Long from;
     private Long to;
+    private String groupOwnerName;
+    private String groupOwnerUserId;
+    private String groupOwnerPhoneNumber;
+
+    public String getGroupOwnerName() {
+        return groupOwnerName;
+    }
+
+    public void setGroupOwnerName(String groupOwnerName) {
+        this.groupOwnerName = groupOwnerName;
+    }
+
+    public String getGroupOwnerUserId() {
+        return groupOwnerUserId;
+    }
+
+    public void setGroupOwnerUserId(String groupOwnerUserId) {
+        this.groupOwnerUserId = groupOwnerUserId;
+    }
+
+    public String getGroupOwnerPhoneNumber() {
+        return groupOwnerPhoneNumber;
+    }
+
+    public void setGroupOwnerPhoneNumber(String groupOwnerPhoneNumber) {
+        this.groupOwnerPhoneNumber = groupOwnerPhoneNumber;
+    }
 
     public Long getFrom() {
         return from;

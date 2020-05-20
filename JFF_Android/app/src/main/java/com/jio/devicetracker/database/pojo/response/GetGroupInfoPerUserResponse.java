@@ -72,6 +72,16 @@ public class GetGroupInfoPerUserResponse implements Serializable {
         private String createdBy;
         @SerializedName("updatedBy")
         private String updatedBy;
+        @SerializedName("groupOwner")
+        private List<GroupOwner> groupOwner;
+
+        public List<GroupOwner> getGroupOwner() {
+            return groupOwner;
+        }
+
+        public void setGroupOwner(List<GroupOwner> groupOwner) {
+            this.groupOwner = groupOwner;
+        }
 
         public String getUpdatedBy() {
             return updatedBy;
@@ -215,4 +225,38 @@ public class GetGroupInfoPerUserResponse implements Serializable {
             this.to = to;
         }
     }
+
+    public class GroupOwner implements Serializable {
+        @SerializedName("_id")
+        private String userId;
+        @SerializedName("phone")
+        private String phone;
+        @SerializedName("name")
+        private String name;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
 }

@@ -26,6 +26,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -141,7 +142,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private static TrackerDeviceListAdapter adapter;
     public static List<String> consentListPhoneNumber = null;
     private static DBManager mDbManager;
-    private static Context context = null;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView user_account_name = null;
     private Locale locale = Locale.ENGLISH;
@@ -189,6 +189,73 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         registerReceiver();
         deepLinkingURICheck();
         makeGroupInfoPerUserRequestAPICall();
+    }
+
+    /**
+     * Initialize all the data members
+     */
+    private void initializeDataMember() {
+        selectedData = new ArrayList<>();
+        mWorkManager = WorkManager.getInstance();
+        consentListPhoneNumber = new LinkedList<>();
+        mapDataList = new ArrayList<>();
+        Util.getInstance().getIMEI(this);
+        mDbManager = new DBManager(this);
+        thread = new Thread(new RefreshMap());
+        //thread.start();
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        this.registerReceiver(broadcastreceiver, intentFilter);
+        setUpGClient();
+        userId = mDbManager.getAdminLoginDetail().getUserId();
+        userPhoneNumber = mDbManager.getAdminLoginDetail().getPhoneNumber();
+        new Thread(new SendLocation()).start();
+        grpMemberDataList = new CopyOnWriteArrayList<>();
+        grpDataList = new CopyOnWriteArrayList<>();
+        devicePresent = findViewById(R.id.devicePresent);
+        MessageListener messageListener = new DashboardActivity();
+        MessageReceiver.bindListener(messageListener);
+        if (specificGroupMemberData == null) {
+            specificGroupMemberData = new ArrayList<>();
+        }
+        if (listOnHomeScreens == null) {
+            listOnHomeScreens = new ArrayList<>();
+        }
+    }
+
+    /**
+     * Sets Navigation data
+     */
+    private void setNavigationData() {
+        NavigationView navigationView = findViewById(R.id.nv);
+        View header = navigationView.getHeaderView(0);
+        user_account_name = header.findViewById(R.id.user_account_name);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.profile:
+                    gotoProfileActivity();
+                    break;
+                case R.id.settings:
+                    goToRefreshIntervalSettingActivity();
+                    break;
+                case R.id.helpPrivacy:
+//                        Toast.makeText(DashboardActivity.this, "Help & Support", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.activeSessions:
+                    gotoActiveSessionActivity();
+                    break;
+                case R.id.home:
+                    drawerLayout.closeDrawer(Gravity.LEFT);
+                    break;
+                case R.id.logout:
+                    updateLogoutData();
+                    break;
+                default:
+                    return true;
+            }
+            return true;
+        });
     }
 
     /**
@@ -378,16 +445,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Generate Consent token request API Call error listener
-     */
-    private class GenerateConsentTokenRequestErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            // To do
-        }
-    }
-
-    /**
      * Goto Group List Activity
      */
     private void goToGroupListActivity(String groupId, String userId) {
@@ -397,74 +454,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         intent.putExtra(Constant.GROUPNAME, groupName);
         startActivity(intent);
         finish();
-    }
-
-    /**
-     * Initialize all the data members
-     */
-    private void initializeDataMember() {
-        selectedData = new ArrayList<>();
-        mWorkManager = WorkManager.getInstance();
-        consentListPhoneNumber = new LinkedList<>();
-        mapDataList = new ArrayList<>();
-        Util.getInstance().getIMEI(this);
-        context = getApplicationContext();
-        mDbManager = new DBManager(context);
-        thread = new Thread(new RefreshMap());
-        //thread.start();
-        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        this.registerReceiver(broadcastreceiver, intentFilter);
-        setUpGClient();
-        userId = mDbManager.getAdminLoginDetail().getUserId();
-        userPhoneNumber = mDbManager.getAdminLoginDetail().getPhoneNumber();
-        new Thread(new SendLocation()).start();
-        grpMemberDataList = new CopyOnWriteArrayList<>();
-        grpDataList = new CopyOnWriteArrayList<>();
-        devicePresent = findViewById(R.id.devicePresent);
-        MessageListener messageListener = new DashboardActivity();
-        MessageReceiver.bindListener(messageListener);
-        if (specificGroupMemberData == null) {
-            specificGroupMemberData = new ArrayList<>();
-        }
-        if (listOnHomeScreens == null) {
-            listOnHomeScreens = new ArrayList<>();
-        }
-    }
-
-    /**
-     * Sets Navigation data
-     */
-    private void setNavigationData() {
-        NavigationView navigationView = findViewById(R.id.nv);
-        View header = navigationView.getHeaderView(0);
-        user_account_name = header.findViewById(R.id.user_account_name);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-            switch (id) {
-                case R.id.profile:
-                    gotoProfileActivity();
-                    break;
-                case R.id.settings:
-                    goToRefreshIntervalSettingActivity();
-                    break;
-                case R.id.helpPrivacy:
-//                        Toast.makeText(DashboardActivity.this, "Help & Support", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.activeSessions:
-                    gotoActiveSessionActivity();
-                    break;
-                case R.id.home:
-                    drawerLayout.closeDrawer(Gravity.LEFT);
-                    break;
-                case R.id.logout:
-                    updateLogoutData();
-                    break;
-                default:
-                    return true;
-            }
-            return true;
-        });
     }
 
 
@@ -481,7 +470,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void messageReceived(String message, String phoneNum) {
         if (message != null || message != "") {
-            makeGroupInfoPerUserRequestAPICall();
+//            GroupRequestHandler.getInstance(this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
         }
     }
 
@@ -550,7 +539,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Get All Group info per user API Call
      */
     protected void makeGroupInfoPerUserRequestAPICall() {
-        GroupRequestHandler.getInstance(context).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
+        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
     }
 
     /**
@@ -594,6 +583,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             homeActivityListData.setUpdatedBy(data.getUpdatedBy());
             homeActivityListData.setFrom(data.getSession().getFrom());
             homeActivityListData.setTo(data.getSession().getTo());
+            homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
+            homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
+            homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
             groupList.add(homeActivityListData);
         }
         for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
@@ -774,6 +766,25 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             devicePresent.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        makeGroupInfoPerUserRequestAPICall();
     }
 
     /**
@@ -1040,24 +1051,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
     }
 
-
-    /**
-     * Called when you press back
-     */
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
     /**
      * Class to calculate the signal strength
      */
     class MyPhoneStateListener extends PhoneStateListener {
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             super.onSignalStrengthsChanged(signalStrength);
-            TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            TelephonyManager mTelephonyManager = (TelephonyManager) DashboardActivity.this.getSystemService(Context.TELEPHONY_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     System.out.println("Permission not granted");
@@ -1452,7 +1452,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 listOnDashBoard.add(data);
             }
         }
-        adapter = new TrackerDeviceListAdapter(listOnDashBoard, context);
+        adapter = new TrackerDeviceListAdapter(listOnDashBoard, this);
         listView.setAdapter(adapter);
     }
 }

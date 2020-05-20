@@ -60,13 +60,11 @@ import com.jio.devicetracker.database.pojo.LoginUserdata;
 import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateLoginTokenRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
-import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.AddDeviceResponse;
 import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
-import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
@@ -315,9 +313,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (logindetailResponse.getData().getUgsToken() != null) {
                 mDbManager.deleteAllPreviousData();
                 mDbManager.insertLoginData(logindetailResponse);
+                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
             }
-            // Get All Group info per user API Call
-            GroupRequestHandler.getInstance(LoginActivity.this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
         }
     }
 
@@ -336,65 +333,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             Util.progressDialog.dismiss();
         }
-    }
-
-    /**
-     * GetGroupInfoPerUserRequest Success listener
-     */
-    private class GetGroupInfoPerUserRequestSuccessListener implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
-            parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
-            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-        }
-    }
-
-    /**
-     * GetGroupInfoPerUserRequest Error listener
-     */
-    private class GetGroupInfoPerUserRequestErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, LoginActivity.this);
-            }
-        }
-    }
-
-    /**
-     * Parse the response and store in DB(Group Table and Member table)
-     */
-    public void parseResponseStoreInDatabase(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
-        List<HomeActivityListData> groupList = new ArrayList<>();
-        List<GroupMemberDataList> mGroupMemberDataLists = new ArrayList<>();
-        for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-            HomeActivityListData homeActivityListData = new HomeActivityListData();
-            homeActivityListData.setGroupName(data.getGroupName());
-            homeActivityListData.setCreatedBy(data.getCreatedBy());
-            homeActivityListData.setGroupId(data.getId());
-            homeActivityListData.setStatus(data.getStatus());
-            homeActivityListData.setUpdatedBy(data.getUpdatedBy());
-            homeActivityListData.setFrom(data.getSession().getFrom());
-            homeActivityListData.setTo(data.getSession().getTo());
-            groupList.add(homeActivityListData);
-        }
-        for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-            if (!data.getStatus().equalsIgnoreCase(Constant.CLOSED)) {
-                for (GetGroupInfoPerUserResponse.Consents mConsents : data.getConsents()) {
-                    GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
-                    groupMemberDataList.setConsentId(mConsents.getConsentId());
-                    groupMemberDataList.setNumber(mConsents.getPhone());
-                    groupMemberDataList.setGroupAdmin(mConsents.isGroupAdmin());
-                    groupMemberDataList.setGroupId(data.getId());
-                    groupMemberDataList.setConsentStatus(mConsents.getStatus());
-                    groupMemberDataList.setName(mConsents.getName());
-                    mGroupMemberDataLists.add(groupMemberDataList);
-                }
-            }
-        }
-        mDbManager.insertAllDataIntoGroupTable(groupList);
-        mDbManager.insertGroupMemberDataInListFormat(mGroupMemberDataLists);
     }
 
     /**

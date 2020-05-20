@@ -113,7 +113,7 @@ public class Constant {
     public static final String LOCATION = "location";
     public static final String SOS = "sos";
     public static final String CONSENT_ID = "consentId";
-    public static final String SELECTION_ERROR = "You cannot track individual user and group at the same time, Please uncheck one of them to track.";
+    public static final String SELECTION_ERROR = "You cannot track individual user and group at the same time, Please select one of them to track.";
     public static final String NO_EVENTS_FOUND_RESPONSE = "No events found matching the search keys.";
     public static final String FETCH_LOCATION_ERROR = "Unable to get location, Please try again!";
     public static final String GROUP_NOT_ACTIVE = "Group is scheduled, please wait until it doesn't become active";
@@ -195,7 +195,7 @@ public class Constant {
     public static final String GENERATE_LOGIN_TOKEN_REQUEST_URL = "/accounts/api/users/tokens/login";
     public static final String ACCOUNTS_API_USER_URL = "/accounts/api/users/";
     public static final String SESSION_GROUPS_URL = "/sessiongroups/";
-    public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true";
+    public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true&isPopulateGroupOwner=true";
     public static final String SESSION_GROUP_CONSENTS_URL = "/sessiongroupconsents";
     public static final String SESSION_GROUP_CONSENTS_TOKEN_URL = "/sessiongroupconsents/tokens";
     public static final String APPROVE_REJECT_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";

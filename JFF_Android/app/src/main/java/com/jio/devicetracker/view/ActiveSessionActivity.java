@@ -92,9 +92,6 @@ public class ActiveSessionActivity extends AppCompatActivity {
         mDbManager = new DBManager(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
-        /*addDatainList();
-        adapterEventListener();
-        isAnyMemberActive();*/
         makeGroupInfoPerUserRequestAPICall();
     }
 
@@ -419,16 +416,6 @@ public class ActiveSessionActivity extends AppCompatActivity {
         }
     }
 
-
-    /**
-     * To Refresh our Home page call Get all for one user API Call
-     */
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        makeGroupInfoPerUserRequestAPICall();
-    }
-
     /**
      * Get All Group info per user API Call
      */
@@ -442,11 +429,6 @@ public class ActiveSessionActivity extends AppCompatActivity {
     private class GetGroupInfoPerUserRequestSuccessListener implements com.android.volley.Response.Listener {
         @Override
         public void onResponse(Object response) {
-            GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
-            DashboardActivity dashboardActivity = new DashboardActivity();
-            dashboardActivity.parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
-            dashboardActivity.addDataInHomeScreen();
-            dashboardActivity.isDevicePresent();
             addDatainList();
             adapterEventListener();
             isAnyMemberActive();
