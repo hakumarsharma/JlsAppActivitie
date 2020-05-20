@@ -61,9 +61,10 @@ import RealmSwift
     dynamic var  groupSession    : GroupSession? = nil
     dynamic var  groupCreatedBy  : String? = nil
     let groupMember = RealmSwift.List<GroupMember>()
+    let groupOwner = RealmSwift.List<GroupOwner>()
     
     enum CodingKeys : String, CodingKey {
-        case status,groupId = "_id",name,groupSession = "session",groupMember = "consents",groupCreatedBy="createdBy"
+        case status,groupId = "_id",name,groupSession = "session",groupMember = "consents",groupCreatedBy="createdBy",groupOwner
     }
     
     required init(from decoder: Decoder) throws
@@ -77,6 +78,9 @@ import RealmSwift
         groupCreatedBy = try? container.decode(String.self, forKey: .groupCreatedBy)
         let groupMembersList = try container.decode([GroupMember].self, forKey: .groupMember)
         groupMember.append(objectsIn: groupMembersList)
+        if let groupowner = try? container.decode([GroupOwner].self, forKey: .groupOwner) {
+        groupOwner.append(objectsIn: groupowner)
+        }
         super.init()
     }
     
@@ -88,6 +92,38 @@ import RealmSwift
         return "groupId"
     }
 }
+
+@objcMembers class  GroupOwner : Object, Decodable{
+    
+    dynamic var  ownerName    : String? = nil
+    dynamic var  ownerPhone   : String? = nil
+    dynamic var  ownerId      : String? = nil
+    
+    enum CodingKeys : String, CodingKey {
+        case ownerName="name",ownerPhone="phone",ownerId="_id"
+    }
+    
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        ownerName = try? container.decode(String.self, forKey: .ownerName)
+        ownerPhone = try? container.decode(String.self, forKey: .ownerPhone)
+        ownerId = try? container.decode(String.self, forKey: .ownerId)
+        
+        super.init()
+    }
+    
+    required init()
+    {
+        super.init()
+    }
+    override class func primaryKey() -> String? {
+        return "ownerId"
+    }
+}
+
+
 @objcMembers class  GroupSession : Object, Decodable{
     
     dynamic var  from  : Int64? = nil

@@ -55,10 +55,10 @@ class UserCell: UITableViewCell {
         var isIndividual = false
         let groupName = groupData.name.components(separatedBy: "+")
         if groupName.count == 2 && groupName[0] == Constants.AddDeviceConstants.Individual {
-            self.name.text = groupData.groupMember.first?.memberName
-            self.phoneNumber.text = groupData.groupMember.first?.memberPhone
             self.checkBoxButton.isHidden = false
             self.setUserIcon(val: groupName[1])
+            self.name.text = groupData.groupMember.first?.memberName
+            self.phoneNumber.text = groupData.groupMember.first?.memberPhone
             isIndividual = true
         } else {
             self.name.text = groupData.name
@@ -68,15 +68,7 @@ class UserCell: UITableViewCell {
             self.userIcon.image = UIImage(named: "group")
         }
         
-        
-        if groupData.groupCreatedBy != Utils.shared.getUserId() {
-            self.requestConsentButton.isHidden = true
-            self.optionsButton.isHidden = true
-            self.consentstatusColor.backgroundColor = UIColor.Consent.ConsentApproved
-        } else {
             if isIndividual {
-//                self.name.text = groupData.groupOwner?.ownerName ?? ""
-//                self.phoneNumber.text = groupData.groupOwner?.ownerPhone ?? ""
                 self.setConsentStatusForIndividual(groupData : groupData)
             } else {
                 let memebersArr = groupData.groupMember.filter { $0.memberStatus == Utils.GroupStatus.isApproved.rawValue || $0.memberStatus == Utils.GroupStatus.isPending.rawValue}
@@ -86,7 +78,7 @@ class UserCell: UITableViewCell {
                     self.requestConsentButton.setTitle(Constants.HomScreenConstants.RequestConsent, for: .normal)
                     self.consentstatusColor.backgroundColor = UIColor.Consent.RequestConsent
                 }
-            }
+                
         }
     }
     

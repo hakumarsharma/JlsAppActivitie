@@ -107,7 +107,7 @@ class Utils {
     }
     
     func getToEpochTime() -> Int64 {
-        return self.getEpochTime(val: 5)
+        return self.getEpochTime(val: 300)
     }
     
     // get epoch time to pass during creation of groups

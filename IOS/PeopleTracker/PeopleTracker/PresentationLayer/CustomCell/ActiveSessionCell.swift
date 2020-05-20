@@ -46,17 +46,24 @@ class ActiveSessionCell: UITableViewCell {
         self.ImgBgView = Utils.shared.createCircularView(view: ImgBgView, borderColor:  UIColor.black, borderWidth: 2.0)
          self.avatar = Utils.shared.createCircularImage(imageView: self.avatar, borderColor:  UIColor.clear, borderWidth: 1.0)
         self.optionsBtn.isHidden = true
+        var isIndividual = false
         let groupName = groupData.name.components(separatedBy: "+")
         if groupName.count == 2 && groupName[0] == Constants.AddDeviceConstants.Individual {
             self.nameLbl.text = groupData.groupMember.first?.memberName
             self.mobileNumberLbl.text = groupData.groupMember.first?.memberPhone
             self.setUserIcon(val: groupName[1])
             self.optionsBtn.isHidden = false
+            isIndividual = true
         } else {
             self.nameLbl.text = groupData.name
             let memebersArr = groupData.groupMember.filter { $0.memberStatus == Utils.GroupStatus.isApproved.rawValue || $0.memberStatus == Utils.GroupStatus.isPending.rawValue}
             self.mobileNumberLbl.text = "Members : " + String(memebersArr.count)
             self.avatar.image = UIImage(named: "group")
+        }
+        
+        if groupData.groupCreatedBy != Utils.shared.getUserId() && isIndividual {
+            self.nameLbl.text = groupData.groupOwner.first?.ownerName
+            self.mobileNumberLbl.text = groupData.groupOwner.first?.ownerPhone
         }
         self.durationLbl.text = "Tracking Duration : " + self.getTrackingDuration(epochFromTime: groupData.groupSession!.from!, epochToTime:  groupData.groupSession!.to!)
         self.expiryTimeLbl.text = "Tracking Expires In : " + self.getTrackingExpiresIn( epochToTime:  groupData.groupSession!.to!)
