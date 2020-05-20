@@ -33,6 +33,9 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     var isActiveSession : Bool = false
     @IBOutlet weak var groupListTableView: UITableView!
     @IBOutlet weak var instructionLbl: UILabel!
+    var isMemeberAdded : Bool = false
+    var refreshControl = UIRefreshControl()
+
     
     let actionButton = JJFloatingActionButton()
     var groupMemberData: [GroupMemberData] = []
@@ -43,6 +46,9 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
         self.title = navtitle
         self.navigationItem.setHidesBackButton(true, animated: true)
         self.initialiseData()
+        if groupData.status == Utils.GroupStatus.isCompleted.rawValue {
+            self.ShowALert(title: Constants.GroupConstants.SessionEnd)
+        }
     }
     
     func initialiseData() {
@@ -52,8 +58,21 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
         self.createNotification()
         self.getMemberInGroupApi()
         self.createLeftBarButtonItem()
-        if !isActiveSession && groupData.groupMember.count < 10 {
-          floatingActionButton()
+        let currentEpochTime = Utils.shared.getEpochTime(val:0)
+        if !isActiveSession && groupData.groupMember.count < 10 && !(groupData.groupSession!.from! <= currentEpochTime && groupData.groupSession!.to! >= currentEpochTime) {
+            floatingActionButton()
+        }
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        groupListTableView.addSubview(refreshControl)
+    }
+    @objc func refresh(_ sender: AnyObject) {
+        self.getMemberInGroupApi()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if isMemeberAdded {
+            NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
         }
     }
     
@@ -71,6 +90,7 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     }
     
     @objc func callgetMembersIngroupApi(notification: NSNotification) {
+        self.isMemeberAdded = true
         self.getMemberInGroupApi()
     }
     
@@ -100,7 +120,15 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
         cell.selectionStyle = .none
         let memberData = groupMemberData[indexPath.row]
         cell.groupcellDelegate = self
-        cell.setUserData(memberData: memberData, groupData: self.groupData)
+        var imgstr : String = ""
+        if indexPath.row % 2 == 0{
+            imgstr = "user0"
+        }else if indexPath.row % 3 == 0 {
+            imgstr = "user1"
+        }else {
+            imgstr = "user2"
+        }
+        cell.setUserData(memberData: memberData, groupData: self.groupData, imgStr : imgstr)
         cell.deleteButton.isHidden = true
         if isActiveSession {
             cell.deleteButton.isHidden = false
@@ -135,7 +163,23 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
     }
     
     @objc func trackButton(sender: UIBarButtonItem) {
-        navigateToMapsScreen()
+        if groupMemberData.count > 0 {
+            let approvedArr = groupMemberData.filter({$0.status == Utils.GroupStatus.isApproved.rawValue})
+            if approvedArr.count > 0 {
+                let currentEpochTime = Utils.shared.getEpochTime(val:0)
+                if(groupData.groupSession!.from! <= currentEpochTime && groupData.groupSession!.to! >= currentEpochTime) {
+                    navigateToMapsScreen()
+                }else if groupData.groupSession!.from! >= currentEpochTime {
+                    self.ShowALert(title: Constants.GroupConstants.SessionStart)
+                }else {
+                    self.ShowALert(title: Constants.GroupConstants.SessionEnd)
+                }
+            }else {
+                self.ShowALert(title:  Constants.GroupConstants.ConsentApprovalStatus)
+            }
+        } else {
+            self.ShowALert(title:  Constants.GroupConstants.AddMemeber)
+        }
     }
     @objc func backButton(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
@@ -184,7 +228,7 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
         view.addSubview(actionButton)
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         actionButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-        actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+        actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
     }
     
     
@@ -210,6 +254,7 @@ class GroupListScreen: UIViewController,UITableViewDelegate, UITableViewDataSour
                 DispatchQueue.main.async {
                     self.hideActivityIndicator()
                     self.showHideTableView()
+                    self.refreshControl.endRefreshing()
                     self.groupListTableView.reloadData()
                 }
             case .failure(let error):

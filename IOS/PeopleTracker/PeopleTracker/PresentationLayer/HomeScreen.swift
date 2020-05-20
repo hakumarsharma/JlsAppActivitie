@@ -27,7 +27,7 @@ import UIKit
 import JJFloatingActionButton
 import SideMenu
 
-class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, UserCellDelegate {
+class HomeScreen: BaseViewController,UITableViewDelegate, UITableViewDataSource, UserCellDelegate {
     
     
     @IBOutlet weak var usersTableView: UITableView!
@@ -36,11 +36,14 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     let actionButton  = JJFloatingActionButton()
     var selectedCell  : [GroupListData] = []
     var groupList     : [GroupListData] = []
+    var refreshControl = UIRefreshControl()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initialiseData()
         self.getAllGroupsApi()
+        //self.ShowALertWithButtonAction(title: "Approve/Reject Consent")
     }
     
     func initialiseData() {
@@ -52,8 +55,16 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
         self.createNavBarItems()
         self.createNotification()
         self.floatingActionButton()
+        
+
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        usersTableView.addSubview(refreshControl) 
+
     }
-    
+    @objc func refresh(_ sender: AnyObject) {
+        self.getAllGroupsApi()
+    }
     // creating navigation bar left and right items for menu and track
     func createNavBarItems(){
         let menuBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "Menu"), style: .plain, target: self, action: #selector(menuButton(sender:)))
@@ -119,12 +130,18 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
         let groupData = self.groupList[indexpath!.row]
         let groupName = groupData.name.components(separatedBy: "+")
         let isIndividual = (groupName[0] == Constants.AddDeviceConstants.Individual) ? true : false
-        if isIndividual && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent {
+        if isIndividual && (groupData.status == Utils.GroupStatus.isActive.rawValue) && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent {
             self.callRequestConsentApi(groupData: groupData)
-        } else if !isIndividual && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent {
-           // call create group and add memeber api
+        } else if isIndividual && (groupData.status == Utils.GroupStatus.isCompleted.rawValue) && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent{
+            self.groupname = groupData.name
+            self.memberName = groupData.groupMember.first?.memberName ?? ""
+            self.callDeleteGroupApi(groupData: groupData, isFromRequestConsent: true)
+        }
+        else if !isIndividual && cell.requestConsentButton.titleLabel?.text == Constants.HomScreenConstants.RequestConsent {
+            self.groupname = groupData.name
+            self.callDeleteGroupApi(groupData: groupData,isFromRequestConsent: true)
         } else {
-            self.ShowALertWithButtonAction(title: Constants.HomScreenConstants.ConsentAlredySent)
+            self.ShowALert(title: Constants.HomScreenConstants.ConsentAlredySent)
         }
     }
     
@@ -149,9 +166,14 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     
     @objc func trackButton(sender: UIBarButtonItem) {
         if selectedCell.count > 0 {
-        let activeGroupsArr = selectedCell.filter({$0.status == Utils.GroupStatus.isActive.rawValue && $0.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue})
-            if activeGroupsArr.count > 0 {
-               self.navigateToMapsScreen()
+            let approvedArr = selectedCell.filter({$0.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue})
+            if approvedArr.count > 0 {
+               let activeGroupsArr = selectedCell.filter({$0.status == Utils.GroupStatus.isActive.rawValue})
+                 if activeGroupsArr.count > 0 {
+                    self.navigateToMapsScreen(activegroupArr: approvedArr)
+                 } else {
+                    self.ShowALert(title: Constants.GroupConstants.SessionStart)
+                }
             } else {
                 self.ShowALert(title: Constants.HomScreenConstants.SelectDevice)
             }
@@ -161,10 +183,10 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     }
     
     // MARK : Navigatation screens
-    func navigateToMapsScreen() {
+    func navigateToMapsScreen(activegroupArr : [GroupListData]) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let mapsViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.MapsScreen) as! MapsScreen
-        mapsViewController.groupData = selectedCell
+        mapsViewController.groupData = activegroupArr
         self.navigationController?.pushViewController(mapsViewController, animated: true)
     }
     
@@ -221,7 +243,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
         view.addSubview(actionButton)
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         actionButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-        actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+        actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
     }
     
     // MARK: Notification Methods
@@ -271,9 +293,14 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     // Alert with button action
     func ShowALertWithButtonAction(title: String){
         let alert = UIAlertController(title: Constants.AlertConstants.Alert, message: title, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: Constants.AlertConstants.OkButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.No, style: UIAlertAction.Style.cancel, handler: {(_: UIAlertAction!) in
             DispatchQueue.main.async {
-                
+                self.callApproveOrRejectConsent(consentId:"5ebbd42c09f9466784735f8e",token :"15329",status: "rejected")
+            }
+        }))
+        alert.addAction(UIAlertAction(title: Constants.AlertConstants.Yes, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
+            DispatchQueue.main.async {
+                 self.callApproveOrRejectConsent(consentId:"5ebbd42c09f9466784735f8e",token :"15329",status: "approved")
             }
         }))
         self.present(alert, animated: true, completion: nil)
@@ -284,7 +311,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
         let alert = UIAlertController(title: Constants.AlertConstants.Alert, message: title, preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: Constants.AlertConstants.Delete, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
             DispatchQueue.main.async {
-                self.callDeleteGroupApi(groupData : groupData)
+                self.callDeleteGroupApi(groupData : groupData, isFromRequestConsent: false)
             }
         }))
         alert.addAction(UIAlertAction(title: Constants.AlertConstants.CancelButton, style: UIAlertAction.Style.default, handler: {(_: UIAlertAction!) in
@@ -312,7 +339,6 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: Service Calls
     
-    
     // Create GroupList Api Call
     func getAllGroupsApi() {
         self.showActivityIndicator()
@@ -321,13 +347,8 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
             switch result {
             case .success(let groupResponse):
                 self.groupList.removeAll()
-//                let groupMembers : [GroupMemberModel]  = Array(RealmManager.sharedInstance.getGroupMemeberDataFromDB())
                 for groupdata in groupResponse.groupListData {
                     if ((groupdata.status == Utils.GroupStatus.isActive.rawValue || groupdata.status == Utils.GroupStatus.isCompleted.rawValue || groupdata.status == Utils.GroupStatus.isScheduled.rawValue) && groupdata.groupCreatedBy == Utils.shared.getUserId()) {
-//                        for member in groupdata.groupMember {
-//                            let memberArr = groupMembers.filter { $0.groupMemberData.first?.groupMemberId == member.memberId }
-//                            member.deviceType = memberArr.first?.groupMemberData.first?.deviceType
-//                        }
                      let groupName = groupdata.name.components(separatedBy: "+")
                         if groupName.count == 2 && groupName[0] == Constants.AddDeviceConstants.Individual && (groupdata.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue || groupdata.groupMember.first?.memberStatus == Utils.GroupStatus.isPending.rawValue ) {
                              self.groupList.append(groupdata)
@@ -339,6 +360,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
                 DispatchQueue.main.async {
                     self.hideActivityIndicator()
                     self.showHideTableView()
+                    self.refreshControl.endRefreshing()
                     self.usersTableView.reloadData()
                 }
             case .failure(let error):
@@ -359,7 +381,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
     }
     
     // Delete Group Api Call
-    func callDeleteGroupApi(groupData : GroupListData) {
+    func callDeleteGroupApi(groupData : GroupListData, isFromRequestConsent : Bool) {
         self.showActivityIndicator()
         
         let deleteGroupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/"  +  groupData.groupId )!
@@ -368,8 +390,12 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
             case .success(let groupResponse):
                 print(groupResponse)
                 DispatchQueue.main.async {
+                    if isFromRequestConsent {
+                        self.callCreateGroupApi(methodType: NetworkManager.Method.post.rawValue, isFromCreateGroup: false, groupMemebers: Array(groupData.groupMember))
+                    } else {
                     self.hideActivityIndicator()
                     self.getAllGroupsApi()
+                    }
                 }
             case .failure(let error):
                 if type(of: error) == NetworkManager.ErrorType.self {
@@ -420,5 +446,7 @@ class HomeScreen: UIViewController,UITableViewDelegate, UITableViewDataSource, U
             
         }
     }
+    
+  
     
 }

@@ -34,15 +34,16 @@ class Constants {
        static let LoginUrl = UserApisUrl + "login?isResponseDataAsUser=true&isPopulateGroup=true&isPopulateGroupUsers=true&isPopulateUserDevices=true&isPopulateUserDevicesAsWearableUsers=true"
        static let AddDeviceUrl = "/devices/verifyandassign?ugs_token="
        static let DeviceDetails = DeviceApisUrl + "v2/search?skip=0&limit=10&ugs_token="
-       static let GenerateTokenUrl = UserApisUrl + "tokens"
+       static let GenerateRegistrationTokenUrl = UserApisUrl + "tokens"
+       static let GenerateLoginTokenUrl = UserApisUrl + "tokens/login"
        static let VerifyTokenUrl = UserApisUrl + "tokens/verify"
        static let RegisterationUrl = UserApisUrl + "register"
        static let CreateGroupUrl = "/sessiongroups"
-       static let GroupListUrl = "/sessiongroups?isPopulateConsents=true"
+       static let GroupListUrl = "/sessiongroups?isPopulateConsents=true&isPopulateGroupOwner=true"
        static let CreateMultiple = "/sessiongroupconsents"
        static let GenerateConsent = "/tokens"
        static let ApproveConsent = "/status"
-       static let LocationUrl = "/events/search"
+       static let LocationUrl = "/events/search?limit=1"
     }
     
     struct HelpScreen {
@@ -62,9 +63,14 @@ class Constants {
     }
     
     struct MqttConstants {
-        static let HostName = "tcp://v.dev.tnt.cats.jvts.net"
-        static let UserName = "borqs-sit"
-        static let Password = "borqs-sit@987"
+        // Stg Details
+        static let HostName = "tcp://bocats.tnt.jiophone.net"
+        static let UserName = "trackNT"
+        static let Password = "trackNT"
+        // SIT Details
+//        static let HostName = "tcp://v.dev.tnt.cats.jvts.net"
+//        static let UserName = "borqs-sit"
+//        static let Password = "borqs-sit@987"
     }
     
     struct AlertConstants {
@@ -126,7 +132,7 @@ class Constants {
         static let ConsentApproved = "Consent Approved"
         static let ConsentPending = "Consent Pending"
         static let ConsentSent = "Consent Sent"
-        static let SelectDevice = "Select consent approved devices to track"
+        static let SelectDevice = "Select consent approved devices to start tracking"
         static let ConsentAlredySent = "Consent already sent."
         static let ConsentAlert = "Consent sent successfully. To track, Please wait till the consent gets approved."
     }
@@ -145,10 +151,18 @@ class Constants {
           static let Individual = "Individual"
           static let ChooseDeviceType = "Please choose type of device"
           static let ContactsPermission = "Please accept access to contacts permission to choose a contact from contact list."
+          static let QrIncorrectData = "Incorrect data, Please scan again."
       }
     
     struct CreateGroupConstants {
         static let CreateGroup = "Please enter group name"
+    }
+    
+    struct GroupConstants {
+        static let SessionStart = "Please wait till your clock ticks the scheduled time."
+        static let SessionEnd = "Tracking duration is lapsed. Please schedule it again by clicking on request consent at group."
+        static let ConsentApprovalStatus = "No user has accepted your consent.Please wait till consent gets approved."
+        static let AddMemeber = "Please add memebers to start tracking."
     }
     
     struct LocationConstants {
@@ -167,5 +181,7 @@ class Constants {
     struct NotificationName {
         static let GetGroupList = "GetGroupList"
         static let GetMemebersInGroup = "GetMemebersInGroup"
+        static let NavigateToHome = "NavigateToHome"
+        static let QRdata = "QRdata"
     }
 }

@@ -46,7 +46,8 @@ class UserCell: UITableViewCell {
     func setGroupData(groupData : GroupListData){
         customView.layer.cornerRadius           = 10
         requestConsentButton.layer.cornerRadius = 10
-        self.ImgBgView = Utils.shared.createCirculatView(view: ImgBgView, borderColor:  UIColor.lightGray, borderWidth: 3.0)
+        self.ImgBgView = Utils.shared.createCircularView(view: ImgBgView, borderColor:  UIColor.black, borderWidth: 2.0)
+        self.userIcon = Utils.shared.createCircularImage(imageView: self.userIcon, borderColor:  UIColor.clear, borderWidth: 1.0)
         self.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkempty"), for: .normal)
         self.checkBoxButton.setBackgroundImage(UIImage(named: "ic_checkmark"), for: .selected)
         self.requestConsentButton.isHidden = false
@@ -54,10 +55,10 @@ class UserCell: UITableViewCell {
         var isIndividual = false
         let groupName = groupData.name.components(separatedBy: "+")
         if groupName.count == 2 && groupName[0] == Constants.AddDeviceConstants.Individual {
-            self.name.text = groupData.groupMember.first?.memberName
-            self.phoneNumber.text = groupData.groupMember.first?.memberPhone
             self.checkBoxButton.isHidden = false
             self.setUserIcon(val: groupName[1])
+            self.name.text = groupData.groupMember.first?.memberName
+            self.phoneNumber.text = groupData.groupMember.first?.memberPhone
             isIndividual = true
         } else {
             self.name.text = groupData.name
@@ -67,12 +68,6 @@ class UserCell: UITableViewCell {
             self.userIcon.image = UIImage(named: "group")
         }
         
-        
-        if groupData.groupCreatedBy != Utils.shared.getUserId() {
-            self.requestConsentButton.isHidden = true
-            self.optionsButton.isHidden = true
-            self.consentstatusColor.backgroundColor = UIColor.Consent.ConsentApproved
-        } else {
             if isIndividual {
                 self.setConsentStatusForIndividual(groupData : groupData)
             } else {
@@ -83,13 +78,13 @@ class UserCell: UITableViewCell {
                     self.requestConsentButton.setTitle(Constants.HomScreenConstants.RequestConsent, for: .normal)
                     self.consentstatusColor.backgroundColor = UIColor.Consent.RequestConsent
                 }
-            }
+                
         }
     }
     
     // set icon based device type
     func setUserIcon(val : String){
-        self.userIcon = Utils.shared.createCirculatImage(imageView: self.userIcon, borderColor: UIColor.clear, borderWidth: 3.0)
+        self.userIcon = Utils.shared.createCircularImage(imageView: self.userIcon, borderColor: UIColor.clear, borderWidth: 3.0)
         switch val {
         case Constants.AddDeviceConstants.PeopleTracker:
             self.userIcon.image = UIImage(named: "user4")
@@ -108,12 +103,11 @@ class UserCell: UITableViewCell {
     
     // Consent for individual will be based on group status and member status
     func setConsentStatusForIndividual(groupData : GroupListData){
-        
         if groupData.status == Utils.GroupStatus.isCompleted.rawValue {
             self.requestConsentButton.setTitle(Constants.HomScreenConstants.RequestConsent, for: .normal)
             self.consentstatusColor.backgroundColor = UIColor.Consent.RequestConsent
         } else {
-            if (groupData.status == Utils.GroupStatus.isApproved.rawValue) {
+            if (groupData.groupMember.first?.memberStatus == Utils.GroupStatus.isApproved.rawValue) {
                 self.requestConsentButton.setTitle(Constants.HomScreenConstants.ConsentApproved, for: .normal)
                 self.consentstatusColor.backgroundColor = UIColor.Consent.ConsentApproved
             } else {

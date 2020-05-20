@@ -36,5 +36,853 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8B966AD8-0FCB-41F3-A8B6-B7EC10008D88"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/Device/AddPersonScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
+            landmarkName = "addPersonButtonAction(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "24F2A45E-3148-4E81-A207-DD8D00054C36"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/Device/AddPersonScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
+            landmarkName = "addPersonButtonAction(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C58B9BD3-E621-46B1-9A08-02DC0356FBA0"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/NetworkLayer/GroupService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "175"
+            endingLineNumber = "175"
+            landmarkName = "addMemberToGroup(addMemberInGroupUrl:parameters:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "C58B9BD3-E621-46B1-9A08-02DC0356FBA0 - 1d3eb630105769ed"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PeopleTracker.GroupService.addMemberToGroup(addMemberInGroupUrl: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Result&lt;PeopleTracker.GroupMemberModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/NetworkLayer/GroupService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "175"
+                  endingLineNumber = "175"
+                  offsetFromSymbolStart = "576">
+               </Location>
+               <Location
+                  uuid = "C58B9BD3-E621-46B1-9A08-02DC0356FBA0 - 7e618ce1461a8f9c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (PeopleTracker.NetworkManager.QueryResult&lt;(__C.NSURLResponse, Swift.Optional&lt;Foundation.Data&gt;)&gt;) -&gt; () in PeopleTracker.GroupService.addMemberToGroup(addMemberInGroupUrl: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Result&lt;PeopleTracker.GroupMemberModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/NetworkLayer/GroupService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "177"
+                  endingLineNumber = "177"
+                  offsetFromSymbolStart = "284">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "18EB6518-92DD-4AFC-9C55-5CBD85465098"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/Device/AddDeviceScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
+            landmarkName = "addDeviceButtonAction(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "55A1D70C-152E-4728-8888-99113878FCDA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/Device/AddDeviceScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
+            landmarkName = "addDeviceButtonAction(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B7B1F767-3D38-4828-ADEC-38C95CFAB486"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/GroupBaseClass.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "addMemberToGroupApi(notificationName:groupId:groupMemebers:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "21399A1F-20A5-4807-B23C-23792490D1F0"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/GroupBaseClass.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "addMemberToGroupApi(notificationName:groupId:groupMemebers:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "65699818-2FF8-4A96-81CD-8EE09A6B2F0E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/GroupBaseClass.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
+            landmarkName = "addMemberToGroupApi(notificationName:groupId:groupMemebers:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B0C2C09F-3F66-4618-8745-36961BB755F5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/GroupBaseClass.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "addMemberToGroupApi(notificationName:groupId:groupMemebers:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0A0C4A71-F553-4C5F-BC9C-8B6DD84B2DE8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/HomeScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "394"
+            endingLineNumber = "394"
+            landmarkName = "callDeleteGroupApi(groupData:isFromRequestConsent:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "76FC405B-177B-4E92-B385-6FD2FCA1F8A5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/NetworkLayer/GroupService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "createGroup(createGroupUrl:parameters:methodType:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "76FC405B-177B-4E92-B385-6FD2FCA1F8A5 - 90fb346f371f6849"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PeopleTracker.GroupService.createGroup(createGroupUrl: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, methodType: Swift.String, completion: (Swift.Result&lt;PeopleTracker.GroupModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/NetworkLayer/GroupService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "41"
+                  endingLineNumber = "41"
+                  offsetFromSymbolStart = "892">
+               </Location>
+               <Location
+                  uuid = "76FC405B-177B-4E92-B385-6FD2FCA1F8A5 - f7e4ea9ae2a451f4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (PeopleTracker.NetworkManager.QueryResult&lt;(__C.NSURLResponse, Swift.Optional&lt;Foundation.Data&gt;)&gt;) -&gt; () in PeopleTracker.GroupService.createGroup(createGroupUrl: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, methodType: Swift.String, completion: (Swift.Result&lt;PeopleTracker.GroupModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/NetworkLayer/GroupService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "43"
+                  endingLineNumber = "43"
+                  offsetFromSymbolStart = "284">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7CE67251-C717-4A09-B158-C575CB83CD57"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/NetworkLayer/GroupService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "createGroup(createGroupUrl:parameters:methodType:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F75A7904-A08A-4918-B17A-42B2FB6D7AAE"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/Menu/SideMenuScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "navigateToLoginScreen()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DD10A407-B374-4DC2-88CE-6D12CFF8F083"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/Menu/SideMenuScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "navigateToLoginScreen()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "DD10A407-B374-4DC2-88CE-6D12CFF8F083 - bc6fae3ef9f70940"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PeopleTracker.SideMenuScreen.navigateToLoginScreen() -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/PresentationLayer/Menu/SideMenuScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "146"
+                  endingLineNumber = "146"
+                  offsetFromSymbolStart = "356">
+               </Location>
+               <Location
+                  uuid = "DD10A407-B374-4DC2-88CE-6D12CFF8F083 - 979e0f3a2c2c3dbc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in PeopleTracker.SideMenuScreen.navigateToLoginScreen() -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/PresentationLayer/Menu/SideMenuScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "147"
+                  endingLineNumber = "147"
+                  offsetFromSymbolStart = "52">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D82D308B-7EB8-4AF7-A3BC-F53FE53C8B6B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/NetworkLayer/UserService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
+            landmarkName = "registerUser(registerTokenUrl:parameters:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D82D308B-7EB8-4AF7-A3BC-F53FE53C8B6B - cba259597df8634"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PeopleTracker.UserService.registerUser(registerTokenUrl: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Result&lt;PeopleTracker.UserModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/NetworkLayer/UserService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "104"
+                  endingLineNumber = "104"
+                  offsetFromSymbolStart = "540">
+               </Location>
+               <Location
+                  uuid = "D82D308B-7EB8-4AF7-A3BC-F53FE53C8B6B - 92819118ef68e73d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (PeopleTracker.NetworkManager.QueryResult&lt;(__C.NSURLResponse, Swift.Optional&lt;Foundation.Data&gt;)&gt;) -&gt; () in PeopleTracker.UserService.registerUser(registerTokenUrl: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Result&lt;PeopleTracker.UserModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/NetworkLayer/UserService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "106"
+                  endingLineNumber = "106"
+                  offsetFromSymbolStart = "284">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B3261BD2-CD3C-420A-913C-BF2D29EB5539"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/NetworkLayer/UserService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
+            landmarkName = "registerUser(registerTokenUrl:parameters:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6D2383BC-4500-422E-9459-6FAAD984CDEA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/RegistrationScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "registerUserApi()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "6D2383BC-4500-422E-9459-6FAAD984CDEA - 8d0a49388ea0cdf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PeopleTracker.RegistrationScreen.registerUserApi() -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/PresentationLayer/RegistrationScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "117"
+                  endingLineNumber = "117"
+                  offsetFromSymbolStart = "3224">
+               </Location>
+               <Location
+                  uuid = "6D2383BC-4500-422E-9459-6FAAD984CDEA - 3229ad6565ed31dd"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;PeopleTracker.UserModel, Swift.Error&gt;) -&gt; () in PeopleTracker.RegistrationScreen.registerUserApi() -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/PresentationLayer/RegistrationScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "119"
+                  endingLineNumber = "119"
+                  offsetFromSymbolStart = "244">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "76DC6084-217F-440E-BD2B-1D8A8172F273"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/NetworkLayer/UserService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
+            landmarkName = "loginRequest(with:parameters:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "99E9D496-CA78-4A63-952B-89864ACF3E54"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/HomeScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "423"
+            endingLineNumber = "423"
+            landmarkName = "callRequestConsentApi(groupData:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "99E9D496-CA78-4A63-952B-89864ACF3E54 - 1f1a4ce3abf2c848"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PeopleTracker.HomeScreen.callRequestConsentApi(groupData: PeopleTracker.GroupListData) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/PresentationLayer/HomeScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "423"
+                  endingLineNumber = "423"
+                  offsetFromSymbolStart = "2268">
+               </Location>
+               <Location
+                  uuid = "99E9D496-CA78-4A63-952B-89864ACF3E54 - d75cfcf9823cf543"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;PeopleTracker.ConsentModel, Swift.Error&gt;) -&gt; () in PeopleTracker.HomeScreen.callRequestConsentApi(groupData: PeopleTracker.GroupListData) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/PresentationLayer/HomeScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "425"
+                  endingLineNumber = "425"
+                  offsetFromSymbolStart = "268">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AE3DC7C6-F8F9-421B-A9D6-83578ED26B8F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/NetworkLayer/ConsentService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "generateConsentToken(generateConsentUrl:parameters:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "AE3DC7C6-F8F9-421B-A9D6-83578ED26B8F - 2660607ddaa30130"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PeopleTracker.ConsentService.generateConsentToken(generateConsentUrl: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Result&lt;PeopleTracker.ConsentModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/NetworkLayer/ConsentService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "40"
+                  endingLineNumber = "40"
+                  offsetFromSymbolStart = "576">
+               </Location>
+               <Location
+                  uuid = "AE3DC7C6-F8F9-421B-A9D6-83578ED26B8F - f72323adeaf07f56"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (PeopleTracker.NetworkManager.QueryResult&lt;(__C.NSURLResponse, Swift.Optional&lt;Foundation.Data&gt;)&gt;) -&gt; () in PeopleTracker.ConsentService.generateConsentToken(generateConsentUrl: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Result&lt;PeopleTracker.ConsentModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/NetworkLayer/ConsentService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "42"
+                  endingLineNumber = "42"
+                  offsetFromSymbolStart = "284">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0CAB575A-7524-4D64-8EEE-2EA754BD6ABB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/NetworkLayer/ConsentService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "generateConsentToken(generateConsentUrl:parameters:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "442CFD8C-22FB-44A8-BD6B-A8E173DA1B3B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/HomeScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "303"
+            endingLineNumber = "303"
+            landmarkName = "ShowALertWithButtonAction(title:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "19C08C74-11A5-41E4-BF9E-E3CC4CF8D8DC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/BaseViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
+            landmarkName = "callApproveOrRejectConsent(consentId:token:status:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "19C08C74-11A5-41E4-BF9E-E3CC4CF8D8DC - f0577ff49cc9549d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PeopleTracker.BaseViewController.callApproveOrRejectConsent(consentId: Swift.String, token: Swift.String, status: Swift.String) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/PresentationLayer/BaseViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184"
+                  offsetFromSymbolStart = "1740">
+               </Location>
+               <Location
+                  uuid = "19C08C74-11A5-41E4-BF9E-E3CC4CF8D8DC - 5a1b6837baf8f166"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;PeopleTracker.ConsentModel, Swift.Error&gt;) -&gt; () in PeopleTracker.BaseViewController.callApproveOrRejectConsent(consentId: Swift.String, token: Swift.String, status: Swift.String) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/PresentationLayer/BaseViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "186"
+                  endingLineNumber = "186"
+                  offsetFromSymbolStart = "244">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BF31F5F4-4F13-478C-A0DA-343BBAEE7426"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/HomeScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
+            landmarkName = "ShowALertWithButtonAction(title:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "79231B3F-5652-452C-A9A0-AB027AA874C4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/BaseViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "callApproveOrRejectConsent(consentId:token:status:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DA07D35D-B0F4-472E-A27E-186FD30C3340"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/NetworkLayer/ConsentService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "approveOrRejectConsentWithToken(consentUrl:parameters:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "DA07D35D-B0F4-472E-A27E-186FD30C3340 - 4f06ee4d9318ab37"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PeopleTracker.ConsentService.approveOrRejectConsentWithToken(consentUrl: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Result&lt;PeopleTracker.ConsentModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/NetworkLayer/ConsentService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "73"
+                  endingLineNumber = "73"
+                  offsetFromSymbolStart = "576">
+               </Location>
+               <Location
+                  uuid = "DA07D35D-B0F4-472E-A27E-186FD30C3340 - 168b89400b92ee71"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (PeopleTracker.NetworkManager.QueryResult&lt;(__C.NSURLResponse, Swift.Optional&lt;Foundation.Data&gt;)&gt;) -&gt; () in PeopleTracker.ConsentService.approveOrRejectConsentWithToken(consentUrl: Foundation.URL, parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Result&lt;PeopleTracker.ConsentModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "PeopleTracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/apps/IOS/PeopleTracker/PeopleTracker/NetworkLayer/ConsentService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "75"
+                  endingLineNumber = "75"
+                  offsetFromSymbolStart = "284">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6374E7D3-B6E5-4E6A-B8F1-A49F3E90CF03"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/HomeScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "295"
+            endingLineNumber = "295"
+            landmarkName = "ShowALertWithButtonAction(title:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "498CFF66-ACF8-4AA9-9704-B9EAAFFCF712"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/LoginScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
+            landmarkName = "textFieldDidBeginEditing(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3F27F454-A244-4829-B94B-7F8FBE119D98"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/Device/AddDeviceScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "createNotification()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AD3D6F6C-18D1-4C4B-BA16-6D2432285157"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/Device/AddDeviceScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
+            landmarkName = "setData(notification:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3953B0D9-A03F-438D-85D9-CC3F1703779A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/CustomCell/ActiveSessionCell.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
+            landmarkName = "getTrackingDuration(epochFromTime:epochToTime:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1C6DBE03-5D55-47A5-A376-FFB1626C0CD3"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/MapsScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
+            landmarkName = "callgetLocationDetails(groupDetails:completionHandler:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D3125C5B-7264-4CA6-8AAD-9F389B9355B1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/MapsScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
+            landmarkName = "createMapViewMarker(deviceData:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "068A5FDA-66E2-45A5-81CF-D19AADD592D4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/MapsScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
+            landmarkName = "callgetLocationDetails(groupDetails:completionHandler:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "993D5F16-ADAC-482E-8A3D-A694E95060AF"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleTracker/PresentationLayer/MapsScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "callgetLocationDetails(groupDetails:completionHandler:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

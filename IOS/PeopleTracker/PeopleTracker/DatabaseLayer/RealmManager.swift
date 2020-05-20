@@ -31,7 +31,7 @@ class RealmManager {
     static let   sharedInstance = RealmManager()
     private init() {
         realm = try! Realm(configuration: Realm.Configuration.defaultConfiguration)
-        print(realm.configuration.fileURL?.absoluteString ?? "")
+//        print(realm.configuration.fileURL?.absoluteString ?? "")
     }
     
     // LoginData
@@ -51,7 +51,7 @@ class RealmManager {
             realm.deleteAll()
         }
     }
-    func deleteUserFromDb(object: GroupModel)   {
+    func deleteUserFromDb(object: LoginModel)   {
         try! realm.write {
             realm.delete(object)
         }
@@ -104,4 +104,18 @@ class RealmManager {
               realm.delete(object)
           }
       }
+    
+    // Device whitelisting data
+    func getDeviceDataFromDB() ->   Results<DeviceModel> {
+        let devicerealm = try! Realm()
+        let results: Results<DeviceModel> =   devicerealm.objects(DeviceModel.self)
+      return results
+    }
+    func addDeviceData(object: DeviceModel)   {
+        let devicerealm = try! Realm()
+        try! devicerealm.write {
+            devicerealm.add(object, update: .modified)
+        }
+    }
+    
 }

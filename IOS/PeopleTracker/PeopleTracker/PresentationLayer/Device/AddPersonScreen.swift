@@ -26,7 +26,7 @@
 import UIKit
 import ContactsUI
 
-class AddPersonScreen: UIViewController,CNContactPickerDelegate {
+class AddPersonScreen: BaseViewController,CNContactPickerDelegate,UITextFieldDelegate {
     
     @IBOutlet weak var nameTxt: UITextField!
     @IBOutlet weak var mobileNumberTxt: UITextField!
@@ -37,11 +37,41 @@ class AddPersonScreen: UIViewController,CNContactPickerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = navtitle
-        self.createNavBarItems()
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        self.initialiseData()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.GetGroupList), object: nil)
+    func initialiseData() {
+        self.createBackBarButtonItem()
+        self.createNavBarItems()
+        self.nameTxt.delegate = self
+        self.mobileNumberTxt.delegate = self
+        self.nameTxt.inputAccessoryView = self.setToolbarWithDoneButton()
+        self.mobileNumberTxt.inputAccessoryView = self.setToolbarWithDoneButton()
+    }
+    func setToolbarWithDoneButton() -> UIToolbar{
+            let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            let keyboardDoneButtonView = UIToolbar.init()
+            keyboardDoneButtonView.sizeToFit()
+            let doneButton = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.done,
+                                                                      target: self,
+                                                                      action: #selector(doneClicked(sender:)))
+
+            keyboardDoneButtonView.items = [flexSpace,doneButton]
+            return keyboardDoneButtonView
+        }
+       
+        @objc func doneClicked(sender: AnyObject) {
+          self.view.endEditing(true)
+        }
+    func createBackBarButtonItem() {
+        let backBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(backButton(sender:)))
+        backBtn.tintColor = .white
+        self.navigationItem.setLeftBarButton(backBtn, animated: true)
+    }
+    
+    @objc func backButton(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
     }
     
     // creating navigation bar right item for adding contact
@@ -91,79 +121,22 @@ class AddPersonScreen: UIViewController,CNContactPickerDelegate {
             return
         }
         if groupId.count > 0 {
-            self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetMemebersInGroup)
+            self.memberName = nameTxt.text!
+            self.memberNumber = mobileNumberTxt.text!
+            self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetMemebersInGroup, groupId: groupId)
         } else {
-            self.callCreateGroupApi()
+            self.groupname = Constants.AddDeviceConstants.Individual+"+"+Constants.AddDeviceConstants.PeopleTracker
+            self.memberName = nameTxt.text!
+            self.memberNumber = mobileNumberTxt.text!
+            self.callCreateGroupApi(methodType: NetworkManager.Method.post.rawValue, isFromCreateGroup: false)
         }
     }
     
+    // MARK: UITextField Delegate
     
-    // Add member to group Api Call
-    func addMemberToGroupApi(notificationName : String) {
-        self.showActivityIndicator()
-        let addMemberUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + self.groupId + Constants.ApiPath.CreateMultiple )!
-        let sessionParams : [String] = ["events"]
-        let groupParams : [String : Any] = ["name": nameTxt.text!,"phone" : self.mobileNumberTxt.text! ,"entities" : sessionParams]
-        let params : [String : Any] = ["consents" : [groupParams]]
-        GroupService.shared.addMemberToGroup(addMemberInGroupUrl:  addMemberUrl,parameters: params) { (result : Result<GroupMemberModel, Error>) in
-            switch result {
-            case .success(let groupResponse):
-                print(groupResponse)
-                DispatchQueue.main.async {
-                    self.hideActivityIndicator()
-                    NotificationCenter.default.post(name: Notification.Name(notificationName), object: nil)
-                    self.navigationController?.popViewController(animated: true)
-                }
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
-    
-    // Create Group Api Call
-    func callCreateGroupApi() {
-        self.showActivityIndicator()
-        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl )!
-        let sessionParams : [String : Int64] = ["from" : Utils.shared.getFromEpochTime(), "to" : Utils.shared.getToEpochTime()]
-        let groupParams : [String : Any] = ["name" : Constants.AddDeviceConstants.Individual+"+"+Constants.AddDeviceConstants.PeopleTracker, "session" : sessionParams, "type" : "one_to_one"]
-        GroupService.shared.createGroup(createGroupUrl:  groupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
-            switch result {
-            case .success(let groupResponse):
-                self.groupId = groupResponse.groupData?.groupId ?? ""
-                if self.groupId.count > 0 {
-                    DispatchQueue.main.async {
-                        self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetGroupList)
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Constants.ErrorMessage.Somethingwentwrong)
-                    }
-                }
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
     
 }

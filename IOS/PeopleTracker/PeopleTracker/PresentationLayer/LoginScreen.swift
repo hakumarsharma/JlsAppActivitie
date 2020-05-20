@@ -24,19 +24,89 @@
 
 
 import UIKit
+import CocoaMQTT
 
-class LoginScreen: UIViewController {
-    
+class LoginScreen: BaseViewController, UITextFieldDelegate {
+
     @IBOutlet weak var userNameTxt: UITextField!
     @IBOutlet weak var mobileNumberTxt: UITextField!
     @IBOutlet weak var otpTxt: UITextField!
+    @IBOutlet weak var resendOtpBtn: UIButton!
+    @IBOutlet weak var scrollView: UIScrollView!
+    var mqtt: CocoaMQTT?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         self.navigationItem.setHidesBackButton(true, animated: true)
-        // self.setUpMQTT()
+        self.initialiseData()
+    }
+ 
+    func initialiseData() {
+        //self.setUpMqtt()
+        self.userNameTxt.delegate = self
+        self.mobileNumberTxt.delegate = self
+        self.otpTxt.delegate = self
+        
+        userNameTxt.inputAccessoryView = self.setToolbarWithDoneButton()
+        mobileNumberTxt.inputAccessoryView = self.setToolbarWithDoneButton()
+        otpTxt.inputAccessoryView = self.setToolbarWithDoneButton()
+        
+        self.createNotification()
+        self.mobileNumberTxt.isUserInteractionEnabled = true
+        self.checkIfUserExistsInDatabaseAndFetchDetails()
+        
+    }
+    
+    func setToolbarWithDoneButton() -> UIToolbar{
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let keyboardDoneButtonView = UIToolbar.init()
+        keyboardDoneButtonView.sizeToFit()
+        let doneButton = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.done,
+                                                                  target: self,
+                                                                  action: #selector(doneClicked(sender:)))
 
+        keyboardDoneButtonView.items = [flexSpace,doneButton]
+        return keyboardDoneButtonView
+    }
+   
+    @objc func doneClicked(sender: AnyObject) {
+      self.view.endEditing(true)
+    }
+    // MARK: Notification Methods
+    
+    func createNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(navigateToHome(notification:)), name: NSNotification.Name(rawValue: Constants.NotificationName.NavigateToHome), object: nil)
+//        NotificationCenter.default.addObserver( self,selector:#selector(self.keyboardDidShow), name: UITextField.textDidChangeNotification, object: otpTxt)
+    }
+//    @objc func keyboardDidShow(notifcation: NSNotification) {
+//        if otpTxt.text?.count == 4 {
+//            self.view.endEditing(true)
+//        }
+//    }
+    
+    @objc func navigateToHome(notification: NSNotification) {
+        self.navigateToHomeScreen()
+    }
+    
+    // checking if user exists blocking user to enter new number to avoid db issues
+    func checkIfUserExistsInDatabaseAndFetchDetails(){
+        if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
+            let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
+            userNameTxt.text = loginData?.user?.name ?? ""
+            mobileNumberTxt.text = loginData?.user?.phone ?? ""
+            self.mobileNumberTxt.isUserInteractionEnabled = false
+        }
+    }
+    
+    @IBAction func resendOtpBtnAction(_ sender: Any) {
+        if mobileNumberTxt.text?.count == 0 || !(mobileNumberTxt.text?.isValidPhone ?? true){
+            self.ShowALert(title: Constants.LoginScreenConstants.PhoneNumber);
+            return
+        }
+        self.resendOtpBtn.setTitle("Resend OTP", for: .normal)
+        self.generateTokenApiCall(tokenUrl: Constants.ApiPath.GenerateLoginTokenUrl,params: ["phone": self.mobileNumberTxt.text!,"role": [
+            "code": "supervisor"]])
     }
     
     @IBAction func continueBtnAction(_ sender: Any) {
@@ -56,92 +126,43 @@ class LoginScreen: UIViewController {
             self.ShowALert(title: Constants.LoginScreenConstants.Otp);
             return
         }
-        //self.registerationApiCall()
+        
         self.callLoginApi()
         
     }
     
-    //Regsiteration Api Call
-    func registerationApiCall() {
-        self.showActivityIndicator()
-        UserService.shared.generateRegistartionTokenwith(generateTokenUrl: URL(string: Constants.ApiPath.GenerateTokenUrl)!, parameters: ["type": "registration","phone": "9019930385","phoneCountryCode": "91"]) { (result : Result<UserModel, Error>) in
-            switch result {
-            case .success(let userResponse):
-                print(userResponse)
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
-    
-    //Verification Api Call
-    func verificationApiCall(){
-        self.showActivityIndicator()
-        UserService.shared.verifyRegistartionTokenwith(verifyTokenUrl: URL(string: Constants.ApiPath.VerifyTokenUrl)!, parameters: ["token": "62178","phone": "9019930385","phoneCountryCode": "91","type": "registration"]) { (result : Result<UserModel, Error>) in
-            switch result {
-            case .success(let userResponse):
-                print(userResponse)
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
-    
-    // Verification Api Call
-    func registrationApiCall(){
-        self.showActivityIndicator()
-        UserService.shared.registerUser(registerTokenUrl: URL(string: Constants.ApiPath.VerifyTokenUrl)!, parameters: ["token": "62178","phone": "9019930384","phoneCountryCode": "91","type": "registration"]) { (result : Result<UserModel, Error>) in
-            switch result {
-            case .success(let userResponse):
-                print(userResponse)
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
-    
+    // MARK: Service Calls
     
     // Login Api Call
     // TODO :  Change API call based on phone registration process
     func callLoginApi() {
         self.showActivityIndicator()
-        UserService.shared.loginRequest(with:URL(string: Constants.ApiPath.LoginUrl)!,userName : self.userNameTxt.text!, parameters: ["phone": self.mobileNumberTxt.text!,"phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
+        UserService.shared.loginRequest(with:URL(string: Constants.ApiPath.LoginUrl)!, parameters: ["phone": self.mobileNumberTxt.text!,"phoneCountryCode": "91","password":"Borqs@1234","type":"supervisor"]) { (result : Result<LoginModel, Error>) in
             switch result {
             case .success( _):
-                DispatchQueue.main.async {
-                    self.hideActivityIndicator()
-                    self.navigateToHomeScreen()
+                // checking if device is whitelisted using verify and assign or not
+                if let deviceData = RealmManager.sharedInstance.getDeviceDataFromDB().first{
+                    // status code is device added successfully and 409 is if we are trying to add same device again
+                    if deviceData.code == 200  {
+                        DispatchQueue.main.async {
+                            self.hideActivityIndicator()
+                            self.navigateToHomeScreen()
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.memberName = self.userNameTxt.text!
+                            self.memberNumber = self.mobileNumberTxt.text!
+                            self.callAddDeviceApi()
+                        }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.memberName = self.userNameTxt.text!
+                        self.memberNumber = self.mobileNumberTxt.text!
+                        self.callAddDeviceApi()
+                    }
                 }
+                
             case .failure(let error):
                 if type(of: error) == NetworkManager.ErrorType.self {
                     DispatchQueue.main.async {
@@ -165,5 +186,15 @@ class LoginScreen: UIViewController {
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
     
+    // MARK: UITextField Delegate
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        scrollView.setContentOffset(CGPoint(x: 0, y: (textField.superview?.frame.origin.y)! + 50), animated: true)
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+    }
 }
+
+

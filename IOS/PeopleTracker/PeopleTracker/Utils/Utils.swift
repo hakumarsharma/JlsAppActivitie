@@ -43,7 +43,7 @@ class Utils {
     }
     
     // creates a circular imageview
-    func createCirculatImage(imageView : UIImageView, borderColor : UIColor, borderWidth : CGFloat) -> UIImageView{
+    func createCircularImage(imageView : UIImageView, borderColor : UIColor, borderWidth : CGFloat) -> UIImageView{
         imageView.layer.borderWidth = borderWidth
         imageView.layer.masksToBounds = false
         imageView.layer.borderColor = borderColor.cgColor
@@ -53,7 +53,7 @@ class Utils {
     }
     
     // creates a circular view
-    func createCirculatView(view : UIView, borderColor : UIColor, borderWidth : CGFloat) -> UIView{
+    func createCircularView(view : UIView, borderColor : UIColor, borderWidth : CGFloat) -> UIView{
         view.layer.borderWidth = borderWidth
         view.layer.masksToBounds = false
         view.layer.borderColor = borderColor.cgColor
@@ -71,7 +71,6 @@ class Utils {
     }
     
     func getUserId() -> String {
-        
         if RealmManager.sharedInstance.getUserDataFromDB().count > 0 {
             let loginData = RealmManager.sharedInstance.getUserDataFromDB().first
             return loginData?.user?.userId ?? ""
@@ -86,22 +85,14 @@ class Utils {
         }
         return 0
     }
-    
+    // checking if ugs token is expired or not
     func isUgsTokenExpired() -> Bool {
-        if self.getUgsTokenExpiryTime() != 0 && self.getUgsTokenExpiryTime() > self.getTokenEpochTime(val: 10){
+        if self.getUgsTokenExpiryTime() != 0 && self.getUgsTokenExpiryTime() > self.getTokenEpochTime(val: 5){
             return false
         }
         return true
     }
-    
-    func getFromEpochTime() -> Int64 {
-        return self.getEpochTime(val: 5)
-    }
-    
-    func getToEpochTime() -> Int64 {
-        return self.getEpochTime(val: 1000)
-    }
-    
+    // To get current epoch time , passing to 5 minutes prior than current to call api back before it gets expired
     func getTokenEpochTime(val : Int) -> Int64 {
         let newData = NSCalendar.current.date(byAdding: .minute, value: val, to: NSDate() as Date)
         let dateFormatter = DateFormatter()
@@ -111,6 +102,15 @@ class Utils {
         return myTimeStamp
     }
     
+    func getFromEpochTime() -> Int64 {
+        return self.getEpochTime(val: 1)
+    }
+    
+    func getToEpochTime() -> Int64 {
+        return self.getEpochTime(val: 300)
+    }
+    
+    // get epoch time to pass during creation of groups
     func getEpochTime(val : Int) -> Int64 {
         let newData = NSCalendar.current.date(byAdding: .minute, value: val, to: NSDate() as Date)
         let dateFormatter = DateFormatter()
@@ -126,6 +126,20 @@ class Utils {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZ"
         return dateFormatter.string(from: newData!)
     }
+    // convert epoch to date time
+    func getDateTimeFromEpochTime(epochTime : Int64) -> Date {
+        let epochTime = TimeInterval(epochTime) / 1000
+        let date = Date(timeIntervalSince1970: epochTime)
+        return date
+    }
+    // To set duration and lapse time for tracking
+    func getDuration(epochFromTime : Int64, epochToTime : Int64) -> (day: Int, hour: Int, minute : Int){
+        let fromdate = Utils.shared.getDateTimeFromEpochTime(epochTime: epochFromTime)
+        let todate = Utils.shared.getDateTimeFromEpochTime(epochTime: epochToTime)
+        let components = Calendar.current.dateComponents([.day, .hour, .minute], from: fromdate, to: todate)
+        return (components.day!, components.hour!, components.minute!)
+    }
+    
 }
 
 extension UIViewController {

@@ -44,6 +44,7 @@ class DeviceService {
                             if let string = String(data: data, encoding: String.Encoding.utf8) {
                                 let jsonData = string.data(using: .utf8)!
                                 let devicedata = try! JSONDecoder().decode(DeviceModel.self, from: jsonData)
+                                RealmManager.sharedInstance.addDeviceData(object: devicedata)
                                 completion(.success(devicedata))
                             }
                         }
@@ -56,6 +57,12 @@ class DeviceService {
                 }
             case .failure(let error):
                 completion(.failure(error))
+                if error == NetworkManager.ErrorType.MobileNumberAlreadyExists {
+                let deviceData = DeviceModel()
+                    deviceData.code = NetworkManager.ErrorType.MobileNumberAlreadyExists.hashValue
+                    deviceData.message = ""
+                RealmManager.sharedInstance.addDeviceData(object: deviceData)
+                }
                 print(error)
             }
         }

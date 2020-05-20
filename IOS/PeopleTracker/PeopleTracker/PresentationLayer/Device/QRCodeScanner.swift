@@ -29,7 +29,7 @@ import AVFoundation
 class QRCodeScanner: UIViewController , AVCaptureMetadataOutputObjectsDelegate {
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
-
+    var detailsArr : [Any] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "QRCode Scanner"
@@ -119,14 +119,10 @@ class QRCodeScanner: UIViewController , AVCaptureMetadataOutputObjectsDelegate {
             guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
             guard let stringValue = readableObject.stringValue else { return }
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-            found(code: stringValue)
+            self.detailsArr = stringValue.components(separatedBy: "\n")
+            print(stringValue)
         }
-
         dismiss(animated: true)
-    }
-
-    func found(code: String) {
-        print(code)
     }
 
     override var prefersStatusBarHidden: Bool {
@@ -135,5 +131,9 @@ class QRCodeScanner: UIViewController , AVCaptureMetadataOutputObjectsDelegate {
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.post(name: Notification.Name(Constants.NotificationName.QRdata), object: nil, userInfo: ["qrData" : self.detailsArr])
     }
 }

@@ -65,9 +65,11 @@ import RealmSwift
     dynamic var  deviceId         : String = ""
     dynamic var  type             : String = ""
     dynamic var  location         : Location? = nil
+    dynamic var  name             : String? = nil
+    dynamic var  phone            : String? = nil
     
     enum CodingKeys : String, CodingKey {
-        case locationId="_id",deviceId = "device",identifier,type,location = "location"
+        case locationId="_id",deviceId = "device",identifier,type,location = "location",name,phone
      }
     
     required init(from decoder: Decoder) throws
@@ -78,6 +80,8 @@ import RealmSwift
         deviceId = try container.decode(String.self, forKey: .deviceId)
         type = try container.decode(String.self, forKey: .type)
         location = try container.decode(Location.self, forKey: .location)
+        name = try? container.decode(String.self, forKey: .name)
+        phone = try? container.decode(String.self, forKey: .phone)
                
         super.init()
     }

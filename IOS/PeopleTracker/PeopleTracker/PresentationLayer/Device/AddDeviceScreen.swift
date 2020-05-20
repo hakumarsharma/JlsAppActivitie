@@ -25,7 +25,7 @@
 
 import UIKit
 
-class AddDeviceScreen: UIViewController {
+class AddDeviceScreen: BaseViewController,UITextFieldDelegate {
     @IBOutlet weak var nameTxt: UITextField!
     @IBOutlet weak var ownerNumberTxt: UITextField!
     @IBOutlet weak var deviceNumberTxt: UITextField!
@@ -37,11 +37,41 @@ class AddDeviceScreen: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = navtitle
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        self.intialiseData()
+    }
+    func intialiseData() {
+        self.createBackBarButtonItem()
         deviceType.layer.borderWidth = 1.0
         deviceType.layer.borderColor = UIColor.Common.TextFieldBorderColor.cgColor
         deviceType.layer.cornerRadius = 4.0
+        
+        self.nameTxt.delegate = self
+        self.ownerNumberTxt.delegate = self
+        self.deviceNumberTxt.delegate = self
+        
+        self.nameTxt.inputAccessoryView = self.setToolbarWithDoneButton()
+        self.ownerNumberTxt.inputAccessoryView = self.setToolbarWithDoneButton()
+        self.deviceNumberTxt.inputAccessoryView = self.setToolbarWithDoneButton()
+        
         self.createNavBarItems()
+        self.createNotification()
     }
+    func setToolbarWithDoneButton() -> UIToolbar{
+         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+         let keyboardDoneButtonView = UIToolbar.init()
+         keyboardDoneButtonView.sizeToFit()
+         let doneButton = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.done,
+                                                                   target: self,
+                                                                   action: #selector(doneClicked(sender:)))
+
+         keyboardDoneButtonView.items = [flexSpace,doneButton]
+         return keyboardDoneButtonView
+     }
+    
+     @objc func doneClicked(sender: AnyObject) {
+       self.view.endEditing(true)
+     }
     
     func createNavBarItems(){
         let qrscannerBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "qr"), style: .plain, target: self, action: #selector(qrscannerBtnButtonAction(sender:)))
@@ -49,11 +79,42 @@ class AddDeviceScreen: UIViewController {
         self.navigationItem.setRightBarButton(qrscannerBtn, animated: true)
     }
     
+    // MARK: Notification Methods
+    
+    func createNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(setData(notification:)), name: NSNotification.Name(rawValue: Constants.NotificationName.QRdata), object: nil)
+    }
+    
+    @objc func setData(notification: NSNotification) {
+        if let notificationData = notification.userInfo {
+            if let dataArr = notificationData["qrData"] as? Array<Any> {
+                if dataArr.count == 3 {
+                    self.nameTxt.text = dataArr[0] as? String
+                    self.ownerNumberTxt.text = dataArr[1] as? String
+                    self.deviceNumberTxt.text = dataArr[2] as? String
+                } else {
+                    self.ShowALert(title: Constants.AddDeviceConstants.QrIncorrectData)
+                }
+            }
+        }
+    }
+    
+    
     @objc func qrscannerBtnButtonAction(sender: UIBarButtonItem) {
-      
+        
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let qrScannerViewController = storyBoard.instantiateViewController(withIdentifier: Constants.ScreenNames.QRCodeScanner) as! QRCodeScanner
-        self.navigationController?.pushViewController(qrScannerViewController, animated: true)
+        self.navigationController?.present(qrScannerViewController, animated: true, completion: nil)
+        
+    }
+    func createBackBarButtonItem() {
+        let backBtn : UIBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(backButton(sender:)))
+        backBtn.tintColor = .white
+        self.navigationItem.setLeftBarButton(backBtn, animated: true)
+    }
+    
+    @objc func backButton(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func deviceTypeButtonAction(_ sender: Any) {
@@ -81,6 +142,7 @@ class AddDeviceScreen: UIViewController {
     }
     
     @IBAction func addDeviceButtonAction(_ sender: Any) {
+         self.view.endEditing(true)
         if nameTxt.text?.count == 0 {
             self.ShowALert(title: Constants.AddDeviceConstants.Name)
             return
@@ -100,103 +162,22 @@ class AddDeviceScreen: UIViewController {
         }
         
         if groupId.count > 0 {
-            self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetMemebersInGroup)
-        } else {
-            self.callCreateGroupApi()
+            self.memberName = nameTxt.text!
+            self.memberNumber = deviceNumberTxt.text!
+            self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetMemebersInGroup, groupId: groupId)
+        }else {
+            self.groupname = Constants.AddDeviceConstants.Individual+"+"+(self.deviceType.titleLabel?.text ?? "")
+            self.memberName = nameTxt.text!
+            self.memberNumber = deviceNumberTxt.text!
+            self.callCreateGroupApi(methodType: NetworkManager.Method.post.rawValue, isFromCreateGroup: false)
         }
     }
     
-    //    // API to add device details
-    //    func callAddDeviceApi() {
-    //        let deviceURL = URL(string: Constants.ApiPath.UserApisUrl + userid + Constants.ApiPath.AddDeviceUrl + ugsToken)!
-    //        let deviceDetails : [[String : String]] = [["mac": deviceNumberTxt.text ?? "","identifier": "imei","name": nameTxt.text ?? "","phone": ownerNumberTxt.text ?? ""]]
-    //        let flagDetails : [String : Bool] = ["isSkipAddDeviceToGroup" : false]
-    //        let deviceParams :  [String : Any] = ["devices" : deviceDetails, "flags": flagDetails]
-    //        DeviceService.shared.addAndGetDeviceDetails(with: deviceURL, parameters: deviceParams) { (result : (Result<DeviceModel, Error>)) in
-    //            switch result {
-    //            case .success(let deviceResponse):
-    //                print(deviceResponse)
-    //                self.ShowALertWithButtonAction(title: Constants.AddDeviceConstants.DeviceAddedSuccessfully)
-    //            case .failure(let error):
-    //                if type(of: error) == NetworkManager.ErrorType.self {
-    //                    DispatchQueue.main.async {
-    //                        self.ShowALertWithButtonAction(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-    //                    }
-    //                } else {
-    //                    DispatchQueue.main.async {
-    //                        self.ShowALertWithButtonAction(title: error.localizedDescription)
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
+    // MARK: UITextField Delegate
     
-    // Add member to group Api Call
-    func addMemberToGroupApi(notificationName : String) {
-        self.showActivityIndicator()
-        let addMemberUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl + "/" + self.groupId + Constants.ApiPath.CreateMultiple )!
-        let sessionParams : [String] = ["events"]
-        let groupParams : [String : Any] = ["name": nameTxt.text!,"phone" : self.deviceNumberTxt.text! ,"entities" : sessionParams]
-        let params : [String : Any] = ["consents" : [groupParams]]
-        GroupService.shared.addMemberToGroup(addMemberInGroupUrl:  addMemberUrl,parameters: params) { (result : Result<GroupMemberModel, Error>) in
-            switch result {
-            case .success(let groupResponse):
-                print(groupResponse)
-                DispatchQueue.main.async {
-                    self.hideActivityIndicator()
-                    NotificationCenter.default.post(name: Notification.Name(notificationName), object: nil)
-                    self.navigationController?.popViewController(animated: true)
-                }
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
-    
-    // Create Group Api Call
-    func callCreateGroupApi() {
-        self.showActivityIndicator()
-        let groupUrl : URL = URL(string: Constants.ApiPath.UserApisUrl + Utils.shared.getUserId() + Constants.ApiPath.CreateGroupUrl )!
-        let sessionParams : [String : Int64] = ["from" : Utils.shared.getFromEpochTime(), "to" : Utils.shared.getToEpochTime()]
-        let groupParams : [String : Any] = ["name" : Constants.AddDeviceConstants.Individual+"+"+(self.deviceType.titleLabel?.text ?? ""), "session" : sessionParams, "type" : "one_to_one"]
-        GroupService.shared.createGroup(createGroupUrl:  groupUrl, parameters: groupParams) { (result : Result<GroupModel, Error>) in
-            switch result {
-            case .success(let groupResponse):
-                self.groupId = groupResponse.groupData?.groupId ?? ""
-                if self.groupId.count > 0 {
-                    DispatchQueue.main.async {
-                        self.addMemberToGroupApi(notificationName: Constants.NotificationName.GetGroupList)
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Constants.ErrorMessage.Somethingwentwrong)
-                    }
-                }
-            case .failure(let error):
-                if type(of: error) == NetworkManager.ErrorType.self {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: Utils.shared.handleError(error: error as! NetworkManager.ErrorType))
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.hideActivityIndicator()
-                        self.ShowALert(title: error.localizedDescription)
-                    }
-                }
-            }
-        }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
     
     // Alert with button action
