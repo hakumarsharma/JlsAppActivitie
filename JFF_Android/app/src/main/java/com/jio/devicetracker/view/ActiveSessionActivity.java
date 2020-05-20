@@ -46,7 +46,6 @@ import com.jio.devicetracker.database.pojo.SearchEventData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
-import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -248,13 +247,12 @@ public class ActiveSessionActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    for (SearchEventResponse.Data data : mList) {
+                    if (! mList.isEmpty()) {
                         MapData mapData = new MapData();
-                        mapData.setLatitude(data.getLocation().getLat());
-                        mapData.setLongitude(data.getLocation().getLng());
+                        mapData.setLatitude(mList.get(0).getLocation().getLat());
+                        mapData.setLongitude(mList.get(0).getLocation().getLng());
                         mapData.setName(groupMemberName);
                         mapDataList.add(mapData);
-                        break;
                     }
                 }
                 Intent intent = new Intent(ActiveSessionActivity.this, MapsActivity.class);

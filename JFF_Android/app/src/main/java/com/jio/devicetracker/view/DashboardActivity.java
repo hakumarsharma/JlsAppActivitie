@@ -86,7 +86,6 @@ import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ApproveRejectConsentData;
 import com.jio.devicetracker.database.pojo.CreateGroupData;
-import com.jio.devicetracker.database.pojo.GenerateConsentTokenData;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
@@ -98,7 +97,6 @@ import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
 import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
 import com.jio.devicetracker.database.pojo.request.CreateGroupRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
-import com.jio.devicetracker.database.pojo.request.GenerateConsentTokenRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.RejectConsentRequest;
 import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
@@ -120,6 +118,7 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.TrackerDeviceListAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -393,7 +392,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private void addUsersInsideGroup(String groupId) {
         AddMemberInGroupData addMemberInGroupData = new AddMemberInGroupData();
         List<AddMemberInGroupData.Consents> consentList = new ArrayList<>();
-        if (isConsentButtonClicked && mGroupMemberList.size() > 0) {
+        if (isConsentButtonClicked && ! mGroupMemberList.isEmpty()) {
             for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
                 AddMemberInGroupData.Consents consents = new AddMemberInGroupData().new Consents();
                 List<String> mList = new ArrayList<>();
@@ -403,7 +402,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 consents.setName(groupMemberDataList.getName());
                 consentList.add(consents);
             }
-        } else if (isConsentButtonClickedForGroupMember && mGroupMemberList.size() > 0) {
+        } else if (isConsentButtonClickedForGroupMember && ! mGroupMemberList.isEmpty()) {
             for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
                 AddMemberInGroupData.Consents consents = new AddMemberInGroupData().new Consents();
                 List<String> mList = new ArrayList<>();
@@ -469,7 +468,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     // Gets called when app receives message
     @Override
     public void messageReceived(String message, String phoneNum) {
-        if (message != null || message != "") {
+        if (message != null || ! message.equalsIgnoreCase("")) {
+            System.out.println("Message is " + message);
 //            GroupRequestHandler.getInstance(this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
         }
     }
@@ -861,7 +861,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             return;
         } else {
             // If Group is selected for tracking
-            if (grpDataList.size() > 0) {
+            if (! grpDataList.isEmpty()) {
                 Util.getInstance().showProgressBarDialog(this);
                 SearchEventData searchEventData = new SearchEventData();
                 List<String> mList = new ArrayList<>();
@@ -897,7 +897,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 Util.alertDilogBox(Constant.LOCATION_NOT_FOUND, Constant.ALERT_TITLE, DashboardActivity.this);
             } else {
                 List<SearchEventResponse.Data> mList = searchEventResponse.getData();
-                if (grpDataList.size() > 0) {
+                if (! grpDataList.isEmpty()) {
                     List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(grpDataList.get(0).getGroupId());
                     for (SearchEventResponse.Data data : mList) {
                         for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
@@ -914,19 +914,18 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                         }
                     }
                 } else {
-                    for (SearchEventResponse.Data data : mList) {
+                    if (! mList.isEmpty()) {
                         MapData mapData = new MapData();
-                        mapData.setLatitude(data.getLocation().getLat());
-                        mapData.setLongitude(data.getLocation().getLng());
+                        mapData.setLatitude(mList.get(0).getLocation().getLat());
+                        mapData.setLongitude(mList.get(0).getLocation().getLng());
                         mapData.setName(groupMemberName);
                         mapDataList.add(mapData);
-                        break;
                     }
                 }
                 if (!mapDataList.isEmpty() && grpMemberDataList.size() == mapDataList.size()) {
                     counter = 0;
                     goToMapActivity();
-                } else if (!mapDataList.isEmpty() && grpDataList.size() > 0) {
+                } else if (!mapDataList.isEmpty() && ! grpDataList.isEmpty()) {
                     counter = 0;
                     goToMapActivity();
                 } else {
@@ -1294,7 +1293,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
             if (!listPermissionsNeeded.isEmpty()) {
                 ActivityCompat.requestPermissions(this,
-                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
+                        listPermissionsNeeded.toArray(new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
             }
         } else {
             getCurrentLocation();
@@ -1306,7 +1305,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        int permissionLocation = ContextCompat.checkSelfPermission(DashboardActivity.this,
+        int permissionLocation = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
             getCurrentLocation();
@@ -1322,7 +1321,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private Location getCurrentLocation() {
         if (googleApiClient != null) {
             if (googleApiClient.isConnected()) {
-                int permissionLocation = ContextCompat.checkSelfPermission(DashboardActivity.this,
+                int permissionLocation = ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
                     currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
@@ -1334,7 +1333,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                             .addLocationRequest(locationRequest);
                     builder.setAlwaysShow(true);
                     LocationServices.FusedLocationApi
-                            .requestLocationUpdates(googleApiClient, locationRequest, DashboardActivity.this, Looper.getMainLooper());
+                            .requestLocationUpdates(googleApiClient, locationRequest, this, Looper.getMainLooper());
                     PendingResult<LocationSettingsResult> result =
                             LocationServices.SettingsApi
                                     .checkLocationSettings(googleApiClient, builder.build());
@@ -1392,18 +1391,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }
         }
         for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
-            GroupMemberDataList data = new GroupMemberDataList();
             if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
-                    && (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(userId))
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(userId)
                     && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
                 count++;
             }
         }
-        if (count > 10) {
-            return true;
-        } else {
-            return false;
-        }
+        return count > 10;
     }
 
     /**
@@ -1432,7 +1426,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
             GroupMemberDataList data = new GroupMemberDataList();
             if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
-                    && (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(userId))
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(userId)
                     && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)
                     && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXITED)) {
                 data.setName(groupMemberDataList.getName());

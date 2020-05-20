@@ -38,7 +38,7 @@ public class MapData implements Parcelable {
     }
 
     public MapData () {
-
+        // Empty constructor
     }
 
     public static final Creator<MapData> CREATOR = new Creator<MapData>() {

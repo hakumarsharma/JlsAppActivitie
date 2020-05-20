@@ -39,7 +39,6 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.DashboardActivity;
 
 import java.util.List;
@@ -51,9 +50,8 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     private List mData;
     private static RecyclerViewClickListener itemListener;
-    private int count;
     private int groupCount;
-    private static Context mContext;
+    private Context mContext;
 
     /**
      * Constructor to add devices in home screen
@@ -64,6 +62,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
         this.mData = mData;
         this.mContext = mContext;
     }
+
 
     /**
      * Binds the given View to the position

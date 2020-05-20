@@ -54,8 +54,6 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.GenerateLoginTokenData;
 import com.jio.devicetracker.database.pojo.GenerateTokenData;
-import com.jio.devicetracker.database.pojo.GroupMemberDataList;
-import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.LoginUserdata;
 import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateLoginTokenRequest;
@@ -63,7 +61,6 @@ import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
 import com.jio.devicetracker.database.pojo.response.AddDeviceResponse;
 import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
-import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
@@ -305,7 +302,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // Verify and assign API Call if number is not already added on server
             if(mDbManager.getAdminLoginDetail() != null && mDbManager.getAdminLoginDetail().getPhoneNumber() != null
                     && logindetailResponse.getData().getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())) {
-                // To do
+                System.out.println("Already added device it is");
             } else {
                 makeVerifyAndAssignAPICall();
             }
@@ -389,7 +386,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void messageReceived(String message, String phoneNum) {
         if (message.contains(Constant.OTP_MESSAGE) && loginOtpEditText != null) {
-            loginOtpEditText.setText(message.substring(message.indexOf("token") + 6, message.indexOf("for") - 1));
+            loginOtpEditText.setText(message.substring(message.indexOf("OTP") + 6, message.indexOf("for") - 1));
         }
     }
 
