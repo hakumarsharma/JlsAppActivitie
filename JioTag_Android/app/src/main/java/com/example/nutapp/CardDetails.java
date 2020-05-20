@@ -47,7 +47,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -95,7 +94,6 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
     boolean m_firstTimeDeviceSwitch = true;
     boolean is_auto_reconnect=true;
     private ImageButton menuOption;
-    private ImageView close;
     private RelativeLayout editDeleteLayout;
 
 
@@ -535,14 +533,14 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
         m_connectDisconnectDialogp = new ProgressDialog(this);
         m_handler = new Handler();
         Intent receiveIntent = this.getIntent();
-        Boolean SHAREDFLAG = receiveIntent.getBooleanExtra("ShareFlag",false);
+        Boolean shareFlag = receiveIntent.getBooleanExtra("ShareFlag",false);
         position_nut_val = receiveIntent.getIntExtra("POSITION_NUT", 0);
         ADDRRESS = receiveIntent.getStringExtra("ADDRRESS");
         LOCADDRRESS = receiveIntent.getStringExtra("LOCATION");
         STATUS = receiveIntent.getStringExtra("STATUS");
        // Log.d("STATUSS", STATUS);
         String statusVal = "";
-        if(SHAREDFLAG){
+        if(shareFlag){
             sharetagNumber.setVisibility(View.VISIBLE);
         }
 
@@ -895,6 +893,9 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
             case R.id.close:
                 editDeleteLayout.setVisibility(View.GONE);
                 menuOption.setVisibility(View.VISIBLE);
+                break;
+
+            default:
                 break;
 
         }

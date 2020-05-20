@@ -41,6 +41,9 @@ public class UserProfileUpdateActivity extends Activity implements View.OnClickL
                 Intent intentHome = new Intent(this,MainActivity.class);
                 startActivity(intentHome);
                 break;
+
+            default:
+                break;
         }
 
     }

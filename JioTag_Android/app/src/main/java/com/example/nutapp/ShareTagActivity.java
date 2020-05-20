@@ -11,15 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
 
 import com.example.nutapp.util.JioConstant;
 
-import org.w3c.dom.Text;
 
 public class ShareTagActivity extends Activity implements View.OnClickListener {
     private EditText contactNumber;
@@ -48,6 +45,9 @@ public class ShareTagActivity extends Activity implements View.OnClickListener {
             case R.id.share_btn:
                  gotoSharetagSuccessActivity();
                 break;
+
+            default:
+                break;
         }
     }
 
@@ -55,24 +55,6 @@ public class ShareTagActivity extends Activity implements View.OnClickListener {
 
         Intent intent = new Intent(this,ShareTagSuccessActivity.class);
         startActivity(intent);
-    }
-
-    private void addContactNumber() {
-        //Uri contactData = data.getData();
-        ContentResolver resolver = getContentResolver();
-        Cursor cursor = resolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-        cursor.moveToFirst();
-        String id = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
-        String hasPhone = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-        if ("1".equalsIgnoreCase(hasPhone)) {
-            Cursor phones = getContentResolver().query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
-                    null, null);
-            phones.moveToFirst();
-            String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            contactNumber.setText(number);
-        }
     }
 
     @Override

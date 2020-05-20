@@ -22,9 +22,7 @@ import java.util.List;
 
 public class UserDetailNavigationActivity extends Activity implements View.OnClickListener {
 
-    private RecyclerView deviceList;
     List<ShareDeviceData> mList;
-    private ShareDeviceDetailsAdapter adapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +36,10 @@ public class UserDetailNavigationActivity extends Activity implements View.OnCli
         shareDeviceText.setTypeface(JioUtils.mTypeface(this,3));
         mList = new ArrayList<>();
         addDeviceData();
-        deviceList = findViewById(R.id.shareDeviceList);
+        RecyclerView deviceList = findViewById(R.id.shareDeviceList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         deviceList.setLayoutManager(linearLayoutManager);
-        adapter = new ShareDeviceDetailsAdapter(mList);
+        ShareDeviceDetailsAdapter adapter = new ShareDeviceDetailsAdapter(mList);
         deviceList.setAdapter(adapter);
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
@@ -80,6 +78,8 @@ public class UserDetailNavigationActivity extends Activity implements View.OnCli
                 Intent intentHome = new Intent();
                 setResult(JioUtils.HOME_KEY, intentHome);
                 finish();
+                break;
+            default:
                 break;
         }
 

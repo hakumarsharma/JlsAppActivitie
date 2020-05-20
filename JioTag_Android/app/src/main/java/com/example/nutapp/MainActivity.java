@@ -26,11 +26,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +38,6 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -54,9 +51,6 @@ import androidx.navigation.ui.NavigationUI;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     boolean m_isLocOn=false;
-    private ImageView profileIcn;
-    private ImageView backDrawer;
-    private ActionBarDrawerToggle toggle;
     private DrawerLayout drawerLayout;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -114,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         title.setText(JioConstant.JIO_TAG_TITLE);
         title.setTypeface(JioUtils.mTypeface(this,5));
         setSupportActionBar(toolbar);
-        toggle = new ActionBarDrawerToggle(
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.drawerOpen, R.string.drawerClose);
         toggle.setDrawerIndicatorEnabled(false);
 
@@ -156,8 +150,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setNavigationData() {
         NavigationView navigationView = findViewById(R.id.nv);
         View header = navigationView.getHeaderView(0);
-        profileIcn = header.findViewById(R.id.profileIcon);
-        backDrawer = header.findViewById(R.id.back);
+        ImageView profileIcn = header.findViewById(R.id.profileIcon);
+        ImageView backDrawer = header.findViewById(R.id.back);
         backDrawer.setOnClickListener(this);
         profileIcn.setOnClickListener(this);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -193,10 +187,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.navigation_header:
                         gotoUserNavigationActivity();
                         break;
-
-
                     default:
-                        return true;
+                        break;
                 }
                 return true;
             }
@@ -256,6 +248,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.back:
                 drawerLayout.closeDrawers();
+                break;
+
+            default:
                 break;
 
 
