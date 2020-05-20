@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -29,7 +27,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /************ Response of Search Device Status to get lat and long ************/
-public class SearchDeviceStatusResponse implements Serializable {
+public class SearchEventResponse implements Serializable {
     @SerializedName("code")
     private int code;
     @SerializedName("message")
@@ -62,11 +60,58 @@ public class SearchDeviceStatusResponse implements Serializable {
     }
 
     public class Data implements Serializable {
+        @SerializedName("_id")
+        private String id;
         @SerializedName("device")
-        private Device device;
-
+        private String device;
+        @SerializedName("sessionGroup")
+        private String sessionGroup;
+        @SerializedName("groupId")
+        private String groupId;
         @SerializedName("location")
         private Location location;
+        @SerializedName("parentId")
+        private String userId;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getDevice() {
+            return device;
+        }
+
+        public void setDevice(String device) {
+            this.device = device;
+        }
+
+        public String getSessionGroup() {
+            return sessionGroup;
+        }
+
+        public void setSessionGroup(String sessionGroup) {
+            this.sessionGroup = sessionGroup;
+        }
+
+        public String getGroupId() {
+            return groupId;
+        }
+
+        public void setGroupId(String groupId) {
+            this.groupId = groupId;
+        }
 
         public Location getLocation() {
             return location;
@@ -75,79 +120,38 @@ public class SearchDeviceStatusResponse implements Serializable {
         public void setLocation(Location location) {
             this.location = location;
         }
+    }
 
-        public Device getDevice() {
-            return device;
+    public class Location implements Serializable {
+        @SerializedName("lat")
+        private Double lat;
+        @SerializedName("lng")
+        private Double lng;
+        @SerializedName("_id")
+        private String id;
+
+        public String getId() {
+            return id;
         }
 
-        public void setDevice(Device device) {
-            this.device = device;
+        public void setId(String id) {
+            this.id = id;
         }
 
-        public class Device implements Serializable {
-            @SerializedName("_id")
-            private String id;
-            @SerializedName("name")
-            private String name;
-            @SerializedName("imei")
-            private String imei;
-            @SerializedName("phone")
-            private String phone;
-
-            public String getId() {
-                return id;
-            }
-
-            public void setId(String id) {
-                this.id = id;
-            }
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public String getImei() {
-                return imei;
-            }
-
-            public void setImei(String imei) {
-                this.imei = imei;
-            }
-
-            public String getPhone() {
-                return phone;
-            }
-
-            public void setPhone(String phone) {
-                this.phone = phone;
-            }
+        public Double getLat() {
+            return lat;
         }
 
-        public class Location implements Serializable {
-            @SerializedName("lat")
-            private Double lat;
-            @SerializedName("lng")
-            private Double lng;
+        public void setLat(Double lat) {
+            this.lat = lat;
+        }
 
-            public Double getLat() {
-                return lat;
-            }
+        public Double getLng() {
+            return lng;
+        }
 
-            public void setLat(Double lat) {
-                this.lat = lat;
-            }
-
-            public Double getLng() {
-                return lng;
-            }
-
-            public void setLng(Double lng) {
-                this.lng = lng;
-            }
+        public void setLng(Double lng) {
+            this.lng = lng;
         }
     }
 }

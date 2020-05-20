@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -54,6 +52,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
@@ -61,7 +60,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Implementation of MapScreen to show the tracee's live location in map .
@@ -75,7 +73,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @SuppressWarnings("PMD.AvoidStringBufferField")
     private static StringBuilder strAddress = null;
     private static Context context = null;
-    Map<String, Map<Double, Double>> namingMap = null;
+    private List<MapData> mapDataList;
 
     @SuppressLint("ObsoleteSdkInt")
     @Override
@@ -89,7 +87,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         title.setText(Constant.MAP_TITLE);
         createNotificationChannel();
         context = this;
-
+        mapDataList = getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         if (mMap != null) {
             mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this));
         }
@@ -114,31 +112,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Call back method to load the map on screen
+     *
      * @param googleMap
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
-        namingMap = DashboardActivity.namingMap;
         int i = 0;
         List<Float> mapColorList = createColoredMapList();
-        if (!namingMap.isEmpty() && strAddress != null) {
-            for (Map.Entry<String, Map<Double, Double>> entry : namingMap.entrySet()) {
+        if (!mapDataList.isEmpty() && strAddress != null) {
+            for (MapData mapData : mapDataList) {
                 MarkerOptions markerOptions = new MarkerOptions();
-                for (Map.Entry<Double, Double> mapEntry : entry.getValue().entrySet()) {
-                    LatLng latLng = new LatLng(mapEntry.getKey(), mapEntry.getValue());
-                    markerOptions.position(latLng);
-                    markerOptions.title(entry.getKey());
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(mapColorList.get(i)));
-                    markerOptions.snippet(getAddressFromLocation(mapEntry.getKey(), mapEntry.getValue()));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
-                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                    mMap.addMarker(markerOptions);
-                    if (context != null) {
-                        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(context));
-                    }
+                LatLng latLng = new LatLng(mapData.getLatitude(), mapData.getLongitude());
+                markerOptions.position(latLng);
+                markerOptions.title(mapData.getName());
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(mapColorList.get(i)));
+                markerOptions.snippet(getAddressFromLocation(mapData.getLatitude(), mapData.getLongitude()));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                mMap.addMarker(markerOptions);
+                if (context != null) {
+                    mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(context));
                 }
+                // To show different color of pin drop on Map for different-different user
                 if (i < 10) {
                     i++;
                 } else {
@@ -151,6 +148,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Adds 10 color in list, so that we could be able to display
      * different marker with different color
+     *
      * @return List of available colors
      */
     private List<Float> createColoredMapList() {
@@ -170,6 +168,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Returns real address based on Lat and Long(Geo Coding)
+     *
      * @param latitude
      * @param longitude
      * @return
@@ -192,6 +191,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Called when you click on Markers, Markers will display the full address
+     *
      * @param marker
      */
     @Override

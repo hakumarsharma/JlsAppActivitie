@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
         <activity android:name=".view.GroupNameActivity" />
-        <activity android:name=".view.TrackerListActivity"></activity>
+        <activity android:name=".view.ActiveMemberActivity" />
         <activity android:name=".view.RefreshIntervalSettingActivity" />
 
         <service
@@ -46,7 +46,7 @@
                 <data
                     android:host="peopletracker"
                     android:pathPrefix="/home"
-                    android:scheme="https"/>
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <!--
@@ -64,35 +64,13 @@
         <activity android:name=".view.DashboardActivity">
             <intent-filter android:label="@string/title_activity_maps">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
                 <data
-                    android:host="peopletracker"
-                    android:pathPrefix="/YesPeopleTracker"
+                    android:host="stg.borqs.io"
                     android:scheme="https" />
                 <!-- note that the leading "/" is required for pathPrefix -->
-            </intent-filter>
-            <intent-filter android:label="@string/title_activity_maps">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-                <data
-                    android:host="peopletracker"
-                    android:pathPrefix="/NoPeopleTracker"
-                    android:scheme="https" />
-                <!-- note that the leading "/" is required for pathPrefix -->
-            </intent-filter>
-            <intent-filter>
-                <data
-                    android:host="www.example.com"
-                    android:scheme="https" />
-                <data
-                    android:host="open.my.app"
-                    android:scheme="app" />
             </intent-filter>
         </activity>
         <activity
@@ -112,9 +90,6 @@
             android:label="@string/map_name" />
         <activity
             android:name=".view.PrivacyPolicyActivity"
-            android:label="@string/map_name" />
-        <activity
-            android:name=".view.BorqsTokenActivity"
             android:label="@string/map_name" />
         <activity
             android:name=".view.RegistrationActivity"

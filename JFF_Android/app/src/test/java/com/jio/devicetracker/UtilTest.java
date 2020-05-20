@@ -102,13 +102,13 @@ public class UtilTest{
 
     @Test
     public void convertTimeToEpochtime() {
-        long epochTime = Util.convertTimeToEpochtime();
+        long epochTime = Util.getInstance().convertTimeToEpochtime();
         assertNotNull(epochTime);
     }
 
     @Test
     public void getTimeEpochFormatAfterCertainTime() {
-        long epochTimeAfterTimeInterval = Util.getTimeEpochFormatAfterCertainTime(15);
+        long epochTimeAfterTimeInterval = Util.getInstance().getTimeEpochFormatAfterCertainTime(15);
         assertNotNull(epochTimeAfterTimeInterval);
     }
 

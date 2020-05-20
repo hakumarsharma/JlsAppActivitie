@@ -28,11 +28,124 @@ package com.jio.devicetracker.database.pojo;
 public class GroupMemberDataList {
     private String name;
     private String number;
-    private int profileImage;
-    private String groupName;
     private String consentStatus;
-    private String lat;
-    private String lng;
+    private int profileImage;
+    private String consentId;
+    private boolean isGroupAdmin;
+    private String groupId;
+    private String userId;
+    private String deviceId;
+    private boolean isSelected;
+    private Long from;
+    private Long to;
+    private String groupStatus;
+    private String groupOwnerName;
+    private String groupOwnerNumber;
+    private String groupOwnerUserId;
+
+    public String getGroupOwnerNumber() {
+        return groupOwnerNumber;
+    }
+
+    public void setGroupOwnerNumber(String groupOwnerNumber) {
+        this.groupOwnerNumber = groupOwnerNumber;
+    }
+
+    public String getGroupOwnerUserId() {
+        return groupOwnerUserId;
+    }
+
+    public void setGroupOwnerUserId(String groupOwnerUserId) {
+        this.groupOwnerUserId = groupOwnerUserId;
+    }
+
+    public String getGroupOwnerName() {
+        return groupOwnerName;
+    }
+
+    public void setGroupOwnerName(String groupOwnerName) {
+        this.groupOwnerName = groupOwnerName;
+    }
+
+    public String getGroupStatus() {
+        return groupStatus;
+    }
+
+    public void setGroupStatus(String groupStatus) {
+        this.groupStatus = groupStatus;
+    }
+
+    public Long getFrom() {
+        return from;
+    }
+
+    public void setFrom(Long from) {
+        this.from = from;
+    }
+
+    public Long getTo() {
+        return to;
+    }
+
+    public void setTo(Long to) {
+        this.to = to;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public boolean isGroupAdmin() {
+        return isGroupAdmin;
+    }
+
+    public void setGroupAdmin(boolean groupAdmin) {
+        isGroupAdmin = groupAdmin;
+    }
+
+    public String getConsentId() {
+        return consentId;
+    }
+
+    public void setConsentId(String consentId) {
+        this.consentId = consentId;
+    }
+
+    public int getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(int profileImage) {
+        this.profileImage = profileImage;
+    }
 
     public String getName() {
         return name;
@@ -50,43 +163,11 @@ public class GroupMemberDataList {
         this.number = number;
     }
 
-    public int getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(int profileImage) {
-        this.profileImage = profileImage;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
     public String getConsentStatus() {
         return consentStatus;
     }
 
     public void setConsentStatus(String consentStatus) {
         this.consentStatus = consentStatus;
-    }
-
-    public String getLat() {
-        return lat;
-    }
-
-    public void setLat(String lat) {
-        this.lat = lat;
-    }
-
-    public String getLng() {
-        return lng;
-    }
-
-    public void setLng(String lng) {
-        this.lng = lng;
     }
 }

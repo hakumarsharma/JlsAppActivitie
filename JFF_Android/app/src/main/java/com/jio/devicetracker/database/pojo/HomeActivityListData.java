@@ -26,9 +26,7 @@ public class HomeActivityListData {
 
     private String name;
     private String number;
-    private boolean isGroupMember;
     private String phoneNumber;
-    private String relation;
     private String imeiNumber;
     private String lat;
     private String lng;
@@ -39,10 +37,89 @@ public class HomeActivityListData {
     private String relationWithName;
     private String deviceType;
     private String groupName;
-    public int isCreated;
     private String deviceId;
-    private String GroupId;
+    private String groupId;
     private String status;
+    private int profileImage;
+    private String createdBy;
+    private String updatedBy;
+    private Long from;
+    private Long to;
+    private String groupOwnerName;
+    private String groupOwnerUserId;
+    private String groupOwnerPhoneNumber;
+
+    public String getGroupOwnerName() {
+        return groupOwnerName;
+    }
+
+    public void setGroupOwnerName(String groupOwnerName) {
+        this.groupOwnerName = groupOwnerName;
+    }
+
+    public String getGroupOwnerUserId() {
+        return groupOwnerUserId;
+    }
+
+    public void setGroupOwnerUserId(String groupOwnerUserId) {
+        this.groupOwnerUserId = groupOwnerUserId;
+    }
+
+    public String getGroupOwnerPhoneNumber() {
+        return groupOwnerPhoneNumber;
+    }
+
+    public void setGroupOwnerPhoneNumber(String groupOwnerPhoneNumber) {
+        this.groupOwnerPhoneNumber = groupOwnerPhoneNumber;
+    }
+
+    public Long getFrom() {
+        return from;
+    }
+
+    public void setFrom(Long from) {
+        this.from = from;
+    }
+
+    public Long getTo() {
+        return to;
+    }
+
+    public void setTo(Long to) {
+        this.to = to;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public int getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(int profileImage) {
+        this.profileImage = profileImage;
+    }
 
     public String getStatus() {
         return status;
@@ -52,28 +129,12 @@ public class HomeActivityListData {
         this.status = status;
     }
 
-    public String getGroupId() {
-        return GroupId;
-    }
-
-    public void setGroupId(String groupId) {
-        GroupId = groupId;
-    }
-
     public String getDeviceId() {
         return deviceId;
     }
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
-    }
-
-    public int getIsCreated() {
-        return isCreated;
-    }
-
-    public void setIsCreated(int isCreated) {
-        this.isCreated = isCreated;
     }
 
     public String getDeviceType() {
@@ -96,14 +157,6 @@ public class HomeActivityListData {
         return number;
     }
 
-    public boolean isGroupMember() {
-        return isGroupMember;
-    }
-
-    public void setGroupMember(boolean groupMember) {
-        isGroupMember = groupMember;
-    }
-
     public void setNumber(String number) {
         this.number = number;
     }
@@ -114,14 +167,6 @@ public class HomeActivityListData {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getRelation() {
-        return relation;
-    }
-
-    public void setRelation(String relation) {
-        this.relation = relation;
     }
 
     public String getImeiNumber() {

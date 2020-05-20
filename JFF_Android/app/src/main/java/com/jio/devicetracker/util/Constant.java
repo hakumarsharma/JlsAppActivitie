@@ -65,7 +65,7 @@ public class Constant {
     public static final String INVALID_OTP = "Invalid OTP Provided";
     public static final String OTP_SENT = "OTP sent.";
     public static final String SMS_SEND_FAILED = "SMS failed, please try again.";
-    public static final String OTP_MESSAGE = "PeopleTracker OTP :";
+    public static final String OTP_MESSAGE = "Hi, please use this OTP ";
     public static final String PHONE_VALIDATION = "Phone number cannot be left empty!";
     public static final String MOBILE_NETWORKCHECK = "Please use your mobile data";
     public static final String JIO_NUMBER = "Please use Jio number";
@@ -74,22 +74,51 @@ public class Constant {
     public static final String DEVICE_JIONUMBER = "Please use Jio number in SIM slot 1 to operate this application";
     public static final String REGISTRAION_ALERT_409 = "User is already registered";
     public static final String REGISTRAION_FAILED = "Register failed ,Please contact your admin";
-    public static final String LOCATION_NOT_FOUND = "Location not found";
+    public static final String LOCATION_NOT_FOUND = "Location not found for the selected device.";
     public static final String TOKEN_SMS = "Hi, please use the token : ";
 
     // Dashboard Activity constants
     public static final String DASHBOARD_TITLE = "Home               ";
     public static final String DELETC_DEVICE = "Do you want to delete ?";
     public static final String CHOOSE_DEVICE = "Please select the number for tracking";
-    public static final String CONSENT_NOTAPPROVED = "Consent is not apporoved for phone number ";
+    public static final String CONSENT_NOT_APPROVED = "Consent is not apporoved for the selected phone number ";
     public static final String CONSENT_APPROVED = "Consent status is already approved for this number";
     public static final String FMS_SERVERISSUE = "FMS server is down please call back after some time";
     public static final String TOKEN_NULL = "Token is null";
     public static final String LOADING_DATA = "Please wait loading data...";
     public static final String GROUP_CREATION_FAILURE = "You have exceeded maximum allowed active groups, Please delete one of the group members to add any other group.";
     public static final String GROUP_UPDATION_FAILURE = "Group name updation failed";
+    public static final String INDIVIDUAL_USER_EDIT_FAILURE = "User name updation failed!, Please try again";
     public static final String NO_GROUP_FOUND = "No Group found, Please try again.";
+    public static final String REQUEST_CONSENT_FAILED = "Request consent failed, Please try again.";
     public static final String GROUP_DELETION_FAILURE = "Group Deletion failed";
+    public static final String ACTIVE = "active";
+    public static final String ACTIVE_CAPS = "Active";
+    public static final String  SCHEDULED = "scheduled";
+    public static final String SCHEDULED_CAPS = "Scheduled";
+    public static final String APPROVED = "approved";
+    public static final String REJECTED = "rejected";
+    public static final String COMPLETED = "completed";
+    public static final String EXIT_FROM_GROUP_FAILURE = "Exit from group failed, Please try again!";
+    public static final String REMOVE_FROM_GROUP_FAILURE = "Remove from group failed, Please try again!";
+    public static final String EXIT_FROM_GROUP_SUCCESS = "Sucessfully exited from Group!";
+    public static final String REMOVE_FROM_GROUP_SUCCESS = "Sucessfully removed from the Group!";
+    public static final String ADDING_INDIVIDUAL_USER_FAILED = "Adding individual user failed, Please try again!";
+    public static final String GROUP_MEMBER_CLASS_NAME = "com.jio.devicetracker.database.pojo.GroupMemberDataList";
+    public static final String GET_GROUP_INFO_PER_USER_ERROR = "Unable to retrieve information from server, please try gain!";
+    public static final String GROUP_NAME_CLASS_NAME = "com.jio.devicetracker.database.pojo.HomeActivityListData";
+    public static final String GROUP = "group";
+    public static final String INDIVIDUAL_MEMBER = "individualMember";
+    public static final String IS_GROUP_MEMBER = "isGroupMember";
+    public static final String LOCATION = "location";
+    public static final String SOS = "sos";
+    public static final String CONSENT_ID = "consentId";
+    public static final String SELECTION_ERROR = "You cannot track individual user and group at the same time, Please select one of them to track.";
+    public static final String NO_EVENTS_FOUND_RESPONSE = "No events found matching the search keys.";
+    public static final String FETCH_LOCATION_ERROR = "Unable to get location, Please try again!";
+    public static final String GROUP_NOT_ACTIVE = "Group is scheduled, please wait until it doesn't become active";
+    public static final String SESSION_COMPLETED = "Please request consent to track the group members";
+    public static final String CONSENT_PENDING_STATUS= "Consent is pending, please ask the user to accept consent for tracking";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
@@ -98,6 +127,7 @@ public class Constant {
     public static final String EMAIL_VALIDATION = "Please provide the correct Email Id!";
     public static final String LOGIN_VALIDATION = "Please enter correct email and password";
     public static final String GENERATE_TOKEN_SUCCESS = "Token generated successfully and sent to user.";
+    public static final String GENERATE_TOKEN_FAILURE = "Cannot generate token as your account is not yet activated. Please register the number first!";
     public static final String EMAIL_LOCKED = "Account is locked";
     public static final String VALID_USER = "Please enter valid user";
     public static final String PASSWORD_VALIDATION2 = "Password must have a minimum of 8 characters and a maximum of 16 characters. Also, must contain atleast one lowercase alphabet, one uppercase alphabet, one numeric and one special character";
@@ -106,6 +136,8 @@ public class Constant {
     public static final String ADMIN_EMAIL_ID = "Shivakumar.jagalur@ril.com";
     public static final String ADMIN_PASSWORD = "Ril@12345";
     public static final String BORQS_TOKEN_ACTIVITY_TITLE = "Token Verification";
+    public static final String RESEND_OTP = "Resend OTP";
+    public static final String REQUEST_OTP = "Request OTP";
 
     // New Device Activity Constants
     public static final String ADD_DEVICE_TITLE = "Add";
@@ -122,6 +154,8 @@ public class Constant {
     public static final String PROGRESSBAR_MSG = "Please wait adding device";
     public static final String PET_TRACKER_DEVICE_TYPE = "Pet Tracker";
     public static final String PEOPLE_TRACKER_DEVICE_TYPE = "People Tracker";
+    public static final String ADD_GROUP_MEMBER_INSTRUCTION1 = "* Click on + button to add member inside the group  ";
+    public static final String ADD_GROUP_MEMBER_INSTRUCTION2 = "\n* Once added go to Home screen, select the group  from list and click on Track button to know the location of group members";
 
     // MAPs Activity constants
     public static final String MAP_TITLE = "      Location";
@@ -132,6 +166,7 @@ public class Constant {
     public static final long FREQUENCY_FOR_LOCATION_UPDATE = 10;
     public static final long PRIORITY_BALANCED_POWER_ACCURACY = 10;
     public static final int EPOCH_TIME_DURATION = 15;
+    public static final String MAP_DATA = "Map_Data";
     // Forgot Activity
     public static final String FORGOT_TITLE = "Forgot password";
     public static final String RESET_TITLE = "Reset password";
@@ -142,7 +177,7 @@ public class Constant {
 
 
     //Rest API URL
-    public static final String LOGIN_URL = "/accounts/api/users/login?isResponseDataAsUser=true&isPopulateGroup=true&isPopulateGroupUsers=true&isPopulateUserDevices=true&isPopulateUserDevicesAsWearableUsers=true";
+    public static final String LOGIN_URL = "/accounts/api/users/tokens/verify/login";
     public static final String REGISTRATION_TOKEN_URL = "/accounts/api/users/tokens";
     public static final String REGISTRATION_URL = "/accounts/api/users/register";
     public static final String FORGOT_PASS_URL = "/accounts/api/users/resetpassword";
@@ -157,14 +192,16 @@ public class Constant {
     public static final String GET_DEVICE_LOCATION_URL_2 = "?tsp=1585031229387&ugs_token=";
     public static final String REGISTRATION_URL_VERIFY = "/accounts/api/users/tokens/verify";
     public static final String GENERATE_TOKEN_REQUEST_URL = "/accounts/api/users/tokens";
-    public static final String CREATE_GROUP_URL1 = "/accounts/api/users/";
-    public static final String CREATE_GROUP_URL2 = "/sessiongroups";
-    public static final String GET_ALL_GROUP_INFO_URL1 = "/accounts/api/users/";
-    public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true";
-    public static final String UPDATE_GROUP_NAME_URL1 = "/accounts/api/users/";
-    public static final String UPDATE_GROUP_NAME_URL2 = "/sessiongroups/";
-    public static final String DELETE_GROUP_URL1 = "/accounts/api/users/";
-    public static final String DELETE_GROUP_URL2 = "/sessiongroups/";
+    public static final String GENERATE_LOGIN_TOKEN_REQUEST_URL = "/accounts/api/users/tokens/login";
+    public static final String ACCOUNTS_API_USER_URL = "/accounts/api/users/";
+    public static final String SESSION_GROUPS_URL = "/sessiongroups/";
+    public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true&isPopulateGroupOwner=true";
+    public static final String SESSION_GROUP_CONSENTS_URL = "/sessiongroupconsents";
+    public static final String SESSION_GROUP_CONSENTS_TOKEN_URL = "/sessiongroupconsents/tokens";
+    public static final String APPROVE_REJECT_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";
+    public static final String STATUS_URL = "/status";
+    public static final String SESSION_GROUP_CONSENTS_URL1 = "/sessiongroupconsents/";
+    public static final String GET_LOCATION_URL = "/events/search";
 
     //Privacy Policy
     public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
@@ -189,6 +226,10 @@ public class Constant {
     public static final String CONSENT_PENDING = "Consent Pending";
     public static final String REQUEST_CONSENT = "Request Consent";
     public static final String NUMBER_CARRIER = "number";
+    public static final String CONSENT_APPROVED_MESSAGE = "Thanks! you have approved the the group invitation request";
+    public static final String CONSENT_REJECTED_MESSAGE = "You have rejected the consent.";
+    public static final String CONSENT_NOT_APPROVED_MESSAGE = "Consent is not approved please try gain!";
+    public static final String CONSENT_NOT_REJECTED_MESSAGE = "Consent rejection failed!";
     public static final String CONSENT_STATUS_MSG = "Yes JioTracker";
     public static final String CONSENT_MSG_SENT = "Consent sent";
     public static final String CONSENT_MSG_TO_TRACKEE = " wants to track your location. Click below link to reply. https://peopletracker/home?data=";
@@ -212,6 +253,8 @@ public class Constant {
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";
     public static final String GROUP_ID = "groupId";
+    public static final String GROUPNAME = "groupName";
+    public static final String QR_CODE_VALUE = "QRCodeValue";
     public static final String ACTIVE_SESSION_TITLE = "Active Sessions";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";
@@ -225,11 +268,36 @@ public class Constant {
     public static final String REFRESH_INTERVAL_SETTING = "Settings";
     public static final String MAP_UPDATION_MSG = "Map will be updated after every ";
     public static final String PENDING = "Pending";
-    public static final String GROUP_LIMITATION = "You can't create more than two groups, please add it as a individual trackee";
-    public static final String USER_LIMITATION = "You can't add more than ten individual users";
+    public static final String USER_LIMITATION = "You cannot create more than ten individual user and groups";
     public static final String GROUP_NAME_VALIDATION_ERROR = "Group name cannot be left empty";
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
+    public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member in a group, Please try again!";
+    public static final String DEVICE_NOT_FOUND = "Device not found, Please try again!";
+    public static final String REMOVE = "Remove";
+    public static final String EXIT = "Exit";
+    public static final String SESSION_GROUPS = "sessiongroups";
+    public static final String TRACK = "Track";
+    public static final String EXITED = "exited";
+    public static final String BEARER = "bearer ";
+    public static final String MEDIA_TYPE = "text/plain";
+    public static final String APPLICATION_JSON = "application/json";
+    public static final String REMOVED = "removed";
+    public static final String USER_ID= "userId";
+    public static final String OK = "OK";
+    public static final String CANCEL = "Cancel";
+    public static final String CREATED_BY = "createdBy";
+    public static final String UPDATED_BY = "updatedBy";
+    public static final String EVENTS = "events";
+    public static final String ONE_TO_ONE = "one_to_one";
+    public static final String INDIVIDUAL_USER_GROUP_NAME = "Individual+People Tracker";
+    public static final String IS_COMING_FROM_ADD_DEVICE = "isComingFromAddDevice";
+    public static final String IS_COMING_FROM_ADD_CONTACT = "isComingFromAddContact";
+    public static final String IS_COMING_FROM_GROUP_LIST = "isComingFromGroupList";
+    public static final String IS_COMING_FROM_CONTACT_LIST = "isComingFromContactList";
+    public static final String CLOSED = "closed";
+
+
 
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";

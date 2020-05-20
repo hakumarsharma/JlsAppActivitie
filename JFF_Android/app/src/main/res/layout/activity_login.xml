@@ -87,6 +87,17 @@
                 android:textColor="#000000"
                 android:textCursorDrawable="@color/colorLogin" />
 
+            <TextView
+                android:id="@+id/requestOTP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/loginOtp"
+                android:layout_marginLeft="115dp"
+                android:layout_marginTop="7dp"
+                android:layout_toRightOf="@+id/newUserText"
+                android:text="@string/request_otp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp" />
 
             <Button
                 android:id="@+id/login"
@@ -94,10 +105,9 @@
                 android:layout_height="50dp"
                 android:layout_below="@id/loginOtp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
                 android:background="@drawable/selector"
                 android:text="Continue" />
-
 
 
             <TextView
@@ -114,14 +124,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/register_here"
-                android:id="@+id/registedHere"
+                android:id="@+id/registerHere"
                 android:layout_below="@+id/login"
                 android:layout_marginTop="15dp"
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/colorPrimaryDark"
                 android:layout_toRightOf="@+id/newUserText"
-                android:textSize="15sp"
-                />
+                android:textSize="15sp" />
 
         </RelativeLayout>
 

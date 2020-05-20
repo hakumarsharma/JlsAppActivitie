@@ -8,12 +8,15 @@
     <string name="loginSubText">Login/Sign up</string>
     <string name="title_activity_login">Login</string>
     <string name="register_here"> <b>Register Here</b></string>
+    <string name="request_otp"><u>Request OTP</u></string>
     <string name="forget_password"> <b>Click Here</b></string>
     <string name="pagerindicater">&amp;#9673;</string>
     <string name="Open">Open</string>
     <string name="Close">Close</string>
     <string name="instruction">* \t  Click on + icon to add details of device (associated with a person/pet), or to create a group of devices to be tracked. \n* \t Select Add Device or Add Person accordingly. \n* \t Device details may be entered manually or using QR code scanner. Person details may be addded manually or by selecting the contact from contacts. After adding the device/person/group, click on \"Request consent\" to obtain consent approval from the device/person. \n* \t After consent approval is received from the device/person over SMS, select the device/person from the  list and click on \"Track\" to start tracking.</string>
-    <string name="message">Are you sure, do you want the user track your location.</string>
+    <string name="instructionOnActiveSession">* \t  No active member/group found.\n* \t Please add member as a group/individual to view them in active session.</string>
+    <string name="instructionOnActiveMember">No active member found for this group. Please add member to view them in group.</string>
+    <string name="message">Are you sure, do you want user to track your location ?</string>
     <string name="termcondition">Jio Friends and Family helps you to track the Jio devices which has data in portal. This application will display the location information completely along with address details and pin drop of location on map to identify the details easily.\n \nDevice which has the application will always send current location details and this can be done once the location permissions are accepted when you launch the application.\n \nTo track device we need to take approval from the person who is using the device once that is approved then we can track the device.\n \nLocation permissions and SMS permissions are mandatory to use this application.\n \nPlease agree the terms and conditions.</string>
     <string name="refresh_inteval_textview">Location refresh interval</string>
     <string name="device_type">Device Type</string>
@@ -30,8 +33,7 @@
     <string name="foreground_service_channel">Foreground Service Channel</string>
     <string name="notification_subtitle">Track friends and family</string>
     <string name="customintent">custom-intent</string>
-    <string name="yesjff">YesPeopleTracker</string>
-    <string name="nojff">NoPeopleTracker</string>
+    <string name="approveURI">https://stg.borqs.io/fms-consent-status?consentId</string>
     <string name="channel_name">channel_name</string>
     <string name="channel_description">channel_description</string>
     <string name="device_imei">IMEI*</string>
@@ -41,8 +43,8 @@
 
 
     <string-array name="device_type_array">
-        <item>Pet Tracker</item>
         <item>People Tracker</item>
+        <item>Pet Tracker</item>
         <item>Device Tracker</item>
     </string-array>
 

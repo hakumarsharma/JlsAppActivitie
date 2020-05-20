@@ -20,55 +20,23 @@
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
  **************************************************************/
 
-
 package com.jio.devicetracker.database.pojo;
 
-public class TrackerListData {
+import com.google.gson.annotations.SerializedName;
 
-    private String name;
-    private String number;
-    private String durationTime;
-    private String expiryTime;
-    private int profileImage;
+import java.io.Serializable;
+import java.util.List;
 
-    public String getName() {
-        return name;
+public class SearchEventData implements Serializable {
+    @SerializedName("types")
+    private List<String> types;
+
+    public List<String> getTypes() {
+        return types;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getDurationTime() {
-        return durationTime;
-    }
-
-    public void setDurationTime(String durationTime) {
-        this.durationTime = durationTime;
-    }
-
-    public String getExpiryTime() {
-        return expiryTime;
-    }
-
-    public void setExpiryTime(String expiryTime) {
-        this.expiryTime = expiryTime;
-    }
-
-    public int getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(int profileImage) {
-        this.profileImage = profileImage;
+    public void setTypes(List<String> types) {
+        this.types = types;
     }
 
 }

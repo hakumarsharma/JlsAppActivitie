@@ -1,7 +1,5 @@
 /*************************************************************
- *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -22,44 +20,24 @@
 
 package com.jio.devicetracker.database.pojo;
 
-/**
- * Class, used to send data at the time of verification of token
- */
-public class VerifyTokenData {
-    private String token;
-    private String phone;
-    private String phoneCountryCode;
-    private String type;
+public class GenerateConsentTokenData {
+    private Consent consent;
 
-    public String getToken() {
-        return token;
+    public Consent getConsent() {
+        return consent;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setConsent(Consent consent) {
+        this.consent = consent;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPhoneCountryCode() {
-        return phoneCountryCode;
-    }
-
-    public void setPhoneCountryCode(String phoneCountryCode) {
-        this.phoneCountryCode = phoneCountryCode;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public class Consent {
+        private String phone;
+        public String getPhone() {
+            return phone;
+        }
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
     }
 }

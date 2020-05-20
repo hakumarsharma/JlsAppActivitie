@@ -21,18 +21,26 @@
 
 package com.jio.devicetracker.view.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
+import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.view.DashboardActivity;
+
 import java.util.List;
 
 /**
@@ -40,20 +48,25 @@ import java.util.List;
  */
 public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDeviceListAdapter.ViewHolder> {
 
-    private List<HomeActivityListData> mData;
+    private List mData;
     private static RecyclerViewClickListener itemListener;
-    private MultipleselectData mSelectData;
+    private int groupCount;
+    private Context mContext;
 
     /**
      * Constructor to add devices in home screen
+     *
      * @param mData
      */
-    public TrackerDeviceListAdapter(List<HomeActivityListData> mData) {
+    public TrackerDeviceListAdapter(List mData, Context mContext) {
         this.mData = mData;
+        this.mContext = mContext;
     }
+
 
     /**
      * Binds the given View to the position
+     *
      * @param parent
      * @param viewType
      * @return View Holder object
@@ -69,15 +82,150 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     /**
      * A new ViewHolder that holds a View of the given view type
+     *
      * @param holder
      * @param position
      */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        HomeActivityListData data = mData.get(position);
-        holder.mIconImage.setImageResource(R.drawable.ic_group_button);
-        holder.name.setText(mData.get(position).getGroupName());
-        holder.mConsentStatus.setVisibility(View.INVISIBLE);
+        if (mData.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_NAME_CLASS_NAME)) {
+            HomeActivityListData data = (HomeActivityListData) mData.get(position);
+            if (data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                holder.mIconImage.setImageResource(R.drawable.ic_user);
+                holder.name.setText(data.getName());
+            } else {
+                holder.mIconImage.setImageResource(R.drawable.ic_group_button);
+                holder.name.setText(data.getGroupName());
+            }
+            holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, data.getGroupName(), data.getPhoneNumber(), data.getGroupId(), Constant.GROUP));
+
+            holder.mListlayout.setOnLongClickListener(v -> true);
+            holder.mListlayout.setOnClickListener(v -> {
+                itemListener.clickonListLayout(data.getGroupName(), data.getGroupId(), data.getProfileImage());
+                return;
+            });
+            holder.mConsentCheckButton.setOnClickListener(v -> {
+                // If Group is not active or in scheduled state then show these toasts
+                if (data.getStatus().equalsIgnoreCase(Constant.COMPLETED)) {
+                    Toast.makeText(mContext, Constant.SESSION_COMPLETED, Toast.LENGTH_LONG).show();
+                    return;
+                } else if (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED)) {
+                    Toast.makeText(mContext, Constant.GROUP_NOT_ACTIVE, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Check If any group Member is already checked
+                for (GroupMemberDataList list : DashboardActivity.grpMemberDataList) {
+                    if (list.isSelected()) {
+                        Toast.makeText(mContext, Constant.SELECTION_ERROR, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                // If Already checked then uncheck it
+                if (data.isSelected() == true) {
+                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkboxempty);
+                    data.setSelected(false);
+                    DashboardActivity.grpDataList.remove(data);
+                    return;
+                }
+                data.setSelected(!data.isSelected());
+                if (data.isSelected()) {
+                    for (HomeActivityListData list : DashboardActivity.grpDataList) {
+                        if (list.isSelected() == true && groupCount > 0) {
+                            Toast.makeText(mContext, Constant.SELECTION_ERROR, Toast.LENGTH_LONG).show();
+                            data.setSelected(false);
+                            DashboardActivity.grpDataList.remove(data);
+                            return;
+                        }
+                    }
+                    itemListener.checkBoxClickedForGroup(data);
+                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkmark);
+                    groupCount++;
+                }
+            });
+
+            if (data.getStatus().equalsIgnoreCase(Constant.COMPLETED)) {
+                holder.mConsentStatusButton.setText(Constant.REQUEST_CONSENT);
+                holder.mConsentStatusButton.setEnabled(true);
+            } else if (data.getStatus().equalsIgnoreCase(Constant.APPROVED) || data.getStatus().equalsIgnoreCase(Constant.SCHEDULED)) {
+                holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
+                holder.mConsentStatusButton.setText(Constant.SCHEDULED_CAPS);
+                holder.mConsentStatusButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending, 0, 0, 0);
+                holder.mConsentStatusButton.setEnabled(false);
+            } else if (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)) {
+                holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
+                holder.mConsentStatusButton.setText(Constant.ACTIVE_CAPS);
+                holder.mConsentStatusButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved, 0, 0, 0);
+                holder.mConsentStatusButton.setEnabled(false);
+            }
+
+            holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentButtonClickForGroup(data)); // consentId is null for Group
+        } else if (mData.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
+            GroupMemberDataList data = (GroupMemberDataList) mData.get(position);
+            holder.mIconImage.setImageResource(R.drawable.ic_user);
+            holder.name.setText(data.getName());
+            holder.phone.setText(data.getNumber());
+
+            holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, data.getName(), data.getNumber(), data.getGroupId(), Constant.INDIVIDUAL_MEMBER));
+
+            holder.mListlayout.setOnLongClickListener(v -> true);
+            holder.mListlayout.setOnClickListener(v -> {
+                itemListener.clickonListLayout(data.getName(), data.getConsentId(), data.getProfileImage());
+                return;
+            });
+            holder.mConsentCheckButton.setOnClickListener(v -> {
+
+                // If Group is not active or in scheduled state then show these toasts
+                if(data.getGroupStatus().equalsIgnoreCase(Constant.COMPLETED)) {
+                    Toast.makeText(mContext, Constant.SESSION_COMPLETED, Toast.LENGTH_LONG).show();
+                    return;
+                } else if (data.getConsentStatus().equalsIgnoreCase(Constant.PENDING)) {
+                    Toast.makeText(mContext, Constant.CONSENT_PENDING_STATUS, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Check If any group is already checked
+                for (HomeActivityListData list : DashboardActivity.grpDataList) {
+                    if (list.isSelected()) {
+                        Toast.makeText(mContext, Constant.SELECTION_ERROR, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+
+                // If Already checked then uncheck it
+                if (data.isSelected() == true) {
+                    holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkboxempty);
+                    data.setSelected(false);
+                    DashboardActivity.grpMemberDataList.remove(data);
+                    return;
+                }
+                data.setSelected(!data.isSelected());
+                itemListener.checkBoxClickedForGroupMember(data);
+                holder.mConsentCheckButton.setBackgroundResource(R.drawable.ic_checkmark);
+            });
+
+            /**
+             * Disable the Consent status button and change the icon of button if consent is sent for group Member
+             * Disable the Consent status button and change the icon of button if consent is approved for group Member
+             */
+            if (data.getGroupStatus().equalsIgnoreCase(Constant.COMPLETED)) {
+                holder.mConsentStatusButton.setText(Constant.REQUEST_CONSENT);
+                holder.mConsentStatusButton.setEnabled(true);
+            } else if (data.getConsentStatus().equalsIgnoreCase(Constant.PENDING)) {
+                holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentPending));
+                holder.mConsentStatusButton.setText(Constant.CONSENT_PENDING);
+                holder.mConsentStatusButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending, 0, 0, 0);
+                holder.mConsentStatusButton.setEnabled(false);
+            } else if (data.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
+                holder.status.setBackgroundColor(mContext.getResources().getColor(R.color.colorConsentApproved));
+                holder.mConsentStatusButton.setText(Constant.APPROVED);
+                holder.mConsentStatusButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_approved, 0, 0, 0);
+                holder.mConsentStatusButton.setEnabled(false);
+            }
+
+            holder.mConsentStatusButton.setOnClickListener(v -> itemListener.consentClickForGroupMember(data));
+        }
+
         /*holder.phone.setText(mData.get(position).getPhoneNumber());
         holder.name.setText(mData.get(position).getGroupName());
         if (mData.get(position).isGroupMember() == true) {
@@ -107,7 +255,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             holder.mConsentStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notsent, 0, 0, 0);
         }*/
 
-        if (!data.isGroupMember()) {
+        /*if (!data.isGroupMember()) {
             holder.mConsentStatus.setOnClickListener(v -> {
                 itemListener.consetClick(mData.get(position).getPhoneNumber());
             });
@@ -115,8 +263,8 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             holder.mConsentStatus.setOnClickListener(v -> {
                 itemListener.consentClickForGroup(mData.get(position).getName());
             });
-        }
-        holder.mConsent.setOnClickListener(v -> {
+        }*/
+        /*holder.mConsent.setOnClickListener(v -> {
             data.setSelected(!data.isSelected());
             if (data.isGroupMember() && data.isSelected()) {
                 holder.mConsent.setBackgroundResource(R.drawable.ic_checkmark);
@@ -132,37 +280,23 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
                 mSelectData.setName(mData.get(position).getName());
                 mSelectData.setImeiNumber(mData.get(position).getImeiNumber());
                 itemListener.recyclerViewListClicked(v, position, mSelectData, 2);
-            } else if(data.isGroupMember()){
+            } else if (data.isGroupMember()) {
                 holder.mConsent.setBackgroundResource(R.drawable.ic_checkboxempty);
                 itemListener.recyclerViewListClicked(v, position, mSelectData, 3);
             } else {
                 holder.mConsent.setBackgroundResource(R.drawable.ic_checkboxempty);
                 itemListener.recyclerViewListClicked(v, position, mSelectData, 3);
             }
-        });
+        });*/
 
         // holder.mEdit.setOnClickListener(v -> itemListener.recyclerviewEditList(mData.get(position).getRelation(),mData.get(position).getPhoneNumber()));
         // holder.mDelete.setOnClickListener(v -> itemListener.recyclerviewDeleteList(mData.get(position).getPhoneNumber(),position));
-
-        holder.viewOptionMenu.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.viewOptionMenu, position, mData.get(position).getGroupName(), mData.get(position).getPhoneNumber(), mData.get(position).getGroupId()));
-
-        holder.mListlayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
-        if (data.isGroupMember()) {
-            holder.mListlayout.setOnClickListener(v -> {
-                itemListener.clickonListLayout(mData.get(position).getGroupName());
-                return;
-            });
-        }
     }
 
 
     /**
      * return The total number of items in this adapter
+     *
      * @return size
      */
     @Override
@@ -176,16 +310,16 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView phone;
         public TextView name;
-        public TextView relation;
         public TextView status;
         public CardView mListlayout;
-        public Button mConsent;
-        public Button mConsentStatus;
+        public Button mConsentCheckButton;
+        public Button mConsentStatusButton;
         public TextView viewOptionMenu;
         public ImageView mIconImage;
 
         /**
          * Constructor where we find element from .xml file
+         *
          * @param itemView
          */
         public ViewHolder(@NonNull View itemView) {
@@ -193,8 +327,8 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
             phone = itemView.findViewById(R.id.phoneNumber);
             name = itemView.findViewById(R.id.nameDeviceTracker);
             mListlayout = itemView.findViewById(R.id.listLayout);
-            mConsent = itemView.findViewById(R.id.consent);
-            mConsentStatus = itemView.findViewById(R.id.consentstatus);
+            mConsentCheckButton = itemView.findViewById(R.id.consentCheckButton);
+            mConsentStatusButton = itemView.findViewById(R.id.requestConsentButton);
             viewOptionMenu = itemView.findViewById(R.id.textViewOptions);
             status = itemView.findViewById(R.id.statusView);
             mIconImage = itemView.findViewById(R.id.contactImage);
@@ -209,17 +343,22 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
         // void recyclerviewEditList(String relation,String phoneNumber);
         // void recyclerviewDeleteList(String phoneNuber,int position);
-        void clickonListLayout(String selectedGroupName);
+        void clickonListLayout(String selectedGroupName, String groupId, int profileImage);
 
-        void consetClick(String phoneNumber);
+        void consentClickForGroupMember(GroupMemberDataList groupMemberDataList);
 
-        void consentClickForGroup(String selectedGroupName);
+        void consentButtonClickForGroup(HomeActivityListData homeActivityListData);
 
-        void onPopupMenuClicked(View v, int position, String name, String number, String groupId);
+        void checkBoxClickedForGroupMember(GroupMemberDataList groupMemberDataList);
+
+        void checkBoxClickedForGroup(HomeActivityListData homeActivityListData);
+
+        void onPopupMenuClicked(View v, int position, String name, String number, String groupId, String groupMember);
     }
 
     /**
      * Register the listener
+     *
      * @param mItemClickListener
      */
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
@@ -228,6 +367,7 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     /**
      * Called when we remove device from home screen
+     *
      * @param adapterPosition
      */
     public void removeItem(int adapterPosition) {

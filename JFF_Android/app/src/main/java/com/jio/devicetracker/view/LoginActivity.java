@@ -35,11 +35,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,22 +51,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.AddDeviceData;
+import com.jio.devicetracker.database.pojo.GenerateLoginTokenData;
 import com.jio.devicetracker.database.pojo.GenerateTokenData;
-import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
-import com.jio.devicetracker.database.pojo.HomeActivityListData;
-import com.jio.devicetracker.database.pojo.Userdata;
+import com.jio.devicetracker.database.pojo.LoginUserdata;
+import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
+import com.jio.devicetracker.database.pojo.request.GenerateLoginTokenRequest;
 import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
-import com.jio.devicetracker.database.pojo.request.GetDeviceLocationRequest;
-import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.LoginDataRequest;
+import com.jio.devicetracker.database.pojo.response.AddDeviceResponse;
 import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
-import com.jio.devicetracker.database.pojo.response.GetDeviceLocationResponse;
-import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
-import com.jio.devicetracker.database.pojo.response.SearchDeviceResponse;
-import com.jio.devicetracker.network.GroupRequestHandler;
-import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
@@ -75,32 +71,29 @@ import com.jio.devicetracker.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Implementation of Splash Screen.This class creates splash screen for JFF application
  */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, MessageListener {
 
-    private EditText jioMobileNumberEditText = null;
+    private static EditText jioMobileNumberEditText = null;
     private EditText jioUserNameEditText = null;
     private static EditText loginOtpEditText = null;
-    private AdminLoginData adminData;
     public static String phoneNumber = null;
+    private List<SubscriptionInfo> subscriptionInfos;
     public static LogindetailResponse logindetailResponse = null;
-    public static SearchDeviceResponse searchdeviceResponse = null;
     private static final int PERMIT_ALL = 1;
     private String mbNumber;
     private String number;
     public static String userName;
-    private DBManager mDbManager;
-    private List<SubscriptionInfo> subscriptionInfos;
+    private static DBManager mDbManager;
     public static boolean isReadPhoneStatePermissionGranted = false;
-    public static boolean isAccessCoarsePermissionGranted = false;
     private Button loginButton;
-    private Locale locale = Locale.ENGLISH;
-    public static GetDeviceLocationResponse getDeviceLocationResponse = null;
+    private String userId;
     public static String ugsToken;
+    private TextView requestOTP;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,13 +113,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginButton.setOnClickListener(this);
         jioUserNameEditText = findViewById(R.id.userName);
         jioMobileNumberEditText = findViewById(R.id.jioNumber);
-        jioMobileNumberEditText.setEnabled(false);
         jioMobileNumberEditText.setOnClickListener(this);
-        adminData = new AdminLoginData();
         mDbManager = new DBManager(this);
         boolean termConditionsFlag = Util.getTermconditionFlag(this);
         loginOtpEditText = findViewById(R.id.loginOtp);
-        TextView registerHereTextView = findViewById(R.id.registedHere);
+        TextView registerHereTextView = findViewById(R.id.registerHere);
+        requestOTP = findViewById(R.id.requestOTP);
+        requestOTP.setOnClickListener(this);
         registerHereTextView.setOnClickListener(this);
         MessageListener messageListener = new LoginActivity();
         MessageReceiver.bindListener(messageListener);
@@ -158,119 +151,55 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     loginButton.setTextColor(Color.WHITE);
                 } else {
                     jioMobileNumberEditText.setError(null);
+                    SpannableString content = new SpannableString(Constant.REQUEST_OTP);
+                    content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                    requestOTP.setText(content);
                 }
             }
         });
     }
 
     /**
-     * Sends OTP to the user mobile number
-     * @param randomNumberForOTP
-     */
-    protected void sendSMSMessage(int randomNumberForOTP) {
-        String phoneNo = number;
-        String message = Constant.OTP_MESSAGE + randomNumberForOTP;
-
-        if (0 == PackageManager.PERMISSION_GRANTED) {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNo, null, message, null, null);
-            Toast.makeText(getApplicationContext(), Constant.OTP_SENT,
-                    Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    Constant.SMS_SEND_FAILED, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-    }
-
-    /**
      * Gets called when you click on login button
+     *
      * @param v
      */
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.login) {
-            validateNumber();
-        } else if(v.getId() == R.id.registedHere) {
-            checkJioSIMSlot1GotoRegistrationActivity();
-        }
+            if (v.getId() == R.id.login) {
+                if(validateNumber()) {
+                    onLoginButtonClick();
+                }
+            } else if (v.getId() == R.id.registerHere) {
+                if (!Util.isValidMobileNumber(jioMobileNumberEditText.getText().toString().substring(2))) {
+                    jioMobileNumberEditText.setError(Constant.MOBILENUMBER_VALIDATION);
+                    return;
+                }
+                generateTokenGotoRegistrationActivity();
+            } else if (v.getId() == R.id.requestOTP) {
+                if (!Util.isValidMobileNumber(jioMobileNumberEditText.getText().toString().substring(2))) {
+                    jioMobileNumberEditText.setError(Constant.MOBILENUMBER_VALIDATION);
+                    return;
+                }
+                generateLoginTokenAPICall();
+            }
     }
 
     /*
-     * Validate mobile number
+     * Validate mobile number, user name and OTP
      */
-    private void validateNumber() {
-        if("".equals(jioUserNameEditText.getText().toString())) {
+    private boolean validateNumber() {
+        if ("".equals(jioUserNameEditText.getText().toString())) {
             jioUserNameEditText.setError(Constant.NAME_EMPTY);
-            return;
-        }
-        if("".equals(loginOtpEditText.getText().toString())) {
+            return false;
+        } else if ("".equals(loginOtpEditText.getText().toString())) {
             loginOtpEditText.setError(Constant.EMPTY_OTP);
-            return;
+            return false;
+        } else if (!Util.isValidMobileNumber(jioMobileNumberEditText.getText().toString().substring(2))) {
+            jioMobileNumberEditText.setError(Constant.MOBILENUMBER_VALIDATION);
+            return false;
         }
-        else {
-            getssoToken();
-        }
-    }
-
-    /**
-     * Check network is there in phone or not
-     */
-    private void getssoToken() {
-        boolean isAvailable = Util.isMobileNetworkAvailable(this);
-        if (isAvailable) {
-            checkJiooperator();
-        } else {
-            Util.alertDilogBox(Constant.MOBILE_NETWORKCHECK, Constant.ALERT_TITLE, this);
-        }
-    }
-
-    /**
-     * Checks the Jio SIM in slot 1 when user enters the mobile number.
-     */
-    private void checkJiooperator() {
-        phoneNumber = jioMobileNumberEditText.getText().toString();
-        if (subscriptionInfos != null) {
-            String carierName = subscriptionInfos.get(0).getCarrierName().toString();
-            String number = subscriptionInfos.get(0).getNumber();
-            if (number != null && (number.equals(phoneNumber) || number.equals("91" + phoneNumber))) {
-                if(carierName.toLowerCase(locale).contains(Constant.JIO)) {
-                    onLoginButtonClick();
-                } else if (!carierName.contains(Constant.JIO)) {
-                    Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
-                }
-            } else if (subscriptionInfos.size() == 2 && subscriptionInfos.get(1).getNumber() != null) {
-                if (subscriptionInfos.get(1).getNumber().equals("91" + phoneNumber) || subscriptionInfos.get(1).getNumber().equals(phoneNumber)) {
-                    Util.alertDilogBox(Constant.NUMBER_VALIDATION, Constant.ALERT_TITLE, this);
-                } else {
-                    Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
-                }
-            } else {
-                Util.alertDilogBox(Constant.DEVICE_JIONUMBER, Constant.ALERT_TITLE, this);
-            }
-        }
-    }
-
-    /**
-     * Called when new register textview is clicked, number should be Jio number
-     */
-    private void checkJioSIMSlot1GotoRegistrationActivity() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-        if (subscriptionInfos != null) {
-            String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
-            if (!carrierNameSlot1.toLowerCase(locale).contains(Constant.JIO)) {
-                Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
-            } else if(carrierNameSlot1.toLowerCase(locale).contains(Constant.JIO)) {
-                generateTokenGotoRegistrationActivity();
-            }
-        }
+        return true;
     }
 
     /**
@@ -284,23 +213,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
         subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
-        if (subscriptionInfos != null) {
-            String carrierNameSlot1 = subscriptionInfos.get(0).getCarrierName().toString();
-            if (!carrierNameSlot1.toLowerCase(locale).contains(Constant.JIO)) {
-                Util.alertDilogBox(Constant.SIM_VALIDATION, Constant.ALERT_TITLE, this);
-            } else {
-                jioMobileNumberEditText.setText(subscriptionInfos.get(0).getNumber());
-            }
-        }
+        jioMobileNumberEditText.setText(subscriptionInfos.get(0).getNumber());
+        number = jioMobileNumberEditText.getText().toString();
     }
+
 
     /**
      * Used to generate Token
      */
     private void generateTokenGotoRegistrationActivity() {
-        GenerateTokenData generateTokenData = new GenerateTokenData();
-        generateTokenData.setType(Constant.REGISTRATION);
-        if(number != null) {
+        if (number != null) {
+            GenerateTokenData generateTokenData = new GenerateTokenData();
+            generateTokenData.setType(Constant.REGISTRATION);
             generateTokenData.setPhoneCountryCode(number.substring(0, 2));
             generateTokenData.setPhone(number.substring(2));
             RequestHandler.getInstance(getApplicationContext()).handleRequest(new GenerateTokenRequest(new GenerateTokenSuccessListener(), new GenerateTokenErrorListener(), generateTokenData));
@@ -314,9 +238,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onResponse(Object response) {
             GenerateTokenResponse generateTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
-            if(generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.GENERATE_TOKEN_SUCCESS)) {
+            if (generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.GENERATE_TOKEN_SUCCESS)) {
                 Toast.makeText(LoginActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, BorqsTokenActivity.class);
+                Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
                 intent.putExtra("countryCode", number.substring(0, 2));
                 intent.putExtra("phoneNumber", number.substring(2));
                 startActivity(intent);
@@ -330,7 +254,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private class GenerateTokenErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if(error.networkResponse.statusCode == 409) {
+            if (error.networkResponse.statusCode == 409) {
                 Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, LoginActivity.this);
                 jioMobileNumberEditText.setError(Constant.REGISTRAION_ALERT_409);
                 return;
@@ -344,7 +268,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             requestPermissions(new String[]{Manifest.permission.READ_SMS,
                     Manifest.permission.READ_PHONE_NUMBERS,
                     Manifest.permission.SEND_SMS,
-                    Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.READ_PHONE_STATE,
                     Manifest.permission.CAMERA,
                     Manifest.permission.RECEIVE_SMS,
                     Manifest.permission.READ_CONTACTS}, PERMIT_ALL);
@@ -356,14 +280,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void onLoginButtonClick() {
         Util.getInstance().showProgressBarDialog(this);
-        makeMQTTConnection();
-        userName = jioUserNameEditText.getText().toString();
-        Userdata data = new Userdata();
-//        data.setToken(loginOtpEditText.getText().toString());
-        data.setPassword("Borqs@1234");
+        userName = jioUserNameEditText.getText().toString().trim();
+        LoginUserdata data = new LoginUserdata();
+        LoginUserdata.Role role = new LoginUserdata().new Role();
+        role.setCode(Constant.SUPERVISOR);
+        data.setToken(loginOtpEditText.getText().toString().trim());
         data.setPhone(number.substring(2));
-        data.setPhoneCountryCode(number.substring(0, 2));
-        data.setType(Constant.SUPERVISOR);
         RequestHandler.getInstance(getApplicationContext()).handleRequest(new LoginDataRequest(new SuccessListener(), new ErrorListener(), data));
     }
 
@@ -374,13 +296,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onResponse(Object response) {
             logindetailResponse = Util.getInstance().getPojoObject(String.valueOf(response), LogindetailResponse.class);
-            String userId = logindetailResponse.getUser().getId();
-            ugsToken = logindetailResponse.getUgsToken();
-            if (logindetailResponse.getUgsToken() != null) {
-                new DBManager(LoginActivity.this).insertLoginData(logindetailResponse);
+            userId = logindetailResponse.getData().getId();
+            ugsToken = logindetailResponse.getData().getUgsToken();
+
+            // Verify and assign API Call if number is not already added on server
+            if(mDbManager.getAdminLoginDetail() != null && mDbManager.getAdminLoginDetail().getPhoneNumber() != null
+                    && logindetailResponse.getData().getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())) {
+                System.out.println("Already added device it is");
+            } else {
+                makeVerifyAndAssignAPICall();
             }
-            // Get All Group info per user API Call
-            GroupRequestHandler.getInstance(LoginActivity.this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
+
+            if (logindetailResponse.getData().getUgsToken() != null) {
+                mDbManager.deleteAllPreviousData();
+                mDbManager.insertLoginData(logindetailResponse);
+                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+            }
         }
     }
 
@@ -400,31 +331,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Util.progressDialog.dismiss();
         }
     }
-
-    /**
-     * GetGroupInfoPerUserRequest Success listener
-     */
-    private class GetGroupInfoPerUserRequestSuccessListener implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
-            mDbManager.insertAllDataIntoGroupTable(getGroupInfoPerUserResponse);
-            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-        }
-    }
-
-    /**
-     * GetGroupInfoPerUserRequest Error listener
-     */
-    private class GetGroupInfoPerUserRequestErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            if(error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GROUP_LIMITATION, Constant.ALERT_TITLE, LoginActivity.this);
-            }
-        }
-    }
-
 
     /**
      * Checks the DeepLinking URI which tracker receives from tracee
@@ -476,97 +382,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog.show();
     }
 
-    // Gets called when app receives message
+    // Gets called when Login page receives message
     @Override
     public void messageReceived(String message, String phoneNum) {
-        /*String[] splitmessage = message.split(":");
-        if (message.contains(Constant.OTP_MESSAGE) && jioMobileOtp != null) {
-            jioMobileOtp.setText(splitmessage[1]);
-        }*/
-    }
-
-    /**
-     * Creates the MQTT connection with MQTT server
-     */
-    private void makeMQTTConnection() {
-        MQTTManager mqttManager = new MQTTManager();
-        mqttManager.getMQTTClient(this);
-        mqttManager.connetMQTT();
-    }
-
-    /*
-     * Search device Success Listener(Gets all the device available under that particular user)
-     */
-    private class SuccessListenerSearchDevice implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            List<HomeActivityListData> mlist = new ArrayList<>();
-            searchdeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchDeviceResponse.class);
-            List<SearchDeviceResponse.SearchDeviceData> deviceData = searchdeviceResponse.getmData();
-            for (SearchDeviceResponse.SearchDeviceData devData : deviceData) {
-                HomeActivityListData data = new HomeActivityListData();
-                data.setPhoneNumber(devData.getPhoneNumber());
-                data.setName(devData.getName());
-                String consentStatus = mDbManager.getConsentStatusBorqs(devData.getPhoneNumber());
-                data.setConsentStaus(consentStatus);
-                data.setImeiNumber(devData.getImeiNumber());
-                data.setDeviceId(devData.getDeviceId());
-                mlist.add(data);
-            }
-            Util.setAutologinStatus(LoginActivity.this, true);
-            adminData = mDbManager.getAdminLoginDetail();
-            mDbManager.insertInBorqsDB(mlist, adminData.getEmail());
-            List<HomeActivityListData> getallDeviceData = mDbManager.getAllBorqsData(adminData.getEmail());
-            for (HomeActivityListData getDeviceId : getallDeviceData) {
-                RequestHandler.getInstance(getApplicationContext()).handleRequest(new GetDeviceLocationRequest(new SuccessListenerDeviceLocation(), new ErrorListenerDeviceLocation(), logindetailResponse.getUgsToken(), getDeviceId.getDeviceId()));
-            }
-            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-            startActivity(intent);
-            Util.getInstance().dismissProgressBarDialog();
+        if (message.contains(Constant.OTP_MESSAGE) && loginOtpEditText != null) {
+            loginOtpEditText.setText(message.substring(message.indexOf("OTP") + 6, message.indexOf("for") - 1));
         }
     }
-
-    /**
-     * this class is handling the getDevice location api's success response
-     */
-    private class SuccessListenerDeviceLocation implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            getDeviceLocationResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetDeviceLocationResponse.class);
-            if (getDeviceLocationResponse != null && getDeviceLocationResponse.getData().getDeviceStatus().getLocation() != null) {
-                GetDeviceLocationData latlangdata = new GetDeviceLocationData();
-                latlangdata.setDeviceId(getDeviceLocationResponse.getData().getPhoneNumber());
-                latlangdata.setLat(getDeviceLocationResponse.getData().getDeviceStatus().getLocation().getLat());
-                latlangdata.setLang(getDeviceLocationResponse.getData().getDeviceStatus().getLocation().getLng());
-                mDbManager.updateLatLangInBorqsDB(getDeviceLocationResponse.getData().getPhoneNumber(), latlangdata);
-            }
-        }
-    }
-
-    /**
-     * this class is handling the getDevice location api's error response
-     */
-    private class ErrorListenerDeviceLocation implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.getInstance().dismissProgressBarDialog();
-        }
-    }
-
-    /**
-     * this class is handling the search device api's error response
-     */
-    private class ErrorListenerSearchDevice implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.getInstance().dismissProgressBarDialog();
-        }
-    }
-
-    /*private void gotoRegisterScreen() {
-        Intent intent = new Intent(this, RegistrationDetailActivity.class);
-        startActivity(intent);
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -620,15 +442,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                     isReadPhoneStatePermissionGranted = false;
                 }
-                if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    isAccessCoarsePermissionGranted = false;
-                }
                 if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     isReadPhoneStatePermissionGranted = true;
-                }
-
-                if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    isAccessCoarsePermissionGranted = true;
                 }
                 subscriptionInfos = SubscriptionManager.from(getApplicationContext()).getActiveSubscriptionInfoList();
                 // If request is cancelled, the result arrays are empty.
@@ -641,6 +456,96 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             default:
                 break;
+        }
+    }
+
+
+    /**
+     * Verify and assign API Call for the white-listing of device
+     */
+    private void makeVerifyAndAssignAPICall() {
+        AddDeviceData addDeviceData = new AddDeviceData();
+        List<AddDeviceData.Devices> mList = new ArrayList<>();
+        AddDeviceData.Devices devices = new AddDeviceData().new Devices();
+        devices.setAge("31");
+        devices.setGender("Male");
+        devices.setHeight("6");
+        devices.setWeight("70");
+        devices.setMac(number.substring(2));
+        devices.setPhone(number.substring(2));
+        devices.setIdentifier("imei");
+        devices.setName(userName);
+        devices.setType("watch");
+        devices.setModel("watch");
+        AddDeviceData.Devices.Metaprofile metaprofile = new AddDeviceData().new Devices().new Metaprofile();
+        metaprofile.setFirst(userName);
+        metaprofile.setSecond("success");
+        devices.setMetaprofile(metaprofile);
+        AddDeviceData.Flags flags = new AddDeviceData().new Flags();
+        flags.setSkipAddDeviceToGroup(false);
+        addDeviceData.setFlags(flags);
+        mList.add(devices);
+        addDeviceData.setDevices(mList);
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new AddDeviceRequestSuccessListener(), new AddDeviceRequestErrorListener(), ugsToken, userId, addDeviceData));
+    }
+
+    /**
+     * Verify & Assign API call success listener
+     */
+    private class AddDeviceRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            AddDeviceResponse addDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), AddDeviceResponse.class);
+            if (addDeviceResponse.getCode() == 200) {
+                Toast.makeText(LoginActivity.this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Verify & Assign API call error listener
+     */
+    private class AddDeviceRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+//            Toast.makeText(LoginActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void generateLoginTokenAPICall() {
+        GenerateLoginTokenData generateLoginTokenData = new GenerateLoginTokenData();
+        GenerateLoginTokenData.Role role = new GenerateLoginTokenData().new Role();
+        role.setCode(Constant.SUPERVISOR);
+        generateLoginTokenData.setPhone(number.substring(2));
+        generateLoginTokenData.setRole(role);
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new GenerateLoginTokenRequest(new GenerateLoginTokenSuccessListener(), new GenerateLoginTokenErrorListener(), generateLoginTokenData));
+    }
+
+    /**
+     * Generate Login token API call success listener
+     */
+    private class GenerateLoginTokenSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GenerateTokenResponse generateLoginTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
+            if (generateLoginTokenResponse.getCode() == 200) {
+                Toast.makeText(LoginActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+                SpannableString content = new SpannableString(Constant.RESEND_OTP);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                requestOTP.setText(content);
+            }
+        }
+    }
+
+    /**
+     * Generate Login Token API call error listener
+     */
+    private class GenerateLoginTokenErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error.networkResponse.statusCode == 403) {
+                jioMobileNumberEditText.setError(Constant.GENERATE_TOKEN_FAILURE);
+            }
         }
     }
 }

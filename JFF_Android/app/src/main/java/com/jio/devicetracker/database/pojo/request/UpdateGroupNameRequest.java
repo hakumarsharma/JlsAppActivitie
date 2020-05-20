@@ -56,7 +56,7 @@ public class UpdateGroupNameRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return Constant.UPDATE_GROUP_NAME_URL1 + userId + Constant.UPDATE_GROUP_NAME_URL2 + groupId;
+        return Constant.ACCOUNTS_API_USER_URL + userId + Constant.SESSION_GROUPS_URL + groupId;
     }
 
     @Override

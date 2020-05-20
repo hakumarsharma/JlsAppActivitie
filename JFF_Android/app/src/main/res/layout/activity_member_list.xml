@@ -44,7 +44,7 @@
         android:text="Duration"
         android:textStyle="bold"
         android:textSize="14sp"
-        android:layout_marginRight="25dp"
+        android:layout_marginRight="20dp"
         android:id="@+id/durationTitle"
         android:layout_toLeftOf="@+id/expiryTitle"
 
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="2dp"
         android:text="15 min"
         android:layout_below="@+id/name"
         android:textStyle="bold"
@@ -71,7 +71,7 @@
         android:text="Expiring After"
         android:textStyle="bold"
         android:textSize="14sp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="40dp"
         android:id="@+id/expiryTitle"
         android:layout_alignParentRight="true"
         />
@@ -86,9 +86,17 @@
         android:textStyle="bold"
         android:id="@+id/expiryTime"
         android:layout_alignLeft="@+id/expiryTitle"
-        android:textSize="12sp"
+        android:textSize="12sp" />
 
-        />
+    <TextView
+        android:id="@+id/activeMemberOptions"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentRight="true"
+        android:text="&#8942;"
+        android:textAppearance="?android:textAppearanceLarge" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"

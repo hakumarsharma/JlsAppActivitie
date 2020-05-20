@@ -63,9 +63,49 @@ public class GetGroupInfoPerUserResponse implements Serializable {
         @SerializedName("status")
         private String status;
         @SerializedName("name")
-        private String name;
+        private String groupName;
         @SerializedName("session")
         private Session session;
+        @SerializedName("consents")
+        private List<Consents> consents;
+        @SerializedName("createdBy")
+        private String createdBy;
+        @SerializedName("updatedBy")
+        private String updatedBy;
+        @SerializedName("groupOwner")
+        private List<GroupOwner> groupOwner;
+
+        public List<GroupOwner> getGroupOwner() {
+            return groupOwner;
+        }
+
+        public void setGroupOwner(List<GroupOwner> groupOwner) {
+            this.groupOwner = groupOwner;
+        }
+
+        public String getUpdatedBy() {
+            return updatedBy;
+        }
+
+        public void setUpdatedBy(String updatedBy) {
+            this.updatedBy = updatedBy;
+        }
+
+        public String getCreatedBy() {
+            return createdBy;
+        }
+
+        public void setCreatedBy(String createdBy) {
+            this.createdBy = createdBy;
+        }
+
+        public List<Consents> getConsents() {
+            return consents;
+        }
+
+        public void setConsents(List<Consents> consents) {
+            this.consents = consents;
+        }
 
         public String getId() {
             return id;
@@ -83,12 +123,12 @@ public class GetGroupInfoPerUserResponse implements Serializable {
             this.status = status;
         }
 
-        public String getName() {
-            return name;
+        public String getGroupName() {
+            return groupName;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public void setGroupName(String groupName) {
+            this.groupName = groupName;
         }
 
         public Session getSession() {
@@ -97,6 +137,69 @@ public class GetGroupInfoPerUserResponse implements Serializable {
 
         public void setSession(Session session) {
             this.session = session;
+        }
+    }
+
+    public class Consents implements Serializable {
+        @SerializedName("_id")
+        private String consentId;
+        @SerializedName("status")
+        private String status;
+        @SerializedName("phone")
+        private String phone;
+        @SerializedName("isGroupAdmin")
+        private boolean isGroupAdmin;
+        @SerializedName("name")
+        private String name;
+        @SerializedName("user")
+        private String userId;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isGroupAdmin() {
+            return isGroupAdmin;
+        }
+
+        public void setGroupAdmin(boolean groupAdmin) {
+            isGroupAdmin = groupAdmin;
+        }
+
+        public String getConsentId() {
+            return consentId;
+        }
+
+        public void setConsentId(String consentId) {
+            this.consentId = consentId;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
         }
     }
 
@@ -122,4 +225,38 @@ public class GetGroupInfoPerUserResponse implements Serializable {
             this.to = to;
         }
     }
+
+    public class GroupOwner implements Serializable {
+        @SerializedName("_id")
+        private String userId;
+        @SerializedName("phone")
+        private String phone;
+        @SerializedName("name")
+        private String name;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
 }

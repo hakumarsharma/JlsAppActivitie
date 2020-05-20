@@ -30,7 +30,6 @@ public class RegisterRequestData {
     private String phone;
     private String phoneCountryCode;
     private String name;
-    private String password;
     private Token token;
     private MetaProfile metaprofile;
 
@@ -56,14 +55,6 @@ public class RegisterRequestData {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Token getToken() {

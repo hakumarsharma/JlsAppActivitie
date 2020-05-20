@@ -32,11 +32,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
-import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.request.GetGroupMemberRequest;
+import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.GroupMemberListAdapter;
@@ -50,28 +54,32 @@ import java.util.List;
 public class GroupListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView mRecyclerList;
-    public static String mGroupName;
-    private DBManager mDbmanager;
-
+    private DBManager mDbManager;
+    private String groupId;
+    private String userId;
+    private String groupName;
+    private List<GroupMemberDataList> mList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_member);
         Toolbar toolbar = findViewById(R.id.customToolbar);
-        mDbmanager = new DBManager(this);
+        mDbManager = new DBManager(this);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Button createGroupButtonOnToolbar = toolbar.findViewById(R.id.createGroupButtonOnToolbar);
         createGroupButtonOnToolbar.setText(Constant.CREATE_GROUP_LIST);
         createGroupButtonOnToolbar.setVisibility(View.VISIBLE);
         createGroupButtonOnToolbar.setOnClickListener(this);
-        toolbarTitle.setText(Constant.GROUP_TITLE);
         mRecyclerList = findViewById(R.id.groupList);
-        //mGroupName = new Intent().getStringExtra("GroupName");
+        Intent intent = getIntent();
+        groupId = intent.getStringExtra(Constant.GROUP_ID);
+        userId = intent.getStringExtra(Constant.USER_ID);
+        groupName = intent.getStringExtra(Constant.GROUPNAME);
+        toolbarTitle.setText(groupName);
         FloatingActionButton groupMembersListFloatButton = findViewById(R.id.groupMembersListFloatButton);
         groupMembersListFloatButton.setOnClickListener(this);
-        addDataInList();
-
+        makeGetGroupMemberAPICall();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
     }
@@ -79,16 +87,53 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
     /**
      * Displays group members in a list
      */
-    private void addDataInList() {
-        List<GroupMemberDataList> mList = new ArrayList<>();
-        List<HomeActivityListData> listData = mDbmanager.getAllBorqsData(Util.adminEmail);
-        for (HomeActivityListData homeActivityListData : listData) {
-            if (homeActivityListData.getGroupName() != null && homeActivityListData.getGroupName().equalsIgnoreCase(DashboardActivity.groupName) && homeActivityListData.getName() != null) {
+    private void makeGetGroupMemberAPICall() {
+        Util.getInstance().showProgressBarDialog(this);
+        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupMemberRequest(new GetGroupMemberRequestSuccessListener(), new GetGroupMemberRequestErrorListener(), groupId, userId));
+    }
+
+    /**
+     * Get all members of a particular group success listener
+     */
+    public class GetGroupMemberRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
+            GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
+            if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
+                mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
+            }
+            showDataInList();
+            isMemberPresent();
+        }
+    }
+
+    private void isMemberPresent() {
+        TextView instruction = findViewById(R.id.groupListMember);
+        if (mList.isEmpty()) {
+            mRecyclerList.setVisibility(View.INVISIBLE);
+            instruction.setVisibility(View.VISIBLE);
+            instruction.setText(Constant.ADD_GROUP_MEMBER_INSTRUCTION1 + groupName + Constant.ADD_GROUP_MEMBER_INSTRUCTION2);
+        } else {
+            mRecyclerList.setVisibility(View.VISIBLE);
+            instruction.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Displays group members of group
+     */
+    private void showDataInList() {
+        mList = new ArrayList<>();
+        List<GroupMemberDataList> listData = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+        for (GroupMemberDataList groupMemberDataList : listData) {
+            if (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)
+            || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXITED)) {
                 GroupMemberDataList data = new GroupMemberDataList();
-                data.setName(homeActivityListData.getName());
-                data.setNumber(homeActivityListData.getPhoneNumber());
+                data.setName(groupMemberDataList.getName());
+                data.setNumber(groupMemberDataList.getNumber());
                 data.setProfileImage(R.drawable.ic_tracee_list);
-                data.setGroupName(homeActivityListData.getGroupName());
+                data.setConsentStatus(groupMemberDataList.getConsentStatus());
                 mList.add(data);
             }
         }
@@ -96,14 +141,34 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         mRecyclerList.setAdapter(mAdapter);
     }
 
+    /**
+     * Get all members of a particular group error listener
+     */
+    private class GetGroupMemberRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.groupMembersListFloatButton) {
-            DashboardActivity.isComingFromGroupList = true;
-            startActivity(new Intent(this, ContactDetailsActivity.class));
+            gotoContactDetailsActivity();
         } else if (v.getId() == R.id.createGroupButtonOnToolbar) {
             Util.alertDilogBox("Coming Soon...", "Alert", this);
         }
+    }
+
+    /**
+     * Goto Contact Details Activity
+     */
+    private void gotoContactDetailsActivity() {
+        Intent intent = new Intent(this, ContactDetailsActivity.class);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.USER_ID, userId);
+        intent.putExtra(Constant.IS_COMING_FROM_GROUP_LIST, true);
+        startActivity(intent);
     }
 
     @Override

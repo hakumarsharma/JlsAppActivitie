@@ -30,75 +30,36 @@ import java.io.Serializable;
  * Pojo implementation to fetch login response from server .
  */
 public class LogindetailResponse implements Serializable {
-    @SerializedName("ugs_token")
-    private String ugsToken;
+    @SerializedName("code")
+    private int code;
+    @SerializedName("data")
+    private Data data;
 
-    @SerializedName("message")
-    private String message;
-
-    @SerializedName("user")
-    private User user;
-
-    @SerializedName("ugs_token_expiry")
-    private Long ugsTokenExpiry;
-
-    public String getUgsToken() {
-        return ugsToken;
+    public int getCode() {
+        return code;
     }
 
-    public void setUgsToken(String ugsToken) {
-        this.ugsToken = ugsToken;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public User getUser() {
-        return user;
+    public Data getData() {
+        return data;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setData(Data data) {
+        this.data = data;
     }
 
-    public Long getUgsTokenExpiry() {
-        return ugsTokenExpiry;
-    }
-
-    public void setUgsTokenExpiry(Long ugsTokenExpiry) {
-        this.ugsTokenExpiry = ugsTokenExpiry;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public class User implements Serializable {
+    public class Data implements Serializable {
         @SerializedName("_id")
         private String id;
-
-        @SerializedName("email")
-        private String email;
-
-        @SerializedName("name")
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
+        @SerializedName("phone")
+        private String phone;
+        @SerializedName("ugs_token")
+        private String ugsToken;
+        @SerializedName("phoneCountryCode")
+        private String phoneCountryCode;
 
         public String getId() {
             return id;
@@ -106,6 +67,30 @@ public class LogindetailResponse implements Serializable {
 
         public void setId(String id) {
             this.id = id;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getUgsToken() {
+            return ugsToken;
+        }
+
+        public void setUgsToken(String ugsToken) {
+            this.ugsToken = ugsToken;
+        }
+
+        public String getPhoneCountryCode() {
+            return phoneCountryCode;
+        }
+
+        public void setPhoneCountryCode(String phoneCountryCode) {
+            this.phoneCountryCode = phoneCountryCode;
         }
     }
 }

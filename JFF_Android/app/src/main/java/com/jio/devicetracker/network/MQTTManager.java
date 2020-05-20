@@ -24,8 +24,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.Util;
 import com.jio.mqttclient.JiotMqttCallback;
 import com.jio.mqttclient.JiotMqttClient;
 import com.jio.mqttclient.JiotMqttConnectOptions;
@@ -50,7 +50,7 @@ public class MQTTManager {
     public JiotMqttClient getMQTTClient(Context context) {
         if (jiotMqttClient == null) {
             JiotMqttSSLOptions jiotMqttSSLOptions = new JiotMqttSSLOptions(R.raw.ca, "ril@1234");
-            JiotMqttCreateOptions jiotMqttCreateOptions = new JiotMqttCreateOptions(Util.imeiNumber, Constant.MQTT_CIT_USER_NAME, Constant.MQTT_CIT_PASSWORD, Constant.MQTT_CIT_URL, jiotMqttSSLOptions);
+            JiotMqttCreateOptions jiotMqttCreateOptions = new JiotMqttCreateOptions(new DBManager(context).getAdminLoginDetail().getPhoneNumber(), Constant.MQTT_USER_NAME, Constant.MQTT_PASSWORD, Constant.MQTT_STG_URL, jiotMqttSSLOptions);
             options = new JiotMqttConnectOptions();
             options.setAutoReconnect(false);
             if (context != null) {

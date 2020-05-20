@@ -48,7 +48,6 @@ public class ConsentTimeUpdate extends Worker {
     public ConsentTimeUpdate(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         mDbmanager = new DBManager(getApplicationContext());
-
     }
 
     // Update the consent time in background

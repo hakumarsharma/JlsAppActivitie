@@ -38,6 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME_USER = "UserData";
     public static final String TABLE_USER_LOGIN = "UserloginData";
     public static final String TABLE_GROUP = "GroupData";
+    public static final String TABLE_GROUP_MEMBER = "GroupMemberData";
 
     //Table Columns
     public static final String IMEI_NUM = "imei";
@@ -63,6 +64,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DEVICE_ID = "deviceId";
     public static final String GROUPID = "groupId";
     public static final String STATUS = "status";
+    public static final String PHONE_COUNTRY_CODE = "phoneCountryCode";
+    public static final String CONSENT_ID = "consentId";
+    public static final String IS_GROUP_ADMIN = "isGroupAdmin";
+    public static final String CREATED_BY = "createdBy";
+    public static final String UPDATED_BY = "updatedBy";
+    public static final String PROFILE_IMAGE = "profileImage";
+    public static final String TIME_FROM = "timeFrom";
+    public static final String TIME_TO = "timeTo";
+    public static final String GROUP_OWNER_NAME = "groupOwnerName";
+    public static final String GROUP_OWNER_USER_ID = "groupOwnerUserId";
+    public static final String GROUP_OWNER_PHONE_NUMBER = "groupOwnerPhoneNumber";
+
 
     //DB Information
     public static final String DB_NAME = "AddDevice.db";
@@ -81,9 +94,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_USER = "create table " + TABLE_NAME_USER + "("+ NAME + " TEXT, " + EMAIL + " TEXT, " + DEVICE_NUM + " TEXT ," + DOB + " TEXT ," + PASS + " TEXT ," + USER_ID + " TEXT ,"+"PRIMARY KEY" +"("+DEVICE_NUM +" ," +EMAIL +"))";
 
-    private static final String CREATE_TABLE_USER_LOGIN = "create table " + TABLE_USER_LOGIN + "("+ USER_TOKEN + " TEXT, " + TOKEN_EXPIRY_TIME + " TEXT, " + USER_NAME + " TEXT," + USER_ID + " TEXT, " + EMAIL + " TEXT, "+ "PRIMARY KEY" +"(" + USER_ID+"))";
+    private static final String CREATE_TABLE_USER_LOGIN = "create table " + TABLE_USER_LOGIN + "("+ USER_TOKEN + " TEXT, " + TOKEN_EXPIRY_TIME + " TEXT, " + USER_NAME + " TEXT," + USER_ID + " TEXT, " + DEVICE_NUM + " TEXT, " + PHONE_COUNTRY_CODE + " TEXT, " + "PRIMARY KEY" +"(" + USER_ID+"))";
 
-    private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + STATUS + " TEXT, "+ "PRIMARY KEY" + "(" + GROUPID +"))";
+    private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + CREATED_BY + " TEXT, " + UPDATED_BY + " TEXT, " + TIME_FROM + " DOUBLE ," + TIME_TO + " DOUBLE ,"  + PROFILE_IMAGE + " INTEGER ," + STATUS + " TEXT, " + GROUP_OWNER_NAME + " TEXT, " +  GROUP_OWNER_PHONE_NUMBER + " TEXT, " + GROUP_OWNER_USER_ID + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
+
+    private static final String CREATE_TABLE_GROUP_MEMBER = "create table " + TABLE_GROUP_MEMBER + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + GROUPID + " TEXT, " + IS_GROUP_ADMIN + " INTEGER, " + DEVICE_NUM + " TEXT ," + PROFILE_IMAGE + " INTEGER ," + USER_ID + " TEXT ," + DEVICE_ID + " TEXT ," + STATUS + " TEXT, " + "PRIMARY KEY" +"("+ CONSENT_ID +"))";
 
 
     public DatabaseHelper(Context context) {
@@ -102,6 +117,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_USER);
         db.execSQL(CREATE_TABLE_USER_LOGIN);
         db.execSQL(CREATE_TABLE_GROUP);
+        db.execSQL(CREATE_TABLE_GROUP_MEMBER);
     }
 
     /**
@@ -116,6 +132,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LOGIN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP_MEMBER);
         onCreate(db);
     }
 }

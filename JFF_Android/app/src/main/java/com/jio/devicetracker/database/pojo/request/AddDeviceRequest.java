@@ -57,7 +57,7 @@ public class AddDeviceRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return  Constant.ADDDEVICE_URL_1 +id+Constant.ADDDEVICE_URL_2+userToken;
+        return  Constant.ADDDEVICE_URL_1 + id + Constant.ADDDEVICE_URL_2 + userToken;
     }
 
     @Override

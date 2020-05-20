@@ -27,11 +27,28 @@ package com.jio.devicetracker.database.pojo;
  */
 public class AdminLoginData {
 
-    private String email;
     private String userToken;
     private String tokenExpirytime;
     private String userId;
     private String name;
+    private String phoneCountryCode;
+    private String phoneNumber;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPhoneCountryCode() {
+        return phoneCountryCode;
+    }
+
+    public void setPhoneCountryCode(String phoneCountryCode) {
+        this.phoneCountryCode = phoneCountryCode;
+    }
 
     public String getName() {
         return name;
@@ -39,14 +56,6 @@ public class AdminLoginData {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUserToken() {
