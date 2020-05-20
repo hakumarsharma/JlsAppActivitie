@@ -27,6 +27,8 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.util.Log;
 
+import com.example.nutapp.util.JioConstant;
+
 import java.util.regex.Pattern;
 
 @SuppressWarnings("PMD")
@@ -167,5 +169,49 @@ public class JioUtils {
             return false;
         }
         return pat.matcher(pass).matches();
+    }
+
+    // Sets Login status
+    public static void setAutologinStatus(Context mContext, boolean flag) {
+        SharedPreferences sharedAutologin = mContext.getSharedPreferences(JioConstant.AUTO_LOGIN_STATUS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedAutologin.edit();
+        editor.putBoolean(JioConstant.AUTO_LOGIN, flag);
+        editor.commit();
+    }
+
+    // Returns Login status
+    public static boolean getAutologinStatus(Context mContext) {
+        SharedPreferences sharedAutologin = mContext.getSharedPreferences(JioConstant.AUTO_LOGIN_STATUS, Context.MODE_PRIVATE);
+        return sharedAutologin.getBoolean(JioConstant.AUTO_LOGIN, false);
+    }
+
+    // Clear Login status
+    public static void clearAutologinstatus(Context mContext) {
+        SharedPreferences sharedAutologin = mContext.getSharedPreferences(JioConstant.AUTO_LOGIN_STATUS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedAutologin.edit();
+        editor.clear();
+        editor.commit();
+    }
+
+    // Set QRScan status
+    public static void setQRScanflag(Context mContext, boolean flag) {
+        SharedPreferences sharedQRFlag = mContext.getSharedPreferences(JioConstant.QR_SCAN_FLAG_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedQRFlag.edit();
+        editor.putBoolean(JioConstant.QR_SCAN_FLAG, flag);
+        editor.commit();
+    }
+
+    // Returns QRScan status
+    public static boolean getQRScanflag(Context mContext) {
+        SharedPreferences sharedQRFlag = mContext.getSharedPreferences(JioConstant.QR_SCAN_FLAG_PREFERENCE, Context.MODE_PRIVATE);
+        return sharedQRFlag.getBoolean(JioConstant.QR_SCAN_FLAG, false);
+    }
+
+    // Clear Login status
+    public static void clearQRScanflag(Context mContext) {
+        SharedPreferences sharedQRFlag = mContext.getSharedPreferences(JioConstant.QR_SCAN_FLAG_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedQRFlag.edit();
+        editor.clear();
+        editor.commit();
     }
 }

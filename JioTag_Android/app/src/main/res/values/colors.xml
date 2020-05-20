@@ -15,6 +15,7 @@
     <color name="green">#50BCAA</color>
     <color name="lite_blue">#3DB5EA</color>
     <color name="lite_grey">#666666</color>
+    <color name="light_white">#F8F8F8</color>
 
     <color name="light_blue_lite">#ACE0F7</color>
     <color name="light_blue_A400">#00B0FF</color>
@@ -34,4 +35,5 @@
     <color name="cardviewlayout_contenttext_color">#00B5B4</color>
     <color name="alert_dialog_location_color">#00BFF2</color>
     <color name="alert_dialog_ok_color">#CCF2FD</color>
+    <color name="navigate_profile_color">#6766B2</color>
 </resources>

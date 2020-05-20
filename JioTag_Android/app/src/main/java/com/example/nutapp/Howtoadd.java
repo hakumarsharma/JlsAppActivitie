@@ -22,38 +22,33 @@
 
 package com.example.nutapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
-
+import android.widget.Button;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+
 
 public class Howtoadd extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.how_toadd);
-        ImageButton howBack = (ImageButton) findViewById(R.id.how_card_attach_back);
-        howBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                setResult(RESULT_CANCELED, intent);
-                finish();
-            }
-        });
+        setToolbarIconTitle();
 
-        ImageButton howHome = (ImageButton) findViewById(R.id.how_card_attach_tick);
-        howHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                setResult(JioUtils.HOME_KEY, intent);
-                finish();
-            }
-        });
 
+    }
+
+    public void setToolbarIconTitle()
+    {
+        TextView title = findViewById(R.id.toolbar_title);
+        title.setText("How to add");
+        title.setTypeface(JioUtils.mTypeface(this,5));
+        Button backIcn = findViewById(R.id.back);
+        backIcn.setVisibility(View.VISIBLE);
+        Button homeicn = findViewById(R.id.home);
+        homeicn.setVisibility(View.VISIBLE);
     }
 }

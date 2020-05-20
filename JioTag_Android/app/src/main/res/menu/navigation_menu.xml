@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/notification"
+        android:title="Notification"
+        android:icon="@drawable/ic_notification"
+        />
+    <item android:id="@+id/slientmode"
+        android:title="Slient Mode"
+        android:icon="@drawable/ic_silentmode"
+        />
+    <item android:id="@+id/settings"
+        android:title="Settings"
+        android:icon="@drawable/settings"
+        />
+    <item android:id="@+id/howtoadd"
+        android:title="How to Add Device"
+        android:icon="@drawable/ic_howtouse"
+        />
+    <item android:id="@+id/information"
+        android:title="Information"
+        android:icon="@drawable/ic_information"
+        />
+
+    <item android:id="@+id/assets"
+        android:title="Assets"
+        android:icon="@drawable/ic_feedback"
+        />
+    <item android:id="@+id/feedback"
+        android:title="Feedback"
+        android:icon="@drawable/ic_feedback"
+        />
+    <item android:id="@+id/logout"
+        android:title="Logout"
+        android:icon="@drawable/logout"
+        />
+
+</menu>

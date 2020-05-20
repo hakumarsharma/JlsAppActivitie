@@ -24,7 +24,7 @@
     <string name="connectstr">Connect</string>
     <string name="introduction_text">"\n+Press Scan to see Devices List\n+Use Connect to pair to devices\n+Alarm Icon Alerts paired device\n+Location:Shows current location\n+Camera Icon:Launches Camera"</string>
     <string name="alarm">Alarm</string>
-    <string name="device_status">Disconnected</string>
+    <string name="device_status">Connected | Near</string>
     <string name="login_subtext">Please tell us more\n about yourself</string>
     <string name="device_distance">Device Distance</string>
     <string name="helptext">1.Launch the App\n2.Press Scan\n 3.ON Listed devices Press Connect\n 4.Press Alarm to Ring the device.\n 5.Press Location to see Location Data.\n 6.Press Camera Icon to launch Camera </string>
@@ -44,7 +44,7 @@
 
     <string name="attach_jio_finder_heading">Attach device</string>
     <string name="attach_jio_finder_search">Search</string>
-    <string name="attach_jio_finder_Header">Turn on the device and long press the power button for 10 seconds, to get connected with the phone.</string>
+    <string name="attach_jio_finder_Header">“Long press the tag to turn it on.\nHold it close to your phone.\nApplication will list the newly \ndetected tags.</string>
 
     <string name="notfound_heading">Search result</string>
     <string name="notfound_header">Device not found ?</string>
@@ -71,7 +71,7 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_notification">Notification</string>
     <string name="menu_homes">Home</string>
-    <string name="card_location">Avana Iblur, Bangalore</string>
+    <string name="card_location">RCP, Thane-Belapur road Navi Mumbai</string>
 
     <string name="settings_header_photocapture">Photo capture</string>
     <string name="settings_header_sos">SOS</string>
@@ -115,12 +115,20 @@
     <string name="devicealert_alert_on_reconnection_details">Phone will send an alert and notification message when device reconnect to your phone.</string>
     <string name="login_text">Login</string>
     <string name="login_enter_number">Please enter your\n mobile number</string>
-    <string name="login_registered_number">Mobile number</string>
+    <string name="login_registered_number">Mobile Number</string>
     <string name="login_privacy">I have read and accept the <b>Terms and Conditions &amp; Privacy Policy.</b></string>
     <string name="login_send_otp">Send OTP</string>
     <string name="login_next">Next</string>
+    <string name="update">Update</string>
     <string name="login_btn_otp">Login</string>
+    <string name="share_button">Share</string>
+    <string name="ok_button">Ok</string>
+    <string name="view_tag_button">View Tag</string>
     <string name="scan_qr_code">Scan QR Code</string>
+    <string name="edit_profile">Edit your details</string>
+    <string name="shared_device">Shared Devices</string>
+    <string name="drawerOpen">Open </string>
+    <string name="drawerClose">Close</string>
     <string name="rescan_qr_code">Rescan </string>
     <string name="attach_device">Attach Device</string>
     <string name="login_otp_text">Please wait while we automatically retrieve the 6-digit verification code.\nYou can always enter it manually.</string>
@@ -133,9 +141,21 @@
     <string name="login_sms_otp_10digit">Enter 10 digit Mobile number</string>
     <string name="login_resend_otp">Resend OTP</string>
     <string name="email_id">Email-Id</string>
+    <string name="contact_number">Contact Number</string>
+    <string name="manually">Manually</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="via_qr_code">Via QR code</string>
+    <string name="slient_mode_text">Silent mode is that way to restrict all \nkind of notification, for particular time \nduration.</string>
     <string name="or">OR</string>
     <string name="email_confirmation_msg">Hey Ashish, you are almost ready \n \t\tto add your device. A verification \nemail is sent on your email-Id. After \n \t\tverify you will be able to login</string>
     <string name="email_confirmation_title">Email confirmation</string>
+    <string name="share_confirmation_title">Share Tag</string>
+    <string name="share_invite_success_title">Shared Successfully !</string>
+    <string name="reset_password_confirmation_msg">Hey Ashish, a link to reset the \npassword has been sent to your \nEmail-Id.</string>
+    <string name="share_tag_msg">You will be able \nto "Share" a tag with other people. \nenter phone numbers manually \nor choose a contacts.</string>
+    <string name="share_tag_success_msg">JioTags (Name of the device) \nis shared successfully.</string>
+    <string name="share_tag_invite_success_msg">JioTags (Name of the device) \nis added to your tracking list, now you \nview/find the attached asset.</string>
+    <string name="reset_password_confirmation_title">Reset Password</string>
     <string name="qrscan_instruction">A QR code will be available to \nthe back side of your device \nbox.</string>
     <string name="add_manual">Add device manually</string>
     <string name="jio_device_name">JioTags (Name of the device)</string>
@@ -146,6 +166,7 @@
     <string name="password_condition">Use 8 or more characters with a mix of letters,\nnumbers &amp; symbols</string>
     <string name="email_id_hint"><i>Email-Id*</i></string>
     <string name="password_hint"><i>Password*</i></string>
+    <string name="add_contact_hint"><i>Contact number</i></string>
     <string name="fb_login">Login with Facebook</string>
     <string name="google_login">Login with Google</string>
 
@@ -166,6 +187,8 @@
     <string name="info_connectionsetup_details">Long press the power button of JioTag for 10 sec will establish the connection to phone.</string>
     <string name="info_photoclick_header">Photo click</string>
     <string name="info_photoclick_details">Pressing twice the power button will click a photo.</string>
+    <string name="info_sos_header">SOS</string>
+    <string name="info_sos_details">Pressing thrice to Power button will send SOS alert to Added contacts.</string>
 
     <string name="how_header">How to add</string>
     <string name="how_details2">Wait for a while till your phone is getting connected with the device.</string>

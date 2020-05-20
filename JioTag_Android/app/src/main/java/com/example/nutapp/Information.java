@@ -75,10 +75,12 @@ public class Information extends AppCompatActivity {
         SettingsDetails infoFeature = new SettingsDetails(getResources().getString(R.string.info_features_header), "");
         SettingsDetails infoConn = new SettingsDetails(getResources().getString(R.string.info_connectionsetup_header), getResources().getString(R.string.info_connectionsetup_details));
         SettingsDetails infoPhoto = new SettingsDetails(getResources().getString(R.string.info_photoclick_header), getResources().getString(R.string.info_photoclick_details));
+        SettingsDetails infoSoS = new SettingsDetails(getResources().getString(R.string.info_sos_header), getResources().getString(R.string.info_sos_details));
         m_bleDetails.add(infoAbout);
         m_bleDetails.add(infoFeature);
         m_bleDetails.add(infoConn);
         m_bleDetails.add(infoPhoto);
+        m_bleDetails.add(infoSoS);
     }
 
 }

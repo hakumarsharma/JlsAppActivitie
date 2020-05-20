@@ -52,8 +52,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                 // Start your app main activity
                 preferences = getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
                 String firstBoot=preferences.getString("FIRSTBOOT", "true");
+                boolean flagAutologin = JioUtils.getAutologinStatus(SplashScreenActivity.this);
                 Intent i;
-                if(firstBoot.toString().trim().equalsIgnoreCase("true")) {
+                if(!flagAutologin) {
+                    i = new Intent(SplashScreenActivity.this, HelpActivity.class);
+                }else if(firstBoot.toString().trim().equalsIgnoreCase("true")) {
                     i = new Intent(SplashScreenActivity.this, OtpRequest.class);
                 }else{
                     i = new Intent(SplashScreenActivity.this, MainActivity.class);

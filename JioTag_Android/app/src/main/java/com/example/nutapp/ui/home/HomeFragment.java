@@ -704,6 +704,11 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
 
     @Override
     public void onServiceBound() {
+        boolean flag = JioUtils.getQRScanflag(getActivity());
+        if(flag)
+        {
+            return;
+        }
         Log.d("SERVICEBOUND", "onServiceBound");
         if (m_sacanPending == true) {
             m_sacanPending = false;
@@ -1173,6 +1178,11 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
         Log.d("MENU", "MENUCLICKED");
         switch (item.getItemId()) {
             case R.id.navigation_scan:
+                boolean flag = JioUtils.getQRScanflag(getActivity());
+                if(flag)
+                {
+                    break;
+                }
                 Log.d("MENU", "SCAN");
                 enableBT();
                 break;
@@ -1360,6 +1370,11 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                 m_connStateCall = this;
                 m_EventCallBack = this;
                 if (m_bleDetailsAdapter.getItemCount() <= 0) {
+                    boolean flag = JioUtils.getQRScanflag(getActivity());
+                    if(flag)
+                    {
+                        return;
+                    }
                     Log.d("BACKEY", "RELOAD");
                     enableBT();
                     // m_sacanPending=false;
@@ -1377,6 +1392,11 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
             m_connStateCall = this;
             m_EventCallBack = this;
             if (m_bleDetailsAdapter.getItemCount() <= 0) {
+                boolean flag = JioUtils.getQRScanflag(getActivity());
+                if(flag)
+                {
+                    return;
+                }
                 Log.d("BACKEY", "RELOAD");
                 enableBT();
                 // m_sacanPending=false;
@@ -1417,6 +1437,11 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                 m_EventCallBack = this;
                 //createSharedPreferences();
                 if (m_bleDetailsAdapter.getItemCount() <= 0) {
+                    boolean flag = JioUtils.getQRScanflag(getActivity());
+                    if(flag)
+                    {
+                        return;
+                    }
                     Log.d("BACKEY", "RELOAD");
                     enableBT();
                     // m_sacanPending=false;
@@ -1513,6 +1538,12 @@ public class HomeFragment extends Fragment implements BleDeviceConsumer, ScanRes
                 switch (item.getItemId()) {
                     case R.id.navigation_scan:
                         Log.d("SCANMENU", "SCAN");
+
+                        boolean flag = JioUtils.getQRScanflag(getActivity());
+                        if(flag)
+                        {
+                            break;
+                        }
                         enableBT();
                         // Toast.makeText(MainActivity.this, "Camera", Toast.LENGTH_SHORT).show();
                         break;

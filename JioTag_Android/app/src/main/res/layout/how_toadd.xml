@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/tools"
+    xmlns:app1="http://schemas.android.com/apk/res-auto"
     android:id="@+id/how_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +9,13 @@
     android:paddingBottom="@dimen/adddevice_heading_height"
     app:ignore="NamespaceTypo">
     <!-- Header aligned to top -->
-    <RelativeLayout
+
+    <include
+        layout="@layout/navigation_toolbar"
+        android:id="@+id/howtouseToolbar"
+        />
+
+   <!-- <RelativeLayout
         android:id="@+id/how_appheader"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_52"
@@ -54,24 +61,46 @@
             android:background="#F8F8F8"
             android:src="@drawable/home"
             android:textAlignment="center" />
-    </RelativeLayout>
+    </RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/how_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/how_appheader"
+        android:layout_below="@id/howtouseToolbar"
         android:layout_centerInParent="true"
         android:layout_marginLeft="@dimen/twenty_five_dp"
         android:layout_marginRight="@dimen/twenty_five_dp"
-        android:background="@drawable/dialog_round_background"
         android:gravity="center"
+        android:layout_marginTop="@dimen/five_dp"
+        android:background="@drawable/dialog_round_background"
         android:paddingBottom="@dimen/twenty_dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/manually"
+                android:layout_marginTop="@dimen/twenty_five_dp"
+                android:id="@+id/manual_help"
+                android:textColor="@color/alert_dialog_location_color"
+                android:textSize="@dimen/twenty_dp"
+                android:layout_marginLeft="@dimen/twenty_five_dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/via_qr_code"
+                android:textColor="@color/black"
+                android:textSize="@dimen/twenty_dp"
+                android:layout_marginTop="@dimen/twenty_five_dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/twenty_five_dp"
+                />
         <TextView
             android:id="@+id/how_attach_jio_finder_Header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/manual_help"
             android:layout_marginLeft="@dimen/twenty_five_dp"
             android:layout_marginTop="@dimen/twenty_dp"
             android:layout_marginRight="@dimen/header_text"
@@ -120,5 +149,5 @@
             android:text="@string/how_details3"
             android:textColor="@android:color/black"
             android:textSize="@dimen/seventeen_sp" />
-    </RelativeLayout>
+        </RelativeLayout>
 </RelativeLayout>

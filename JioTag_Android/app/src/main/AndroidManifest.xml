@@ -21,6 +21,7 @@
     <uses-feature android:name="android.hardware.camera2.full"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-feature
         android:name="android.hardware.camera.front"
         android:required="false" />
@@ -71,6 +72,7 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="sensorPortrait"
+            android:theme="@style/NoActionBarTheme"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name">
         </activity>
@@ -203,6 +205,45 @@
         </activity>
 
         <activity android:name=".RescanQRCodeActivity"
+            android:theme="@style/NoActionBarTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+
+        <activity android:name=".SlientModeActivity"
+            android:theme="@style/NoActionBarTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+        <activity android:name=".ForgotPasswordActivity"
+            android:theme="@style/NoActionBarTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+
+        <activity android:name=".NotificationActivity"
+            android:theme="@style/NoActionBarTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+
+        <activity android:name=".UserDetailNavigationActivity"
+            android:theme="@style/NoActionBarTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+
+        <activity android:name=".UserProfileUpdateActivity"
+            android:theme="@style/NoActionBarTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+
+        <activity android:name=".ShareTagActivity"
+            android:theme="@style/NoActionBarTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+
+        <activity android:name=".ShareTagSuccessActivity"
+            android:theme="@style/NoActionBarTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+
+        <activity android:name=".ShareViewTagActivity"
             android:theme="@style/NoActionBarTheme"
             android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>

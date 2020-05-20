@@ -63,7 +63,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class CardDetails extends AppCompatActivity {
+public class CardDetails extends AppCompatActivity implements View.OnClickListener {
     int position_nut_val = 0;
     String m_assetName = "";
     boolean isAlarmOn = false;
@@ -85,6 +85,7 @@ public class CardDetails extends AppCompatActivity {
 
     AlertDialog.Builder builder;
     AlertDialog m_disconnectAlert;
+    View child;
 
     boolean m_isPleaseWaitOn = false;
     //String to show next to connected/disconnected.
@@ -92,6 +93,8 @@ public class CardDetails extends AppCompatActivity {
     boolean m_firstTimePhoneSwitch = true;
     boolean m_firstTimeDeviceSwitch = true;
     boolean is_auto_reconnect=true;
+    private ImageButton menuOption;
+    private RelativeLayout editDeleteLayout;
 
 
     ///////////////////////////////////////////////////////////
@@ -520,22 +523,29 @@ public class CardDetails extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("ONCREATE","CREATEEEEEE");
-        setContentView(R.layout.card_details_view);
+        setContentView(R.layout.activity_card_details_view);
         m_firstTimeDeviceSwitch = true;
         m_firstTimePhoneSwitch = true;
 
+        TextView sharetagNumber = findViewById(R.id.shareTagNumber);
+        menuOption = findViewById(R.id.rel_detail_connect_devices);
+        menuOption.setOnClickListener(this);
         m_connectDisconnectDialogp = new ProgressDialog(this);
         m_handler = new Handler();
         Intent receiveIntent = this.getIntent();
+        Boolean shareFlag = receiveIntent.getBooleanExtra("ShareFlag",false);
         position_nut_val = receiveIntent.getIntExtra("POSITION_NUT", 0);
         ADDRRESS = receiveIntent.getStringExtra("ADDRRESS");
         LOCADDRRESS = receiveIntent.getStringExtra("LOCATION");
         STATUS = receiveIntent.getStringExtra("STATUS");
-        Log.d("STATUSS", STATUS);
+       // Log.d("STATUSS", STATUS);
         String statusVal = "";
+        if(shareFlag){
+            sharetagNumber.setVisibility(View.VISIBLE);
+        }
 
 
-        if (STATUS.toLowerCase(Locale.ROOT).contains("|")) {
+        if (STATUS != null && STATUS.toLowerCase(Locale.ROOT).contains("|")) {
             statusVal = STATUS.split("\\|")[0];
             farnear_val = STATUS.split("\\|")[1];
         } else {
@@ -544,7 +554,7 @@ public class CardDetails extends AppCompatActivity {
         //Log.d("STATUSVAL",status_val+":::Hello");
         //Toast.makeText(this.getApplicationContext(), "RENTRY"+STATUS, Toast.LENGTH_LONG).show();
 
-        if (statusVal.trim().equalsIgnoreCase("connected")) {
+        if (statusVal != null && statusVal.trim().equalsIgnoreCase("connected")) {
             isConnected = true;
             //Log.d("RENTRY", "reentry connected");
             //Toast.makeText(this.getApplicationContext(), "RENTRY CONNECTED "+status_val, Toast.LENGTH_LONG).show();
@@ -553,8 +563,10 @@ public class CardDetails extends AppCompatActivity {
             //Log.d("RENTRY", "reentry disconnected");
             //Toast.makeText(this.getApplicationContext(), "RENTRY DISCONNECTED "+status_val, Toast.LENGTH_LONG).show();
         }
-        ICON = receiveIntent.getStringExtra("ICON").split("\\.")[0];
-        Log.d("ICONINCARD", ICON);
+        if(receiveIntent.getStringExtra("ICON") != null) {
+            ICON = receiveIntent.getStringExtra("ICON").split("\\.")[0];
+        }
+     //   Log.d("ICONINCARD", ICON);
 
         IntentFilter intFilterConnected = new IntentFilter("com.nutapp.notifications_connected_device");
         intFilterConnected.addAction("com.nutapp.notifications_disconnected_device");
@@ -581,12 +593,13 @@ public class CardDetails extends AppCompatActivity {
                 relDetailLefticon.setImageResource(R.drawable.purse);
                 break;
             default:
-                relDetailLefticon.setImageResource(R.drawable.others);
+                relDetailLefticon.setImageResource(R.drawable.ic_wallet);
                 break;
         }
 
         rel_detail_device_status = (TextView) findViewById(R.id.rel_detail_device_status);
-        rel_detail_device_status.setText(STATUS);
+       // rel_detail_device_status.setText(STATUS);
+        rel_detail_device_status.setText("Connected | Near");
         if (isConnected == false) {
             rel_detail_device_status.setTextColor(0xCCCCCCCC);
         } else {
@@ -595,6 +608,7 @@ public class CardDetails extends AppCompatActivity {
 
         TextView locationText = (TextView) findViewById(R.id.rel_detail_device_distance);
         locationText.setText(LOCADDRRESS);
+        locationText.setText("RCP, Thane-Belapur road Navi Mumbai");
 
         preferences = this.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
         prefEditor = preferences.edit();
@@ -607,7 +621,7 @@ public class CardDetails extends AppCompatActivity {
         deviceAddr.setText(receiveIntent.getStringExtra("ICON"));
         alarm = (Button) findViewById(R.id.rel_detail_btn_search_devices);
 
-        if (isConnected == false && statusVal.trim().toLowerCase(Locale.ROOT).equalsIgnoreCase("disconnected")) {
+        if (isConnected == false && statusVal != null && statusVal.trim().toLowerCase(Locale.ROOT).equalsIgnoreCase("disconnected")) {
             alarm.setEnabled(false);
             alarm.setBackgroundDrawable(getResources().getDrawable(R.drawable.disabled_button));
         }
@@ -810,6 +824,13 @@ public class CardDetails extends AppCompatActivity {
                         sendBroadcast(inte);
                         break;
 
+                    case R.id.navigation_share:
+                        gotoShareTagActivity();
+                        break;
+
+                    case R.id.navigation_setting:
+                        gotoSettingsActivity();
+                        break;
                     default:
                         break;
                 }
@@ -818,6 +839,17 @@ public class CardDetails extends AppCompatActivity {
         });
 
         m_context_main = this;
+    }
+
+    private void gotoShareTagActivity() {
+
+        Intent intent = new Intent(this,ShareTagActivity.class);
+        startActivity(intent);
+    }
+
+    private void gotoSettingsActivity() {
+        Intent intent = new Intent(this,SettingsActivity.class);
+        startActivity(intent);
     }
 
     public String getTime() {
@@ -848,4 +880,52 @@ public class CardDetails extends AppCompatActivity {
         }
         return timeStr;
     }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+
+            case R.id.rel_detail_connect_devices:
+                addEditDeleteDisconnectView();
+                break;
+
+            case R.id.close:
+                editDeleteLayout.setVisibility(View.GONE);
+                menuOption.setVisibility(View.VISIBLE);
+                break;
+
+            default:
+                break;
+
+        }
+
+
+    }
+
+
+    private void addEditDeleteDisconnectView(){
+
+        if(child != null)
+        {
+            editDeleteLayout.setVisibility(View.VISIBLE);
+            menuOption.setVisibility(View.INVISIBLE);
+        }else {
+            menuOption.setVisibility(View.INVISIBLE);
+            RelativeLayout item = findViewById(R.id.childLayout);
+            child = getLayoutInflater().inflate(R.layout.activity_edit_delete_disconnect,null);
+            item.addView(child);
+            ImageView close = item.findViewById(R.id.close);
+            close.setOnClickListener(this);
+            editDeleteLayout = findViewById(R.id.oprationLayout);
+        }
+
+
+
+    }
+
+    /*@Override
+    public boolean onMenuItemClick(MenuItem item) {
+        return false;
+    }*/
 }

@@ -86,11 +86,12 @@ public class OtpRequest extends AppCompatActivity {
         int readPhoneNumbers=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS);
         int readSms=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
         int receiveSms=ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
+        int readContact=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
         if(sendSms != PackageManager.PERMISSION_GRANTED|| fineLocation !=PackageManager.PERMISSION_GRANTED || camera !=PackageManager.PERMISSION_GRANTED ||
         writeExternalStorage !=PackageManager.PERMISSION_GRANTED || readExternalStorage !=PackageManager.PERMISSION_GRANTED ||
         coarseLocation !=PackageManager.PERMISSION_GRANTED || readPhoneState != PackageManager.PERMISSION_GRANTED ||
         readPhoneNumbers !=PackageManager.PERMISSION_GRANTED || readSms !=PackageManager.PERMISSION_GRANTED ||
-        receiveSms != PackageManager.PERMISSION_GRANTED){
+        receiveSms != PackageManager.PERMISSION_GRANTED || readContact != PackageManager.PERMISSION_GRANTED ){
             return false;
         }else{
             return true;
@@ -102,7 +103,7 @@ public class OtpRequest extends AppCompatActivity {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (isPermissionAlreadyGranted() == false) {
                 requestPermissions(
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_PHONE_NUMBERS, Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS},
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_PHONE_NUMBERS, Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS ,Manifest.permission.READ_CONTACTS},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             } else {
                 Log.d("PERMISSIONS", "GRANTED ALREADY NO CHECK");

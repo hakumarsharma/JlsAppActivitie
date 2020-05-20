@@ -48,6 +48,7 @@ public class JioTagDeviceInfoActivity extends AppCompatActivity {
         title.setText(JioConstant.DEVICE_INFO_TITLE);
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
+        Button attachDevice = findViewById(R.id.attach_btn);
         title.setTypeface(JioUtils.mTypeface(this, 5));
         deviceName = findViewById(R.id.jiotag_device_name);
         deviceNumber = findViewById(R.id.jiotag_device_number);
@@ -55,6 +56,15 @@ public class JioTagDeviceInfoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String qrValue = intent.getStringExtra("QRCodeValue");
         setNameNumberImei(qrValue);
+        attachDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JioUtils.setQRScanflag(JioTagDeviceInfoActivity.this,true);
+                Intent intent = new Intent(JioTagDeviceInfoActivity.this,MainActivity.class);
+                //intent.putExtra("ScanningProcess","Yes");
+                startActivity(intent);
+            }
+        });
 
     }
     private void setNameNumberImei(String qrValue) {

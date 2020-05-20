@@ -60,6 +60,7 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
     private EditText passEdittext;
     private TextView emailTitleText;
     private TextView passTitleText;
+    private TextView passConditionText;
     private  CallbackManager callbackManager;
     private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN =0;
@@ -72,7 +73,7 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_auth_login);
         TextView title = findViewById(R.id.toolbar_title);
         Button backBtn = findViewById(R.id.back);
-        TextView passConditionText = findViewById(R.id.password_condition);
+        passConditionText = findViewById(R.id.password_condition);
         backBtn.setVisibility(View.VISIBLE);
         title.setText(JioConstant.AUTH_LOGIN_TITLE);
         emailEdittext = findViewById(R.id.login_edit_email);
@@ -81,6 +82,8 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
         passTitleText = findViewById(R.id.login_text_password);
         Button nextBtn = findViewById(R.id.login_btn);
         nextBtn.setOnClickListener(this);
+        TextView forgotPassword = findViewById(R.id.forgot_password);
+        forgotPassword.setOnClickListener(this);
         passConditionText.setTypeface(JioUtils.mTypeface(this, 3));
 
         callbackManager = CallbackManager.Factory.create();
@@ -193,10 +196,17 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
             case R.id.login_btn:
                 validateEntry();
                 break;
-
+            case R.id.forgot_password:
+                gotoForgotPasswordScreen();
+                break;
             default:
                 break;
         }
+    }
+
+    private void gotoForgotPasswordScreen() {
+        Intent intent = new Intent(this,ForgotPasswordActivity.class);
+        startActivity(intent);
     }
 
     private void validateEntry() {
@@ -205,7 +215,8 @@ public class AuthLoginActivity extends AppCompatActivity implements View.OnClick
             return;
         }
         if(passEdittext.getText().toString().isEmpty() || ! JioUtils.isValidPassword(passEdittext.getText().toString())){
-            passEdittext.setError("Please enter the valid password");
+           // passEdittext.setError("Please enter the valid password");
+             passConditionText.setVisibility(View.VISIBLE);
             return;
         }
 
