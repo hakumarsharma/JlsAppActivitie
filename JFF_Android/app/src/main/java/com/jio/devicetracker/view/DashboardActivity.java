@@ -118,7 +118,6 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.TrackerDeviceListAdapter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -468,7 +467,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     // Gets called when app receives message
     @Override
     public void messageReceived(String message, String phoneNum) {
-        if (message != null || ! message.equalsIgnoreCase("")) {
+        if (message != null || ! "".equalsIgnoreCase(message)) {
             System.out.println("Message is " + message);
 //            GroupRequestHandler.getInstance(this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
         }
