@@ -101,6 +101,10 @@
             android:name=".view.GroupListActivity"
             android:label="@string/map_name" />
         <activity
+            android:name=".view.QRReaderInstruction"
+            android:label="@string/map_name" />
+
+        <activity
             android:name=".view.SplashScreenActivity"
             android:theme="@style/SplashScreen">
             <intent-filter>

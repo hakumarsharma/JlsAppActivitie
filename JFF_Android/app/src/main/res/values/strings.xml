@@ -40,6 +40,10 @@
     <string name="trackee_number">Number*</string>
     <string name="trackee_name">Name*</string>
     <string name="group_name_textview">Please enter your group name</string>
+    <string name="add_manual">Add manually</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="qrscan_instruction">A QR code will be available to \nthe back side of your device \nbox.</string>
+    <string name="qrcode_text">Align QR Code with in the \nframe to scan</string>
 
 
     <string-array name="device_type_array">

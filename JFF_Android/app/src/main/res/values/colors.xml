@@ -18,4 +18,7 @@
     <color name="black">#000000</color>
     <color name="black_semi_transparent">#B2000000</color>
     <color name="float_menu_color">#74c045</color>
+    <color name="cardviewlayout_device_background_color">#353398</color>
+    <color name="cardviewlayout_contenttext_color">#00B5B4</color>
+    <color name="lite_blue">#3DB5EA</color>
 </resources>

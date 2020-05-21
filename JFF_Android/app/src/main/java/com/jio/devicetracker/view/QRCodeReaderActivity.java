@@ -23,10 +23,16 @@ package com.jio.devicetracker.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.google.zxing.Result;
+import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -47,13 +53,24 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mScannerView = new ZXingScannerView(this);
-        setContentView(mScannerView);
+        setContentView(R.layout.activity_qrcode_reader);
+        TextView title = findViewById(R.id.toolbar_title);
+        title.setText(Constant.SCAN_QR_CODE_TITLE);
+        Button closeBtn = findViewById(R.id.close);
+        closeBtn.setVisibility(View.VISIBLE);
+        RelativeLayout toolbarLayout = findViewById(R.id.toolbarlayout);
+        toolbarLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.cardviewlayout_device_background_color));
         Intent intent = getIntent();
         isComingFromAddDevice = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_DEVICE, false);
         isComingFromAddContact = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_CONTACT, false);
         isComingFromGroupList = intent.getBooleanExtra(Constant.IS_COMING_FROM_GROUP_LIST, false);
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         userId = intent.getStringExtra(Constant.USER_ID);
+
+        RelativeLayout scanView = findViewById(R.id.scanframe);
+        mScannerView = new ZXingScannerView(this);
+        //mScannerView.setBackground(getDrawable(R.drawable.ic_qrcodescan));
+        scanView.addView(mScannerView);
     }
 
     /**
