@@ -2,6 +2,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="margin_24">24dp</dimen>
     <dimen name="adddevice_content_font_size">17dp</dimen>
+    <dimen name="device_content_font_size">18dp</dimen>
     <dimen name="twenty_dp">20dp</dimen>
     <dimen name="fifteen_dp">15dp</dimen>
     <dimen name="adddevice_button_height">40dp</dimen>

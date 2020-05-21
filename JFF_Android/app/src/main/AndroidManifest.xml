@@ -74,6 +74,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".view.AddDeviceActivity"
+            android:label="@string/map_name" />
+        <activity
             android:name=".view.MapsActivity"
             android:label="@string/map_name" />
         <activity
