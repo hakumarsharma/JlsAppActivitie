@@ -302,7 +302,11 @@ public class Constant {
 
     // Add Device constants
     public static final String Add_Device = "JioTrack";
+    public static final String Add_People = "Add People";
 
+    // Custom Alert Constants
+    public  static  final  String Custom_Alert_Title = "Invite";
+    public  static  final  String Custom_Alert_Message = "An invite message sent to selected contacts, you can view the status of them in invite section";
 
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";

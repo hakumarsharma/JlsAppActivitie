@@ -51,7 +51,7 @@
             android:layout_height="36dp"
             android:layout_marginRight="15dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/icon_contact"
+            android:src="@drawable/addcontact"
             android:layout_alignParentRight="true"
             android:visibility="invisible" />
 

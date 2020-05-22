@@ -29,6 +29,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
+
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 
 import com.jio.devicetracker.R;
@@ -80,7 +82,9 @@ public class SplashScreenActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//            startActivity(intent);
+            Intent intent = new Intent(getApplicationContext(), AddPeopleActivity.class);
             startActivity(intent);
         }
 
