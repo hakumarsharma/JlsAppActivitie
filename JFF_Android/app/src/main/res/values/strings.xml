@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">People Tracker</string>
+    <string name="app_name">JioTrack</string>
     <string name="title_activity_maps">People Tracker</string>
-    <string name="map_name">People Tracker</string>
+    <string name="map_name">JioTrack</string>
     <string name="action_settings">Setting</string>
     <string name="about_us">About Us</string>
     <string name="loginLabel">People Tracker</string>
@@ -49,7 +49,8 @@
     <string name="add_device_info">You have successfully registered with JioTrack.\nFollow the next steps to set up your device.</string>
     <string name="purchase_info">Inorder to purchase device follow the link</string>
     <string name="purchase_link">www.myjio/devices/JioTrack</string>
-
+    <string name="add_people_text">Add people from your contacts or add their name and mobile number</string>
+    <string name="continue_text">Continue</string>
     <string-array name="device_type_array">
         <item>People Tracker</item>
         <item>Pet Tracker</item>
