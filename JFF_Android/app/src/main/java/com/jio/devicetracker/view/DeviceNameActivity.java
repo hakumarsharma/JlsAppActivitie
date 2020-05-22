@@ -1,3 +1,23 @@
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.jio.devicetracker.view;
 
 import android.app.Activity;
@@ -29,11 +49,7 @@ public class DeviceNameActivity extends Activity implements View.OnClickListener
         title.setTypeface(Util.mTypeface(this,5));
         TextView iconSelectionText = findViewById(R.id.icon_selection);
         iconSelectionText.setTypeface(Util.mTypeface(this,3));
-        RelativeLayout toolbarLayout = findViewById(R.id.toolbarlayout);
-        toolbarLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.cardviewlayout_device_background_color));
         initiateUI();
-
-
     }
 
     public void initiateUI(){

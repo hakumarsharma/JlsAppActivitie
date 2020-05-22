@@ -48,7 +48,7 @@ import java.util.List;
  */
 public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDeviceListAdapter.ViewHolder> {
 
-    private List mData;
+        private List mData;
     private static RecyclerViewClickListener itemListener;
     private int groupCount;
     private Context mContext;

@@ -257,6 +257,7 @@ public class Constant {
     public static final String QR_CODE_VALUE = "QRCodeValue";
     public static final String SCAN_QR_CODE_TITLE = "Scan QR Code";
     public static final String DEVICE_NAME_TITLE = "Device name";
+
     public static final String ACTIVE_SESSION_TITLE = "Active Sessions";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";
