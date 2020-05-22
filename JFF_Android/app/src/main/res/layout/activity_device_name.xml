@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F4F4">
+
+    <include
+        android:id="@+id/deviceNameToolbar"
+        layout="@layout/toolbar" />
+
+
+    <RelativeLayout
+        android:id="@+id/rel_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/deviceNameToolbar"
+        android:background="@drawable/layout_frame_blue">
+
+        <ImageView
+            android:id="@+id/device_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/device_default" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/device_icon"
+            android:layout_marginTop="@dimen/fifteen_dp"
+            android:gravity="center"
+            android:id="@+id/icon_selection"
+            android:paddingBottom="@dimen/twenty_dp"
+            android:text="@string/select_icon_text"
+            android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/people_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rel_layout"
+        android:layout_marginLeft="@dimen/sixteen_dp"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:text="@string/people_title"
+        android:textColor="@color/mine_shaft"
+        android:textSize="@dimen/fourteen_dp" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/people_title"
+        android:id="@+id/people_card"
+        app:cardBackgroundColor="#FFFFFF"
+        android:layout_marginLeft="@dimen/sixteen_dp"
+        android:layout_marginTop="@dimen/eight_dp"
+        android:layout_marginRight="@dimen/sixteen_dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
+        android:elevation="10dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/mother_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ten_dp"
+                android:layout_marginTop="@dimen/sixteen_dp"
+                android:src="@drawable/mother" />
+
+            <TextView
+                android:id="@+id/mother_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mother_icon"
+                android:layout_alignRight="@+id/mother_icon"
+                android:gravity="center"
+                android:layout_alignLeft="@+id/mother_icon"
+                android:textSize="@dimen/fourteen_dp"
+                android:textColor="@color/mine_shaft"
+                android:text="Mother" />
+
+            <ImageView
+                android:id="@+id/father_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sixteen_dp"
+                android:layout_toRightOf="@+id/mother_icon"
+                android:src="@drawable/father" />
+
+            <TextView
+                android:id="@+id/father_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mother_icon"
+                android:textSize="@dimen/fourteen_dp"
+                android:layout_alignBaseline="@+id/mother_title"
+                android:layout_alignRight="@+id/father_icon"
+                android:layout_alignLeft="@+id/father_icon"
+                android:gravity="center"
+
+                android:textColor="@color/mine_shaft"
+                android:text="Father" />
+
+            <ImageView
+                android:id="@+id/husband_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sixteen_dp"
+                android:layout_toRightOf="@+id/father_icon"
+                android:src="@drawable/husband" />
+
+            <TextView
+                android:id="@+id/husband_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mother_icon"
+                android:textSize="@dimen/fourteen_dp"
+                android:textColor="@color/mine_shaft"
+                android:layout_alignBaseline="@+id/mother_title"
+                android:layout_alignRight="@+id/husband_icon"
+                android:layout_alignLeft="@+id/husband_icon"
+                android:gravity="center"
+                android:text="Husband" />
+
+            <ImageView
+                android:id="@+id/wife_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sixteen_dp"
+                android:layout_toRightOf="@+id/husband_icon"
+                android:src="@drawable/wife" />
+
+            <TextView
+                android:id="@+id/wife_title"
+                android:layout_width="wrap_content"
+                android:textColor="@color/mine_shaft"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wife_icon"
+                android:layout_alignBaseline="@+id/mother_title"
+                android:layout_alignRight="@+id/wife_icon"
+                android:layout_alignLeft="@+id/wife_icon"
+                android:gravity="center"
+                android:textSize="@dimen/fourteen_dp"
+                android:text="Wife" />
+
+            <ImageView
+                android:id="@+id/kid_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mother_title"
+                android:layout_marginLeft="@dimen/ten_dp"
+                android:layout_marginTop="@dimen/sixteen_dp"
+                android:src="@drawable/kid" />
+
+            <TextView
+                android:id="@+id/kid_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/kid_icon"
+                android:textSize="@dimen/fourteen_dp"
+                android:textColor="@color/mine_shaft"
+                android:layout_alignBaseline="@+id/other_title"
+                android:layout_alignRight="@+id/kid_icon"
+                android:layout_alignLeft="@+id/kid_icon"
+                android:gravity="center"
+                android:text="Kid" />
+
+            <ImageView
+                android:id="@+id/other_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mother_title"
+                android:layout_marginTop="@dimen/sixteen_dp"
+                android:layout_toRightOf="@+id/kid_icon"
+                android:src="@drawable/other" />
+
+            <TextView
+                android:id="@+id/other_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/other_icon"
+                android:textSize="@dimen/fourteen_dp"
+                android:textColor="@color/mine_shaft"
+                android:layout_alignBaseline="@+id/mother_icon"
+                android:layout_alignRight="@+id/other_icon"
+                android:layout_alignLeft="@+id/other_icon"
+                android:gravity="center"
+                android:paddingBottom="17dp"
+                android:text="Other" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/pet_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/people_card"
+        android:layout_marginLeft="@dimen/sixteen_dp"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:text="@string/pet_title"
+        android:textColor="@color/mine_shaft"
+        android:textSize="@dimen/fourteen_dp" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pet_title"
+        android:id="@+id/pet_card"
+        android:layout_marginLeft="@dimen/sixteen_dp"
+        android:layout_marginTop="@dimen/eight_dp"
+        android:layout_marginRight="@dimen/sixteen_dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
+        android:elevation="10dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/dog_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/cat_icon"
+                android:layout_marginLeft="@dimen/ten_dp"
+                android:layout_marginTop="@dimen/fourteen_dp"
+                android:src="@drawable/dog" />
+
+            <TextView
+                android:id="@+id/dog_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dog_icon"
+                android:layout_alignBaseline="@+id/cat_title"
+                android:layout_alignRight="@+id/dog_icon"
+                android:textSize="@dimen/fourteen_dp"
+                android:textColor="@color/mine_shaft"
+                android:layout_alignLeft="@+id/dog_icon"
+                android:gravity="center"
+                android:text="Dog" />
+
+            <ImageView
+                android:id="@+id/cat_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fourteen_dp"
+                android:layout_toRightOf="@+id/dog_icon"
+                android:src="@drawable/cat" />
+
+            <TextView
+                android:id="@+id/cat_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cat_icon"
+                android:layout_alignRight="@+id/cat_icon"
+                android:layout_alignLeft="@+id/cat_icon"
+                android:gravity="center"
+                android:textColor="@color/mine_shaft"
+                android:textSize="@dimen/fourteen_dp"
+                android:text="Cat" />
+
+            <ImageView
+                android:id="@+id/other_pet_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fourteen_dp"
+                android:layout_toRightOf="@+id/cat_icon"
+                android:src="@drawable/other_pet" />
+
+            <TextView
+                android:id="@+id/other_pet_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/other_pet_icon"
+                android:layout_alignBaseline="@+id/cat_title"
+                android:layout_alignRight="@+id/other_pet_icon"
+                android:layout_alignLeft="@+id/other_pet_icon"
+                android:gravity="center"
+                android:textColor="@color/mine_shaft"
+                android:textSize="@dimen/fourteen_dp"
+                android:paddingBottom="15dp"
+                android:text="Other" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

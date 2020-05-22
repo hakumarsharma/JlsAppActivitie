@@ -26,6 +26,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
@@ -453,5 +454,23 @@ public final class Util extends AppCompatActivity {
             userName = adminLoginData.getName();
             userId = adminLoginData.getUserId();
         }
+    }
+
+    public static Typeface mTypeface(Context ctx, int typeface) {
+        Typeface font1 = null;
+        if (typeface == 1) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-Black.ttf");
+        } else if (typeface == 2) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-Bold.ttf");
+        } else if (typeface == 3) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-Light.ttf");
+        } else if (typeface == 4) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-LightItalic.ttf");
+        } else if (typeface == 5) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-Medium.ttf");
+        } else if (typeface == 6) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-MediumItalic.ttf");
+        }
+        return font1;
     }
 }

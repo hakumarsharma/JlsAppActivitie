@@ -33,6 +33,7 @@ import androidx.core.content.ContextCompat;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 
 public class QRReaderInstruction extends AppCompatActivity implements View.OnClickListener {
 
@@ -40,14 +41,14 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrscan_instruction);
+        TextView qrScanHelpTitle = findViewById(R.id.qrcode_scan_help_title);
+        qrScanHelpTitle.setTypeface(Util.mTypeface(this,3));
         RelativeLayout toolbarLayout = findViewById(R.id.toolbarlayout);
         toolbarLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.cardviewlayout_device_background_color));
         Button scanBtn = findViewById(R.id.scan_btn);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.SCAN_QR_CODE_TITLE);
-        //title.setTypeface(JioUtils.mTypeface(this, 5));
-        TextView scanHelpText = findViewById(R.id.qrcode_scan_help_title);
-        //scanHelpText.setTypeface(JioUtils.mTypeface(this,3));
+        title.setTypeface(Util.mTypeface(this, 5));
         Button addManually = findViewById(R.id.manual_add);
         addManually.setOnClickListener(this);
         scanBtn.setOnClickListener(this);

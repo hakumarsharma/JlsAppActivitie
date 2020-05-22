@@ -108,6 +108,10 @@
             android:label="@string/map_name" />
 
         <activity
+        android:name=".view.DeviceNameActivity"
+        android:label="@string/map_name" />
+
+        <activity
             android:name=".view.SplashScreenActivity"
             android:theme="@style/SplashScreen">
             <intent-filter>
