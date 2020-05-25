@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -47,13 +48,21 @@ public class ChooseGroupActivity extends AppCompatActivity {
         addDatainList();
     }
 
+    /**
+     * Initialize UI component
+     */
     private void initUI() {
         TextView chooseGroupTextView = findViewById(R.id.chooseGroupTextView);
         chooseGroupTextView.setTypeface(Util.mTypeface(this,5));
         EditText trackeeNameEditText = findViewById(R.id.trackeeNameEditText);
         trackeeNameEditText.setTypeface(Util.mTypeface(this, 5));
+        Button chooseGroupButton = findViewById(R.id.continueChooseGroup);
+        chooseGroupButton.setTypeface(Util.mTypeface(this, 5));
     }
 
+    /**
+     * Displays created group in recycler view
+     */
     private void addDatainList() {
         List<ChooseGroupData> chooseGroupDataList = new ArrayList<>();
         ChooseGroupData chooseGroupData = new ChooseGroupData();

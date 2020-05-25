@@ -23,6 +23,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
+        <activity android:name=".view.CreateGroupActivity"></activity>
+        <activity android:name=".view.ChooseGroupActivity" />
         <activity android:name=".view.GroupNameActivity" />
         <activity android:name=".view.ActiveMemberActivity" />
         <activity android:name=".view.RefreshIntervalSettingActivity" />
@@ -64,6 +66,7 @@
         <activity android:name=".view.DashboardActivity">
             <intent-filter android:label="@string/title_activity_maps">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
@@ -106,11 +109,9 @@
         <activity
             android:name=".view.QRReaderInstruction"
             android:label="@string/map_name" />
-
         <activity
-        android:name=".view.DeviceNameActivity"
-        android:label="@string/map_name" />
-
+            android:name=".view.DeviceNameActivity"
+            android:label="@string/map_name" />
         <activity
             android:name=".view.SplashScreenActivity"
             android:theme="@style/SplashScreen">
