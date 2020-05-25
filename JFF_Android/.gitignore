@@ -12,3 +12,4 @@
 /captures
 .externalNativeBuild
 .cxx
+/jioutils-mqtt-client-1.0/build

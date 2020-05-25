@@ -1,6 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="margin_24">24dp</dimen>
+    <dimen name="margin_32">32dp</dimen>
     <dimen name="adddevice_content_font_size">17dp</dimen>
     <dimen name="device_content_font_size">18dp</dimen>
     <dimen name="twenty_dp">20dp</dimen>

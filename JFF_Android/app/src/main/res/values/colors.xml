@@ -25,4 +25,10 @@
     <color name="cardviewlayout_device_background_color">#353398</color>
     <color name="cardviewlayout_contenttext_color">#00B5B4</color>
     <color name="lite_blue">#3DB5EA</color>
+    <color name="dull_text_color">#EBEBEB</color>
+    <color name="unselected_button_background">#D5D7D7</color>
+    <color name="alert_text_color">#666666</color>
+    <color name="alert_btn_color">#CCF2FD</color>
+    <color name="alert_btn_selected_color">#00BFF2</color>
+    <color name="alert_background_color">#707070</color>
 </resources>
