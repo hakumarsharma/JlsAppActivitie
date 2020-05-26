@@ -60,8 +60,7 @@
         android:layout_marginRight="@dimen/sixteen_dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="8dp"
-        android:elevation="10dp"
-        >
+        android:elevation="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"

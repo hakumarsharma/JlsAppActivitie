@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/listLayout"
     android:layout_width="match_parent"
-    android:layout_height="240dp"
+    android:layout_height="150dp"
     card_view:cardCornerRadius="10dp"
     android:layout_margin="10dp"
     card_view:cardElevation="8dp"
@@ -17,94 +17,87 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/cardTextOnChooseGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="17dp" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/home"
-            android:layout_width="wrap_content"
-            android:layout_height="85dp"
-            android:layout_marginTop="80dp"
-            android:background="@drawable/ic_home_group" />
+            android:id="@+id/firstButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:visibility="invisible"
+            android:layout_marginRight="18dp"
+            android:layout_marginLeft="26dp"
+            android:drawableTop="@drawable/ic_creategroup"
+            android:background="@drawable/button_shape"
+            android:layout_marginTop="28dp" />
 
         <TextView
-            android:id="@+id/homeTextView"
+            android:id="@+id/firstButtonTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="34dp"
             android:textSize="14dp"
-            android:layout_below="@id/home"/>
+            android:visibility="invisible"
+            android:layout_marginTop="110dp"/>
 
         <Button
-            android:id="@+id/family"
-            android:layout_width="wrap_content"
-            android:layout_height="85dp"
-            android:layout_marginTop="80dp"
-            android:layout_toRightOf="@id/home"
-            android:background="@drawable/ic_family_group"/>
+            android:id="@+id/secondButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="28dp"
+            android:visibility="invisible"
+            android:layout_marginRight="20dp"
+            android:drawableTop="@drawable/ic_creategroup"
+            android:background="@drawable/button_shape"
+            android:layout_toRightOf="@id/firstButton" />
 
         <TextView
-            android:id="@+id/familyTextView"
+            android:id="@+id/secondButtonTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Family"
             android:textSize="14dp"
-            android:layout_toRightOf="@id/homeTextView"
-            android:layout_marginLeft="50dp"
-            android:layout_below="@id/family"/>
+            android:layout_marginLeft="126dp"
+            android:visibility="invisible"
+            android:layout_marginTop="110dp"/>
 
         <Button
-            android:id="@+id/friends"
-            android:layout_width="wrap_content"
-            android:layout_height="85dp"
-            android:layout_marginTop="80dp"
-            android:layout_toRightOf="@id/family"
-            android:background="@drawable/ic_friends_group" />
+            android:id="@+id/thirdButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="28dp"
+            android:visibility="invisible"
+            android:layout_marginRight="20dp"
+            android:drawableTop="@drawable/ic_creategroup"
+            android:background="@drawable/button_shape"
+            android:layout_toRightOf="@id/secondButton" />
 
         <TextView
-            android:id="@+id/friendsTextView"
+            android:id="@+id/thirdButtonTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14dp"
-            android:text="Friends"
-            android:layout_toRightOf="@id/familyTextView"
-            android:layout_marginLeft="50dp"
-            android:layout_below="@id/friends"/>
+            android:layout_marginLeft="220dp"
+            android:visibility="invisible"
+            android:layout_marginTop="110dp"/>
 
         <Button
-            android:id="@+id/pet"
-            android:layout_width="wrap_content"
-            android:layout_height="85dp"
-            android:layout_marginTop="80dp"
-            android:layout_toRightOf="@id/friends"
-            android:background="@drawable/ic_group_pet" />
+            android:id="@+id/fourthButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="28dp"
+            android:visibility="invisible"
+            android:layout_marginRight="20dp"
+            android:drawableTop="@drawable/ic_creategroup"
+            android:background="@drawable/button_shape"
+            android:layout_toRightOf="@id/thirdButton" />
 
         <TextView
-            android:id="@+id/petTextView"
+            android:id="@+id/fourthButtonTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14dp"
-            android:text="Pet"
-            android:layout_toRightOf="@id/friendsTextView"
-            android:layout_marginLeft="45dp"
-            android:layout_below="@id/pet"/>
+            android:layout_marginLeft="312dp"
+            android:visibility="invisible"
+            android:layout_marginTop="110dp"/>
 
     </RelativeLayout>
 

@@ -24,61 +24,86 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.pojo.ChooseGroupData;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.ChooseGroupActivity;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
-public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupListAdapter.ExampleViewHolder> {
+public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupListAdapter.ViewHolder> {
 
-    private List<ChooseGroupData> mData;
+    private List<List<HomeActivityListData>> mData;
     private Context mContext;
 
-    public ChooseGroupListAdapter(List<ChooseGroupData> mList, Context mContext) {
+    public ChooseGroupListAdapter(List<List<HomeActivityListData>> mList, Context mContext) {
         mData = mList;
         this.mContext = mContext;
     }
 
-    public static class ExampleViewHolder extends RecyclerView.ViewHolder {
-        public TextView cardTextView;
-        public TextView homeTextView;
-        public TextView familyTextView;
-        public TextView friendsTextView;
-        public TextView petTextView;
-
-        public ExampleViewHolder(View itemView) {
-            super(itemView);
-            cardTextView = itemView.findViewById(R.id.cardTextOnChooseGroup);
-            homeTextView = itemView.findViewById(R.id.homeTextView);
-            familyTextView = itemView.findViewById(R.id.familyTextView);
-            friendsTextView = itemView.findViewById(R.id.friendsTextView);
-            petTextView = itemView.findViewById(R.id.petTextView);
-        }
-    }
-
     @Override
-    public ExampleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_choose_device_list_adapter, parent, false);
-        ExampleViewHolder evh = new ExampleViewHolder(v);
+        ViewHolder evh = new ViewHolder(v);
         return evh;
     }
 
     @Override
-    public void onBindViewHolder(ExampleViewHolder holder, int position) {
-        holder.cardTextView.setText(R.string.chooseGroupText);
-        holder.cardTextView.setTypeface(Util.mTypeface(mContext, 3));
-        holder.homeTextView.setTypeface(Util.mTypeface(mContext, 3));
-        holder.familyTextView.setTypeface(Util.mTypeface(mContext, 3));
-        holder.friendsTextView.setTypeface(Util.mTypeface(mContext, 3));
-        holder.petTextView.setTypeface(Util.mTypeface(mContext, 3));
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        List<HomeActivityListData> data = mData.get(position);
+        for(int i = 0; i < data.size(); i ++) {
+            if(i == 0) {
+                holder.firstButtonTextView.setText(data.get(i).getGroupName());
+                holder.firstButtonTextView.setTypeface(Util.mTypeface(mContext, 3));
+                holder.firstButtonTextView.setVisibility(View.VISIBLE);
+                holder.firstButton.setVisibility(View.VISIBLE);
+            }
+            else if(i == 1) {
+                holder.secondButtonTextView.setText(data.get(i).getGroupName());
+                holder.secondButtonTextView.setTypeface(Util.mTypeface(mContext, 3));
+                holder.secondButtonTextView.setVisibility(View.VISIBLE);
+                holder.secondButton.setVisibility(View.VISIBLE);
+            }
+            else if(i == 2) {
+                holder.thirdButtonTextView.setText(data.get(i).getGroupName());
+                holder.thirdButtonTextView.setTypeface(Util.mTypeface(mContext, 3));
+                holder.thirdButtonTextView.setVisibility(View.VISIBLE);
+                holder.thirdButton.setVisibility(View.VISIBLE);
+            }
+            else if(i == 3) {
+                holder.fourthButtonTextView.setText(data.get(i).getGroupName());
+                holder.fourthButtonTextView.setTypeface(Util.mTypeface(mContext, 3));
+                holder.fourthButtonTextView.setVisibility(View.VISIBLE);
+                holder.fourthButton.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView firstButtonTextView;
+        public TextView secondButtonTextView;
+        public TextView thirdButtonTextView;
+        public TextView fourthButtonTextView;
+        public Button firstButton;
+        public Button secondButton;
+        public Button thirdButton;
+        public Button fourthButton;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            firstButtonTextView = itemView.findViewById(R.id.firstButtonTextView);
+            secondButtonTextView = itemView.findViewById(R.id.secondButtonTextView);
+            thirdButtonTextView = itemView.findViewById(R.id.thirdButtonTextView);
+            fourthButtonTextView = itemView.findViewById(R.id.fourthButtonTextView);
+            firstButton = itemView.findViewById(R.id.firstButton);
+            secondButton = itemView.findViewById(R.id.secondButton);
+            thirdButton = itemView.findViewById(R.id.thirdButton);
+            fourthButton = itemView.findViewById(R.id.fourthButton);
+        }
     }
 
     @Override
