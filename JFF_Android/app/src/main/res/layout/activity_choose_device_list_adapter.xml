@@ -26,6 +26,8 @@
             android:visibility="invisible"
             android:layout_marginRight="18dp"
             android:layout_marginLeft="26dp"
+            android:color="#FFFFFF"
+            android:alpha="0.25"
             android:drawableTop="@drawable/ic_creategroup"
             android:background="@drawable/button_shape"
             android:layout_marginTop="28dp" />
@@ -46,6 +48,8 @@
             android:layout_marginTop="28dp"
             android:visibility="invisible"
             android:layout_marginRight="20dp"
+            android:color="#FFFFFF"
+            android:alpha="0.25"
             android:drawableTop="@drawable/ic_creategroup"
             android:background="@drawable/button_shape"
             android:layout_toRightOf="@id/firstButton" />
@@ -66,6 +70,8 @@
             android:layout_marginTop="28dp"
             android:visibility="invisible"
             android:layout_marginRight="20dp"
+            android:color="#FFFFFF"
+            android:alpha="0.25"
             android:drawableTop="@drawable/ic_creategroup"
             android:background="@drawable/button_shape"
             android:layout_toRightOf="@id/secondButton" />
@@ -86,6 +92,8 @@
             android:layout_marginTop="28dp"
             android:visibility="invisible"
             android:layout_marginRight="20dp"
+            android:color="#FFFFFF"
+            android:alpha="0.25"
             android:drawableTop="@drawable/ic_creategroup"
             android:background="@drawable/button_shape"
             android:layout_toRightOf="@id/thirdButton" />
