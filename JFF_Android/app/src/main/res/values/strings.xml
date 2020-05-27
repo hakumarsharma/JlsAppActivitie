@@ -45,6 +45,7 @@
     <string name="qrscan_instruction">A QR code will be available to \nthe back side of your device \nbox.</string>
     <string name="qrcode_text">Align QR Code with in the \nframe to scan</string>
     <string name="add_device">Add device</string>
+    <string name="add_contact">Add contact</string>
     <string name="add_device_later">Add device later</string>
     <string name="add_device_info">You have successfully registered with JioTrack.\nFollow the next steps to set up your device.</string>
     <string name="purchase_info">Inorder to purchase device follow the link</string>

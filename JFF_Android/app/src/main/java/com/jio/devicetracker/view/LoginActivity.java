@@ -310,7 +310,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (logindetailResponse.getData().getUgsToken() != null) {
                 mDbManager.deleteAllPreviousData();
                 mDbManager.insertLoginData(logindetailResponse);
-                startActivity(new Intent(LoginActivity.this, CreateGroupActivity.class));
+                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
             }
         }
     }

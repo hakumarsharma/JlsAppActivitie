@@ -39,12 +39,12 @@
             android:layout_marginLeft="@dimen/margin_32"
             android:layout_marginTop="10dp"
             android:layout_marginRight="@dimen/margin_32"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/hintColor"
             android:hint="Name"
             android:inputType="text"
             android:textAlignment="center"
-            android:textColor="@color/dull_text_color"
-            android:textColorHint="@color/dull_text_color"
+            android:textColor="@color/white"
+            android:textColorHint="@color/hintColor"
             android:textCursorDrawable="@color/dull_text_color" />
 
         <EditText
@@ -56,12 +56,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="@dimen/margin_32"
             android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/hintColor"
             android:hint="Mobile Number"
             android:inputType="text"
             android:textAlignment="center"
-            android:textColor="@color/dull_text_color"
-            android:textColorHint="@color/dull_text_color"
+            android:textColor="@color/white"
+            android:textColorHint="@color/hintColor"
             android:textCursorDrawable="@color/dull_text_color" />
     </RelativeLayout>
 
