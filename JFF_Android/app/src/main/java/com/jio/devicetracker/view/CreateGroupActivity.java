@@ -44,7 +44,7 @@ import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
-public class CreateGroupActivity extends AppCompatActivity implements View.OnClickListener {
+public class CreateGroupActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText createGroupEditText;
     private Button addGroupCreateGroup;
@@ -112,50 +112,52 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                 createGroupEditText.setError(Constant.GROUP_NAME_VALIDATION_ERROR);
                 return;
             }
-            makeCreateGroupAPICall(groupName);
+//            makeCreateGroupAPICall(groupName);
+            this.isFromCreateGroup = true;
+            createGroupAndAddContactAPICall(groupName);
         }
     }
 
-    /**
-     * Create Group API call
-     */
-    private void makeCreateGroupAPICall(String groupName) {
-        CreateGroupData createGroupData = new CreateGroupData();
-        createGroupData.setName(groupName);
-        createGroupData.setType("one_to_one");
-        CreateGroupData.Session session = new CreateGroupData().new Session();
-        session.setFrom(Util.getInstance().getTimeEpochFormatAfterCertainTime(1));
-        session.setTo(Util.getInstance().getTimeEpochFormatAfterCertainTime(60));
-        createGroupData.setSession(session);
-        Util.getInstance().showProgressBarDialog(this);
-        GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, mDbManager.getAdminLoginDetail().getUserId()));
-    }
-
-    /**
-     * Create Group Success Listener
-     */
-    private class CreateGroupSuccessListener implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            CreateGroupResponse createGroupResponse = Util.getInstance().getPojoObject(String.valueOf(response), CreateGroupResponse.class);
-            DBManager mDbManager = new DBManager(CreateGroupActivity.this);
-            mDbManager.insertIntoGroupTable(createGroupResponse);
-            Util.progressDialog.dismiss();
-            startActivity(new Intent(CreateGroupActivity.this, ChooseGroupActivity.class));
-        }
-    }
-
-    /**
-     * Create Group error Listener
-     */
-    private class CreateGroupErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.progressDialog.dismiss();
-            if(error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
-                Util.alertDilogBox(Constant.GROUP_CREATION_FAILURE, Constant.ALERT_TITLE, CreateGroupActivity.this);
-            }
-        }
-    }
+//    /**
+//     * Create Group API call
+//     */
+//    private void makeCreateGroupAPICall(String groupName) {
+//        CreateGroupData createGroupData = new CreateGroupData();
+//        createGroupData.setName(groupName);
+//        createGroupData.setType("one_to_one");
+//        CreateGroupData.Session session = new CreateGroupData().new Session();
+//        session.setFrom(Util.getInstance().getTimeEpochFormatAfterCertainTime(1));
+//        session.setTo(Util.getInstance().getTimeEpochFormatAfterCertainTime(60));
+//        createGroupData.setSession(session);
+//        Util.getInstance().showProgressBarDialog(this);
+//        GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, mDbManager.getAdminLoginDetail().getUserId()));
+//    }
+//
+//    /**
+//     * Create Group Success Listener
+//     */
+//    private class CreateGroupSuccessListener implements Response.Listener {
+//        @Override
+//        public void onResponse(Object response) {
+//            CreateGroupResponse createGroupResponse = Util.getInstance().getPojoObject(String.valueOf(response), CreateGroupResponse.class);
+//            DBManager mDbManager = new DBManager(CreateGroupActivity.this);
+//            mDbManager.insertIntoGroupTable(createGroupResponse);
+//            Util.progressDialog.dismiss();
+//            startActivity(new Intent(CreateGroupActivity.this, ChooseGroupActivity.class));
+//        }
+//    }
+//
+//    /**
+//     * Create Group error Listener
+//     */
+//    private class CreateGroupErrorListener implements Response.ErrorListener {
+//        @Override
+//        public void onErrorResponse(VolleyError error) {
+//            Util.progressDialog.dismiss();
+//            if(error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
+//                Util.alertDilogBox(Constant.GROUP_CREATION_FAILURE, Constant.ALERT_TITLE, CreateGroupActivity.this);
+//            }
+//        }
+//    }
 
 }

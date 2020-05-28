@@ -285,7 +285,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 public void clickonListLayout(String selectedGroupName, String groupId, int profileImage) {
                     if (profileImage != R.drawable.ic_user) {
                         groupName = selectedGroupName;
-                        goToGroupListActivity(groupId, userId);
+                        goToAddDeviceActivity(groupId);
                     }
                 }
 
@@ -452,6 +452,23 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         intent.putExtra(Constant.GROUPNAME, groupName);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Goto add device activity
+     */
+    private void goToAddDeviceActivity(String groupId) {
+//        Intent intent = new Intent(this, AddDeviceActivity.class);
+//        intent.putExtra(Constant.GROUP_ID, groupId);
+////        intent.putExtra(Constant.USER_ID, userId);
+//        intent.putExtra(Constant.GROUPNAME, groupName);
+//        startActivity(intent);
+//        finish();
+
+        Intent intent = new Intent(this, AddPeopleActivity.class);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.GROUPNAME, groupName);
+        startActivity(intent);
     }
 
 
@@ -799,7 +816,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     Util.alertDilogBox(Constant.USER_LIMITATION, Constant.ALERT_TITLE, this);
                     return;
                 }
-                startActivity(new Intent(this, GroupNameActivity.class));
+                startActivity(new Intent(this, CreateGroupActivity.class));
                 break;
             case R.id.track:
                 trackDevice();
@@ -829,7 +846,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * which should be less than equal to ten.
      */
     private void gotoQRScannerScreen() {
-        Intent intent = new Intent(this, ContactDetailsActivity.class);
+        Intent intent = new Intent(this, QRReaderInstruction.class);
         intent.putExtra(Constant.IS_COMING_FROM_ADD_DEVICE, true);
         intent.putExtra(Constant.USER_ID, userId);
         startActivity(intent);
@@ -839,7 +856,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
      * Navigates to the Contact Details Activity
      */
     private void gotoContactsDetailsActivity() {
-        Intent intent = new Intent(this, ContactDetailsActivity.class);
+        Intent intent = new Intent(this, AddPeopleActivity.class);
         intent.putExtra(Constant.IS_COMING_FROM_ADD_CONTACT, true);
         intent.putExtra(Constant.USER_ID, userId);
         startActivity(intent);

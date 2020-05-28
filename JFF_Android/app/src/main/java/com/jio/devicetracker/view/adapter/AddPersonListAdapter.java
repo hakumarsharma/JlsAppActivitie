@@ -32,12 +32,13 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 
 import java.util.List;
 
 public class AddPersonListAdapter extends RecyclerView.Adapter<AddPersonListAdapter.ViewHolder> {
 
-    private List<String> mData;
+    private List<GroupMemberResponse.Data> mData;
 
     /**
      * Constructor to add devices in home screen
@@ -61,8 +62,8 @@ public class AddPersonListAdapter extends RecyclerView.Adapter<AddPersonListAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        holder.contactName.setText(mData.get(position));
+        GroupMemberResponse.Data data = (GroupMemberResponse.Data) mData.get(position);
+        holder.contactName.setText(data.getName());
     }
 
     @Override

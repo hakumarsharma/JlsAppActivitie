@@ -37,6 +37,9 @@ import com.jio.devicetracker.util.Util;
 
 public class QRReaderInstruction extends AppCompatActivity implements View.OnClickListener {
 
+    private static String groupId;
+    private static String groupName;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,10 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
         Button addManually = findViewById(R.id.manual_add);
         addManually.setOnClickListener(this);
         scanBtn.setOnClickListener(this);
+
+        Intent intent = getIntent();
+        groupId = intent.getStringExtra(Constant.GROUP_ID);
+        groupName = intent.getStringExtra(Constant.GROUP_NAME);
     }
 
     @Override
@@ -76,8 +83,9 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
     }*/
 
     private void gotoQRReaderScreen() {
-
-        Intent startMain = new Intent(getApplicationContext(), QRCodeReaderActivity.class);
-        startActivity(startMain);
+        Intent intent = new Intent(getApplicationContext(), QRCodeReaderActivity.class);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.GROUP_NAME, groupName);
+        startActivity(intent);
     }
 }

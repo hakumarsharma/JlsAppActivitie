@@ -30,6 +30,9 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -75,6 +78,7 @@ public final class Util extends AppCompatActivity {
         }
         return mUtils;
     }
+
 
     /**
      * Converts class to JSON object
@@ -473,4 +477,6 @@ public final class Util extends AppCompatActivity {
         }
         return font1;
     }
+
+
 }
