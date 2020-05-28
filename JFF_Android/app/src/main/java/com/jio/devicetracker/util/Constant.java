@@ -138,6 +138,12 @@ public class Constant {
     public static final String BORQS_TOKEN_ACTIVITY_TITLE = "Token Verification";
     public static final String RESEND_OTP = "Resend OTP";
     public static final String REQUEST_OTP = "Request OTP";
+    public static final String GROUP_WITH_DOT = "Groups \n.";
+    public static final String GROUP_WITHOUT_DOT = "Groups";
+    public static final String PEOPLE_WITH_DOT = "People \n.";
+    public static final String PEOPLE_WITHOUT_DOT = "People";
+    public static final String DEVICES_WITH_DOT = "Devices \n.";
+    public static final String DEVICES_WITHOUT_DOT = "Devices";
 
     // New Device Activity Constants
     public static final String ADD_DEVICE_TITLE = "Add";

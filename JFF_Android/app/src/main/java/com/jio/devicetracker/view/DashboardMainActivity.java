@@ -25,12 +25,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.adapter.DashboardAdapter;
 
 public class DashboardMainActivity extends AppCompatActivity {
@@ -66,18 +72,24 @@ public class DashboardMainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition() == 1) {
-                    // Todo
-                } else if (tab.getPosition() == 2) {
-                   // Todo
+                if (tab.getPosition() == 0) {
+                    tabLayout.getTabAt(0).setText(Constant.GROUP_WITH_DOT);
+                } else if (tab.getPosition() == 1) {
+                    tabLayout.getTabAt(1).setText(Constant.PEOPLE_WITH_DOT);
                 } else {
-                    // Todo
+                    tabLayout.getTabAt(2).setText(Constant.DEVICES_WITH_DOT);
                 }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                if (tab.getPosition() == 0) {
+                    tabLayout.getTabAt(0).setText(Constant.GROUP_WITHOUT_DOT);
+                } else if (tab.getPosition() == 1) {
+                    tabLayout.getTabAt(1).setText(Constant.PEOPLE_WITHOUT_DOT);
+                } else {
+                    tabLayout.getTabAt(2).setText(Constant.DEVICES_WITHOUT_DOT);
+                }
             }
 
             @Override
