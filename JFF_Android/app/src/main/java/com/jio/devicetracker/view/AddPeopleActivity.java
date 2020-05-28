@@ -22,7 +22,6 @@ package com.jio.devicetracker.view;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -30,41 +29,28 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
-import com.jio.devicetracker.database.pojo.CreateGroupData;
-import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
-import com.jio.devicetracker.database.pojo.request.CreateGroupRequest;
-import com.jio.devicetracker.database.pojo.request.GetGroupMemberRequest;
-import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
-import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.AddPersonListAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AddPeopleActivity extends BaseActivity implements View.OnClickListener {
@@ -76,12 +62,10 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private boolean isComingFromAddContact;
     private boolean isComingFromAddDevice;
     private boolean isComingFromGroupList;
-    private boolean isComingFromContactList;
     private static String groupId;
     private EditText contactName;
     private EditText contactNumber;
-    private Button   addContact;
-    private DBManager mDbManager;
+    private Button addContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,16 +75,12 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initializeData() {
-
-        toolbar = findViewById(R.id.addPeopleToolbar);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.Add_People);
 
         toolbar.setBackgroundColor(getResources().getColor(R.color.cardviewlayout_device_background_color));
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
-
-        mDbManager = new DBManager(this);
 
         contactsListView = findViewById(R.id.contactsListView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -129,10 +109,9 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     }
 
     // Intent data to check whether use has come from group or individual
-    private void getDataFromIntent(TextView title){
+    private void getDataFromIntent(TextView title) {
         Intent intent = getIntent();
         String qrValue = intent.getStringExtra(Constant.QR_CODE_VALUE);
-        isComingFromContactList = intent.getBooleanExtra(Constant.IS_COMING_FROM_CONTACT_LIST, false);
         isComingFromAddDevice = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_DEVICE, false);
         isComingFromAddContact = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_CONTACT, false);
         isComingFromGroupList = intent.getBooleanExtra(Constant.IS_COMING_FROM_GROUP_LIST, false);
