@@ -51,9 +51,9 @@ public class DashboardMainActivity extends AppCompatActivity {
 
     private void initUI() {
         tabLayout = findViewById(R.id.tablayout);
-        tabPeople = findViewById(R.id.tabCalls);
-        tabGroups = findViewById(R.id.tabChats);
-        tabDevices = findViewById(R.id.tabStatus);
+        tabPeople = findViewById(R.id.tabPeople);
+        tabGroups = findViewById(R.id.tabGroups);
+        tabDevices = findViewById(R.id.tabDevices);
         viewPager = findViewById(R.id.viewPager);
         dashboardAdapter = new DashboardAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(dashboardAdapter);

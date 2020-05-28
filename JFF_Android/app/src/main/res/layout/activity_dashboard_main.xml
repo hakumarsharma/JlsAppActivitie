@@ -47,26 +47,27 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@drawable/layout_frame_blue"
+        app:tabTextAppearance="@style/custom_tab_text"
         app:tabSelectedTextColor="@color/white"
         app:tabIndicatorHeight="0dp">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabChats"
+            android:id="@+id/tabGroups"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chats" />
+            android:text="Groups" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabStatus"
+            android:id="@+id/tabPeople"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Status" />
+            android:text="People" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabCalls"
+            android:id="@+id/tabDevices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calls" />
+            android:text="Devices" />
 
     </com.google.android.material.tabs.TabLayout>
 
