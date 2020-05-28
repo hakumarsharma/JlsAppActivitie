@@ -80,12 +80,7 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
      */
     @Override
     public void handleResult(Result result) {
-        Intent intent = new Intent(this, AddPeopleActivity.class);
-//        intent.putExtra(Constant.IS_COMING_FROM_ADD_CONTACT, isComingFromAddContact);
-//        intent.putExtra(Constant.IS_COMING_FROM_ADD_DEVICE, isComingFromAddDevice);
-//        intent.putExtra(Constant.IS_COMING_FROM_GROUP_LIST, isComingFromGroupList);
-//        intent.putExtra(Constant.GROUP_ID, groupId);
-//        intent.putExtra(Constant.USER_ID, userId);
+        Intent intent = new Intent(this, DeviceNameActivity.class);
         intent.putExtra("QRCodeValue", result.getText());
         startActivity(intent);
     }

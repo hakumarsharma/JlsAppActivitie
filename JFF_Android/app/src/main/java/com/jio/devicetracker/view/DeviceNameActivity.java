@@ -110,7 +110,12 @@ public class DeviceNameActivity extends Activity implements View.OnClickListener
                 break;
 
         }
+       navigateTochooseGroup();
+    }
 
+    private void navigateTochooseGroup() {
+        Intent intent = new Intent(this,ChooseGroupActivity.class);
+        startActivity(intent);
     }
 
     /**

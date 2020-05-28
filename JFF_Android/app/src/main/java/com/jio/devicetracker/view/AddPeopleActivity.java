@@ -81,6 +81,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         toolbar.setBackgroundColor(getResources().getColor(R.color.cardviewlayout_device_background_color));
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
 
         contactsListView = findViewById(R.id.contactsListView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -236,6 +237,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 this.isGroupMember = true;
                 addMemberInGroupAPICall();
             }
+        }else if (v.getId() == R.id.back){
+            finish();
         }
 
     }
