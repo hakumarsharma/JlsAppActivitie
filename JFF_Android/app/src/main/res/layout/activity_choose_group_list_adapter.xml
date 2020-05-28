@@ -1,0 +1,111 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="240dp"
+    android:id="@+id/chooseGroupCardView"
+    card_view:cardCornerRadius="10dp"
+    android:layout_marginRight="14dp"
+    android:layout_marginLeft="14dp"
+    card_view:cardElevation="8dp"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    tools:context=".view.ChooseGroupActivity">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/cardTextOnChooseGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chooseGroupText"
+            android:textSize="17dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/firstButtonWithInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:layout_marginTop="80dp"
+            android:visibility="invisible"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/ic_home_group" />
+
+        <TextView
+            android:id="@+id/firstTextViewWithInfo"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:textSize="14dp"
+            android:visibility="invisible"
+            android:layout_marginTop="168dp"/>
+
+        <Button
+            android:id="@+id/secondButtonWithInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:layout_marginTop="80dp"
+            android:visibility="invisible"
+            android:layout_marginLeft="105dp"
+            android:background="@drawable/ic_family_group"/>
+
+        <TextView
+            android:id="@+id/secondButtonTextViewWithInfo"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:layout_marginLeft="125dp"
+            android:visibility="invisible"
+            android:layout_marginTop="168dp"/>
+
+        <Button
+            android:id="@+id/thirdButtonWithInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:layout_marginTop="80dp"
+            android:visibility="invisible"
+            android:layout_marginLeft="200dp"
+            android:background="@drawable/ic_friends_group" />
+
+        <TextView
+            android:id="@+id/thirdButtonTextViewWithInfo"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:layout_marginLeft="225dp"
+            android:visibility="invisible"
+            android:layout_marginTop="168dp"/>
+
+        <Button
+            android:id="@+id/fourthButtonWithInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:layout_marginTop="80dp"
+            android:visibility="invisible"
+            android:layout_marginLeft="288dp"
+            android:background="@drawable/ic_group_pet" />
+
+        <TextView
+            android:id="@+id/fourthButtonTextViewWithInfo"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:layout_marginLeft="316dp"
+            android:visibility="invisible"
+            android:layout_marginTop="168dp"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

@@ -112,8 +112,6 @@
         <activity
             android:name=".view.DeviceNameActivity"
             android:label="@string/map_name" />
-        android:name=".view.DeviceNameActivity"
-        android:label="@string/map_name" />
         <activity
             android:name=".util.CustomAlertActivity"
             android:label="@string/map_name" />
