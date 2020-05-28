@@ -101,7 +101,6 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * To do event handling
-     *
      * @param v
      */
     @Override

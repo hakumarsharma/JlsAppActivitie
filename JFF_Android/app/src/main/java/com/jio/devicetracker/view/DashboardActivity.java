@@ -181,7 +181,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         setLayoutData();
         setNavigationData();
         initializeDataMember();
-        Util.getAdminDetail(this);
+//        Util.getAdminDetail(this);
         setConstaint();
 //        startService();
         registerReceiver();

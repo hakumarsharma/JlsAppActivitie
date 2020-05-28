@@ -70,7 +70,7 @@ public class BaseActivity extends AppCompatActivity {
         session.setTo(Util.getInstance().getTimeEpochFormatAfterCertainTime(60));
         createGroupData.setSession(session);
         Util.getInstance().showProgressBarDialog(this);
-        GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new CreateGroupRequest(new BaseActivity.CreateGroupSuccessListener(), new BaseActivity.CreateGroupErrorListener(), createGroupData, Util.userId));
+        GroupRequestHandler.getInstance(this).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, Util.userId));
     }
 
     /**
@@ -86,10 +86,9 @@ public class BaseActivity extends AppCompatActivity {
                 if (isFromCreateGroup) {
                     Util.progressDialog.dismiss();
                     startActivity(new Intent(BaseActivity.this, ChooseGroupActivity.class));
-                }else{
+                } else {
                     addIndividualUserInGroupAPICall();
                 }
-
             }
         }
     }
@@ -122,7 +121,7 @@ public class BaseActivity extends AppCompatActivity {
         consents.setName(memberName);
         consentList.add(consents);
         addMemberInGroupData.setConsents(consentList);
-        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new BaseActivity.AddMemberInGroupRequestSuccessListener(), new BaseActivity.AddMemberInGroupRequestErrorListener(), addMemberInGroupData, createdGroupId, Util.userId));
+        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new AddMemberInGroupRequestSuccessListener(), new AddMemberInGroupRequestErrorListener(), addMemberInGroupData, createdGroupId, Util.userId));
     }
 
 
@@ -141,7 +140,7 @@ public class BaseActivity extends AppCompatActivity {
         consentList.add(consents);
         addMemberInGroupData.setConsents(consentList);
         Util.getInstance().showProgressBarDialog(this);
-        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new BaseActivity.AddMemberInGroupRequestSuccessListener(), new BaseActivity.AddMemberInGroupRequestErrorListener(), addMemberInGroupData, createdGroupId, Util.userId));
+        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new AddMemberInGroupRequestSuccessListener(), new AddMemberInGroupRequestErrorListener(), addMemberInGroupData, createdGroupId, Util.userId));
     }
 
     /**
@@ -190,7 +189,7 @@ public class BaseActivity extends AppCompatActivity {
         if(Util.progressDialog == null) {
             Util.getInstance().showProgressBarDialog(this);
         }
-        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupMemberRequest(new BaseActivity.GetGroupMemberRequestSuccessListener(), new BaseActivity.GetGroupMemberRequestErrorListener(), createdGroupId, Util.userId));
+        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupMemberRequest(new GetGroupMemberRequestSuccessListener(), new GetGroupMemberRequestErrorListener(), createdGroupId, Util.userId));
     }
 
     /**
@@ -227,7 +226,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void gotoDashboardActivity() {
-        startActivity(new Intent(this, DashboardActivity.class));
+        startActivity(new Intent(this, ChooseGroupActivity.class));
     }
 
 }

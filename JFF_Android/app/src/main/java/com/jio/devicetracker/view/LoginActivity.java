@@ -125,6 +125,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         MessageReceiver.bindListener(messageListener);
         checkTermandCondition(termConditionsFlag);
         checkJioSIMSlot1();
+        Util.getAdminDetail(this);
     }
 
     /**
