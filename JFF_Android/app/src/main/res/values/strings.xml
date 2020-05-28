@@ -13,6 +13,17 @@
     <string name="pagerindicater">&amp;#9673;</string>
     <string name="Open">Open</string>
     <string name="Close">Close</string>
+    <string name="helpScreen1heading">Don\'t lose sight of your loved ones</string>
+    <string name="helpScreen1desc">Track live location of device and view it on Maps</string>
+    <string name="helpScreen2heading">Share the location of loved ones</string>
+    <string name="helpScreen2desc">Share the location of device with your partner so they can track as well</string>
+    <string name="helpScreen3heading">Track people &amp; pets in a group</string>
+    <string name="helpScreen3desc">Create groups and collectively track your family, friends and pets</string>
+    <string name="helpScreen4heading">Use SOS in case of Emergency</string>
+    <string name="helpScreen4desc">Utilize Emergency SOS calls to help in distressing situation</string>
+    <string name="helpScreen5heading">Receive active alerts</string>
+    <string name="helpScreen5desc">Get alerted on whereabouts of devices based on your own settings</string>
+
     <string name="instruction">* \t  Click on + icon to add details of device (associated with a person/pet), or to create a group of devices to be tracked. \n* \t Select Add Device or Add Person accordingly. \n* \t Device details may be entered manually or using QR code scanner. Person details may be addded manually or by selecting the contact from contacts. After adding the device/person/group, click on \"Request consent\" to obtain consent approval from the device/person. \n* \t After consent approval is received from the device/person over SMS, select the device/person from the  list and click on \"Track\" to start tracking.</string>
     <string name="instructionOnActiveSession">* \t  No active member/group found.\n* \t Please add member as a group/individual to view them in active session.</string>
     <string name="instructionOnActiveMember">No active member found for this group. Please add member to view them in group.</string>

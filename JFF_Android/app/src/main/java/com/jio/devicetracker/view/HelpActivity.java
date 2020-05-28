@@ -49,17 +49,15 @@ public class HelpActivity extends Activity implements View.OnClickListener {
     private LinearLayout mLayout;
     TextView[] dot;
     private ViewPager mPager;
-    private int helpImage[] = {R.drawable.dashboard_screenshot, R.drawable.home_2_screenshot, R.drawable.login_screenshot, R.drawable.location_screenshot};
-    private int helpTitle[] = {R.string.login_heading, R.string.home_heading, R.string.home_heading, R.string.location_heading};
-    private int helpContent[] = {R.string.login_help, R.string.home_help, R.string.home_help1, R.string.location_help};
+    private int helpImage[] = {R.drawable.helpscreen1, R.drawable.helpscreen1, R.drawable.helpscreen1, R.drawable.helpscreen1,R.drawable.helpscreen5};
+    private int helpTitle[] = {R.string.helpScreen1heading, R.string.helpScreen2heading, R.string.helpScreen3heading, R.string.helpScreen4heading,R.string.helpScreen5heading};
+    private int helpContent[] = {R.string.helpScreen1desc, R.string.helpScreen2desc, R.string.helpScreen3desc, R.string.helpScreen4desc,R.string.helpScreen4desc};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
-        TextView mNext = findViewById(R.id.next);
         TextView mSkip = findViewById(R.id.skip);
-        mNext.setOnClickListener(this);
         mSkip.setOnClickListener(this);
         mList = new ArrayList<>();
         addDataforHelpscreen();
@@ -119,22 +117,13 @@ public class HelpActivity extends Activity implements View.OnClickListener {
             mLayout.addView(dot[i]);
         }
         //active dot
-        dot[pagePosition].setTextColor(getResources().getColor(R.color.black));
+        dot[pagePosition].setTextColor(getResources().getColor(R.color.white));
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.next:
-                gotoTermandCondition();
-                break;
-
-            case R.id.skip:
-                gotoTermandCondition();
-                break;
-
-            default:
-                break;
+        if(v.getId() == R.id.skip) {
+            gotoTermandCondition();
         }
     }
 

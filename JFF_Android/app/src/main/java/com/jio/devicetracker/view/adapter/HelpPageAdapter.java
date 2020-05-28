@@ -34,6 +34,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.HelpPagedata;
+import com.jio.devicetracker.util.Util;
 
 import java.util.List;
 
@@ -64,8 +65,10 @@ public class HelpPageAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view = layoutInflater.inflate(R.layout.activity_help_content, container, false);
         TextView mHeading = view.findViewById(R.id.heading);
+        mHeading.setTypeface(Util.mTypeface(container.getContext(),5));
         ImageView mHelpImage = view.findViewById(R.id.helpImage);
         TextView mHelpContent = view.findViewById(R.id.content);
+        mHelpContent.setTypeface(Util.mTypeface(container.getContext(),3));
         mHelpImage.setImageResource(list.get(position).getImage());
         mHelpContent.setText(list.get(position).getContent());
         mHeading.setText(list.get(position).getTitle());
