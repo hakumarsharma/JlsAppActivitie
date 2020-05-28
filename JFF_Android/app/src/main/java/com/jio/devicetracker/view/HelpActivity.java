@@ -49,7 +49,7 @@ public class HelpActivity extends Activity implements View.OnClickListener {
     private LinearLayout mLayout;
     TextView[] dot;
     private ViewPager mPager;
-    private int helpImage[] = {R.drawable.helpscreen1, R.drawable.helpscreen1, R.drawable.helpscreen1, R.drawable.helpscreen1,R.drawable.helpscreen5};
+    private int helpImage[] = {R.drawable.helpscreen1, R.drawable.helpscreen2, R.drawable.helpscreen1, R.drawable.helpscreen4,R.drawable.helpscreen5};
     private int helpTitle[] = {R.string.helpScreen1heading, R.string.helpScreen2heading, R.string.helpScreen3heading, R.string.helpScreen4heading,R.string.helpScreen5heading};
     private int helpContent[] = {R.string.helpScreen1desc, R.string.helpScreen2desc, R.string.helpScreen3desc, R.string.helpScreen4desc,R.string.helpScreen4desc};
 
