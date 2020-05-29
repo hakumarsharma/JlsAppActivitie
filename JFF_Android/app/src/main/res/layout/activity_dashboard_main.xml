@@ -17,7 +17,10 @@
         android:theme="?attr/actionBarTheme"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark" >
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/toolbarlayout">
         <ImageView
             android:id="@+id/profileMenu"
             android:layout_marginTop="20dp"
@@ -39,9 +42,10 @@
             android:layout_width="26dp"
             android:layout_height="26dp"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="110dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
             android:background="@drawable/ic_add_btn"/>
-
+        </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.tabs.TabLayout

@@ -8,82 +8,60 @@
         android:id="@+id/createGroupToolbar"
         layout="@layout/toolbar" />
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="220dp"
-        android:id="@+id/createGroupView"
-        android:background="@drawable/layout_frame_blue" />
+    <RelativeLayout
+        android:id="@+id/rel_layout"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_below="@id/createGroupToolbar"
+        android:background="@drawable/layout_frame_blue">
 
-    <Button
-        android:id="@+id/navigateBackCreateGroup"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/back" />
+        <ImageView
+            android:id="@+id/userIconCreateGroup"
+            android:layout_width="60dp"
+            android:layout_height="59.98dp"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_creategroup" />
 
-    <TextView
-        android:id="@+id/createGroupTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="145dp"
-        android:layout_marginTop="10dp"
-        android:text="Create group"
-        android:textColor="@color/white"
-        android:textSize="20dp" />
 
-    <Button
-        android:id="@+id/addGroupCreateGroup"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_toRightOf="@id/createGroupTextView"
-        android:layout_marginLeft="105dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/ic_add_btn" />
+        <EditText
+            android:id="@+id/groupName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/userIconCreateGroup"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginRight="48dp"
+            android:backgroundTint="@color/hintColor"
+            android:hint="Name of the group"
+            android:inputType="text"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/hintColor"
+            android:textCursorDrawable="@color/dull_text_color" />
 
-    <ImageView
-        android:id="@+id/userIconCreateGroup"
-        android:layout_width="60dp"
-        android:layout_height="59.98dp"
-        android:layout_below="@id/createGroupTextView"
-        android:layout_marginLeft="168dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/ic_creategroup" />
 
-    <EditText
-        android:id="@+id/createGroupEditText"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorLogin"
-        android:gravity="center"
-        android:hint="Name of the group"
-        android:textColor="@color/white"
-        android:textColorHint="@color/hintColor"
-        android:textCursorDrawable="@color/colorLogin"
-        android:textSize="17dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/userIconCreateGroup"/>
+    </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/createGroupIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/createGroupView"
-        android:layout_marginTop="80dp"
-        android:src="@drawable/ic_create_group"/>
+        <ImageView
+            android:id="@+id/createGroupIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rel_layout"
+            android:layout_marginTop="41dp"
+            android:src="@drawable/ic_create_group"/>
 
-    <Button
-        android:id="@+id/createGroup"
-        android:layout_width="232dp"
-        android:layout_height="36dp"
-        android:layout_below="@id/createGroupIcon"
-        android:layout_centerHorizontal="true"
-        android:textAllCaps="false"
-        android:textSize="17dp"
-        android:layout_marginTop="40dp"
-        android:textColor="@color/white"
-        android:background="@drawable/create_group_style"
-        android:text="Add" />
+        <Button
+            android:id="@+id/createGroup"
+            android:layout_width="232dp"
+            android:layout_height="36dp"
+            android:layout_centerHorizontal="true"
+            android:textAllCaps="false"
+            android:textSize="17dp"
+            android:textColor="@color/white"
+            android:background="@drawable/create_group_style"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="28dp"
+            android:text="Add" />
 
 </RelativeLayout>

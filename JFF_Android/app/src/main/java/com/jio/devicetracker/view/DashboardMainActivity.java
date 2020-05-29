@@ -108,7 +108,17 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.addGroupInDashboard) {
-            startActivity(new Intent(this, CreateGroupActivity.class));
+        switch (tabLayout.getSelectedTabPosition()){
+            case 0 :
+                startActivity(new Intent(this, CreateGroupActivity.class));
+                break;
+            case 1:
+                startActivity(new Intent(this, AddPeopleActivity.class));
+                break;
+            case 2:
+                startActivity(new Intent(this, QRReaderInstruction.class));
+                break;
+        }
         }
     }
 }

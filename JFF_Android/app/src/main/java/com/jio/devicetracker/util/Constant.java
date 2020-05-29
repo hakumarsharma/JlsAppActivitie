@@ -310,6 +310,10 @@ public class Constant {
     public static final String Add_Device = "JioTrack";
     public static final String Add_People = "Add People";
 
+    // Add people constants
+    public static final String Choose_Group = "Choose group";
+
+
     // Custom Alert Constants
     public  static  final  String Custom_Alert_Title = "Invite";
     public  static  final  String Custom_Alert_Message = "An invite message sent to selected contacts, you can view the status of them in invite section";

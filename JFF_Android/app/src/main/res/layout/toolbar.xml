@@ -45,6 +45,16 @@
             android:textColor="#FFFFFF"
             android:visibility="invisible" />
 
+        <Button
+            android:id="@+id/createGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_add_btn"
+            android:visibility="invisible" />
+
         <ImageView
             android:id="@+id/contactAdd"
             android:layout_width="36dp"

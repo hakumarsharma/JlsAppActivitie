@@ -21,6 +21,7 @@
 package com.jio.devicetracker.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
@@ -31,6 +32,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -63,12 +65,20 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
      * Initialize UI component
      */
     private void initUI() {
-        TextView chooseGroupTextView = findViewById(R.id.createGroupTextView);
-        chooseGroupTextView.setTypeface(Util.mTypeface(this, 5));
-        createGroupEditText = findViewById(R.id.createGroupEditText);
+        Toolbar toolbar = findViewById(R.id.createGroupToolbar);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+
+        title.setText(Constant.Choose_Group);
+        title.setTypeface(Util.mTypeface(this, 5));
+
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
+
+        createGroupEditText = findViewById(R.id.groupName);
         createGroupEditText.setTypeface(Util.mTypeface(this, 5));
-        addGroupCreateGroup = findViewById(R.id.addGroupCreateGroup);
-        addGroupCreateGroup.setOnClickListener(this);
+
+
         createGroup = findViewById(R.id.createGroup);
         createGroup.setTypeface(Util.mTypeface(this, 5));
         createGroup.setOnClickListener(this);
@@ -106,7 +116,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
      */
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.createGroup || v.getId() == R.id.addGroupCreateGroup) {
+        if (v.getId() == R.id.createGroup ) {
             String groupName = createGroupEditText.getText().toString();
             if ("".equalsIgnoreCase(groupName)) {
                 createGroupEditText.setError(Constant.GROUP_NAME_VALIDATION_ERROR);
@@ -114,6 +124,8 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
             }
             this.isFromCreateGroup = true;
             createGroupAndAddContactAPICall(groupName);
+        }else if (v.getId() == R.id.back){
+            finish();
         }
     }
 }
