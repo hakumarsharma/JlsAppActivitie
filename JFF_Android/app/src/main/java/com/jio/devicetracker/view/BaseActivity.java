@@ -83,6 +83,7 @@ public class BaseActivity extends AppCompatActivity {
             if (createGroupResponse.getCode() == 200) {
                 mDbManager.insertIntoGroupTable(createGroupResponse);
                 createdGroupId = createGroupResponse.getData().getId();
+                Util.setGroupId(BaseActivity.this, createdGroupId);
                 if (isFromCreateGroup) {
                     Util.progressDialog.dismiss();
                     startActivity(new Intent(BaseActivity.this, AddDeviceActivity.class));

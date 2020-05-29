@@ -68,7 +68,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
         Toolbar toolbar = findViewById(R.id.createGroupToolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
 
-        title.setText(Constant.Choose_Group);
+        title.setText(Constant.CREATE_GROUP);
         title.setTypeface(Util.mTypeface(this, 5));
 
         Button backBtn = findViewById(R.id.back);
@@ -79,7 +79,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
         createGroupEditText.setTypeface(Util.mTypeface(this, 5));
 
 
-        createGroup = findViewById(R.id.createGroup);
+        createGroup = findViewById(R.id.createGroupInCreateGroupActivity);
         createGroup.setTypeface(Util.mTypeface(this, 5));
         createGroup.setOnClickListener(this);
         mDbManager = new DBManager(CreateGroupActivity.this);
@@ -116,7 +116,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
      */
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.createGroup ) {
+        if (v.getId() == R.id.createGroupInCreateGroupActivity ) {
             String groupName = createGroupEditText.getText().toString();
             if ("".equalsIgnoreCase(groupName)) {
                 createGroupEditText.setError(Constant.GROUP_NAME_VALIDATION_ERROR);

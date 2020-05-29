@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -57,7 +58,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
 
     private static RecyclerView contactsListView;
     private static AddPersonListAdapter mAdapter;
-    private List<GroupMemberResponse.Data> listOfContacts;
+    private static List<GroupMemberResponse.Data> listOfContacts;
+    private Toolbar toolbar = null;
     private boolean isComingFromAddContact;
     private boolean isComingFromAddDevice;
     private boolean isComingFromGroupList;
@@ -65,6 +67,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private EditText contactName;
     private EditText contactNumber;
     private Button addContact;
+    private Button addContactInPeopleActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,17 +90,20 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         contactsListView.setLayoutManager(linearLayoutManager);
 
         TextView peopleText = findViewById(R.id.people_text);
-        peopleText.setTypeface(Util.mTypeface(this,3));
+        peopleText.setTypeface(Util.mTypeface(this, 3));
 
         contactName = findViewById(R.id.memberName);
-        contactName.setTypeface(Util.mTypeface(this,5));
+        contactName.setTypeface(Util.mTypeface(this, 5));
 
         contactNumber = findViewById(R.id.deviceNumber);
-        contactNumber.setTypeface(Util.mTypeface(this,5));
+        contactNumber.setTypeface(Util.mTypeface(this, 5));
 
-        addContact = findViewById(R.id.add_contact);
-        addContact.setTypeface(Util.mTypeface(this,5));
+        addContact = findViewById(R.id.addContactDetail);
+        addContact.setTypeface(Util.mTypeface(this, 5));
         addContact.setOnClickListener(this);
+
+        addContactInPeopleActivity = findViewById(R.id.add_contact_in_add_people);
+        addContactInPeopleActivity.setOnClickListener(this);
 
         ImageView contactBtn = toolbar.findViewById(R.id.contactAdd);
         contactBtn.setVisibility(View.VISIBLE);
@@ -115,10 +121,10 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         isComingFromAddDevice = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_DEVICE, false);
         isComingFromAddContact = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_CONTACT, false);
         isComingFromGroupList = intent.getBooleanExtra(Constant.IS_COMING_FROM_GROUP_LIST, false);
-        groupId = intent.getStringExtra(Constant.GROUP_ID);
+        groupId = Util.getGroupId(this);
         String groupName = intent.getStringExtra(Constant.GROUP_NAME);
 
-        if(groupId != null && !groupId.isEmpty()){
+        if (groupId != null && !groupId.isEmpty()) {
             this.createdGroupId = groupId;
             this.isFromCreateGroup = false;
             this.isGroupMember = true;
@@ -126,7 +132,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         }
 
         // set group name as title
-        if(groupName != null && !groupName.isEmpty()){
+        if (groupName != null && !groupName.isEmpty()) {
             title.setText(groupName);
         }
 
@@ -163,9 +169,11 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // Unused empty method
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 String name = contactName.getText().toString();
@@ -186,9 +194,11 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // Unused empty method
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 String name = contactName.getText().toString();
@@ -205,6 +215,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         });
 
     }
+
     // change edit text bottom line color based on text entry
     private void setEditTextBottomLineColor(EditText contactEditText) {
         if (!"".equalsIgnoreCase(contactEditText.getText().toString())) {
@@ -219,17 +230,17 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         if (v.getId() == R.id.contactAdd) {
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             startActivityForResult(intent, 1);
-        }else if (v.getId() == R.id.add_contact){
+        } else if (v.getId() == R.id.addContactDetail) {
             if (!Util.isValidMobileNumber(contactNumber.getText().toString())) {
                 contactNumber.setError(Constant.MOBILENUMBER_VALIDATION);
                 return;
             }
-            if(groupId == null || groupId.isEmpty()) {
+            if (groupId == null || groupId.isEmpty()) {
                 this.memberName = contactName.getText().toString();
                 this.memberNumber = contactNumber.getText().toString();
                 this.isFromCreateGroup = false;
                 createGroupAndAddContactAPICall(Constant.INDIVIDUAL_USER_GROUP_NAME);
-            }else {
+            } else {
                 this.createdGroupId = groupId;
                 this.memberName = contactName.getText().toString();
                 this.memberNumber = contactNumber.getText().toString();
@@ -237,26 +248,32 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 this.isGroupMember = true;
                 addMemberInGroupAPICall();
             }
-        }else if (v.getId() == R.id.back){
+        } else if (v.getId() == R.id.back) {
             finish();
+        } else if (v.getId() == R.id.add_contact_in_add_people) {
+            if(! listOfContacts.isEmpty()) {
+                startActivity(new Intent(this, DashboardMainActivity.class));
+            } else {
+                Toast.makeText(this, Constant.ADD_CONTACT_WARNING, Toast.LENGTH_SHORT);
+            }
         }
 
     }
 
-    public void getAllMembers(List<GroupMemberResponse.Data> memberList){
-//        if(contactName != null){
-//            hideKeyboard();
-//            setEditTextValues();
-//        }
-        if(memberList != null) {
+    public void getAllMembers(List<GroupMemberResponse.Data> memberList) {
+        if (memberList != null) {
             listOfContacts = new ArrayList();
             listOfContacts.addAll(memberList);
             mAdapter = new AddPersonListAdapter(listOfContacts);
             contactsListView.setAdapter(mAdapter);
+            if(addContactInPeopleActivity != null) {
+                addContactInPeopleActivity.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                addContactInPeopleActivity.setTextColor(Color.WHITE);
+            }
         }
     }
 
-    private void setEditTextValues(){
+    private void setEditTextValues() {
         contactName.getText().clear();
         contactNumber.getText().clear();
         addContact.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
@@ -264,6 +281,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         contactNumber.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.hintColor));
         contactName.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.hintColor));
     }
+
     // To dismiss Keyboard
     public void hideKeyboard() {
         View view = this.getCurrentFocus();

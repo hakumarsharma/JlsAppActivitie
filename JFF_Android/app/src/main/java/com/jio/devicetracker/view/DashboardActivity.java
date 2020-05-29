@@ -496,7 +496,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private void setLayoutData() {
         Toolbar toolbar = findViewById(R.id.customToolbar);
         listView = findViewById(R.id.listView);
-        FloatingActionButton fabCreateGroup = findViewById(R.id.createGroup);
+        FloatingActionButton fabCreateGroup = findViewById(R.id.createGroupInDashboard);
         FloatingActionButton fabAddDevice = findViewById(R.id.addDevice);
         FloatingActionButton fabAddContact = findViewById(R.id.addContact);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());

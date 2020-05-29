@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/rel_layout"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="250dp"
         android:layout_below="@id/addPeopleToolbar"
         android:background="@drawable/layout_frame_blue">
 
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/device_icon"
             android:layout_marginLeft="@dimen/margin_32"
-            android:layout_marginTop="@dimen/margin_32"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="@dimen/margin_32"
             android:gravity="center"
             android:paddingBottom="@dimen/twenty_dp"
@@ -61,6 +61,19 @@
             android:textColor="@color/white"
             android:textColorHint="@color/hintColor"
             android:textCursorDrawable="@color/dull_text_color" />
+
+        <Button
+            android:id="@+id/addContactDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_below="@id/deviceNumber"
+            android:layout_alignParentRight="true"
+            android:layout_margin ="10dp"
+            android:background="@drawable/selector"
+            android:text="Add"
+            android:textColor="@color/white"
+            android:textAllCaps="false" />
+
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -74,7 +87,7 @@
         android:dividerHeight="1dp" />
 
     <Button
-        android:id="@+id/add_contact"
+        android:id="@+id/add_contact_in_add_people"
         android:layout_width="@dimen/adddevice_button_width"
         android:layout_height="@dimen/adddevice_button_height"
         android:layout_alignParentBottom="true"
@@ -83,7 +96,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="@dimen/margin_24"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/selector"
+        android:background="@drawable/login_selector"
         android:text="@string/continue_text"
         android:textAllCaps="false"
         android:textColor="@android:color/white"

@@ -119,6 +119,7 @@ public class Constant {
     public static final String GROUP_NOT_ACTIVE = "Group is scheduled, please wait until it doesn't become active";
     public static final String SESSION_COMPLETED = "Please request consent to track the group members";
     public static final String CONSENT_PENDING_STATUS= "Consent is pending, please ask the user to accept consent for tracking";
+    public static final String ADD_CONTACT_WARNING = "Please add contact first in the list to proceed further";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
@@ -201,6 +202,7 @@ public class Constant {
     public static final String GENERATE_LOGIN_TOKEN_REQUEST_URL = "/accounts/api/users/tokens/login";
     public static final String ACCOUNTS_API_USER_URL = "/accounts/api/users/";
     public static final String SESSION_GROUPS_URL = "/sessiongroups/";
+    public static final String SESSION_GROUPS_URL1 = "/sessiongroups";
     public static final String GET_ALL_GROUP_INFO_URL2 = "/sessiongroups?isPopulateConsents=true&isPopulateGroupOwner=true";
     public static final String SESSION_GROUP_CONSENTS_URL = "/sessiongroupconsents";
     public static final String SESSION_GROUP_CONSENTS_TOKEN_URL = "/sessiongroupconsents/tokens";
@@ -246,6 +248,7 @@ public class Constant {
     public static final String ACCESS_COARSE_PERMISSION_ALERT = "Location permission is not granted, please grant it first";
     public static final String IMEI_PERMISSION_NOT_GRANTED = "IMEI permission is not granted!";
     public static final String TERM_CONDITION_FLAG = "TermFlag";
+    public static final String GROUP_ID_VALUE = "Group_ID_Value";
     public static String AUTO_LOGIN = "Autologin";
     public static final String AUTO_LOGIN_STATUS = "AutoLoginStatus";
     public static final String LOCATION_FLAG_STATUS = "LocationFlagStatus";
@@ -312,6 +315,7 @@ public class Constant {
 
     // Add people constants
     public static final String Choose_Group = "Choose group";
+    public static final String CREATE_GROUP = "Create group";
 
 
     // Custom Alert Constants

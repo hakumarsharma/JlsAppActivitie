@@ -125,7 +125,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         MessageReceiver.bindListener(messageListener);
         checkTermandCondition(termConditionsFlag);
         checkJioSIMSlot1();
-        Util.getAdminDetail(this);
     }
 
     /**
@@ -311,6 +310,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (logindetailResponse.getData().getUgsToken() != null) {
                 mDbManager.deleteAllPreviousData();
                 mDbManager.insertLoginData(logindetailResponse);
+                Util.getAdminDetail(LoginActivity.this);
                 startActivity(new Intent(LoginActivity.this, DashboardMainActivity.class));
             }
         }

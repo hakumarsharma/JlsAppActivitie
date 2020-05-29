@@ -47,12 +47,13 @@
             android:id="@+id/createGroupIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_below="@id/rel_layout"
-            android:layout_marginTop="41dp"
+            android:layout_marginTop="60dp"
             android:src="@drawable/ic_create_group"/>
 
         <Button
-            android:id="@+id/createGroup"
+            android:id="@+id/createGroupInCreateGroupActivity"
             android:layout_width="232dp"
             android:layout_height="36dp"
             android:layout_centerHorizontal="true"

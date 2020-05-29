@@ -301,7 +301,6 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Sets the terms and condition flag
-     *
      * @param mContext
      * @param flag
      */
@@ -314,18 +313,42 @@ public final class Util extends AppCompatActivity {
 
     /**
      * returns the terms and condition flag
-     *
      * @param mContext
      * @return
      */
     public static boolean getTermconditionFlag(Context mContext) {
         sharedpreferences = mContext.getSharedPreferences(Constant.TERM_CONDITION_FLAG, Context.MODE_PRIVATE);
         if (sharedpreferences != null) {
-
             return sharedpreferences.getBoolean("FLAG", false);
         }
         return false;
     }
+
+    /**
+     * Sets the group Id
+     * @param mContext
+     * @param groupId
+     */
+    public static void setGroupId(Context mContext, String groupId) {
+        sharedpreferences = mContext.getSharedPreferences(Constant.GROUP_ID_VALUE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(Constant.GROUP_ID, groupId);
+        editor.commit();
+    }
+
+    /**
+     * returns the group_id
+     * @param mContext
+     * @return
+     */
+    public static String getGroupId(Context mContext) {
+        sharedpreferences = mContext.getSharedPreferences(Constant.GROUP_ID_VALUE, Context.MODE_PRIVATE);
+        if (sharedpreferences != null) {
+            return sharedpreferences.getString(Constant.GROUP_ID, "");
+        }
+        return "";
+    }
+
 
     /**
      * Sets Login status

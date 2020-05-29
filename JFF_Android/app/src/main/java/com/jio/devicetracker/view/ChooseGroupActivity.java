@@ -75,8 +75,7 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
     // Set the memberIcon
     private void setMemberIcon(String label) {
 
-        if(!label.isEmpty()) {
-
+        if(label != null  && !label.isEmpty()) {
             if (label.equalsIgnoreCase("Mother")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
             }
