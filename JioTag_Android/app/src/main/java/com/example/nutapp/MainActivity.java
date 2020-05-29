@@ -23,9 +23,12 @@
 package com.example.nutapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     boolean m_isLocOn=false;
     private DrawerLayout drawerLayout;
+    SharedPreferences preferences;
+    SharedPreferences.Editor prefEditor;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -122,7 +127,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
-
+        preferences = this.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
+        prefEditor = preferences.edit();
 
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
@@ -175,14 +181,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.information:
                         goToInformationActivity();
                         break;
-                    case R.id.assets:
-                        goToAssetsScreen();
-                        break;
                     case R.id.feedback:
                         goToFeedbackActivity();
                         break;
                     case R.id.logout:
-                        //updateLogoutData();
+                        updateLogoutData();
                         break;
                     case R.id.navigation_header:
                         gotoUserNavigationActivity();
@@ -195,6 +198,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private void updateLogoutData() {
+
+        prefEditor.putString("FIRSTBOOT", "true");
+        Log.d("FIRSTBOOT", "FIRSTBOOT IS DONE");
+        prefEditor.commit();
+        startActivity(new Intent(this,OtpRequest.class));
+    }
+
     private void gotoUserNavigationActivity() {
         Intent intent = new Intent(this,UserDetailNavigationActivity.class);
         startActivity(intent);
@@ -202,10 +213,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void gotoNotificationActivity() {
         Intent intent = new Intent(this,NotificationActivity.class);
-        startActivity(intent);
-    }
-    private void goToAssetsScreen() {
-        Intent intent = new Intent(this,CardDetails.class);
         startActivity(intent);
     }
 
@@ -252,9 +259,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             default:
                 break;
-
-
-
+                
         }
 
     }

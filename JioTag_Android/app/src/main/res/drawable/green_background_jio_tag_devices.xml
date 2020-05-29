@@ -74,10 +74,10 @@
                 android:width="25dp"/>
             <stroke
                 android:width="2dp"
-                android:color="@color/navigate_profile_color"
+                android:color="@color/cardview_device_status_color"
                 />
             <solid
-                android:color="@color/navigate_profile_color"
+                android:color="@color/cardview_device_status_color"
                 />
         </shape>
     </item>

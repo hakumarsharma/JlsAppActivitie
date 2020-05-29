@@ -195,6 +195,10 @@
     <string name="how_details3">Attached device to any asset and save the information to get it track.</string>
     <string name="facebook_app_id">1177666639249332</string>
     <string name="fb_login_protocol_scheme">fb1177666639249332</string>
+    <string name="disconnect_dialog_title">Disconnect JioTag</string>
+    <string name="disconnect_dialog_content">Do you really want to disconnect the \n[Tag name] ?</string>
+    <string name="delete_dialog_content">On deleting the tag from here will \npermanently remove it form your \naccount .Do you really want to delete \nthe [Tag name] ?</string>
+    <string name="delete_dialog_title">Delete JioTag</string>
 
     <!-- Help Screen -->
     <string name="location_help_title">Location tracking</string>

@@ -56,7 +56,6 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/five_dp"
                 android:layout_marginLeft="@dimen/margin_24"
-                android:layout_toRightOf="@+id/prefix_text"
                 android:text=""
                 android:textSize="@dimen/seventeen_sp"
                 android:hint="@string/email_id_hint"
@@ -71,7 +70,6 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/five_dp"
                 android:id="@+id/email_edit_line"
-                android:layout_alignStart="@+id/prefix_text"
                 android:layout_marginRight="@dimen/layout_margin_16"
                 android:layout_marginLeft="@dimen/layout_margin_16"
                 android:layout_below="@+id/login_edit_email"
@@ -99,7 +97,6 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/five_dp"
                 android:layout_marginLeft="@dimen/margin_24"
-                android:layout_toRightOf="@+id/prefix_text"
                 android:text=""
                 android:hint="@string/password_hint"
                 android:inputType="textPassword"
@@ -112,7 +109,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/five_dp"
-                android:layout_alignStart="@+id/prefix_text"
+
                 android:layout_marginRight="@dimen/layout_margin_16"
                 android:layout_marginLeft="@dimen/layout_margin_16"
                 android:id="@+id/password_edit_line"

@@ -487,7 +487,6 @@ public class BleDetailsAdapter extends RecyclerView.Adapter<BleDetailsAdapter.Bl
         ImageView m_lefticon;
         String m_dev_address;
 
-
         BleViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cv);
