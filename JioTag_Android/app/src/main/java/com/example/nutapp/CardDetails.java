@@ -907,7 +907,7 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
                 break;
 
             case R.id.edit:
-               startActivity(new Intent(CardDetails.this,JioAttachAssets.class));
+               startActivity(new Intent(this,JioAttachAssets.class));
                 break;
             case R.id.delete:
                 customAlertDialogForDeleteDisconnect("delete");
@@ -963,7 +963,7 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
         Button negativeBtn = dialogLayout.findViewById(R.id.negative);
         builder.setView(dialogLayout);
         final AlertDialog dialog = builder.show();
-        if(dialogValue.equalsIgnoreCase("disconnect")){
+        if("disconnect".equalsIgnoreCase(dialogValue)){
             content.setText(getResources().getString(R.string.disconnect_dialog_content));
             title.setText(getResources().getString(R.string.disconnect_dialog_title));
         } else {
@@ -973,7 +973,7 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
         positiveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(value.equalsIgnoreCase("disconnect")){
+                if("disconnect".equalsIgnoreCase(value)){
                     Toast.makeText(CardDetails.this,"Disconnect dialog called",Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(CardDetails.this,"Delete dialog called",Toast.LENGTH_SHORT).show();
