@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".view.GroupsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/groupListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="150dp"
-        android:text="Hello Groups" />
-
+        android:background="@color/viewBackgroundColor"
+        android:padding="4dp"
+        android:scrollbars="vertical" />
 </FrameLayout>

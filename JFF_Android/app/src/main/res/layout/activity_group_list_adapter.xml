@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="10dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/groupmemberIcon"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ic_family_group" />
+
+        <TextView
+            android:id="@+id/groupName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="15dp"
+            android:text="Harish Kumar"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/motherIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/mother" />
+
+        <ImageView
+            android:id="@+id/fatherIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="96dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/father" />
+
+        <ImageView
+            android:id="@+id/kidIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="112dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/kid" />
+
+        <ImageView
+            android:id="@+id/dogIcon"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="130dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/dog" />
+
+        <ImageView
+            android:id="@+id/consentstatus"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_more_black"
+            android:layout_marginLeft="340dp"
+            android:layout_marginTop="16dp" />
+
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
