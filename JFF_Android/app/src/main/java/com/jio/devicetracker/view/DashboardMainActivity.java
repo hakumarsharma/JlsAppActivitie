@@ -25,6 +25,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +33,8 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
@@ -39,7 +42,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.adapter.DashboardAdapter;
 
-public class DashboardMainActivity extends AppCompatActivity {
+public class DashboardMainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -47,6 +50,7 @@ public class DashboardMainActivity extends AppCompatActivity {
     private TabItem tabPeople;
     private TabItem tabGroups;
     private TabItem tabDevices;
+    private ImageView addGroupInDashboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,8 @@ public class DashboardMainActivity extends AppCompatActivity {
         tabGroups = findViewById(R.id.tabGroups);
         tabDevices = findViewById(R.id.tabDevices);
         viewPager = findViewById(R.id.viewPager);
+        addGroupInDashboard = findViewById(R.id.addGroupInDashboard);
+        addGroupInDashboard.setOnClickListener(this);
         dashboardAdapter = new DashboardAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(dashboardAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -97,5 +103,12 @@ public class DashboardMainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.addGroupInDashboard) {
+            startActivity(new Intent(this, CreateGroupActivity.class));
+        }
     }
 }

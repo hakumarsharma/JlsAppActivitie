@@ -55,10 +55,10 @@
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="qrscan_instruction">A QR code will be available to \nthe back side of your device \nbox.</string>
     <string name="qrcode_text">Align QR Code with in the \nframe to scan</string>
-    <string name="add_device">Add device</string>
-    <string name="add_contact">Add contact</string>
+    <string name="add_device">Add Device</string>
+    <string name="add_contact">Add Contact</string>
     <string name="add_device_later">Add device later</string>
-    <string name="add_device_info">You have successfully registered with JioTrack.\nFollow the next steps to set up your device.</string>
+    <string name="add_device_info">To track any Device/Person choose below options to Add device/Add contact and then start tracking.</string>
     <string name="purchase_info">Inorder to purchase device follow the link</string>
     <string name="purchase_link">www.myjio/devices/JioTrack</string>
     <string name="add_people_text">Add people from your contacts or add their name and mobile number</string>

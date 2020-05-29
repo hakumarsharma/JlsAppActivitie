@@ -252,7 +252,7 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
-                startActivity(new Intent(ChooseGroupActivity.this, DashboardActivity.class));
+                startActivity(new Intent(ChooseGroupActivity.this, DashboardMainActivity.class));
             }
         }
     }

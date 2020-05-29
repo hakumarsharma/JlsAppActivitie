@@ -3,11 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/addPeopleToolbar"
+        layout="@layout/toolbar" />
 
     <RelativeLayout
         android:id="@+id/rel_layout"
         android:layout_width="match_parent"
         android:layout_height="220dp"
+        android:layout_below="@id/addPeopleToolbar"
         android:background="@drawable/layout_frame_blue">
 
         <TextView

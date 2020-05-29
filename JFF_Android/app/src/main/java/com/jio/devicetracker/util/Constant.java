@@ -65,7 +65,7 @@ public class Constant {
     public static final String INVALID_OTP = "Invalid OTP Provided";
     public static final String OTP_SENT = "OTP sent.";
     public static final String SMS_SEND_FAILED = "SMS failed, please try again.";
-    public static final String OTP_MESSAGE = "Hi, please use this OTP ";
+    public static final String OTP_MESSAGE = "Hi, Use OTP :";
     public static final String PHONE_VALIDATION = "Phone number cannot be left empty!";
     public static final String MOBILE_NETWORKCHECK = "Please use your mobile data";
     public static final String JIO_NUMBER = "Please use Jio number";

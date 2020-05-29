@@ -85,7 +85,7 @@ public class BaseActivity extends AppCompatActivity {
                 createdGroupId = createGroupResponse.getData().getId();
                 if (isFromCreateGroup) {
                     Util.progressDialog.dismiss();
-                    startActivity(new Intent(BaseActivity.this, ChooseGroupActivity.class));
+                    startActivity(new Intent(BaseActivity.this, AddDeviceActivity.class));
                 } else {
                     addIndividualUserInGroupAPICall();
                 }
@@ -152,7 +152,7 @@ public class BaseActivity extends AppCompatActivity {
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
-                if(isGroupMember){
+                if(isGroupMember) {
                     getAllForOneGroupAPICall();
                 }else {
                     Util.progressDialog.dismiss();

@@ -80,7 +80,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(getApplicationContext(), DashboardMainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }
     }

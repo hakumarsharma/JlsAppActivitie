@@ -62,7 +62,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private boolean isComingFromAddContact;
     private boolean isComingFromAddDevice;
     private boolean isComingFromGroupList;
-    private static String groupId;
+    private String groupId;
     private EditText contactName;
     private EditText contactNumber;
     private Button addContact;
@@ -75,9 +75,9 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initializeData() {
-        TextView title = findViewById(R.id.toolbar_title);
+        Toolbar toolbar = findViewById(R.id.addPeopleToolbar);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Constant.Add_People);
-
         toolbar.setBackgroundColor(getResources().getColor(R.color.cardviewlayout_device_background_color));
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
@@ -157,14 +157,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         isComingFromGroupList = savedInstanceState.getBoolean(Constant.IS_COMING_FROM_GROUP_LIST, false);
     }
 
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(this, DashboardActivity.class));
-    }
-
-
     // Change the button color when data is field
     private void changeButtonColorOnDataEntry() {
         contactName.addTextChangedListener(new TextWatcher() {
@@ -177,7 +169,16 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             }
             @Override
             public void afterTextChanged(Editable s) {
-                setEditTextBottomLineColor(contactName);
+                String name = contactName.getText().toString();
+                String number = contactNumber.getText().toString();
+                setEditTextBottomLineColor(contactNumber);
+                if (!"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
+                    addContact.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                    addContact.setTextColor(Color.WHITE);
+                } else {
+                    addContact.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
+                    addContact.setTextColor(Color.WHITE);
+                }
             }
         });
 
@@ -197,7 +198,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 if (!"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
                     addContact.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
                     addContact.setTextColor(Color.WHITE);
-                }else {
+                } else {
                     addContact.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
                     addContact.setTextColor(Color.WHITE);
                 }
@@ -297,17 +298,9 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
                             null, null);
                     phones.moveToFirst();
-                    contactNumber.setText(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
                     contactName.setText(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
+                    contactNumber.setText(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
                 }
-                Intent intent = new Intent(this, AddPeopleActivity.class);
-                intent.putExtra(Constant.IS_COMING_FROM_CONTACT_LIST, true);
-                intent.putExtra(Constant.IS_COMING_FROM_ADD_CONTACT, isComingFromAddContact);
-                intent.putExtra(Constant.IS_COMING_FROM_ADD_DEVICE, isComingFromAddDevice);
-                intent.putExtra(Constant.IS_COMING_FROM_GROUP_LIST, isComingFromGroupList);
-                intent.putExtra(Constant.GROUP_ID, groupId);
-                intent.putExtra(Constant.USER_ID, Util.userId);
-                startActivity(intent);
             }
         }
     }

@@ -35,6 +35,7 @@
             android:layout_marginLeft="135dp"/>
 
         <ImageView
+            android:id="@+id/addGroupInDashboard"
             android:layout_width="26dp"
             android:layout_height="26dp"
             android:layout_marginTop="20dp"
