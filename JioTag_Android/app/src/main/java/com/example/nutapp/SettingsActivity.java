@@ -49,6 +49,11 @@ public class SettingsActivity extends AppCompatActivity {
             Log.d("FEEDBACK","HOME KEY FROM FEEDBACK");
             finish();
         }
+        if (resultCode == JioUtils.LAUNCH_HOW) {
+            Log.d("HowToAdd","LAUNCH KEY FROM HOWTOADD");
+            finish();
+        }
+
     }
 
     @Override

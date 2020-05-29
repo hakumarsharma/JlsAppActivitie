@@ -1,3 +1,25 @@
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.example.nutapp;
 
 import android.app.Activity;
@@ -12,6 +34,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -45,6 +68,16 @@ public class ShareTagActivity extends Activity implements View.OnClickListener {
             case R.id.share_btn:
                  gotoSharetagSuccessActivity();
                 break;
+            case R.id.back:
+                Intent intentBack = new Intent();
+                setResult(RESULT_CANCELED, intentBack);
+                finish();
+                break;
+            case R.id.home:
+                Intent intentHome = new Intent();
+                setResult(JioUtils.HOME_KEY, intentHome);
+                finish();
+                break;
 
             default:
                 break;
@@ -53,8 +86,13 @@ public class ShareTagActivity extends Activity implements View.OnClickListener {
 
     private void gotoSharetagSuccessActivity() {
 
-        Intent intent = new Intent(this,ShareTagSuccessActivity.class);
-        startActivity(intent);
+
+        if(!contactNumber.getText().toString().isEmpty()) {
+            Intent intent = new Intent(this, ShareTagSuccessActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Please enter the contact number", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -90,7 +128,9 @@ public class ShareTagActivity extends Activity implements View.OnClickListener {
             title.setTypeface(JioUtils.mTypeface(this,5));
             Button backIcn = findViewById(R.id.back);
             backIcn.setVisibility(View.VISIBLE);
-            Button homeicn = findViewById(R.id.home);
-            homeicn.setVisibility(View.VISIBLE);
+            backIcn.setOnClickListener(this);
+            Button homeIcn = findViewById(R.id.home);
+            homeIcn.setVisibility(View.VISIBLE);
+            homeIcn.setOnClickListener(this);
         }
     }

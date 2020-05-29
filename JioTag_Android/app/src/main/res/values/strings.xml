@@ -44,7 +44,7 @@
 
     <string name="attach_jio_finder_heading">Attach device</string>
     <string name="attach_jio_finder_search">Search</string>
-    <string name="attach_jio_finder_Header">“Long press the tag to turn it on.\nHold it close to your phone.\nApplication will list the newly \ndetected tags.</string>
+    <string name="attach_jio_finder_Header">Long press the tag to turn it on.\nHold it close to your phone.\nApplication will list the newly \ndetected tags.</string>
 
     <string name="notfound_heading">Search result</string>
     <string name="notfound_header">Device not found ?</string>
@@ -58,10 +58,10 @@
     <string name="jiopermissions_header_value">Permissions</string>
     <string name="jiopermissions_before_activate_text">Before activating the Device</string>
     <string name="jiopermissions_turnon_bt_text">Turn on Bluetooth</string>
-    <string name="jiopermissions_turnon_bt_details_text">In order to find your assets,bluetooth of your phone needs to be activated.</string>
+    <string name="jiopermissions_turnon_bt_details_text">In order to find your assets, bluetooth of your phone needs to be activated.</string>
     <string name="jiopermissions_turnon_bt_details_enable_text">Enable</string>
     <string name="jiopermissions_turnon_location_text">Turn on Location</string>
-    <string name="jiopermissions_turnon_location_details_text">In order to find your assets location accurately,location of your phone needs to be activated.</string>
+    <string name="jiopermissions_turnon_location_details_text">In order to find your assets location accurately, location of your phone needs to be activated.</string>
     <string name="jiopermissions_turnon_location_details_enable_text">Enable</string>
     <string name="jiopermissions_next_text">Next</string>
     <string name="jiopermissions_app_header_str">Permissions</string>
@@ -195,6 +195,10 @@
     <string name="how_details3">Attached device to any asset and save the information to get it track.</string>
     <string name="facebook_app_id">1177666639249332</string>
     <string name="fb_login_protocol_scheme">fb1177666639249332</string>
+    <string name="disconnect_dialog_title">Disconnect JioTag</string>
+    <string name="disconnect_dialog_content">Do you really want to disconnect the \n[Tag name] ?</string>
+    <string name="delete_dialog_content">On deleting the tag from here will \npermanently remove it form your \naccount .Do you really want to delete \nthe [Tag name] ?</string>
+    <string name="delete_dialog_title">Delete JioTag</string>
 
     <!-- Help Screen -->
     <string name="location_help_title">Location tracking</string>

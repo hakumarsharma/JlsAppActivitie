@@ -41,6 +41,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -73,6 +74,7 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
     String ICON = "others";
     String STATUS = "";
     public static TextView rel_detail_device_status;
+    private RelativeLayout iconRing;
     public static Button alarm;
     public ProgressDialog m_connectDisconnectDialogp;
     SharedPreferences preferences;
@@ -447,6 +449,7 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
             if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_connected_device")) {
                 nut_device_address = intent.getStringExtra("DEV_ADDRESS");
                 Log.d("NUTRECEIVER", "CONNECTEDMSG::" + nut_device_address);
+                iconRing.setBackground(getResources().getDrawable(R.drawable.green_background_jio_tag_devices));
                 if (ADDRRESS.equalsIgnoreCase(nut_device_address)) {
                     rel_detail_device_status.setText("Connected" + " | " + farnear_val);
                     rel_detail_device_status.setTextColor(getResources().getColor(R.color.cardview_device_status_color));
@@ -463,11 +466,12 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
                 }
             } else if (intent.getAction().equalsIgnoreCase("com.nutapp.notifications_disconnected_device")) {
                 nut_device_address = intent.getStringExtra("DEV_ADDRESS");
+                iconRing.setBackground(getResources().getDrawable(R.drawable.red_background_jio_tag_devices));
                 Log.d("NUTRECEIVER", "DISCONNECTEDMSG::" + nut_device_address);
                 if (ADDRRESS.equalsIgnoreCase(nut_device_address) && isConnected == true) {
                     is_auto_reconnect=true;
                     rel_detail_device_status.setText("Disconnected" + " | " + farnear_val);
-                    rel_detail_device_status.setTextColor(0xCCCCCCCC);
+                    rel_detail_device_status.setTextColor(getResources().getColor(R.color.google_login_text_color));
                     alarm.setEnabled(false);
                     alarm.setBackgroundDrawable(getResources().getDrawable(R.drawable.disabled_button));
                     stopConnectProgressDialog(false);
@@ -578,37 +582,44 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
         ImageView relDetailLefticon = (ImageView) findViewById(R.id.rel_detail_lefticon);
         switch (ICON.toLowerCase(Locale.ROOT)) {
             case "key":
-                relDetailLefticon.setImageResource(R.drawable.key);
+                relDetailLefticon.setImageResource(R.drawable.ic_key);
                 break;
             case "wallet":
-                relDetailLefticon.setImageResource(R.drawable.wallet);
+                relDetailLefticon.setImageResource(R.drawable.ic_wallet);
                 break;
             case "laptop":
-                relDetailLefticon.setImageResource(R.drawable.laptop_home);
+                relDetailLefticon.setImageResource(R.drawable.ic_laptop);
                 break;
             case "suitcase":
-                relDetailLefticon.setImageResource(R.drawable.suitcase);
+                relDetailLefticon.setImageResource(R.drawable.ic_suitcase);
                 break;
             case "purse":
-                relDetailLefticon.setImageResource(R.drawable.purse);
+                relDetailLefticon.setImageResource(R.drawable.ic_purse);
                 break;
             default:
-                relDetailLefticon.setImageResource(R.drawable.ic_wallet);
+                relDetailLefticon.setImageResource(R.drawable.ic_others);
                 break;
         }
 
         rel_detail_device_status = (TextView) findViewById(R.id.rel_detail_device_status);
+        iconRing = findViewById(R.id.deviceIcon);
        // rel_detail_device_status.setText(STATUS);
-        rel_detail_device_status.setText("Connected | Near");
+
+        //rel_detail_device_status.setText("Connected | Near");
         if (isConnected == false) {
+            /*iconRing.setBackground(getResources().getDrawable(R.drawable.red_background_jio_tag_devices));*/
             rel_detail_device_status.setTextColor(0xCCCCCCCC);
+            rel_detail_device_status.setText("Disconnected" + " | " + farnear_val);
+            //iconRing.setBackground(getResources().getDrawable(R.drawable.red_background_jio_tag_devices));
         } else {
             rel_detail_device_status.setTextColor(getResources().getColor(R.color.cardview_device_status_color));
+            iconRing.setBackground(getResources().getDrawable(R.drawable.green_background_jio_tag_devices));
+            rel_detail_device_status.setText("Connected" + " | " + farnear_val);
         }
 
         TextView locationText = (TextView) findViewById(R.id.rel_detail_device_distance);
         locationText.setText(LOCADDRRESS);
-        locationText.setText("RCP, Thane-Belapur road Navi Mumbai");
+        //locationText.setText("RCP, Thane-Belapur road Navi Mumbai");
 
         preferences = this.getSharedPreferences(JioUtils.MYPREFERENCES, Context.MODE_PRIVATE);
         prefEditor = preferences.edit();
@@ -844,7 +855,7 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
     private void gotoShareTagActivity() {
 
         Intent intent = new Intent(this,ShareTagActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,JioUtils.HOME_KEY);
     }
 
     private void gotoSettingsActivity() {
@@ -895,6 +906,15 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
                 menuOption.setVisibility(View.VISIBLE);
                 break;
 
+            case R.id.edit:
+               startActivity(new Intent(this,JioAttachAssets.class));
+                break;
+            case R.id.delete:
+                customAlertDialogForDeleteDisconnect("delete");
+                break;
+            case R.id.disconnect:
+                customAlertDialogForDeleteDisconnect("disconnect");
+                break;
             default:
                 break;
 
@@ -917,6 +937,12 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
             item.addView(child);
             ImageView close = item.findViewById(R.id.close);
             close.setOnClickListener(this);
+            TextView editOption = findViewById(R.id.edit);
+            editOption.setOnClickListener(this);
+            TextView deleteOption = findViewById(R.id.delete);
+            deleteOption.setOnClickListener(this);
+            TextView disconnectOption = findViewById(R.id.disconnect);
+            disconnectOption.setOnClickListener(this);
             editDeleteLayout = findViewById(R.id.oprationLayout);
         }
 
@@ -924,8 +950,66 @@ public class CardDetails extends AppCompatActivity implements View.OnClickListen
 
     }
 
-    /*@Override
-    public boolean onMenuItemClick(MenuItem item) {
-        return false;
-    }*/
+    private void customAlertDialogForDeleteDisconnect(String dialogValue)
+    {
+        final String value = dialogValue;
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.create_dialog, null);
+        TextView content = dialogLayout.findViewById(R.id.dialogContent);
+        TextView title = dialogLayout.findViewById(R.id.dialogTitle);
+        Button positiveBtn = dialogLayout.findViewById(R.id.positive);
+        Button negativeBtn = dialogLayout.findViewById(R.id.negative);
+        builder.setView(dialogLayout);
+        final AlertDialog dialog = builder.show();
+        if("disconnect".equalsIgnoreCase(dialogValue)){
+            content.setText(getResources().getString(R.string.disconnect_dialog_content));
+            title.setText(getResources().getString(R.string.disconnect_dialog_title));
+        } else {
+            content.setText(getResources().getString(R.string.delete_dialog_content));
+            title.setText(getResources().getString(R.string.delete_dialog_title));
+        }
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if("disconnect".equalsIgnoreCase(value)){
+                    Toast.makeText(CardDetails.this,"Disconnect dialog called",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CardDetails.this,"Delete dialog called",Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+                //builder.setCancelable(true);
+            }
+        });
+
+        negativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+      /*  builder.setPositiveButton("", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(value.equalsIgnoreCase("disconnect")){
+                    Toast.makeText(CardDetails.this,"Disconnect dialog called",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CardDetails.this,"Delete dialog called",Toast.LENGTH_SHORT).show();
+                }
+
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+             dialog.dismiss();
+            }
+        });*/
+
+    }
 }

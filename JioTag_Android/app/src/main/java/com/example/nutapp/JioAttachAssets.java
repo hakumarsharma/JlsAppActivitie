@@ -289,10 +289,13 @@ public class JioAttachAssets extends AppCompatActivity implements PopupMenu.OnMe
         });
 
         asset_custom_name = (EditText) findViewById(R.id.asset_custom_name);
-        String resourceId=m_deviceposName.toLowerCase(Locale.ROOT).split("\\.")[0];
-        setHighlight(resourceId);
-        if(!"JioTag".equalsIgnoreCase(resourceId)){
-            filledNameValue.setText(m_deviceposName.split("\\.")[0]);
+        if(m_deviceposName != null) {
+            String resourceId = m_deviceposName.toLowerCase(Locale.ROOT).split("\\.")[0];
+            setHighlight(resourceId);
+
+            if (!"JioTag".equalsIgnoreCase(resourceId)) {
+                filledNameValue.setText(m_deviceposName.split("\\.")[0]);
+            }
         }
         attach_asset_btn_add.setEnabled(true);
     }

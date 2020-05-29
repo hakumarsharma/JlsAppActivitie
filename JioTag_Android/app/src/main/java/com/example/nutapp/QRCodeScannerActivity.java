@@ -54,7 +54,6 @@ public class QRCodeScannerActivity extends AppCompatActivity implements ZXingSca
         scanCodeText.setTypeface(JioUtils.mTypeface(this, 5));
         RelativeLayout scanView = findViewById(R.id.scanframe);
         mScannerView = new ZXingScannerView(this);
-        mScannerView.setBackground(getDrawable(R.drawable.ic_qrcodescan));
         scanView.addView(mScannerView);
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override

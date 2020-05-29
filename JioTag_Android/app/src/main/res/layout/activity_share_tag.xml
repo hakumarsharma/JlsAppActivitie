@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_white"
@@ -54,7 +53,6 @@
                 android:id="@+id/share_btn"
                 android:layout_width="@dimen/adddevice_button_width"
                 android:layout_height="@dimen/adddevice_button_height"
-                android:layout_below="@+id/password_condition"
                 android:background="@drawable/button_frame_blue"
                 android:text="@string/share_button"
                 android:layout_alignParentBottom="true"
@@ -110,7 +108,6 @@
                 android:layout_width="wrap_content"
                 android:layout_marginTop="@dimen/five_dp"
                 android:layout_marginLeft="@dimen/margin_24"
-                android:layout_toRightOf="@+id/prefix_text"
                 android:text=""
                 android:hint="@string/add_contact_hint"
                 android:background="@android:color/transparent"
@@ -123,7 +120,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/five_dp"
-                android:layout_alignStart="@+id/prefix_text"
                 android:layout_marginRight="@dimen/layout_margin_16"
                 android:layout_marginLeft="@dimen/layout_margin_16"
                 android:id="@+id/contact_edit_line"
