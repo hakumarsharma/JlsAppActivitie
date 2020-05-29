@@ -79,42 +79,43 @@ public class DeviceNameActivity extends Activity implements View.OnClickListener
         switch(v.getId()){
 
             case R.id.mother_icon:
-                getNameIcon("Mother");
+                navigateTochooseGroup("Mother");
                 break;
             case R.id.father_icon:
-                getNameIcon("Father");
+                navigateTochooseGroup("Father");
                 break;
             case R.id.husband_icon:
-                getNameIcon("Husband");
+                navigateTochooseGroup("Husband");
                 break;
             case R.id.wife_icon:
-                getNameIcon("Wife");
+                navigateTochooseGroup("Wife");
                 break;
             case R.id.kid_icon:
-                getNameIcon("Kid");
+                navigateTochooseGroup("Kid");
                 break;
             case R.id.other_icon:
-                getNameIcon("Other");
+                navigateTochooseGroup("Other");
                 break;
             case R.id.dog_icon:
-                getNameIcon("Dog");
+                navigateTochooseGroup("Dog");
                 break;
             case R.id.cat_icon:
-                getNameIcon("Cat");
+                navigateTochooseGroup("Cat");
                 break;
             case R.id.other_pet_icon:
-                getNameIcon("OtherPet");
+                navigateTochooseGroup("OtherPet");
                 break;
 
             default:
                 break;
 
         }
-       navigateTochooseGroup();
+       //navigateTochooseGroup();
     }
 
-    private void navigateTochooseGroup() {
+    private void navigateTochooseGroup(String memberLabel) {
         Intent intent = new Intent(this,ChooseGroupActivity.class);
+        intent.putExtra("Title",memberLabel);
         startActivity(intent);
     }
 

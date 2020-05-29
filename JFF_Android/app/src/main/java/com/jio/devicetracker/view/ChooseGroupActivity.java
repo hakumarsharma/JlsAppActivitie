@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -57,15 +58,56 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
     private ChooseGroupListAdapter mAdapter;
     private EditText trackeeNameEditText;
     private String userId;
+    private ImageView memberIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_group);
+        Intent intent = getIntent();
+        String label = intent.getStringExtra("Title");
         initUI();
+        setMemberIcon(label);
         initDataMember();
         makeGroupInfoPerUserRequestAPICall();
     }
+
+    // Set the memberIcon
+    private void setMemberIcon(String label) {
+
+        if(!label.isEmpty()) {
+
+            if (label.equalsIgnoreCase("Mother")) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
+            }
+            if (label.equalsIgnoreCase("Father")) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
+            }
+            if (label.equalsIgnoreCase("Husband")) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
+            }
+            if (label.equalsIgnoreCase("Wife")) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
+            }
+            if (label.equalsIgnoreCase("Kid")) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
+            }
+            if (label.equalsIgnoreCase("Other")) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
+            }
+            if (label.equalsIgnoreCase("Cat")) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
+            }
+            if (label.equalsIgnoreCase("Dog")) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
+            }
+            if (label.equalsIgnoreCase("OtherPet")) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
+            }
+        }
+
+    }
+
 
     /**
      * Initialize data members
@@ -79,6 +121,7 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
      * Initialize UI component
      */
     private void initUI() {
+        memberIcon = findViewById(R.id.userIcon);
         TextView chooseGroupTextView = findViewById(R.id.chooseGroupTextView);
         chooseGroupTextView.setTypeface(Util.mTypeface(this, 5));
         trackeeNameEditText = findViewById(R.id.trackeeNameEditText);
@@ -89,6 +132,7 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * To do event handling
+     *
      * @param v
      */
     @Override
@@ -264,20 +308,20 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
         for (int i = 0; i < chooseGroupDataList.size(); i++) {
             if (i < 4) {
                 list1.add(chooseGroupDataList.get(i));
-            } else if(i > 3 && i < 8) {
+            } else if (i > 3 && i < 8) {
                 mList.add(chooseGroupDataList.get(i));
-            } else if(i > 7 && i < 10) {
+            } else if (i > 7 && i < 10) {
                 mList2.add(chooseGroupDataList.get(i));
             }
         }
 
-        if(list1.size() > 0) {
+        if (list1.size() > 0) {
             listListList.add(list1);
         }
-        if(mList.size() > 0) {
+        if (mList.size() > 0) {
             listListList.add(mList);
         }
-        if(mList2.size() > 0) {
+        if (mList2.size() > 0) {
             listListList.add(mList2);
         }
 
