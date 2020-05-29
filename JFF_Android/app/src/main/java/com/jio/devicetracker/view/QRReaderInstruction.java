@@ -56,6 +56,11 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
         addManually.setOnClickListener(this);
         scanBtn.setOnClickListener(this);
 
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
+
+
         Intent intent = getIntent();
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         groupName = intent.getStringExtra(Constant.GROUP_NAME);
@@ -72,6 +77,9 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
                // gotoJioPermissionScreen();
                 break;
 
+            case R.id.back:
+                finish();
+                break;
             default:
                 break;
         }
