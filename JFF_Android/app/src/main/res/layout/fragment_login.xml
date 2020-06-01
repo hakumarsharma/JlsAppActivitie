@@ -32,7 +32,7 @@
 
             <TextView
                 android:id="@+id/signInHelloTextView"
-                android:layout_width="178dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/signInHelloTextView"
                 android:layout_marginTop="30dp"
@@ -52,12 +52,26 @@
                 android:textColor="@color/black"
                 android:textSize="14dp" />
 
+            <TextView
+                android:id="@+id/mobileNumberTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:text="Mobile Number"
+                android:textSize="10dp"
+                android:visibility="invisible"
+                android:textColor="@color/cardviewlayout_device_background_color"
+                android:layout_marginLeft="4dp"
+                android:layout_alignLeft="@id/mobileNumberEditText"
+                android:layout_below="@id/enterMobileNumberTextView"/>
+
             <EditText
                 android:id="@+id/mobileNumberEditText"
                 android:layout_width="312dp"
                 android:layout_height="wrap_content"
                 android:hint="Mobile Number"
                 android:layout_marginTop="40dp"
+                android:inputType="number"
                 android:layout_marginLeft="20dp"
                 android:backgroundTint="@color/black"
                 android:layout_below="@id/enterMobileNumberTextView"/>

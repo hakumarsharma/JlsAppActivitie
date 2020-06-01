@@ -56,6 +56,7 @@ public class Constant {
     public static final String FLAG = "flag";
     public static final String SUPERVISOR = "supervisor";
     public static final String TITLE = "Title...";
+    public static final String EMPTY_STRING = "";
 
 
     // Registration Activity constants

@@ -20,26 +20,90 @@
 
 package com.jio.devicetracker.view;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 
 /**
  * Signup fragment
  */
 public class SignupFragment extends Fragment {
 
+    private EditText signUpNameEditText;
+    private Button continueSignup;
+    private TextView addLaterTextView;
+    private TextView nameTextView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_signup, container, false);
+        View view = inflater.inflate(R.layout.fragment_signup, container, false);
+        setLayoutData(view);
+        changeButtonColorOnDataEntry();
+        return view;
     }
+
+    private void setLayoutData(View view) {
+        TextView signUpcustomizeProfile = view.findViewById(R.id.signUpcustomizeProfile);
+        signUpcustomizeProfile.setTypeface(Util.mTypeface(getActivity(),5));
+        TextView enterNameTextView = view.findViewById(R.id.enterNameTextView);
+        enterNameTextView.setTypeface(Util.mTypeface(getActivity(),3));
+        signUpNameEditText = view.findViewById(R.id.signUpNameEditText);
+        signUpNameEditText.setTypeface(Util.mTypeface(getActivity(),5));
+        addLaterTextView = view.findViewById(R.id.addLaterTextView);
+        addLaterTextView.setTypeface(Util.mTypeface(getActivity(),5));
+        continueSignup = view.findViewById(R.id.continueSignup);
+        continueSignup.setTypeface(Util.mTypeface(getActivity(),5));
+        TextView signupRequestOTPTextView = view.findViewById(R.id.signupRequestOTPTextView);
+        signupRequestOTPTextView.setTypeface(Util.mTypeface(getActivity(), 3));
+        TextView signupTermConditionTextView = view.findViewById(R.id.signupTermConditionTextView);
+        signupTermConditionTextView.setTypeface(Util.mTypeface(getActivity(), 5));
+        nameTextView = view.findViewById(R.id.nameTextView);
+        nameTextView.setTypeface(Util.mTypeface(getActivity(), 5));
+    }
+
+    private void changeButtonColorOnDataEntry() {
+        signUpNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Unused empty method
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                continueSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                continueSignup.setTextColor(Color.WHITE);
+                nameTextView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String name = signUpNameEditText.getText().toString();
+                if (!Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
+                    continueSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                    continueSignup.setTextColor(Color.WHITE);
+                    nameTextView.setVisibility(View.VISIBLE);
+                } else if(Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
+                    nameTextView.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
 }
