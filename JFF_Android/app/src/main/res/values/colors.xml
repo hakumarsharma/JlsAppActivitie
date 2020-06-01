@@ -31,4 +31,5 @@
     <color name="alert_btn_color">#CCF2FD</color>
     <color name="alert_btn_selected_color">#00BFF2</color>
     <color name="alert_background_color">#707070</color>
+    <color name="navigate_profile_color">#03007F</color>
 </resources>

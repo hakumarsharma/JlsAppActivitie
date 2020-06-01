@@ -66,6 +66,8 @@
     <string name="select_icon_text">Let\'s choose any one with whom you \nwant to attach your device</string>
     <string name="people_title">PEOPLE</string>
     <string name="pet_title">PET</string>
+    <string name="drawerOpen">Open </string>
+    <string name="drawerClose">Close</string>
     <string name="chooseGroupText">Now choose any group or \ncreate new group in which \n \t you want to track</string>
 
     <string-array name="device_type_array">

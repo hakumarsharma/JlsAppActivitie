@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/notification"
+        android:icon="@drawable/notification"
+        android:title="Notification &amp; alerts" />
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/settings"
+        android:title="Group management" />
+    <item
+        android:id="@+id/howtoadd"
+        android:icon="@drawable/howtouse"
+        android:title="How to Add Device" />
+    <item
+        android:id="@+id/information"
+        android:icon="@drawable/feedback"
+        android:title="Support" />
+
+
+
+</menu>
