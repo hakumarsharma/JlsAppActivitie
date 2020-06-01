@@ -69,6 +69,11 @@
     <string name="drawerOpen">Open </string>
     <string name="drawerClose">Close</string>
     <string name="chooseGroupText">Now choose any group or \ncreate new group in which \n \t you want to track</string>
+    <string name="signInHelloTextView">Hello! Let\'s get started</string>
+    <string name="customizeProfile">Customize profile</string>
+    <string name="enterMobileNumberTextView">To Login please enter your\n \t \t \t \t mobile number</string>
+    <string name="customizeProfileTextView">To customize your profile,\n please enter below details</string>
+    <string name="requestOTPTextView">By requesting OTP you agree to the</string>
 
     <string-array name="device_type_array">
         <item>People Tracker</item>

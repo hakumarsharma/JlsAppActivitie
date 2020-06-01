@@ -221,6 +221,33 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
+     * Sets all the layout data
+     */
+    private void setLayoutData() {
+        Toolbar toolbar = findViewById(R.id.customToolbar);
+        listView = findViewById(R.id.listView);
+        FloatingActionButton fabCreateGroup = findViewById(R.id.createGroupInDashboard);
+        FloatingActionButton fabAddDevice = findViewById(R.id.addDevice);
+        FloatingActionButton fabAddContact = findViewById(R.id.addContact);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        listView.setLayoutManager(linearLayoutManager);
+        Button trackBtn = toolbar.findViewById(R.id.track);
+        trackBtn.setVisibility(View.VISIBLE);
+        TextView toolbarTitle = findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(Constant.DASHBOARD_TITLE);
+        trackBtn.setOnClickListener(this);
+        fabCreateGroup.setOnClickListener(this);
+        fabAddDevice.setOnClickListener(this);
+        fabAddContact.setOnClickListener(this);
+        setSupportActionBar(toolbar);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.Open, R.string.Close);
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+    }
+
+    /**
      * Sets Navigation data
      */
     private void setNavigationData() {
@@ -488,33 +515,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             System.out.println("Message is " + message);
 //            GroupRequestHandler.getInstance(this).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
         }
-    }
-
-    /**
-     * Sets all the layout data
-     */
-    private void setLayoutData() {
-        Toolbar toolbar = findViewById(R.id.customToolbar);
-        listView = findViewById(R.id.listView);
-        FloatingActionButton fabCreateGroup = findViewById(R.id.createGroupInDashboard);
-        FloatingActionButton fabAddDevice = findViewById(R.id.addDevice);
-        FloatingActionButton fabAddContact = findViewById(R.id.addContact);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        listView.setLayoutManager(linearLayoutManager);
-        Button trackBtn = toolbar.findViewById(R.id.track);
-        trackBtn.setVisibility(View.VISIBLE);
-        TextView toolbarTitle = findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(Constant.DASHBOARD_TITLE);
-        trackBtn.setOnClickListener(this);
-        fabCreateGroup.setOnClickListener(this);
-        fabAddDevice.setOnClickListener(this);
-        fabAddContact.setOnClickListener(this);
-        setSupportActionBar(toolbar);
-        drawerLayout = findViewById(R.id.drawerLayout);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.Open, R.string.Close);
-        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
     }
 
     /**

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardviewlayout_device_background_color"
+    android:orientation="vertical"
+    tools:context=".view.SigninSignupActivity">
+
+    <include
+        android:id="@+id/signInSignUpToolbar"
+        layout="@layout/toolbar" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/signinSignupTablayout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:tabIndicatorHeight="0dp"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextAppearance="@style/custom_tab_text">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/loginScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login\n." />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/signUpScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign up" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/signinSignupviewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

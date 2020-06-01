@@ -145,6 +145,7 @@ public class Constant {
     public static final String PEOPLE_WITHOUT_DOT = "People";
     public static final String DEVICES_WITH_DOT = "Devices \n.";
     public static final String DEVICES_WITHOUT_DOT = "Devices";
+    public static final String welcome = "Welcome";
 
     // New Device Activity Constants
     public static final String ADD_DEVICE_TITLE = "Add";

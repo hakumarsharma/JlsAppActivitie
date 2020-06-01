@@ -23,7 +23,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".view.DashboardMainActivity"></activity>
+        <activity android:name=".view.SigninSignupActivity"></activity>
+        <activity android:name=".view.DashboardMainActivity" />
         <activity android:name=".view.CreateGroupActivity" />
         <activity android:name=".view.ChooseGroupActivity" />
         <activity android:name=".view.GroupNameActivity" />
