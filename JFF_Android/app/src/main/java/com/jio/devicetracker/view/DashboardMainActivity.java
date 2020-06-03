@@ -51,6 +51,8 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.DashboardAdapter;
 
+import java.util.Locale;
+
 public class DashboardMainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TabLayout tabLayout;
@@ -157,6 +159,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         NavigationView navigationView = findViewById(R.id.nv);
         View header = navigationView.getHeaderView(0);
         ImageView profileIcn = header.findViewById(R.id.profileIcon);
+        TextView userAccountName = header.findViewById(R.id.user_account_name);
+        TextView userPhoneNumber = header.findViewById(R.id.user_number);
+        //userAccountName.setText(Util.userName.substring(0, 1).toUpperCase(Locale.ROOT) + Util.userName.substring(1));
+        //userPhoneNumber.setText(Util.userNumber);
         ImageView backDrawer = header.findViewById(R.id.back);
         backDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +173,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         profileIcn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+              gotoNavigateUserProfileActivity();
             }
         });
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -185,8 +191,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                     case R.id.howtoadd:
                         //goToHowtoAddActivity();
                         break;
-                    case R.id.information:
-                        //goToInformationActivity();
+                    case R.id.support:
+                        startActivity(new Intent(DashboardMainActivity.this,NavigateSupportActivity.class));
                         break;
                     case R.id.logout:
                         //updateLogoutData();
@@ -197,6 +203,11 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                 return true;
             }
         });
+    }
+
+    private void gotoNavigateUserProfileActivity() {
+        Intent intent = new Intent(this,NavigateUserProfileActivity.class);
+        startActivity(intent);
     }
 
 }

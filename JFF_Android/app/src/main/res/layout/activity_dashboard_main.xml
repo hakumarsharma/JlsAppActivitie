@@ -22,47 +22,6 @@
         layout="@layout/toolbar"
         android:id="@+id/dashboardToolbar"
         />
-
-   <!-- <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/cardviewlayout_device_background_color"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark" >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/toolbarlayout">
-        <ImageView
-            android:id="@+id/profileMenu"
-            android:layout_marginTop="20dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/ic_more"/>
-        
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="20dp"
-            android:text="Dashboard"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:layout_marginLeft="135dp"/>
-
-        <ImageView
-            android:id="@+id/addGroupInDashboard"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/ic_add_btn"/>
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
--->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout"
         android:layout_width="match_parent"

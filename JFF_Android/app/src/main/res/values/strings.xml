@@ -131,4 +131,17 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_app_content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in et dolore magna \naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </string>
+    <string name="name">Name</string>
+    <string name="about_app">About app</string>
+    <string name="term_policy">Terms &amp; privacy policies</string>
+    <string name="term_condition">Terms &amp; Conditions</string>
+    <string name="faq">FAQ</string>
+    <string name="contact_us">Contact us</string>
+    <string name="version">Version</string>
+    <string name="email_id">Email ID</string>
+    <string name="mobile_number">Alternate mobile number</string>
+    <string name="edit_button">Edit</string>
+    <string name="update_button">Update</string>
+    <string name="app_version">Version : v2.33.0003 </string>
 </resources>

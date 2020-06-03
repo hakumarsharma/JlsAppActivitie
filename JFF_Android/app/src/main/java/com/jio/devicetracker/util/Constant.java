@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -95,7 +93,7 @@ public class Constant {
     public static final String GROUP_DELETION_FAILURE = "Group Deletion failed";
     public static final String ACTIVE = "active";
     public static final String ACTIVE_CAPS = "Active";
-    public static final String  SCHEDULED = "scheduled";
+    public static final String SCHEDULED = "scheduled";
     public static final String SCHEDULED_CAPS = "Scheduled";
     public static final String APPROVED = "approved";
     public static final String REJECTED = "rejected";
@@ -119,7 +117,7 @@ public class Constant {
     public static final String FETCH_LOCATION_ERROR = "Unable to get location, Please try again!";
     public static final String GROUP_NOT_ACTIVE = "Group is scheduled, please wait until it doesn't become active";
     public static final String SESSION_COMPLETED = "Please request consent to track the group members";
-    public static final String CONSENT_PENDING_STATUS= "Consent is pending, please ask the user to accept consent for tracking";
+    public static final String CONSENT_PENDING_STATUS = "Consent is pending, please ask the user to accept consent for tracking";
     public static final String ADD_CONTACT_WARNING = "Please add contact first in the list to proceed further";
 
     // Login Activity constants
@@ -300,7 +298,7 @@ public class Constant {
     public static final String MEDIA_TYPE = "text/plain";
     public static final String APPLICATION_JSON = "application/json";
     public static final String REMOVED = "removed";
-    public static final String USER_ID= "userId";
+    public static final String USER_ID = "userId";
     public static final String OK = "OK";
     public static final String CANCEL = "Cancel";
     public static final String CREATED_BY = "createdBy";
@@ -324,8 +322,8 @@ public class Constant {
 
 
     // Custom Alert Constants
-    public  static  final  String Custom_Alert_Title = "Invite";
-    public  static  final  String Custom_Alert_Message = "An invite message sent to selected contacts, you can view the status of them in invite section";
+    public static final String Custom_Alert_Title = "Invite";
+    public static final String Custom_Alert_Message = "An invite message sent to selected contacts, you can view the status of them in invite section";
 
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";
@@ -348,4 +346,14 @@ public class Constant {
     public static final String MIN_40 = "40 min";
     public static final String NOTIFICATION_CHANNEL_ID = "channel";
     public static final int NOTIFICATION__ID = 1;
+
+
+    // NavigateSupport Activity
+    public static final String SUPPORT_TITLE = "Support";
+    public static final String ABOUT_APP_TITLE = "About app";
+    public static final String TERM_CONDITION_TITLE = "Terms & privacy policies";
+    public static final String FAQ_TITLE = "FAQ";
+    public static final String CONTACT_TITLE = "Contact us";
+
+
 }

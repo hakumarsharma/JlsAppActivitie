@@ -62,6 +62,7 @@ public final class Util extends AppCompatActivity {
     public static String userToken = "";
     public static String userName = "";
     public static String userId = "";
+    public static String userNumber = "";
 
     private Util() {
 
@@ -480,6 +481,7 @@ public final class Util extends AppCompatActivity {
             userToken = adminLoginData.getUserToken();
             userName = adminLoginData.getName();
             userId = adminLoginData.getUserId();
+            userNumber = adminLoginData.getPhoneNumber();
         }
     }
 

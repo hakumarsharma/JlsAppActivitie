@@ -121,6 +121,28 @@
             android:name=".view.AddPeopleActivity"
             android:label="@string/map_name" />
         <activity
+            android:name=".view.NavigateUserProfileActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.NavigateSupportActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.TermAndConditionPolicyActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.AboutAppActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.FaqActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.ContactUsActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.EditUserProfileActivity"
+            android:label="@string/map_name" />
+
+        <activity
             android:name=".view.SplashScreenActivity"
             android:theme="@style/SplashScreen">
             <intent-filter>

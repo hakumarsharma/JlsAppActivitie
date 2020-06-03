@@ -14,6 +14,7 @@
     <color name="graylight">#fafafa</color>
     <color name="startblue">#09c6df</color>
     <color name="endblue">#0bcce6</color>
+    <color name="light_blue">#343398</color>
     <color name="white">#FFFFFF</color>
     <color name="mine_shaft">#252525</color>
     <color name="hintColor">#A9A9A9</color>
@@ -29,6 +30,7 @@
     <color name="unselected_button_background">#D5D7D7</color>
     <color name="alert_text_color">#666666</color>
     <color name="alert_btn_color">#CCF2FD</color>
+    <color name="underline_color">#666666</color>
     <color name="alert_btn_selected_color">#00BFF2</color>
     <color name="alert_background_color">#707070</color>
     <color name="navigate_profile_color">#03007F</color>

@@ -5,6 +5,12 @@
         android:id="@+id/notification"
         android:icon="@drawable/notification"
         android:title="Notification &amp; alerts" />
+
+    <item
+        android:id="@+id/silent_mode"
+        android:icon="@drawable/ic_silentmode"
+        android:title="Silent mode" />
+
     <item
         android:id="@+id/settings"
         android:icon="@drawable/settings"
@@ -14,7 +20,7 @@
         android:icon="@drawable/howtouse"
         android:title="How to Add Device" />
     <item
-        android:id="@+id/information"
+        android:id="@+id/support"
         android:icon="@drawable/feedback"
         android:title="Support" />
 
