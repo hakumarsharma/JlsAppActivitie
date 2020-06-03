@@ -25,6 +25,7 @@ import android.os.Bundle;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -70,6 +71,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         addLaterTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         continueSignup = view.findViewById(R.id.continueSignup);
         continueSignup.setTypeface(Util.mTypeface(getActivity(), 5));
+        continueSignup.setOnClickListener(this);
         TextView signupRequestOTPTextView = view.findViewById(R.id.signupRequestOTPTextView);
         signupRequestOTPTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         TextView signupTermConditionTextView = view.findViewById(R.id.signupTermConditionTextView);
@@ -109,7 +111,11 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.continueSignup) {
-            
+            FragmentTransaction trans = getFragmentManager().beginTransaction();
+            trans.replace(R.id.signup_root_frame, new SignupMobileNumberFragment());
+            trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            trans.addToBackStack(null);
+            trans.commit();
         }
     }
 }

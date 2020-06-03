@@ -72,8 +72,10 @@
     <string name="signInHelloTextView">Hello! Let\'s get started</string>
     <string name="sentOTPTextView">OTP has been sent</string>
     <string name="customizeProfile">Customize profile</string>
+    <string name="alternate_number_textview">Alternate Mobile Number</string>
     <string name="enterMobileNumberTextView">To Login please enter your\n \t \t \t \t mobile number</string>
     <string name="customizeProfileTextView">To customize your profile,\n please enter below details</string>
+    <string name="alternate_number_security_textview">Please enter an alternate phone number \n \t \t \t \t \t \t \t for security purpose</string>
     <string name="requestOTPTextView">By requesting OTP you agree to the</string>
 
     <string-array name="device_type_array">

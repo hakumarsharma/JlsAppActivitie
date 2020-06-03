@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.jio.devicetracker.view.LoginFragment;
 import com.jio.devicetracker.view.RootFragment;
 import com.jio.devicetracker.view.SignupFragment;
+import com.jio.devicetracker.view.SignupRootFragment;
 
 public class SigninSignupAdapter extends FragmentPagerAdapter {
 
@@ -42,7 +43,7 @@ public class SigninSignupAdapter extends FragmentPagerAdapter {
             case 0:
                 return new RootFragment();
             case 1:
-                return new SignupFragment();
+                return new SignupRootFragment();
             default:
                 return null;
         }

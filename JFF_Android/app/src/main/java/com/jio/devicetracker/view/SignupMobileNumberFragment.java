@@ -23,29 +23,49 @@ package com.jio.devicetracker.view;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.util.Util;
 
 /**
- * Sign up root fragment
+ * Signup Mobile Number Fragment
  */
-public class SignupRootFragment extends Fragment {
+public class SignupMobileNumberFragment extends Fragment implements View.OnClickListener{
+
+    private EditText signUpNumberEditText;
+    private Button continueNumberSignup;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_signup_mobile_number, container, false);
+        setLayoutData(view);
+        return view;
+    }
 
-        FragmentTransaction trans = getFragmentManager().beginTransaction();
-        trans.replace(R.id.signup_root_frame, new SignupFragment());
-        trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        trans.addToBackStack(null);
-        trans.commit();
+    private void setLayoutData(View view) {
+        TextView alternateMobileNumberTextView = view.findViewById(R.id.alternateMobileNumberTextView);
+        alternateMobileNumberTextView.setTypeface(Util.mTypeface(getActivity(), 5));
+        TextView enterAlternateNumber = view.findViewById(R.id.enterAlternateNumber);
+        enterAlternateNumber.setTypeface(Util.mTypeface(getActivity(), 3));
+        signUpNumberEditText = view.findViewById(R.id.signUpNumberEditText);
+        signUpNumberEditText.setTypeface(Util.mTypeface(getActivity(), 5));
+        continueNumberSignup = view.findViewById(R.id.continueNumberSignup);
+        continueNumberSignup.setTypeface(Util.mTypeface(getActivity(), 5));
+        continueNumberSignup.setOnClickListener(this);
+    }
 
-        return inflater.inflate(R.layout.signup_root_fragment, container, false);
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.continueNumberSignup) {
+            // Todo
+        }
     }
 }
