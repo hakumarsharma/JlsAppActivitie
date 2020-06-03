@@ -18,38 +18,34 @@
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
  **************************************************************/
 
-package com.jio.devicetracker.view.adapter;
+package com.jio.devicetracker.view;
+
+import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import com.jio.devicetracker.view.LoginFragment;
-import com.jio.devicetracker.view.RootFragment;
-import com.jio.devicetracker.view.SignupFragment;
+import androidx.fragment.app.FragmentTransaction;
 
-public class SigninSignupAdapter extends FragmentPagerAdapter {
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-    private int numOfTabs;
+import com.jio.devicetracker.R;
 
-    public SigninSignupAdapter(FragmentManager fm, int numOfTabs) {
-        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        this.numOfTabs = numOfTabs;
-    }
+/**
+ * create Root Fragment
+ */
+public class RootFragment extends Fragment {
 
     @Override
-    public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return new RootFragment();
-            case 1:
-                return new SignupFragment();
-            default:
-                return null;
-        }
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-    @Override
-    public int getCount() {
-        return numOfTabs;
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        trans.replace(R.id.root_frame, new LoginFragment());
+        trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        trans.addToBackStack(null);
+        trans.commit();
+
+        return inflater.inflate(R.layout.frame_layout, container, false);
     }
 }

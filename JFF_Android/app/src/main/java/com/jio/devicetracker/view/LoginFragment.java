@@ -20,11 +20,13 @@
 
 package com.jio.devicetracker.view;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,19 +36,27 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.GenerateLoginTokenData;
+import com.jio.devicetracker.database.pojo.request.GenerateLoginTokenRequest;
+import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
+import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 /**
  * Login fragment
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private EditText mobileNumberEditText;
     private Button continueButton;
     private TextView mobileNumberTextView;
+    private String phoneNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,19 +70,28 @@ public class LoginFragment extends Fragment {
 
     private void setLayoutData(View view) {
         TextView signInHelloTextView = view.findViewById(R.id.signInHelloTextView);
-        signInHelloTextView.setTypeface(Util.mTypeface(getActivity(),5));
+        signInHelloTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         TextView enterMobileNumberTextView = view.findViewById(R.id.enterMobileNumberTextView);
-        enterMobileNumberTextView.setTypeface(Util.mTypeface(getActivity(),3));
+        enterMobileNumberTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         mobileNumberEditText = view.findViewById(R.id.mobileNumberEditText);
-        mobileNumberEditText.setTypeface(Util.mTypeface(getActivity(),5));
+        mobileNumberEditText.setTypeface(Util.mTypeface(getActivity(), 5));
         continueButton = view.findViewById(R.id.continueLogin);
-        continueButton.setTypeface(Util.mTypeface(getActivity(),5));
+        continueButton.setTypeface(Util.mTypeface(getActivity(), 5));
+        continueButton.setOnClickListener(this);
         TextView requestOTPTextView = view.findViewById(R.id.requestOTPTextView);
-        requestOTPTextView.setTypeface(Util.mTypeface(getActivity(),3));
+        requestOTPTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         TextView termConditionTextView = view.findViewById(R.id.termConditionTextView);
-        termConditionTextView.setTypeface(Util.mTypeface(getActivity(),5));
+        termConditionTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         mobileNumberTextView = view.findViewById(R.id.mobileNumberTextView);
         mobileNumberTextView.setTypeface(Util.mTypeface(getActivity(), 5));
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.continueLogin) {
+            phoneNumber = mobileNumberEditText.getText().toString().trim();
+            generateLoginTokenAPICall();
+        }
     }
 
     private void showMobileNumberTextViewOnDataEntry() {
@@ -92,10 +111,57 @@ public class LoginFragment extends Fragment {
                 String name = mobileNumberEditText.getText().toString();
                 if (!Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
                     mobileNumberTextView.setVisibility(View.VISIBLE);
-                } else if(Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
+                } else if (Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
                     mobileNumberTextView.setVisibility(View.INVISIBLE);
                 }
             }
         });
     }
+
+    private void generateLoginTokenAPICall() {
+        GenerateLoginTokenData generateLoginTokenData = new GenerateLoginTokenData();
+        GenerateLoginTokenData.Role role = new GenerateLoginTokenData().new Role();
+        role.setCode(Constant.SUPERVISOR);
+        generateLoginTokenData.setPhone(phoneNumber);
+        generateLoginTokenData.setRole(role);
+        Util.getInstance().showProgressBarDialog(getActivity());
+        RequestHandler.getInstance(getActivity()).handleRequest(new GenerateLoginTokenRequest(new GenerateLoginTokenSuccessListener(), new GenerateLoginTokenErrorListener(), generateLoginTokenData));
+    }
+
+    /**
+     * Generate Login token API call success listener
+     */
+    private class GenerateLoginTokenSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GenerateTokenResponse generateLoginTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
+            Util.progressDialog.dismiss();
+            if (generateLoginTokenResponse.getCode() == 200) {
+                Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+                OTPEntryFragment otpEntryFragment = new OTPEntryFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(Constant.MOBILE_NUMBER, phoneNumber);
+                otpEntryFragment.setArguments(bundle);
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+                trans.replace(R.id.root_frame, otpEntryFragment);
+                trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                trans.addToBackStack(null);
+                trans.commit();
+            }
+        }
+    }
+
+    /**
+     * Generate Login Token API call error listener
+     */
+    private class GenerateLoginTokenErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            if (error.networkResponse.statusCode == 403) {
+                mobileNumberEditText.setError(Constant.GENERATE_TOKEN_FAILURE);
+            }
+        }
+    }
+
 }

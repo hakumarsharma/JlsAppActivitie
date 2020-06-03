@@ -53,7 +53,7 @@ public class SigninSignupActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.signInSignUpToolbar);
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setTypeface(Util.mTypeface(this,5));
-        toolbarTitle.setText(Constant.welcome);
+        toolbarTitle.setText(Constant.WELCOME);
 
         tabLayout = findViewById(R.id.signinSignupTablayout);
         signinSignupAdapter = new SigninSignupAdapter(getSupportFragmentManager(), tabLayout.getTabCount());

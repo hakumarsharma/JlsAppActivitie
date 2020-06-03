@@ -146,7 +146,10 @@ public class Constant {
     public static final String PEOPLE_WITHOUT_DOT = "People";
     public static final String DEVICES_WITH_DOT = "Devices \n.";
     public static final String DEVICES_WITHOUT_DOT = "Devices";
-    public static final String welcome = "Welcome";
+    public static final String WELCOME = "Welcome";
+    public static final String MOBILE_NUMBER = "Mobile Number";
+    public static final String OTP_TEXTVIEW = "Please enter the OTP sent to \n your mobile no. ";
+
 
     // New Device Activity Constants
     public static final String ADD_DEVICE_TITLE = "Add";
