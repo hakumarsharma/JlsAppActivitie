@@ -42,7 +42,7 @@ import com.jio.devicetracker.util.Util;
 /**
  * Signup fragment
  */
-public class SignupFragment extends Fragment {
+public class SignupFragment extends Fragment implements View.OnClickListener {
 
     private EditText signUpNameEditText;
     private Button continueSignup;
@@ -61,15 +61,15 @@ public class SignupFragment extends Fragment {
 
     private void setLayoutData(View view) {
         TextView signUpcustomizeProfile = view.findViewById(R.id.signUpcustomizeProfile);
-        signUpcustomizeProfile.setTypeface(Util.mTypeface(getActivity(),5));
+        signUpcustomizeProfile.setTypeface(Util.mTypeface(getActivity(), 5));
         TextView enterNameTextView = view.findViewById(R.id.enterNameTextView);
-        enterNameTextView.setTypeface(Util.mTypeface(getActivity(),3));
+        enterNameTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         signUpNameEditText = view.findViewById(R.id.signUpNameEditText);
-        signUpNameEditText.setTypeface(Util.mTypeface(getActivity(),5));
+        signUpNameEditText.setTypeface(Util.mTypeface(getActivity(), 5));
         addLaterTextView = view.findViewById(R.id.addLaterTextView);
-        addLaterTextView.setTypeface(Util.mTypeface(getActivity(),5));
+        addLaterTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         continueSignup = view.findViewById(R.id.continueSignup);
-        continueSignup.setTypeface(Util.mTypeface(getActivity(),5));
+        continueSignup.setTypeface(Util.mTypeface(getActivity(), 5));
         TextView signupRequestOTPTextView = view.findViewById(R.id.signupRequestOTPTextView);
         signupRequestOTPTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         TextView signupTermConditionTextView = view.findViewById(R.id.signupTermConditionTextView);
@@ -99,11 +99,17 @@ public class SignupFragment extends Fragment {
                     continueSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
                     continueSignup.setTextColor(Color.WHITE);
                     nameTextView.setVisibility(View.VISIBLE);
-                } else if(Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
+                } else if (Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
                     nameTextView.setVisibility(View.INVISIBLE);
                 }
             }
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.continueSignup) {
+            
+        }
+    }
 }
