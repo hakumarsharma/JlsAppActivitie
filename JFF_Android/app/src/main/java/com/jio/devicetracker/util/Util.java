@@ -204,6 +204,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Convert current time to epoch time
+     *
      * @return
      */
     public long convertTimeToEpochtime() {
@@ -222,6 +223,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Convert current time + given time to epoch time
+     *
      * @param min
      * @return
      */
@@ -242,6 +244,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Get Difference between two epoch time
+     *
      * @param fromTime
      * @param toTime
      */
@@ -302,6 +305,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Sets the terms and condition flag
+     *
      * @param mContext
      * @param flag
      */
@@ -314,6 +318,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * returns the terms and condition flag
+     *
      * @param mContext
      * @return
      */
@@ -327,6 +332,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Sets the group Id
+     *
      * @param mContext
      * @param groupId
      */
@@ -339,6 +345,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * returns the group_id
+     *
      * @param mContext
      * @return
      */
@@ -502,6 +509,4 @@ public final class Util extends AppCompatActivity {
         }
         return font1;
     }
-
-
 }

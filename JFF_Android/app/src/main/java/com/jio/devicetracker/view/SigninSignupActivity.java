@@ -39,8 +39,8 @@ public class SigninSignupActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager signinSignupviewPager;
     private SigninSignupAdapter signinSignupAdapter;
-    private TabItem loginScreenTab;
-    private TabItem signupScreenTab;
+//    private TabItem loginScreenTab;
+//    private TabItem signupScreenTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class SigninSignupActivity extends AppCompatActivity {
     private void setLayoutData() {
         Toolbar toolbar = findViewById(R.id.signInSignUpToolbar);
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setTypeface(Util.mTypeface(this,5));
+        toolbarTitle.setTypeface(Util.mTypeface(this, 5));
         toolbarTitle.setText(Constant.WELCOME);
 
         tabLayout = findViewById(R.id.signinSignupTablayout);
@@ -68,12 +68,20 @@ public class SigninSignupActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 signinSignupviewPager.setCurrentItem(tab.getPosition());
-                // Todo
+                if (tab.getPosition() == 0) {
+                    tabLayout.getTabAt(0).setText(Constant.LOGIN_WITH_DOT);
+                } else if (tab.getPosition() == 1) {
+                    tabLayout.getTabAt(1).setText(Constant.SIGNUP_WITH_DOT);
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                // Todo
+                if (tab.getPosition() == 0) {
+                    tabLayout.getTabAt(0).setText(Constant.LOGIN_WITHOUT_DOT);
+                } else if (tab.getPosition() == 1) {
+                    tabLayout.getTabAt(1).setText(Constant.SIGNUP_WITHOUT_DOT);
+                }
             }
 
             @Override

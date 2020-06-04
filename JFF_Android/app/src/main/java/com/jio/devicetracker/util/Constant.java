@@ -136,7 +136,7 @@ public class Constant {
     public static final String ADMIN_EMAIL_ID = "Shivakumar.jagalur@ril.com";
     public static final String ADMIN_PASSWORD = "Ril@12345";
     public static final String BORQS_TOKEN_ACTIVITY_TITLE = "Token Verification";
-    public static final String RESEND_OTP = "Resend OTP";
+    public static final String RESEND_OTP = "Resend OTP in ";
     public static final String REQUEST_OTP = "Request OTP";
     public static final String GROUP_WITH_DOT = "Groups \n.";
     public static final String GROUP_WITHOUT_DOT = "Groups";
@@ -147,6 +147,11 @@ public class Constant {
     public static final String WELCOME = "Welcome";
     public static final String MOBILE_NUMBER = "Mobile Number";
     public static final String OTP_TEXTVIEW = "Please enter the OTP sent to \n your mobile no. ";
+    public static final String LOGIN_WITH_DOT = "Login \n.";
+    public static final String SIGNUP_WITH_DOT = "Sign up \n.";
+    public static final String LOGIN_WITHOUT_DOT = "Login";
+    public static final String SIGNUP_WITHOUT_DOT = "Sign up";
+
 
 
     // New Device Activity Constants

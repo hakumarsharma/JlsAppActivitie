@@ -18,7 +18,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/alterMobileNumberImageIcon"
+            android:id="@+id/signupMobileNumberImageIcon"
             android:layout_width="80dp"
             android:layout_height="79.98dp"
             android:layout_marginLeft="145dp"
@@ -26,21 +26,21 @@
             android:background="@drawable/ic_login_signup" />
 
         <TextView
-            android:id="@+id/alternateMobileNumberTextView"
+            android:id="@+id/signUpMobileNumberTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/alterMobileNumberImageIcon"
-            android:layout_marginLeft="105dp"
+            android:layout_below="@id/signupMobileNumberImageIcon"
+            android:layout_marginLeft="130dp"
             android:layout_marginTop="30dp"
             android:text="@string/alternate_number_textview"
             android:textColor="@color/black"
             android:textSize="17dp" />
 
         <TextView
-            android:id="@+id/enterAlternateNumber"
+            android:id="@+id/enterSignupMobileNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/alternateMobileNumberTextView"
+            android:layout_below="@id/signUpMobileNumberTextView"
             android:layout_marginLeft="80dp"
             android:layout_marginTop="18dp"
             android:text="@string/alternate_number_security_textview"
@@ -51,12 +51,25 @@
             android:id="@+id/signUpNumberEditText"
             android:layout_width="312dp"
             android:layout_height="40dp"
-            android:layout_below="@id/enterAlternateNumber"
+            android:layout_below="@id/enterSignupMobileNumber"
             android:layout_marginTop="60dp"
             android:layout_marginLeft="20dp"
+            android:inputType="number"
             android:backgroundTint="@color/black"
-            android:hint="Name"
+            android:hint="Phone number"
             android:textSize="17dp" />
+
+        <TextView
+            android:id="@+id/signupMobileNumberErrorCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invalid mobile number"
+            android:visibility="invisible"
+            android:textColor="@color/errorColor"
+            android:textSize="10dp"
+            android:layout_marginLeft="4dp"
+            android:layout_alignLeft="@id/signUpNumberEditText"
+            android:layout_below="@id/signUpNumberEditText"/>
 
         <Button
             android:id="@+id/continueNumberSignup"

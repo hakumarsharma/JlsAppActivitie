@@ -20,6 +20,7 @@
 
 package com.jio.devicetracker.view;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -47,8 +48,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
 
     private EditText signUpNameEditText;
     private Button continueSignup;
-    private TextView addLaterTextView;
     private TextView nameTextView;
+    private TextView wrongNameErrorTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,8 +68,6 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         enterNameTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         signUpNameEditText = view.findViewById(R.id.signUpNameEditText);
         signUpNameEditText.setTypeface(Util.mTypeface(getActivity(), 5));
-        addLaterTextView = view.findViewById(R.id.addLaterTextView);
-        addLaterTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         continueSignup = view.findViewById(R.id.continueSignup);
         continueSignup.setTypeface(Util.mTypeface(getActivity(), 5));
         continueSignup.setOnClickListener(this);
@@ -78,6 +77,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         signupTermConditionTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         nameTextView = view.findViewById(R.id.nameTextView);
         nameTextView.setTypeface(Util.mTypeface(getActivity(), 5));
+        wrongNameErrorTextView = view.findViewById(R.id.wrongNameErrorTextView);
+        wrongNameErrorTextView.setTypeface(Util.mTypeface(getActivity(), 5));
     }
 
     private void changeButtonColorOnDataEntry() {
@@ -92,6 +93,9 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                 continueSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
                 continueSignup.setTextColor(Color.WHITE);
                 nameTextView.setVisibility(View.VISIBLE);
+                wrongNameErrorTextView.setVisibility(View.INVISIBLE);
+                ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.black));
+                signUpNameEditText.setBackgroundTintList(colorStateList);
             }
 
             @Override
@@ -101,8 +105,13 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                     continueSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
                     continueSignup.setTextColor(Color.WHITE);
                     nameTextView.setVisibility(View.VISIBLE);
+                    wrongNameErrorTextView.setVisibility(View.INVISIBLE);
+                    ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.black));
+                    signUpNameEditText.setBackgroundTintList(colorStateList);
                 } else if (Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
                     nameTextView.setVisibility(View.INVISIBLE);
+                    continueSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
+                    continueSignup.setTextColor(Color.WHITE);
                 }
             }
         });
@@ -111,6 +120,12 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.continueSignup) {
+            if(signUpNameEditText.getText().toString().trim().equalsIgnoreCase(Constant.EMPTY_STRING)) {
+                ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.errorColor));
+                signUpNameEditText.setBackgroundTintList(colorStateList);
+                wrongNameErrorTextView.setVisibility(View.VISIBLE);
+                return;
+            }
             FragmentTransaction trans = getFragmentManager().beginTransaction();
             trans.replace(R.id.signup_root_frame, new SignupMobileNumberFragment());
             trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

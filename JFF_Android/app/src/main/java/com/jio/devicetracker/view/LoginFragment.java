@@ -122,6 +122,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    /**
+     * Make an api call to generate Login token
+     */
     private void generateLoginTokenAPICall() {
         if(!Util.isValidMobileNumber(phoneNumber)) {
             mobileNumberErrorCode.setVisibility(View.VISIBLE);
