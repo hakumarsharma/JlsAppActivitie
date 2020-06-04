@@ -91,7 +91,7 @@ public class GroupsFragment extends Fragment {
      * Get All Group info per user API Call
      */
     protected void makeGroupInfoPerUserRequestAPICall() {
-        Util.getInstance().showProgressBarDialog(getActivity());
+        Util.getInstance().showProgressBarDialog(getContext());
         GroupRequestHandler.getInstance(getActivity()).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserId()));
     }
 

@@ -211,5 +211,4 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         Intent intent = new Intent(this,NavigateUserProfileActivity.class);
         startActivity(intent);
     }
-
 }

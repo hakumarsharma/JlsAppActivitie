@@ -121,7 +121,7 @@ public class DBManager {
         contentValue.put(DatabaseHelper.USER_TOKEN, data.getData().getUgsToken());
         contentValue.put(DatabaseHelper.USER_ID, data.getData().getId());
         contentValue.put(DatabaseHelper.TOKEN_EXPIRY_TIME, "");
-        contentValue.put(DatabaseHelper.USER_NAME, LoginActivity.userName);
+        contentValue.put(DatabaseHelper.USER_NAME, data.getData().getName());
         contentValue.put(DatabaseHelper.PHONE_COUNTRY_CODE, data.getData().getPhoneCountryCode());
         contentValue.put(DatabaseHelper.DEVICE_NUM, data.getData().getPhone());
         return mDatabase.replace(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
