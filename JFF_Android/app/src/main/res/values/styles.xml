@@ -28,6 +28,7 @@
     <style name="custom_tab_text" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
         <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/tabBarUnselectedColor</item>
     </style>
 
     <style name="NavigationViewStyle">

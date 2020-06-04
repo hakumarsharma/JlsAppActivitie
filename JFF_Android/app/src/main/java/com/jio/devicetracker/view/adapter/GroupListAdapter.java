@@ -24,6 +24,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -93,7 +94,12 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView groupName;
+        private TextView  groupName;
+        private ImageView icon1;
+        private ImageView icon2;
+        private ImageView icon3;
+        private ImageView icon4;
+
         /**
          * Constructor where we find element from .xml file
          * @param itemView
@@ -101,6 +107,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             groupName = itemView.findViewById(R.id.groupName);
+
         }
     }
 }

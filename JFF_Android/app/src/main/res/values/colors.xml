@@ -19,6 +19,9 @@
     <color name="mine_shaft">#252525</color>
     <color name="hintColor">#A9A9A9</color>
     <color name="viewBackgroundColor">#F4F4F4</color>
+    <color name="tabBarUnselectedColor">#544FA3</color>
+    <color name="timerColor">#666666</color>
+    <color name="timeUp">#EC1C24</color>
 
     <color name="black">#000000</color>
     <color name="black_semi_transparent">#B2000000</color>

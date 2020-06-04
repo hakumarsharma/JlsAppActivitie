@@ -121,7 +121,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         isComingFromAddDevice = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_DEVICE, false);
         isComingFromAddContact = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_CONTACT, false);
         isComingFromGroupList = intent.getBooleanExtra(Constant.IS_COMING_FROM_GROUP_LIST, false);
-        groupId = Util.getGroupId(this);
+        groupId = intent.getStringExtra(Constant.GROUP_ID);
         String groupName = intent.getStringExtra(Constant.GROUP_NAME);
 
         if (groupId != null && !groupId.isEmpty()) {
@@ -239,6 +239,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 this.memberName = contactName.getText().toString();
                 this.memberNumber = contactNumber.getText().toString();
                 this.isFromCreateGroup = false;
+                this.isGroupMember = false;
                 createGroupAndAddContactAPICall(Constant.INDIVIDUAL_USER_GROUP_NAME);
             } else {
                 this.createdGroupId = groupId;
@@ -251,7 +252,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         } else if (v.getId() == R.id.back) {
             finish();
         } else if (v.getId() == R.id.add_contact_in_add_people) {
-            if(! listOfContacts.isEmpty()) {
+            if(listOfContacts != null && !listOfContacts.isEmpty()) {
                 startActivity(new Intent(this, DashboardMainActivity.class));
             } else {
                 Toast.makeText(this, Constant.ADD_CONTACT_WARNING, Toast.LENGTH_SHORT);

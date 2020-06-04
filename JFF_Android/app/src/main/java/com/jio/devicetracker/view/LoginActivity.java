@@ -298,6 +298,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             logindetailResponse = Util.getInstance().getPojoObject(String.valueOf(response), LogindetailResponse.class);
             userId = logindetailResponse.getData().getId();
             ugsToken = logindetailResponse.getData().getUgsToken();
+            Util.getAdminDetail(LoginActivity.this);
 
             // Verify and assign API Call if number is not already added on server
             if(mDbManager.getAdminLoginDetail() != null && mDbManager.getAdminLoginDetail().getPhoneNumber() != null

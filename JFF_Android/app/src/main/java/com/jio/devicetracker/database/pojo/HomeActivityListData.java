@@ -22,6 +22,10 @@
 
 package com.jio.devicetracker.database.pojo;
 
+import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
+
+import java.util.List;
+
 public class HomeActivityListData {
 
     private String name;
@@ -32,6 +36,7 @@ public class HomeActivityListData {
     private String lng;
     private String consentStaus;
     private String consentTime;
+    private String consentId;
     private int consentApprovalTime;
     private boolean isSelected;
     private String relationWithName;
@@ -48,6 +53,7 @@ public class HomeActivityListData {
     private String groupOwnerName;
     private String groupOwnerUserId;
     private String groupOwnerPhoneNumber;
+
 
     public String getGroupOwnerName() {
         return groupOwnerName;
@@ -135,6 +141,12 @@ public class HomeActivityListData {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getConsentId() { return consentId; }
+
+    public void setConsentId(String consentId) {
+        this.consentId = consentId;
     }
 
     public String getDeviceType() {

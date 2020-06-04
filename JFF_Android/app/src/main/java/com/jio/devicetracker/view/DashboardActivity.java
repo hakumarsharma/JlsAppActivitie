@@ -205,6 +205,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         this.registerReceiver(broadcastreceiver, intentFilter);
         setUpGClient();
         userId = mDbManager.getAdminLoginDetail().getUserId();
+        Util.getAdminDetail(this);
         userPhoneNumber = mDbManager.getAdminLoginDetail().getPhoneNumber();
         new Thread(new SendLocation()).start();
         grpMemberDataList = new CopyOnWriteArrayList<>();

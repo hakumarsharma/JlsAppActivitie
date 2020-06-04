@@ -70,7 +70,7 @@ public class BaseActivity extends AppCompatActivity {
         session.setTo(Util.getInstance().getTimeEpochFormatAfterCertainTime(60));
         createGroupData.setSession(session);
         Util.getInstance().showProgressBarDialog(this);
-        GroupRequestHandler.getInstance(this).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, Util.userId));
+        GroupRequestHandler.getInstance(this).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, mDbManager.getAdminLoginDetail().getUserId()));
     }
 
     /**
@@ -83,10 +83,12 @@ public class BaseActivity extends AppCompatActivity {
             if (createGroupResponse.getCode() == 200) {
                 mDbManager.insertIntoGroupTable(createGroupResponse);
                 createdGroupId = createGroupResponse.getData().getId();
-                Util.setGroupId(BaseActivity.this, createdGroupId);
+//                Util.setGroupId(BaseActivity.this, createdGroupId);
                 if (isFromCreateGroup) {
                     Util.progressDialog.dismiss();
-                    startActivity(new Intent(BaseActivity.this, AddDeviceActivity.class));
+                    Intent intent = new Intent(BaseActivity.this, AddDeviceActivity.class);
+                    intent.putExtra(Constant.GROUP_ID, createdGroupId);
+                    startActivity(intent);
                 } else {
                     addIndividualUserInGroupAPICall();
                 }
@@ -122,7 +124,7 @@ public class BaseActivity extends AppCompatActivity {
         consents.setName(memberName);
         consentList.add(consents);
         addMemberInGroupData.setConsents(consentList);
-        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new AddMemberInGroupRequestSuccessListener(), new AddMemberInGroupRequestErrorListener(), addMemberInGroupData, createdGroupId, Util.userId));
+        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new AddMemberInGroupRequestSuccessListener(), new AddMemberInGroupRequestErrorListener(), addMemberInGroupData, createdGroupId, mDbManager.getAdminLoginDetail().getUserId()));
     }
 
 
@@ -141,7 +143,7 @@ public class BaseActivity extends AppCompatActivity {
         consentList.add(consents);
         addMemberInGroupData.setConsents(consentList);
         Util.getInstance().showProgressBarDialog(this);
-        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new AddMemberInGroupRequestSuccessListener(), new AddMemberInGroupRequestErrorListener(), addMemberInGroupData, createdGroupId, Util.userId));
+        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new AddMemberInGroupRequestSuccessListener(), new AddMemberInGroupRequestErrorListener(), addMemberInGroupData, createdGroupId, mDbManager.getAdminLoginDetail().getUserId()));
     }
 
     /**
@@ -190,7 +192,7 @@ public class BaseActivity extends AppCompatActivity {
         if(Util.progressDialog == null) {
             Util.getInstance().showProgressBarDialog(this);
         }
-        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupMemberRequest(new GetGroupMemberRequestSuccessListener(), new GetGroupMemberRequestErrorListener(), createdGroupId, Util.userId));
+        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupMemberRequest(new GetGroupMemberRequestSuccessListener(), new GetGroupMemberRequestErrorListener(), createdGroupId,mDbManager.getAdminLoginDetail().getUserId()));
     }
 
     /**
@@ -222,12 +224,12 @@ public class BaseActivity extends AppCompatActivity {
     private void gotoGroupListActivity() {
         Intent intent = new Intent(this, GroupListActivity.class);
         intent.putExtra(Constant.GROUP_ID, createdGroupId);
-        intent.putExtra(Constant.USER_ID, Util.userId);
+        intent.putExtra(Constant.USER_ID, mDbManager.getAdminLoginDetail().getUserId());
         startActivity(intent);
     }
 
     private void gotoDashboardActivity() {
-        startActivity(new Intent(this, ChooseGroupActivity.class));
+        startActivity(new Intent(this, DashboardMainActivity.class));
     }
 
 }

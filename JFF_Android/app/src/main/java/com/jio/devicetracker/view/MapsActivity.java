@@ -127,7 +127,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 LatLng latLng = new LatLng(mapData.getLatitude(), mapData.getLongitude());
                 markerOptions.position(latLng);
                 markerOptions.title(mapData.getName());
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(mapColorList.get(i)));
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.mother));
                 markerOptions.snippet(getAddressFromLocation(mapData.getLatitude(), mapData.getLongitude()));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
