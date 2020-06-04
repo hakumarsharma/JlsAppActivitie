@@ -8,6 +8,7 @@
     <color name="colorConsentApproved">#008000</color>
     <color name="colorConsentNotSent">#0099CF</color>
     <color name="colorConsentPending">#E43A29</color>
+    <color name="errorColor">#C83638</color>
     <color name="colorButtonText">#ffffff</color>
     <color name="colorsplash">#03007F</color>
     <color name="colorButtonBackground">#E8E8E8</color>

@@ -57,6 +57,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private Button continueButton;
     private TextView mobileNumberTextView;
     private String phoneNumber;
+    private TextView mobileNumberErrorCode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,6 +85,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         termConditionTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         mobileNumberTextView = view.findViewById(R.id.mobileNumberTextView);
         mobileNumberTextView.setTypeface(Util.mTypeface(getActivity(), 5));
+        mobileNumberErrorCode = view.findViewById(R.id.mobileNumberErrorCode);
+        mobileNumberEditText.setTypeface(Util.mTypeface(getActivity(), 5));
     }
 
     @Override
@@ -113,12 +116,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     mobileNumberTextView.setVisibility(View.VISIBLE);
                 } else if (Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
                     mobileNumberTextView.setVisibility(View.INVISIBLE);
+                    mobileNumberErrorCode.setVisibility(View.INVISIBLE);
                 }
             }
         });
     }
 
     private void generateLoginTokenAPICall() {
+        if(!Util.isValidMobileNumber(phoneNumber)) {
+            mobileNumberErrorCode.setVisibility(View.VISIBLE);
+            return;
+        }
         GenerateLoginTokenData generateLoginTokenData = new GenerateLoginTokenData();
         GenerateLoginTokenData.Role role = new GenerateLoginTokenData().new Role();
         role.setCode(Constant.SUPERVISOR);

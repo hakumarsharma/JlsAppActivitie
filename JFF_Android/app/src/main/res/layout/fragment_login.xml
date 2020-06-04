@@ -72,9 +72,21 @@
                 android:hint="Mobile Number"
                 android:layout_marginTop="40dp"
                 android:inputType="number"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="16dp"
                 android:backgroundTint="@color/black"
                 android:layout_below="@id/enterMobileNumberTextView"/>
+
+            <TextView
+                android:id="@+id/mobileNumberErrorCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invalid mobile number"
+                android:visibility="invisible"
+                android:textColor="@color/errorColor"
+                android:textSize="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_alignLeft="@id/mobileNumberEditText"
+                android:layout_below="@id/mobileNumberEditText"/>
 
             <Button
                 android:id="@+id/continueLogin"
