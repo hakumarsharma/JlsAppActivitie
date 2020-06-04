@@ -101,8 +101,8 @@ public class GroupsFragment extends Fragment {
     private class GetGroupInfoPerUserRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
             Util.progressDialog.dismiss();
+            GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
             parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
             displayGroupDataInDashboard(getView());
         }
@@ -114,6 +114,7 @@ public class GroupsFragment extends Fragment {
     private class GetGroupInfoPerUserRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
             if (error.networkResponse.statusCode == 409) {
                 Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, getActivity());
             }

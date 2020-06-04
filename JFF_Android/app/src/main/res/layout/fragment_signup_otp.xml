@@ -17,7 +17,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/otpImageIcon"
+            android:id="@+id/signupOTPImageIcon"
             android:layout_width="80dp"
             android:layout_height="79.98dp"
             android:layout_marginLeft="145dp"
@@ -25,10 +25,10 @@
             android:background="@drawable/ic_otp" />
 
         <TextView
-            android:id="@+id/sentOTPTextView"
+            android:id="@+id/signupSentOTPTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/otpImageIcon"
+            android:layout_below="@id/signupOTPImageIcon"
             android:layout_marginLeft="105dp"
             android:layout_marginTop="30dp"
             android:text="@string/sentOTPTextView"
@@ -36,21 +36,21 @@
             android:textSize="17dp" />
 
         <TextView
-            android:id="@+id/enterOTPTextView"
+            android:id="@+id/signupEnterOTPTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/sentOTPTextView"
+            android:layout_below="@id/signupSentOTPTextView"
             android:layout_marginLeft="100dp"
             android:layout_marginTop="18dp"
             android:textColor="@color/black"
             android:textSize="14dp" />
 
         <com.alimuzaffar.lib.pin.PinEntryEditText
-            android:id="@+id/txt_pin_entry"
+            android:id="@+id/signup_txt_pin_entry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/signupEnterOTPTextView"
             android:layout_marginTop="40dp"
-            android:layout_below="@id/enterOTPTextView"
             android:cursorVisible="false"
             android:digits="1234567890"
             android:inputType="number"
@@ -59,27 +59,26 @@
             android:textSize="17dp" />
 
         <TextView
-            android:id="@+id/timerTextView"
+            android:id="@+id/signupTimerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/signup_txt_pin_entry"
+            android:layout_marginRight="3dp"
+            android:layout_alignRight="@id/signup_txt_pin_entry"
             android:textColor="@color/timerTextViewColor"
-            android:textSize="12dp"
-            android:layout_marginRight="4dp"
-            android:layout_below="@id/txt_pin_entry"
-            android:layout_alignRight="@id/txt_pin_entry"/>
+            android:textSize="12dp" />
 
         <Button
-            android:id="@+id/submitLogin"
+            android:id="@+id/signupSubmitLogin"
             android:layout_width="232dp"
             android:layout_height="36dp"
-            android:layout_below="@id/txt_pin_entry"
+            android:layout_below="@id/signup_txt_pin_entry"
             android:layout_marginLeft="60dp"
             android:layout_marginTop="80dp"
             android:background="@drawable/login_selector"
             android:text="Submit"
             android:textAllCaps="false"
             android:textColor="@color/white" />
-
-
     </RelativeLayout>
+
 </androidx.cardview.widget.CardView>

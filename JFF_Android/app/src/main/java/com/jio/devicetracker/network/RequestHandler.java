@@ -87,6 +87,6 @@ public class RequestHandler {
      * @return constructed URL
      */
     private String constructUrl(String action) {
-        return Constant.STG_URL + action;
+        return Constant.SIT_URL + action;
     }
 }

@@ -120,14 +120,19 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.continueSignup) {
-            if(signUpNameEditText.getText().toString().trim().equalsIgnoreCase(Constant.EMPTY_STRING)) {
+            String name = signUpNameEditText.getText().toString().trim();
+            if(name.equalsIgnoreCase(Constant.EMPTY_STRING)) {
                 ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.errorColor));
                 signUpNameEditText.setBackgroundTintList(colorStateList);
                 wrongNameErrorTextView.setVisibility(View.VISIBLE);
                 return;
             }
             FragmentTransaction trans = getFragmentManager().beginTransaction();
-            trans.replace(R.id.signup_root_frame, new SignupMobileNumberFragment());
+            SignupEmailFragment signupEmailFragment = new SignupEmailFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(Constant.NAME, name);
+            signupEmailFragment.setArguments(bundle);
+            trans.replace(R.id.signup_root_frame, signupEmailFragment);
             trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             trans.addToBackStack(null);
             trans.commit();

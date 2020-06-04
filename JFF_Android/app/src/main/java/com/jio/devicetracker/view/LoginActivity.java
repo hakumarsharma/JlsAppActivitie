@@ -161,7 +161,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     /**
      * Gets called when you click on login button
-     *
      * @param v
      */
     @Override
@@ -387,7 +386,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     // Gets called when Login page receives message
     @Override
     public void messageReceived(String message, String phoneNum) {
-        if (message.contains(Constant.OTP_MESSAGE) && loginOtpEditText != null) {
+        if (message.contains(Constant.OTP_SMS) && loginOtpEditText != null) {
             loginOtpEditText.setText(message.substring(message.indexOf("OTP") + 6, message.indexOf("to") - 1));
         }
     }

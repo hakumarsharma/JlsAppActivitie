@@ -64,7 +64,7 @@ public class Constant {
     public static final String INVALID_OTP = "Invalid OTP Provided";
     public static final String OTP_SENT = "OTP sent.";
     public static final String SMS_SEND_FAILED = "SMS failed, please try again.";
-    public static final String OTP_MESSAGE = "Hi, Use OTP :";
+    public static final String OTP_SMS = "Hi, please use this OTP :";
     public static final String PHONE_VALIDATION = "Phone number cannot be left empty!";
     public static final String MOBILE_NETWORKCHECK = "Please use your mobile data";
     public static final String JIO_NUMBER = "Please use Jio number";
@@ -74,7 +74,7 @@ public class Constant {
     public static final String REGISTRAION_ALERT_409 = "User is already registered";
     public static final String REGISTRAION_FAILED = "Register failed ,Please contact your admin";
     public static final String LOCATION_NOT_FOUND = "Location not found for the selected device.";
-    public static final String TOKEN_SMS = "Hi, please use the token : ";
+    public static final String COUNTRY_CODE = "91";
 
     // Dashboard Activity constants
     public static final String DASHBOARD_TITLE = "Home               ";
@@ -151,6 +151,7 @@ public class Constant {
     public static final String SIGNUP_WITH_DOT = "Sign up \n.";
     public static final String LOGIN_WITHOUT_DOT = "Login";
     public static final String SIGNUP_WITHOUT_DOT = "Sign up";
+    public static final String SUCCESS = "success";
 
 
 

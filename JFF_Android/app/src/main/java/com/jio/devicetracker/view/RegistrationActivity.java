@@ -220,7 +220,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
      * @param phoneNum
      */
     public void messageReceived(String message, String phoneNum) {
-        if (message.contains(Constant.TOKEN_SMS) && tokenEditText != null) {
+        if (message.contains(Constant.OTP_SMS) && tokenEditText != null) {
             String[] splitMessage = message.split(":");
             tokenEditText.setText(splitMessage[1].substring(1, 6));
         }

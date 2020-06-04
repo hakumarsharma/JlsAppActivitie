@@ -36,8 +36,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.GenerateTokenData;
+import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
+import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
+import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
@@ -49,6 +56,8 @@ public class SignupMobileNumberFragment extends Fragment implements View.OnClick
     private EditText signUpNumberEditText;
     private Button continueNumberSignup;
     private TextView signupMobileNumberErrorCode;
+    private String name;
+    private String phoneNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,6 +80,7 @@ public class SignupMobileNumberFragment extends Fragment implements View.OnClick
         continueNumberSignup.setOnClickListener(this);
         signupMobileNumberErrorCode = view.findViewById(R.id.signupMobileNumberErrorCode);
         signupMobileNumberErrorCode.setTypeface(Util.mTypeface(getActivity(), 5));
+        name = getArguments().getString(Constant.NAME);
     }
 
     private void changeButtonColorOnDataEntry() {
@@ -106,17 +116,65 @@ public class SignupMobileNumberFragment extends Fragment implements View.OnClick
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.continueNumberSignup) {
-            if (!Util.isValidMobileNumber(signUpNumberEditText.getText().toString().trim())) {
+            phoneNumber = signUpNumberEditText.getText().toString().trim();
+            if (!Util.isValidMobileNumber(phoneNumber)) {
                 signupMobileNumberErrorCode.setVisibility(View.VISIBLE);
                 ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.errorColor));
                 signUpNumberEditText.setBackgroundTintList(colorStateList);
                 return;
             }
+            generateRegistrationTokenAPICall(phoneNumber);
         }
-        FragmentTransaction trans = getFragmentManager().beginTransaction();
-        trans.replace(R.id.signup_root_frame, new SignupEmailFragment());
-        trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        trans.addToBackStack(null);
-        trans.commit();
     }
+
+    /**
+     * Used to generate registration Token
+     */
+    private void generateRegistrationTokenAPICall(String phoneNumber) {
+        if (phoneNumber != null) {
+            GenerateTokenData generateTokenData = new GenerateTokenData();
+            generateTokenData.setType(Constant.REGISTRATION);
+            generateTokenData.setPhoneCountryCode(Constant.COUNTRY_CODE);
+            generateTokenData.setPhone(phoneNumber);
+            RequestHandler.getInstance(getActivity()).handleRequest(new GenerateTokenRequest(new GenerateTokenSuccessListener(), new GenerateTokenErrorListener(), generateTokenData));
+        }
+    }
+
+    /**
+     * Generate Token Success Listener
+     */
+    private class GenerateTokenSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GenerateTokenResponse generateTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
+            if (generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.GENERATE_TOKEN_SUCCESS)) {
+                Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+                // Switch to the Signup OTP Fragment
+                SignupOTPFragment signupOTPFragment = new SignupOTPFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(Constant.NAME, name);
+                bundle.putString(Constant.MOBILE_NUMBER, phoneNumber);
+                signupOTPFragment.setArguments(bundle);
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+                trans.replace(R.id.signup_root_frame, signupOTPFragment);
+                trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                trans.addToBackStack(null);
+                trans.commit();
+            }
+        }
+    }
+
+    /**
+     * Generate Token error Listener
+     */
+    private class GenerateTokenErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error.networkResponse.statusCode == 409) {
+                Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, getActivity());
+                return;
+            }
+        }
+    }
+
 }

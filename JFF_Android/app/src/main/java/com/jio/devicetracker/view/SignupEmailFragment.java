@@ -25,6 +25,7 @@ import android.os.Bundle;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -75,6 +76,7 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
         emailTermConditionTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         signupAddLaterTextView = view.findViewById(R.id.signupAddLaterTextView);
         signupAddLaterTextView.setTypeface(Util.mTypeface(getActivity(), 5));
+        signupAddLaterTextView.setOnClickListener(this);
     }
 
     private void changeButtonColorOnDataEntry() {
@@ -103,10 +105,18 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.continueEmailSignup) {
+        if (v.getId() == R.id.continueEmailSignup) {
             // Todo
-        } else if(v.getId() == R.id.signupAddLaterTextView) {
-            // Todo
+        } else if (v.getId() == R.id.signupAddLaterTextView) {
+            FragmentTransaction trans = getFragmentManager().beginTransaction();
+            SignupMobileNumberFragment signupMobileNumberFragment = new SignupMobileNumberFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(Constant.NAME, getArguments().getString(Constant.NAME));
+            signupMobileNumberFragment.setArguments(bundle);
+            trans.replace(R.id.signup_root_frame, signupMobileNumberFragment);
+            trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            trans.addToBackStack(null);
+            trans.commit();
         }
     }
 }
