@@ -360,5 +360,16 @@ public class Constant {
     public static final String FAQ_TITLE = "FAQ";
     public static final String CONTACT_TITLE = "Contact us";
 
+    //FAQ Activity
+    public static final String QUES_1 = "First Question ?";
+    public static final String QUES_2 = "Second Question ?";
+    public static final String QUES_3 = "Third Question ?";
+
+    public static final String ANS_1 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
+    public static final String ANS_2 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
+    public static final String ANS_3 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
+
+
+
 
 }

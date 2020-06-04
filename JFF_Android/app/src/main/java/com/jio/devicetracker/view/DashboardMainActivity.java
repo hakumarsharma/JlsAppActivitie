@@ -161,8 +161,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         ImageView profileIcn = header.findViewById(R.id.profileIcon);
         TextView userAccountName = header.findViewById(R.id.user_account_name);
         TextView userPhoneNumber = header.findViewById(R.id.user_number);
-        //userAccountName.setText(Util.userName.substring(0, 1).toUpperCase(Locale.ROOT) + Util.userName.substring(1));
-        //userPhoneNumber.setText(Util.userNumber);
+        if(!Util.userName.isEmpty() && !Util.userNumber.isEmpty()) {
+            userAccountName.setText(Util.userName.substring(0, 1).toUpperCase(Locale.ROOT) + Util.userName.substring(1));
+            userPhoneNumber.setText(Util.userNumber);
+        }
         ImageView backDrawer = header.findViewById(R.id.back);
         backDrawer.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dull_text_color"
+    >
+
+    <include
+        android:id="@+id/editToolbar"
+        layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/blueBackground"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@+id/editToolbar"
+        android:background="@drawable/layout_frame_blue" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/blueBackground"
+        android:layout_marginLeft="@dimen/twenty_dp"
+        android:layout_marginTop="@dimen/twenty_dp"
+        android:layout_marginRight="@dimen/twenty_dp"
+        android:layout_marginBottom="@dimen/twenty_dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/margin_25"
+            >
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/contact"
+                android:id="@+id/mailIcon"
+                android:layout_marginTop="@dimen/margin_40"
+                android:layout_centerHorizontal="true"
+                />
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/contact_us_content"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/twenty_dp"
+                android:layout_marginTop="@dimen/sixteen_dp"
+                android:layout_below="@+id/mailIcon"
+                />
+            <TextView
+                android:id="@+id/email_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/contact_us_email"
+                android:gravity="center"
+                android:textColor="@color/alert_text_color"
+                android:textSize="@dimen/seventeen_dp"
+                android:layout_marginTop="@dimen/ten_dp"
+                android:layout_below="@+id/content"
+                />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
