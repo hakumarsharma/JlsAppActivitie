@@ -40,12 +40,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_30"
-                android:layout_toRightOf="@+id/app_icon"
                 android:text="@string/term_condition"
                 android:textColor="@color/alert_text_color"
                 android:textSize="@dimen/seventeen_dp"
                 android:layout_marginTop="@dimen/margin_24"
-                android:layout_alignTop="@+id/app_icon"
                 android:textStyle="bold"
                 android:visibility="visible"/>
 
@@ -56,7 +54,6 @@
                 android:layout_below="@+id/app_name"
                 android:layout_marginTop="@dimen/margin_18"
                 android:layout_marginBottom="10dp"
-                android:layout_above="@+id/checkBtnlayout"
                 >
 
                 <RelativeLayout
