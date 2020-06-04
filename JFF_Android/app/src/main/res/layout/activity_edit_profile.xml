@@ -160,7 +160,6 @@
         android:id="@+id/update_btn"
         android:layout_width="@dimen/adddevice_button_width"
         android:layout_height="@dimen/adddevice_button_height"
-        android:layout_above="@+id/manual_add"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"

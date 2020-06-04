@@ -53,7 +53,6 @@
         android:layout_height="@dimen/adddevice_button_height"
         android:background="@drawable/button_frame_blue"
         android:text="@string/edit_button"
-        android:layout_above="@+id/manual_add"
         android:layout_centerHorizontal="true"
         android:textAllCaps="false"
         android:layout_marginBottom="20dp"
