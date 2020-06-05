@@ -29,6 +29,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -41,12 +43,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.DashboardAdapter;
@@ -63,6 +67,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private TabItem tabDevices;
     private ImageView addGroupInDashboard;
     private DrawerLayout drawerLayout;
+    private static DBManager mDbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_dashboard_main);
         Toolbar toolbar = findViewById(R.id.dashboardToolbar);
         TextView title = findViewById(R.id.toolbar_title);
+        mDbManager = new DBManager(this);
         drawerLayout = findViewById(R.id.drawerLayout);
         title.setText(Constant.DASHBOARD_TITLE);
         title.setTypeface(Util.mTypeface(this,5));
@@ -161,6 +167,13 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         ImageView profileIcn = header.findViewById(R.id.profileIcon);
         TextView userAccountName = header.findViewById(R.id.user_account_name);
         TextView userPhoneNumber = header.findViewById(R.id.user_number);
+        RelativeLayout logoutLayout = findViewById(R.id.logout);
+        logoutLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateLogoutData();
+            }
+        });
         if(!Util.userName.isEmpty() && !Util.userNumber.isEmpty()) {
             userAccountName.setText(Util.userName.substring(0, 1).toUpperCase(Locale.ROOT) + Util.userName.substring(1));
             userPhoneNumber.setText(Util.userNumber);
@@ -175,7 +188,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         profileIcn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              gotoNavigateUserProfileActivity();
+              gotoNavigateUserProfileActivity(userAccountName.getText().toString(),userPhoneNumber.getText().toString());
             }
         });
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -196,9 +209,6 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                     case R.id.support:
                         startActivity(new Intent(DashboardMainActivity.this,NavigateSupportActivity.class));
                         break;
-                    case R.id.logout:
-                        //updateLogoutData();
-                        break;
                     default:
                         break;
                 }
@@ -207,8 +217,35 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         });
     }
 
-    private void gotoNavigateUserProfileActivity() {
+    private void gotoNavigateUserProfileActivity(String name,String number) {
         Intent intent = new Intent(this,NavigateUserProfileActivity.class);
+        intent.putExtra("Name",name);
+        intent.putExtra("Number",number);
         startActivity(intent);
+    }
+
+    private void updateLogoutData() {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setTitle(Constant.ALERT_TITLE);
+        adb.setMessage(Constant.LOGOUT_CONFIRMATION_MESSAGE);
+        adb.setIcon(android.R.drawable.ic_dialog_alert);
+        adb.setPositiveButton("OK", (dialog, which) -> {
+            Util.clearAutologinstatus(this);
+            mDbManager.updateLogoutData();
+            goToLoginActivity();
+        });
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        adb.show();
+    }
+
+    /**
+     * Navigates to the Login Activity
+     */
+    private void goToLoginActivity() {
+        startActivity(new Intent(this, SigninSignupActivity.class));
     }
 }

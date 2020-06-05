@@ -333,6 +333,8 @@ public class Constant {
 
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";
+    public static final String EDIT_PROFILE_TITLE = "Edit Profile";
+
 
     //Status code
     public static final int STATUS_CODE_409 = 409;
@@ -369,7 +371,6 @@ public class Constant {
     public static final String ANS_1 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
     public static final String ANS_2 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
     public static final String ANS_3 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
-
 
 
 

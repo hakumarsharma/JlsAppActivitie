@@ -21,28 +21,45 @@
 package com.jio.devicetracker.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
+
+import org.w3c.dom.Text;
 
 public class EditUserProfileActivity extends Activity implements View.OnClickListener {
+
+    private TextView userName;
+    private TextView userNumber;
+    private TextView userEmail;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        Button editBtn = findViewById(R.id.update_btn);
+        Button updateBtn = findViewById(R.id.update_btn);
         TextView title = findViewById(R.id.toolbar_title);
-        title.setText("Edit Profile");
+        title.setText(Constant.EDIT_PROFILE_TITLE);
+        title.setTypeface(Util.mTypeface(this,5));
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
+        Intent intent = getIntent();
+        userName = findViewById(R.id.update_edit_name);
+        userNumber = findViewById(R.id.update_edit_number);
+        userEmail = findViewById(R.id.update_edit_email);
+        userName.setText(intent.getStringExtra("Name"));
+        userNumber.setText(intent.getStringExtra("Number"));
         backBtn.setOnClickListener(this);
-        editBtn.setOnClickListener(this);
+        updateBtn.setOnClickListener(this);
     }
 
     @Override
@@ -53,6 +70,7 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
                 break;
 
             case R.id.update_btn:
+                Toast.makeText(this,"Coming soon.... please wait",Toast.LENGTH_SHORT).show();
                 break;
 
         }
