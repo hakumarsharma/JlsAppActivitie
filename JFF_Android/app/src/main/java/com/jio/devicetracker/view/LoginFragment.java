@@ -154,7 +154,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 bundle.putString(Constant.MOBILE_NUMBER, phoneNumber);
                 otpEntryFragment.setArguments(bundle);
                 FragmentTransaction trans = getFragmentManager().beginTransaction();
-                trans.replace(R.id.root_frame, otpEntryFragment);
+                trans.replace(R.id.loginFrameLayout, otpEntryFragment);
                 trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 trans.addToBackStack(null);
                 trans.commit();
@@ -174,5 +174,4 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
-
 }

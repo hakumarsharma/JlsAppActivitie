@@ -84,7 +84,6 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
 
     /**
      * Sets Layout Data
-     *
      * @param view
      */
     private void setLayoutData(View view) {
@@ -115,7 +114,6 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
 
     /**
      * Will be called when OTP is received in phone
-     *
      * @param message
      * @param phoneNum
      */
@@ -128,7 +126,6 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
 
     /**
      * Starts the timer for 60 second
-     *
      * @param finish
      * @param tick
      */
@@ -141,14 +138,18 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
                 } else {
                     timerTextView.setText(Constant.RESEND_OTP + "00" + ":" + remainedSecs);
                 }
-                timerTextView.setTextColor(getResources().getColor(R.color.unselected_button_background));
-                timerTextView.setEnabled(false);
+                if(getContext() != null) {
+                    timerTextView.setTextColor(getResources().getColor(R.color.unselected_button_background));
+                    timerTextView.setEnabled(false);
+                }
             }
 
             public void onFinish() {
                 timerTextView.setText(Constant.REQUEST_OTP);
                 timerTextView.setEnabled(true);
-                timerTextView.setTextColor(getResources().getColor(R.color.timerTextViewColor));
+                if(getContext() != null) {
+                    timerTextView.setTextColor(getResources().getColor(R.color.timerTextViewColor));
+                }
                 cancel();
             }
         }.start();
@@ -220,7 +221,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
             ugsToken = logindetailResponse.getData().getUgsToken();
             Util.getAdminDetail(getActivity());
             // Verify and assign API Call if number is not already added on server
-            if (mDbManager.getAdminLoginDetail() != null && mDbManager.getAdminLoginDetail().getPhoneNumber() != null
+            if(mDbManager.getAdminLoginDetail() != null && mDbManager.getAdminLoginDetail().getPhoneNumber() != null
                     && logindetailResponse.getData().getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())) {
                 System.out.println("Already added device it is");
             } else {

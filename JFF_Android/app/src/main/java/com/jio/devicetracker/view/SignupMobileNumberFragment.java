@@ -156,7 +156,7 @@ public class SignupMobileNumberFragment extends Fragment implements View.OnClick
                 bundle.putString(Constant.MOBILE_NUMBER, phoneNumber);
                 signupOTPFragment.setArguments(bundle);
                 FragmentTransaction trans = getFragmentManager().beginTransaction();
-                trans.replace(R.id.signup_root_frame, signupOTPFragment);
+                trans.replace(R.id.signupFrameLayout, signupOTPFragment);
                 trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 trans.addToBackStack(null);
                 trans.commit();

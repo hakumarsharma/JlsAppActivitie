@@ -113,7 +113,7 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
             Bundle bundle = new Bundle();
             bundle.putString(Constant.NAME, getArguments().getString(Constant.NAME));
             signupMobileNumberFragment.setArguments(bundle);
-            trans.replace(R.id.signup_root_frame, signupMobileNumberFragment);
+            trans.replace(R.id.signupFrameLayout, signupMobileNumberFragment);
             trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             trans.addToBackStack(null);
             trans.commit();

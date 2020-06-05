@@ -132,7 +132,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
             Bundle bundle = new Bundle();
             bundle.putString(Constant.NAME, name);
             signupEmailFragment.setArguments(bundle);
-            trans.replace(R.id.signup_root_frame, signupEmailFragment);
+            trans.replace(R.id.signupFrameLayout, signupEmailFragment);
             trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             trans.addToBackStack(null);
             trans.commit();

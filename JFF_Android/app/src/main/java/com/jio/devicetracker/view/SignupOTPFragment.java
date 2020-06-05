@@ -179,7 +179,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
                 // Switch to the Login Fragment once registration is successfull
                 LoginFragment loginFragment = new LoginFragment();
                 FragmentTransaction trans = getFragmentManager().beginTransaction();
-                trans.replace(R.id.signup_root_frame, loginFragment);
+                trans.replace(R.id.loginFrameLayout, loginFragment);
                 trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 trans.addToBackStack(null);
                 trans.commit();
