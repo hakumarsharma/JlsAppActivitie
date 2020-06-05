@@ -64,7 +64,6 @@ public class GroupsFragment extends Fragment {
         RecyclerView groupListRecyclerView = view.findViewById(R.id.groupListRecyclerView);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
-
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
         List<HomeActivityListData> groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
@@ -91,7 +90,6 @@ public class GroupsFragment extends Fragment {
      * Get All Group info per user API Call
      */
     protected void makeGroupInfoPerUserRequestAPICall() {
-        Util.getInstance().showProgressBarDialog(getContext());
         GroupRequestHandler.getInstance(getActivity()).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserId()));
     }
 
@@ -101,7 +99,6 @@ public class GroupsFragment extends Fragment {
     private class GetGroupInfoPerUserRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            Util.progressDialog.dismiss();
             GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
             parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
             displayGroupDataInDashboard(getView());
@@ -114,7 +111,6 @@ public class GroupsFragment extends Fragment {
     private class GetGroupInfoPerUserRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Util.progressDialog.dismiss();
             if (error.networkResponse.statusCode == 409) {
                 Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, getActivity());
             }
