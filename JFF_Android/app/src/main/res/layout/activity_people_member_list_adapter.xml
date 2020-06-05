@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="10dp"
+    android:id="@+id/peopleListLayout"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/IndividualMemberIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/inviteaccepted" />
+
+        <TextView
+            android:id="@+id/IndividualMemberName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/IndividualMemberIcon"
+            android:text="Harish Kumar"
+            android:textColor="@color/black"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="5dp"
+            android:textSize="17dp" />
+
+        <ImageView
+            android:id="@+id/consentStatus"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_more_black"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="30dp" />
+
+        <ImageView
+            android:id="@+id/timer"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_timetimeline_outline"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/timeLeft"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+         />
+        <TextView
+            android:id="@+id/timeLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="00h 00min"
+            android:textColor="@color/timerColor"
+            android:layout_marginRight="5dp"
+            android:textSize="14dp"
+            android:layout_marginBottom="10dp"/>
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

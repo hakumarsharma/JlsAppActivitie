@@ -39,4 +39,8 @@
     <color name="alert_btn_selected_color">#00BFF2</color>
     <color name="alert_background_color">#707070</color>
     <color name="navigate_profile_color">#03007F</color>
+
+    <color name="status_connected">#1A8905</color>
+    <color name="status_disconnected">#EC1C24</color>
+    <color name="dull_black">#181818</color>
 </resources>

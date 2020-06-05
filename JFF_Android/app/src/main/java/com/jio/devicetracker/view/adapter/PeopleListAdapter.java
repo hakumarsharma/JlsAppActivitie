@@ -34,17 +34,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
-import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 import java.util.List;
 
-public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberListAdapter.ViewHolder> {
+public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.ViewHolder> {
     private List<HomeActivityListData> mList;
     private Context mContext;
-    private static RecyclerViewClickListener itemListener;
 
-    public PeopleMemberListAdapter(List<HomeActivityListData> mList, Context mContext) {
+    public PeopleListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
         this.mContext = mContext;
     }
@@ -58,19 +56,12 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
      */
     @NonNull
     @Override
-    public PeopleMemberListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_people_member_list_adapter, parent, false);
-        return new PeopleMemberListAdapter.ViewHolder(itemView);
+    public PeopleListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_people_list_adapter, parent, false);
+        return new PeopleListAdapter.ViewHolder(itemView);
     }
 
 
-    /**
-     * Interface to override methods in Dashboard to call those methods on particular item click
-     */
-    public interface RecyclerViewClickListener {
-        void clickOnListLayout(String groupId, String name);
-
-    }
 
     /**
      * A new ViewHolder that holds a View of the given view type
@@ -80,41 +71,15 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
      */
 
     @Override
-    public void onBindViewHolder(@NonNull PeopleMemberListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PeopleListAdapter.ViewHolder holder, int position) {
         HomeActivityListData data = mList.get(position);
         holder.memberName.setTypeface(Util.mTypeface(mContext, 5));
         holder.memberName.setText(data.getGroupName());
-        holder.timeLeft.setText("00h 60min"); //TODO : Remove hard coded value
+        holder.memberAddress.setText(data.getName());
+        holder.memberAddress.setTypeface(Util.mTypeface(mContext, 3));
 
-        //TODO : Uncomment and check status handling when deep link flow works
-
-//        if(data.getConsentStaus().equals(Constant.ACTIVE)){
-//            holder.memberIcon.setImageResource(R.drawable.inviteaccepted);
-//            holder.timer.setImageResource(R.drawable.ic_timetimeline_outline);
-//            holder.timeLeft.setTextColor(mContext.getResources().getColor(R.color.timerColor));
-//        }else if(data.getConsentStaus().equals(Constant.PENDING)){
-//            holder.memberIcon.setImageResource(R.drawable.pendinginvite);
-//            holder.timer.setImageResource(R.drawable.ic_timetimeline_outline);
-//            holder.timeLeft.setTextColor(mContext.getResources().getColor(R.color.timerColor));
-//        }else {
-//            holder.memberIcon.setImageResource(R.drawable.invitetimeup);
-//            holder.timer.setImageResource(R.drawable.ic_timetimeline_outline);
-//            holder.timeLeft.setTextColor(mContext.getResources().getColor(R.color.timeUp));
-//        }
-        holder.peopleList.setOnClickListener(v -> {
-            itemListener.clickOnListLayout(data.getGroupId(),data.getGroupName());
-            return;
-        });
     }
 
-    /**
-     * Register the listener
-     *
-     * @param mItemClickListener
-     */
-    public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
-        this.itemListener = mItemClickListener;
-    }
 
     /**
      * return The total number of items in this adapter
@@ -133,9 +98,9 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
 
         private TextView memberName;
         private ImageView memberIcon;
-        private TextView timeLeft;
-        private ImageView timer;
-        private CardView peopleList;
+        private TextView memberStatus;
+        private TextView memberAddress;
+        private TextView pingTime;
         /**
          * Constructor where we find element from .xml file
          *
@@ -143,11 +108,11 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            memberName = itemView.findViewById(R.id.IndividualMemberName);
-            memberIcon = itemView.findViewById(R.id.IndividualMemberIcon);
-            timeLeft = itemView.findViewById(R.id.timeLeft);
-            timer = itemView.findViewById(R.id.timer);
-            peopleList = itemView.findViewById(R.id.peopleListLayout);
+            memberName = itemView.findViewById(R.id.mapMemberName);
+            memberIcon = itemView.findViewById(R.id.mapMemberIcon);
+            memberStatus = itemView.findViewById(R.id.mapMemberStatus);
+            memberAddress = itemView.findViewById(R.id.memberAddress);
+            pingTime = itemView.findViewById(R.id.pingTime);
         }
     }
 }

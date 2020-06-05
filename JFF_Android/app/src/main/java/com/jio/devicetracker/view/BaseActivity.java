@@ -67,7 +67,7 @@ public class BaseActivity extends AppCompatActivity {
         createGroupData.setType(Constant.ONE_TO_ONE);
         CreateGroupData.Session session = new CreateGroupData().new Session();
         session.setFrom(Util.getInstance().getTimeEpochFormatAfterCertainTime(1));
-        session.setTo(Util.getInstance().getTimeEpochFormatAfterCertainTime(60));
+        session.setTo(Util.getInstance().getTimeEpochFormatAfterCertainTime(600));
         createGroupData.setSession(session);
         Util.getInstance().showProgressBarDialog(this);
         GroupRequestHandler.getInstance(this).handleRequest(new CreateGroupRequest(new CreateGroupSuccessListener(), new CreateGroupErrorListener(), createGroupData, mDbManager.getAdminLoginDetail().getUserId()));

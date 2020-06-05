@@ -174,7 +174,7 @@ public class Constant {
     public static final String ADD_GROUP_MEMBER_INSTRUCTION2 = "\n* Once added go to Home screen, select the group  from list and click on Track button to know the location of group members";
 
     // MAPs Activity constants
-    public static final String MAP_TITLE = "      Location";
+    public static final String MAP_TITLE = "Location";
     public static final String LOCATION_UPDATE = "Location will be updated after every";
     public static final String SUCCESSFULL_DEVICE_ADDITION_RESPONSE = "1 device(s) are assigned to one user.";
     public static final String SUCCESSFULL_DEVICE_ADDITION = "Device is successfully added";
@@ -183,6 +183,13 @@ public class Constant {
     public static final long PRIORITY_BALANCED_POWER_ACCURACY = 10;
     public static final int EPOCH_TIME_DURATION = 15;
     public static final String MAP_DATA = "Map_Data";
+    public static final String MAP_WITH_DOT = "Map \n.";
+    public static final String MAP_WITHOUT_DOT = "Map";
+    public static final String LIST_WITH_DOT = "List \n.";
+    public static final String LIST_WITHOUT_DOT = "List";
+    public static final String PEOPLE_DATA = "People_Data";
+
+
     // Forgot Activity
     public static final String FORGOT_TITLE = "Forgot password";
     public static final String RESET_TITLE = "Reset password";
@@ -288,7 +295,7 @@ public class Constant {
     public static final String ONE_HOUR = "1 Hour";
     public static final String REFRESH_INTERVAL_SETTING = "Settings";
     public static final String MAP_UPDATION_MSG = "Map will be updated after every ";
-    public static final String PENDING = "Pending";
+    public static final String PENDING = "pending";
     public static final String USER_LIMITATION = "You cannot create more than ten individual user and groups";
     public static final String GROUP_NAME_VALIDATION_ERROR = "Group name cannot be left empty";
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
