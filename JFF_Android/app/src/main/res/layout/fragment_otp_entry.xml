@@ -20,7 +20,7 @@
             android:id="@+id/otpImageIcon"
             android:layout_width="80dp"
             android:layout_height="79.98dp"
-            android:layout_marginLeft="145dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:background="@drawable/ic_otp" />
 
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/otpImageIcon"
-            android:layout_marginLeft="105dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:text="@string/sentOTPTextView"
             android:textColor="@color/black"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/sentOTPTextView"
-            android:layout_marginLeft="100dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="18dp"
             android:textColor="@color/black"
             android:textSize="14dp" />
@@ -73,7 +73,7 @@
             android:layout_width="232dp"
             android:layout_height="36dp"
             android:layout_below="@id/txt_pin_entry"
-            android:layout_marginLeft="60dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="80dp"
             android:background="@drawable/login_selector"
             android:text="Submit"

@@ -50,7 +50,7 @@ public class MQTTManager {
     public JiotMqttClient getMQTTClient(Context context) {
         if (jiotMqttClient == null) {
             JiotMqttSSLOptions jiotMqttSSLOptions = new JiotMqttSSLOptions(R.raw.ca, "ril@1234");
-            JiotMqttCreateOptions jiotMqttCreateOptions = new JiotMqttCreateOptions(new DBManager(context).getAdminLoginDetail().getPhoneNumber(), Constant.MQTT_USER_NAME, Constant.MQTT_PASSWORD, Constant.MQTT_STG_URL, jiotMqttSSLOptions);
+            JiotMqttCreateOptions jiotMqttCreateOptions = new JiotMqttCreateOptions(new DBManager(context).getAdminLoginDetail().getPhoneNumber(), Constant.MQTT_CIT_USER_NAME, Constant.MQTT_CIT_PASSWORD, Constant.MQTT_CIT_URL, jiotMqttSSLOptions);
             options = new JiotMqttConnectOptions();
             options.setAutoReconnect(false);
             if (context != null) {

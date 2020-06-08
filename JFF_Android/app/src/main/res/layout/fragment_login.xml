@@ -28,7 +28,7 @@
                 android:layout_width="80dp"
                 android:layout_height="79.98dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginLeft="145dp"
+                android:layout_centerHorizontal="true"
                 android:background="@drawable/ic_login_signup" />
 
             <TextView
@@ -37,9 +37,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/signInHelloTextView"
                 android:layout_marginTop="30dp"
-                android:layout_marginLeft="95dp"
                 android:textColor="@color/black"
                 android:layout_below="@id/signInImageIcon"
+                android:layout_centerHorizontal="true"
                 android:textSize="17dp" />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:layout_width="178dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:layout_marginLeft="100dp"
+                android:layout_centerHorizontal="true"
                 android:text="@string/enterMobileNumberTextView"
                 android:layout_below="@id/signInHelloTextView"
                 android:textColor="@color/black"
@@ -68,12 +68,12 @@
 
             <EditText
                 android:id="@+id/mobileNumberEditText"
-                android:layout_width="312dp"
+                android:layout_width="325dp"
                 android:layout_height="wrap_content"
                 android:hint="Mobile Number"
                 android:layout_marginTop="40dp"
                 android:inputType="number"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="10dp"
                 android:backgroundTint="@color/black"
                 android:layout_below="@id/enterMobileNumberTextView"/>
 
@@ -94,7 +94,7 @@
                 android:layout_width="232dp"
                 android:layout_height="36dp"
                 android:layout_marginTop="60dp"
-                android:layout_marginLeft="60dp"
+                android:layout_centerHorizontal="true"
                 android:textAllCaps="false"
                 android:text="Continue"
                 android:textColor="@color/white"
@@ -108,7 +108,7 @@
                 android:textSize="14dp"
                 android:layout_below="@id/continueLogin"
                 android:layout_marginTop="20dp"
-                android:layout_marginLeft="70dp"
+                android:layout_centerHorizontal="true"
                 android:text="@string/requestOTPTextView"
                 android:textColor="@color/black" />
 
@@ -119,7 +119,7 @@
                 android:textSize="14dp"
                 android:layout_below="@id/requestOTPTextView"
                 android:textColor="@color/lite_blue"
-                android:layout_marginLeft="65dp"
+                android:layout_centerHorizontal="true"
                 android:text="Terms &amp; Conditions &amp; Privacy Policy"/>
 
         </RelativeLayout>
