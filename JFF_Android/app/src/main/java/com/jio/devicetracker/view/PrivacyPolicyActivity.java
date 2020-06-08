@@ -75,7 +75,7 @@ public class PrivacyPolicyActivity extends Activity implements View.OnClickListe
      */
     private void gotoLoginScreen() {
         Util.setTermconditionFlag(this,true);
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, SigninSignupActivity.class);
         startActivity(intent);
     }
 

@@ -273,7 +273,7 @@ public class Constant {
     public static final String EMPTY_OTP = "Please enter the otp";
     public static final String TOKEN_VERIFIED_SUCCESS = "Token successfully verified.";
     public static final String TOKEN_VERIFICATION_FAILED = "Token verification failed!";
-    public static final String REGISTARTION_SUCCESS_MESSAGE = "User registration is successful.";
+    public static final String REGISTARTION_SUCCESS_MESSAGE = "Your registartion is successful";
     public static final String REGISTARTION_FAILED_MESSAGE = "Registration is failed";
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";

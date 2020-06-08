@@ -20,6 +20,7 @@
 
 package com.jio.devicetracker.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -174,15 +175,16 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
         public void onResponse(Object response) {
             RegistrationResponse registrationResponse = Util.getInstance().getPojoObject(String.valueOf(response), RegistrationResponse.class);
             Util.progressDialog.dismiss();
-            if (registrationResponse.getCode() == Constant.SUCCESS_CODE_200 && registrationResponse.getMessage().equalsIgnoreCase(Constant.REGISTARTION_SUCCESS_MESSAGE)) {
+            if (registrationResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 Toast.makeText(getActivity(), Constant.REGISTARTION_SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
                 // Switch to the Login Fragment once registration is successfull
-                LoginFragment loginFragment = new LoginFragment();
+                startActivity(new Intent(getActivity(), SigninSignupActivity.class));
+                /*LoginFragment loginFragment = new LoginFragment();
                 FragmentTransaction trans = getFragmentManager().beginTransaction();
                 trans.replace(R.id.loginFrameLayout, loginFragment);
                 trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 trans.addToBackStack(null);
-                trans.commit();
+                trans.commit();*/
             }
         }
     }

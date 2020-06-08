@@ -20,11 +20,17 @@
 
 package com.jio.devicetracker.view;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.telephony.SubscriptionManager;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabItem;
@@ -39,6 +45,7 @@ public class SigninSignupActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager signinSignupviewPager;
     private SigninSignupAdapter signinSignupAdapter;
+    private static final int PERMIT_ALL = 1;
 //    private TabItem loginScreenTab;
 //    private TabItem signupScreenTab;
 
@@ -46,6 +53,7 @@ public class SigninSignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_signup);
+        requestPermission();
         setLayoutData();
     }
 
@@ -90,4 +98,50 @@ public class SigninSignupActivity extends AppCompatActivity {
             }
         });
     }
+
+    // Request for SMS and Phone Permissions
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{Manifest.permission.READ_SMS,
+                    Manifest.permission.READ_PHONE_NUMBERS,
+                    Manifest.permission.SEND_SMS,
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECEIVE_SMS,
+                    Manifest.permission.READ_CONTACTS}, PERMIT_ALL);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (PERMIT_ALL == requestCode) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+        switch (requestCode) {
+            case PERMIT_ALL: {
+                if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    // Todo
+                }
+                if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                    // Todo
+                }
+                // If request is cancelled, the result arrays are empty.
+                for (int grantResult : grantResults) {
+                    if (grantResults.length > 0 && grantResult == PackageManager.PERMISSION_GRANTED) {
+                        System.out.println("Permission is granted");
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
 }

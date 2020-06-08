@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
         <activity android:name=".view.SigninSignupActivity" />
-        <activity android:name=".view.DashboardMainActivity" />
+        <activity android:name=".view.DashboardActivity" />
         <activity android:name=".view.CreateGroupActivity" />
         <activity android:name=".view.ChooseGroupActivity" />
         <activity android:name=".view.GroupNameActivity" />
@@ -65,7 +65,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".view.DashboardActivity">
+        <activity android:name=".view.DashboardMainActivity">
             <intent-filter android:label="@string/title_activity_maps">
                 <action android:name="android.intent.action.VIEW" />
 

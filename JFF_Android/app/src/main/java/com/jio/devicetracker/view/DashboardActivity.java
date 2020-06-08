@@ -1183,7 +1183,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     /**
      * Approve Consent Request API Call
-     *
      * @param consentId
      * @param token
      */
