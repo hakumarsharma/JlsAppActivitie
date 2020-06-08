@@ -148,6 +148,11 @@
     <string name="app_version">Version : v2.33.0003 </string>
     <string name="contact_us_content">We are here to help and \nanswer your quireis </string>
     <string name="contact_us_email">care@jio.com</string>
+    <string name="how_to_use_qrcode_1">When you clicks on "+" OR [Add Device] button, application to turn on camera with a QR code bracket.</string>
+    <string name="how_to_use_qrcode_2">You need to place QR code within \nthe bracket for the phone to scan \nthe code \nScanning of QR code would allow \napp to identify MAC ID of the \ndevice, and on verifying it will add \nthe device.</string>
+    <string name="how_to_use_manual_add_1">Enter 10 digit mobile number \nwhich comes with device. You can \nfind out {place on packet}</string>
+    <string name="how_to_use_manual_add_2">Please wait till the device is getting \nconnected with phone</string>
+    <string name="how_to_use_manual_add_3">Attached device to any asset and \nsave the information to get it track.</string>
 
 
 </resources>

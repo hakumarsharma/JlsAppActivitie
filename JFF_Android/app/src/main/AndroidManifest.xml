@@ -139,11 +139,14 @@
             android:name=".view.ContactUsActivity"
             android:label="@string/map_name" />
         <activity
-        android:name=".view.EditUserProfileActivity"
-        android:label="@string/map_name" />
+            android:name=".view.EditUserProfileActivity"
+            android:label="@string/map_name" />
 
         <activity
             android:name=".view.LocationActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.HowToUseActivity"
             android:label="@string/map_name" />
 
         <activity

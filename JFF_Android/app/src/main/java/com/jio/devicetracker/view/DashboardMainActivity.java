@@ -265,6 +265,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
 
     /**
      * Approve Consent Request API Call
+     *
      * @param consentId
      * @param token
      */
@@ -386,7 +387,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                         //gotoSettingsActivity();
                         break;
                     case R.id.howtoadd:
-                        //goToHowtoAddActivity();
+                        goToHowtoUseActivity();
                         break;
                     case R.id.support:
                         startActivity(new Intent(DashboardMainActivity.this, NavigateSupportActivity.class));
@@ -630,4 +631,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         }
         return currentLocation;
     }
+
+    private void goToHowtoUseActivity() {
+        startActivity(new Intent(this, HowToUseActivity.class));
+    }
+
 }

@@ -362,6 +362,8 @@ public class Constant {
     public static final String NOTIFICATION_CHANNEL_ID = "channel";
     public static final int NOTIFICATION__ID = 1;
 
+    // HowToUse Activity
+    public static final String HOW_TO_ADD_TITLE = "How to use device";
 
     // NavigateSupport Activity
     public static final String SUPPORT_TITLE = "Support";
