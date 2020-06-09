@@ -53,6 +53,7 @@ import android.telephony.CellInfoLte;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -127,6 +128,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private String userPhoneNumber;
     private static int batteryLevel;
     private String consentId;
+    private TextView groupTitle;
+    private TextView peopleTitle;
+    private TextView deviceTitle;
+    private TextView manualTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,35 +159,92 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             }
         });
         initUI();
-        initializeDataMembers();
+        //initializeDataMembers();
     }
 
     private void initUI() {
-        tabLayout = findViewById(R.id.tablayout);
+        groupTitle = findViewById(R.id.group_detail);
+        peopleTitle = findViewById(R.id.people_detail);
+        deviceTitle = findViewById(R.id.device_detail);
+        groupTitle.setOnClickListener(this);
+        peopleTitle.setOnClickListener(this);
+        deviceTitle.setOnClickListener(this);
+        groupTitle.setText("Groups\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        groupTitle.setTypeface(Util.mTypeface(this,5));
+        peopleTitle.setTypeface(Util.mTypeface(this,5));
+        deviceTitle.setTypeface(Util.mTypeface(this,5));
+        /*tabLayout = findViewById(R.id.tablayout);
         tabPeople = findViewById(R.id.tabPeople);
         tabGroups = findViewById(R.id.tabGroups);
-        tabDevices = findViewById(R.id.tabDevices);
+        tabDevices = findViewById(R.id.tabDevices);*/
         viewPager = findViewById(R.id.viewPager);
         addGroupInDashboard = findViewById(R.id.createGroup);
         addGroupInDashboard.setVisibility(View.VISIBLE);
         addGroupInDashboard.setOnClickListener(this);
-        dashboardAdapter = new DashboardAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        dashboardAdapter = new DashboardAdapter(getSupportFragmentManager(), 3);
         viewPager.setAdapter(dashboardAdapter);
+        pageChangeListener();
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        onTabClicked();
+      //  onTabClicked();
         deepLinkingURICheck();
     }
 
-    private void initializeDataMembers() {
+
+    /**
+     * Called when you change the page
+     */
+    private void pageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // To do
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position==0){
+                    groupTitle.setText("Groups\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    groupTitle.setTextColor(Color.WHITE);
+                    peopleTitle.setText("People");
+                    peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                    deviceTitle.setText("Devices");
+                    deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                } else if(position ==1){
+
+                    peopleTitle.setText("People\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    peopleTitle.setTextColor(Color.WHITE);
+                    groupTitle.setText("Groups");
+                    groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                    deviceTitle.setText("Devices");
+                    deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                } else {
+                    deviceTitle.setText("Devices\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    deviceTitle.setTextColor(Color.WHITE);
+                    peopleTitle.setText("People");
+                    peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                    groupTitle.setText("Groups");
+                    groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // To do
+            }
+        });
+    }
+
+
+  /*  private void initializeDataMembers() {
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         this.registerReceiver(broadcastreceiver, intentFilter);
         setUpGClient();
         new Thread(new SendLocation()).start();
         userPhoneNumber = mDbManager.getAdminLoginDetail().getPhoneNumber();
     }
-
+*/
     // Event handling for the selection of tabs
-    private void onTabClicked() {
+  /*  private void onTabClicked() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -212,13 +274,13 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
 
             }
         });
-    }
+    }*/
 
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.createGroup) {
-            switch (tabLayout.getSelectedTabPosition()) {
+            switch (viewPager.getCurrentItem()) {
                 case 0:
                     startActivity(new Intent(this, CreateGroupActivity.class));
                     break;
@@ -229,6 +291,33 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                     startActivity(new Intent(this, QRReaderInstruction.class));
                     break;
             }
+        }
+        if(v.getId() == R.id.group_detail){
+            viewPager.setCurrentItem(0);
+            groupTitle.setText("Groups\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            groupTitle.setTextColor(Color.WHITE);
+            peopleTitle.setText("People");
+            peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+            deviceTitle.setText("Devices");
+            deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+        }
+        if(v.getId() == R.id.people_detail){
+            viewPager.setCurrentItem(1);
+            peopleTitle.setText("People\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            peopleTitle.setTextColor(Color.WHITE);
+            groupTitle.setText("Groups");
+            groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+            deviceTitle.setText("Devices");
+            deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+        }
+        if (v.getId() == R.id.device_detail){
+            viewPager.setCurrentItem(2);
+            deviceTitle.setText("Devices\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            deviceTitle.setTextColor(Color.WHITE);
+            peopleTitle.setText("People");
+            peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+            groupTitle.setText("Groups");
+            groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
         }
     }
 
