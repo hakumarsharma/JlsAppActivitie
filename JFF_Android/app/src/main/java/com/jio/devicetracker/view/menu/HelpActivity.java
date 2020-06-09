@@ -51,6 +51,8 @@ public class HelpActivity extends Activity implements View.OnClickListener {
     private ViewPager mPager;
     private ImageView backImageView;
     private ImageView forwardImageView;
+    private HelpPageAdapter mHelpadapter;
+    private TextView mSkip;
     private int position;
     private int helpImage[] = {R.drawable.helpscreen1, R.drawable.helpscreen2, R.drawable.helpscreen3, R.drawable.helpscreen4, R.drawable.helpscreen5};
     private int helpTitle[] = {R.string.helpScreen1heading, R.string.helpScreen2heading, R.string.helpScreen3heading, R.string.helpScreen4heading, R.string.helpScreen5heading};
@@ -60,7 +62,7 @@ public class HelpActivity extends Activity implements View.OnClickListener {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
-        TextView mSkip = findViewById(R.id.skip);
+        mSkip = findViewById(R.id.skip);
         backImageView = findViewById(R.id.helpPageBack);
         forwardImageView = findViewById(R.id.helpPageForward);
         backImageView.setOnClickListener(this);
@@ -70,7 +72,7 @@ public class HelpActivity extends Activity implements View.OnClickListener {
         addDataforHelpscreen();
         mPager = findViewById(R.id.pager);
         mLayout = findViewById(R.id.layout_dot);
-        HelpPageAdapter mHelpadapter = new HelpPageAdapter(this, mList);
+        mHelpadapter = new HelpPageAdapter(this, mList);
         mPager.setAdapter(mHelpadapter);
         addDot(0);
         pageChangeListener();
@@ -81,19 +83,29 @@ public class HelpActivity extends Activity implements View.OnClickListener {
      */
     private void pageChangeListener() {
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            int counter = 0;
+            boolean lastPageChange = false;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                int lastIdx = mHelpadapter.getCount() - 1;
+                if (lastPageChange && position == lastIdx) {
+                    System.out.println("Hello");
+                }
                 HelpActivity.this.position = position;
                 if (position == 0) {
                     backImageView.setVisibility(View.INVISIBLE);
+                    mSkip.setVisibility(View.VISIBLE);
                 } else if (position == 4) {
                     backImageView.setVisibility(View.INVISIBLE);
                     backImageView.setVisibility(View.VISIBLE);
                     forwardImageView.setVisibility(View.INVISIBLE);
+                    mSkip.setVisibility(View.INVISIBLE);
                 } else {
                     backImageView.setVisibility(View.INVISIBLE);
                     backImageView.setVisibility(View.VISIBLE);
                     forwardImageView.setVisibility(View.VISIBLE);
+                    mSkip.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -104,7 +116,18 @@ public class HelpActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                System.out.println("Hello");
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    int curr = mPager.getCurrentItem();
+                    int lastReal = mPager.getAdapter().getCount() - 1;
+                    if (curr < lastReal) {
+                        counter = 0;
+                    } else if (curr == lastReal) {
+                        counter++;
+                        if (counter == 2) {
+                            gotoSigninSignupActivity();
+                        }
+                    }
+                }
             }
         });
     }
