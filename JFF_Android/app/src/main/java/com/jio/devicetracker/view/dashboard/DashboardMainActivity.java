@@ -194,26 +194,25 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    groupTitle.setText("Groups\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    groupTitle.setText(Constant.GROUP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
                     groupTitle.setTextColor(Color.WHITE);
-                    peopleTitle.setText("People");
+                    peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
                     peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-                    deviceTitle.setText("Devices");
+                    deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
                     deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
                 } else if (position == 1) {
-
-                    peopleTitle.setText("People\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    peopleTitle.setText(Constant.PEOPLE_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
                     peopleTitle.setTextColor(Color.WHITE);
-                    groupTitle.setText("Groups");
+                    groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
                     groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-                    deviceTitle.setText("Devices");
+                    deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
                     deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
                 } else {
-                    deviceTitle.setText("Devices\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    deviceTitle.setText(Constant.DEVICES_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
                     deviceTitle.setTextColor(Color.WHITE);
-                    peopleTitle.setText("People");
+                    peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
                     peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-                    groupTitle.setText("Groups");
+                    groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
                     groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
                 }
             }
@@ -251,29 +250,29 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         }
         if (v.getId() == R.id.group_detail) {
             viewPager.setCurrentItem(0);
-            groupTitle.setText("Groups\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            groupTitle.setText(Constant.GROUP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
             groupTitle.setTextColor(Color.WHITE);
-            peopleTitle.setText("People");
+            peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
             peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-            deviceTitle.setText("Devices");
+            deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
             deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
         }
         if (v.getId() == R.id.people_detail) {
             viewPager.setCurrentItem(1);
-            peopleTitle.setText("People\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            peopleTitle.setText(Constant.PEOPLE_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
             peopleTitle.setTextColor(Color.WHITE);
-            groupTitle.setText("Groups");
+            groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
             groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-            deviceTitle.setText("Devices");
+            deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
             deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
         }
         if (v.getId() == R.id.device_detail) {
             viewPager.setCurrentItem(2);
-            deviceTitle.setText("Devices\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            deviceTitle.setText(Constant.DEVICES_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
             deviceTitle.setTextColor(Color.WHITE);
-            peopleTitle.setText("People");
+            peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
             peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-            groupTitle.setText("Groups");
+            groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
             groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
         }
     }
@@ -596,7 +595,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         if (getCurrentLocation() != null) {
             latitude = getCurrentLocation().getLatitude();
             longitude = getCurrentLocation().getLongitude();
-            String message = "{\"imi\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
+
+            String message = "{\"did\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                     "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
             String topic = "jioiot/svcd/tracker/" + userPhoneNumber + "/uc/fwd/locinfo";
             System.out.println("Message --> " + message);
