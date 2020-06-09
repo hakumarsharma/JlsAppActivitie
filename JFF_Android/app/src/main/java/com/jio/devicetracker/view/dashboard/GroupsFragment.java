@@ -22,6 +22,7 @@ package com.jio.devicetracker.view.dashboard;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -48,15 +51,28 @@ import java.util.List;
 public class GroupsFragment extends Fragment {
 
     private DBManager mDbManager;
+    private CardView cardInstruction;
+    private ImageView instructionIcon;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_groups, container, false);
+        initUI(view);
         mDbManager = new DBManager(getActivity());
         makeGroupInfoPerUserRequestAPICall();
         return view;
+    }
+
+    private void initUI(View view) {
+        cardInstruction = view.findViewById(R.id.instruction_card);
+        TextView instruction1 = view.findViewById(R.id.group_add_instruction1);
+        instruction1.setTypeface(Util.mTypeface(getActivity(),5));
+        TextView instruction2 = view.findViewById(R.id.group_add_instruction2);
+        instruction2.setTypeface(Util.mTypeface(getActivity(),3));
+        instructionIcon = view.findViewById(R.id.group_default_icon);
+
     }
 
     private void displayGroupDataInDashboard(View view) {
@@ -64,6 +80,10 @@ public class GroupsFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        if(groupDetailList == null){
+            cardInstruction.setVisibility(View.VISIBLE);
+            instructionIcon.setVisibility(View.VISIBLE);
+        }
         List<HomeActivityListData> groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {

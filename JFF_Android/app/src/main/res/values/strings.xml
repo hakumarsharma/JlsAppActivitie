@@ -153,6 +153,11 @@
     <string name="how_to_use_manual_add_1">Enter 10 digit mobile number \nwhich comes with device. You can \nfind out {place on packet}</string>
     <string name="how_to_use_manual_add_2">Please wait till the device is getting \nconnected with phone</string>
     <string name="how_to_use_manual_add_3">Attached device to any asset and \nsave the information to get it track.</string>
-
+    <string name="group_instruction_1">No Groups yet !</string>
+    <string name="group_instruction_2">A Group is a personal circle created by \nyou to quickly track your loved ones \ncollectively. You can track people and \ndevices in the same group. \nCreate a group by clicking on +" sign \nabove" </string>
+    <string name="people_instruction_1">Attached device to any asset and \nsave the information to get it track.</string>
+    <string name="people_instruction_2">Attached device to any asset and \nsave the information to get it track.</string>
+    <string name="device_instruction_1">Attached device to any asset and \nsave the information to get it track.</string>
+    <string name="device_instruction_2">Attached device to any asset and \nsave the information to get it track.</string>
 
 </resources>

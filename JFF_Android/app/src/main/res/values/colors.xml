@@ -24,6 +24,8 @@
     <color name="timerColor">#666666</color>
     <color name="timerTextViewColor">#5BC0ED</color>
     <color name="timeUp">#EC1C24</color>
+    <color name="group_text">#252525</color>
+
 
     <color name="black">#000000</color>
     <color name="black_semi_transparent">#B2000000</color>
