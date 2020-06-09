@@ -21,8 +21,10 @@
 package com.jio.devicetracker.view.group;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,6 +32,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jio.devicetracker.R;
@@ -44,6 +48,8 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
     private Button addGroupCreateGroup;
     private DBManager mDbManager;
     private Button createGroup;
+    private FrameLayout frameLayout;
+    private ImageView userIconCreateGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +76,29 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
         createGroupEditText = findViewById(R.id.groupName);
         createGroupEditText.setTypeface(Util.mTypeface(this, 5));
 
+        userIconCreateGroup = findViewById(R.id.userIconCreateGroup);
+        userIconCreateGroup.setOnClickListener(this);
 
         createGroup = findViewById(R.id.createGroupInCreateGroupActivity);
         createGroup.setTypeface(Util.mTypeface(this, 5));
         createGroup.setOnClickListener(this);
         mDbManager = new DBManager(CreateGroupActivity.this);
+        frameLayout = findViewById(R.id.chooseIcon_view);
+
+        Button closeBtn = findViewById(R.id.closeFrameLayout);
+        closeBtn.setOnClickListener(this);
+
+        Button homeGroupBtn = findViewById(R.id.homeGroupButton);
+        homeGroupBtn.setOnClickListener(this);
+
+        Button familyGroupBtn = findViewById(R.id.familyGroupButton);
+        familyGroupBtn.setOnClickListener(this);
+
+        Button friendsGroupButton = findViewById(R.id.friendsGroupButton);
+        friendsGroupButton.setOnClickListener(this);
+
+        Button petGroupButton = findViewById(R.id.petGroupButton);
+        petGroupButton.setOnClickListener(this);
     }
 
     /**
@@ -118,6 +142,23 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
             createGroupAndAddContactAPICall(groupName);
         }else if (v.getId() == R.id.back){
             finish();
+        }else  if (v.getId() == R.id.userIconCreateGroup){
+             frameLayout.setVisibility(View.VISIBLE);
+        }else if(v.getId() == R.id.closeFrameLayout){
+             userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_creategroup));
+             frameLayout.setVisibility(View.INVISIBLE);
+        }else if(v.getId() == R.id.homeGroupButton){
+            userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.home_group));
+            frameLayout.setVisibility(View.INVISIBLE);
+        }else if(v.getId() == R.id.familyGroupButton){
+            userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.family_group));
+            frameLayout.setVisibility(View.INVISIBLE);
+        }else if(v.getId() == R.id.friendsGroupButton){
+            userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.friends_group));
+            frameLayout.setVisibility(View.INVISIBLE);
+        }else if(v.getId() == R.id.petGroupButton){
+            userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.group_pet));
+            frameLayout.setVisibility(View.INVISIBLE);
         }
     }
 }

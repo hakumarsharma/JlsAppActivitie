@@ -78,6 +78,8 @@
     <string name="customizeProfileTextView">To customize your profile,\nplease enter below details</string>
     <string name="alternate_number_security_textview">Please enter an alternate phone number \n \t \t \tfor security purpose</string>
     <string name="requestOTPTextView">By requesting OTP you agree to the</string>
+    <string name="choose_group_icon">Add group picture</string>
+    <string name="choose_group_icon_text">You can choose from below icon</string>
 
     <string-array name="device_type_array">
         <item>People Tracker</item>
