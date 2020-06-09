@@ -16,7 +16,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/viewBackgroundColor"
-    tools:context=".view.DashboardMainActivity">
+    tools:context=".view.dashboard.DashboardMainActivity">
 
     <include
         layout="@layout/toolbar"
@@ -35,7 +35,8 @@
             android:id="@+id/tabGroups"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Groups\n." />
+            android:text="Groups \n."
+            />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabPeople"

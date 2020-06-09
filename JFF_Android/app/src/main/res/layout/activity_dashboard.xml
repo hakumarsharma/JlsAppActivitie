@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#EBEBEB"
-        tools:context=".view.DashboardActivity">
+        tools:context=".view.dashboard.DashboardActivity">
 
         <include
             android:id="@+id/customToolbar"

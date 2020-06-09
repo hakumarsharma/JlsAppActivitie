@@ -23,22 +23,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".view.SigninSignupActivity" />
-        <activity android:name=".view.DashboardActivity" />
-        <activity android:name=".view.CreateGroupActivity" />
-        <activity android:name=".view.ChooseGroupActivity" />
-        <activity android:name=".view.GroupNameActivity" />
-        <activity android:name=".view.ActiveMemberActivity" />
-        <activity android:name=".view.RefreshIntervalSettingActivity" />
+
+        <activity android:name=".view.signinsignup.SigninSignupActivity" />
+        <activity android:name=".view.dashboard.DashboardMainActivity" />
+        <activity android:name=".view.group.CreateGroupActivity" />
+        <activity android:name=".view.group.ChooseGroupActivity" />
+        <activity android:name=".view.group.GroupNameActivity" />
+        <activity android:name=".view.menu.ActiveMemberActivity" />
+        <activity android:name=".view.menu.RefreshIntervalSettingActivity" />
 
         <service
             android:name=".network.SendLocationService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".view.ProfileActivity" />
+        <activity android:name=".view.menu.ProfileActivity" />
         <activity
-            android:name=".view.LoginActivity"
+            android:name=".view.signinsignup.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter android:label="@string/title_activity_maps">
@@ -64,8 +65,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity android:name=".view.DashboardMainActivity">
+            <activity android:name=".view.dashboard.DashboardActivity">
             <intent-filter android:label="@string/title_activity_maps">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -79,71 +79,70 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.AddDeviceActivity"
+            android:name=".view.device.AddDeviceActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.MapsActivity"
+            android:name=".view.location.MapsActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.EditActivity"
+            android:name=".view.people.EditActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.HelpActivity"
+            android:name=".view.menu.HelpActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.ActiveSessionActivity"
+            android:name=".view.menu.ActiveSessionActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.QRCodeReaderActivity"
+            android:name=".view.device.QRCodeReaderActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.PrivacyPolicyActivity"
+            android:name=".view.menu.PrivacyPolicyActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.RegistrationActivity"
+            android:name=".view.signinsignup.RegistrationActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.ContactDetailsActivity"
+            android:name=".view.people.ContactDetailsActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.GroupListActivity"
+            android:name=".view.group.GroupListActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.QRReaderInstruction"
+            android:name=".view.device.QRReaderInstruction"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.DeviceNameActivity"
+            android:name=".view.device.DeviceNameActivity"
             android:label="@string/map_name" />
         <activity
             android:name=".util.CustomAlertActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.AddPeopleActivity"
+            android:name=".view.people.AddPeopleActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.NavigateUserProfileActivity"
+            android:name=".view.menu.NavigateUserProfileActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.NavigateSupportActivity"
+            android:name=".view.menu.NavigateSupportActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.TermAndConditionPolicyActivity"
+            android:name=".view.menu.TermAndConditionPolicyActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.AboutAppActivity"
+            android:name=".view.menu.AboutAppActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.FaqActivity"
+            android:name=".view.menu.FaqActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.ContactUsActivity"
+            android:name=".view.menu.ContactUsActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.EditUserProfileActivity"
-            android:label="@string/map_name" />
-
+        android:name=".view.menu.EditUserProfileActivity"
+        android:label="@string/map_name" />
         <activity
-            android:name=".view.LocationActivity"
+            android:name=".view.location.LocationActivity"
             android:label="@string/map_name" />
         <activity
             android:name=".view.HowToUseActivity"

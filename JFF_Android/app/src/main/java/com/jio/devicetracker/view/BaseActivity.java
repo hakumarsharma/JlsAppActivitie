@@ -21,7 +21,6 @@ package com.jio.devicetracker.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,6 +37,10 @@ import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
+import com.jio.devicetracker.view.device.AddDeviceActivity;
+import com.jio.devicetracker.view.group.GroupListActivity;
+import com.jio.devicetracker.view.people.AddPeopleActivity;
 
 import java.util.ArrayList;
 import java.util.List;

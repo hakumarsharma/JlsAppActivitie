@@ -32,6 +32,11 @@ import android.view.WindowManager;
 import com.jio.devicetracker.util.Util;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.view.dashboard.DashboardActivity;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
+import com.jio.devicetracker.view.location.MapsActivity;
+import com.jio.devicetracker.view.menu.HelpActivity;
+import com.jio.devicetracker.view.signinsignup.SigninSignupActivity;
 
 /**
  * Implementation of Splash Screen.This class creates splash screen for People tracker application

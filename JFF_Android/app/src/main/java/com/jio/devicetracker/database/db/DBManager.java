@@ -36,7 +36,6 @@ import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.view.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;

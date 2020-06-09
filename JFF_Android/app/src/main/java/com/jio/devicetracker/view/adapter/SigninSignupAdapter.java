@@ -24,8 +24,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.jio.devicetracker.view.LoginFragment;
-import com.jio.devicetracker.view.SignupFragment;
+import com.jio.devicetracker.view.signinsignup.LoginFragment;
+import com.jio.devicetracker.view.signinsignup.SignupFragment;
 
 public class SigninSignupAdapter extends FragmentPagerAdapter {
 

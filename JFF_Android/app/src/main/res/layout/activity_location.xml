@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/viewBackgroundColor"
-        tools:context=".view.LocationActivity">
+        tools:context=".view.location.LocationActivity">
 
         <include
             layout="@layout/toolbar"

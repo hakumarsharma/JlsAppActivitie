@@ -14,7 +14,7 @@
     card_view:cardElevation="8dp"
     android:orientation="horizontal"
     android:padding="16dp"
-    tools:context=".view.ChooseGroupActivity">
+    tools:context=".view.group.ChooseGroupActivity">
 
     <RelativeLayout
         android:layout_width="wrap_content"

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/cardviewlayout_device_background_color"
     android:orientation="vertical"
-    tools:context=".view.SigninSignupActivity">
+    tools:context=".view.signinsignup.SigninSignupActivity">
 
     <include
         android:id="@+id/signInSignUpToolbar"

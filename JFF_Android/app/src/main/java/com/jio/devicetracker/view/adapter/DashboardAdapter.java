@@ -24,9 +24,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.jio.devicetracker.view.GroupsFragment;
-import com.jio.devicetracker.view.InviteFragment;
-import com.jio.devicetracker.view.PeopleFragment;
+import com.jio.devicetracker.view.dashboard.GroupsFragment;
+import com.jio.devicetracker.view.fragment.InviteFragment;
+import com.jio.devicetracker.view.dashboard.PeopleFragment;
 
 public class DashboardAdapter extends FragmentPagerAdapter {
 
