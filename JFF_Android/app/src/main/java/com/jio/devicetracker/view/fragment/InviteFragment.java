@@ -22,22 +22,42 @@ package com.jio.devicetracker.view.fragment;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.util.Util;
 
 
 public class InviteFragment extends Fragment {
 
+    private CardView cardInstruction;
+    private ImageView instructionIcon;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_invite, container, false);
+         View view = inflater.inflate(R.layout.fragment_invite, container, false);
+         initUI(view);
+        return view;
+    }
+
+    private void initUI(View view) {
+        cardInstruction = view.findViewById(R.id.instruction_card);
+        TextView instruction1 = view.findViewById(R.id.device_instruction1);
+        instruction1.setTypeface(Util.mTypeface(getActivity(),5));
+        TextView instruction2 = view.findViewById(R.id.device_instruction2);
+        instruction2.setTypeface(Util.mTypeface(getActivity(),3));
+        instructionIcon = view.findViewById(R.id.devices_default_icon);
+        cardInstruction.setVisibility(View.VISIBLE);
+        instructionIcon.setVisibility(View.VISIBLE);
+
     }
 }

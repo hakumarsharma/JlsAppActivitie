@@ -30,6 +30,8 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -55,6 +57,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PeopleFragment extends Fragment {
 
     private DBManager mDbManager;
+    private ImageView instructionIcon;
+    private TextView instruction;
     private static PeopleMemberListAdapter groupListAdapter;
     private List<MapData> mapDataList;
     public static List<HomeActivityListData> grpDataList;
@@ -66,7 +70,18 @@ public class PeopleFragment extends Fragment {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_people, container, false);
+        initUI(view);
         return view;
+    }
+
+    private void initUI(View view) {
+        instruction = view.findViewById(R.id.people_instruction);
+        instruction.setTypeface(Util.mTypeface(getActivity(),3));
+        instructionIcon = view.findViewById(R.id.people_default_icon);
+        /*instruction.setVisibility(View.VISIBLE);
+        instructionIcon.setVisibility(View.VISIBLE);*/
+
+
     }
 
     @Override
@@ -85,6 +100,10 @@ public class PeopleFragment extends Fragment {
         groupListRecyclerView.setLayoutManager(mLayoutManager);
 
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        if(groupDetailList == null){
+            instruction.setVisibility(View.VISIBLE);
+            instructionIcon.setVisibility(View.VISIBLE);
+        }
         List<HomeActivityListData> groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId()) && data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME) ) {

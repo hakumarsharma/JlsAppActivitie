@@ -1,15 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/viewBackgroundColor"
     tools:context=".view.dashboard.PeopleFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/people_instruction_1"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/margin_18"
+        android:layout_marginRight="@dimen/fifteen_dp"
+        android:textColor="@color/mine_shaft"
+        android:id="@+id/people_instruction"
+        android:layout_marginBottom="@dimen/margin_65"
+        android:textSize="@dimen/seventeen_dp"
+        android:layout_above="@+id/people_default_icon"
+
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:id="@+id/people_default_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/people_default"
+        android:visibility="invisible" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/peopleListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/viewBackgroundColor"
         android:padding="4dp"
         android:scrollbars="vertical" />
-</FrameLayout>
+</RelativeLayout>

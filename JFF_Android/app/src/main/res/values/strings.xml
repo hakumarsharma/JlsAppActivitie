@@ -155,9 +155,9 @@
     <string name="how_to_use_manual_add_3">Attached device to any asset and \nsave the information to get it track.</string>
     <string name="group_instruction_1">No Groups yet !</string>
     <string name="group_instruction_2">A Group is a personal circle created by \nyou to quickly track your loved ones \ncollectively. You can track people and \ndevices in the same group. \nCreate a group by clicking on +" sign \nabove" </string>
-    <string name="people_instruction_1">Attached device to any asset and \nsave the information to get it track.</string>
+    <string name="people_instruction_1">You can start tracking your loved ones \nthrough the application. Add a person \nby clicking on the "+" sign above</string>
     <string name="people_instruction_2">Attached device to any asset and \nsave the information to get it track.</string>
-    <string name="device_instruction_1">Attached device to any asset and \nsave the information to get it track.</string>
-    <string name="device_instruction_2">Attached device to any asset and \nsave the information to get it track.</string>
+    <string name="device_instruction_1">No Devices yet !</string>
+    <string name="device_instruction_2">You can start tracking your loved ones \nwith a device. Add the device by \ntapping on "+" sign above \nDon\'t have a device? \nVisit //http:www.jio.com </string>
 
 </resources>

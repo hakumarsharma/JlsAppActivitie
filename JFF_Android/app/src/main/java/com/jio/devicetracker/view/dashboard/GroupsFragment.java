@@ -72,6 +72,8 @@ public class GroupsFragment extends Fragment {
         TextView instruction2 = view.findViewById(R.id.group_add_instruction2);
         instruction2.setTypeface(Util.mTypeface(getActivity(),3));
         instructionIcon = view.findViewById(R.id.group_default_icon);
+        /*cardInstruction.setVisibility(View.VISIBLE);
+        instructionIcon.setVisibility(View.VISIBLE);*/
 
     }
 
