@@ -304,7 +304,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     private class AddDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Toast.makeText(getActivity(), Constant.UNSUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+           // Todo
         }
     }
 

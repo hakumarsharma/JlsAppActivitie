@@ -72,8 +72,6 @@ public class HelpPageAdapter extends PagerAdapter {
         mHelpImage.setImageResource(list.get(position).getImage());
         mHelpContent.setText(list.get(position).getContent());
         mHeading.setText(list.get(position).getTitle());
-
-
         container.addView(view);
         return view;
     }

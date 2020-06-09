@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -27,6 +25,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -47,21 +46,27 @@ public class HelpActivity extends Activity implements View.OnClickListener {
 
     private List<HelpPagedata> mList;
     private LinearLayout mLayout;
-    TextView[] dot;
+    private TextView[] dot;
     private ViewPager mPager;
-    private int helpImage[] = {R.drawable.helpscreen1, R.drawable.helpscreen2, R.drawable.helpscreen1, R.drawable.helpscreen4,R.drawable.helpscreen5};
-    private int helpTitle[] = {R.string.helpScreen1heading, R.string.helpScreen2heading, R.string.helpScreen3heading, R.string.helpScreen4heading,R.string.helpScreen5heading};
-    private int helpContent[] = {R.string.helpScreen1desc, R.string.helpScreen2desc, R.string.helpScreen3desc, R.string.helpScreen4desc,R.string.helpScreen4desc};
+    private ImageView backImageView;
+    private ImageView forwardImageView;
+    private int position;
+    private int helpImage[] = {R.drawable.helpscreen1, R.drawable.helpscreen2, R.drawable.helpscreen3, R.drawable.helpscreen4, R.drawable.helpscreen5};
+    private int helpTitle[] = {R.string.helpScreen1heading, R.string.helpScreen2heading, R.string.helpScreen3heading, R.string.helpScreen4heading, R.string.helpScreen5heading};
+    private int helpContent[] = {R.string.helpScreen1desc, R.string.helpScreen2desc, R.string.helpScreen3desc, R.string.helpScreen4desc, R.string.helpScreen5desc};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
         TextView mSkip = findViewById(R.id.skip);
+        backImageView = findViewById(R.id.helpPageBack);
+        forwardImageView = findViewById(R.id.helpPageForward);
+        backImageView.setOnClickListener(this);
+        forwardImageView.setOnClickListener(this);
         mSkip.setOnClickListener(this);
         mList = new ArrayList<>();
         addDataforHelpscreen();
-
         mPager = findViewById(R.id.pager);
         mLayout = findViewById(R.id.layout_dot);
         HelpPageAdapter mHelpadapter = new HelpPageAdapter(this, mList);
@@ -77,7 +82,18 @@ public class HelpActivity extends Activity implements View.OnClickListener {
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                // To do
+                HelpActivity.this.position = position;
+                if (position == 0) {
+                    backImageView.setVisibility(View.INVISIBLE);
+                } else if (position == 4) {
+                    backImageView.setVisibility(View.INVISIBLE);
+                    backImageView.setVisibility(View.VISIBLE);
+                    forwardImageView.setVisibility(View.INVISIBLE);
+                } else {
+                    backImageView.setVisibility(View.INVISIBLE);
+                    backImageView.setVisibility(View.VISIBLE);
+                    forwardImageView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -87,7 +103,7 @@ public class HelpActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                // To do
+                System.out.println("Hello");
             }
         });
     }
@@ -122,8 +138,52 @@ public class HelpActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.skip) {
+        if (v.getId() == R.id.skip) {
             gotoTermandCondition();
+        } else if (v.getId() == R.id.helpPageBack) {
+            onHelpPageBackButtonClick();
+        } else if (v.getId() == R.id.helpPageForward) {
+            onHelpPageForwardButtonClick();
+        }
+    }
+
+    private void onHelpPageBackButtonClick() {
+        switch (position) {
+            case 1:
+                mPager.setCurrentItem(0);
+                break;
+            case 2:
+                mPager.setCurrentItem(1);
+                break;
+            case 3:
+                mPager.setCurrentItem(2);
+                break;
+            case 4:
+                mPager.setCurrentItem(3);
+                break;
+            default:
+                mPager.setCurrentItem(1);
+                break;
+        }
+    }
+
+    private void onHelpPageForwardButtonClick() {
+        switch (position) {
+            case 0:
+                mPager.setCurrentItem(1);
+                break;
+            case 1:
+                mPager.setCurrentItem(2);
+                break;
+            case 2:
+                mPager.setCurrentItem(3);
+                break;
+            case 3:
+                mPager.setCurrentItem(4);
+                break;
+            default:
+                mPager.setCurrentItem(0);
+                break;
         }
     }
 
