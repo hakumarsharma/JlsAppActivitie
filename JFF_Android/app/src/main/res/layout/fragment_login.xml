@@ -26,7 +26,7 @@
             <ImageView
                 android:id="@+id/signInImageIcon"
                 android:layout_width="80dp"
-                android:layout_height="79.98dp"
+                android:layout_height="80dp"
                 android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/ic_login_signup" />
@@ -93,20 +93,20 @@
                 android:id="@+id/continueLogin"
                 android:layout_width="232dp"
                 android:layout_height="36dp"
-                android:layout_marginTop="60dp"
                 android:layout_centerHorizontal="true"
                 android:textAllCaps="false"
                 android:text="Continue"
                 android:textColor="@color/white"
                 android:background="@drawable/login_selector"
-                android:layout_below="@id/mobileNumberEditText"/>
+                android:layout_marginBottom="30dp"
+                android:layout_above="@+id/requestOTPTextView"/>
 
             <TextView
                 android:id="@+id/requestOTPTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
-                android:layout_below="@id/continueLogin"
+                android:layout_above="@+id/termConditionTextView"
                 android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true"
                 android:text="@string/requestOTPTextView"
@@ -114,12 +114,13 @@
 
             <TextView
                 android:id="@+id/termConditionTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
-                android:layout_below="@id/requestOTPTextView"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="30dp"
                 android:textColor="@color/lite_blue"
-                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
                 android:text="Terms &amp; Conditions &amp; Privacy Policy"/>
 
         </RelativeLayout>
