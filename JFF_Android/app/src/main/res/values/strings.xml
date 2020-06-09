@@ -11,6 +11,7 @@
     <string name="request_otp"><u>Request OTP</u></string>
     <string name="forget_password"> <b>Click Here</b></string>
     <string name="pagerindicater">&amp;#9673;</string>
+    <string name="white_indicater">&amp;#9673;</string>
     <string name="Open">Open</string>
     <string name="Close">Close</string>
     <string name="helpScreen1heading">Don\'t lose sight of your loved ones</string>
