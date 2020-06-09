@@ -20,7 +20,7 @@ import com.jio.devicetracker.view.adapter.HowToUseAdapter;
 
 public class HowToUseActivity extends AppCompatActivity implements View.OnClickListener {
 
-   // private TabLayout tabLayout;
+    // private TabLayout tabLayout;
     private ViewPager howToUseViewPager;
     private HowToUseAdapter howToUseAdapter;
     private TextView qrCodeTitle;
@@ -43,9 +43,9 @@ public class HowToUseActivity extends AppCompatActivity implements View.OnClickL
         backBtn.setOnClickListener(this);
         manualTitle = findViewById(R.id.manual_help);
         qrCodeTitle = findViewById(R.id.qr_code_help);
-        manualTitle.setTypeface(Util.mTypeface(this,5));
-        qrCodeTitle.setTypeface(Util.mTypeface(this,5));
-        qrCodeTitle.setText("QR code\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        manualTitle.setTypeface(Util.mTypeface(this, 5));
+        qrCodeTitle.setTypeface(Util.mTypeface(this, 5));
+        qrCodeTitle.setText("QR code\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
         qrCodeTitle.setOnClickListener(this);
         manualTitle.setOnClickListener(this);
 
@@ -68,14 +68,13 @@ public class HowToUseActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onPageSelected(int position) {
-                if(position==0){
-                    qrCodeTitle.setText("QR code\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                if (position == 0) {
+                    qrCodeTitle.setText("QR code\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
                     qrCodeTitle.setTextColor(Color.WHITE);
                     manualTitle.setText("Manual");
                     manualTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
                 } else {
-
-                    manualTitle.setText("Manual\n"+Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    manualTitle.setText("Manual\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
                     manualTitle.setTextColor(Color.WHITE);
                     qrCodeTitle.setText("QR code");
                     qrCodeTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
@@ -91,18 +90,17 @@ public class HowToUseActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.manual_help:
                 howToUseViewPager.setCurrentItem(1);
-                manualTitle.setText("Manual\n"+Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                manualTitle.setText("Manual\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
                 manualTitle.setTextColor(Color.WHITE);
                 qrCodeTitle.setText("QR code");
                 qrCodeTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
                 break;
             case R.id.qr_code_help:
                 howToUseViewPager.setCurrentItem(0);
-                qrCodeTitle.setText("QR code\n"+Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                qrCodeTitle.setText("QR code\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
                 qrCodeTitle.setTextColor(Color.WHITE);
                 manualTitle.setText("Manual");
                 manualTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));

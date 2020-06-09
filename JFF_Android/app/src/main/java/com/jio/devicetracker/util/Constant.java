@@ -40,8 +40,8 @@ public class Constant {
     public static final String MQTT_STG_TOPIC = "jioiot/svcd/jiophone/" + Util.imeiNumber + "/uc/fwd/locinfo";
     public static final String MQTT_USER_NAME = "trackNT";
     public static final String MQTT_PASSWORD = "trackNT";
-    public static final String MQTT_CIT_URL = "tcp://v.dev.tnt.cats.jvts.net:1883";
-    public static final String MQTT_CIT_TOPIC = "jioiot/svcd/jiophone/" + Util.imeiNumber + "/uc/fwd/locinfo";
+    public static final String MQTT_CIT_URL = "tcp://sit.tnt.cats.jvts.net:1883";
+    public static final String MQTT_CIT_TOPIC = "tracker/svcd/jiophone/" + Util.imeiNumber + "/uc/fwd/locinfo";
     public static final String MQTT_CIT_USER_NAME = "borqs-sit";
     public static final String MQTT_CIT_PASSWORD = "borqs-sit@987";
     public static final int MQTT_TIME_INTERVAL = 10;
@@ -147,10 +147,8 @@ public class Constant {
     public static final String WELCOME = "Welcome";
     public static final String MOBILE_NUMBER = "Mobile Number";
     public static final String OTP_TEXTVIEW = "Please enter the OTP sent to \n your mobile no. ";
-    public static final String LOGIN_WITH_DOT = "Login \n.";
-    public static final String SIGNUP_WITH_DOT = "Sign up \n.";
-    public static final String LOGIN_WITHOUT_DOT = "Login";
-    public static final String SIGNUP_WITHOUT_DOT = "Sign up";
+    public static final String LOGIN_WITHOUT_DOT = "Login\n";
+    public static final String SIGNUP_WITHOUT_DOT = "Sign up\n";
     public static final String SUCCESS = "success";
 
 

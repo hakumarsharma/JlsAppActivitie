@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dull_text_color"
-    >
+    android:background="@color/dull_text_color">
     <include
         layout="@layout/toolbar"
-        android:id="@+id/howtotuseToolbar"
-        />
+        android:id="@+id/howtotuseToolbar" />
+
     <RelativeLayout
         android:id="@+id/bluebackground"
         android:layout_width="match_parent"

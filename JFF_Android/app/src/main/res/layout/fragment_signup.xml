@@ -26,28 +26,28 @@
             <ImageView
                 android:id="@+id/signUpImageIcon"
                 android:layout_width="80dp"
-                android:layout_height="79.98dp"
+                android:layout_height="80dp"
                 android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/ic_customiseprofile" />
 
             <TextView
                 android:id="@+id/signUpcustomizeProfile"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/customizeProfile"
                 android:layout_marginTop="30dp"
                 android:textColor="@color/black"
                 android:layout_below="@id/signUpImageIcon"
-                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
                 android:textSize="17dp" />
 
             <TextView
                 android:id="@+id/enterNameTextView"
-                android:layout_width="178dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
                 android:text="@string/customizeProfileTextView"
                 android:layout_below="@id/signUpcustomizeProfile"
                 android:textColor="@color/black"
@@ -57,7 +57,7 @@
                 android:id="@+id/nameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="40dp"
                 android:text="Name"
                 android:textSize="10dp"
                 android:visibility="invisible"
@@ -68,10 +68,9 @@
 
             <EditText
                 android:id="@+id/signUpNameEditText"
-                android:layout_width="325dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Name"
-                android:layout_marginTop="40dp"
                 android:layout_marginLeft="10dp"
                 android:backgroundTint="@color/black"
                 android:layout_below="@id/nameTextView"/>

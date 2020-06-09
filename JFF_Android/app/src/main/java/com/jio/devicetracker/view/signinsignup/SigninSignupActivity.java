@@ -28,9 +28,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SubscriptionManager;
+import android.text.Html;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
@@ -39,14 +42,13 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.SigninSignupAdapter;
 
-public class SigninSignupActivity extends AppCompatActivity {
+public class SigninSignupActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TabLayout tabLayout;
     private ViewPager signinSignupviewPager;
     private SigninSignupAdapter signinSignupAdapter;
     private static final int PERMIT_ALL = 1;
-//    private TabItem loginScreenTab;
-//    private TabItem signupScreenTab;
+    private TextView signinTextView;
+    private TextView signupTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,39 +63,44 @@ public class SigninSignupActivity extends AppCompatActivity {
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setTypeface(Util.mTypeface(this, 5));
         toolbarTitle.setText(Constant.WELCOME);
-
-        tabLayout = findViewById(R.id.signinSignupTablayout);
-        signinSignupAdapter = new SigninSignupAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        signinSignupAdapter = new SigninSignupAdapter(getSupportFragmentManager(), 2);
         signinSignupviewPager = findViewById(R.id.signinSignupviewPager);
         signinSignupviewPager.setAdapter(signinSignupAdapter);
-        signinSignupviewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        signinTextView = findViewById(R.id.signinTextView);
+        signupTextView = findViewById(R.id.signupTextView);
+        signinTextView.setOnClickListener(this);
+        signupTextView.setOnClickListener(this);
+        signinTextView.setTypeface(Util.mTypeface(this, 5));
+        signupTextView.setTypeface(Util.mTypeface(this, 5));
+        signinTextView.setText(Constant.LOGIN_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
         onTabClicked();
     }
 
     private void onTabClicked() {
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        signinSignupviewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                signinSignupviewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition() == 0) {
-                    tabLayout.getTabAt(0).setText(Constant.LOGIN_WITH_DOT);
-                } else if (tab.getPosition() == 1) {
-                    tabLayout.getTabAt(1).setText(Constant.SIGNUP_WITH_DOT);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // To do
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    signinTextView.setText(Constant.LOGIN_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    signinTextView.setTextColor(Color.WHITE);
+                    signupTextView.setText(Constant.SIGNUP_WITHOUT_DOT);
+                    signupTextView.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                } else if(position == 1){
+                    signupTextView.setText(Constant.SIGNUP_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    signupTextView.setTextColor(Color.WHITE);
+                    signinTextView.setText(Constant.LOGIN_WITHOUT_DOT);
+                    signinTextView.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
                 }
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    tabLayout.getTabAt(0).setText(Constant.LOGIN_WITHOUT_DOT);
-                } else if (tab.getPosition() == 1) {
-                    tabLayout.getTabAt(1).setText(Constant.SIGNUP_WITHOUT_DOT);
-                }
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
+            public void onPageScrollStateChanged(int state) {
+                // To do
             }
         });
     }
@@ -143,4 +150,20 @@ public class SigninSignupActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.signinTextView) {
+            signinSignupviewPager.setCurrentItem(0);
+            signinTextView.setText(Constant.LOGIN_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            signinTextView.setTextColor(Color.WHITE);
+            signupTextView.setText(Constant.SIGNUP_WITHOUT_DOT);
+            signupTextView.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+        } else if (v.getId() == R.id.signupTextView) {
+            signinSignupviewPager.setCurrentItem(1);
+            signupTextView.setText(Constant.SIGNUP_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            signupTextView.setTextColor(Color.WHITE);
+            signinTextView.setText(Constant.LOGIN_WITHOUT_DOT);
+            signinTextView.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+        }
+    }
 }

@@ -35,6 +35,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.HelpPagedata;
 import com.jio.devicetracker.view.adapter.HelpPageAdapter;
+import com.jio.devicetracker.view.signinsignup.SigninSignupActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,7 +140,7 @@ public class HelpActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.skip) {
-            gotoTermandCondition();
+            gotoSigninSignupActivity();
         } else if (v.getId() == R.id.helpPageBack) {
             onHelpPageBackButtonClick();
         } else if (v.getId() == R.id.helpPageForward) {
@@ -190,8 +191,8 @@ public class HelpActivity extends Activity implements View.OnClickListener {
     /**
      * Go to Term & Condition page when you click on skip button
      */
-    private void gotoTermandCondition() {
-        Intent intent = new Intent(this, PrivacyPolicyActivity.class);
+    private void gotoSigninSignupActivity() {
+        Intent intent = new Intent(this, SigninSignupActivity.class);
         startActivity(intent);
     }
 }

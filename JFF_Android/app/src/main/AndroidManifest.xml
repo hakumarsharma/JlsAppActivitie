@@ -97,9 +97,6 @@
             android:name=".view.device.QRCodeReaderActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.menu.PrivacyPolicyActivity"
-            android:label="@string/map_name" />
-        <activity
             android:name=".view.signinsignup.RegistrationActivity"
             android:label="@string/map_name" />
         <activity
