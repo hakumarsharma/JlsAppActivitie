@@ -39,7 +39,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="22dp"
         android:layout_marginBottom="5dp"
-        android:src="@drawable/device_location_img" />
+        android:src="@drawable/jiotrack" />
 
     <TextView
         android:id="@+id/purchase_title"

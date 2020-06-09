@@ -26,6 +26,7 @@
     <color name="timeUp">#EC1C24</color>
     <color name="group_text">#252525</color>
     <color name="hyperlink_color">#65C4EE</color>
+    <color name="dull_bg">#484848</color>
 
 
     <color name="black">#000000</color>
