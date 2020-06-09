@@ -109,12 +109,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private TabLayout tabLayout;
     private ViewPager viewPager;
     private DashboardAdapter dashboardAdapter;
-    private TabItem tabPeople;
-    private TabItem tabGroups;
-    private TabItem tabDevices;
     private ImageView addGroupInDashboard;
     private DrawerLayout drawerLayout;
     private static DBManager mDbManager;
@@ -159,7 +155,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             }
         });
         initUI();
-        //initializeDataMembers();
+        initializeDataMembers();
+        Util.getInstance().setAutologinStatus(this, true);
     }
 
     private void initUI() {
@@ -169,14 +166,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         groupTitle.setOnClickListener(this);
         peopleTitle.setOnClickListener(this);
         deviceTitle.setOnClickListener(this);
-        groupTitle.setText("Groups\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
-        groupTitle.setTypeface(Util.mTypeface(this,5));
-        peopleTitle.setTypeface(Util.mTypeface(this,5));
-        deviceTitle.setTypeface(Util.mTypeface(this,5));
-        /*tabLayout = findViewById(R.id.tablayout);
-        tabPeople = findViewById(R.id.tabPeople);
-        tabGroups = findViewById(R.id.tabGroups);
-        tabDevices = findViewById(R.id.tabDevices);*/
+        groupTitle.setText("Groups\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        groupTitle.setTypeface(Util.mTypeface(this, 5));
+        peopleTitle.setTypeface(Util.mTypeface(this, 5));
+        deviceTitle.setTypeface(Util.mTypeface(this, 5));
         viewPager = findViewById(R.id.viewPager);
         addGroupInDashboard = findViewById(R.id.createGroup);
         addGroupInDashboard.setVisibility(View.VISIBLE);
@@ -184,8 +177,6 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         dashboardAdapter = new DashboardAdapter(getSupportFragmentManager(), 3);
         viewPager.setAdapter(dashboardAdapter);
         pageChangeListener();
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-      //  onTabClicked();
         deepLinkingURICheck();
     }
 
@@ -202,23 +193,23 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void onPageSelected(int position) {
-                if(position==0){
-                    groupTitle.setText("Groups\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                if (position == 0) {
+                    groupTitle.setText("Groups\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
                     groupTitle.setTextColor(Color.WHITE);
                     peopleTitle.setText("People");
                     peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
                     deviceTitle.setText("Devices");
                     deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-                } else if(position ==1){
+                } else if (position == 1) {
 
-                    peopleTitle.setText("People\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    peopleTitle.setText("People\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
                     peopleTitle.setTextColor(Color.WHITE);
                     groupTitle.setText("Groups");
                     groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
                     deviceTitle.setText("Devices");
                     deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
                 } else {
-                    deviceTitle.setText("Devices\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                    deviceTitle.setText("Devices\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
                     deviceTitle.setTextColor(Color.WHITE);
                     peopleTitle.setText("People");
                     peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
@@ -235,47 +226,13 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     }
 
 
-  /*  private void initializeDataMembers() {
+    private void initializeDataMembers() {
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         this.registerReceiver(broadcastreceiver, intentFilter);
         setUpGClient();
         new Thread(new SendLocation()).start();
         userPhoneNumber = mDbManager.getAdminLoginDetail().getPhoneNumber();
     }
-*/
-    // Event handling for the selection of tabs
-  /*  private void onTabClicked() {
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition() == 0) {
-                    tabLayout.getTabAt(0).setText(Constant.GROUP_WITH_DOT);
-                } else if (tab.getPosition() == 1) {
-                    tabLayout.getTabAt(1).setText(Constant.PEOPLE_WITH_DOT);
-                } else {
-                    tabLayout.getTabAt(2).setText(Constant.DEVICES_WITH_DOT);
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    tabLayout.getTabAt(0).setText(Constant.GROUP_WITHOUT_DOT);
-                } else if (tab.getPosition() == 1) {
-                    tabLayout.getTabAt(1).setText(Constant.PEOPLE_WITHOUT_DOT);
-                } else {
-                    tabLayout.getTabAt(2).setText(Constant.DEVICES_WITHOUT_DOT);
-                }
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }*/
-
 
     @Override
     public void onClick(View v) {
@@ -292,27 +249,27 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                     break;
             }
         }
-        if(v.getId() == R.id.group_detail){
+        if (v.getId() == R.id.group_detail) {
             viewPager.setCurrentItem(0);
-            groupTitle.setText("Groups\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            groupTitle.setText("Groups\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
             groupTitle.setTextColor(Color.WHITE);
             peopleTitle.setText("People");
             peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
             deviceTitle.setText("Devices");
             deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
         }
-        if(v.getId() == R.id.people_detail){
+        if (v.getId() == R.id.people_detail) {
             viewPager.setCurrentItem(1);
-            peopleTitle.setText("People\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            peopleTitle.setText("People\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
             peopleTitle.setTextColor(Color.WHITE);
             groupTitle.setText("Groups");
             groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
             deviceTitle.setText("Devices");
             deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
         }
-        if (v.getId() == R.id.device_detail){
+        if (v.getId() == R.id.device_detail) {
             viewPager.setCurrentItem(2);
-            deviceTitle.setText("Devices\n"+ Html.fromHtml(getResources().getString(R.string.white_indicater)));
+            deviceTitle.setText("Devices\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
             deviceTitle.setTextColor(Color.WHITE);
             peopleTitle.setText("People");
             peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
@@ -731,6 +688,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private void goToHowtoUseActivity() {
         startActivity(new Intent(this, HowToUseActivity.class));
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

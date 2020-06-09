@@ -239,7 +239,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onBackPressed() {
         super.onBackPressed();
         Util.clearLocationFlagstatus(this);
-        Util.setAutologinStatus(this, true);
+//        Util.setAutologinStatus(this, true);
         Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }

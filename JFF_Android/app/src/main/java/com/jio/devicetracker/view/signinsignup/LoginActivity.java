@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         jioMobileNumberEditText = findViewById(R.id.jioNumber);
         jioMobileNumberEditText.setOnClickListener(this);
         mDbManager = new DBManager(this);
-        boolean termConditionsFlag = Util.getTermconditionFlag(this);
+//        boolean termConditionsFlag = Util.getTermconditionFlag(this);
         loginOtpEditText = findViewById(R.id.loginOtp);
         TextView registerHereTextView = findViewById(R.id.registerHere);
         requestOTP = findViewById(R.id.requestOTP);
@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         registerHereTextView.setOnClickListener(this);
         MessageListener messageListener = new LoginActivity();
         MessageReceiver.bindListener(messageListener);
-        checkTermandCondition(termConditionsFlag);
+//        checkTermandCondition(termConditionsFlag);
         checkJioSIMSlot1();
     }
 

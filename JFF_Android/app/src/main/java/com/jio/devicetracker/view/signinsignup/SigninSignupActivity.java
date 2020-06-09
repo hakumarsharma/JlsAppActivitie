@@ -73,6 +73,7 @@ public class SigninSignupActivity extends AppCompatActivity implements View.OnCl
         signinTextView.setTypeface(Util.mTypeface(this, 5));
         signupTextView.setTypeface(Util.mTypeface(this, 5));
         signinTextView.setText(Constant.LOGIN_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        Util.getInstance().setTermconditionFlag(this, true);
         onTabClicked();
     }
 

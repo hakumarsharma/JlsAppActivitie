@@ -72,21 +72,22 @@ public class SplashScreenActivity extends AppCompatActivity {
      * According to the condition it navigates to the particular screen
      */
     public void gotoScreen() {
-        boolean flag = Util.getTermconditionFlag(this);
-        boolean flagAutologin = Util.getAutologinStatus(this);
-        boolean flagLocation = Util.getLocationFlagStatus(this);
+        boolean flag = Util.getInstance().getTermconditionFlag(this);
+        boolean flagAutologin = Util.getInstance().getAutologinStatus(this);
         if (!flag) {
             Intent intent = new Intent(getApplicationContext(), HelpActivity.class);
             startActivity(intent);
         } else if (flagAutologin) {
-            Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-            startActivity(intent);
-        } else if (flagLocation) {
-            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), DashboardMainActivity.class);
             startActivity(intent);
         } else {
             Intent intent = new Intent(getApplicationContext(), SigninSignupActivity.class);
             startActivity(intent);
         }
+        // boolean flagLocation = Util.getLocationFlagStatus(this);
+        /*else if (flagLocation) {
+            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+            startActivity(intent);
+        } */
     }
 }

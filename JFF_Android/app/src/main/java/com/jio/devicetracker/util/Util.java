@@ -70,7 +70,6 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Singleton which returns single instance of a Util class
-     *
      * @return
      */
     public synchronized static Util getInstance() {
@@ -94,7 +93,6 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Returns Pojo class objects
-     *
      * @param response
      * @param pojo
      * @param <T>
@@ -127,7 +125,6 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Common alerts dialog box
-     *
      * @param message
      * @param title
      * @param context
@@ -169,7 +166,6 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Email id validation through RegEx
-     *
      * @param email
      * @return
      */
@@ -204,7 +200,6 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Convert current time to epoch time
-     *
      * @return
      */
     public long convertTimeToEpochtime() {
@@ -223,7 +218,6 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Convert current time + given time to epoch time
-     *
      * @param min
      * @return
      */
@@ -244,7 +238,6 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Get Difference between two epoch time
-     *
      * @param fromTime
      * @param toTime
      */
@@ -305,11 +298,10 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Sets the terms and condition flag
-     *
      * @param mContext
      * @param flag
      */
-    public static void setTermconditionFlag(Context mContext, boolean flag) {
+    public void setTermconditionFlag(Context mContext, boolean flag) {
         sharedpreferences = mContext.getSharedPreferences(Constant.TERM_CONDITION_FLAG, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putBoolean("FLAG", flag);
@@ -318,11 +310,10 @@ public final class Util extends AppCompatActivity {
 
     /**
      * returns the terms and condition flag
-     *
      * @param mContext
      * @return
      */
-    public static boolean getTermconditionFlag(Context mContext) {
+    public boolean getTermconditionFlag(Context mContext) {
         sharedpreferences = mContext.getSharedPreferences(Constant.TERM_CONDITION_FLAG, Context.MODE_PRIVATE);
         if (sharedpreferences != null) {
             return sharedpreferences.getBoolean("FLAG", false);
@@ -364,7 +355,7 @@ public final class Util extends AppCompatActivity {
      * @param mContext
      * @param flag
      */
-    public static void setAutologinStatus(Context mContext, boolean flag) {
+    public void setAutologinStatus(Context mContext, boolean flag) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.AUTO_LOGIN_STATUS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedAutologin.edit();
         editor.putBoolean(Constant.AUTO_LOGIN, flag);
@@ -377,7 +368,7 @@ public final class Util extends AppCompatActivity {
      * @param mContext
      * @return
      */
-    public static boolean getAutologinStatus(Context mContext) {
+    public boolean getAutologinStatus(Context mContext) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.AUTO_LOGIN_STATUS, Context.MODE_PRIVATE);
         return sharedAutologin.getBoolean(Constant.AUTO_LOGIN, false);
     }
