@@ -635,5 +635,12 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private void goToHowtoUseActivity() {
         startActivity(new Intent(this, HowToUseActivity.class));
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (broadcastreceiver != null) {
+            unregisterReceiver(broadcastreceiver);
+        }
+    }
 
 }
