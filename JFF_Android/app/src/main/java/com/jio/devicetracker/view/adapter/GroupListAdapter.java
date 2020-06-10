@@ -21,6 +21,7 @@
 package com.jio.devicetracker.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.EditMemberActivity;
 
 import java.util.List;
 
@@ -97,6 +99,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
 
     /**
      * Register the listener
+     *
      * @param mItemClickListener
      */
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
@@ -118,7 +121,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView  groupName;
+        private TextView groupName;
         private ImageView menuIcon;
         private RelativeLayout groupOptLayout;
         private ImageView close;
@@ -156,8 +159,9 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
 
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.edit:
+                    gotoEditMemberActivity();
                     break;
                 case R.id.close:
                     groupOptLayout.setVisibility(View.GONE);
@@ -169,4 +173,10 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             }
         }
     }
+
+    private void gotoEditMemberActivity() {
+        Intent intent = new Intent(mContext, EditMemberActivity.class);
+        mContext.startActivity(intent);
+    }
+
 }

@@ -341,6 +341,7 @@ public class Constant {
     // Profile Activity
     public static final String PROFILE_TITLE = "Profile";
     public static final String EDIT_PROFILE_TITLE = "Edit Profile";
+    public static final String EDIT_MEMBER_PROFILE_TITLE = "Edit members";
 
 
     //Status code
