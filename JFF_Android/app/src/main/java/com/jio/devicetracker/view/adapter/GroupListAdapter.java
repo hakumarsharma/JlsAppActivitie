@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -92,13 +93,18 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     /**
      * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView  groupName;
-        private ImageView icon1;
+        private ImageView menuIcon;
+        private RelativeLayout groupOptLayout;
+        private ImageView close;
         private ImageView icon2;
         private ImageView icon3;
         private ImageView icon4;
+        private TextView editOpt;
+        private TextView addNewOpt;
+        private TextView deleteOpt;
 
         /**
          * Constructor where we find element from .xml file
@@ -107,7 +113,33 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             groupName = itemView.findViewById(R.id.groupName);
+            menuIcon = itemView.findViewById(R.id.operationStatus);
+            close = itemView.findViewById(R.id.close);
+            editOpt = itemView.findViewById(R.id.edit);
+            addNewOpt = itemView.findViewById(R.id.add);
+            deleteOpt = itemView.findViewById(R.id.delete);
+            groupOptLayout = itemView.findViewById(R.id.oprationLayout);
+            menuIcon.setOnClickListener(this);
+            close.setOnClickListener(this);
+            editOpt.setOnClickListener(this);
+            addNewOpt.setOnClickListener(this);
+            deleteOpt.setOnClickListener(this);
 
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.edit:
+                    break;
+                case R.id.close:
+                    groupOptLayout.setVisibility(View.GONE);
+                    break;
+                case R.id.operationStatus:
+                    groupOptLayout.setVisibility(View.VISIBLE);
+                    break;
+
+            }
         }
     }
 }
