@@ -92,7 +92,7 @@ public class BaseActivity extends AppCompatActivity {
                     Intent intent = new Intent(BaseActivity.this, AddDeviceActivity.class);
                     intent.putExtra(Constant.GROUP_ID, createdGroupId);
                     startActivity(intent);
-                } else {
+                }else {
                     addIndividualUserInGroupAPICall();
                 }
             }
@@ -232,7 +232,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void gotoDashboardActivity() {
-        startActivity(new Intent(this, DashboardMainActivity.class));
+        Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
+        intent.putExtra(Constant.Add_People,true);
+        startActivity(intent);
     }
 
 }

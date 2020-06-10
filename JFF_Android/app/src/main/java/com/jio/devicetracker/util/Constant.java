@@ -330,6 +330,7 @@ public class Constant {
     // Add people constants
     public static final String Choose_Group = "Choose group";
     public static final String CREATE_GROUP = "Create group";
+    public static final String ENTER_NAME = "Please enter contact name";
 
 
     // Custom Alert Constants

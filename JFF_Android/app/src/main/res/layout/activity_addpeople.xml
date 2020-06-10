@@ -70,6 +70,7 @@
             android:layout_margin ="10dp"
             android:background="@drawable/selector"
             android:text="Add"
+            android:visibility="invisible"
             android:textColor="@color/white"
             android:textAllCaps="false" />
 
@@ -85,7 +86,7 @@
         android:dividerHeight="1dp" />
 
     <Button
-        android:id="@+id/add_contact_in_add_people"
+        android:id="@+id/addContact_Continue"
         android:layout_width="@dimen/adddevice_button_width"
         android:layout_height="@dimen/adddevice_button_height"
         android:layout_alignParentBottom="true"
@@ -94,7 +95,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="@dimen/margin_24"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/login_selector"
+        android:background="@drawable/selector"
         android:text="@string/continue_text"
         android:textAllCaps="false"
         android:textColor="@android:color/white"

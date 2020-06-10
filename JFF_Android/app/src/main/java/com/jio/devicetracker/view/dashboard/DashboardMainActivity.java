@@ -178,6 +178,12 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         viewPager.setAdapter(dashboardAdapter);
         pageChangeListener();
         deepLinkingURICheck();
+
+        Intent intent = getIntent();
+        Boolean isAddPeople = intent.getBooleanExtra(Constant.Add_People,false);
+        if(isAddPeople){
+           viewPager.setCurrentItem(1);
+        }
     }
 
 
