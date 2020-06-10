@@ -20,6 +20,7 @@
 
 package com.jio.devicetracker.view.signinsignup;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -49,6 +50,7 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
     private Button continueEmailSignup;
     private TextView emailTextView;
     private TextView signupAddLaterTextView;
+    private TextView wrongEmailErrorTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,6 +79,8 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
         signupAddLaterTextView = view.findViewById(R.id.signupAddLaterTextView);
         signupAddLaterTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         signupAddLaterTextView.setOnClickListener(this);
+        wrongEmailErrorTextView = view.findViewById(R.id.wrongEmailErrorTextView);
+        changeButtonColorOnDataEntry();
     }
 
     private void changeButtonColorOnDataEntry() {
@@ -90,14 +94,25 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 continueEmailSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
                 continueEmailSignup.setTextColor(Color.WHITE);
+                emailTextView.setVisibility(View.VISIBLE);
+                ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.black));
+                signUpEmailEditText.setBackgroundTintList(colorStateList);
+                wrongEmailErrorTextView.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                continueEmailSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
-                continueEmailSignup.setTextColor(Color.WHITE);
-                if (Constant.EMPTY_STRING.equalsIgnoreCase(signUpEmailEditText.getText().toString().trim())) {
+                String email = signUpEmailEditText.getText().toString().trim();
+                if (!Constant.EMPTY_STRING.equalsIgnoreCase(email)) {
+                    continueEmailSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                    continueEmailSignup.setTextColor(Color.WHITE);
+                    wrongEmailErrorTextView.setVisibility(View.INVISIBLE);
+                    ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.black));
+                    signUpEmailEditText.setBackgroundTintList(colorStateList);
+                } else if (Constant.EMPTY_STRING.equalsIgnoreCase(email)) {
+                    emailTextView.setVisibility(View.INVISIBLE);
                     continueEmailSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
+                    continueEmailSignup.setTextColor(Color.WHITE);
                 }
             }
         });
@@ -106,7 +121,10 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.continueEmailSignup) {
-            // Todo
+            if(signUpEmailEditText.getText().toString().trim().equalsIgnoreCase(Constant.EMPTY_STRING)) {
+                wrongEmailErrorTextView.setVisibility(View.VISIBLE);
+                return;
+            }
         } else if (v.getId() == R.id.signupAddLaterTextView) {
             FragmentTransaction trans = getFragmentManager().beginTransaction();
             SignupMobileNumberFragment signupMobileNumberFragment = new SignupMobileNumberFragment();

@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
@@ -46,6 +47,7 @@ import java.util.List;
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.ViewHolder> {
     private List<HomeActivityListData> mList;
     private Context mContext;
+    private static RecyclerViewClickListener itemListener;
 
     public GroupListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
@@ -76,8 +78,29 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     @Override
     public void onBindViewHolder(@NonNull GroupListAdapter.ViewHolder holder, int position) {
         HomeActivityListData data = mList.get(position);
-        holder.groupName.setTypeface(Util.mTypeface(mContext,5));
+        holder.groupName.setTypeface(Util.mTypeface(mContext, 5));
         holder.groupName.setText(data.getGroupName());
+        holder.mListlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemListener.clickonListLayout(data);
+            }
+        });
+    }
+
+    /**
+     * Interface to override methods in Groups Fragment to call these methods on particular item click
+     */
+    public interface RecyclerViewClickListener {
+        void clickonListLayout(HomeActivityListData homeActivityListData);
+    }
+
+    /**
+     * Register the listener
+     * @param mItemClickListener
+     */
+    public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
+        this.itemListener = mItemClickListener;
     }
 
     /**
@@ -99,15 +122,18 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         private ImageView menuIcon;
         private RelativeLayout groupOptLayout;
         private ImageView close;
+        private ImageView icon1;
         private ImageView icon2;
         private ImageView icon3;
         private ImageView icon4;
         private TextView editOpt;
         private TextView addNewOpt;
         private TextView deleteOpt;
+        public CardView mListlayout;
 
         /**
          * Constructor where we find element from .xml file
+         *
          * @param itemView
          */
         public ViewHolder(@NonNull View itemView) {
@@ -119,6 +145,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             addNewOpt = itemView.findViewById(R.id.add);
             deleteOpt = itemView.findViewById(R.id.delete);
             groupOptLayout = itemView.findViewById(R.id.oprationLayout);
+            mListlayout = itemView.findViewById(R.id.groupListLayout);
             menuIcon.setOnClickListener(this);
             close.setOnClickListener(this);
             editOpt.setOnClickListener(this);

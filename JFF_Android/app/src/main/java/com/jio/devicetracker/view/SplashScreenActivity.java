@@ -84,10 +84,5 @@ public class SplashScreenActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), SigninSignupActivity.class);
             startActivity(intent);
         }
-        // boolean flagLocation = Util.getLocationFlagStatus(this);
-        /*else if (flagLocation) {
-            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-            startActivity(intent);
-        } */
     }
 }

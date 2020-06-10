@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,14 +13,15 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
  **************************************************************/
 package com.jio.devicetracker.view.location;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -40,12 +40,10 @@ import com.jio.devicetracker.view.adapter.LocationAdapter;
 
 public class LocationActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TabLayout tabLayout;
     private ViewPager viewPager;
     private LocationAdapter locationAdapter;
-    private TabItem tabMap;
-    private TabItem tabList;
-    private DrawerLayout drawerLayout;
+    private TextView mapTab;
+    private TextView listTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,53 +51,48 @@ public class LocationActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_location);
         Toolbar toolbar = findViewById(R.id.locationToolbar);
         TextView title = findViewById(R.id.toolbar_title);
-        drawerLayout = findViewById(R.id.drawerLayout);
         title.setText(Constant.MAP_TITLE);
-        title.setTypeface(Util.mTypeface(this,5));
+        title.setTypeface(Util.mTypeface(this, 5));
+        mapTab = findViewById(R.id.mapTab);
+        listTab = findViewById(R.id.listTab);
+        listTab.setOnClickListener(this);
+        mapTab.setOnClickListener(this);
+        mapTab.setTypeface(Util.mTypeface(this, 5));
+        listTab.setTypeface(Util.mTypeface(this, 5));
+        mapTab.setText(Constant.MAP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
         setSupportActionBar(toolbar);
-
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         backBtn.setOnClickListener(this);
-
         initUI();
     }
 
     private void initUI() {
-        tabLayout = findViewById(R.id.locationTabLayout);
-        tabMap = findViewById(R.id.tabMap);
-        tabList = findViewById(R.id.tabList);
         viewPager = findViewById(R.id.locationViewPager);
-        locationAdapter = new LocationAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        locationAdapter = new LocationAdapter(getSupportFragmentManager(), 2);
         viewPager.setAdapter(locationAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         onTabClicked();
     }
 
     private void onTabClicked() {
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition() == 0) {
-                    tabLayout.getTabAt(0).setText(Constant.MAP_WITH_DOT);
-                } else {
-                    tabLayout.getTabAt(1).setText(Constant.LIST_WITH_DOT);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // Todo
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    setMapTab();
+                } else if (position == 1) {
+                    setListTab();
                 }
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    tabLayout.getTabAt(0).setText(Constant.MAP_WITHOUT_DOT);
-                } else {
-                    tabLayout.getTabAt(1).setText(Constant.LIST_WITHOUT_DOT);
-                }
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
+            public void onPageScrollStateChanged(int state) {
+                // Todo
             }
         });
     }
@@ -109,7 +102,30 @@ public class LocationActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         if (v.getId() == R.id.back) {
             finish();
+        } else if(v.getId() == R.id.mapTab) {
+            viewPager.setCurrentItem(0);
+            setMapTab();
+        } else if(v.getId() == R.id.listTab) {
+            viewPager.setCurrentItem(1);
+            setListTab();
         }
     }
+
+    // Sets the Map tab data
+    private void setMapTab() {
+        mapTab.setText(Constant.MAP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        mapTab.setTextColor(Color.WHITE);
+        listTab.setText(Constant.LIST_TAB_WITHOUT_NEXTLINE);
+        listTab.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+    }
+
+    // Sets the List tab data
+    private void setListTab() {
+        listTab.setText(Constant.LIST_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        listTab.setTextColor(Color.WHITE);
+        mapTab.setText(Constant.MAP_TAB_WITHOUT_NEXTLINE);
+        mapTab.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+    }
+
 }
 

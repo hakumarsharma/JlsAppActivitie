@@ -101,7 +101,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
             @Override
             public void afterTextChanged(Editable s) {
                 String name = signUpNameEditText.getText().toString();
-                if (!Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
+                if (! Constant.EMPTY_STRING.equalsIgnoreCase(name)) {
                     continueSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
                     continueSignup.setTextColor(Color.WHITE);
                     nameTextView.setVisibility(View.VISIBLE);

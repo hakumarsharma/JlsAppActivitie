@@ -56,6 +56,7 @@ public class SignupMobileNumberFragment extends Fragment implements View.OnClick
     private EditText signUpNumberEditText;
     private Button continueNumberSignup;
     private TextView signupMobileNumberErrorCode;
+    private TextView phoneNumberTextView;
     private String name;
     private String phoneNumber;
 
@@ -80,6 +81,7 @@ public class SignupMobileNumberFragment extends Fragment implements View.OnClick
         continueNumberSignup.setOnClickListener(this);
         signupMobileNumberErrorCode = view.findViewById(R.id.signupMobileNumberErrorCode);
         signupMobileNumberErrorCode.setTypeface(Util.mTypeface(getActivity(), 5));
+        phoneNumberTextView = view.findViewById(R.id.phoneNumberTextView);
         name = getArguments().getString(Constant.NAME);
     }
 
@@ -101,13 +103,17 @@ public class SignupMobileNumberFragment extends Fragment implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                continueNumberSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
-                continueNumberSignup.setTextColor(Color.WHITE);
-                if (Constant.EMPTY_STRING.equalsIgnoreCase(signUpNumberEditText.getText().toString().trim())) {
+                String phoneNumber = signUpNumberEditText.getText().toString().trim();
+                ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.black));
+                signUpNumberEditText.setBackgroundTintList(colorStateList);
+                signupMobileNumberErrorCode.setVisibility(View.INVISIBLE);
+                if (! Constant.EMPTY_STRING.equalsIgnoreCase(phoneNumber)) {
+                    phoneNumberTextView.setVisibility(View.VISIBLE);
+                    continueNumberSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.login_selector, null));
+                    continueNumberSignup.setTextColor(Color.WHITE);
+                } else if (Constant.EMPTY_STRING.equalsIgnoreCase(phoneNumber)) {
                     continueNumberSignup.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.selector, null));
-                    ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.black));
-                    signUpNumberEditText.setBackgroundTintList(colorStateList);
-                    signupMobileNumberErrorCode.setVisibility(View.INVISIBLE);
+                    phoneNumberTextView.setVisibility(View.INVISIBLE);
                 }
             }
         });

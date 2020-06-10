@@ -46,6 +46,19 @@
             android:textColor="@color/black"
             android:textSize="14dp" />
 
+        <TextView
+            android:id="@+id/phoneNumberTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Phone number"
+            android:textSize="10dp"
+            android:visibility="invisible"
+            android:textColor="@color/cardviewlayout_device_background_color"
+            android:layout_marginLeft="4dp"
+            android:layout_alignLeft="@id/signUpNumberEditText"
+            android:layout_below="@id/enterSignupMobileNumber"/>
+
         <EditText
             android:id="@+id/signUpNumberEditText"
             android:layout_width="match_parent"

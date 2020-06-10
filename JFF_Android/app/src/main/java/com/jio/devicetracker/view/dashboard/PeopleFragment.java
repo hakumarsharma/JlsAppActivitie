@@ -80,8 +80,6 @@ public class PeopleFragment extends Fragment {
         instructionIcon = view.findViewById(R.id.people_default_icon);
         /*instruction.setVisibility(View.VISIBLE);
         instructionIcon.setVisibility(View.VISIBLE);*/
-
-
     }
 
     @Override
@@ -144,8 +142,7 @@ public class PeopleFragment extends Fragment {
                     mList.add(Constant.LOCATION);
                     mList.add(Constant.SOS);
                     searchEventData.setTypes(mList);
-                    GroupRequestHandler.getInstance(getContext()).handleRequest(new SearchEventRequest(new PeopleFragment.SearchEventRequestSuccessListener(), new PeopleFragment.SearchEventRequestErrorListener(), searchEventData, mDbManager.getAdminLoginDetail().getUserId(), groupId, Constant.GET_LOCATION_URL));
-
+                    GroupRequestHandler.getInstance(getContext()).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, mDbManager.getAdminLoginDetail().getUserId(), groupId, Constant.GET_LOCATION_URL));
                 }
             });
 //     }

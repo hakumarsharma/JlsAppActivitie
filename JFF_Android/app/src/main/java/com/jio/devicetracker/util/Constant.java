@@ -181,10 +181,11 @@ public class Constant {
     public static final long PRIORITY_BALANCED_POWER_ACCURACY = 10;
     public static final int EPOCH_TIME_DURATION = 15;
     public static final String MAP_DATA = "Map_Data";
-    public static final String MAP_WITH_DOT = "Map \n.";
-    public static final String MAP_WITHOUT_DOT = "Map";
-    public static final String LIST_WITH_DOT = "List \n.";
-    public static final String LIST_WITHOUT_DOT = "List";
+    public static final String MAP_TAB = "Map\n";
+    public static final String MAP_TAB_WITHOUT_NEXTLINE = "Map";
+    public static final String LIST_TAB = "List\n";
+    public static final String LIST_TAB_WITHOUT_NEXTLINE = "List";
+
     public static final String PEOPLE_DATA = "People_Data";
 
 

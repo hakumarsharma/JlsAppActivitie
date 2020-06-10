@@ -87,15 +87,9 @@ public class SigninSignupActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    signinTextView.setText(Constant.LOGIN_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
-                    signinTextView.setTextColor(Color.WHITE);
-                    signupTextView.setText(Constant.SIGNUP_WITHOUT_DOT);
-                    signupTextView.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                    setSigninTabData();
                 } else if(position == 1){
-                    signupTextView.setText(Constant.SIGNUP_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
-                    signupTextView.setTextColor(Color.WHITE);
-                    signinTextView.setText(Constant.LOGIN_WITHOUT_DOT);
-                    signinTextView.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                    setSignoutTabData();
                 }
             }
 
@@ -155,16 +149,27 @@ public class SigninSignupActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if (v.getId() == R.id.signinTextView) {
             signinSignupviewPager.setCurrentItem(0);
-            signinTextView.setText(Constant.LOGIN_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
-            signinTextView.setTextColor(Color.WHITE);
-            signupTextView.setText(Constant.SIGNUP_WITHOUT_DOT);
-            signupTextView.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+            setSigninTabData();
         } else if (v.getId() == R.id.signupTextView) {
             signinSignupviewPager.setCurrentItem(1);
-            signupTextView.setText(Constant.SIGNUP_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
-            signupTextView.setTextColor(Color.WHITE);
-            signinTextView.setText(Constant.LOGIN_WITHOUT_DOT);
-            signinTextView.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+            setSignoutTabData();
         }
     }
+
+    // Sets Signin Tab data
+    private void setSigninTabData() {
+        signinTextView.setText(Constant.LOGIN_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        signinTextView.setTextColor(Color.WHITE);
+        signupTextView.setText(Constant.SIGNUP_WITHOUT_DOT);
+        signupTextView.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+    }
+
+    // Sets Signout Tab data
+    private void setSignoutTabData() {
+        signupTextView.setText(Constant.SIGNUP_WITHOUT_DOT + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        signupTextView.setTextColor(Color.WHITE);
+        signinTextView.setText(Constant.LOGIN_WITHOUT_DOT);
+        signinTextView.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+    }
+
 }
