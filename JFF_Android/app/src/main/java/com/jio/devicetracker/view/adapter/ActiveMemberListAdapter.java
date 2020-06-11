@@ -143,7 +143,6 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
 
     /**
      * Called when we remove device from active member screen
-     *
      * @param adapterPosition
      */
     public void removeItem(int adapterPosition) {

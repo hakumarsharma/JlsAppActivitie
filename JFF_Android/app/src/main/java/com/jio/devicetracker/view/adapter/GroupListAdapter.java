@@ -33,10 +33,15 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.EditMemberActivity;
@@ -50,14 +55,21 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     private List<HomeActivityListData> mList;
     private Context mContext;
     private static RecyclerViewClickListener itemListener;
+    private String userId;
+    private DBManager mDbManager;
+    private String groupId;
+    private int position;
 
     public GroupListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
         this.mContext = mContext;
+        mDbManager = new DBManager(mContext);
+        userId = mDbManager.getAdminLoginDetail().getUserId();
     }
 
     /**
      * Binds the given View to the position
+     *
      * @param parent
      * @param viewType
      * @return View Holder object
@@ -145,7 +157,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             close = itemView.findViewById(R.id.close);
             editOpt = itemView.findViewById(R.id.edit);
             addNewOpt = itemView.findViewById(R.id.add);
-            deleteOpt = itemView.findViewById(R.id.delete);
+            deleteOpt = itemView.findViewById(R.id.deleteGroup);
             groupOptLayout = itemView.findViewById(R.id.oprationLayout);
             mListlayout = itemView.findViewById(R.id.groupListLayout);
             menuIcon.setOnClickListener(this);
@@ -160,7 +172,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.edit:
-                    gotoEditMemberActivity();
+                    gotoEditMemberActivity(mList.get(position));
                     break;
                 case R.id.close:
                     groupOptLayout.setVisibility(View.GONE);
@@ -168,14 +180,59 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                 case R.id.operationStatus:
                     groupOptLayout.setVisibility(View.VISIBLE);
                     break;
-
+                case R.id.deleteGroup:
+                    position = getAdapterPosition();
+                    deleteGroupAPICall(mList.get(position));
+                    break;
             }
         }
     }
 
-    private void gotoEditMemberActivity() {
+    private void gotoEditMemberActivity(HomeActivityListData homeActivityListData) {
         Intent intent = new Intent(mContext, EditMemberActivity.class);
+        intent.putExtra(Constant.GROUP_ID, homeActivityListData.getGroupId());
+        intent.putExtra(Constant.GROUP_NAME, homeActivityListData.getGroupName());
         mContext.startActivity(intent);
     }
 
+    //    Delete the Group and update the database
+    private void deleteGroupAPICall(HomeActivityListData homeActivityListData) {
+        groupId = homeActivityListData.getGroupId();
+        Util.getInstance().showProgressBarDialog(mContext);
+        GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteGroupRequest(new DeleteGroupRequestSuccessListener(), new DeleteGroupRequestErrorListener(), groupId, userId));
+    }
+
+    /**
+     * Delete Group Request API Call Success Listener and create new group if Session time is completed and Request Consent button is clicked
+     */
+    private class DeleteGroupRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            mDbManager.deleteSelectedDataFromGroup(groupId);
+            mDbManager.deleteSelectedDataFromGroupMember(groupId);
+            Util.progressDialog.dismiss();
+            removeItem(position);
+        }
+    }
+
+    /**
+     * Delete Group Request API Call Error Listener
+     */
+    private class DeleteGroupRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            Util.alertDilogBox(Constant.GROUP_DELETION_FAILURE, Constant.ALERT_TITLE, mContext);
+        }
+    }
+
+    /**
+     * Called when we delete group
+     * @param adapterPosition
+     */
+    public void removeItem(int adapterPosition) {
+        mList.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        notifyDataSetChanged();
+    }
 }
