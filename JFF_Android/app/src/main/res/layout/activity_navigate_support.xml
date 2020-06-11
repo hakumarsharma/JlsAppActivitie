@@ -29,10 +29,18 @@
         app:cardCornerRadius="10dp"
         app:cardElevation="8dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/margin_40">
+            android:paddingBottom="@dimen/margin_32"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/about_app_layout"
+                >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -62,12 +70,17 @@
                 android:layout_marginLeft="@dimen/margin_18"
                 android:layout_marginRight="@dimen/margin_18"
                 />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/term_condition_layout"
+                >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/term_policy"
                 android:text="@string/term_policy"
-                android:layout_below="@+id/about_app_line"
                 android:textSize="@dimen/seventeen_dp"
                 android:textColor="@color/black"
                 android:layout_marginLeft="@dimen/twenty_dp"
@@ -92,6 +105,12 @@
                 android:layout_marginLeft="@dimen/margin_18"
                 android:layout_marginRight="@dimen/margin_18"
                 />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/faq_layout"
+                >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -99,7 +118,6 @@
                 android:text="@string/faq"
                 android:textSize="@dimen/seventeen_dp"
                 android:textColor="@color/black"
-                android:layout_below="@+id/term_policy_line"
                 android:layout_marginLeft="@dimen/twenty_dp"
                 android:layout_marginTop="@dimen/margin_24"
                 />
@@ -122,6 +140,12 @@
                 android:layout_marginLeft="@dimen/margin_18"
                 android:layout_marginRight="@dimen/margin_18"
                 />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/contact_layout"
+                >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,7 +153,6 @@
                 android:text="@string/contact_us"
                 android:textSize="@dimen/seventeen_dp"
                 android:textColor="@color/black"
-                android:layout_below="@+id/faq_line"
                 android:layout_marginLeft="@dimen/twenty_dp"
                 android:layout_marginTop="@dimen/margin_24"
                 />
@@ -152,6 +175,12 @@
                 android:layout_marginLeft="@dimen/margin_18"
                 android:layout_marginRight="@dimen/margin_18"
                 />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/version_layout"
+                >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -159,7 +188,6 @@
                 android:text="@string/version"
                 android:textSize="@dimen/seventeen_dp"
                 android:textColor="@color/black"
-                android:layout_below="@+id/contact_us_line"
                 android:layout_marginLeft="@dimen/twenty_dp"
                 android:layout_marginTop="@dimen/margin_24"
                 />
@@ -174,6 +202,7 @@
                 android:layout_marginLeft="@dimen/twenty_dp"
                 android:layout_marginTop="@dimen/five_dp"
                 />
+            </RelativeLayout>
           <!--  <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -193,7 +222,7 @@
                 android:layout_marginLeft="@dimen/margin_18"
                 android:layout_marginRight="@dimen/margin_18"
                 />-->
-        </RelativeLayout>
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>
