@@ -59,13 +59,13 @@ import java.util.List;
 
 public class GroupsFragment extends Fragment {
     private DBManager mDbManager;
-    private CardView cardInstruction;
-    private ImageView instructionIcon;
+    private static CardView cardInstruction;
+    private static ImageView instructionIcon;
     private GroupListAdapter groupListAdapter;
     private String userId;
     private String groupId;
     private HomeActivityListData homeActivityListData;
-
+    private static List<HomeActivityListData> groupList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -237,7 +237,7 @@ public class GroupsFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
-        List<HomeActivityListData> groupList = new ArrayList<>();
+        groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
                     && !data.getStatus().equalsIgnoreCase(Constant.COMPLETED)) {
@@ -255,6 +255,12 @@ public class GroupsFragment extends Fragment {
                 }
             }
         }
+        checkIsGroupPresent();
+        groupListAdapter = new GroupListAdapter(groupList, getContext());
+        groupListRecyclerView.setAdapter(groupListAdapter);
+    }
+
+    public static void checkIsGroupPresent() {
         if (groupList != null && !groupList.isEmpty()) {
             cardInstruction.setVisibility(View.INVISIBLE);
             instructionIcon.setVisibility(View.INVISIBLE);
@@ -262,8 +268,6 @@ public class GroupsFragment extends Fragment {
             cardInstruction.setVisibility(View.VISIBLE);
             instructionIcon.setVisibility(View.VISIBLE);
         }
-        groupListAdapter = new GroupListAdapter(groupList, getContext());
-        groupListRecyclerView.setAdapter(groupListAdapter);
     }
 
 }

@@ -81,6 +81,4 @@ public class EditmemberListAdapter extends RecyclerView.Adapter<EditmemberListAd
             name.setTypeface(Util.mTypeface(mContext,5));
         }
     }
-
-
 }
