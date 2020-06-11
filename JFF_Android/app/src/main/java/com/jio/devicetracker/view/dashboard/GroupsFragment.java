@@ -20,6 +20,7 @@
 
 package com.jio.devicetracker.view.dashboard;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -52,7 +53,6 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.GroupListAdapter;
 import com.jio.devicetracker.view.location.LocationActivity;
-import com.jio.devicetracker.view.location.MapsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +65,7 @@ public class GroupsFragment extends Fragment {
     private String userId;
     private String groupId;
     private HomeActivityListData homeActivityListData;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -169,7 +169,7 @@ public class PeopleFragment extends Fragment {
      * Get All Group info per user API Call
      */
     protected void makeGroupInfoPerUserRequestAPICall() {
-        Util.getInstance().showProgressBarDialog(getActivity());
+    //    Util.getInstance().showProgressBarDialog(getActivity());
         GroupRequestHandler.getInstance(getActivity()).handleRequest(new GetGroupInfoPerUserRequest(new PeopleFragment.GetGroupInfoPerUserRequestSuccessListener(), new PeopleFragment.GetGroupInfoPerUserRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserId()));
     }
 
@@ -180,10 +180,16 @@ public class PeopleFragment extends Fragment {
         @Override
         public void onResponse(Object response) {
             GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
-            Util.progressDialog.dismiss();
+//            Util.progressDialog.dismiss();
             parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
             displayGroupDataInDashboard(getView());
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        makeGroupInfoPerUserRequestAPICall();
     }
 
     /**
@@ -244,7 +250,7 @@ public class PeopleFragment extends Fragment {
     private class SearchEventRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            Util.progressDialog.dismiss();
+         //   Util.progressDialog.dismiss();
 
             // TODO : Remove hardcoded values when location details are available in server
             MapData mapData = new MapData();
