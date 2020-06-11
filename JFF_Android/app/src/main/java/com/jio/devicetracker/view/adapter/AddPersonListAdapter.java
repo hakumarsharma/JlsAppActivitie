@@ -39,6 +39,7 @@ import java.util.List;
 public class AddPersonListAdapter extends RecyclerView.Adapter<AddPersonListAdapter.ViewHolder> {
 
     private List<GroupMemberResponse.Data> mData;
+    private static RecyclerViewClickListener itemListener;
 
     /**
      * Constructor to add devices in home screen
@@ -59,11 +60,26 @@ public class AddPersonListAdapter extends RecyclerView.Adapter<AddPersonListAdap
         return new ViewHolder(itemView);
     }
 
+    /**
+     * Interface to override methods in ActiveSessionActivity to call this methods on particular item click
+     */
+    public interface RecyclerViewClickListener {
+        void onDeleteMemberClicked(View v,int position,GroupMemberResponse.Data data);
+    }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         GroupMemberResponse.Data data = (GroupMemberResponse.Data) mData.get(position);
         holder.contactName.setText(data.getName());
+        holder.deleteButton.setOnClickListener(v -> itemListener.onDeleteMemberClicked(holder.deleteButton, position,data));
+    }
+
+    /**
+     * Register the listener
+     * @param mItemClickListener
+     */
+    public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
+        this.itemListener = mItemClickListener;
     }
 
     @Override
@@ -90,6 +106,16 @@ public class AddPersonListAdapter extends RecyclerView.Adapter<AddPersonListAdap
             deleteButton = itemView.findViewById(R.id.deleteButton);
 
         }
+    }
+
+    /**
+     * Called when we remove device from active session screen
+     * @param adapterPosition
+     */
+    public void removeItem(int adapterPosition) {
+        mData.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        notifyDataSetChanged();
     }
 
 

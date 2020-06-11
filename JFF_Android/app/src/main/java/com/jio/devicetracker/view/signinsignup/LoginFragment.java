@@ -20,6 +20,7 @@
 
 package com.jio.devicetracker.view.signinsignup;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -44,6 +45,7 @@ import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.menu.TermAndConditionPolicyActivity;
 
 /**
  * Login fragment
@@ -80,6 +82,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         requestOTPTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         TextView termConditionTextView = view.findViewById(R.id.termConditionTextView);
         termConditionTextView.setTypeface(Util.mTypeface(getActivity(), 5));
+        termConditionTextView.setOnClickListener(this);
         mobileNumberTextView = view.findViewById(R.id.mobileNumberTextView);
         mobileNumberTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         mobileNumberErrorCode = view.findViewById(R.id.mobileNumberErrorCode);
@@ -91,6 +94,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         if (v.getId() == R.id.continueLogin) {
             phoneNumber = mobileNumberEditText.getText().toString().trim();
             generateLoginTokenAPICall();
+        } else {
+            Intent intent = new Intent(getContext(), TermAndConditionPolicyActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -145,7 +151,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             GenerateTokenResponse generateLoginTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
             Util.progressDialog.dismiss();
             if (generateLoginTokenResponse.getCode() == 200) {
-                Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
                 OTPEntryFragment otpEntryFragment = new OTPEntryFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString(Constant.MOBILE_NUMBER, phoneNumber);

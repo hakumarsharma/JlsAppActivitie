@@ -240,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         public void onResponse(Object response) {
             GenerateTokenResponse generateTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
             if (generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.GENERATE_TOKEN_SUCCESS)) {
-                Toast.makeText(LoginActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(LoginActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
                 intent.putExtra("countryCode", number.substring(0, 2));
                 intent.putExtra("phoneNumber", number.substring(2));
@@ -532,7 +532,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         public void onResponse(Object response) {
             GenerateTokenResponse generateLoginTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
             if (generateLoginTokenResponse.getCode() == 200) {
-                Toast.makeText(LoginActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(LoginActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
                 SpannableString content = new SpannableString(Constant.RESEND_OTP);
                 content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
                 requestOTP.setText(content);

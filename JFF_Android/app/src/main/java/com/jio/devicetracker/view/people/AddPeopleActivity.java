@@ -44,17 +44,31 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
+import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.dashboard.DashboardActivity;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.adapter.AddPersonListAdapter;
+import com.jio.devicetracker.view.menu.ActiveSessionActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddPeopleActivity extends BaseActivity implements View.OnClickListener {
 
@@ -67,6 +81,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private  Button addContact;
     private static Button addContact_Continue;
     private static Context context;
+    private DBManager mPeopleDbManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +100,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         backBtn.setOnClickListener(this);
 
         context = this;
+        mPeopleDbManager = new DBManager(context);
         contactsListView = findViewById(R.id.contactsListView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         contactsListView.setLayoutManager(linearLayoutManager);
@@ -313,6 +330,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             if(!listOfContacts.isEmpty() && addContact_Continue != null){
                 setButtonBackground(addContact_Continue,true);
             }
+            adapterEventListener();
         }
     }
 
@@ -367,4 +385,57 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    private void adapterEventListener() {
+        mAdapter.setOnItemClickPagerListener(new AddPersonListAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onDeleteMemberClicked(View v, int position, GroupMemberResponse.Data data) {
+                    makeRemoveAPICall(data.getPhone(), groupId, position);
+            }
+        });
+    }
+
+    /**
+     * Make Remove from Group API Call using retrofit
+     *
+     * @param phoneNumber
+     * @param groupId
+     */
+    private void makeRemoveAPICall(String phoneNumber, String groupId, int position) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
+        ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
+        ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
+        consent.setPhone(phoneNumber);
+        consent.setStatus(Constant.REMOVED);
+        exitRemovedGroupData.setConsent(consent);
+        RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
+        Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mPeopleDbManager.getAdminLoginDetail().getUserToken(),
+                Constant.APPLICATION_JSON, mPeopleDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, groupId, body);
+        Util.getInstance().showProgressBarDialog(this);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    Util.progressDialog.dismiss();
+                    Toast.makeText(AddPeopleActivity.this, Constant.REMOVE_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
+                    mPeopleDbManager.deleteSelectedDataFromGroup(groupId);
+                    mPeopleDbManager.deleteSelectedDataFromGroupMember(groupId);
+                    mAdapter.removeItem(position);
+                    getAllForOneGroupAPICall();
+                } else {
+                    Util.progressDialog.dismiss();
+                    Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, AddPeopleActivity.this);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Util.progressDialog.dismiss();
+                Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, AddPeopleActivity.this);
+            }
+        });
+    }
 }

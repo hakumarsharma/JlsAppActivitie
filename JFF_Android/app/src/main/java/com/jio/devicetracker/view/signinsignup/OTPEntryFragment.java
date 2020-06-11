@@ -146,6 +146,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
             }
 
             public void onFinish() {
+                pinEntryEditText.getText().clear();
                 timerTextView.setText(Constant.REQUEST_OTP);
                 timerTextView.setEnabled(true);
                 if(getContext() != null) {
@@ -178,7 +179,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
             GenerateTokenResponse generateLoginTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
             Util.progressDialog.dismiss();
             if (generateLoginTokenResponse.getCode() == 200) {
-                Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
                 startTimer(60000, 1000);
             }
         }

@@ -152,7 +152,7 @@ public class HelpActivity extends Activity implements View.OnClickListener {
         for (int i = 0; i < helpImage.length; i++) {
             dot[i] = new TextView(this);
             dot[i].setText(Html.fromHtml(getResources().getString(R.string.pagerindicater)));
-            dot[i].setTextSize(12);
+            dot[i].setTextSize(20);
             dot[i].setTextColor(getResources().getColor(R.color.colorAccent));
             mLayout.addView(dot[i]);
         }

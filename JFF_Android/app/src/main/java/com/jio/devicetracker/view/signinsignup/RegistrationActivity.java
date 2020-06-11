@@ -295,7 +295,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         public void onResponse(Object response) {
             GenerateTokenResponse generateTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
             if (generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.GENERATE_TOKEN_SUCCESS)) {
-                Toast.makeText(RegistrationActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RegistrationActivity.this, Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
                 SpannableString content = new SpannableString(Constant.RESEND_OTP);
                 content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
                 requestOTPRegistration.setText(content);

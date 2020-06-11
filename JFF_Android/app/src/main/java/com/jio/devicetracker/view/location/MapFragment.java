@@ -127,7 +127,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         } else if (groupStatus.equalsIgnoreCase(Constant.COMPLETED)) {
             Util.alertDilogBox(Constant.SESSION_COMPLETED, Constant.ALERT_TITLE, getActivity());
         }
-        if (!mapDataList.isEmpty() && strAddress != null && groupStatus.equalsIgnoreCase(Constant.ACTIVE)) {
+        if (mapDataList != null && !mapDataList.isEmpty() && strAddress != null && groupStatus.equalsIgnoreCase(Constant.ACTIVE)) {
             for (MapData mapData : mapDataList) {
                 MarkerOptions markerOptions = new MarkerOptions();
                 LatLng latLng = new LatLng(mapData.getLatitude(), mapData.getLongitude());

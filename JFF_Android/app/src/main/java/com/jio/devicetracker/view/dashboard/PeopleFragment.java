@@ -22,6 +22,7 @@ package com.jio.devicetracker.view.dashboard;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,7 +59,7 @@ public class PeopleFragment extends Fragment {
 
     private DBManager mDbManager;
     private ImageView instructionIcon;
-    private TextView instruction;
+    private CardView cardInstruction;
     private static PeopleMemberListAdapter groupListAdapter;
     private List<MapData> mapDataList;
     public static List<HomeActivityListData> grpDataList;
@@ -75,11 +76,15 @@ public class PeopleFragment extends Fragment {
     }
 
     private void initUI(View view) {
-        instruction = view.findViewById(R.id.people_instruction);
-        instruction.setTypeface(Util.mTypeface(getActivity(),3));
+
+        cardInstruction = view.findViewById(R.id.people_instruction_card);
+
+        TextView instruction1 = view.findViewById(R.id.people_instruction);
+        instruction1.setTypeface(Util.mTypeface(getActivity(), 5));
+        TextView instruction2 = view.findViewById(R.id.people_instruction_1);
+        instruction2.setTypeface(Util.mTypeface(getActivity(), 3));
+
         instructionIcon = view.findViewById(R.id.people_default_icon);
-        /*instruction.setVisibility(View.VISIBLE);
-        instructionIcon.setVisibility(View.VISIBLE);*/
     }
 
     @Override
@@ -98,10 +103,6 @@ public class PeopleFragment extends Fragment {
         groupListRecyclerView.setLayoutManager(mLayoutManager);
 
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
-        if(groupDetailList == null){
-            instruction.setVisibility(View.VISIBLE);
-            instructionIcon.setVisibility(View.VISIBLE);
-        }
         List<HomeActivityListData> groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId()) && data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME) ) {
@@ -122,6 +123,13 @@ public class PeopleFragment extends Fragment {
                         groupList.add(homeActivityListData);
                     }
             }
+        }
+        if(groupList != null && !groupList.isEmpty()){
+            cardInstruction.setVisibility(View.INVISIBLE);
+            instructionIcon.setVisibility(View.INVISIBLE);
+        }else {
+            cardInstruction.setVisibility(View.VISIBLE);
+            instructionIcon.setVisibility(View.VISIBLE);
         }
         groupListAdapter = new PeopleMemberListAdapter(groupList, getContext());
         groupListRecyclerView.setAdapter(groupListAdapter);

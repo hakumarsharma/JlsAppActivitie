@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alimuzaffar.lib.pin.PinEntryEditText;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
@@ -56,7 +57,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
 
     private TextView signupEnterOTPTextView;
     private String phoneNumber;
-    private static TextView signupTxtPinEntry;
+    private static PinEntryEditText signupTxtPinEntry;
     private Button signupSubmitLogin;
     private TextView signupTimerTextView;
     private String name;
@@ -130,7 +131,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
         public void onResponse(Object response) {
             GenerateTokenResponse generateTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
             if (generateTokenResponse.getCode() == Constant.SUCCESS_CODE_200 && generateTokenResponse.getMessage().equalsIgnoreCase(Constant.GENERATE_TOKEN_SUCCESS)) {
-                Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
                 startTimer(60000, 1000);
             }
         }
@@ -222,6 +223,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
             }
 
             public void onFinish() {
+                signupTxtPinEntry.getText().clear();
                 signupTimerTextView.setText(Constant.REQUEST_OTP);
                 signupTimerTextView.setEnabled(true);
                 signupTimerTextView.setTextColor(getResources().getColor(R.color.timerTextViewColor));

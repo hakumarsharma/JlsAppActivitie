@@ -20,6 +20,7 @@
 
 package com.jio.devicetracker.view.signinsignup;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import android.widget.TextView;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.menu.TermAndConditionPolicyActivity;
 
 /**
  * Signup email id fragment
@@ -76,6 +78,7 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
         emailRequestOTPTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         TextView emailTermConditionTextView = view.findViewById(R.id.emailTermConditionTextView);
         emailTermConditionTextView.setTypeface(Util.mTypeface(getActivity(), 5));
+        emailTermConditionTextView.setOnClickListener(this);
         signupAddLaterTextView = view.findViewById(R.id.signupAddLaterTextView);
         signupAddLaterTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         signupAddLaterTextView.setOnClickListener(this);
@@ -135,6 +138,9 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
             trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             trans.addToBackStack(null);
             trans.commit();
+        }else if (v.getId() == R.id.emailTermConditionTextView){
+            Intent intent = new Intent(getContext(), TermAndConditionPolicyActivity.class);
+            startActivity(intent);
         }
     }
 }
