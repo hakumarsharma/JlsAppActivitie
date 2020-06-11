@@ -127,7 +127,6 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private TextView groupTitle;
     private TextView peopleTitle;
     private TextView deviceTitle;
-    private TextView manualTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +165,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         groupTitle.setOnClickListener(this);
         peopleTitle.setOnClickListener(this);
         deviceTitle.setOnClickListener(this);
-        groupTitle.setText("Groups\n" + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        groupTitle.setText(Constant.GROUP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
         groupTitle.setTypeface(Util.mTypeface(this, 5));
         peopleTitle.setTypeface(Util.mTypeface(this, 5));
         deviceTitle.setTypeface(Util.mTypeface(this, 5));

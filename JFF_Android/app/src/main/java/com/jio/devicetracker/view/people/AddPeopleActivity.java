@@ -61,10 +61,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private static RecyclerView contactsListView;
     private static AddPersonListAdapter mAdapter;
     private static List<GroupMemberResponse.Data> listOfContacts;
-    private Toolbar toolbar = null;
-//    private boolean isComingFromAddContact;
-//    private boolean isComingFromAddDevice;
-//    private boolean isComingFromGroupList;
     private  String groupId;
     private  EditText contactName;
     private  EditText contactNumber;

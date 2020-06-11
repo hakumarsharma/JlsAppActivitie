@@ -54,6 +54,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private static StringBuilder strAddress = null;
     private static Context context = null;
     private List<MapData> mapDataList;
+    private String groupStatus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,6 +85,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         context = getContext();
         strAddress = new StringBuilder();
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
+        groupStatus = getActivity().getIntent().getStringExtra(Constant.GROUP_STATUS);
         if (mMap != null) {
             mMap.setInfoWindowAdapter(new MapFragment.MyInfoWindowAdapter(getContext()));
         }
@@ -105,21 +108,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     MY_PERMISSIONS_REQUEST_MAPS);
         }
 
+
+
         return view;
     }
 
     /**
      * Call back method to load the map on screen
-     *
+     * Show the alerts if group is not active or it is completed
      * @param googleMap
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
-        int i = 0;
-        List<Float> mapColorList = createColoredMapList();
-        if (!mapDataList.isEmpty() && strAddress != null) {
+        if (groupStatus.equalsIgnoreCase(Constant.SCHEDULED)) {
+            Util.alertDilogBox(Constant.GROUP_NOT_ACTIVE, Constant.ALERT_TITLE, getActivity());
+        } else if (groupStatus.equalsIgnoreCase(Constant.COMPLETED)) {
+            Util.alertDilogBox(Constant.SESSION_COMPLETED, Constant.ALERT_TITLE, getActivity());
+        }
+        if (!mapDataList.isEmpty() && strAddress != null && groupStatus.equalsIgnoreCase(Constant.ACTIVE)) {
             for (MapData mapData : mapDataList) {
                 MarkerOptions markerOptions = new MarkerOptions();
                 LatLng latLng = new LatLng(mapData.getLatitude(), mapData.getLongitude());
@@ -133,12 +141,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 if (context != null) {
                     mMap.setInfoWindowAdapter(new MapFragment.MyInfoWindowAdapter(context));
                 }
-                // To show different color of pin drop on Map for different-different user
-                if (i < 10) {
-                    i++;
-                } else {
-                    i = 0;
-                }
             }
         }
     }
@@ -148,7 +150,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
      * different marker with different color
      *
      * @return List of available colors
-     */
+     *//*
     private List<Float> createColoredMapList() {
         List<Float> mapColorList = new ArrayList<>();
         mapColorList.add(BitmapDescriptorFactory.HUE_BLUE);
@@ -162,7 +164,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mapColorList.add(BitmapDescriptorFactory.HUE_VIOLET);
         mapColorList.add(BitmapDescriptorFactory.HUE_YELLOW);
         return mapColorList;
-    }
+    }*/
 
     /**
      * Returns real address based on Lat and Long(Geo Coding)

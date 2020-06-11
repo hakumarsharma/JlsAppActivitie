@@ -56,7 +56,6 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
 
     /**
      * Binds the given View to the position
-     *
      * @param parent
      * @param viewType
      * @return View Holder object

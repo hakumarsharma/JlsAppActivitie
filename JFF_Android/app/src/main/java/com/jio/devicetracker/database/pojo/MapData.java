@@ -30,11 +30,13 @@ public class MapData implements Parcelable {
     private String name;
     private double latitude;
     private double longitude;
+    private String consentId;
 
     protected MapData(Parcel in) {
         name = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
+        consentId = in.readString();
     }
 
     public MapData () {
@@ -77,6 +79,14 @@ public class MapData implements Parcelable {
         this.longitude = longitude;
     }
 
+    public String getConsentId() {
+        return consentId;
+    }
+
+    public void setConsentId(String consentId) {
+        this.consentId = consentId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -87,5 +97,6 @@ public class MapData implements Parcelable {
         dest.writeString(name);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeString(consentId);
     }
 }

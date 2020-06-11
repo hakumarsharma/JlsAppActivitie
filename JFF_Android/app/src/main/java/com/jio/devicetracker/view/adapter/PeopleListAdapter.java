@@ -33,16 +33,17 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Util;
 
 import java.util.List;
 
 public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.ViewHolder> {
-    private List<HomeActivityListData> mList;
+    private List<GroupMemberDataList> mList;
     private Context mContext;
 
-    public PeopleListAdapter(List<HomeActivityListData> mList, Context mContext) {
+    public PeopleListAdapter(List<GroupMemberDataList> mList, Context mContext) {
         this.mList = mList;
         this.mContext = mContext;
     }
@@ -72,12 +73,12 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull PeopleListAdapter.ViewHolder holder, int position) {
-        HomeActivityListData data = mList.get(position);
+        GroupMemberDataList data = mList.get(position);
         holder.memberName.setTypeface(Util.mTypeface(mContext, 5));
-        holder.memberName.setText(data.getGroupName());
-        holder.memberAddress.setText(data.getName());
+        holder.memberName.setText(data.getName());
+        holder.memberAddress.setText(data.getAddress());
         holder.memberAddress.setTypeface(Util.mTypeface(mContext, 3));
-
+        holder.memberStatus.setText(data.getConsentStatus());
     }
 
 
@@ -100,7 +101,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         private ImageView memberIcon;
         private TextView memberStatus;
         private TextView memberAddress;
-        private TextView pingTime;
         /**
          * Constructor where we find element from .xml file
          *
@@ -112,7 +112,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             memberIcon = itemView.findViewById(R.id.mapMemberIcon);
             memberStatus = itemView.findViewById(R.id.mapMemberStatus);
             memberAddress = itemView.findViewById(R.id.memberAddress);
-            pingTime = itemView.findViewById(R.id.pingTime);
         }
     }
 }

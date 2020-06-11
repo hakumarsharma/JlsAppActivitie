@@ -119,6 +119,7 @@ public class Constant {
     public static final String SESSION_COMPLETED = "Please request consent to track the group members";
     public static final String CONSENT_PENDING_STATUS = "Consent is pending, please ask the user to accept consent for tracking";
     public static final String ADD_CONTACT_WARNING = "Please add contact first in the list to proceed further";
+    public static final String GROUP_STATUS = "Group Status";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";

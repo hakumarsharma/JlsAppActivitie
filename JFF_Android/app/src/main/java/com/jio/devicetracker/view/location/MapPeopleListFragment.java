@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -34,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
@@ -51,6 +50,7 @@ public class MapPeopleListFragment extends Fragment {
     private List<MapData> mapDataList;
     private List<HomeActivityListData> peopleList;
     private static StringBuilder strAddress = null;
+    private String groupId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,27 +59,64 @@ public class MapPeopleListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_map_peoplelist, container, false);
         mDbManager = new DBManager(getActivity());
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
+        groupId = getActivity().getIntent().getStringExtra(Constant.GROUP_ID);
         strAddress = new StringBuilder();
         displayGroupDataInDashboard(view);
         return view;
     }
 
+    // If location is not available then just show the group member details else display the member with the location details
     private void displayGroupDataInDashboard(View view) {
         RecyclerView groupListRecyclerView = view.findViewById(R.id.memberDetailsList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
-
-        List<HomeActivityListData> groupList = new ArrayList<>();
-
+        List<GroupMemberDataList> groupMemberList = new ArrayList<>();
+        List<GroupMemberDataList> allGroupMemberDataBasedOnGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
         if (!mapDataList.isEmpty() && strAddress != null) {
+            int count = 0;
             for (MapData mapData : mapDataList) {
-                HomeActivityListData homeActivityListData = new HomeActivityListData();
-                homeActivityListData.setGroupName(mapData.getName());
-                homeActivityListData.setName(getAddressFromLocation(mapData.getLatitude(), mapData.getLongitude()));
-                groupList.add(homeActivityListData);
+                for (GroupMemberDataList groupMemberDataList : allGroupMemberDataBasedOnGroupId) {
+                    if (groupMemberDataList.getConsentId().equalsIgnoreCase(mapData.getConsentId())) {
+                        GroupMemberDataList groupDataList = new GroupMemberDataList();
+                        groupDataList.setName(groupMemberDataList.getName());
+                        groupDataList.setConsentStatus(groupMemberDataList.getConsentStatus().substring(0, 1).toUpperCase() + groupMemberDataList.getConsentStatus().substring(1));
+                        groupDataList.setAddress(getAddressFromLocation(mapData.getLatitude(), mapData.getLongitude()));
+                        groupDataList.setConsentId(mapData.getConsentId());
+                        groupMemberList.add(groupDataList);
+                        count++;
+                    }
+                }
+            }
+            // If group member is present but address is not present for few group members
+            if (count != allGroupMemberDataBasedOnGroupId.size()) {
+                for (GroupMemberDataList groupMemberDataList : allGroupMemberDataBasedOnGroupId) {
+                    boolean isFound = false;
+                    for (GroupMemberDataList grpMemberList : groupMemberList) {
+                        if (groupMemberDataList.getConsentId().equalsIgnoreCase(grpMemberList.getConsentId())) {
+                            isFound = true;
+                        }
+                    }
+                    if (!isFound) {
+                        GroupMemberDataList groupDataList = new GroupMemberDataList();
+                        groupDataList.setName(groupMemberDataList.getName());
+                        groupDataList.setConsentStatus(groupMemberDataList.getConsentStatus().substring(0, 1).toUpperCase() + groupMemberDataList.getConsentStatus().substring(1));
+                        groupMemberList.add(groupDataList);
+                    }
+                }
             }
         }
-        peopleListAdapter = new PeopleListAdapter(groupList, getContext());
+        // Location is not there for any of the group member
+        else if (mapDataList.isEmpty()) {
+            for (GroupMemberDataList allGroupMemberData : allGroupMemberDataBasedOnGroupId) {
+                GroupMemberDataList groupDataList = new GroupMemberDataList();
+                groupDataList.setName(allGroupMemberData.getName());
+                groupDataList.setConsentStatus(allGroupMemberData.getConsentStatus().substring(0, 1).toUpperCase() + allGroupMemberData.getConsentStatus().substring(1));
+                groupMemberList.add(groupDataList);
+            }
+        } else if (allGroupMemberDataBasedOnGroupId.isEmpty()) {
+
+        }
+        peopleListAdapter = new PeopleListAdapter(groupMemberList, getContext());
         groupListRecyclerView.setAdapter(peopleListAdapter);
     }
 

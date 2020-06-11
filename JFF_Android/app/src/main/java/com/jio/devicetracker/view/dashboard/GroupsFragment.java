@@ -58,13 +58,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GroupsFragment extends Fragment {
-
     private DBManager mDbManager;
     private CardView cardInstruction;
     private ImageView instructionIcon;
     private GroupListAdapter groupListAdapter;
     private String userId;
     private String groupId;
+    private HomeActivityListData homeActivityListData;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,6 +75,12 @@ public class GroupsFragment extends Fragment {
         initUI(view);
         makeGroupInfoPerUserRequestAPICall();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        makeGroupInfoPerUserRequestAPICall();
     }
 
     private void initUI(View view) {
@@ -127,7 +133,7 @@ public class GroupsFragment extends Fragment {
             groupListAdapter.setOnItemClickPagerListener(new GroupListAdapter.RecyclerViewClickListener() {
                 @Override
                 public void clickonListLayout(HomeActivityListData homeActivityListData) {
-                    makeGetLocationAPICall(homeActivityListData.getGroupId());
+                    makeGetLocationAPICall(homeActivityListData);
                 }
             });
         }
@@ -136,10 +142,11 @@ public class GroupsFragment extends Fragment {
     /**
      * find locations for group members
      *
-     * @param groupId
+     * @param homeActivityListData
      */
-    private void makeGetLocationAPICall(String groupId) {
-        this.groupId = groupId;
+    private void makeGetLocationAPICall(HomeActivityListData homeActivityListData) {
+        this.groupId = homeActivityListData.getGroupId();
+        this.homeActivityListData = homeActivityListData;
         SearchEventData searchEventData = new SearchEventData();
         List<String> mList = new ArrayList<>();
         mList.add(Constant.LOCATION);
@@ -157,27 +164,24 @@ public class GroupsFragment extends Fragment {
         public void onResponse(Object response) {
             Util.progressDialog.dismiss();
             SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
-            if (searchEventResponse.getMessage().equalsIgnoreCase(Constant.NO_EVENTS_FOUND_RESPONSE)) {
-                Util.alertDilogBox(Constant.LOCATION_NOT_FOUND, Constant.ALERT_TITLE, getActivity());
-            } else {
-                List<MapData> mapDataList = new ArrayList<>();
-                List<SearchEventResponse.Data> mList = searchEventResponse.getData();
-                if (!mList.isEmpty()) {
-                    List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
-                    for (SearchEventResponse.Data data : mList) {
-                        for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
-                            if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
-                                MapData mapData = new MapData();
-                                mapData.setLatitude(data.getLocation().getLat());
-                                mapData.setLongitude(data.getLocation().getLng());
-                                mapData.setName(grpMembers.getName());
-                                mapDataList.add(mapData);
-                            }
+            List<MapData> mapDataList = new ArrayList<>();
+            List<SearchEventResponse.Data> mList = searchEventResponse.getData();
+            if (!mList.isEmpty()) {
+                List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+                for (SearchEventResponse.Data data : mList) {
+                    for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
+                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
+                            MapData mapData = new MapData();
+                            mapData.setLatitude(data.getLocation().getLat());
+                            mapData.setLongitude(data.getLocation().getLng());
+                            mapData.setName(grpMembers.getName());
+                            mapData.setConsentId(grpMembers.getConsentId());
+                            mapDataList.add(mapData);
                         }
                     }
                 }
-                goToMapActivity(mapDataList);
             }
+            goToMapActivity(mapDataList);
         }
     }
 
@@ -190,19 +194,19 @@ public class GroupsFragment extends Fragment {
             Util.progressDialog.dismiss();
             Util.alertDilogBox(Constant.FETCH_LOCATION_ERROR, Constant.ALERT_TITLE, getActivity());
         }
+
     }
 
     /**
      * Navigates to the Map activity
      */
     private void goToMapActivity(List<MapData> mapDataList) {
-        if (mapDataList.isEmpty()) {
-            Util.alertDilogBox(Constant.FETCH_LOCATION_ERROR, Constant.ALERT_TITLE, getActivity());
-        } else {
-            Intent intent = new Intent(getContext(), LocationActivity.class);
-            intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(getContext(), LocationActivity.class);
+        intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.GROUP_STATUS, homeActivityListData.getStatus());
+        startActivity(intent);
+
     }
 
     /**
@@ -238,7 +242,8 @@ public class GroupsFragment extends Fragment {
         }
         List<HomeActivityListData> groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
-            if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
+            if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
+                    && !data.getStatus().equalsIgnoreCase(Constant.COMPLETED)) {
                 if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                     HomeActivityListData homeActivityListData = new HomeActivityListData();
                     homeActivityListData.setGroupName(data.getGroupName());

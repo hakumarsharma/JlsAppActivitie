@@ -27,7 +27,7 @@
         android:layout_height="600dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-
+        android:layout_above="@id/layout_dot"
         tools:ignore="UnknownId" />
 
     <LinearLayout
