@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -56,10 +57,10 @@ public class NavigateSupportActivity extends Activity implements View.OnClickLis
                 finish();
             }
         });
-        ImageView appName = findViewById(R.id.about_app_arrow);
-        ImageView termCondition = findViewById(R.id.term_policy_arrow);
-        ImageView faq = findViewById(R.id.faq_arrow);
-        ImageView contactUs = findViewById(R.id.contact_us_arrow);
+        RelativeLayout appName = findViewById(R.id.about_app_layout);
+        RelativeLayout termCondition = findViewById(R.id.term_condition_layout);
+        RelativeLayout faq = findViewById(R.id.faq_layout);
+        RelativeLayout contactUs = findViewById(R.id.contact_layout);
         TextView appNameTitle = findViewById(R.id.aboutApp);
         TextView termPolicyTitle = findViewById(R.id.term_policy);
         TextView faqTitle = findViewById(R.id.faq);
@@ -79,16 +80,16 @@ public class NavigateSupportActivity extends Activity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.about_app_arrow:
+            case R.id.about_app_layout:
                 startActivity(new Intent(this,AboutAppActivity.class));
                 break;
-            case R.id.term_policy_arrow:
+            case R.id.term_condition_layout:
                 startActivity(new Intent(this,TermAndConditionPolicyActivity.class));
                 break;
-            case R.id.faq_arrow:
+            case R.id.faq_layout:
                 startActivity(new Intent(this,FaqActivity.class));
                 break;
-            case R.id.contact_us_arrow:
+            case R.id.contact_layout:
                 startActivity(new Intent(this,ContactUsActivity.class));
                 break;
             default:
