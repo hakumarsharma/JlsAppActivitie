@@ -244,7 +244,7 @@ public class Constant {
     public static final String VALID_PHONE_NUMBER = "Please enter valid phone number";
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
     public static final String SIT_URL = "https://sit.boapi.cats.jvts.net";
-    public static final String STG_URL = "https://stg.borqs.io";
+    //public static final String STG_URL = "https://stg.borqs.io";
     public static final String FMS_BASE_URL = "http://49.40.22.92:8080";
     public static final String CONSENT_APPROVED_STATUS = "Consent Approved";
     public static final String CONSENT_PENDING = "Consent Pending";
@@ -283,7 +283,7 @@ public class Constant {
     public static final String SCAN_QR_CODE_TITLE = "Scan QR Code";
     public static final String DEVICE_NAME_TITLE = "Device name";
 
-    public static final String ACTIVE_SESSION_TITLE = "Active Sessions";
+    public static final String ACTIVE_SESSION_TITLE = "Group Management";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";
     public static final String CREATE_GROUP_LIST = "Track";

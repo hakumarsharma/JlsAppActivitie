@@ -75,31 +75,26 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (mList.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_NAME_CLASS_NAME)) {
             HomeActivityListData data = (HomeActivityListData) mList.get(position);
-            holder.profile.setImageResource(R.drawable.ic_group_button);
+            holder.profile.setImageResource(R.drawable.ic_family_group);
             holder.name.setText(data.getGroupName());
-            holder.durationtime.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(), data.getTo()));
-            holder.expirytime.setText(Util.getInstance().getTrackingExpirirationDuration(Util.getInstance().convertTimeToEpochtime(), data.getTo()));
             holder.relativeLayout.setOnClickListener(v -> {
                 itemListener.clickOnListLayout(data.getProfileImage(), data.getGroupName(), data.getGroupId()
                         , data.getCreatedBy());
                 return;
             });
-            holder.activeSessionOptions.setOnClickListener(v -> itemListener.onPopupMenuClickedForGroup(holder.activeSessionOptions, position, data));
         } else if (mList.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
             GroupMemberDataList data = (GroupMemberDataList) mList.get(position);
             holder.profile.setImageResource(R.drawable.ic_user);
             holder.name.setText(data.getName());
-            holder.phone.setText(data.getNumber());
-            holder.durationtime.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(), data.getTo()));
-            holder.expirytime.setText(Util.getInstance().getTrackingExpirirationDuration(Util.getInstance().convertTimeToEpochtime(), data.getTo()));
+            holder.motherIcon.setVisibility(View.INVISIBLE);
+            holder.fatherIcon.setVisibility(View.INVISIBLE);
+            holder.kidIcon.setVisibility(View.INVISIBLE);
+            holder.dogIcon.setVisibility(View.INVISIBLE);
             holder.relativeLayout.setOnClickListener(v -> {
                 itemListener.clickOnListLayout(data.getProfileImage(), data.getName(), data.getConsentId(), "");
                 return;
             });
-            holder.activeSessionOptions.setOnClickListener(v -> itemListener.onPopupMenuClickedForMember(holder.activeSessionOptions, position, data));
         }
-        /*holder.durationtime.setText(mList.get(position).getDurationTime());
-        holder.expirytime.setText(mList.get(position).getExpiryTime());*/
     }
 
     /**
@@ -115,14 +110,17 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
     /**
      * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView phone;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView name;
-        public TextView durationtime;
-        public TextView expirytime;
+        public ImageView motherIcon;
+        public ImageView fatherIcon;
+        public ImageView dogIcon;
+        public ImageView kidIcon;
         public ImageView profile;
         public RelativeLayout relativeLayout;
-        public TextView activeSessionOptions;
+        public ImageView activeSessionOptions;
+        private RelativeLayout groupOptLayout;
+        public ImageView close;
 
         /**
          * Constructor where we find element from .xml file
@@ -131,13 +129,30 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            phone = itemView.findViewById(R.id.mobileNumber);
-            name = itemView.findViewById(R.id.name);
-            durationtime = itemView.findViewById(R.id.durationTime);
-            expirytime = itemView.findViewById(R.id.expiryTime);
-            profile = itemView.findViewById(R.id.activeSessionImage);
+            name = itemView.findViewById(R.id.groupName);
+            profile = itemView.findViewById(R.id.groupmemberIcon);
+            groupOptLayout = itemView.findViewById(R.id.oprationLayout);
+            close = itemView.findViewById(R.id.close);
+            close.setOnClickListener(this);
             relativeLayout = itemView.findViewById(R.id.activeSessionLayout);
-            activeSessionOptions = itemView.findViewById(R.id.activeSessionOptions);
+            activeSessionOptions = itemView.findViewById(R.id.operationStatus);
+            activeSessionOptions.setOnClickListener(this);
+            motherIcon = itemView.findViewById(R.id.motherIcon);
+            fatherIcon = itemView.findViewById(R.id.fatherIcon);
+            kidIcon = itemView.findViewById(R.id.kidIcon);
+            dogIcon = itemView.findViewById(R.id.dogIcon);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+                case R.id.operationStatus:
+                    groupOptLayout.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.close:
+                    groupOptLayout.setVisibility(View.GONE);
+                    break;
+            }
         }
     }
 
@@ -146,8 +161,6 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
      */
     public interface RecyclerViewClickListener {
         void clickOnListLayout(int selectedGroupName, String name, String groupId, String createdBy);
-        void onPopupMenuClickedForMember(View v, int position, GroupMemberDataList groupMemberDataList);
-        void onPopupMenuClickedForGroup(View v, int position, HomeActivityListData homeActivityListData);
     }
 
     /**

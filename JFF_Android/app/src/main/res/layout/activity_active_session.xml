@@ -7,7 +7,24 @@
     <include
         android:id="@+id/customToolbar"
         layout="@layout/toolbar" />
+    <RelativeLayout
+        android:id="@+id/blueBackground"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@+id/customToolbar"
+        android:background="@drawable/layout_frame_blue"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/blueBackground"
+        >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollLayout"
+        >
     <TextView
         android:id="@+id/activeMemberPresent"
         android:layout_width="wrap_content"
@@ -22,12 +39,46 @@
         android:textSize="15sp"
         android:visibility="invisible" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tracked by you"
+        android:id="@+id/tracked_title"
+        android:textSize="@dimen/fourteen_dp"
+        android:layout_marginLeft="@dimen/fifteen_dp"
+        android:layout_marginTop="@dimen/twenty_dp"
+        android:textColor="@color/mine_shaft"
+        android:visibility="invisible"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/activeSessionsList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/customToolbar"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tracked_title"
         android:divider="#806326"
         android:dividerHeight="1dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tracking you"
+        android:id="@+id/tracking_title"
+        android:textSize="@dimen/fourteen_dp"
+        android:layout_marginLeft="@dimen/fifteen_dp"
+        android:layout_marginTop="@dimen/twenty_dp"
+        android:visibility="invisible"
+        android:textColor="@color/mine_shaft"
+        android:layout_below="@+id/activeSessionsList"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/activeSessionsTrackingList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tracking_title"
+        android:divider="#806326"
+        android:dividerHeight="1dp" />
+
+    </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

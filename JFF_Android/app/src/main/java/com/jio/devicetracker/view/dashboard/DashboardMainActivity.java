@@ -96,6 +96,7 @@ import com.jio.devicetracker.view.HowToUseActivity;
 import com.jio.devicetracker.view.adapter.DashboardAdapter;
 import com.jio.devicetracker.view.device.QRReaderInstruction;
 import com.jio.devicetracker.view.group.CreateGroupActivity;
+import com.jio.devicetracker.view.menu.ActiveSessionActivity;
 import com.jio.devicetracker.view.menu.NavigateSupportActivity;
 import com.jio.devicetracker.view.menu.NavigateUserProfileActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
@@ -440,8 +441,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                     case R.id.notification:
                         //gotoNotificationActivity();
                         break;
-                    case R.id.settings:
-                        //gotoSettingsActivity();
+                    case R.id.group_management:
+                        gotoGroupManagementActivity();
                         break;
                     case R.id.howtoadd:
                         goToHowtoUseActivity();
@@ -455,6 +456,11 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                 return true;
             }
         });
+    }
+
+    private void gotoGroupManagementActivity() {
+        Intent intent = new Intent(this, ActiveSessionActivity.class);
+        startActivity(intent);
     }
 
     private void gotoNavigateUserProfileActivity(String name, String number) {

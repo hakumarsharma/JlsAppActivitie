@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,9 +70,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * This class shows all the active session(To whom you are tracking or you are tracked by)
  */
-public class ActiveSessionActivity extends AppCompatActivity {
+public class ActiveSessionActivity extends AppCompatActivity implements View.OnClickListener {
     private ActiveSessionListAdapter mAdapter;
     private RecyclerView mRecyclerList;
+    private RecyclerView trackingList;
     private List listOnActiveSession;
     private TextView activeMemberPresent;
     private int position;
@@ -80,6 +82,8 @@ public class ActiveSessionActivity extends AppCompatActivity {
     private String groupMemberName;
     private DBManager mDbManager;
     private boolean isGroup;
+    private TextView trackedTitle;
+    private TextView trackingTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,11 +91,21 @@ public class ActiveSessionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_active_session);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Constant.ACTIVE_SESSION_TITLE);
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
+        trackedTitle = findViewById(R.id.tracked_title);
+        trackingTitle = findViewById(R.id.tracking_title);
+        trackedTitle.setTypeface(Util.mTypeface(this,3));
+        trackingTitle.setTypeface(Util.mTypeface(this,3));
         mRecyclerList = findViewById(R.id.activeSessionsList);
+        trackingList = findViewById(R.id.activeSessionsTrackingList);
         activeMemberPresent = findViewById(R.id.activeMemberPresent);
         mDbManager = new DBManager(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
+        trackingList.setLayoutManager(linearLayoutManager1);
         makeGroupInfoPerUserRequestAPICall();
     }
 
@@ -106,86 +120,6 @@ public class ActiveSessionActivity extends AppCompatActivity {
                     intent.putExtra(Constant.CREATED_BY, createdBy);
                     ActiveSessionActivity.this.startActivity(intent);
                 }
-            }
-
-            /**
-             * Exit or Remove API call for Group
-             * @param v
-             * @param position
-             * @param homeActivityListData
-             */
-            @Override
-            public void onPopupMenuClickedForGroup(View v, int position, HomeActivityListData homeActivityListData) {
-                PopupMenu popup = new PopupMenu(ActiveSessionActivity.this, v);
-                ActiveSessionActivity.this.position = position;
-                DBManager mDbManager = new DBManager(ActiveSessionActivity.this);
-                String userId = mDbManager.getAdminLoginDetail().getUserId();
-                ActiveSessionActivity.this.groupId = homeActivityListData.getGroupId();
-                popup.getMenu().add(Menu.NONE, 1, 1, Constant.TRACK);
-                if (homeActivityListData.getCreatedBy() != null && homeActivityListData.getCreatedBy().equalsIgnoreCase(userId)) { // Check through updated by not by isGroupAdmin
-                    popup.getMenu().add(Menu.NONE, 2, 2, Constant.REMOVE);
-                    errorMessage = Constant.REMOVE_FROM_GROUP_FAILURE;
-                } else {
-                    popup.getMenu().add(Menu.NONE, 3, 3, Constant.EXIT);
-                    errorMessage = Constant.EXIT_FROM_GROUP_FAILURE;
-                }
-                popup.setOnMenuItemClickListener(item -> {
-                    switch (item.getItemId()) {
-                        case 1:
-                            trackUserForGroup(homeActivityListData);
-                            break;
-                        case 2:
-                            ActiveSessionActivity.this.makeDeleteGroupAPICall(userId, homeActivityListData.getGroupId());
-                            break;
-                        case 3:
-                            ActiveSessionActivity.this.makeExitAPICall(mDbManager.getAdminLoginDetail().getPhoneNumber(), homeActivityListData.getGroupId());
-                            break;
-                        default:
-                            break;
-                    }
-                    return false;
-                });
-                popup.show();
-            }
-
-            /**
-             * Exit or Remove API call for Group Member
-             * @param v
-             * @param position
-             * @param groupMemberDataList
-             */
-            @Override
-            public void onPopupMenuClickedForMember(View v, int position, GroupMemberDataList groupMemberDataList) {
-                PopupMenu popup = new PopupMenu(ActiveSessionActivity.this, v);
-                ActiveSessionActivity.this.position = position;
-                DBManager mDbManager = new DBManager(ActiveSessionActivity.this);
-                String userId = mDbManager.getAdminLoginDetail().getUserId();
-                String createdBy = mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy();
-                popup.getMenu().add(Menu.NONE, 1, 1, Constant.TRACK);
-                if (createdBy != null && createdBy.equalsIgnoreCase(userId)) { // Check through updated by not by isGroupAdmin
-                    popup.getMenu().add(Menu.NONE, 2, 2, Constant.REMOVE);
-                    errorMessage = Constant.REMOVE_FROM_GROUP_FAILURE;
-                } else {
-                    popup.getMenu().add(Menu.NONE, 3, 3, Constant.EXIT);
-                    errorMessage = Constant.EXIT_FROM_GROUP_FAILURE;
-                }
-                popup.setOnMenuItemClickListener(item -> {
-                    switch (item.getItemId()) {
-                        case 1:
-                            trackUser(groupMemberDataList);
-                            break;
-                        case 2:
-                            ActiveSessionActivity.this.makeRemoveAPICall(groupMemberDataList.getNumber(), groupMemberDataList.getGroupId());
-                            break;
-                        case 3:
-                            ActiveSessionActivity.this.makeExitAPICall(groupMemberDataList.getNumber(), groupMemberDataList.getGroupId());
-                            break;
-                        default:
-                            break;
-                    }
-                    return false;
-                });
-                popup.show();
             }
         });
     }
@@ -219,6 +153,11 @@ public class ActiveSessionActivity extends AppCompatActivity {
         searchEventData.setTypes(mList);
         isGroup = false;
         GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, groupMemberDataList.getUserId(), groupMemberDataList.getGroupId(), Constant.GET_LOCATION_URL));
+    }
+
+    @Override
+    public void onClick(View v) {
+        finish();
     }
 
     /**
@@ -284,6 +223,9 @@ public class ActiveSessionActivity extends AppCompatActivity {
         } else {
             activeMemberPresent.setVisibility(View.GONE);
             mRecyclerList.setVisibility(View.VISIBLE);
+            trackingTitle.setVisibility(View.VISIBLE);
+            trackedTitle.setVisibility(View.VISIBLE);
+            trackingList.setVisibility(View.VISIBLE);
         }
     }
 
@@ -493,5 +435,6 @@ public class ActiveSessionActivity extends AppCompatActivity {
         }
         mAdapter = new ActiveSessionListAdapter(listOnActiveSession);
         mRecyclerList.setAdapter(mAdapter);
+        trackingList.setAdapter(mAdapter);
     }
 }

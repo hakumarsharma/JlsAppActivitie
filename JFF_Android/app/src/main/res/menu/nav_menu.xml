@@ -12,7 +12,7 @@
         android:title="Silent mode" />
 
     <item
-        android:id="@+id/settings"
+        android:id="@+id/group_management"
         android:icon="@drawable/settings"
         android:title="Group management" />
     <item
