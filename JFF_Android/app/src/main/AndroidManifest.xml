@@ -144,6 +144,9 @@
         <activity
             android:name=".view.HowToUseActivity"
             android:label="@string/map_name" />
+        <activity
+            android:name=".view.EditMemberActivity"
+            android:label="@string/map_name" />
 
         <activity
             android:name=".view.SplashScreenActivity"

@@ -91,12 +91,20 @@ public class GroupsFragment extends Fragment {
         instruction2.setTypeface(Util.mTypeface(getActivity(), 3));
         instructionIcon = view.findViewById(R.id.group_default_icon);
         userId = mDbManager.getAdminLoginDetail().getUserId();
+        /*List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        if (groupDetailList == null) {
+            cardInstruction.setVisibility(View.VISIBLE);
+            instructionIcon.setVisibility(View.VISIBLE);
+        }*/
+
     }
 
     /**
      * Get All Group info per user API Call
      */
     protected void makeGroupInfoPerUserRequestAPICall() {
+        cardInstruction.setVisibility(View.VISIBLE);
+        instructionIcon.setVisibility(View.VISIBLE);
         GroupRequestHandler.getInstance(getActivity()).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
     }
 
@@ -236,9 +244,9 @@ public class GroupsFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
-        if (groupDetailList == null) {
-            cardInstruction.setVisibility(View.VISIBLE);
-            instructionIcon.setVisibility(View.VISIBLE);
+        if (groupDetailList != null) {
+            cardInstruction.setVisibility(View.INVISIBLE);
+            instructionIcon.setVisibility(View.INVISIBLE);
         }
         List<HomeActivityListData> groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
