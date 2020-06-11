@@ -23,7 +23,6 @@ public class EditmemberListAdapter extends RecyclerView.Adapter<EditmemberListAd
 
     /**
      * Constructor to add devices inside group
-     *
      * @param mList
      */
     public EditmemberListAdapter(List<GroupMemberDataList> mList,Context mContext) {
@@ -33,7 +32,6 @@ public class EditmemberListAdapter extends RecyclerView.Adapter<EditmemberListAd
 
     /**
      * Binds the given View to the position
-     *
      * @param parent
      * @param viewType
      * @return View Holder object
@@ -42,7 +40,6 @@ public class EditmemberListAdapter extends RecyclerView.Adapter<EditmemberListAd
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_edit_member_list, parent, false);
-
         return new ViewHolder(itemView);
     }
 
@@ -54,8 +51,8 @@ public class EditmemberListAdapter extends RecyclerView.Adapter<EditmemberListAd
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         holder.name.setText(mList.get(position).getName());
+        holder.name.setTypeface(Util.mTypeface(mContext, 5));
     }
 
     /**
@@ -76,14 +73,12 @@ public class EditmemberListAdapter extends RecyclerView.Adapter<EditmemberListAd
 
         /**
          * Constructor where we find element from .xml file
-         *
          * @param itemView
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.memberName);
             name.setTypeface(Util.mTypeface(mContext,5));
-
         }
     }
 

@@ -180,9 +180,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         deepLinkingURICheck();
 
         Intent intent = getIntent();
-        Boolean isAddPeople = intent.getBooleanExtra(Constant.Add_People,false);
-        if(isAddPeople){
-           viewPager.setCurrentItem(1);
+        Boolean isAddPeople = intent.getBooleanExtra(Constant.Add_People, false);
+        if (isAddPeople) {
+            viewPager.setCurrentItem(1);
         }
     }
 
@@ -409,12 +409,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         TextView userAccountName = header.findViewById(R.id.user_account_name);
         TextView userPhoneNumber = header.findViewById(R.id.user_number);
         RelativeLayout logoutLayout = findViewById(R.id.logout);
-        logoutLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateLogoutData();
-            }
-        });
+        logoutLayout.setOnClickListener(v -> updateLogoutData());
         if (!Util.userName.isEmpty() && !Util.userNumber.isEmpty()) {
             userAccountName.setText(Util.userName.substring(0, 1).toUpperCase(Locale.ROOT) + Util.userName.substring(1));
             userPhoneNumber.setText(Util.userNumber);
@@ -706,6 +701,12 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         if (broadcastreceiver != null) {
             unregisterReceiver(broadcastreceiver);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, SigninSignupActivity.class));
     }
 
 }
