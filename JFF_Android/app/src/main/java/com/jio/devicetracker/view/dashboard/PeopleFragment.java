@@ -62,7 +62,7 @@ public class PeopleFragment extends Fragment {
     private DBManager mDbManager;
     private static ImageView instructionIcon;
     private static CardView cardInstruction;
-    private static PeopleMemberListAdapter groupListAdapter;
+    private static PeopleMemberListAdapter peopleMemberListAdapter;
     public static List<HomeActivityListData> grpDataList;
     private String groupStatus;
     private String groupId;
@@ -121,8 +121,8 @@ public class PeopleFragment extends Fragment {
             }
         }
         checkMemberPresent();
-        groupListAdapter = new PeopleMemberListAdapter(groupList, getContext());
-        groupListRecyclerView.setAdapter(groupListAdapter);
+        peopleMemberListAdapter = new PeopleMemberListAdapter(groupList, getContext());
+        groupListRecyclerView.setAdapter(peopleMemberListAdapter);
         adapterEventListener();
     }
 
@@ -140,8 +140,8 @@ public class PeopleFragment extends Fragment {
      * Adapter Listener
      */
     private void adapterEventListener() {
-        if (groupListAdapter != null) {
-            groupListAdapter.setOnItemClickPagerListener(new PeopleMemberListAdapter.RecyclerViewClickListener() {
+        if (peopleMemberListAdapter != null) {
+            peopleMemberListAdapter.setOnItemClickPagerListener(new PeopleMemberListAdapter.RecyclerViewClickListener() {
                 @Override
                 public void clickOnListLayout(HomeActivityListData homeActivityListData) {
                     groupStatus = homeActivityListData.getStatus();

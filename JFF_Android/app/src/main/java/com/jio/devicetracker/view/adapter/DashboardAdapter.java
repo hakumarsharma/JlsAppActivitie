@@ -25,7 +25,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.jio.devicetracker.view.dashboard.GroupsFragment;
-import com.jio.devicetracker.view.fragment.InviteFragment;
+import com.jio.devicetracker.view.dashboard.DeviceFragment;
 import com.jio.devicetracker.view.dashboard.PeopleFragment;
 
 public class DashboardAdapter extends FragmentPagerAdapter {
@@ -45,7 +45,7 @@ public class DashboardAdapter extends FragmentPagerAdapter {
             case 1:
                 return new PeopleFragment();
             case 2:
-                return new InviteFragment();
+                return new DeviceFragment();
             default:
                 return null;
         }

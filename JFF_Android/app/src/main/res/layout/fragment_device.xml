@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/viewBackgroundColor"
-    tools:context=".view.fragment.InviteFragment">
+    tools:context=".view.dashboard.DeviceFragment">
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -62,5 +62,12 @@
         android:layout_alignParentBottom="true"
         android:src="@drawable/devices_default"
         android:visibility="invisible" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/deviceListRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:scrollbars="vertical" />
 
 </RelativeLayout>
