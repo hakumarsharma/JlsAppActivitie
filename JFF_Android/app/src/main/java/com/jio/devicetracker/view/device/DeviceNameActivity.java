@@ -28,15 +28,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.BaseActivity;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.group.ChooseGroupActivity;
 
-public class DeviceNameActivity extends Activity implements View.OnClickListener {
+public class DeviceNameActivity extends BaseActivity implements View.OnClickListener {
     private ImageView motherIcon;
     private ImageView fatherIcon;
     private ImageView husbandIcon;
@@ -49,8 +52,7 @@ public class DeviceNameActivity extends Activity implements View.OnClickListener
     private EditText deviceName;
     private Button done;
     private String deviceNumber;
-
-
+    private String groupId;
 
 
     @Override
@@ -66,6 +68,7 @@ public class DeviceNameActivity extends Activity implements View.OnClickListener
         done.setOnClickListener(this);
         done.setAlpha(.5f);
         Intent intent = getIntent();
+        groupId = intent.getStringExtra(Constant.GROUP_ID);
         deviceNumber = intent.getStringExtra("DeviceNumber");
         title.setTypeface(Util.mTypeface(this,5));
         TextView iconSelectionText = findViewById(R.id.icon_selection);
@@ -221,18 +224,44 @@ public class DeviceNameActivity extends Activity implements View.OnClickListener
                 break;
 
             case R.id.done:
-                navigateTochooseGroup(deviceName.getText().toString());
+                if (deviceName.getText().length() == 0) {
+                    deviceName.setError(Constant.ENTER_DEVICE_NAME);
+                    return;
+                }
+                if (groupId == null || groupId.isEmpty()) {
+                   createGroupAndAddContactDetails();
+                }else {
+                    addMemberToCreatedGroup();
+                }
                 break;
             default:
                 break;
 
         }
-       //navigateTochooseGroup();
+    }
+    private void createGroupAndAddContactDetails(){
+        this.memberName = deviceName.getText().toString();
+        this.memberNumber = deviceNumber;
+        this.isFromCreateGroup = false;
+        this.isGroupMember = false;
+        this.isFromDevice = false;
+        createGroupAndAddContactAPICall(Constant.INDIVIDUAL_DEVICE_GROUP_NAME);
     }
 
-    private void navigateTochooseGroup(String memberLabel) {
+    private void addMemberToCreatedGroup() {
+        this.createdGroupId = groupId;
+        this.memberName = deviceName.getText().toString();
+        this.memberNumber = deviceNumber;
+        this.isFromCreateGroup = false;
+        this.isGroupMember = false;
+        this.isFromDevice = true;
+        addMemberInGroupAPICall();
+    }
+
+
+    public void navigateTochooseGroup() {
         Intent intent = new Intent(this, ChooseGroupActivity.class);
-        intent.putExtra("Title",memberLabel);
+        intent.putExtra("Title","");
         intent.putExtra("Number",deviceNumber);
         startActivity(intent);
     }

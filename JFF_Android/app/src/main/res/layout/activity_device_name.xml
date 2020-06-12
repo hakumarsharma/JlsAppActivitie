@@ -32,7 +32,6 @@
             android:hint="Device Name"
             android:layout_alignTop="@+id/device_icon"
             android:gravity="center"
-            android:inputType="phone"
             android:textColorHint="@color/tabBarUnselectedColor"
             android:textColor="@color/white"
             android:textSize="@dimen/seventeen_dp"

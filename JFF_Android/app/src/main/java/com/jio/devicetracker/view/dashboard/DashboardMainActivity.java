@@ -182,8 +182,11 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
 
         Intent intent = getIntent();
         Boolean isAddPeople = intent.getBooleanExtra(Constant.Add_People, false);
+        Boolean isAddDevice = intent.getBooleanExtra(Constant.Add_Device, false);
         if (isAddPeople) {
             viewPager.setCurrentItem(1);
+        }else if(isAddDevice){
+            viewPager.setCurrentItem(2);
         }
     }
 

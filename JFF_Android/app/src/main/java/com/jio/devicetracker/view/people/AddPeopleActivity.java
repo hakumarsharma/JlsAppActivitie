@@ -279,6 +279,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         this.memberNumber = contactNumber.getText().toString();
         this.isFromCreateGroup = false;
         this.isGroupMember = false;
+        this.isFromDevice = false;
         setEditTextValues();
         createGroupAndAddContactAPICall(Constant.INDIVIDUAL_USER_GROUP_NAME);
     }
@@ -289,6 +290,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         this.memberNumber = contactNumber.getText().toString();
         this.isFromCreateGroup = false;
         this.isGroupMember = true;
+        this.isFromDevice = false;
         setEditTextValues();
         addMemberInGroupAPICall();
     }

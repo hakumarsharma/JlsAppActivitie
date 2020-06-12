@@ -43,9 +43,6 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class QRCodeReaderActivity extends Activity implements ZXingScannerView.ResultHandler {
 
     private ZXingScannerView mScannerView;
-    private boolean isComingFromAddContact;
-    private boolean isComingFromAddDevice;
-    private boolean isComingFromGroupList;
     private String userId;
     private String groupId;
 
@@ -61,9 +58,6 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
         RelativeLayout toolbarLayout = findViewById(R.id.toolbarlayout);
         toolbarLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.cardviewlayout_device_background_color));
         Intent intent = getIntent();
-        isComingFromAddDevice = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_DEVICE, false);
-        isComingFromAddContact = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_CONTACT, false);
-        isComingFromGroupList = intent.getBooleanExtra(Constant.IS_COMING_FROM_GROUP_LIST, false);
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         userId = intent.getStringExtra(Constant.USER_ID);
 
@@ -81,7 +75,8 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
     @Override
     public void handleResult(Result result) {
         Intent intent = new Intent(this, DeviceNameActivity.class);
-        intent.putExtra("QRCodeValue", result.getText());
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra("DeviceNumber", result.getText());
         startActivity(intent);
     }
 

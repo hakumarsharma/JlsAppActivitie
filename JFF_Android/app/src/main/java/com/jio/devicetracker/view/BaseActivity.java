@@ -39,6 +39,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.device.AddDeviceActivity;
+import com.jio.devicetracker.view.device.DeviceNameActivity;
 import com.jio.devicetracker.view.group.GroupListActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 
@@ -53,6 +54,7 @@ public class BaseActivity extends AppCompatActivity {
     public String createdGroupId;
     public Boolean isFromCreateGroup;
     public Boolean isGroupMember;
+    public Boolean isFromDevice;
     public String selectedIcon;
 
     @Override
@@ -161,7 +163,10 @@ public class BaseActivity extends AppCompatActivity {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
                 if(isGroupMember) {
                     getAllForOneGroupAPICall();
-                }else {
+                }else if (isFromDevice){
+                    BaseActivity baseActivity = new DeviceNameActivity();
+                    ((DeviceNameActivity)baseActivity).navigateTochooseGroup();
+                } else{
                     Util.progressDialog.dismiss();
                     gotoDashboardActivity();
                 }
@@ -234,7 +239,11 @@ public class BaseActivity extends AppCompatActivity {
 
     private void gotoDashboardActivity() {
         Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
-        intent.putExtra(Constant.Add_People,true);
+        if(isFromDevice){
+            intent.putExtra(Constant.Add_Device, true);
+        }else {
+            intent.putExtra(Constant.Add_People, true);
+        }
         startActivity(intent);
     }
 
