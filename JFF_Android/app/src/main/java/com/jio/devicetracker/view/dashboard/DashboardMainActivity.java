@@ -187,6 +187,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             viewPager.setCurrentItem(1);
         }else if(isAddDevice){
             viewPager.setCurrentItem(2);
+        }else {
+            viewPager.setCurrentItem(0);
         }
     }
 

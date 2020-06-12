@@ -244,7 +244,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         this.memberNumber = deviceNumber;
         this.isFromCreateGroup = false;
         this.isGroupMember = false;
-        this.isFromDevice = false;
+        this.isFromDevice = true;
         createGroupAndAddContactAPICall(Constant.INDIVIDUAL_DEVICE_GROUP_NAME);
     }
 
@@ -252,7 +252,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         this.createdGroupId = groupId;
         this.memberName = deviceName.getText().toString();
         this.memberNumber = deviceNumber;
-        this.isFromCreateGroup = false;
+        this.isFromCreateGroup = true;
         this.isGroupMember = false;
         this.isFromDevice = true;
         addMemberInGroupAPICall();

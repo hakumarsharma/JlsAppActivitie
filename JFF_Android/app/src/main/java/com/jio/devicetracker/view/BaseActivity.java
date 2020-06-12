@@ -165,10 +165,16 @@ public class BaseActivity extends AppCompatActivity {
                 if(isGroupMember) {
                     getAllForOneGroupAPICall();
                 }else if (isFromDevice){
-                    gotoDashboardActivity();
+                    Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
+                    if (!isFromCreateGroup){
+                        intent.putExtra(Constant.Add_Device, true);
+                    }
+                    startActivity(intent);
                 } else{
                     Util.progressDialog.dismiss();
-                    gotoDashboardActivity();
+                    Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
+                    intent.putExtra(Constant.Add_People, true);
+                    startActivity(intent);
                 }
             }
         }
@@ -237,14 +243,5 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void gotoDashboardActivity() {
-        Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
-        if(isFromDevice){
-            intent.putExtra(Constant.Add_Device, true);
-        }else {
-            intent.putExtra(Constant.Add_People, true);
-        }
-        startActivity(intent);
-    }
 
 }
