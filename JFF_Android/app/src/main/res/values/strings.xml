@@ -138,6 +138,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="about_app_content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in et dolore magna \naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </string>
     <string name="name">Name</string>
+    <string name="device">Device phone number</string>
+    <string name="device_number_text">Device phone number</string>
+    <string name="device_number_content">Please enter you device phone number \nwhich is unique for your device. You can find \nit to back side of device package.</string>
     <string name="about_app">About app</string>
     <string name="term_policy">Terms &amp; privacy policies</string>
     <string name="term_condition">Terms &amp; Conditions</string>
@@ -148,6 +151,7 @@
     <string name="mobile_number">Alternate mobile number</string>
     <string name="edit_button">Edit</string>
     <string name="update_button">Update</string>
+    <string name="connect_button">Connect</string>
     <string name="app_version">Version : v2.33.0003 </string>
     <string name="contact_us_content">We are here to help and \nanswer your quireis </string>
     <string name="contact_us_email">care@jio.com</string>

@@ -74,7 +74,7 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
                 break;
 
             case R.id.manual_add:
-               // gotoJioPermissionScreen();
+                gotoAttachDeviceActivity();
                 break;
 
             case R.id.back:
@@ -85,10 +85,10 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
         }
     }
 
-    /*private void gotoJioPermissionScreen() {
-        Intent startMain = new Intent(getApplicationContext(), JioPermissions.class);
+    private void gotoAttachDeviceActivity() {
+        Intent startMain = new Intent(this, AttachDeviceActivity.class);
         startActivity(startMain);
-    }*/
+    }
 
     private void gotoQRReaderScreen() {
         Intent intent = new Intent(getApplicationContext(), QRCodeReaderActivity.class);

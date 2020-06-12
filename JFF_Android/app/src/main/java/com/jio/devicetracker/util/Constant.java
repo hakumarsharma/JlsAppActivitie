@@ -281,7 +281,7 @@ public class Constant {
     public static final String GROUPNAME = "groupName";
     public static final String QR_CODE_VALUE = "QRCodeValue";
     public static final String SCAN_QR_CODE_TITLE = "Scan QR Code";
-    public static final String DEVICE_NAME_TITLE = "Device name";
+    public static final String DEVICE_NAME_TITLE = "Customize device ";
 
     public static final String ACTIVE_SESSION_TITLE = "Group Management";
     public static final String TRACKER_TITLE = "Trackers";
@@ -343,6 +343,8 @@ public class Constant {
     public static final String PROFILE_TITLE = "Profile";
     public static final String EDIT_PROFILE_TITLE = "Edit Profile";
     public static final String EDIT_MEMBER_PROFILE_TITLE = "Edit members";
+    public static final String ATTACH_DEVICE_TITLE = "Attach device";
+
 
 
     //Status code

@@ -16,24 +16,49 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/deviceNameToolbar"
         android:background="@drawable/layout_frame_blue">
-
         <ImageView
             android:id="@+id/device_icon"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/margin_40"
+            android:layout_marginTop="@dimen/five_dp"
             android:src="@drawable/device_default" />
+        <EditText
+            android:id="@+id/device_edit_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:focusedByDefault="true"
+            android:hint="Device Name"
+            android:layout_alignTop="@+id/device_icon"
+            android:gravity="center"
+            android:inputType="phone"
+            android:textColorHint="@color/tabBarUnselectedColor"
+            android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp"
+            />
+
+        <View
+            android:id="@+id/name_edit_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/device_edit_name"
+            android:layout_marginTop="@dimen/five_dp"
+            android:layout_marginRight="@dimen/sixteen_dp"
+            android:layout_toRightOf="@+id/device_icon"
+            android:background="@color/tabBarUnselectedColor" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/device_icon"
             android:layout_marginTop="@dimen/fifteen_dp"
-            android:gravity="center"
+            android:gravity="left"
             android:id="@+id/icon_selection"
             android:paddingBottom="@dimen/twenty_dp"
             android:text="@string/select_icon_text"
             android:textColor="@color/white"
+            android:layout_alignLeft="@+id/device_icon"
             android:textSize="@dimen/seventeen_dp" />
 
     </RelativeLayout>
