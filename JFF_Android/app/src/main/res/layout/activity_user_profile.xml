@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/dull_text_color"
+    >
 
     <include
         layout="@layout/toolbar"
@@ -10,6 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/userDetail"
         android:layout_below="@+id/profileToolbar"
         android:background="@drawable/layout_frame_blue"
         >
@@ -47,6 +50,20 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TRACKED BY"
+        android:layout_below="@+id/userDetail"
+        android:id="@+id/tracked_text"
+        android:layout_marginTop="@dimen/twenty_dp"
+        android:layout_marginLeft="@dimen/margin_18"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tracked_list"
+        android:layout_below="@+id/tracked_text" />
     <Button
         android:id="@+id/edit_btn"
         android:layout_width="@dimen/adddevice_button_width"

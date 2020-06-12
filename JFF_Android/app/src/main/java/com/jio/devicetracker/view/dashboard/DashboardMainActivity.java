@@ -84,6 +84,7 @@ import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ApproveRejectConsentData;
 import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
 import com.jio.devicetracker.database.pojo.request.RejectConsentRequest;
@@ -156,7 +157,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         });
         initUI();
         initializeDataMembers();
-        Util.getInstance().setAutologinStatus(this, true);
+
     }
 
     private void initUI() {
@@ -410,9 +411,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         TextView userPhoneNumber = header.findViewById(R.id.user_number);
         RelativeLayout logoutLayout = findViewById(R.id.logout);
         logoutLayout.setOnClickListener(v -> updateLogoutData());
-        if (!Util.userName.isEmpty() && !Util.userNumber.isEmpty()) {
-            userAccountName.setText(Util.userName.substring(0, 1).toUpperCase(Locale.ROOT) + Util.userName.substring(1));
-            userPhoneNumber.setText(Util.userNumber);
+        AdminLoginData adminLoginData = new DBManager(this).getAdminLoginDetail();
+        if (adminLoginData != null) {
+            userAccountName.setText(adminLoginData.getName().substring(0, 1).toUpperCase(Locale.ROOT) + adminLoginData.getName().substring(1));
+            userPhoneNumber.setText(adminLoginData.getPhoneNumber());
         }
         ImageView backDrawer = header.findViewById(R.id.back);
         backDrawer.setOnClickListener(new View.OnClickListener() {

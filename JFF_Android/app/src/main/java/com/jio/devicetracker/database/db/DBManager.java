@@ -123,7 +123,7 @@ public class DBManager {
         contentValue.put(DatabaseHelper.USER_NAME, data.getData().getName());
         contentValue.put(DatabaseHelper.PHONE_COUNTRY_CODE, data.getData().getPhoneCountryCode());
         contentValue.put(DatabaseHelper.DEVICE_NUM, data.getData().getPhone());
-        return mDatabase.replace(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
+        return mDatabase.insert(DatabaseHelper.TABLE_USER_LOGIN, null, contentValue);
     }
 
     /**

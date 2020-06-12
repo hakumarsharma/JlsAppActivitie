@@ -313,7 +313,7 @@ public final class Util extends AppCompatActivity {
      * @param mContext
      * @return
      */
-    public boolean getTermconditionFlag(Context mContext) {
+    public static boolean getTermconditionFlag(Context mContext) {
         sharedpreferences = mContext.getSharedPreferences(Constant.TERM_CONDITION_FLAG, Context.MODE_PRIVATE);
         if (sharedpreferences != null) {
             return sharedpreferences.getBoolean("FLAG", false);

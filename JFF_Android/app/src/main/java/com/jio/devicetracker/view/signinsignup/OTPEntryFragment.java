@@ -232,6 +232,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
 
             if (logindetailResponse.getData().getUgsToken() != null) {
                 mDbManager.deleteAllPreviousData();
+                Util.getInstance().setAutologinStatus(getActivity(), true);
                 mDbManager.insertLoginData(logindetailResponse);
                 Util.getAdminDetail(getActivity());
                 startActivity(new Intent(getActivity(), DashboardMainActivity.class));

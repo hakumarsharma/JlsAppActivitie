@@ -68,7 +68,7 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
                 break;
 
             case R.id.update_btn:
-                Toast.makeText(this,"Coming soon.... please wait",Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this,"Coming soon.... please wait",Toast.LENGTH_SHORT).show();
                 break;
 
         }
