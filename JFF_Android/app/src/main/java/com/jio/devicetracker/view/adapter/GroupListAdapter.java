@@ -22,6 +22,8 @@ package com.jio.devicetracker.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Response;
@@ -96,6 +99,14 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         HomeActivityListData data = mList.get(position);
         holder.groupName.setTypeface(Util.mTypeface(mContext, 5));
         holder.groupName.setText(data.getGroupName());
+        if(data.getGroupIcon() != null && !data.getGroupIcon().isEmpty()) {
+            Resources res = mContext.getResources();
+            int iconId = res.getIdentifier(data.getGroupIcon(), "drawable", mContext.getPackageName());
+            Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
+            holder.groupListmemberIcon.setImageDrawable(drawable);
+        }else {
+            holder.groupListmemberIcon.setBackgroundResource(R.drawable.ic_family_group);
+        }
         holder.mListlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,6 +158,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         private TextView addNewMember;
         private TextView deleteOpt;
         public CardView mListlayout;
+        private ImageView groupListmemberIcon;
 
         /**
          * Constructor where we find element from .xml file
@@ -155,6 +167,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            groupListmemberIcon = itemView.findViewById(R.id.groupListmemberIcon);
             groupName = itemView.findViewById(R.id.groupName);
             menuIcon = itemView.findViewById(R.id.operationStatus);
             close = itemView.findViewById(R.id.close);

@@ -81,7 +81,7 @@ public class GroupsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        makeGroupInfoPerUserRequestAPICall();
+//        makeGroupInfoPerUserRequestAPICall();
     }
 
     private void initUI(View view) {
@@ -215,21 +215,36 @@ public class GroupsFragment extends Fragment {
      */
     public void parseResponseStoreInDatabase(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
         List<HomeActivityListData> groupList = new ArrayList<>();
-        for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-            HomeActivityListData homeActivityListData = new HomeActivityListData();
-            homeActivityListData.setGroupName(data.getGroupName());
-            homeActivityListData.setCreatedBy(data.getCreatedBy());
-            homeActivityListData.setGroupId(data.getId());
-            homeActivityListData.setStatus(data.getStatus());
-            homeActivityListData.setUpdatedBy(data.getUpdatedBy());
-            homeActivityListData.setFrom(data.getSession().getFrom());
-            homeActivityListData.setTo(data.getSession().getTo());
-            homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
-            homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
-            homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
-            groupList.add(homeActivityListData);
+        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        if (groupDetailList != null && !groupDetailList.isEmpty()){
+                for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
+                    if (data.getStatus() != null && (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED)) || (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED)) || (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED))) {
+                        for (HomeActivityListData groupDbData : groupDetailList) {
+                                HomeActivityListData homeActivityListData = new HomeActivityListData();
+                                homeActivityListData.setGroupName(data.getGroupName());
+                                homeActivityListData.setCreatedBy(data.getCreatedBy());
+                                homeActivityListData.setGroupId(data.getId());
+                                homeActivityListData.setStatus(data.getStatus());
+                                homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+                                homeActivityListData.setFrom(data.getSession().getFrom());
+                                homeActivityListData.setTo(data.getSession().getTo());
+                                homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
+                                homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
+                                homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
+                                if (data.getId().equals(groupDbData.getGroupId())) {
+                                     if (groupDbData.getGroupIcon() != null) {
+                                        homeActivityListData.setGroupIcon(groupDbData.getGroupIcon());
+                                    }
+                                }
+                                groupList.add(homeActivityListData);
+
+                        }
+                    }
+            }
+            mDbManager.insertAllDataIntoGroupTable(groupList);
+
         }
-        mDbManager.insertAllDataIntoGroupTable(groupList);
+
     }
 
     private void displayGroupDataInDashboard(View view) {
@@ -251,6 +266,7 @@ public class GroupsFragment extends Fragment {
                     homeActivityListData.setProfileImage(data.getProfileImage());
                     homeActivityListData.setFrom(data.getFrom());
                     homeActivityListData.setTo(data.getTo());
+                    homeActivityListData.setGroupIcon(data.getGroupIcon());
                     groupList.add(homeActivityListData);
                 }
             }

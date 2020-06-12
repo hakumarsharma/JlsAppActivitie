@@ -30,6 +30,8 @@ public class CreateGroupResponse implements Serializable {
     private String message;
     @SerializedName("data")
     private Data data;
+    @SerializedName("groupIcon")
+    private String groupIcon;
 
     public int getCode() {
         return code;
@@ -45,6 +47,14 @@ public class CreateGroupResponse implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setGroupIcon(String groupIcon) {
+        this.groupIcon = groupIcon;
+    }
+
+    public String getGroupIcon() {
+        return groupIcon;
     }
 
     public Data getData() {

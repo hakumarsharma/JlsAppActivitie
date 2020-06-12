@@ -73,6 +73,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
         backBtn.setVisibility(View.VISIBLE);
         backBtn.setOnClickListener(this);
 
+        this.selectedIcon = "ic_creategroup";
         createGroupEditText = findViewById(R.id.groupName);
         createGroupEditText.setTypeface(Util.mTypeface(this, 5));
 
@@ -145,18 +146,23 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
         }else  if (v.getId() == R.id.userIconCreateGroup){
              frameLayout.setVisibility(View.VISIBLE);
         }else if(v.getId() == R.id.closeFrameLayout){
+            this.selectedIcon  = "ic_creategroup";
              userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_creategroup));
              frameLayout.setVisibility(View.INVISIBLE);
         }else if(v.getId() == R.id.homeGroupButton){
+            this.selectedIcon  = "home_group";
             userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.home_group));
             frameLayout.setVisibility(View.INVISIBLE);
         }else if(v.getId() == R.id.familyGroupButton){
+            this.selectedIcon  = "family_group";
             userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.family_group));
             frameLayout.setVisibility(View.INVISIBLE);
         }else if(v.getId() == R.id.friendsGroupButton){
+            this.selectedIcon  = "friends_group";
             userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.friends_group));
             frameLayout.setVisibility(View.INVISIBLE);
         }else if(v.getId() == R.id.petGroupButton){
+            this.selectedIcon  = "group_pet";
             userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.group_pet));
             frameLayout.setVisibility(View.INVISIBLE);
         }

@@ -53,6 +53,7 @@ public class BaseActivity extends AppCompatActivity {
     public String createdGroupId;
     public Boolean isFromCreateGroup;
     public Boolean isGroupMember;
+    public String selectedIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +85,9 @@ public class BaseActivity extends AppCompatActivity {
         public void onResponse(Object response) {
             CreateGroupResponse createGroupResponse = Util.getInstance().getPojoObject(String.valueOf(response), CreateGroupResponse.class);
             if (createGroupResponse.getCode() == 200) {
+                createGroupResponse.setGroupIcon(selectedIcon);
                 mDbManager.insertIntoGroupTable(createGroupResponse);
                 createdGroupId = createGroupResponse.getData().getId();
-//                Util.setGroupId(BaseActivity.this, createdGroupId);
                 if (isFromCreateGroup) {
                     Util.progressDialog.dismiss();
                     Intent intent = new Intent(BaseActivity.this, AddDeviceActivity.class);

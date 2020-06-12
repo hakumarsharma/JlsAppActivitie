@@ -53,6 +53,7 @@ public class HomeActivityListData {
     private String groupOwnerName;
     private String groupOwnerUserId;
     private String groupOwnerPhoneNumber;
+    private String groupIcon;
 
 
     public String getGroupOwnerName() {
@@ -250,6 +251,14 @@ public class HomeActivityListData {
 
     public void setRelationWithName(String relationWithName) {
         this.relationWithName = relationWithName;
+    }
+
+    public void setGroupIcon(String groupIcon) {
+        this.groupIcon = groupIcon;
+    }
+
+    public String getGroupIcon() {
+        return groupIcon;
     }
 
 }
