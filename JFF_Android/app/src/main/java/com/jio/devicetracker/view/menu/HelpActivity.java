@@ -211,7 +211,7 @@ public class HelpActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    /**
+    /**boolean flag = Util.getInstance().getTermconditionFlag(this);
      * Go to Term & Condition page when you click on skip button
      */
     private void gotoSigninSignupActivity() {

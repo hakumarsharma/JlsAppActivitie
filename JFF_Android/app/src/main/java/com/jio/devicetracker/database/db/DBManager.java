@@ -763,9 +763,9 @@ public class DBManager {
     /**
      * Delete the Selected data from group member table
      */
-    public void deleteSelectedDataFromGroupMember(String groupId) {
+    public void deleteSelectedDataFromGroupMember(String consentId) {
         mDatabase = mDBHelper.getWritableDatabase();
-        mDatabase.delete(DatabaseHelper.TABLE_GROUP_MEMBER, DatabaseHelper.GROUPID + "= '" + groupId + "';", null);
+        mDatabase.delete(DatabaseHelper.TABLE_GROUP_MEMBER, DatabaseHelper.CONSENT_ID + "= '" + consentId + "';", null);
     }
 
     /**

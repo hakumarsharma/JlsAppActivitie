@@ -117,7 +117,7 @@
             android:background="@color/light_hash" />
 
         <TextView
-            android:id="@+id/add"
+            android:id="@+id/addNewMember"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editLine"
@@ -131,7 +131,7 @@
             android:id="@+id/addLine"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/add"
+            android:layout_below="@+id/addNewMember"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/ten_dp"
             android:layout_marginRight="@dimen/fourteen_dp"

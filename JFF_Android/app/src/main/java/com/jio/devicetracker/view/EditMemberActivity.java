@@ -5,18 +5,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import retrofit2.Callback;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.request.GetGroupMemberRequest;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
+import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -25,12 +30,21 @@ import com.jio.devicetracker.view.adapter.EditmemberListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class EditMemberActivity extends Activity implements View.OnClickListener {
     private List<GroupMemberDataList> dataList;
     private String groupId;
     private DBManager mDbManager;
     private String userId;
     private RecyclerView editMemberList;
+    private EditmemberListAdapter editmemberListAdapter;
+    private int position;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,11 +53,11 @@ public class EditMemberActivity extends Activity implements View.OnClickListener
         TextView groupName = findViewById(R.id.group_name);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.EDIT_MEMBER_PROFILE_TITLE);
-        title.setTypeface(Util.mTypeface(this,5));
+        title.setTypeface(Util.mTypeface(this, 5));
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         backBtn.setOnClickListener(this);
-        groupName.setTypeface(Util.mTypeface(this,3));
+        groupName.setTypeface(Util.mTypeface(this, 3));
         groupName.setText(getIntent().getStringExtra(Constant.GROUP_NAME));
         editMemberList = findViewById(R.id.editRecyclerList);
         dataList = new ArrayList<>();
@@ -84,7 +98,67 @@ public class EditMemberActivity extends Activity implements View.OnClickListener
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
             }
             showDataInList();
+            adapterEventListener();
         }
+    }
+
+    /**
+     * Adapter Listener
+     */
+    private void adapterEventListener() {
+        if (editmemberListAdapter != null) {
+            editmemberListAdapter.setOnItemClickPagerListener(new EditmemberListAdapter.RecyclerViewClickListener() {
+                @Override
+                public void clickonDeleteButton(GroupMemberDataList groupMemberDataList, int position) {
+                    EditMemberActivity.this.position = position;
+                    makeRemoveAPICall(groupMemberDataList);
+                }
+            });
+        }
+    }
+
+    /**
+     * Make a Remove API Call
+     *
+     * @param groupMemberDataList
+     */
+    private void makeRemoveAPICall(GroupMemberDataList groupMemberDataList) {
+        DBManager mDbManager = new DBManager(this);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
+        ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
+        ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
+        consent.setPhone(groupMemberDataList.getNumber());
+        consent.setStatus(Constant.REMOVED);
+        exitRemovedGroupData.setConsent(consent);
+        RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
+        Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mDbManager.getAdminLoginDetail().getUserToken(),
+                Constant.APPLICATION_JSON, mDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, groupId, body);
+        Util.getInstance().showProgressBarDialog(this);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    Util.progressDialog.dismiss();
+                    Toast.makeText(EditMemberActivity.this, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
+                    mDbManager.deleteSelectedDataFromGroupMember(groupMemberDataList.getConsentId());
+                    editmemberListAdapter.removeItem(position);
+                    makeGetGroupMemberAPICall();
+                } else {
+                    Util.progressDialog.dismiss();
+                    Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, EditMemberActivity.this);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Util.progressDialog.dismiss();
+                Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, EditMemberActivity.this);
+            }
+        });
     }
 
     /**
@@ -112,8 +186,8 @@ public class EditMemberActivity extends Activity implements View.OnClickListener
                 mList.add(data);
             }
         }
-        EditmemberListAdapter adapterData = new EditmemberListAdapter(mList,this);
-        editMemberList.setAdapter(adapterData);
+        editmemberListAdapter = new EditmemberListAdapter(mList, this);
+        editMemberList.setAdapter(editmemberListAdapter);
     }
 
 }

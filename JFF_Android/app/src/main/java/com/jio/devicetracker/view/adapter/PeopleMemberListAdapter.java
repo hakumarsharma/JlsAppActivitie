@@ -33,6 +33,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -68,7 +69,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
      * Interface to override methods in Dashboard to call those methods on particular item click
      */
     public interface RecyclerViewClickListener {
-        void clickOnListLayout(String groupId, String name);
+        void clickOnListLayout(HomeActivityListData homeActivityListData);
 
     }
 
@@ -84,9 +85,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         HomeActivityListData data = mList.get(position);
         holder.memberName.setTypeface(Util.mTypeface(mContext, 5));
         holder.memberName.setText(data.getGroupName());
-        holder.timeLeft.setText("00h 60min"); //TODO : Remove hard coded value
-
-        //TODO : Uncomment and check status handling when deep link flow works
+        holder.timeLeft.setText("00h 60min");
 
 //        if(data.getConsentStaus().equals(Constant.ACTIVE)){
 //            holder.memberIcon.setImageResource(R.drawable.inviteaccepted);
@@ -102,7 +101,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
 //            holder.timeLeft.setTextColor(mContext.getResources().getColor(R.color.timeUp));
 //        }
         holder.peopleList.setOnClickListener(v -> {
-            itemListener.clickOnListLayout(data.getGroupId(),data.getGroupName());
+            itemListener.clickOnListLayout(data);
             return;
         });
     }

@@ -58,7 +58,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ActiveMemberActivity extends AppCompatActivity {
-
     private String groupId;
     private DBManager mDbManager;
     private ActiveMemberListAdapter mAdapter;

@@ -19,6 +19,7 @@
  **************************************************************/
 
 package com.jio.devicetracker.view.dashboard;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -45,6 +46,7 @@ import com.jio.devicetracker.database.pojo.SearchEventData;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
+import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -61,10 +63,9 @@ public class PeopleFragment extends Fragment {
     private ImageView instructionIcon;
     private CardView cardInstruction;
     private static PeopleMemberListAdapter groupListAdapter;
-    private List<MapData> mapDataList;
     public static List<HomeActivityListData> grpDataList;
-    private int counter = 0;
-    private String selectedUserName = ""; //TODO : Remove this after location flow is set
+    private String groupStatus;
+    private String groupId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,14 +77,11 @@ public class PeopleFragment extends Fragment {
     }
 
     private void initUI(View view) {
-
         cardInstruction = view.findViewById(R.id.people_instruction_card);
-
         TextView instruction1 = view.findViewById(R.id.people_instruction);
         instruction1.setTypeface(Util.mTypeface(getActivity(), 5));
         TextView instruction2 = view.findViewById(R.id.people_instruction_1);
         instruction2.setTypeface(Util.mTypeface(getActivity(), 3));
-
         instructionIcon = view.findViewById(R.id.people_default_icon);
     }
 
@@ -92,42 +90,39 @@ public class PeopleFragment extends Fragment {
         super.onStart();
         mDbManager = new DBManager(getActivity());
         makeGroupInfoPerUserRequestAPICall();
-        mapDataList = new ArrayList<>();
         grpDataList = new CopyOnWriteArrayList<>();
-
     }
 
     private void displayGroupDataInDashboard(View view) {
         RecyclerView groupListRecyclerView = view.findViewById(R.id.peopleListRecyclerView);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
-
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
         List<HomeActivityListData> groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
-            if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId()) && data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME) ) {
-                  List<GroupMemberDataList> memberDataList = mDbManager.getAllGroupMemberDataBasedOnGroupId(data.getGroupId());
-                    for (GroupMemberDataList memberData : memberDataList){
-                        HomeActivityListData homeActivityListData = new HomeActivityListData();
-                        homeActivityListData.setGroupName(memberData.getName());
-                        homeActivityListData.setPhoneNumber(memberData.getNumber());
-                        homeActivityListData.setConsentStaus(memberData.getConsentStatus());
-                        homeActivityListData.setConsentId(memberData.getConsentId());
-                        homeActivityListData.setGroupId(data.getGroupId());
-                        homeActivityListData.setStatus(data.getStatus());
-                        homeActivityListData.setCreatedBy(data.getCreatedBy());
-                        homeActivityListData.setUpdatedBy(data.getUpdatedBy());
-                        homeActivityListData.setProfileImage(data.getProfileImage());
-                        homeActivityListData.setFrom(data.getFrom());
-                        homeActivityListData.setTo(data.getTo());
-                        groupList.add(homeActivityListData);
-                    }
+            if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId()) && data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                List<GroupMemberDataList> memberDataList = mDbManager.getAllGroupMemberDataBasedOnGroupId(data.getGroupId());
+                for (GroupMemberDataList memberData : memberDataList) {
+                    HomeActivityListData homeActivityListData = new HomeActivityListData();
+                    homeActivityListData.setGroupName(memberData.getName());
+                    homeActivityListData.setPhoneNumber(memberData.getNumber());
+                    homeActivityListData.setConsentStaus(memberData.getConsentStatus());
+                    homeActivityListData.setConsentId(memberData.getConsentId());
+                    homeActivityListData.setGroupId(data.getGroupId());
+                    homeActivityListData.setStatus(data.getStatus());
+                    homeActivityListData.setCreatedBy(data.getCreatedBy());
+                    homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+                    homeActivityListData.setProfileImage(data.getProfileImage());
+                    homeActivityListData.setFrom(data.getFrom());
+                    homeActivityListData.setTo(data.getTo());
+                    groupList.add(homeActivityListData);
+                }
             }
         }
-        if(groupList != null && !groupList.isEmpty()){
+        if (groupList != null && !groupList.isEmpty()) {
             cardInstruction.setVisibility(View.INVISIBLE);
             instructionIcon.setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             cardInstruction.setVisibility(View.VISIBLE);
             instructionIcon.setVisibility(View.VISIBLE);
         }
@@ -140,36 +135,29 @@ public class PeopleFragment extends Fragment {
      * Adapter Listener
      */
     private void adapterEventListener() {
-//        if (groupListAdapter != null) {
+        if (groupListAdapter != null) {
             groupListAdapter.setOnItemClickPagerListener(new PeopleMemberListAdapter.RecyclerViewClickListener() {
                 @Override
-                public void clickOnListLayout(String groupId, String name) {
-                    selectedUserName = name;
+                public void clickOnListLayout(HomeActivityListData homeActivityListData) {
+                    groupStatus = homeActivityListData.getStatus();
+                    groupId = homeActivityListData.getGroupId();
                     SearchEventData searchEventData = new SearchEventData();
                     List<String> mList = new ArrayList<>();
                     mList.add(Constant.LOCATION);
                     mList.add(Constant.SOS);
                     searchEventData.setTypes(mList);
-                    GroupRequestHandler.getInstance(getContext()).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, mDbManager.getAdminLoginDetail().getUserId(), groupId, Constant.GET_LOCATION_URL));
+                    Util.getInstance().showProgressBarDialog(getActivity());
+                    GroupRequestHandler.getInstance(getContext()).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, mDbManager.getAdminLoginDetail().getUserId(), homeActivityListData.getGroupId(), Constant.GET_LOCATION_URL));
                 }
             });
-//     }
+        }
     }
 
-    /**
-     * Navigates to the Map activity
-     */
-    private void goToMapActivity() {
-        Intent intent = new Intent(getContext(), LocationActivity.class);
-        intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
-        startActivity(intent);
-    }
 
     /**
      * Get All Group info per user API Call
      */
     protected void makeGroupInfoPerUserRequestAPICall() {
-    //    Util.getInstance().showProgressBarDialog(getActivity());
         GroupRequestHandler.getInstance(getActivity()).handleRequest(new GetGroupInfoPerUserRequest(new PeopleFragment.GetGroupInfoPerUserRequestSuccessListener(), new PeopleFragment.GetGroupInfoPerUserRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserId()));
     }
 
@@ -180,16 +168,9 @@ public class PeopleFragment extends Fragment {
         @Override
         public void onResponse(Object response) {
             GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
-//            Util.progressDialog.dismiss();
             parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
             displayGroupDataInDashboard(getView());
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        makeGroupInfoPerUserRequestAPICall();
     }
 
     /**
@@ -204,6 +185,62 @@ public class PeopleFragment extends Fragment {
         }
     }
 
+    /**
+     * Search Event Request API call Success Listener
+     */
+    private class SearchEventRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
+            SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
+            List<MapData> mapDataList = new ArrayList<>();
+            List<SearchEventResponse.Data> mList = searchEventResponse.getData();
+            if (!mList.isEmpty()) {
+                List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+                for (SearchEventResponse.Data data : mList) {
+                    for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
+                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
+                            MapData mapData = new MapData();
+                            mapData.setLatitude(data.getLocation().getLat());
+                            mapData.setLongitude(data.getLocation().getLng());
+                            mapData.setName(grpMembers.getName());
+                            mapData.setConsentId(grpMembers.getConsentId());
+                            mapDataList.add(mapData);
+                        }
+                    }
+                }
+            }
+            goToMapActivity(mapDataList);
+        }
+    }
+
+    /**
+     * Search Event Request API Call Error listener
+     */
+    private class SearchEventRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            Util.alertDilogBox(Constant.FETCH_LOCATION_ERROR, Constant.ALERT_TITLE, getContext());
+        }
+    }
+
+    /**
+     * Navigates to the Map activity
+     */
+    private void goToMapActivity(List<MapData> mapDataList) {
+        Intent intent = new Intent(getContext(), LocationActivity.class);
+        intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+        intent.putExtra(Constant.GROUP_STATUS, groupStatus);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        makeGroupInfoPerUserRequestAPICall();
+    }
 
     /**
      * Parse the response and store in DB(Group Table and Member table)
@@ -242,78 +279,6 @@ public class PeopleFragment extends Fragment {
         }
         mDbManager.insertAllDataIntoGroupTable(groupList);
         mDbManager.insertGroupMemberDataInListFormat(mGroupMemberDataLists);
-    }
-
-    /**
-     * Search Event Request API call Success Listener
-     */
-    private class SearchEventRequestSuccessListener implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-         //   Util.progressDialog.dismiss();
-
-            // TODO : Remove hardcoded values when location details are available in server
-            MapData mapData = new MapData();
-            mapData.setLatitude(12.917757);
-            mapData.setLongitude(77.609629);
-            mapData.setName(selectedUserName);
-            mapDataList.add(mapData);
-            counter = 0;
-            goToMapActivity();
-
-//            SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
-//            if (searchEventResponse.getMessage().equalsIgnoreCase(Constant.NO_EVENTS_FOUND_RESPONSE)) {
-//                Util.alertDilogBox(Constant.LOCATION_NOT_FOUND, Constant.ALERT_TITLE, getContext());
-//            } else {
-//                List<SearchEventResponse.Data> mList = searchEventResponse.getData();
-//                if (! grpDataList.isEmpty()) {
-//                    List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(grpDataList.get(0).getGroupId());
-//                    for (SearchEventResponse.Data data : mList) {
-//                        for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
-//                            if (grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
-//                                MapData mapData = new MapData();
-//                                mapData.setLatitude(data.getLocation().getLat());
-//                                mapData.setLongitude(data.getLocation().getLng());
-//                                mapData.setName(grpMembers.getName());
-//                                mapDataList.add(mapData);
-//                                if (mapDataList.size() == grpMembersOfParticularGroupId.size()) {
-//                                    break;
-//                                }
-//                            }
-//                        }
-//                    }
-//                } else {
-//                    if (! mList.isEmpty()) {
-//                        MapData mapData = new MapData();
-//                        mapData.setLatitude(mList.get(0).getLocation().getLat());
-//                        mapData.setLongitude(mList.get(0).getLocation().getLng());
-//                        mapData.setName("sree");
-//                        mapDataList.add(mapData);
-//                    }
-//                }
-//                if (!mapDataList.isEmpty() ) {
-//                    counter = 0;
-//                    goToMapActivity();
-//                } else if (!mapDataList.isEmpty() && ! grpDataList.isEmpty()) {
-//                    counter = 0;
-//                    goToMapActivity();
-//                } else {
-//                    counter++;
-////                    trackDevice();
-//                }
-//            }
-        }
-    }
-
-    /**
-     * Search Event Request API Call Error listener
-     */
-    private class SearchEventRequestErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.FETCH_LOCATION_ERROR, Constant.ALERT_TITLE, getContext());
-        }
     }
 
 }

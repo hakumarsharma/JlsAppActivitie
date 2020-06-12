@@ -46,6 +46,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.EditMemberActivity;
 import com.jio.devicetracker.view.dashboard.GroupsFragment;
+import com.jio.devicetracker.view.device.AddDeviceActivity;
 
 import java.util.List;
 
@@ -143,7 +144,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         private ImageView icon3;
         private ImageView icon4;
         private TextView editOpt;
-        private TextView addNewOpt;
+        private TextView addNewMember;
         private TextView deleteOpt;
         public CardView mListlayout;
 
@@ -158,14 +159,14 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             menuIcon = itemView.findViewById(R.id.operationStatus);
             close = itemView.findViewById(R.id.close);
             editOpt = itemView.findViewById(R.id.edit);
-            addNewOpt = itemView.findViewById(R.id.add);
+            addNewMember = itemView.findViewById(R.id.addNewMember);
             deleteOpt = itemView.findViewById(R.id.deleteGroup);
             groupOptLayout = itemView.findViewById(R.id.oprationLayout);
             mListlayout = itemView.findViewById(R.id.groupListLayout);
             menuIcon.setOnClickListener(this);
             close.setOnClickListener(this);
             editOpt.setOnClickListener(this);
-            addNewOpt.setOnClickListener(this);
+            addNewMember.setOnClickListener(this);
             deleteOpt.setOnClickListener(this);
             GroupListAdapter.this.groupOptLayout = groupOptLayout;
         }
@@ -186,6 +187,10 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                     position = getAdapterPosition();
                     deleteGroupAPICall(mList.get(position));
                     break;
+                case R.id.addNewMember:
+                    Intent intent = new Intent(mContext, AddDeviceActivity.class);
+                    intent.putExtra(Constant.GROUP_ID, mList.get(position).getGroupId());
+                    mContext.startActivity(intent);
             }
         }
     }
@@ -232,6 +237,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
 
     /**
      * Called when we delete group
+     *
      * @param adapterPosition
      */
     public void removeItem(int adapterPosition) {

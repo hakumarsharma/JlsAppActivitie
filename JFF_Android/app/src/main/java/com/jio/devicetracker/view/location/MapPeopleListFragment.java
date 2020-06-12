@@ -113,8 +113,6 @@ public class MapPeopleListFragment extends Fragment {
                 groupDataList.setConsentStatus(allGroupMemberData.getConsentStatus().substring(0, 1).toUpperCase() + allGroupMemberData.getConsentStatus().substring(1));
                 groupMemberList.add(groupDataList);
             }
-        } else if (allGroupMemberDataBasedOnGroupId.isEmpty()) {
-
         }
         peopleListAdapter = new PeopleListAdapter(groupMemberList, getContext());
         groupListRecyclerView.setAdapter(peopleListAdapter);
