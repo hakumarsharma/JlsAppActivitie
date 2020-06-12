@@ -45,6 +45,7 @@ import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.EditMemberActivity;
+import com.jio.devicetracker.view.dashboard.GroupsFragment;
 
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     private DBManager mDbManager;
     private String groupId;
     private int position;
+    private RelativeLayout groupOptLayout;
 
     public GroupListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
@@ -165,7 +167,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             editOpt.setOnClickListener(this);
             addNewOpt.setOnClickListener(this);
             deleteOpt.setOnClickListener(this);
-
+            GroupListAdapter.this.groupOptLayout = groupOptLayout;
         }
 
         @Override
@@ -210,8 +212,10 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public void onResponse(Object response) {
             mDbManager.deleteSelectedDataFromGroup(groupId);
             mDbManager.deleteSelectedDataFromGroupMember(groupId);
+            groupOptLayout.setVisibility(View.GONE);
             Util.progressDialog.dismiss();
             removeItem(position);
+            GroupsFragment.checkIsGroupPresent();
         }
     }
 
