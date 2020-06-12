@@ -259,11 +259,4 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     }
 
 
-    public void navigateTochooseGroup() {
-        Intent intent = new Intent(this, ChooseGroupActivity.class);
-        intent.putExtra("Title","");
-        intent.putExtra("Number",deviceNumber);
-        startActivity(intent);
-    }
-
 }

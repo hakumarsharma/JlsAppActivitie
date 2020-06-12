@@ -218,7 +218,7 @@ public class GroupsFragment extends Fragment {
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
         if (groupDetailList != null && !groupDetailList.isEmpty()){
                 for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-                    if (data.getStatus() != null && (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED)) || (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED)) || (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED))) {
+                    if (data.getStatus() != null && (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)) || (data.getStatus().equalsIgnoreCase(Constant.COMPLETED)) || (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED))) {
                         for (HomeActivityListData groupDbData : groupDetailList) {
                                 HomeActivityListData homeActivityListData = new HomeActivityListData();
                                 homeActivityListData.setGroupName(data.getGroupName());
@@ -256,7 +256,7 @@ public class GroupsFragment extends Fragment {
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
                     && !data.getStatus().equalsIgnoreCase(Constant.COMPLETED)) {
-                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME) && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)) {
                     HomeActivityListData homeActivityListData = new HomeActivityListData();
                     homeActivityListData.setGroupName(data.getGroupName());
                     homeActivityListData.setGroupId(data.getGroupId());

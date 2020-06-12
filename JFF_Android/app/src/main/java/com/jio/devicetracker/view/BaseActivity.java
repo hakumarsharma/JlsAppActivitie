@@ -40,6 +40,7 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.device.AddDeviceActivity;
 import com.jio.devicetracker.view.device.DeviceNameActivity;
+import com.jio.devicetracker.view.group.ChooseGroupActivity;
 import com.jio.devicetracker.view.group.GroupListActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 
@@ -164,8 +165,7 @@ public class BaseActivity extends AppCompatActivity {
                 if(isGroupMember) {
                     getAllForOneGroupAPICall();
                 }else if (isFromDevice){
-                    BaseActivity baseActivity = new DeviceNameActivity();
-                    ((DeviceNameActivity)baseActivity).navigateTochooseGroup();
+                    gotoDashboardActivity();
                 } else{
                     Util.progressDialog.dismiss();
                     gotoDashboardActivity();
