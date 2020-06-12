@@ -75,13 +75,13 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private static RecyclerView contactsListView;
     private static AddPersonListAdapter mAdapter;
     private static List<GroupMemberResponse.Data> listOfContacts;
-    private  String groupId;
-    private  EditText contactName;
-    private  EditText contactNumber;
-    private  Button addContact;
+    private String groupId;
+    private EditText contactName;
+    private EditText contactNumber;
+    private Button addContact;
     private static Button addContact_Continue;
     private static Context context;
-    private DBManager mPeopleDbManager;
+    private static DBManager mPeopleDbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,13 +98,11 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         backBtn.setOnClickListener(this);
-
         context = this;
-        mPeopleDbManager = new DBManager(context);
+        mPeopleDbManager = new DBManager(this);
         contactsListView = findViewById(R.id.contactsListView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         contactsListView.setLayoutManager(linearLayoutManager);
-
         getDataFromIntent(title);
 
         TextView peopleText = findViewById(R.id.people_text);
@@ -117,7 +115,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         contactNumber.setTypeface(Util.mTypeface(this, 5));
 
         addContact = findViewById(R.id.addContactDetail);
-        if(groupId != null) {
+        if (groupId != null) {
             addContact.setVisibility(View.VISIBLE);
             addContact.setTypeface(Util.mTypeface(this, 5));
             addContact.setOnClickListener(this);
@@ -138,9 +136,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private void getDataFromIntent(TextView title) {
         Intent intent = getIntent();
         String qrValue = intent.getStringExtra(Constant.QR_CODE_VALUE);
-//        isComingFromAddDevice = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_DEVICE, false);
-//        isComingFromAddContact = intent.getBooleanExtra(Constant.IS_COMING_FROM_ADD_CONTACT, false);
-//        isComingFromGroupList = intent.getBooleanExtra(Constant.IS_COMING_FROM_GROUP_LIST, false);
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         String groupName = intent.getStringExtra(Constant.GROUP_NAME);
 
@@ -155,31 +150,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         if (groupName != null && !groupName.isEmpty()) {
             title.setText(groupName);
         }
-
-    }
-
-    /**
-     * To save data before going into the other activity
-     *
-     * @param savedInstanceState
-     */
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString(Constant.GROUP_ID, groupId);
-        savedInstanceState.putString(Constant.USER_ID, Util.userId);
-//        savedInstanceState.putBoolean(Constant.IS_COMING_FROM_ADD_CONTACT, isComingFromAddContact);
-//        savedInstanceState.putBoolean(Constant.IS_COMING_FROM_ADD_DEVICE, isComingFromAddDevice);
-//        savedInstanceState.putBoolean(Constant.IS_COMING_FROM_GROUP_LIST, isComingFromGroupList);
-}
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        groupId = savedInstanceState.getString(Constant.GROUP_ID);
-//        isComingFromAddDevice = savedInstanceState.getBoolean(Constant.IS_COMING_FROM_ADD_DEVICE, false);
-//        isComingFromAddContact = savedInstanceState.getBoolean(Constant.IS_COMING_FROM_ADD_CONTACT, false);
-//        isComingFromGroupList = savedInstanceState.getBoolean(Constant.IS_COMING_FROM_GROUP_LIST, false);
     }
 
     // Change the button color when data is field
@@ -201,14 +171,14 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 setEditTextBottomLineColor(contactName);
 
                 // Displaying add button and continue based on groupid as groupid exists if user is coming from create group
-                if((groupId == null || groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
-                    setButtonBackground(addContact_Continue,true);
-                }else if((groupId != null && !groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
-                    setButtonBackground(addContact,true);
-                    setButtonBackground(addContact_Continue,false);
-                }else {
-                    setButtonBackground(addContact_Continue,false);
-                    setButtonBackground(addContact,false);
+                if ((groupId == null || groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
+                    setButtonBackground(addContact_Continue, true);
+                } else if ((groupId != null && !groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
+                    setButtonBackground(addContact, true);
+                    setButtonBackground(addContact_Continue, false);
+                } else {
+                    setButtonBackground(addContact_Continue, false);
+                    setButtonBackground(addContact, false);
                 }
             }
         });
@@ -230,14 +200,14 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 setEditTextBottomLineColor(contactNumber);
 
                 // Displaying add button and continue based on groupid as groupid exists if user is coming from create group
-                if((groupId == null || groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
-                    setButtonBackground(addContact_Continue,true);
-                }else if((groupId != null && !groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
-                    setButtonBackground(addContact,true);
-                    setButtonBackground(addContact_Continue,false);
-                }else {
-                    setButtonBackground(addContact_Continue,false);
-                    setButtonBackground(addContact,false);
+                if ((groupId == null || groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
+                    setButtonBackground(addContact_Continue, true);
+                } else if ((groupId != null && !groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
+                    setButtonBackground(addContact, true);
+                    setButtonBackground(addContact_Continue, false);
+                } else {
+                    setButtonBackground(addContact_Continue, false);
+                    setButtonBackground(addContact, false);
                 }
             }
         });
@@ -245,7 +215,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     }
 
     // Background color of button based text entered
-    private void setButtonBackground(Button btn, Boolean selectorChange){
+    private void setButtonBackground(Button btn, Boolean selectorChange) {
         if (selectorChange) {
             btn.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.login_selector, null));
             btn.setTextColor(Color.WHITE);
@@ -276,18 +246,19 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         } else if (v.getId() == R.id.addContact_Continue) {
             if (groupId == null || groupId.isEmpty()) {
                 validationCheck();
-            }else {
-                if (listOfContacts != null && !listOfContacts.isEmpty()){
+            } else {
+                if (listOfContacts != null && !listOfContacts.isEmpty()) {
                     startActivity(new Intent(this, DashboardMainActivity.class));
-                }else {
+                } else {
                     Toast.makeText(this, Constant.ADD_CONTACT_WARNING, Toast.LENGTH_SHORT);
                 }
             }
         }
 
     }
-    private void validationCheck(){
-        if(contactName.getText().length() == 0){
+
+    private void validationCheck() {
+        if (contactName.getText().length() == 0) {
             contactName.setError(Constant.ENTER_NAME);
             return;
         }
@@ -298,11 +269,12 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         // if groupid exists it means it coming from created group
         if (groupId == null || groupId.isEmpty()) {
             createGroupAndAddContactDetails();
-        }else {
+        } else {
             addMemberToCreatedGroup();
         }
     }
-    private void createGroupAndAddContactDetails(){
+
+    private void createGroupAndAddContactDetails() {
         this.memberName = contactName.getText().toString();
         this.memberNumber = contactNumber.getText().toString();
         this.isFromCreateGroup = false;
@@ -324,24 +296,28 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     public void getAllMembers(List<GroupMemberResponse.Data> memberList) {
         if (memberList != null) {
             listOfContacts = new ArrayList();
-            listOfContacts.addAll(memberList);
+            for(GroupMemberResponse.Data data : memberList) {
+                if(!data.getStatus().equalsIgnoreCase(Constant.REMOVED)) {
+                    listOfContacts.add(data);
+                }
+            }
             mAdapter = new AddPersonListAdapter(listOfContacts);
             contactsListView.setAdapter(mAdapter);
-            if(!listOfContacts.isEmpty() && addContact_Continue != null){
-                setButtonBackground(addContact_Continue,true);
+            if (!listOfContacts.isEmpty() && addContact_Continue != null) {
+                setButtonBackground(addContact_Continue, true);
             }
             adapterEventListener();
         }
     }
 
     private void setEditTextValues() {
-        if(addContact != null) {
-            setButtonBackground(addContact,false);
+        if (addContact != null) {
+            setButtonBackground(addContact, false);
         }
-            setEditTextBottomLineColor(contactName);
-            setEditTextBottomLineColor(contactNumber);
-            contactName.getText().clear();
-            contactNumber.getText().clear();
+        setEditTextBottomLineColor(contactName);
+        setEditTextBottomLineColor(contactNumber);
+        contactName.getText().clear();
+        contactNumber.getText().clear();
 
     }
 
@@ -388,8 +364,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private void adapterEventListener() {
         mAdapter.setOnItemClickPagerListener(new AddPersonListAdapter.RecyclerViewClickListener() {
             @Override
-            public void onDeleteMemberClicked(View v, int position, GroupMemberResponse.Data data) {
-                    makeRemoveAPICall(data.getPhone(), groupId, position);
+            public void onDeleteMemberClicked(View v, int position, String groupId, GroupMemberResponse.Data data) {
+                AddPeopleActivity.this.makeRemoveAPICall(data.getPhone(), groupId, position);
             }
         });
     }
@@ -412,29 +388,29 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         consent.setStatus(Constant.REMOVED);
         exitRemovedGroupData.setConsent(consent);
         RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
+        Util.getInstance().showProgressBarDialog(context);
         Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mPeopleDbManager.getAdminLoginDetail().getUserToken(),
                 Constant.APPLICATION_JSON, mPeopleDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, groupId, body);
-        Util.getInstance().showProgressBarDialog(this);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.code() == 200) {
                     Util.progressDialog.dismiss();
-                    Toast.makeText(AddPeopleActivity.this, Constant.REMOVE_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, Constant.REMOVE_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mPeopleDbManager.deleteSelectedDataFromGroup(groupId);
                     mPeopleDbManager.deleteSelectedDataFromGroupMember(groupId);
                     mAdapter.removeItem(position);
                     getAllForOneGroupAPICall();
                 } else {
                     Util.progressDialog.dismiss();
-                    Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, AddPeopleActivity.this);
+                    Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, context);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, AddPeopleActivity.this);
+                Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, context);
             }
         });
     }

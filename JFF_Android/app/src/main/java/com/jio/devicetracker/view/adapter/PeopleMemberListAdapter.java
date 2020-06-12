@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -26,17 +24,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.dashboard.PeopleFragment;
 
 import java.util.List;
 
@@ -44,10 +49,15 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
     private List<HomeActivityListData> mList;
     private Context mContext;
     private static RecyclerViewClickListener itemListener;
+    private DBManager mDbManager;
+    private String groupId;
+    private int position;
+    private RelativeLayout individualMemberOperationLayout;
 
     public PeopleMemberListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
         this.mContext = mContext;
+        mDbManager = new DBManager(mContext);
     }
 
     /**
@@ -87,19 +97,6 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         holder.memberName.setText(data.getGroupName());
         holder.timeLeft.setText("00h 60min");
 
-//        if(data.getConsentStaus().equals(Constant.ACTIVE)){
-//            holder.memberIcon.setImageResource(R.drawable.inviteaccepted);
-//            holder.timer.setImageResource(R.drawable.ic_timetimeline_outline);
-//            holder.timeLeft.setTextColor(mContext.getResources().getColor(R.color.timerColor));
-//        }else if(data.getConsentStaus().equals(Constant.PENDING)){
-//            holder.memberIcon.setImageResource(R.drawable.pendinginvite);
-//            holder.timer.setImageResource(R.drawable.ic_timetimeline_outline);
-//            holder.timeLeft.setTextColor(mContext.getResources().getColor(R.color.timerColor));
-//        }else {
-//            holder.memberIcon.setImageResource(R.drawable.invitetimeup);
-//            holder.timer.setImageResource(R.drawable.ic_timetimeline_outline);
-//            holder.timeLeft.setTextColor(mContext.getResources().getColor(R.color.timeUp));
-//        }
         holder.peopleList.setOnClickListener(v -> {
             itemListener.clickOnListLayout(data);
             return;
@@ -128,13 +125,18 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
     /**
      * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView memberName;
         private ImageView memberIcon;
         private TextView timeLeft;
         private ImageView timer;
         private CardView peopleList;
+        private ImageView individualUserMenubar;
+        private RelativeLayout individualMemberOperationLayout;
+        private ImageView closeOperation;
+        private TextView deleteIndividualUser;
+
         /**
          * Constructor where we find element from .xml file
          *
@@ -147,6 +149,77 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
             timeLeft = itemView.findViewById(R.id.timeLeft);
             timer = itemView.findViewById(R.id.timer);
             peopleList = itemView.findViewById(R.id.peopleListLayout);
+            individualMemberOperationLayout = itemView.findViewById(R.id.individualMemberOperationLayout);
+            individualUserMenubar = itemView.findViewById(R.id.individualUserMenubar);
+            individualUserMenubar.setOnClickListener(this);
+            closeOperation = itemView.findViewById(R.id.closeOperation);
+            closeOperation.setOnClickListener(this);
+            deleteIndividualUser = itemView.findViewById(R.id.deleteIndividualUser);
+            deleteIndividualUser.setOnClickListener(this);
+            PeopleMemberListAdapter.this.individualMemberOperationLayout = individualMemberOperationLayout;
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.individualUserMenubar:
+                    individualMemberOperationLayout.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.closeOperation:
+                    individualMemberOperationLayout.setVisibility(View.GONE);
+                    break;
+                case R.id.deleteIndividualUser:
+                    position = getAdapterPosition();
+                    makeDeleteGroupAPICall(mList.get(position).getGroupId());
+                    break;
+            }
         }
     }
+
+    /**
+     * Delete the Group and update the database
+     */
+    private void makeDeleteGroupAPICall(String groupId) {
+        this.groupId = groupId;
+        Util.getInstance().showProgressBarDialog(mContext);
+        GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteGroupRequest(new DeleteGroupRequestSuccessListener(), new DeleteGroupRequestErrorListener(), groupId, mDbManager.getAdminLoginDetail().getUserId()));
+    }
+
+    /**
+     * Delete Group Request API Call Success Listener and create new group if Session time is completed and Request Consent button is clicked
+     */
+    private class DeleteGroupRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            mDbManager.deleteSelectedDataFromGroup(groupId);
+            mDbManager.deleteSelectedDataFromGroupMember(groupId);
+            Util.progressDialog.dismiss();
+            removeItem(position);
+            individualMemberOperationLayout.setVisibility(View.GONE);
+            PeopleFragment.checkMemberPresent();
+        }
+    }
+
+    /**
+     * Delete Group Request API Call Error Listener
+     */
+    private class DeleteGroupRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            Util.alertDilogBox(Constant.GROUP_DELETION_FAILURE, Constant.ALERT_TITLE, mContext);
+        }
+    }
+
+    /**
+     * Called when we delete group
+     *
+     * @param adapterPosition
+     */
+    public void removeItem(int adapterPosition) {
+        mList.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        notifyDataSetChanged();
+    }
+
 }

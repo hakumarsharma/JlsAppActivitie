@@ -60,12 +60,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PeopleFragment extends Fragment {
 
     private DBManager mDbManager;
-    private ImageView instructionIcon;
-    private CardView cardInstruction;
+    private static ImageView instructionIcon;
+    private static CardView cardInstruction;
     private static PeopleMemberListAdapter groupListAdapter;
     public static List<HomeActivityListData> grpDataList;
     private String groupStatus;
     private String groupId;
+    private static List<HomeActivityListData> groupList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,7 +99,7 @@ public class PeopleFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
-        List<HomeActivityListData> groupList = new ArrayList<>();
+        groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId()) && data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                 List<GroupMemberDataList> memberDataList = mDbManager.getAllGroupMemberDataBasedOnGroupId(data.getGroupId());
@@ -119,6 +120,13 @@ public class PeopleFragment extends Fragment {
                 }
             }
         }
+        checkMemberPresent();
+        groupListAdapter = new PeopleMemberListAdapter(groupList, getContext());
+        groupListRecyclerView.setAdapter(groupListAdapter);
+        adapterEventListener();
+    }
+
+    public static void checkMemberPresent() {
         if (groupList != null && !groupList.isEmpty()) {
             cardInstruction.setVisibility(View.INVISIBLE);
             instructionIcon.setVisibility(View.INVISIBLE);
@@ -126,9 +134,6 @@ public class PeopleFragment extends Fragment {
             cardInstruction.setVisibility(View.VISIBLE);
             instructionIcon.setVisibility(View.VISIBLE);
         }
-        groupListAdapter = new PeopleMemberListAdapter(groupList, getContext());
-        groupListRecyclerView.setAdapter(groupListAdapter);
-        adapterEventListener();
     }
 
     /**

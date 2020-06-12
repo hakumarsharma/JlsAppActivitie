@@ -62,6 +62,7 @@
         android:layout_alignParentBottom="true"
         android:src="@drawable/people_default"
         android:visibility="invisible" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/peopleListRecyclerView"
         android:layout_width="match_parent"

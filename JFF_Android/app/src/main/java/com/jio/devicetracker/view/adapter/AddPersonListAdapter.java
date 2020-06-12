@@ -64,14 +64,14 @@ public class AddPersonListAdapter extends RecyclerView.Adapter<AddPersonListAdap
      * Interface to override methods in ActiveSessionActivity to call this methods on particular item click
      */
     public interface RecyclerViewClickListener {
-        void onDeleteMemberClicked(View v,int position,GroupMemberResponse.Data data);
+        void onDeleteMemberClicked(View v,int position,String groupId, GroupMemberResponse.Data data);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        GroupMemberResponse.Data data = (GroupMemberResponse.Data) mData.get(position);
+        GroupMemberResponse.Data data = mData.get(position);
         holder.contactName.setText(data.getName());
-        holder.deleteButton.setOnClickListener(v -> itemListener.onDeleteMemberClicked(holder.deleteButton, position,data));
+        holder.deleteButton.setOnClickListener(v -> itemListener.onDeleteMemberClicked(holder.deleteButton, position, data.getGroupId(), data));
     }
 
     /**

@@ -49,7 +49,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public String memberName;
     public String memberNumber;
-    private DBManager mDbManager;
+    private static DBManager mDbManager;
     public String createdGroupId;
     public Boolean isFromCreateGroup;
     public Boolean isGroupMember;
@@ -196,7 +196,7 @@ public class BaseActivity extends AppCompatActivity {
         if(Util.progressDialog == null) {
             Util.getInstance().showProgressBarDialog(this);
         }
-        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupMemberRequest(new GetGroupMemberRequestSuccessListener(), new GetGroupMemberRequestErrorListener(), createdGroupId,mDbManager.getAdminLoginDetail().getUserId()));
+        GroupRequestHandler.getInstance(this).handleRequest(new GetGroupMemberRequest(new GetGroupMemberRequestSuccessListener(), new GetGroupMemberRequestErrorListener(), createdGroupId, mDbManager.getAdminLoginDetail().getUserId()));
     }
 
     /**
