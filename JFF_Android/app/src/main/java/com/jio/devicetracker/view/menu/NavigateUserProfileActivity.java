@@ -40,7 +40,6 @@ import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.adapter.ActiveSessionListAdapter;
 import com.jio.devicetracker.view.adapter.ProfileTrackedByListAdapter;
 
 import java.util.ArrayList;
@@ -54,6 +53,7 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
     private DBManager mDbManager;
     private RecyclerView trackedList;
     private ProfileTrackedByListAdapter mAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +62,7 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.PROFILE_TITLE);
         mDbManager = new DBManager(this);
-        title.setTypeface(Util.mTypeface(this,5));
+        title.setTypeface(Util.mTypeface(this, 5));
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         backBtn.setOnClickListener(this);
@@ -81,7 +81,7 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.back:
                 finish();
                 break;
@@ -92,11 +92,12 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
     }
 
     private void gotoUpdateProfileActivity() {
-        Intent intent = new Intent(this,EditUserProfileActivity.class);
-        intent.putExtra("Name",userName.getText().toString());
-        intent.putExtra("Number",userNumber.getText().toString());
+        Intent intent = new Intent(this, EditUserProfileActivity.class);
+        intent.putExtra("Name", userName.getText().toString());
+        intent.putExtra("Number", userNumber.getText().toString());
         startActivity(intent);
     }
+
     /**
      * Get All Group info per user API Call
      */
@@ -182,7 +183,7 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         }
         mAdapter = new ProfileTrackedByListAdapter(listOnActiveSession);
         trackedList.setAdapter(mAdapter);
-       // trackingList.setAdapter(mAdapter);
+        // trackingList.setAdapter(mAdapter);
     }
 
 }

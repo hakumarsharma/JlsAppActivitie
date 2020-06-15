@@ -35,11 +35,10 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.Util;
 
 import java.util.List;
 
-public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSessionListAdapter.ViewHolder> {
+public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouListAdapter.ViewHolder> {
     private List mList;
     private static RecyclerViewClickListener itemListener;
 
@@ -48,7 +47,7 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
      *
      * @param mList
      */
-    public ActiveSessionListAdapter(List mList) {
+    public TrackedByYouListAdapter(List mList) {
         this.mList = mList;
     }
 
@@ -62,7 +61,7 @@ public class ActiveSessionListAdapter extends RecyclerView.Adapter<ActiveSession
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_active_session_list, parent, false);
-        return new ActiveSessionListAdapter.ViewHolder(itemView);
+        return new TrackedByYouListAdapter.ViewHolder(itemView);
     }
 
     /**

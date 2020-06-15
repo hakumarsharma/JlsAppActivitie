@@ -61,7 +61,6 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     }
 
 
-
     /**
      * A new ViewHolder that holds a View of the given view type
      *
@@ -92,6 +91,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView trackingDeviceName;
+
         /**
          * Constructor where we find element from .xml file
          *

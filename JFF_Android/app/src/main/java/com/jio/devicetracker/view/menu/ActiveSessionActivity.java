@@ -23,7 +23,6 @@ package com.jio.devicetracker.view.menu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,6 +42,7 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.database.pojo.SearchEventData;
+import com.jio.devicetracker.database.pojo.TrackingYou;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
@@ -51,8 +51,9 @@ import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.adapter.TrackingYouListAdapter;
 import com.jio.devicetracker.view.location.MapsActivity;
-import com.jio.devicetracker.view.adapter.ActiveSessionListAdapter;
+import com.jio.devicetracker.view.adapter.TrackedByYouListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,9 +71,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * This class shows all the active session(To whom you are tracking or you are tracked by)
  */
 public class ActiveSessionActivity extends AppCompatActivity implements View.OnClickListener {
-    private ActiveSessionListAdapter mAdapter;
-    private RecyclerView mRecyclerList;
-    private RecyclerView trackingList;
+    private TrackedByYouListAdapter mTrackedByYouListAdapter;
+    private TrackingYouListAdapter mTrackingYouListAdapter;
+    private RecyclerView trackingByYouListRecyclerView;
+    private RecyclerView trackingYouListRecyclerView;
     private List listOnActiveSession;
     private TextView activeMemberPresent;
     private int position;
@@ -95,21 +97,21 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         backBtn.setOnClickListener(this);
         trackedTitle = findViewById(R.id.tracked_title);
         trackingTitle = findViewById(R.id.tracking_title);
-        trackedTitle.setTypeface(Util.mTypeface(this,3));
-        trackingTitle.setTypeface(Util.mTypeface(this,3));
-        mRecyclerList = findViewById(R.id.activeSessionsList);
-        trackingList = findViewById(R.id.activeSessionsTrackingList);
+        trackedTitle.setTypeface(Util.mTypeface(this, 3));
+        trackingTitle.setTypeface(Util.mTypeface(this, 3));
+        trackingByYouListRecyclerView = findViewById(R.id.trackingByYouList);
+        trackingYouListRecyclerView = findViewById(R.id.trackingYouList);
         activeMemberPresent = findViewById(R.id.activeMemberPresent);
         mDbManager = new DBManager(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getApplicationContext());
-        mRecyclerList.setLayoutManager(linearLayoutManager);
-        trackingList.setLayoutManager(linearLayoutManager1);
+        trackingByYouListRecyclerView.setLayoutManager(linearLayoutManager);
+        trackingYouListRecyclerView.setLayoutManager(linearLayoutManager1);
         makeGroupInfoPerUserRequestAPICall();
     }
 
     private void adapterEventListener() {
-        mAdapter.setOnItemClickPagerListener(new ActiveSessionListAdapter.RecyclerViewClickListener() {
+        mTrackedByYouListAdapter.setOnItemClickPagerListener(new TrackedByYouListAdapter.RecyclerViewClickListener() {
             @Override
             public void clickOnListLayout(int image, String groupName, String groupId, String createdBy) {
                 if (image == R.drawable.ic_group_button) {
@@ -186,7 +188,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                         }
                     }
                 } else {
-                    if (! mList.isEmpty()) {
+                    if (!mList.isEmpty()) {
                         MapData mapData = new MapData();
                         mapData.setLatitude(mList.get(0).getLocation().getLat());
                         mapData.setLongitude(mList.get(0).getLocation().getLng());
@@ -216,7 +218,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
      * Checks if any group/member is in active state or else display no active member found
      */
     private void isAnyMemberActive() {
-        if (listOnActiveSession.isEmpty()) {
+        /*if (listOnActiveSession.isEmpty()) {
             mRecyclerList.setVisibility(View.INVISIBLE);
             activeMemberPresent.setVisibility(View.VISIBLE);
         } else {
@@ -225,7 +227,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             trackingTitle.setVisibility(View.VISIBLE);
             trackedTitle.setVisibility(View.VISIBLE);
             trackingList.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
     /**
@@ -258,7 +260,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                     Toast.makeText(ActiveSessionActivity.this, Constant.REMOVE_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mDbManager.deleteSelectedDataFromGroup(groupId);
                     mDbManager.deleteSelectedDataFromGroupMember(groupId);
-                    mAdapter.removeItem(position);
+                    mTrackedByYouListAdapter.removeItem(position);
                     addDatainList();
                     isAnyMemberActive();
                 } else {
@@ -304,7 +306,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                     Util.progressDialog.dismiss();
                     Toast.makeText(ActiveSessionActivity.this, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mDbManager.deleteSelectedDataFromGroupMember(groupId);
-                    mAdapter.removeItem(position);
+                    mTrackedByYouListAdapter.removeItem(position);
                     addDatainList();
                     isAnyMemberActive();
                 } else {
@@ -339,7 +341,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             DBManager mDbManager = new DBManager(ActiveSessionActivity.this);
             mDbManager.deleteSelectedDataFromGroup(groupId);
             mDbManager.deleteSelectedDataFromGroupMember(groupId);
-            mAdapter.removeItem(position);
+            mTrackedByYouListAdapter.removeItem(position);
             addDatainList();
             isAnyMemberActive();
         }
@@ -392,13 +394,17 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
      */
     private void addDatainList() {
         DBManager mDbManager = new DBManager(getApplicationContext());
+        String userId = mDbManager.getAdminLoginDetail().getUserId();
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
         List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
         listOnActiveSession = new ArrayList<>();
+
+        // Adding Tracked by you list in Active Session
         for (HomeActivityListData data : groupDetailList) {
             if (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
                     && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
-                    && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)) {
+                    && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)
+                    && !data.getGroupOwnerUserId().equalsIgnoreCase(userId)) {
                 HomeActivityListData homeActivityListData = new HomeActivityListData();
                 homeActivityListData.setGroupName(data.getGroupName());
                 homeActivityListData.setGroupId(data.getGroupId());
@@ -411,7 +417,19 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             }
         }
 
-        for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
+        // Adding Tracking you in list of Active session
+        List<TrackingYou> trackingYouList = new ArrayList<>();
+        for(HomeActivityListData data : groupDetailList) {
+            if(userId.equalsIgnoreCase(data.getGroupOwnerUserId())) {
+                TrackingYou trackingYou = new TrackingYou();
+                trackingYou.setGroupOwnerName(data.getGroupOwnerName());
+                trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
+                trackingYou.setGroupOwnerUserId(data.getGroupOwnerUserId());
+                trackingYouList.add(trackingYou);
+            }
+        }
+
+        /*for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
             GroupMemberDataList data = new GroupMemberDataList();
             if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
@@ -435,9 +453,10 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                 }
                 listOnActiveSession.add(data);
             }
-        }
-        mAdapter = new ActiveSessionListAdapter(listOnActiveSession);
-        mRecyclerList.setAdapter(mAdapter);
-        trackingList.setAdapter(mAdapter);
+        }*/
+        mTrackedByYouListAdapter = new TrackedByYouListAdapter(listOnActiveSession);
+        mTrackingYouListAdapter = new TrackingYouListAdapter(trackingYouList);
+        trackingByYouListRecyclerView.setAdapter(mTrackedByYouListAdapter);
+        trackingYouListRecyclerView.setAdapter(mTrackedByYouListAdapter);
     }
 }

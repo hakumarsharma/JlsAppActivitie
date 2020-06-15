@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,7 @@ import java.util.List;
 
 public class ProfileTrackedByListAdapter extends RecyclerView.Adapter<ProfileTrackedByListAdapter.ViewHolder> {
     private List mList;
-    private static ActiveSessionListAdapter.RecyclerViewClickListener itemListener;
+    private static TrackedByYouListAdapter.RecyclerViewClickListener itemListener;
 
     /**
      * Constructor to display the active session devices list
