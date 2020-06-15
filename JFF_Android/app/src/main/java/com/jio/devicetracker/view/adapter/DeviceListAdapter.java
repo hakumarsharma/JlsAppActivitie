@@ -24,21 +24,25 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.util.Util;
 
 import java.util.List;
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.ViewHolder> {
 
     private Context mContext;
+    private List<HomeActivityListData> mList;
 
-    public DeviceListAdapter(List<GroupMemberDataList> mList, Context mContext) {
-//        this.mList = mList;
+    public DeviceListAdapter(List<HomeActivityListData> mList, Context mContext) {
+        this.mList = mList;
         this.mContext = mContext;
     }
 
@@ -52,9 +56,8 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     @NonNull
     @Override
     public DeviceListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        /*View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_layout_adapter, parent, false);
-        return new DeviceListAdapter.ViewHolder(itemView);*/
-        return null;
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_layout_adapter, parent, false);
+        return new DeviceListAdapter.ViewHolder(itemView);
     }
 
 
@@ -68,7 +71,9 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull DeviceListAdapter.ViewHolder holder, int position) {
-        // Todo
+        HomeActivityListData data = mList.get(position);
+        holder.trackingDeviceName.setTypeface(Util.mTypeface(mContext, 5));
+        holder.trackingDeviceName.setText(data.getGroupName());
     }
 
 
@@ -79,14 +84,14 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
      */
     @Override
     public int getItemCount() {
-//        return mList.size();
-        return 0;
+        return mList.size();
     }
 
     /**
      * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView trackingDeviceName;
         /**
          * Constructor where we find element from .xml file
          *
@@ -94,7 +99,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            trackingDeviceName = itemView.findViewById(R.id.trackingDeviceName);
         }
     }
 }

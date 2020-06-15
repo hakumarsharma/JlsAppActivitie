@@ -140,7 +140,9 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
         listOnActiveSession = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
-            if (data.getStatus().equalsIgnoreCase(Constant.ACTIVE) && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+            if (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
+                    && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                    && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)) {
                 HomeActivityListData homeActivityListData = new HomeActivityListData();
                 homeActivityListData.setGroupName(data.getGroupName());
                 homeActivityListData.setGroupId(data.getGroupId());
@@ -155,9 +157,11 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
 
         for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
             GroupMemberDataList data = new GroupMemberDataList();
-            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)
-                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXITED) && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
+                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXITED)
+                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());
                 data.setConsentStatus(groupMemberDataList.getConsentStatus());
