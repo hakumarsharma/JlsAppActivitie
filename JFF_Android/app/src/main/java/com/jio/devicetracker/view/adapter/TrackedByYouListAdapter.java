@@ -53,6 +53,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
 
     /**
      * Binds the given View to the position
+     *
      * @param parent
      * @param viewType
      * @return View Holder object
@@ -60,7 +61,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_active_session_list, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tracking_you_list_apater, parent, false);
         return new TrackedByYouListAdapter.ViewHolder(itemView);
     }
 
@@ -117,9 +118,11 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         public ImageView kidIcon;
         public ImageView profile;
         public RelativeLayout relativeLayout;
-        public ImageView activeSessionOptions;
-        private RelativeLayout groupOptLayout;
-        public ImageView close;
+        public ImageView trackedByYouOperationStatus;
+        private RelativeLayout trackedByYouOprationLayout;
+        public ImageView trackedByYouClose;
+        private TextView trackedByYouEdit;
+        private TextView deleteAllMembers;
 
         /**
          * Constructor where we find element from .xml file
@@ -130,26 +133,36 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             super(itemView);
             name = itemView.findViewById(R.id.groupName);
             profile = itemView.findViewById(R.id.groupmemberIcon);
-            groupOptLayout = itemView.findViewById(R.id.oprationLayout);
-            close = itemView.findViewById(R.id.close);
-            close.setOnClickListener(this);
+            trackedByYouOprationLayout = itemView.findViewById(R.id.trackedByYouOprationLayout);
+            trackedByYouClose = itemView.findViewById(R.id.trackedByYouClose);
+            trackedByYouClose.setOnClickListener(this);
             relativeLayout = itemView.findViewById(R.id.activeSessionLayout);
-            activeSessionOptions = itemView.findViewById(R.id.operationStatus);
-            activeSessionOptions.setOnClickListener(this);
+            trackedByYouOperationStatus = itemView.findViewById(R.id.trackedByYouOperationStatus);
+            trackedByYouOperationStatus.setOnClickListener(this);
             motherIcon = itemView.findViewById(R.id.motherIcon);
             fatherIcon = itemView.findViewById(R.id.fatherIcon);
             kidIcon = itemView.findViewById(R.id.kidIcon);
             dogIcon = itemView.findViewById(R.id.dogIcon);
+            trackedByYouEdit = itemView.findViewById(R.id.trackedByYouEdit);
+            trackedByYouEdit.setOnClickListener(this);
+            deleteAllMembers = itemView.findViewById(R.id.deleteAllMembers);
+            deleteAllMembers.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            switch(v.getId()){
-                case R.id.operationStatus:
-                    groupOptLayout.setVisibility(View.VISIBLE);
+            switch (v.getId()) {
+                case R.id.trackedByYouOperationStatus:
+                    trackedByYouOprationLayout.setVisibility(View.VISIBLE);
                     break;
-                case R.id.close:
-                    groupOptLayout.setVisibility(View.GONE);
+                case R.id.trackedByYouClose:
+                    trackedByYouOprationLayout.setVisibility(View.GONE);
+                    break;
+                case R.id.trackedByYouEdit:
+                    // Todo
+                    break;
+                case R.id.deleteAllMembers:
+                    // Todo
                     break;
             }
         }
@@ -164,6 +177,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
 
     /**
      * Register the listener
+     *
      * @param mItemClickListener
      */
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
@@ -172,6 +186,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
 
     /**
      * Called when we remove device from active session screen
+     *
      * @param adapterPosition
      */
     public void removeItem(int adapterPosition) {

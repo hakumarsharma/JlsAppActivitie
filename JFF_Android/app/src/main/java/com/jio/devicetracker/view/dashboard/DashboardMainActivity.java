@@ -185,9 +185,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         Boolean isAddDevice = intent.getBooleanExtra(Constant.Add_Device, false);
         if (isAddPeople) {
             viewPager.setCurrentItem(1);
-        }else if(isAddDevice){
+        } else if (isAddDevice) {
             viewPager.setCurrentItem(2);
-        }else {
+        } else {
             viewPager.setCurrentItem(0);
         }
     }

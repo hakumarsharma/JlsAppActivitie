@@ -23,6 +23,9 @@ package com.jio.devicetracker.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,7 +46,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_active_session_list, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tracking_by_you_list_apater, parent, false);
         return new TrackingYouListAdapter.ViewHolder(itemView);
     }
 
@@ -54,13 +57,59 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private ImageView trackingYouOperationStatus;
+        private RelativeLayout trackingYouOprationLayout;
+        private ImageView trackingYouclose;
+        private TextView disableTracking;
+        private TextView leaveGroup;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            trackingYouOperationStatus = itemView.findViewById(R.id.trackingYouOperationStatus);
+            trackingYouOperationStatus.setOnClickListener(this);
+            trackingYouOprationLayout = itemView.findViewById(R.id.trackingYouOprationLayout);
+            trackingYouclose = itemView.findViewById(R.id.trackingYouclose);
+            trackingYouclose.setOnClickListener(this);
+            disableTracking = itemView.findViewById(R.id.disableTracking);
+            disableTracking.setOnClickListener(this);
+            leaveGroup = itemView.findViewById(R.id.leaveGroup);
+            leaveGroup.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.trackingYouOperationStatus:
+                    trackingYouOprationLayout.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.trackingYouclose:
+                    trackingYouOprationLayout.setVisibility(View.GONE);
+                    break;
+                case R.id.disableTracking:
+                    // Todo
+                    break;
+                case R.id.leaveGroup:
+                    // Todo
+                    break;
+
+            }
         }
     }
+
+    /**
+     * Called when we remove device from active session screen
+     *
+     * @param adapterPosition
+     */
+    public void removeItem(int adapterPosition) {
+        mList.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        notifyDataSetChanged();
+    }
+
 }

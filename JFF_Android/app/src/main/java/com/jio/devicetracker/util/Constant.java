@@ -281,7 +281,6 @@ public class Constant {
     public static final String GROUPNAME = "groupName";
     public static final String QR_CODE_VALUE = "QRCodeValue";
     public static final String SCAN_QR_CODE_TITLE = "Scan QR Code";
-    public static final String DEVICE_NAME_TITLE = "Customize device ";
 
     public static final String ACTIVE_SESSION_TITLE = "Group Management";
     public static final String TRACKER_TITLE = "Trackers";
@@ -347,6 +346,21 @@ public class Constant {
     public static final String EDIT_MEMBER_PROFILE_TITLE = "Edit members";
     public static final String ATTACH_DEVICE_TITLE = "Attach device";
 
+
+    // Customize device
+    public static final String DEVICE_NAME_TITLE = "Customize device ";
+    public static final String REAL_ICON = "Real Icon";
+    public static final String GROUP_ICON = "Group Icon";
+    public static final String DEVICE_NUMBER = "DeviceNumber";
+    public static final String MOM = "Mom";
+    public static final String FATHER = "Father";
+    public static final String KID = "Kid";
+    public static final String HUSBAND = "Husband";
+    public static final String WIFE = "Wife";
+    public static final String OTHER = "Other";
+    public static final String DOG = "Dog";
+    public static final String CAT = "Cat";
+    public static final String OTHER_PET = "Other Pet";
 
 
     //Status code

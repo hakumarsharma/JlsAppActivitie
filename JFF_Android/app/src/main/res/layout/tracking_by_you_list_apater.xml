@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:id="@+id/activeSessionLayout"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/trackedByYouLayout"
         android:layout_width="match_parent"
-        android:id="@+id/groupListLayout"
         android:layout_height="90dp"
         android:layout_margin="10dp"
         card_view:cardCornerRadius="5dp"
@@ -70,7 +69,7 @@
                 android:background="@drawable/dog" />
 
             <ImageView
-                android:id="@+id/operationStatus"
+                android:id="@+id/trackedByYouOperationStatus"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignParentRight="true"
@@ -79,17 +78,18 @@
                 android:src="@drawable/ic_more_black" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
     <RelativeLayout
-        android:id="@+id/oprationLayout"
+        android:id="@+id/trackedByYouOprationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/ten_dp"
+        android:background="@drawable/dialog_lightblue_background"
         android:elevation="@dimen/ten_dp"
-        android:visibility="gone"
-        android:background="@drawable/dialog_lightblue_background">
+        android:visibility="gone">
 
         <ImageView
-            android:id="@+id/close"
+            android:id="@+id/trackedByYouClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -98,7 +98,7 @@
             android:src="@drawable/ic_close" />
 
         <TextView
-            android:id="@+id/edit"
+            android:id="@+id/trackedByYouEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_22"
@@ -108,25 +108,25 @@
             android:textSize="@dimen/seventeen_dp" />
 
         <View
-            android:id="@+id/editLine"
+            android:id="@+id/trackedByYouEditEditLine"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/edit"
+            android:layout_below="@+id/trackedByYouEdit"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/eight_dp"
             android:layout_marginRight="@dimen/fourteen_dp"
             android:background="@color/light_hash" />
 
         <TextView
-            android:id="@+id/add"
+            android:id="@+id/deleteAllMembers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editLine"
+            android:layout_below="@+id/trackedByYouEditEditLine"
             android:layout_marginLeft="@dimen/margin_22"
             android:layout_marginTop="@dimen/ten_dp"
+            android:paddingBottom="@dimen/margin_12"
             android:text="Delete all members"
             android:textColor="@color/white"
-            android:paddingBottom="@dimen/margin_12"
             android:textSize="@dimen/seventeen_dp" />
 
     </RelativeLayout>

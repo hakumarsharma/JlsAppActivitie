@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
@@ -40,6 +41,7 @@ import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.group.ChooseGroupActivity;
 
 public class DeviceNameActivity extends BaseActivity implements View.OnClickListener {
+
     private ImageView motherIcon;
     private ImageView fatherIcon;
     private ImageView husbandIcon;
@@ -53,7 +55,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     private Button done;
     private String deviceNumber;
     private String groupId;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,14 +70,14 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         done.setAlpha(.5f);
         Intent intent = getIntent();
         groupId = intent.getStringExtra(Constant.GROUP_ID);
-        deviceNumber = intent.getStringExtra("DeviceNumber");
-        title.setTypeface(Util.mTypeface(this,5));
+        deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
+        title.setTypeface(Util.mTypeface(this, 5));
         TextView iconSelectionText = findViewById(R.id.icon_selection);
-        iconSelectionText.setTypeface(Util.mTypeface(this,3));
+        iconSelectionText.setTypeface(Util.mTypeface(this, 3));
         initiateUI();
     }
 
-    public void initiateUI(){
+    public void initiateUI() {
         motherIcon = findViewById(R.id.mother_icon);
         fatherIcon = findViewById(R.id.father_icon);
         husbandIcon = findViewById(R.id.husband_icon);
@@ -87,7 +88,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         catIcon = findViewById(R.id.cat_icon);
         otherPetIcon = findViewById(R.id.other_pet_icon);
         deviceName = findViewById(R.id.device_edit_name);
-
         motherIcon.setOnClickListener(this);
         fatherIcon.setOnClickListener(this);
         wifeIcon.setOnClickListener(this);
@@ -101,64 +101,103 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
-
+        String name = deviceName.getText().toString().trim();
+        switch (v.getId()) {
             case R.id.mother_icon:
-                motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.groupselected));
+                if (motherIcon.getTag() != null && motherIcon.getTag().equals(Constant.GROUP_ICON)
+                        && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.MOM)) {
+                    motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
+                    motherIcon.setTag(Constant.REAL_ICON);
+                    deviceName.setText(Constant.EMPTY_STRING);
+                } else {
+                    motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
+                    motherIcon.setTag(Constant.GROUP_ICON);
+                    deviceName.setText(Constant.MOM);
+                }
                 fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
                 husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
                 wifeIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
                 kidIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
-                otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
+                otherIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
                 dogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
                 catIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
                 otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
-
-                deviceName.setText("Mom");
                 done.setAlpha(1);
-                //navigateTochooseGroup("Mother");
                 break;
             case R.id.father_icon:
-                fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.groupselected));
+                if (fatherIcon.getTag() != null && fatherIcon.getTag().equals(Constant.GROUP_ICON)
+                        && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.FATHER)) {
+                    fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
+                    fatherIcon.setTag(Constant.REAL_ICON);
+                    deviceName.setText(Constant.EMPTY_STRING);
+                } else {
+                    fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
+                    fatherIcon.setTag(Constant.GROUP_ICON);
+                    deviceName.setText(Constant.FATHER);
+                }
                 motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
                 husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
                 wifeIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
                 kidIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
-                otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
+                otherIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
                 dogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
                 catIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
                 otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
-                deviceName.setText("Father");
                 done.setAlpha(1);
                 break;
             case R.id.husband_icon:
-                husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.groupselected));
+                if (husbandIcon.getTag() != null && husbandIcon.getTag().equals(Constant.GROUP_ICON)
+                        && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.HUSBAND)) {
+                    husbandIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.husband, null));
+                    husbandIcon.setTag(Constant.REAL_ICON);
+                    deviceName.setText(Constant.EMPTY_STRING);
+                } else {
+                    husbandIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
+                    husbandIcon.setTag(Constant.GROUP_ICON);
+                    deviceName.setText(Constant.HUSBAND);
+                }
                 motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
                 fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
                 wifeIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
                 kidIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
-                otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
+                otherIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
                 dogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
                 catIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
                 otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
-                deviceName.setText("Husband");
                 done.setAlpha(1);
                 break;
             case R.id.wife_icon:
-                wifeIcon.setImageDrawable(getResources().getDrawable(R.drawable.groupselected));
+                if (wifeIcon.getTag() != null && wifeIcon.getTag().equals(Constant.GROUP_ICON)
+                        && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.WIFE)) {
+                    wifeIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.wife, null));
+                    wifeIcon.setTag(Constant.REAL_ICON);
+                    deviceName.setText(Constant.EMPTY_STRING);
+                } else {
+                    wifeIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
+                    wifeIcon.setTag(Constant.GROUP_ICON);
+                    deviceName.setText(Constant.WIFE);
+                }
                 motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
                 fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
                 husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
                 kidIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
-                otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
+                otherIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
                 dogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
                 catIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
                 otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
-                deviceName.setText("Wife");
                 done.setAlpha(1);
                 break;
             case R.id.kid_icon:
-                kidIcon.setImageDrawable(getResources().getDrawable(R.drawable.groupselected));
+                if (kidIcon.getTag() != null && kidIcon.getTag().equals(Constant.GROUP_ICON)
+                        && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.KID)) {
+                    kidIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.kid, null));
+                    kidIcon.setTag(Constant.REAL_ICON);
+                    deviceName.setText(Constant.EMPTY_STRING);
+                } else {
+                    kidIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
+                    kidIcon.setTag(Constant.GROUP_ICON);
+                    deviceName.setText(Constant.KID);
+                }
                 motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
                 fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
                 husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
@@ -167,59 +206,90 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 dogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
                 catIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
                 otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
-                deviceName.setText("Kid");
                 done.setAlpha(1);
                 break;
             case R.id.other_icon:
-                otherIcon.setImageDrawable(getResources().getDrawable(R.drawable.groupselected));
-                motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
-                fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
-                husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
-                wifeIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
-                kidIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
-                dogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
-                catIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
-                otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
-                deviceName.setText("Other");
+                if (otherIcon.getTag() != null && otherIcon.getTag().equals(Constant.GROUP_ICON)
+                        && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.OTHER)) {
+                    otherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other, null));
+                    otherIcon.setTag(Constant.REAL_ICON);
+                    deviceName.setText(Constant.EMPTY_STRING);
+                } else {
+                    otherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
+                    otherIcon.setTag(Constant.GROUP_ICON);
+                    deviceName.setText(Constant.OTHER);
+                }
+                motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
+                fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
+                husbandIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.husband, null));
+                wifeIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.wife, null));
+                kidIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.kid, null));
+                dogIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.dog, null));
+                catIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.cat, null));
+                otherPetIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other_pet, null));
                 done.setAlpha(1);
                 break;
             case R.id.dog_icon:
-                dogIcon.setImageDrawable(getResources().getDrawable(R.drawable.groupselected));
-                motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
-                fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
-                husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
-                wifeIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
-                kidIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
-                otherIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
-                catIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
-                otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
-                deviceName.setText("Dog");
+                if (dogIcon.getTag() != null && dogIcon.getTag().equals(Constant.GROUP_ICON)
+                        && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.DOG)) {
+                    dogIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.dog, null));
+                    dogIcon.setTag(Constant.REAL_ICON);
+                    deviceName.setText(Constant.EMPTY_STRING);
+                } else {
+                    dogIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
+                    dogIcon.setTag(Constant.GROUP_ICON);
+                    deviceName.setText(Constant.DOG);
+                }
+                motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
+                fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
+                husbandIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.husband, null));
+                wifeIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.wife, null));
+                kidIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.kid, null));
+                otherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other, null));
+                catIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.cat, null));
+                otherPetIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other_pet, null));
                 done.setAlpha(1);
                 break;
             case R.id.cat_icon:
-                catIcon.setImageDrawable(getResources().getDrawable(R.drawable.groupselected));
-                motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
-                fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
-                husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
-                wifeIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
-                kidIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
-                otherIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
-                dogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
-                otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
-                deviceName.setText("Cat");
+                if (catIcon.getTag() != null && catIcon.getTag().equals(Constant.GROUP_ICON)
+                        && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.CAT)) {
+                    catIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.cat, null));
+                    catIcon.setTag(Constant.REAL_ICON);
+                    deviceName.setText(Constant.EMPTY_STRING);
+                } else {
+                    catIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
+                    catIcon.setTag(Constant.GROUP_ICON);
+                    deviceName.setText(Constant.CAT);
+                }
+                motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
+                fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
+                husbandIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.husband, null));
+                wifeIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.wife, null));
+                kidIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.kid, null));
+                otherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other, null));
+                dogIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.dog, null));
+                otherPetIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other_pet, null));
                 done.setAlpha(1);
                 break;
             case R.id.other_pet_icon:
-                otherPetIcon.setImageDrawable(getResources().getDrawable(R.drawable.groupselected));
-                motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
-                fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
-                husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
-                wifeIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
-                kidIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
-                otherIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
-                dogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
-                catIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
-                deviceName.setText("Other Pet");
+                if (otherPetIcon.getTag() != null && otherPetIcon.getTag().equals(Constant.GROUP_ICON)
+                        && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.OTHER_PET)) {
+                    otherPetIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other_pet, null));
+                    otherPetIcon.setTag(Constant.REAL_ICON);
+                    deviceName.setText(Constant.EMPTY_STRING);
+                } else {
+                    otherPetIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
+                    otherPetIcon.setTag(Constant.GROUP_ICON);
+                    deviceName.setText(Constant.OTHER_PET);
+                }
+                motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
+                fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
+                husbandIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.husband, null));
+                wifeIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.wife, null));
+                kidIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.kid, null));
+                otherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other, null));
+                dogIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.dog, null));
+                catIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.cat, null));
                 done.setAlpha(1);
                 break;
 
@@ -229,8 +299,8 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     return;
                 }
                 if (groupId == null || groupId.isEmpty()) {
-                   createGroupAndAddContactDetails();
-                }else {
+                    createGroupAndAddContactDetails();
+                } else {
                     addMemberToCreatedGroup();
                 }
                 break;
@@ -239,7 +309,8 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
 
         }
     }
-    private void createGroupAndAddContactDetails(){
+
+    private void createGroupAndAddContactDetails() {
         this.memberName = deviceName.getText().toString();
         this.memberNumber = deviceNumber;
         this.isFromCreateGroup = false;
@@ -257,6 +328,4 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         this.isFromDevice = true;
         addMemberInGroupAPICall();
     }
-
-
 }

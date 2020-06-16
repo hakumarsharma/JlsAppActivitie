@@ -559,7 +559,7 @@ public class DBManager {
     public List<HomeActivityListData> getAllGroupDetail() {
         List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
-        String[] column = {DatabaseHelper.GROUPID, DatabaseHelper.GROUP_NAME, DatabaseHelper.STATUS, DatabaseHelper.CREATED_BY, DatabaseHelper.UPDATED_BY, DatabaseHelper.PROFILE_IMAGE, DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO,DatabaseHelper.GROUP_ICON};
+        String[] column = {DatabaseHelper.GROUPID, DatabaseHelper.GROUP_NAME, DatabaseHelper.STATUS, DatabaseHelper.CREATED_BY, DatabaseHelper.UPDATED_BY, DatabaseHelper.PROFILE_IMAGE, DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO, DatabaseHelper.GROUP_ICON};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP, column, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -584,6 +584,7 @@ public class DBManager {
 
     /**
      * Get group detail based on group id from Group Table
+     *
      * @param groupId
      * @return Entire group detail
      */
@@ -696,6 +697,7 @@ public class DBManager {
 
     /**
      * Get all group member of a group based on group id
+     *
      * @param groupId
      */
     public List<GroupMemberDataList> getAllGroupMemberDataBasedOnGroupId(String groupId) {
@@ -773,6 +775,7 @@ public class DBManager {
 
     /**
      * Update consent in TABLE_NAME_BORQS table
+     *
      * @param consentId
      * @param message
      */
@@ -784,20 +787,19 @@ public class DBManager {
     }
 
     /**
-     *
      * @param consentId
      * @return Group Member details
      */
     public GroupMemberDataList getGroupMemberDetailByConsentId(String consentId) {
         mDatabase = mDBHelper.getWritableDatabase();
         GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
-        if(consentId != null) {
+        if (consentId != null) {
             String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.STATUS,
                     DatabaseHelper.CONSENT_ID, DatabaseHelper.USER_ID, DatabaseHelper.DEVICE_ID, DatabaseHelper.GROUPID, DatabaseHelper.PROFILE_IMAGE};
             String[] arg = {consentId};
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP_MEMBER, column, DatabaseHelper.CONSENT_ID + " = ? ", arg, null, null, null);
             if (cursor != null && cursor.getCount() > 0) {
-                if(cursor.moveToNext()) {
+                if (cursor.moveToNext()) {
                     groupMemberDataList.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
                     groupMemberDataList.setNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
                     groupMemberDataList.setConsentStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATUS)));
