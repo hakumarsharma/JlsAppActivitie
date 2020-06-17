@@ -39,7 +39,6 @@ public class GenerateLoginTokenRequest implements IRequest {
         this.sucessListener = sucessListener;
         this.errorListener = errorListener;
         this.data = data;
-
     }
 
     @Override

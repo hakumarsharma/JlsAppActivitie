@@ -63,6 +63,8 @@ public final class Util extends AppCompatActivity {
     public static String userName = "";
     public static String userId = "";
     public static String userNumber = "";
+    public String googleToken;
+    private Date expiryTime;
 
     private Util() {
 
@@ -499,5 +501,25 @@ public final class Util extends AppCompatActivity {
             font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-MediumItalic.ttf");
         }
         return font1;
+    }
+
+    public void updateGoogleToken(String googleToken) {
+        this.googleToken = googleToken;
+    }
+
+    public String getGoogleToken() {
+        return googleToken;
+    }
+
+    public void setExpiryTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 2);
+        expiryTime = calendar.getTime();
+    }
+    public boolean isGoogleTokenExpired() {
+        if(Calendar.getInstance().getTime().after(expiryTime)) {
+            return true;
+        }
+        return false;
     }
 }

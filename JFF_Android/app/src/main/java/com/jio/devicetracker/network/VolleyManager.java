@@ -29,6 +29,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
+import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.SplashScreenActivity;
+import com.jio.devicetracker.view.signinsignup.LoginFragment;
+
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,8 +70,8 @@ public class VolleyManager extends StringRequest {
     public Map<String, String> getHeaders(){
         Map<String, String> header = new HashMap<String, String>();
         header.put("Content-Type", "application/json; charset=utf-8");
+        header.put("captcha", "android " + Util.getInstance().getGoogleToken());
         return header;
-
     }
 
 

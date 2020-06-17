@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.alimuzaffar.lib.pin.PinEntryEditText;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.safetynet.SafetyNet;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddDeviceData;
@@ -85,6 +86,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
 
     /**
      * Sets Layout Data
+     *
      * @param view
      */
     private void setLayoutData(View view) {
@@ -107,14 +109,21 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.timerTextView) {
+            if (Util.getInstance().isGoogleTokenExpired()) {
+                makeSafetyNetCall();
+            }
             generateLoginTokenAPICall();
         } else if (v.getId() == R.id.submitLogin) {
+            if (Util.getInstance().isGoogleTokenExpired()) {
+                makeSafetyNetCall();
+            }
             onLoginButtonClick();
         }
     }
 
     /**
      * Will be called when OTP is received in phone
+     *
      * @param message
      * @param phoneNum
      */
@@ -127,6 +136,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
 
     /**
      * Starts the timer for 60 second
+     *
      * @param finish
      * @param tick
      */
@@ -139,7 +149,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
                 } else {
                     timerTextView.setText(Constant.RESEND_OTP + "00" + ":" + remainedSecs);
                 }
-                if(getContext() != null) {
+                if (getContext() != null) {
                     timerTextView.setTextColor(getResources().getColor(R.color.unselected_button_background));
                     timerTextView.setEnabled(false);
                 }
@@ -149,7 +159,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
                 pinEntryEditText.getText().clear();
                 timerTextView.setText(Constant.REQUEST_OTP);
                 timerTextView.setEnabled(true);
-                if(getContext() != null) {
+                if (getContext() != null) {
                     timerTextView.setTextColor(getResources().getColor(R.color.timerTextViewColor));
                 }
                 cancel();
@@ -161,12 +171,12 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
      * Make an api call to generate Login token
      */
     private void generateLoginTokenAPICall() {
+        Util.getInstance().showProgressBarDialog(getActivity());
         GenerateLoginTokenData generateLoginTokenData = new GenerateLoginTokenData();
         GenerateLoginTokenData.Role role = new GenerateLoginTokenData().new Role();
         role.setCode(Constant.SUPERVISOR);
         generateLoginTokenData.setPhone(phoneNumber);
         generateLoginTokenData.setRole(role);
-        Util.getInstance().showProgressBarDialog(getActivity());
         RequestHandler.getInstance(getActivity()).handleRequest(new GenerateLoginTokenRequest(new GenerateLoginTokenSuccessListener(), new GenerateLoginTokenErrorListener(), generateLoginTokenData));
     }
 
@@ -179,7 +189,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
             GenerateTokenResponse generateLoginTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
             Util.progressDialog.dismiss();
             if (generateLoginTokenResponse.getCode() == 200) {
-               // Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
                 startTimer(60000, 1000);
             }
         }
@@ -195,6 +205,19 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
             if (error.networkResponse.statusCode == 403) {
                 pinEntryEditText.setError(Constant.GENERATE_TOKEN_FAILURE);
             }
+        }
+    }
+
+    private void makeSafetyNetCall() {
+        if (Util.getInstance().isGoogleTokenExpired()) {
+            SafetyNet.getClient(getActivity()).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
+                    .addOnSuccessListener(getActivity(), response -> {
+                        if (!response.getTokenResult().isEmpty()) {
+                            Util.getInstance().setExpiryTime();
+                            Util.getInstance().updateGoogleToken(response.getTokenResult());
+                        }
+                    })
+                    .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -223,7 +246,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
             ugsToken = logindetailResponse.getData().getUgsToken();
             Util.getAdminDetail(getActivity());
             // Verify and assign API Call if number is not already added on server
-            if(mDbManager.getAdminLoginDetail() != null && mDbManager.getAdminLoginDetail().getPhoneNumber() != null
+            if (mDbManager.getAdminLoginDetail() != null && mDbManager.getAdminLoginDetail().getPhoneNumber() != null
                     && logindetailResponse.getData().getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())) {
                 System.out.println("Already added device it is");
             } else {
@@ -306,7 +329,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     private class AddDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-           // Todo
+            // Todo
         }
     }
 

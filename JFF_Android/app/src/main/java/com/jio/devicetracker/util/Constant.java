@@ -29,6 +29,8 @@ public class Constant {
 
     public static String AES_SECRET_KEY = "PBKDF2WithHmacSHA512";
     public static String CIPHER_KEY = "AES/CBC/PKCS5Padding";
+    public static final String GOOGLE_RECAPCHA_KEY = "6Lf5VQAVAAAAAEoiNLih9hYqm-SPZ3Di8QZyFqbC";
+
 
     public static int INVALID_USER = 401;
     public static int ACCOUNT_LOCK = 403;
@@ -55,6 +57,7 @@ public class Constant {
     public static final String SUPERVISOR = "supervisor";
     public static final String TITLE = "Title...";
     public static final String EMPTY_STRING = "";
+    public static final String GOOGLE_RECAPTCHA_ERROR = "Captcha error";
 
 
     // Registration Activity constants
@@ -215,7 +218,7 @@ public class Constant {
     public static final String GET_DEVICE_LOCATION_URL_2 = "?tsp=1585031229387&ugs_token=";
     public static final String REGISTRATION_URL_VERIFY = "/accounts/api/users/tokens/verify";
     public static final String GENERATE_TOKEN_REQUEST_URL = "/accounts/api/users/tokens";
-    public static final String GENERATE_LOGIN_TOKEN_REQUEST_URL = "/accounts/api/users/tokens/login";
+    public static final String GENERATE_LOGIN_TOKEN_REQUEST_URL = "/accounts/api/users/v2/tokens/login";
     public static final String ACCOUNTS_API_USER_URL = "/accounts/api/users/";
     public static final String SESSION_GROUPS_URL = "/sessiongroups/";
     public static final String SESSION_GROUPS_URL1 = "/sessiongroups";

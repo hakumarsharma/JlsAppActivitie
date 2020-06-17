@@ -23,6 +23,7 @@ package com.jio.devicetracker.view.signinsignup;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -38,6 +39,10 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.GenerateLoginTokenData;
 import com.jio.devicetracker.database.pojo.request.GenerateLoginTokenRequest;
@@ -93,7 +98,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.continueLogin) {
             phoneNumber = mobileNumberEditText.getText().toString().trim();
-            generateLoginTokenAPICall();
+            makeSafetyNetCall();
         } else {
             Intent intent = new Intent(getContext(), TermAndConditionPolicyActivity.class);
             startActivity(intent);
@@ -142,6 +147,18 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         RequestHandler.getInstance(getActivity()).handleRequest(new GenerateLoginTokenRequest(new GenerateLoginTokenSuccessListener(), new GenerateLoginTokenErrorListener(), generateLoginTokenData));
     }
 
+    private void makeSafetyNetCall() {
+        SafetyNet.getClient(getActivity()).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
+                .addOnSuccessListener(getActivity(), response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        Util.getInstance().setExpiryTime();
+                        Util.getInstance().updateGoogleToken(response.getTokenResult());
+                        generateLoginTokenAPICall();
+                    }
+                })
+                .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());
+    }
+
     /**
      * Generate Login token API call success listener
      */
@@ -151,7 +168,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             GenerateTokenResponse generateLoginTokenResponse = Util.getInstance().getPojoObject(String.valueOf(response), GenerateTokenResponse.class);
             Util.progressDialog.dismiss();
             if (generateLoginTokenResponse.getCode() == 200) {
-                //Toast.makeText(getActivity(), Constant.GENERATE_TOKEN_SUCCESS, Toast.LENGTH_SHORT).show();
                 OTPEntryFragment otpEntryFragment = new OTPEntryFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString(Constant.MOBILE_NUMBER, phoneNumber);
