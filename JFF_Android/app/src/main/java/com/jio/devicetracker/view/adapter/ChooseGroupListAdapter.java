@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,21 +37,22 @@ import com.jio.devicetracker.util.Util;
 
 import java.util.List;
 
-public class ChooseGroupListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupListAdapter.ViewHolder> {
 
-    private List<List<HomeActivityListData>> mData;
+    private List<HomeActivityListData> mData;
     private Context mContext;
     private RecyclerViewClickListener itemListener;
 
-    public ChooseGroupListAdapter(List<List<HomeActivityListData>> mList, Context mContext) {
+    public ChooseGroupListAdapter(List<HomeActivityListData> mList, Context mContext) {
         mData = mList;
         this.mContext = mContext;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = null;
-        RecyclerView.ViewHolder viewHolder = null;
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view  = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.activity_choose_group_list_adapter, parent, false);;
+      /*  RecyclerView.ViewHolder viewHolder = null;
         switch (viewType) {
             case 0:
                 view = LayoutInflater.from(parent.getContext())
@@ -62,24 +64,43 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         .inflate(R.layout.activity_choose_device_list_adapter, parent, false);
                 viewHolder = new ViewHolder(view);
                 break;
-        }
-        return viewHolder;
+        }*/
+        return new ViewHolder(view);
     }
 
     @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        HomeActivityListData homeActivityListData = mData.get(position);
+        if(mData.get(position).getGroupIcon() != null) {
+            holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(Integer.parseInt(mData.get(position).getGroupIcon())));
+        } else {
+            holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.home_group));
+        }
+        holder.groupName.setText(mData.get(position).getGroupName());
+        holder.groupIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.groupselected));
+                itemListener.groupButtonClicked(homeActivityListData);
+            }
+        });
+
+    }
+
+   /* @Override
     public int getItemViewType(int position) {
         if (position == 0) {
             return 0;
         }
         return 1;
-    }
+    }*/
 
     @Override
     public int getItemCount() {
         return mData.size();
     }
 
-    @Override
+  /*  @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case 0:
@@ -153,11 +174,11 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
                 break;
         }
-    }
+    }*/
 
-    /**
+   /* *//**
      * First row in Choose Group
-     */
+     *//*
     public static class ViewHolderWithInfo extends RecyclerView.ViewHolder {
         private Button firstButtonWithInfo;
         private TextView firstTextViewWithInfo;
@@ -179,28 +200,32 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             fourthButtonWithInfo = itemView.findViewById(R.id.fourthButtonWithInfo);
             fourthButtonTextViewWithInfo = itemView.findViewById(R.id.fourthButtonTextViewWithInfo);
         }
-    }
+    }*/
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView firstButtonTextView;
-        public TextView secondButtonTextView;
+        public TextView groupName;
+        public ImageView groupIcon;
+        /*public TextView secondButtonTextView;
         public TextView thirdButtonTextView;
         public TextView fourthButtonTextView;
         public Button firstButton;
         public Button secondButton;
         public Button thirdButton;
-        public Button fourthButton;
+        public Button fourthButton;*/
 
         public ViewHolder(View itemView) {
             super(itemView);
-            firstButtonTextView = itemView.findViewById(R.id.firstButtonTextView);
+            groupName = itemView.findViewById(R.id.group_name);
+            groupIcon = itemView.findViewById(R.id.group_icon);
+
+            /*firstButtonTextView = itemView.findViewById(R.id.firstButtonTextView);
             secondButtonTextView = itemView.findViewById(R.id.secondButtonTextView);
             thirdButtonTextView = itemView.findViewById(R.id.thirdButtonTextView);
             fourthButtonTextView = itemView.findViewById(R.id.fourthButtonTextView);
             firstButton = itemView.findViewById(R.id.firstButton);
             secondButton = itemView.findViewById(R.id.secondButton);
             thirdButton = itemView.findViewById(R.id.thirdButton);
-            fourthButton = itemView.findViewById(R.id.fourthButton);
+            fourthButton = itemView.findViewById(R.id.fourthButton);*/
         }
     }
 

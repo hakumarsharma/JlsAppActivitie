@@ -67,6 +67,7 @@ public class PeopleFragment extends Fragment {
     private String groupStatus;
     private String groupId;
     private static List<HomeActivityListData> groupList;
+    private RecyclerView groupListRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,6 +85,7 @@ public class PeopleFragment extends Fragment {
         TextView instruction2 = view.findViewById(R.id.people_instruction_1);
         instruction2.setTypeface(Util.mTypeface(getActivity(), 3));
         instructionIcon = view.findViewById(R.id.people_default_icon);
+        groupListRecyclerView = view.findViewById(R.id.peopleListRecyclerView);
     }
 
     @Override
@@ -95,7 +97,7 @@ public class PeopleFragment extends Fragment {
     }
 
     private void displayGroupDataInDashboard(View view) {
-        RecyclerView groupListRecyclerView = view.findViewById(R.id.peopleListRecyclerView);
+
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();

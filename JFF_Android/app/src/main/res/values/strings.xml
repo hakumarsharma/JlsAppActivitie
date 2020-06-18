@@ -152,6 +152,7 @@
     <string name="edit_button">Edit</string>
     <string name="update_button">Update</string>
     <string name="connect_button">Connect</string>
+    <string name="detailsForGroup">A Group is a personal circle created by you to quickly track your loved ones collectively. You can track people and devices in the same group. Create a group by clicking on +" sign above" </string>
     <string name="app_version">Version : v2.33.0003 </string>
     <string name="contact_us_content">We are here to help and \nanswer your quireis </string>
     <string name="contact_us_email">care@jio.com</string>

@@ -56,6 +56,7 @@ import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.dashboard.DashboardActivity;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.adapter.AddPersonListAdapter;
+import com.jio.devicetracker.view.group.CreateGroupActivity;
 import com.jio.devicetracker.view.menu.ActiveSessionActivity;
 
 import java.util.ArrayList;
@@ -113,6 +114,11 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
 
         contactNumber = findViewById(R.id.deviceNumber);
         contactNumber.setTypeface(Util.mTypeface(this, 5));
+
+        if(CreateGroupActivity.trackeeNumber != null && CreateGroupActivity.trackeeName != null){
+            contactName.setText(CreateGroupActivity.trackeeName);
+            contactNumber.setText(CreateGroupActivity.trackeeNumber);
+        }
 
         addContact = findViewById(R.id.addContactDetail);
         if (groupId != null) {
@@ -304,7 +310,15 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 }
             }
             mAdapter = new AddPersonListAdapter(listOfContacts);
-            contactsListView.setAdapter(mAdapter);
+            if(contactsListView == null){
+                contactsListView = this.findViewById(R.id.contactsListView);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                contactsListView.setLayoutManager(linearLayoutManager);
+                contactsListView.setAdapter(mAdapter);
+            } else {
+                contactsListView.setAdapter(mAdapter);
+            }
+
             if (!listOfContacts.isEmpty() && addContact_Continue != null) {
                 setButtonBackground(addContact_Continue, true);
             }

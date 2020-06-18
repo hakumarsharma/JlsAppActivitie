@@ -48,6 +48,8 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
     private Button addGroupCreateGroup;
     private DBManager mDbManager;
     private Button createGroup;
+    public static String trackeeNumber;
+    public static String trackeeName;
     private FrameLayout frameLayout;
     private ImageView userIconCreateGroup;
 
@@ -56,6 +58,9 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
         initUI();
+        Intent intent = getIntent();
+        trackeeName = intent.getStringExtra("TrackeeName");
+        trackeeNumber = intent.getStringExtra("TrackeeNumber");
         changeButtonColorOnDataEntry();
     }
 

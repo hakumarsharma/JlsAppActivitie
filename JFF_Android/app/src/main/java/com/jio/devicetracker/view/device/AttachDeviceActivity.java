@@ -16,8 +16,11 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
+
 public class AttachDeviceActivity extends Activity implements View.OnClickListener {
     private EditText deviceNumber;
+    private TextView errorText;
+    private View underLine;
 
 
     @Override
@@ -26,9 +29,11 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
         setContentView(R.layout.activity_attach_device);
         TextView title = findViewById(R.id.toolbar_title);
         TextView deviceTitle = findViewById(R.id.device_number);
+        errorText = findViewById(R.id.number_validation_text);
         title.setText(Constant.ATTACH_DEVICE_TITLE);
         title.setTypeface(Util.mTypeface(this,5));
         deviceNumber = findViewById(R.id.device_edit_name);
+        underLine = findViewById(R.id.number_edit_line);
         Button connectBtn = findViewById(R.id.connect_btn);
         connectBtn.setOnClickListener(this);
 
@@ -63,7 +68,9 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
             intent.putExtra("DeviceNumber",deviceNumber.getText().toString());
             startActivity(intent);
         } else {
-            deviceNumber.setError(Constant.VALID_PHONE_NUMBER);
+            errorText.setVisibility(View.VISIBLE);
+            underLine.setBackgroundColor(getResources().getColor(R.color.errorColor));
+           // deviceNumber.setError(Constant.VALID_PHONE_NUMBER);
             return;
         }
 

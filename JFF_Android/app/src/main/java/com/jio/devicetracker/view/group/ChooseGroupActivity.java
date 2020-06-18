@@ -21,6 +21,8 @@
 package com.jio.devicetracker.view.group;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,19 +48,24 @@ import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.adapter.ChooseGroupListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChooseGroupActivity extends AppCompatActivity implements View.OnClickListener {
+public class ChooseGroupActivity extends BaseActivity implements View.OnClickListener {
 
     private DBManager mDbManager;
     private ChooseGroupListAdapter mAdapter;
     private EditText trackeeNameEditText;
     private String userId;
     private ImageView memberIcon;
+    private TextView groupText;
+    private CardView cardViewGroup;
+    private String phoneNumber;
+    private String groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +73,8 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_choose_group);
         Intent intent = getIntent();
         String label = intent.getStringExtra("Title");
+        phoneNumber = intent.getStringExtra("DeviceNumber");
+       // groupId = intent.getStringExtra(Constant.GROUP_ID);
         initUI();
         setMemberIcon(label);
         initDataMember();
@@ -121,12 +130,27 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
      */
     private void initUI() {
         memberIcon = findViewById(R.id.userIcon);
-        TextView chooseGroupTextView = findViewById(R.id.chooseGroupTextView);
-        chooseGroupTextView.setTypeface(Util.mTypeface(this, 5));
+        TextView title = findViewById(R.id.toolbar_title);
+        title.setText(Constant.Choose_Group);
+        ImageView createGroup = findViewById(R.id.createGroup);
+        createGroup.setVisibility(View.VISIBLE);
+        createGroup.setOnClickListener(this);
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
+        groupText = findViewById(R.id.group_detail_text);
+        cardViewGroup = findViewById(R.id.cardViewList);
+
+        //TextView chooseGroupTextView = findViewById(R.id.chooseGroupTextView);
+        title.setTypeface(Util.mTypeface(this, 5));
         trackeeNameEditText = findViewById(R.id.trackeeNameEditText);
         trackeeNameEditText.setTypeface(Util.mTypeface(this, 5));
         Button chooseGroupButton = findViewById(R.id.continueChooseGroup);
         chooseGroupButton.setTypeface(Util.mTypeface(this, 5));
+        Button addLater = findViewById(R.id.addLater);
+        Button continueBtn = findViewById(R.id.continueChooseGroup);
+        continueBtn.setOnClickListener(this);
+        addLater.setOnClickListener(this);
     }
 
     /**
@@ -137,6 +161,31 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         // To do
+        switch(v.getId())
+        {
+            case R.id.back:
+                finish();
+                break;
+
+            case R.id.createGroup:
+                gotoCreateGroupActivity();
+                break;
+
+            case R.id.addLater:
+                createGroupAndAddContactDetails();
+                break;
+
+            case R.id.continueChooseGroup:
+                addMemberToCreatedGroup(groupId);
+                break;
+        }
+    }
+
+    private void gotoCreateGroupActivity() {
+        Intent createGroupIntent = new Intent(this,CreateGroupActivity.class);
+        createGroupIntent.putExtra("TrackeeName",trackeeNameEditText.getText().toString());
+        createGroupIntent.putExtra("TrackeeNumber",phoneNumber);
+        startActivity(createGroupIntent);
     }
 
     /**
@@ -218,7 +267,8 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
             mAdapter.setOnItemClickPagerListener(new ChooseGroupListAdapter.RecyclerViewClickListener() {
                 @Override
                 public void groupButtonClicked(HomeActivityListData homeActivityListData) {
-                    addMemberInGroupAPICall(homeActivityListData);
+                    groupId = homeActivityListData.getGroupId();
+                    //addMemberToCreatedGroup(homeActivityListData.getGroupId());
                 }
             });
         }
@@ -285,7 +335,7 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
         List<HomeActivityListData> chooseGroupDataList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
-                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME) && (data.getStatus().equalsIgnoreCase("Active") || data.getStatus().equalsIgnoreCase("Scheduled"))) {
                     HomeActivityListData homeActivityListData = new HomeActivityListData();
                     homeActivityListData.setGroupName(data.getGroupName());
                     homeActivityListData.setGroupId(data.getGroupId());
@@ -300,34 +350,32 @@ public class ChooseGroupActivity extends AppCompatActivity implements View.OnCli
             }
         }
 
-        List<List<HomeActivityListData>> listListList = new ArrayList<>();
-        List<HomeActivityListData> list1 = new ArrayList<>();
-        List<HomeActivityListData> mList = new ArrayList<>();
-        List<HomeActivityListData> mList2 = new ArrayList<>();
-        for (int i = 0; i < chooseGroupDataList.size(); i++) {
-            if (i < 4) {
-                list1.add(chooseGroupDataList.get(i));
-            } else if (i > 3 && i < 8) {
-                mList.add(chooseGroupDataList.get(i));
-            } else if (i > 7 && i < 10) {
-                mList2.add(chooseGroupDataList.get(i));
-            }
+        if(chooseGroupDataList.size() == 0){
+            groupText.setVisibility(View.VISIBLE);
+            cardViewGroup.setVisibility(View.INVISIBLE);
         }
-
-        if (list1.size() > 0) {
-            listListList.add(list1);
-        }
-        if (mList.size() > 0) {
-            listListList.add(mList);
-        }
-        if (mList2.size() > 0) {
-            listListList.add(mList2);
-        }
-
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(this,4);
         RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ChooseGroupListAdapter(listListList, this);
+        mAdapter = new ChooseGroupListAdapter(chooseGroupDataList, this);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void addMemberToCreatedGroup(String groupId) {
+        this.createdGroupId = groupId;
+        this.memberName = trackeeNameEditText.getText().toString();
+        this.memberNumber = phoneNumber;
+        this.isFromCreateGroup = false;
+        this.isGroupMember = true;
+        this.isFromDevice = false;
+        addMemberInGroupAPICall();
+    }
+    private void createGroupAndAddContactDetails() {
+        this.memberName = trackeeNameEditText.getText().toString();
+        this.memberNumber = phoneNumber;
+        this.isFromCreateGroup = false;
+        this.isGroupMember = false;
+        this.isFromDevice = true;
+        createGroupAndAddContactAPICall(Constant.INDIVIDUAL_DEVICE_GROUP_NAME);
     }
 }

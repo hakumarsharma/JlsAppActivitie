@@ -56,6 +56,7 @@ public class DeviceFragment extends Fragment {
     private CardView cardInstruction;
     private ImageView instructionIcon;
     private DBManager mDbManager;
+    private RecyclerView deviceFragmentRecyclerView;
     private static List<HomeActivityListData> groupList;
 
     @Override
@@ -77,6 +78,7 @@ public class DeviceFragment extends Fragment {
         cardInstruction.setVisibility(View.VISIBLE);
         instructionIcon.setVisibility(View.VISIBLE);
         mDbManager = new DBManager(getActivity());
+        deviceFragmentRecyclerView = view.findViewById(R.id.deviceListRecyclerView);
     }
 
     @Override
@@ -109,7 +111,7 @@ public class DeviceFragment extends Fragment {
             }
         }
         checkMemberPresent();
-        RecyclerView deviceFragmentRecyclerView = view.findViewById(R.id.deviceListRecyclerView);
+
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         deviceFragmentRecyclerView.setLayoutManager(mLayoutManager);
         DeviceListAdapter deviceListAdapter = new DeviceListAdapter(groupList, getActivity());
