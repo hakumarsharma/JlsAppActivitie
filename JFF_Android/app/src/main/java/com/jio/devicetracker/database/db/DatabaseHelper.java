@@ -39,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_USER_LOGIN = "UserloginData";
     public static final String TABLE_GROUP = "GroupData";
     public static final String TABLE_GROUP_MEMBER = "GroupMemberData";
+    public static final String TABLE_GROUP_ICON = "GroupIconTable";
 
     //Table Columns
     public static final String IMEI_NUM = "imei";
@@ -97,9 +98,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_USER_LOGIN = "create table " + TABLE_USER_LOGIN + "("+ USER_TOKEN + " TEXT, " + TOKEN_EXPIRY_TIME + " TEXT, " + USER_NAME + " TEXT," + USER_ID + " TEXT, " + DEVICE_NUM + " TEXT, " + PHONE_COUNTRY_CODE + " TEXT, " + "PRIMARY KEY" +"(" + USER_ID+"))";
 
-    private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + CREATED_BY + " TEXT, " + UPDATED_BY + " TEXT, " + TIME_FROM + " DOUBLE ," + TIME_TO + " DOUBLE ,"  + PROFILE_IMAGE + " INTEGER ," + STATUS + " TEXT, " + GROUP_OWNER_NAME + " TEXT, " +  GROUP_OWNER_PHONE_NUMBER + " TEXT, " + GROUP_OWNER_USER_ID + " TEXT, " + GROUP_ICON + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
+    private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + CREATED_BY + " TEXT, " + UPDATED_BY + " TEXT, " + TIME_FROM + " DOUBLE ," + TIME_TO + " DOUBLE ,"  + PROFILE_IMAGE + " INTEGER ," + STATUS + " TEXT, " + GROUP_OWNER_NAME + " TEXT, " +  GROUP_OWNER_PHONE_NUMBER + " TEXT, " + GROUP_OWNER_USER_ID + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
 
     private static final String CREATE_TABLE_GROUP_MEMBER = "create table " + TABLE_GROUP_MEMBER + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + GROUPID + " TEXT, " + IS_GROUP_ADMIN + " INTEGER, " + DEVICE_NUM + " TEXT ," + PROFILE_IMAGE + " INTEGER ," + USER_ID + " TEXT ," + DEVICE_ID + " TEXT ," + STATUS + " TEXT, " + "PRIMARY KEY" +"("+ CONSENT_ID +"))";
+
+    private static final String CREATE_GROUP_ICON_TABLE = "create table " + TABLE_GROUP_ICON + "(" + GROUPID + " TEXT, " + GROUP_ICON + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
 
 
     public DatabaseHelper(Context context) {
@@ -119,6 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_USER_LOGIN);
         db.execSQL(CREATE_TABLE_GROUP);
         db.execSQL(CREATE_TABLE_GROUP_MEMBER);
+        db.execSQL(CREATE_GROUP_ICON_TABLE);
     }
 
     /**
@@ -134,6 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LOGIN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP_MEMBER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP_ICON);
         onCreate(db);
     }
 }

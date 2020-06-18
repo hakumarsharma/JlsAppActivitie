@@ -75,14 +75,13 @@ public class GroupsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_groups, container, false);
         mDbManager = new DBManager(getActivity());
         initUI(view);
-        makeGroupInfoPerUserRequestAPICall();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        makeGroupInfoPerUserRequestAPICall();
+        makeGroupInfoPerUserRequestAPICall();
     }
 
     private void initUI(View view) {
@@ -218,30 +217,30 @@ public class GroupsFragment extends Fragment {
     public void parseResponseStoreInDatabase(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
         List<HomeActivityListData> groupList = new ArrayList<>();
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
-        if (groupDetailList != null && !groupDetailList.isEmpty()){
-                for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-                    if (data.getStatus() != null && (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)) || (data.getStatus().equalsIgnoreCase(Constant.COMPLETED)) || (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED))) {
-                        for (HomeActivityListData groupDbData : groupDetailList) {
-                                HomeActivityListData homeActivityListData = new HomeActivityListData();
-                                homeActivityListData.setGroupName(data.getGroupName());
-                                homeActivityListData.setCreatedBy(data.getCreatedBy());
-                                homeActivityListData.setGroupId(data.getId());
-                                homeActivityListData.setStatus(data.getStatus());
-                                homeActivityListData.setUpdatedBy(data.getUpdatedBy());
-                                homeActivityListData.setFrom(data.getSession().getFrom());
-                                homeActivityListData.setTo(data.getSession().getTo());
-                                homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
-                                homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
-                                homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
-                                if (data.getId().equals(groupDbData.getGroupId())) {
-                                     if (groupDbData.getGroupIcon() != null) {
-                                        homeActivityListData.setGroupIcon(groupDbData.getGroupIcon());
-                                    }
-                                }
-                                groupList.add(homeActivityListData);
-
+        if (groupDetailList != null && !groupDetailList.isEmpty()) {
+            for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
+                if (data.getStatus() != null && (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)) || (data.getStatus().equalsIgnoreCase(Constant.COMPLETED)) || (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED))) {
+                    for (HomeActivityListData groupDbData : groupDetailList) {
+                        HomeActivityListData homeActivityListData = new HomeActivityListData();
+                        homeActivityListData.setGroupName(data.getGroupName());
+                        homeActivityListData.setCreatedBy(data.getCreatedBy());
+                        homeActivityListData.setGroupId(data.getId());
+                        homeActivityListData.setStatus(data.getStatus());
+                        homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+                        homeActivityListData.setFrom(data.getSession().getFrom());
+                        homeActivityListData.setTo(data.getSession().getTo());
+                        homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
+                        homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
+                        homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
+                        if (data.getId().equals(groupDbData.getGroupId())) {
+                            if (groupDbData.getGroupIcon() != null) {
+                                homeActivityListData.setGroupIcon(groupDbData.getGroupIcon());
+                            }
                         }
+                        groupList.add(homeActivityListData);
+
                     }
+                }
             }
             mDbManager.insertAllDataIntoGroupTable(groupList);
 
@@ -253,6 +252,7 @@ public class GroupsFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        List<HomeActivityListData> mGroupIconList = mDbManager.getAllGroupIconTableData();
         groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
@@ -267,7 +267,11 @@ public class GroupsFragment extends Fragment {
                     homeActivityListData.setProfileImage(data.getProfileImage());
                     homeActivityListData.setFrom(data.getFrom());
                     homeActivityListData.setTo(data.getTo());
-                    homeActivityListData.setGroupIcon(data.getGroupIcon());
+                    for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
+                        if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+                            homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                        }
+                    }
                     groupList.add(homeActivityListData);
                 }
             }

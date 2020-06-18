@@ -97,7 +97,6 @@ public class PeopleFragment extends Fragment {
     }
 
     private void displayGroupDataInDashboard(View view) {
-
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();

@@ -88,9 +88,9 @@ public class BaseActivity extends AppCompatActivity {
         public void onResponse(Object response) {
             CreateGroupResponse createGroupResponse = Util.getInstance().getPojoObject(String.valueOf(response), CreateGroupResponse.class);
             if (createGroupResponse.getCode() == 200) {
-                createGroupResponse.setGroupIcon(selectedIcon);
                 mDbManager.insertIntoGroupTable(createGroupResponse);
                 createdGroupId = createGroupResponse.getData().getId();
+                mDbManager.insertInToGroupIconTable(createdGroupId, selectedIcon);
                 if (isFromCreateGroup) {
                     Util.progressDialog.dismiss();
                     Intent intent = new Intent(BaseActivity.this, AddDeviceActivity.class);

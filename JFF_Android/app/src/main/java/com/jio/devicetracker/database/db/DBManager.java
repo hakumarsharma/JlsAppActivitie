@@ -512,7 +512,6 @@ public class DBManager {
         contentValue.put(DatabaseHelper.UPDATED_BY, createGroupResponse.getData().getUpdatedBy());
         contentValue.put(DatabaseHelper.TIME_FROM, createGroupResponse.getData().getSession().getFrom());
         contentValue.put(DatabaseHelper.TIME_TO, createGroupResponse.getData().getSession().getTo());
-        contentValue.put(DatabaseHelper.GROUP_ICON, createGroupResponse.getGroupIcon());
         if (createGroupResponse.getData().getName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
             contentValue.put(DatabaseHelper.PROFILE_IMAGE, R.drawable.ic_user);
         } else {
@@ -540,7 +539,6 @@ public class DBManager {
             contentValue.put(DatabaseHelper.GROUP_OWNER_NAME, data.getGroupOwnerName());
             contentValue.put(DatabaseHelper.GROUP_OWNER_PHONE_NUMBER, data.getGroupOwnerPhoneNumber());
             contentValue.put(DatabaseHelper.GROUP_OWNER_USER_ID, data.getGroupOwnerUserId());
-            contentValue.put(DatabaseHelper.GROUP_ICON, data.getGroupIcon());
             if (data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                 contentValue.put(DatabaseHelper.PROFILE_IMAGE, R.drawable.ic_user);
             } else {
@@ -550,6 +548,34 @@ public class DBManager {
         }
     }
 
+    /**
+     * Inserts group icon into the table along with groupid
+     * @param groupId
+     * @param groupIcon
+     */
+    public void insertInToGroupIconTable(String groupId, String groupIcon) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.GROUPID, groupId);
+        contentValue.put(DatabaseHelper.GROUP_ICON, groupIcon);
+        mDatabase.replace(DatabaseHelper.TABLE_GROUP_ICON, null, contentValue);
+    }
+
+    public List<HomeActivityListData> getAllGroupIconTableData() {
+        List<HomeActivityListData> mList = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String[] column = {DatabaseHelper.GROUPID, DatabaseHelper.GROUP_ICON};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP_ICON, column, null, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                HomeActivityListData homeActivityListData = new HomeActivityListData();
+                homeActivityListData.setGroupId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUPID)));
+                homeActivityListData.setGroupIcon(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_ICON)));
+                mList.add(homeActivityListData);
+            }
+        }
+        return mList;
+    }
 
     /**
      * Returns Group Data
@@ -559,7 +585,7 @@ public class DBManager {
     public List<HomeActivityListData> getAllGroupDetail() {
         List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
-        String[] column = {DatabaseHelper.GROUPID, DatabaseHelper.GROUP_NAME, DatabaseHelper.STATUS, DatabaseHelper.CREATED_BY, DatabaseHelper.UPDATED_BY, DatabaseHelper.PROFILE_IMAGE, DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO, DatabaseHelper.GROUP_ICON};
+        String[] column = {DatabaseHelper.GROUPID, DatabaseHelper.GROUP_NAME, DatabaseHelper.STATUS, DatabaseHelper.CREATED_BY, DatabaseHelper.UPDATED_BY, DatabaseHelper.PROFILE_IMAGE, DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP, column, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -573,7 +599,6 @@ public class DBManager {
                     data.setProfileImage(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.PROFILE_IMAGE)));
                     data.setFrom(cursor.getLong(cursor.getColumnIndex(DatabaseHelper.TIME_FROM)));
                     data.setTo(cursor.getLong(cursor.getColumnIndex(DatabaseHelper.TIME_TO)));
-                    data.setGroupIcon(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_ICON)));
                     mlist.add(data);
                 }
             }
