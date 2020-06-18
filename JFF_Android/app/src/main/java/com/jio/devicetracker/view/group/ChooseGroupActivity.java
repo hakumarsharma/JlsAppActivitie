@@ -335,7 +335,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         List<HomeActivityListData> chooseGroupDataList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
-                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME) && (data.getStatus().equalsIgnoreCase("Active") || data.getStatus().equalsIgnoreCase("Scheduled"))) {
+                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME) && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME) && (data.getStatus().equalsIgnoreCase("Active") || data.getStatus().equalsIgnoreCase("Scheduled"))) {
                     HomeActivityListData homeActivityListData = new HomeActivityListData();
                     homeActivityListData.setGroupName(data.getGroupName());
                     homeActivityListData.setGroupId(data.getGroupId());
@@ -366,7 +366,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         this.memberName = trackeeNameEditText.getText().toString();
         this.memberNumber = phoneNumber;
         this.isFromCreateGroup = false;
-        this.isGroupMember = true;
+        this.isGroupMember = false;
         this.isFromDevice = false;
         addMemberInGroupAPICall();
     }
