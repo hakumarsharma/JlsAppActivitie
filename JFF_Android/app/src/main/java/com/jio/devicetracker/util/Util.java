@@ -63,7 +63,7 @@ public final class Util extends AppCompatActivity {
     public static String userName = "";
     public static String userId = "";
     public static String userNumber = "";
-    public String googleToken;
+    public static String googleToken;
     private Date expiryTime;
 
     private Util() {

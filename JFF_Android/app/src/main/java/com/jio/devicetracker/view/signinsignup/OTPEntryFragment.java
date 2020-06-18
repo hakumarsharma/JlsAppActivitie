@@ -71,6 +71,8 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     private DBManager mDbManager;
     private String userId;
     private String ugsToken;
+    private boolean isComingFromRequestOTP;
+    private boolean isComingFromLogin;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,14 +112,18 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View v) {
         if (v.getId() == R.id.timerTextView) {
             if (Util.getInstance().isGoogleTokenExpired()) {
+                isComingFromRequestOTP = true;
                 makeSafetyNetCall();
+            } else {
+                generateLoginTokenAPICall();
             }
-            generateLoginTokenAPICall();
         } else if (v.getId() == R.id.submitLogin) {
             if (Util.getInstance().isGoogleTokenExpired()) {
+                isComingFromLogin = true;
                 makeSafetyNetCall();
+            } else {
+                onLoginButtonClick();
             }
-            onLoginButtonClick();
         }
     }
 
@@ -215,6 +221,13 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
                         if (!response.getTokenResult().isEmpty()) {
                             Util.getInstance().setExpiryTime();
                             Util.getInstance().updateGoogleToken(response.getTokenResult());
+                            if(isComingFromRequestOTP) {
+                                generateLoginTokenAPICall();
+                                isComingFromRequestOTP = false;
+                            } else if(isComingFromLogin) {
+                                onLoginButtonClick();
+                                isComingFromLogin = false;
+                            }
                         }
                     })
                     .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());
