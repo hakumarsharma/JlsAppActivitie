@@ -198,6 +198,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                     break;
                 case R.id.deleteGroup:
                     position = getAdapterPosition();
+                    GroupListAdapter.this.groupOptLayout = groupOptLayout;
                     deleteGroupAPICall(mList.get(position));
                     break;
                 case R.id.addNewMember:
