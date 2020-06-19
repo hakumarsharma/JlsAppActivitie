@@ -49,8 +49,8 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-    <!--<RelativeLayout
-        android:id="@+id/individualMemberOperationLayout"
+    <RelativeLayout
+        android:id="@+id/devicesOperationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/ten_dp"
@@ -59,7 +59,7 @@
         android:visibility="gone">
 
         <ImageView
-            android:id="@+id/closeOperation"
+            android:id="@+id/devicesCloseOperation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -68,99 +68,37 @@
             android:src="@drawable/ic_close" />
 
         <TextView
-            android:id="@+id/editIndividualMember"
-            android:layout_width="match_parent"
+            android:id="@+id/shareDevices"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/margin_18"
-            android:text="Edit"
+            android:text="Share device"
             android:textColor="@color/white"
             android:textSize="@dimen/seventeen_dp" />
 
         <View
-            android:id="@+id/editLineIndividualUser"
+            android:id="@+id/shareDevicesLine"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/editIndividualMember"
+            android:layout_below="@+id/shareDevices"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/ten_dp"
             android:layout_marginRight="@dimen/fourteen_dp"
             android:background="@color/light_hash" />
 
         <TextView
-            android:id="@+id/addtoGroup"
+            android:id="@+id/devicesDelete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editLineIndividualUser"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:text="Add to group"
-            android:textColor="@color/white"
-            android:textSize="@dimen/seventeen_dp" />
-
-        <View
-            android:id="@+id/addtoGroupLine"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/addtoGroup"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:layout_marginRight="@dimen/fourteen_dp"
-            android:background="@color/light_hash" />
-
-        <TextView
-            android:id="@+id/stopTracking"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/addtoGroupLine"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:text="Stop tracking"
-            android:textColor="@color/white"
-            android:textSize="@dimen/seventeen_dp" />
-
-        <View
-            android:id="@+id/stopTrackingLine"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/stopTracking"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:layout_marginRight="@dimen/fourteen_dp"
-            android:background="@color/light_hash" />
-
-        <TextView
-            android:id="@+id/resendInvite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/stopTrackingLine"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:text="Resend invite"
-            android:textColor="@color/white"
-            android:textSize="@dimen/seventeen_dp" />
-
-        <View
-            android:id="@+id/resendInviteLine"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/resendInvite"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:layout_marginRight="@dimen/fourteen_dp"
-            android:background="@color/light_hash" />
-
-        <TextView
-            android:id="@+id/deleteIndividualUser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/resendInviteLine"
+            android:layout_below="@+id/shareDevicesLine"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/ten_dp"
             android:text="Delete"
             android:textColor="@color/white"
             android:paddingBottom="16dp"
-            android:textSize="@dimen/seventeen_dp" />
+            android:textSize="@dimen/seventeen_dp"  />
 
-    </RelativeLayout>-->
+
+    </RelativeLayout>
 </RelativeLayout>

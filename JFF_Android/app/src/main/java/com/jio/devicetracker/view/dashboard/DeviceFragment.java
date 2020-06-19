@@ -53,8 +53,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DeviceFragment extends Fragment {
 
-    private CardView cardInstruction;
-    private ImageView instructionIcon;
+    private static CardView cardInstruction;
+    private static ImageView instructionIcon;
     private DBManager mDbManager;
     private RecyclerView deviceFragmentRecyclerView;
     private static List<HomeActivityListData> groupList;
@@ -111,7 +111,6 @@ public class DeviceFragment extends Fragment {
             }
         }
         checkMemberPresent();
-
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         deviceFragmentRecyclerView.setLayoutManager(mLayoutManager);
         DeviceListAdapter deviceListAdapter = new DeviceListAdapter(groupList, getActivity());
@@ -149,7 +148,7 @@ public class DeviceFragment extends Fragment {
         }
     }
 
-    public void checkMemberPresent() {
+    public static void checkMemberPresent() {
         if (groupList != null && ! groupList.isEmpty()) {
             cardInstruction.setVisibility(View.INVISIBLE);
             instructionIcon.setVisibility(View.INVISIBLE);
