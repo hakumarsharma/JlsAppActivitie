@@ -22,10 +22,12 @@
 package com.jio.devicetracker.view.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -95,12 +97,18 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     /**
      * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView memberName;
         private ImageView memberIcon;
         private TextView memberStatus;
         private TextView memberAddress;
+        private ImageView menuIcon;
+        private ImageView closeBtn;
+        private TextView editText;
+        private TextView removeFromGroupText;
+        private TextView shareInvite;
+        private RelativeLayout layoutOps;
         /**
          * Constructor where we find element from .xml file
          *
@@ -112,6 +120,37 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             memberIcon = itemView.findViewById(R.id.mapMemberIcon);
             memberStatus = itemView.findViewById(R.id.mapMemberStatus);
             memberAddress = itemView.findViewById(R.id.memberAddress);
+            menuIcon = itemView.findViewById(R.id.consentStatus);
+            closeBtn = itemView.findViewById(R.id.close);
+            editText = itemView.findViewById(R.id.edit);
+            layoutOps = itemView.findViewById(R.id.oprationLayout);
+            removeFromGroupText = itemView.findViewById(R.id.remove_from_group);
+            shareInvite = itemView.findViewById(R.id.share_invite);
+            editText.setOnClickListener(this);
+            removeFromGroupText.setOnClickListener(this);
+            shareInvite.setOnClickListener(this);
+            menuIcon.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+
+                case R.id.close:
+                    layoutOps.setVisibility(View.GONE);
+                    break;
+                case R.id.consentStatus:
+                    layoutOps.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.edit:
+                    break;
+                case R.id.remove_from_group:
+                    break;
+                case R.id.share_invite:
+                    break;
+
+            }
+
         }
     }
 }

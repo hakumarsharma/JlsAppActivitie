@@ -1,88 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
-    android:layout_margin="10dp"
-    android:id="@+id/peopleAddressListLayout"
-    card_view:cardCornerRadius="5dp"
-    card_view:cardElevation="5dp">
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/peopleAddressListLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        card_view:cardCornerRadius="8dp"
+        card_view:cardElevation="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/mapMemberIcon"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="11dp"
+                android:background="@drawable/inviteaccepted" />
+
+            <TextView
+                android:id="@+id/mapMemberName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/mapMemberIcon"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@+id/mapMemberIcon"
+                android:text="Sree"
+                android:textColor="@color/black"
+                android:textSize="17dp" />
+
+            <TextView
+                android:id="@+id/mapMemberStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_below="@+id/mapMemberName"
+                android:layout_alignLeft="@+id/mapMemberName"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="5dp"
+                android:text="Connected"
+                android:textColor="@color/status_connected"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/memberAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mapMemberStatus"
+                android:layout_alignLeft="@+id/mapMemberStatus"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:paddingBottom="@dimen/twenty_dp"
+                android:text="RCP,Thane-Belapur road, Navi mumbai"
+                android:textColor="@color/dull_black"
+                android:textSize="12dp" />
+
+            <ImageView
+                android:id="@+id/consentStatus"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_more_black" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
     <RelativeLayout
+        android:id="@+id/oprationLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ten_dp"
+        android:background="@drawable/dialog_lightblue_background"
+        android:elevation="@dimen/ten_dp"
+        android:visibility="gone">
 
         <ImageView
-            android:id="@+id/mapMemberIcon"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_marginTop="11dp"
-            android:layout_marginLeft="16dp"
-            android:background="@drawable/inviteaccepted" />
-
-        <TextView
-            android:id="@+id/mapMemberName"
+            android:id="@+id/close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/mapMemberIcon"
-            android:text="Sree"
-            android:textColor="@color/black"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="11dp"
-            android:layout_marginRight="5dp"
-            android:textSize="17dp" />
-
-        <TextView
-            android:id="@+id/mapMemberStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_toRightOf="@+id/mapMemberIcon"
-            android:layout_below="@+id/mapMemberName"
-            android:text="Connected"
-            android:textColor="@color/status_connected"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="11dp"
-            android:layout_marginRight="5dp"
-            android:textSize="14dp"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/memberAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/mapMemberIcon"
-            android:layout_below="@+id/mapMemberStatus"
-            android:text="RCP,Thane-Belapur road, Navi mumbai"
-            android:textColor="@color/dull_black"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
-            android:textSize="12dp" />
-
-        <ImageView
-            android:id="@+id/consentStatus"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/ic_more_black"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:src="@drawable/ic_close" />
 
-
-
-        <!--<TextView
-            android:id="@+id/pingTime"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/edit"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/mapMemberIcon"
-            android:layout_below="@+id/memberAddress"
-            android:text="00h 00min"
-            android:textColor="@color/timerColor"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="5dp"
-            android:textSize="12dp"
-            />-->
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/margin_18"
+            android:text="Edit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp" />
 
+        <View
+            android:id="@+id/editLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/edit"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/fourteen_dp"
+            android:background="@color/light_hash" />
+
+        <TextView
+            android:id="@+id/remove_from_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editLine"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:text="Remove from group"
+            android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp" />
+
+        <View
+            android:id="@+id/remove_from_group_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/remove_from_group"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/fourteen_dp"
+            android:background="@color/light_hash" />
+
+        <TextView
+            android:id="@+id/share_invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/remove_from_group_line"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:paddingBottom="@dimen/sixteen_dp"
+            android:text="Send invite"
+            android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp" />
 
     </RelativeLayout>
-</androidx.cardview.widget.CardView>
+
+</RelativeLayout>
