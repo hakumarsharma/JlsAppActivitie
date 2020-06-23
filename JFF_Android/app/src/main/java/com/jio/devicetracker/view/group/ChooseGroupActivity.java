@@ -85,16 +85,16 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private void setMemberIcon(String label) {
 
         if(label != null  && !label.isEmpty()) {
-            if (label.equalsIgnoreCase("Mother")) {
+            if (label.equalsIgnoreCase("Woman")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
             }
-            if (label.equalsIgnoreCase("Father")) {
+            if (label.equalsIgnoreCase("Man")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
             }
-            if (label.equalsIgnoreCase("Husband")) {
+            if (label.equalsIgnoreCase("Boy")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
             }
-            if (label.equalsIgnoreCase("Wife")) {
+            if (label.equalsIgnoreCase("Girl")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
             }
             if (label.equalsIgnoreCase("Kid")) {
@@ -113,6 +113,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
             }
         }
+        trackeeNameEditText.setText(label);
 
     }
 
