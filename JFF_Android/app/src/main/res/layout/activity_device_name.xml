@@ -108,7 +108,7 @@
                 android:layout_alignLeft="@+id/mother_icon"
                 android:textSize="@dimen/fourteen_dp"
                 android:textColor="@color/mine_shaft"
-                android:text="Mother" />
+                android:text="Woman" />
 
             <ImageView
                 android:id="@+id/father_icon"
@@ -128,9 +128,8 @@
                 android:layout_alignRight="@+id/father_icon"
                 android:layout_alignLeft="@+id/father_icon"
                 android:gravity="center"
-
                 android:textColor="@color/mine_shaft"
-                android:text="Father" />
+                android:text="Man" />
 
             <ImageView
                 android:id="@+id/husband_icon"
@@ -151,7 +150,7 @@
                 android:layout_alignRight="@+id/husband_icon"
                 android:layout_alignLeft="@+id/husband_icon"
                 android:gravity="center"
-                android:text="Husband" />
+                android:text="Boy" />
 
             <ImageView
                 android:id="@+id/wife_icon"
@@ -172,7 +171,7 @@
                 android:layout_alignLeft="@+id/wife_icon"
                 android:gravity="center"
                 android:textSize="@dimen/fourteen_dp"
-                android:text="Wife" />
+                android:text="Girl" />
 
             <ImageView
                 android:id="@+id/kid_icon"
