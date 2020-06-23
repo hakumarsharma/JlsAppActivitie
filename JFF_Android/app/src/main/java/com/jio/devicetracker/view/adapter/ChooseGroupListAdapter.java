@@ -43,7 +43,7 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
 
     private List<HomeActivityListData> mData;
     private Context mContext;
-    private RecyclerViewClickListener itemListener;
+    private static RecyclerViewClickListener itemListener;
 
     public ChooseGroupListAdapter(List<HomeActivityListData> mList, Context mContext) {
         mData = mList;
@@ -61,7 +61,9 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HomeActivityListData homeActivityListData = mData.get(position);
-        if (mData.get(position).getGroupIcon() != null) {
+        if(homeActivityListData.getGroupIcon() != null && homeActivityListData.getGroupIcon().equalsIgnoreCase("groupSelected")) {
+            holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.groupselected));
+        } else if (mData.get(position).getGroupIcon() != null) {
             Resources res = mContext.getResources();
             int iconId = res.getIdentifier(homeActivityListData.getGroupIcon(), Constant.DRAWABLE, mContext.getPackageName());
             Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
@@ -70,13 +72,7 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
             holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.home_group));
         }
         holder.groupName.setText(mData.get(position).getGroupName());
-        holder.groupIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemListener.groupButtonClicked(homeActivityListData);
-                deSelectRemainingGroups(homeActivityListData, holder);
-            }
-        });
+        holder.groupIcon.setOnClickListener(v -> itemListener.groupButtonClicked(homeActivityListData));
 
     }
 
@@ -84,19 +80,6 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
     @Override
     public int getItemCount() {
         return mData.size();
-    }
-
-    private void deSelectRemainingGroups(HomeActivityListData homeActivityListData, ViewHolder holder) {
-        for (HomeActivityListData mHomeActivityListData : mData) {
-            if (homeActivityListData.getGroupId().equalsIgnoreCase(mHomeActivityListData.getGroupId())) {
-                holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.groupselected));
-            } else {
-                Resources res = mContext.getResources();
-                int iconId = res.getIdentifier(mHomeActivityListData.getGroupIcon(), Constant.DRAWABLE, mContext.getPackageName());
-                Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
-                holder.groupIcon.setImageDrawable(drawable);
-            }
-        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

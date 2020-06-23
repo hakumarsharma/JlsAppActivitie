@@ -620,7 +620,6 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         if (getCurrentLocation() != null) {
             latitude = getCurrentLocation().getLatitude();
             longitude = getCurrentLocation().getLongitude();
-
             String message = "{\"did\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                     "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
             String topic = "jioiot/svcd/tracker/" + userPhoneNumber + "/uc/fwd/locinfo";
@@ -673,35 +672,31 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                     PendingResult<LocationSettingsResult> result =
                             LocationServices.SettingsApi
                                     .checkLocationSettings(googleApiClient, builder.build());
-                    result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-
-                        @Override
-                        public void onResult(LocationSettingsResult result) {
-                            final Status status = result.getStatus();
-                            switch (status.getStatusCode()) {
-                                case LocationSettingsStatusCodes.SUCCESS:
-                                    int permissionLocation = ContextCompat
-                                            .checkSelfPermission(DashboardMainActivity.this,
-                                                    Manifest.permission.ACCESS_FINE_LOCATION);
-                                    if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
-                                        currentLocation = LocationServices.FusedLocationApi
-                                                .getLastLocation(googleApiClient);
-                                    }
-                                    break;
-                                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                                    try {
-                                        status.startResolutionForResult(DashboardMainActivity.this,
-                                                REQUEST_CHECK_SETTINGS_GPS);
-                                    } catch (IntentSender.SendIntentException e) {
-                                        e.printStackTrace();
-                                    }
-                                    break;
-                                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                                    break;
-                                default:
-                                    // To do
-                                    break;
-                            }
+                    result.setResultCallback(result1 -> {
+                        final Status status = result1.getStatus();
+                        switch (status.getStatusCode()) {
+                            case LocationSettingsStatusCodes.SUCCESS:
+                                int permissionLocation1 = ContextCompat
+                                        .checkSelfPermission(DashboardMainActivity.this,
+                                                Manifest.permission.ACCESS_FINE_LOCATION);
+                                if (permissionLocation1 == PackageManager.PERMISSION_GRANTED) {
+                                    currentLocation = LocationServices.FusedLocationApi
+                                            .getLastLocation(googleApiClient);
+                                }
+                                break;
+                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                try {
+                                    status.startResolutionForResult(DashboardMainActivity.this,
+                                            REQUEST_CHECK_SETTINGS_GPS);
+                                } catch (IntentSender.SendIntentException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                break;
+                            default:
+                                // To do
+                                break;
                         }
                     });
                 }

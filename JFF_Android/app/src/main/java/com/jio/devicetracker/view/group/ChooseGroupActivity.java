@@ -66,13 +66,15 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private CardView cardViewGroup;
     private String phoneNumber;
     private String groupId;
+    private List<HomeActivityListData> chooseGroupDataList;
+    private String label;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_group);
         Intent intent = getIntent();
-        String label = intent.getStringExtra("Title");
+        label = intent.getStringExtra("Title");
         phoneNumber = intent.getStringExtra("DeviceNumber");
         // groupId = intent.getStringExtra(Constant.GROUP_ID);
         initUI();
@@ -86,45 +88,28 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         if (label != null && !label.isEmpty()) {
             if (label.equalsIgnoreCase("Woman")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
-            }
-            if (label.equalsIgnoreCase("Man")) {
+            } else if (label.equalsIgnoreCase("Man")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
-            }
-            if (label.equalsIgnoreCase("Boy")) {
+            } else if (label.equalsIgnoreCase("Boy")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
+            } else if (label.equalsIgnoreCase(Constant.CAT)) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
+            } else if (label.equalsIgnoreCase(Constant.DOG)) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
+            } else if (label.equalsIgnoreCase("OtherPet")) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
+            } else if(label.equalsIgnoreCase(Constant.KID)) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
+            } else if (label.equalsIgnoreCase(Constant.OTHER)) {
+                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
             }
             if (label.equalsIgnoreCase("Girl")) {
                 if (label != null && !label.isEmpty()) {
-                    if (label.equalsIgnoreCase("Mother")) {
-                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
-                    }
-                    if (label.equalsIgnoreCase(Constant.FATHER)) {
-                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
-                    }
-                    if (label.equalsIgnoreCase(Constant.HUSBAND)) {
-                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
-                    }
                     if (label.equalsIgnoreCase(Constant.WIFE)) {
                         memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
                     }
-                    if (label.equalsIgnoreCase(Constant.KID)) {
-                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
-                    }
-                    if (label.equalsIgnoreCase(Constant.OTHER)) {
-                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
-                    }
-                    if (label.equalsIgnoreCase(Constant.CAT)) {
-                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
-                    }
-                    if (label.equalsIgnoreCase(Constant.DOG)) {
-                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
-                    }
-                    if (label.equalsIgnoreCase("OtherPet")) {
-                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
-                    }
                 }
                 trackeeNameEditText.setText(label);
-
             }
         }
     }
@@ -177,15 +162,12 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             case R.id.back:
                 finish();
                 break;
-
             case R.id.createGroup:
                 gotoCreateGroupActivity();
                 break;
-
             case R.id.addLater:
                 createGroupAndAddContactDetails();
                 break;
-
             case R.id.continueChooseGroup:
                 addMemberToCreatedGroup(groupId);
                 break;
@@ -280,7 +262,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                 @Override
                 public void groupButtonClicked(HomeActivityListData homeActivityListData) {
                     groupId = homeActivityListData.getGroupId();
-                    //addMemberToCreatedGroup(homeActivityListData.getGroupId());
+                    updateUIInChooseGroupActivity(homeActivityListData);
                 }
             });
         }
@@ -345,7 +327,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private void addDatainList() {
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
         List<HomeActivityListData> mGroupIconList = mDbManager.getAllGroupIconTableData();
-        List<HomeActivityListData> chooseGroupDataList = new ArrayList<>();
+        chooseGroupDataList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
                 if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME) && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME) && (data.getStatus().equalsIgnoreCase("Active") || data.getStatus().equalsIgnoreCase("Scheduled"))) {
@@ -394,7 +376,34 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         this.isFromCreateGroup = false;
         this.isGroupMember = false;
         this.isFromDevice = true;
+        setUserIcon(label);
         createGroupAndAddContactAPICall(Constant.INDIVIDUAL_DEVICE_GROUP_NAME);
     }
+
+    private void updateUIInChooseGroupActivity(HomeActivityListData mData) {
+        List<HomeActivityListData> mHomeActivityListData = new ArrayList<>();
+        for(HomeActivityListData data : chooseGroupDataList) {
+            HomeActivityListData homeActivityListData = new HomeActivityListData();
+            homeActivityListData.setGroupName(data.getGroupName());
+            homeActivityListData.setGroupId(data.getGroupId());
+            homeActivityListData.setStatus(data.getStatus());
+            homeActivityListData.setCreatedBy(data.getCreatedBy());
+            homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+            homeActivityListData.setFrom(data.getFrom());
+            homeActivityListData.setTo(data.getTo());
+            if(mData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+                homeActivityListData.setGroupIcon("groupSelected");
+            } else {
+                homeActivityListData.setGroupIcon(data.getGroupIcon());
+            }
+            mHomeActivityListData.add(homeActivityListData);
+        }
+        GridLayoutManager mLayoutManager = new GridLayoutManager(this, 4);
+        RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new ChooseGroupListAdapter(mHomeActivityListData, this);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
 }
 

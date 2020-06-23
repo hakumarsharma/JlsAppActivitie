@@ -58,6 +58,7 @@ public class BaseActivity extends AppCompatActivity {
     public Boolean isGroupMember;
     public Boolean isFromDevice;
     public String selectedIcon;
+    private String memberIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,14 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * sets the group icon
+     * @param selectedIcon
+     */
+    public void setUserIcon(String selectedIcon) {
+        memberIcon = selectedIcon;
+    }
+
+    /**
      * Create Group Success Listener
      */
     private class CreateGroupSuccessListener implements Response.Listener {
@@ -101,6 +110,9 @@ public class BaseActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else if(DashboardMainActivity.flowFromPeople){
                     addMemberInGroupAPICall();
+                } else if(isFromDevice) {
+                    mDbManager.insertInToGroupIconTable(createdGroupId, memberIcon);
+                    addIndividualUserInGroupAPICall();
                 }
                 else {
                     addIndividualUserInGroupAPICall();
@@ -170,9 +182,9 @@ public class BaseActivity extends AppCompatActivity {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
                 if(isGroupMember) {
                     getAllForOneGroupAPICall();
-                }else if (isFromDevice){
+                } else if (isFromDevice){
                     Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
-                    if (!isFromCreateGroup){
+                    if (!isFromCreateGroup) {
                         intent.putExtra(Constant.Add_Device, true);
                     }
                     startActivity(intent);

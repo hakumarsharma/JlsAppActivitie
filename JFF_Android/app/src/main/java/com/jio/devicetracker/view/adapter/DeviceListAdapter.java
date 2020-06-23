@@ -49,7 +49,6 @@ import com.jio.devicetracker.view.dashboard.DeviceFragment;
 import java.util.List;
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.ViewHolder> {
-
     private Context mContext;
     private List<HomeActivityListData> mList;
     private String groupId;
@@ -90,11 +89,24 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         HomeActivityListData data = mList.get(position);
         holder.trackingDeviceName.setTypeface(Util.mTypeface(mContext, 5));
         holder.trackingDeviceName.setText(data.getGroupName());
-        if (data.getGroupIcon() != null && !data.getGroupIcon().isEmpty()) {
-            Resources res = mContext.getResources();
-            int iconId = res.getIdentifier(data.getGroupIcon(), Constant.DRAWABLE, mContext.getPackageName());
-            Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
-            holder.deviceMemberIcon.setImageDrawable(drawable);
+        if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("Girl")) {
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.wife);
+        } else if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("Woman")) {
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.mother);
+        } else if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("Man")) {
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.father);
+        } else if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("Boy")) {
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.husband);
+        } else if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("Kid")) {
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.kid);
+        } else if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("Other")) {
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.other);
+        } else if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("Dog")) {
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.dog);
+        } else if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("Cat")) {
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.cat);
+        } else if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("OtherPet")) {
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.other_pet);
         } else {
             holder.deviceMemberIcon.setBackgroundResource(R.drawable.ic_family_group);
         }

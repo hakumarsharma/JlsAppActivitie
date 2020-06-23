@@ -345,6 +345,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     private class AddDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            isDeviceAdditionRequired = false;
             System.out.println("Error in Device Addition");
         }
     }
