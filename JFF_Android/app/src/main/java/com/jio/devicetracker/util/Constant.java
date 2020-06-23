@@ -53,6 +53,7 @@ public class Constant {
     public static final String WAIT_LOADER = "Please wait...";
     public static final String JIO = "jio";
     public static final String NAME = "name";
+    public static final String EMAIL = "email";
     public static final String FLAG = "flag";
     public static final String SUPERVISOR = "supervisor";
     public static final String TITLE = "Title...";

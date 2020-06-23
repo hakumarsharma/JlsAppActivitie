@@ -128,19 +128,27 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
                 wrongEmailErrorTextView.setVisibility(View.VISIBLE);
                 return;
             }
+            navigateToMobileFragment(signUpEmailEditText.getText().toString());
         } else if (v.getId() == R.id.signupAddLaterTextView) {
-            FragmentTransaction trans = getFragmentManager().beginTransaction();
-            SignupMobileNumberFragment signupMobileNumberFragment = new SignupMobileNumberFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString(Constant.NAME, getArguments().getString(Constant.NAME));
-            signupMobileNumberFragment.setArguments(bundle);
-            trans.replace(R.id.signupFrameLayout, signupMobileNumberFragment);
-            trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            trans.addToBackStack(null);
-            trans.commit();
+           navigateToMobileFragment(signUpEmailEditText.getText().toString());
         }else if (v.getId() == R.id.emailTermConditionTextView){
             Intent intent = new Intent(getContext(), TermAndConditionPolicyActivity.class);
             startActivity(intent);
         }
+    }
+
+    private void navigateToMobileFragment(String email){
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        SignupMobileNumberFragment signupMobileNumberFragment = new SignupMobileNumberFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constant.NAME, getArguments().getString(Constant.NAME));
+        if (email != null & email.length() > 0) {
+            bundle.putString(Constant.EMAIL, email);
+        }
+        signupMobileNumberFragment.setArguments(bundle);
+        trans.replace(R.id.signupFrameLayout, signupMobileNumberFragment);
+        trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        trans.addToBackStack(null);
+        trans.commit();
     }
 }

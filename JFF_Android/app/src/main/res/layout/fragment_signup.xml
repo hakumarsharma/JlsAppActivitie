@@ -118,7 +118,7 @@
                 android:layout_below="@id/signupRequestOTPTextView"
                 android:textColor="@color/lite_blue"
                 android:layout_centerHorizontal="true"
-                android:text="Terms &amp; Conditions &amp; Privacy Policy"/>
+                android:text="@string/terms_privacy_policy"/>
 
         </RelativeLayout>
 

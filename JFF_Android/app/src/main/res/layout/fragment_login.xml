@@ -57,7 +57,7 @@
                 android:id="@+id/mobileNumberTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="40dp"
                 android:text="Mobile Number"
                 android:textSize="10dp"
                 android:visibility="invisible"
@@ -98,15 +98,15 @@
                 android:text="Continue"
                 android:textColor="@color/white"
                 android:background="@drawable/login_selector"
-                android:layout_marginBottom="30dp"
-                android:layout_above="@+id/requestOTPTextView"/>
+                android:layout_marginTop="60dp"
+                android:layout_below="@+id/mobileNumberErrorCode"/>
 
             <TextView
                 android:id="@+id/requestOTPTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
-                android:layout_above="@+id/termConditionTextView"
+                android:layout_below="@+id/continueLogin"
                 android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true"
                 android:text="@string/requestOTPTextView"
@@ -117,11 +117,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
-                android:layout_alignParentBottom="true"
-                android:paddingBottom="30dp"
+                android:layout_below="@+id/requestOTPTextView"
                 android:textColor="@color/lite_blue"
                 android:textAlignment="center"
-                android:text="Terms &amp; Conditions &amp; Privacy Policy"/>
+                android:text="@string/terms_privacy_policy"/>
 
         </RelativeLayout>
 
