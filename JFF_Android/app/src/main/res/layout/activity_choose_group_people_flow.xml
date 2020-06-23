@@ -34,7 +34,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/userDetail"
         android:gravity="center"
         android:id="@+id/group_detail_text"
         android:layout_marginTop="@dimen/margin_30"
