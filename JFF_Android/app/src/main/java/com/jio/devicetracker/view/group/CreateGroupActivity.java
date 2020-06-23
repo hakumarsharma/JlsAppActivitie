@@ -41,6 +41,7 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 
 public class CreateGroupActivity extends BaseActivity implements View.OnClickListener {
 
@@ -52,6 +53,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
     public static String trackeeName;
     private FrameLayout frameLayout;
     private ImageView userIconCreateGroup;
+    public static String groupIdFromPeopleFlow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +145,17 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
             if ("".equalsIgnoreCase(groupName)) {
                 createGroupEditText.setError(Constant.GROUP_NAME_VALIDATION_ERROR);
                 return;
+            } if(DashboardMainActivity.flowFromPeople){
+                this.isFromCreateGroup = false;
+                memberName = trackeeName;
+                memberNumber = trackeeNumber;
+                isGroupMember = true;
+                createdGroupId = groupIdFromPeopleFlow;
+                isFromDevice = false;
+            } else {
+                this.isFromCreateGroup = true;
             }
-            this.isFromCreateGroup = true;
+
             createGroupAndAddContactAPICall(groupName);
         }else if (v.getId() == R.id.back){
             finish();

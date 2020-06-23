@@ -130,6 +130,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             removeFromGroupText.setOnClickListener(this);
             shareInvite.setOnClickListener(this);
             menuIcon.setOnClickListener(this);
+            closeBtn.setOnClickListener(this);
         }
 
         @Override

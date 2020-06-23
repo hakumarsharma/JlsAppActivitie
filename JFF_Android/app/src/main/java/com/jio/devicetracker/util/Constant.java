@@ -356,11 +356,11 @@ public class Constant {
     public static final String REAL_ICON = "Real Icon";
     public static final String GROUP_ICON = "Group Icon";
     public static final String DEVICE_NUMBER = "DeviceNumber";
-    public static final String MOM = "Mom";
-    public static final String FATHER = "Father";
+    public static final String MOM = "Woman";
+    public static final String FATHER = "Man";
     public static final String KID = "Kid";
-    public static final String HUSBAND = "Husband";
-    public static final String WIFE = "Wife";
+    public static final String HUSBAND = "Boy";
+    public static final String WIFE = "Girl";
     public static final String OTHER = "Other";
     public static final String DOG = "Dog";
     public static final String CAT = "Cat";

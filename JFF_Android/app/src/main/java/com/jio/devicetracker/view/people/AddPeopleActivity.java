@@ -82,6 +82,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private Button addContact;
     private static Button addContact_Continue;
     private static Context context;
+    private Button addToGroup;
     private static DBManager mPeopleDbManager;
 
     @Override
@@ -106,6 +107,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         contactsListView.setLayoutManager(linearLayoutManager);
         getDataFromIntent(title);
 
+        addToGroup = findViewById(R.id.add_to_group);
+        addToGroup.setOnClickListener(this);
         TextView peopleText = findViewById(R.id.people_text);
         peopleText.setTypeface(Util.mTypeface(this, 3));
 
@@ -130,6 +133,10 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         addContact_Continue = findViewById(R.id.addContact_Continue);
         addContact_Continue.setOnClickListener(this);
 
+        if(DashboardMainActivity.flowFromPeople){
+            addToGroup.setVisibility(View.VISIBLE);
+            addContact_Continue.setVisibility(View.INVISIBLE);
+        }
         ImageView contactBtn = toolbar.findViewById(R.id.contactAdd);
         contactBtn.setVisibility(View.VISIBLE);
         contactBtn.setOnClickListener(this);
@@ -259,8 +266,18 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                     Toast.makeText(this, Constant.ADD_CONTACT_WARNING, Toast.LENGTH_SHORT);
                 }
             }
+        } else if(v.getId() == R.id.add_to_group){
+            gotoGroupFromPeopleActivity();
+
         }
 
+    }
+
+    private void gotoGroupFromPeopleActivity() {
+        Intent chooseGroupIntent = new Intent(this, ChooseGroupFromPeopleFlow.class);
+        chooseGroupIntent.putExtra("TrackeeName",contactName.getText().toString());
+        chooseGroupIntent.putExtra("TrackeeNumber",contactNumber.getText().toString());
+        startActivity(chooseGroupIntent);
     }
 
     private void validationCheck() {

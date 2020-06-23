@@ -129,6 +129,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private TextView groupTitle;
     private TextView peopleTitle;
     private TextView deviceTitle;
+    public static boolean flowFromPeople;
+    public static boolean flowFromGroup;
+    public static boolean flowFromDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,12 +253,21 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         if (v.getId() == R.id.createGroup) {
             switch (viewPager.getCurrentItem()) {
                 case 0:
+                    flowFromGroup = true;
+                    flowFromPeople = false;
+                    flowFromDevice = false;
                     startActivity(new Intent(this, CreateGroupActivity.class));
                     break;
                 case 1:
+                    flowFromPeople = true;
+                    flowFromGroup = false;
+                    flowFromDevice = false;
                     startActivity(new Intent(this, AddPeopleActivity.class));
                     break;
                 case 2:
+                    flowFromDevice = true;
+                    flowFromGroup = false;
+                    flowFromPeople = false;
                     startActivity(new Intent(this, QRReaderInstruction.class));
                     break;
             }

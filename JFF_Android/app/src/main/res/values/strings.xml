@@ -64,6 +64,8 @@
     <string name="purchase_link">www.myjio/devices/JioTrack</string>
     <string name="add_people_text">Add people from your contacts or add their name and mobile number</string>
     <string name="continue_text">Continue</string>
+    <string name="add_later">Add later</string>
+    <string name="add_to_group">Add to group</string>
     <string name="select_icon_text">Let\'s choose any one with whom you \nwant to attach your device</string>
     <string name="people_title">PEOPLE</string>
     <string name="pet_title">PET</string>
@@ -153,6 +155,7 @@
     <string name="edit_button">Edit</string>
     <string name="update_button">Update</string>
     <string name="connect_button">Connect</string>
+    <string name="group_text">GROUPS</string>
     <string name="detailsForGroup">A Group is a personal circle created by you to quickly track your loved ones collectively. You can track people and devices in the same group. Create a group by clicking on +" sign above" </string>
     <string name="app_version">Version : v2.33.0003 </string>
     <string name="contact_us_content">We are here to help and \nanswer your quireis </string>
