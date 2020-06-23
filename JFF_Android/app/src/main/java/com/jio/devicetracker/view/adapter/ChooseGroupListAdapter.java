@@ -21,6 +21,8 @@
 package com.jio.devicetracker.view.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +30,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.util.Constant;
 
 import java.util.List;
 
@@ -48,16 +52,20 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view  = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_choose_group_list_adapter, parent, false);;
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.activity_choose_group_list_adapter, parent, false);
+        ;
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HomeActivityListData homeActivityListData = mData.get(position);
-        if(mData.get(position).getGroupIcon() != null) {
-            holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(Integer.parseInt(mData.get(position).getGroupIcon())));
+        if (mData.get(position).getGroupIcon() != null) {
+            Resources res = mContext.getResources();
+            int iconId = res.getIdentifier(homeActivityListData.getGroupIcon(), Constant.DRAWABLE, mContext.getPackageName());
+            Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
+            holder.groupIcon.setImageDrawable(drawable);
         } else {
             holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.home_group));
         }
@@ -65,8 +73,8 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
         holder.groupIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.groupselected));
                 itemListener.groupButtonClicked(homeActivityListData);
+                deSelectRemainingGroups(homeActivityListData, holder);
             }
         });
 
@@ -76,6 +84,19 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    private void deSelectRemainingGroups(HomeActivityListData homeActivityListData, ViewHolder holder) {
+        for (HomeActivityListData mHomeActivityListData : mData) {
+            if (homeActivityListData.getGroupId().equalsIgnoreCase(mHomeActivityListData.getGroupId())) {
+                holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.groupselected));
+            } else {
+                Resources res = mContext.getResources();
+                int iconId = res.getIdentifier(mHomeActivityListData.getGroupIcon(), Constant.DRAWABLE, mContext.getPackageName());
+                Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
+                holder.groupIcon.setImageDrawable(drawable);
+            }
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -99,6 +120,7 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
 
     /**
      * Register the listener
+     *
      * @param mItemClickListener
      */
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {

@@ -74,7 +74,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         Intent intent = getIntent();
         String label = intent.getStringExtra("Title");
         phoneNumber = intent.getStringExtra("DeviceNumber");
-       // groupId = intent.getStringExtra(Constant.GROUP_ID);
+        // groupId = intent.getStringExtra(Constant.GROUP_ID);
         initUI();
         setMemberIcon(label);
         initDataMember();
@@ -83,8 +83,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
 
     // Set the memberIcon
     private void setMemberIcon(String label) {
-
-        if(label != null  && !label.isEmpty()) {
+        if (label != null && !label.isEmpty()) {
             if (label.equalsIgnoreCase("Woman")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
             }
@@ -95,26 +94,39 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
             }
             if (label.equalsIgnoreCase("Girl")) {
-                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
-            }
-            if (label.equalsIgnoreCase("Kid")) {
-                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
-            }
-            if (label.equalsIgnoreCase("Other")) {
-                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
-            }
-            if (label.equalsIgnoreCase("Cat")) {
-                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
-            }
-            if (label.equalsIgnoreCase("Dog")) {
-                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
-            }
-            if (label.equalsIgnoreCase("OtherPet")) {
-                memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
+                if (label != null && !label.isEmpty()) {
+                    if (label.equalsIgnoreCase("Mother")) {
+                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
+                    }
+                    if (label.equalsIgnoreCase(Constant.FATHER)) {
+                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
+                    }
+                    if (label.equalsIgnoreCase(Constant.HUSBAND)) {
+                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
+                    }
+                    if (label.equalsIgnoreCase(Constant.WIFE)) {
+                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
+                    }
+                    if (label.equalsIgnoreCase(Constant.KID)) {
+                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
+                    }
+                    if (label.equalsIgnoreCase(Constant.OTHER)) {
+                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
+                    }
+                    if (label.equalsIgnoreCase(Constant.CAT)) {
+                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
+                    }
+                    if (label.equalsIgnoreCase(Constant.DOG)) {
+                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
+                    }
+                    if (label.equalsIgnoreCase("OtherPet")) {
+                        memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
+                    }
+                }
+                trackeeNameEditText.setText(label);
+
             }
         }
-        trackeeNameEditText.setText(label);
-
     }
 
 
@@ -142,7 +154,6 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         groupText = findViewById(R.id.group_detail_text);
         cardViewGroup = findViewById(R.id.cardViewList);
 
-        //TextView chooseGroupTextView = findViewById(R.id.chooseGroupTextView);
         title.setTypeface(Util.mTypeface(this, 5));
         trackeeNameEditText = findViewById(R.id.trackeeNameEditText);
         trackeeNameEditText.setTypeface(Util.mTypeface(this, 5));
@@ -162,8 +173,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         // To do
-        switch(v.getId())
-        {
+        switch (v.getId()) {
             case R.id.back:
                 finish();
                 break;
@@ -183,9 +193,9 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void gotoCreateGroupActivity() {
-        Intent createGroupIntent = new Intent(this,CreateGroupActivity.class);
-        createGroupIntent.putExtra("TrackeeName",trackeeNameEditText.getText().toString());
-        createGroupIntent.putExtra("TrackeeNumber",phoneNumber);
+        Intent createGroupIntent = new Intent(this, CreateGroupActivity.class);
+        createGroupIntent.putExtra("TrackeeName", trackeeNameEditText.getText().toString());
+        createGroupIntent.putExtra("TrackeeNumber", phoneNumber);
         startActivity(createGroupIntent);
     }
 
@@ -224,7 +234,8 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     /**
      * Parse the response and store in DB(Group Table and Member table)
      */
-    public void parseResponseStoreInDatabase(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
+    public void parseResponseStoreInDatabase(GetGroupInfoPerUserResponse
+                                                     getGroupInfoPerUserResponse) {
         List<HomeActivityListData> groupList = new ArrayList<>();
         List<GroupMemberDataList> mGroupMemberDataLists = new ArrayList<>();
         for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
@@ -333,6 +344,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
      */
     private void addDatainList() {
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        List<HomeActivityListData> mGroupIconList = mDbManager.getAllGroupIconTableData();
         List<HomeActivityListData> chooseGroupDataList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
@@ -345,17 +357,21 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                     homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                     homeActivityListData.setFrom(data.getFrom());
                     homeActivityListData.setTo(data.getTo());
-                    homeActivityListData.setProfileImage(R.drawable.ic_group_button);
+                    for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
+                        if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+                            homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                        }
+                    }
                     chooseGroupDataList.add(homeActivityListData);
                 }
             }
         }
 
-        if(chooseGroupDataList.size() == 0){
+        if (chooseGroupDataList.size() == 0) {
             groupText.setVisibility(View.VISIBLE);
             cardViewGroup.setVisibility(View.INVISIBLE);
         }
-        GridLayoutManager mLayoutManager = new GridLayoutManager(this,4);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(this, 4);
         RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ChooseGroupListAdapter(chooseGroupDataList, this);
@@ -371,6 +387,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         this.isFromDevice = false;
         addMemberInGroupAPICall();
     }
+
     private void createGroupAndAddContactDetails() {
         this.memberName = trackeeNameEditText.getText().toString();
         this.memberNumber = phoneNumber;
@@ -380,3 +397,4 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         createGroupAndAddContactAPICall(Constant.INDIVIDUAL_DEVICE_GROUP_NAME);
     }
 }
+

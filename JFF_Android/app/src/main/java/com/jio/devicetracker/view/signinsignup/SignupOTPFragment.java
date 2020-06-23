@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.alimuzaffar.lib.pin.PinEntryEditText;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.safetynet.SafetyNet;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.GenerateTokenData;
 import com.jio.devicetracker.database.pojo.RegisterRequestData;
@@ -49,6 +50,8 @@ import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+
+import java.util.Objects;
 
 /**
  * Signup OTP Fragment
@@ -103,11 +106,23 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
         if (v.getId() == R.id.signupSubmitLogin) {
             String token = signupTxtPinEntry.getText().toString().trim();
             if (!token.equalsIgnoreCase(Constant.EMPTY_STRING)) {
-                makeRegisterAPICall(token);
+                makeSafetyNetCall(token);
             }
         } else if(v.getId() == R.id.signupTimerTextView) {
             generateRegistrationTokenAPICall();
         }
+    }
+
+    private void makeSafetyNetCall(String token) {
+        SafetyNet.getClient(Objects.requireNonNull(getActivity())).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
+                .addOnSuccessListener(getActivity(), response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        Util.getInstance().setExpiryTime();
+                        Util.getInstance().updateGoogleToken(response.getTokenResult());
+                        makeRegisterAPICall(token);
+                    }
+                })
+                .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());
     }
 
     /**

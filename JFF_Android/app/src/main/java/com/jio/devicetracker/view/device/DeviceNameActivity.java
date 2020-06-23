@@ -65,6 +65,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         title.setText(Constant.DEVICE_NAME_TITLE);
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
         done = findViewById(R.id.done);
         done.setVisibility(View.VISIBLE);
         done.setOnClickListener(this);
@@ -318,6 +319,9 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 } else {
                     addMemberToCreatedGroup();
                 }*/
+                break;
+            case R.id.back:
+                finish();
                 break;
             default:
                 break;

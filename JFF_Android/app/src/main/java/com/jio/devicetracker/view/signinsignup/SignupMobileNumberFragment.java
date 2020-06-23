@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.safetynet.SafetyNet;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.GenerateTokenData;
 import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
@@ -129,8 +130,20 @@ public class SignupMobileNumberFragment extends Fragment implements View.OnClick
                 signUpNumberEditText.setBackgroundTintList(colorStateList);
                 return;
             }
-            generateRegistrationTokenAPICall(phoneNumber);
+            makeSafetyNetCall();
         }
+    }
+
+    private void makeSafetyNetCall() {
+        SafetyNet.getClient(getActivity()).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
+                .addOnSuccessListener(getActivity(), response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        Util.getInstance().setExpiryTime();
+                        Util.getInstance().updateGoogleToken(response.getTokenResult());
+                        generateRegistrationTokenAPICall(phoneNumber);
+                    }
+                })
+                .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());
     }
 
     /**

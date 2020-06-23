@@ -87,8 +87,9 @@ public class DeviceFragment extends Fragment {
         makeGroupInfoPerUserRequestAPICall();
     }
 
-    private void displayGroupDataInDashboard(View view) {
+    private void displayGroupDataInDashboard() {
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        List<HomeActivityListData> mGroupIconList = mDbManager.getAllGroupIconTableData();
         groupList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId()) && data.getGroupName().equals(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)) {
@@ -106,6 +107,11 @@ public class DeviceFragment extends Fragment {
                     homeActivityListData.setProfileImage(data.getProfileImage());
                     homeActivityListData.setFrom(data.getFrom());
                     homeActivityListData.setTo(data.getTo());
+                    for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
+                        if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+                            homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                        }
+                    }
                     groupList.add(homeActivityListData);
                 }
             }
@@ -132,7 +138,7 @@ public class DeviceFragment extends Fragment {
         public void onResponse(Object response) {
             GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
             parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
-            displayGroupDataInDashboard(getView());
+            displayGroupDataInDashboard();
         }
     }
 
@@ -149,7 +155,7 @@ public class DeviceFragment extends Fragment {
     }
 
     public static void checkMemberPresent() {
-        if (groupList != null && ! groupList.isEmpty()) {
+        if (groupList != null && !groupList.isEmpty()) {
             cardInstruction.setVisibility(View.INVISIBLE);
             instructionIcon.setVisibility(View.INVISIBLE);
         } else {

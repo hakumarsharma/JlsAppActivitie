@@ -101,7 +101,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         holder.groupName.setText(data.getGroupName());
         if(data.getGroupIcon() != null && !data.getGroupIcon().isEmpty()) {
             Resources res = mContext.getResources();
-            int iconId = res.getIdentifier(data.getGroupIcon(), "drawable", mContext.getPackageName());
+            int iconId = res.getIdentifier(data.getGroupIcon(), Constant.DRAWABLE, mContext.getPackageName());
             Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
             holder.groupListmemberIcon.setImageDrawable(drawable);
         }else {

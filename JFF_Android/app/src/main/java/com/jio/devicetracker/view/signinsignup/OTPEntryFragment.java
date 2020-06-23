@@ -73,6 +73,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     private String ugsToken;
     private boolean isComingFromRequestOTP;
     private boolean isComingFromLogin;
+    public static boolean isDeviceAdditionRequired;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -221,10 +222,10 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
                         if (!response.getTokenResult().isEmpty()) {
                             Util.getInstance().setExpiryTime();
                             Util.getInstance().updateGoogleToken(response.getTokenResult());
-                            if(isComingFromRequestOTP) {
+                            if (isComingFromRequestOTP) {
                                 generateLoginTokenAPICall();
                                 isComingFromRequestOTP = false;
-                            } else if(isComingFromLogin) {
+                            } else if (isComingFromLogin) {
                                 onLoginButtonClick();
                                 isComingFromLogin = false;
                             }
@@ -263,9 +264,9 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
                     && logindetailResponse.getData().getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())) {
                 System.out.println("Already added device it is");
             } else {
+                isDeviceAdditionRequired = true;
                 makeVerifyAndAssignAPICall();
             }
-
             if (logindetailResponse.getData().getUgsToken() != null) {
                 mDbManager.deleteAllPreviousData();
                 Util.getInstance().setAutologinStatus(getActivity(), true);
@@ -330,8 +331,10 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
         @Override
         public void onResponse(Object response) {
             AddDeviceResponse addDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), AddDeviceResponse.class);
+            isDeviceAdditionRequired = false;
             if (addDeviceResponse.getCode() == 200) {
                 Toast.makeText(getActivity(), Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+                System.out.println("Device added successfully");
             }
         }
     }
@@ -342,8 +345,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     private class AddDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            // Todo
+            System.out.println("Error in Device Addition");
         }
     }
-
 }

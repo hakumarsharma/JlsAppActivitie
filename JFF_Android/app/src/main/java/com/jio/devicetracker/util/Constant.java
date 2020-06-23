@@ -59,6 +59,7 @@ public class Constant {
     public static final String TITLE = "Title...";
     public static final String EMPTY_STRING = "";
     public static final String GOOGLE_RECAPTCHA_ERROR = "Captcha error";
+    public static final String DRAWABLE = "drawable";
 
 
     // Registration Activity constants
@@ -206,7 +207,7 @@ public class Constant {
     //Rest API URL
     public static final String LOGIN_URL = "/accounts/api/users/tokens/verify/login";
     public static final String REGISTRATION_TOKEN_URL = "/accounts/api/users/tokens";
-    public static final String REGISTRATION_URL = "/accounts/api/users/register";
+    public static final String REGISTRATION_URL = "/accounts/api/users/v2/register";
     public static final String FORGOT_PASS_URL = "/accounts/api/users/resetpassword";
     public static final String FORGOTPASS_TOKEN_URL = "/ugs/api/user/forgotpassword";
     public static final String ADDDEVICE_URL_1 = "/accounts/api/users/";
@@ -218,7 +219,7 @@ public class Constant {
     public static final String GET_DEVICE_LOCATION_URL_1 = "/accounts/api/devices/";
     public static final String GET_DEVICE_LOCATION_URL_2 = "?tsp=1585031229387&ugs_token=";
     public static final String REGISTRATION_URL_VERIFY = "/accounts/api/users/tokens/verify";
-    public static final String GENERATE_TOKEN_REQUEST_URL = "/accounts/api/users/tokens";
+    public static final String GENERATE_TOKEN_REQUEST_URL = "/accounts/api/users/v2/tokens";
     public static final String GENERATE_LOGIN_TOKEN_REQUEST_URL = "/accounts/api/users/v2/tokens/login";
     public static final String ACCOUNTS_API_USER_URL = "/accounts/api/users/";
     public static final String SESSION_GROUPS_URL = "/sessiongroups/";

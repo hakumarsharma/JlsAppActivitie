@@ -49,6 +49,8 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.menu.TermAndConditionPolicyActivity;
 
+import java.util.Objects;
+
 /**
  * Login fragment
  */
@@ -131,7 +133,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
      * Make an api call to generate Login token
      */
     private void generateLoginTokenAPICall() {
-        if(!Util.isValidMobileNumber(phoneNumber)) {
+        if (!Util.isValidMobileNumber(phoneNumber)) {
             mobileNumberErrorCode.setVisibility(View.VISIBLE);
             return;
         }
@@ -145,7 +147,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void makeSafetyNetCall() {
-        SafetyNet.getClient(getActivity()).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
+        SafetyNet.getClient(Objects.requireNonNull(getActivity())).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
                 .addOnSuccessListener(getActivity(), response -> {
                     if (!response.getTokenResult().isEmpty()) {
                         Util.getInstance().setExpiryTime();

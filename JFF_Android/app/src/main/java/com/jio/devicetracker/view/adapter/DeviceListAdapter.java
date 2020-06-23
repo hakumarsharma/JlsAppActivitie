@@ -21,6 +21,8 @@
 package com.jio.devicetracker.view.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Response;
@@ -87,6 +90,14 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         HomeActivityListData data = mList.get(position);
         holder.trackingDeviceName.setTypeface(Util.mTypeface(mContext, 5));
         holder.trackingDeviceName.setText(data.getGroupName());
+        if (data.getGroupIcon() != null && !data.getGroupIcon().isEmpty()) {
+            Resources res = mContext.getResources();
+            int iconId = res.getIdentifier(data.getGroupIcon(), Constant.DRAWABLE, mContext.getPackageName());
+            Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
+            holder.deviceMemberIcon.setImageDrawable(drawable);
+        } else {
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.ic_family_group);
+        }
     }
 
 
@@ -111,6 +122,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         private TextView devicesDelete;
         private TextView trackingDeviceName;
         private ImageView deviceMenubar;
+        private ImageView deviceMemberIcon;
 
         /**
          * Constructor where we find element from .xml file
@@ -125,6 +137,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             devicesDelete = itemView.findViewById(R.id.devicesDelete);
             deviceMenubar = itemView.findViewById(R.id.deviceMenubar);
             devicesOperationLayout = itemView.findViewById(R.id.devicesOperationLayout);
+            deviceMemberIcon = itemView.findViewById(R.id.deviceMemberIcon);
             deviceMenubar.setOnClickListener(this);
             shareDevices.setOnClickListener(this);
             devicesDelete.setOnClickListener(this);

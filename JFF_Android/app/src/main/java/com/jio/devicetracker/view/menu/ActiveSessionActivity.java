@@ -404,6 +404,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             if (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
                     && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
                     && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)
+                    && data.getGroupOwnerUserId() != null
                     && !data.getGroupOwnerUserId().equalsIgnoreCase(userId)) {
                 HomeActivityListData homeActivityListData = new HomeActivityListData();
                 homeActivityListData.setGroupName(data.getGroupName());
