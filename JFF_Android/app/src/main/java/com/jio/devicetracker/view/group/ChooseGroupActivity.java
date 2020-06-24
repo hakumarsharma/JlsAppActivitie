@@ -74,7 +74,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_group);
         Intent intent = getIntent();
-        label = intent.getStringExtra("Title");
+        label = intent.getStringExtra(Constant.TITLE_NAME);
         phoneNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         initUI();
         setMemberIcon(label);
@@ -86,24 +86,24 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private void setMemberIcon(String label) {
         trackeeNameEditText.setText(label);
         if (label != null && !label.isEmpty()) {
-            if (label.equalsIgnoreCase("Woman")) {
+            if (label.equalsIgnoreCase(Constant.MOM)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
-            } else if (label.equalsIgnoreCase("Man")) {
+            } else if (label.equalsIgnoreCase(Constant.FATHER)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
-            } else if (label.equalsIgnoreCase("Boy")) {
+            } else if (label.equalsIgnoreCase(Constant.HUSBAND)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
             } else if (label.equalsIgnoreCase(Constant.CAT)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.cat));
             } else if (label.equalsIgnoreCase(Constant.DOG)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
-            } else if (label.equalsIgnoreCase("OtherPet")) {
+            } else if (label.equalsIgnoreCase(Constant.OTHER_PET)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
             } else if (label.equalsIgnoreCase(Constant.KID)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
             } else if (label.equalsIgnoreCase(Constant.OTHER)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
             }
-            if (label.equalsIgnoreCase("Girl")) {
+            if (label.equalsIgnoreCase(Constant.WIFE)) {
                 if (label != null && !label.isEmpty()) {
                     if (label.equalsIgnoreCase(Constant.WIFE)) {
                         memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
@@ -176,8 +176,8 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
 
     private void gotoCreateGroupActivity() {
         Intent createGroupIntent = new Intent(this, CreateGroupActivity.class);
-        createGroupIntent.putExtra("TrackeeName", trackeeNameEditText.getText().toString());
-        createGroupIntent.putExtra("TrackeeNumber", phoneNumber);
+        createGroupIntent.putExtra(Constant.TRACKEE_NAME, trackeeNameEditText.getText().toString());
+        createGroupIntent.putExtra(Constant.TRACKEE_NUMBER, phoneNumber);
         startActivity(createGroupIntent);
     }
 

@@ -352,8 +352,8 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     {
         Intent intent = new Intent(DeviceNameActivity.this, ChooseGroupActivity.class);
         intent.putExtra(Constant.GROUP_ID, createdGroupId);
-        intent.putExtra("DeviceNumber",deviceNumber);
-        intent.putExtra("Title",iconName);
+        intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+        intent.putExtra(Constant.TITLE_NAME,iconName);
         startActivity(intent);
     }
 }

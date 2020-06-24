@@ -287,8 +287,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
 
     private void gotoGroupFromPeopleActivity() {
         Intent chooseGroupIntent = new Intent(this, ChooseGroupFromPeopleFlow.class);
-        chooseGroupIntent.putExtra("TrackeeName", contactName.getText().toString());
-        chooseGroupIntent.putExtra("TrackeeNumber", contactNumber.getText().toString());
+        chooseGroupIntent.putExtra(Constant.TRACKEE_NAME, contactName.getText().toString());
+        chooseGroupIntent.putExtra(Constant.TRACKEE_NUMBER, contactNumber.getText().toString());
         startActivity(chooseGroupIntent);
     }
 

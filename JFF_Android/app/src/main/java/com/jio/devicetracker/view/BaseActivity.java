@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.maps.model.Dash;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
 import com.jio.devicetracker.database.pojo.CreateGroupData;
@@ -189,7 +190,11 @@ public class BaseActivity extends AppCompatActivity {
                         isNavigateToGroupsFragment = false;
                         intent.putExtra(Constant.Add_Device, false);
                         intent.putExtra(Constant.Add_People, false);
-                    } else if (!isFromCreateGroup) {
+                    } else if(DashboardMainActivity.flowFromDevice){
+                        intent.putExtra(Constant.Add_Device, false);
+                        intent.putExtra(Constant.Add_People, false);
+                    }
+                    else if (!isFromCreateGroup) {
                         intent.putExtra(Constant.Add_Device, true);
                     }
                     startActivity(intent);

@@ -61,8 +61,8 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_create_group);
         initUI();
         Intent intent = getIntent();
-        trackeeName = intent.getStringExtra("TrackeeName");
-        trackeeNumber = intent.getStringExtra("TrackeeNumber");
+        trackeeName = intent.getStringExtra(Constant.TRACKEE_NAME);
+        trackeeNumber = intent.getStringExtra(Constant.TRACKEE_NUMBER);
         changeButtonColorOnDataEntry();
     }
 
@@ -152,6 +152,13 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
                 isGroupMember = false;
                 createdGroupId = groupIdFromPeopleFlow;
                 isFromDevice = false;
+            } else if(DashboardMainActivity.flowFromDevice){
+                memberName = trackeeName;
+                memberNumber = trackeeNumber;
+                isGroupMember = false;
+                this.isFromCreateGroup = false;
+                isFromDevice = true;
+
             } else {
                 this.isFromCreateGroup = true;
             }

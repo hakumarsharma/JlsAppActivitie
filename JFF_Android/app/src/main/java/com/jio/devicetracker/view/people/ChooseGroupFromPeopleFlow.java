@@ -79,8 +79,8 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         add.setOnClickListener(this);
         Intent intent = getIntent();
         groupText = findViewById(R.id.group_detail_text);
-        name = intent.getStringExtra("TrackeeName");
-        phoneNumber = intent.getStringExtra("TrackeeNumber");
+        name = intent.getStringExtra(Constant.TRACKEE_NAME);
+        phoneNumber = intent.getStringExtra(Constant.TRACKEE_NUMBER);
         continueChooseGroup = findViewById(R.id.continueChooseGroup);
         continueChooseGroup.setOnClickListener(this);
         Button addLater = findViewById(R.id.addLater);
@@ -108,8 +108,8 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
 
     private void gotoCreateGroupActivity() {
         Intent createGroupIntent = new Intent(this, CreateGroupActivity.class);
-        createGroupIntent.putExtra("TrackeeName",name);
-        createGroupIntent.putExtra("TrackeeNumber",phoneNumber);
+        createGroupIntent.putExtra(Constant.TRACKEE_NAME,name);
+        createGroupIntent.putExtra(Constant.TRACKEE_NUMBER,phoneNumber);
         startActivity(createGroupIntent);
     }
 

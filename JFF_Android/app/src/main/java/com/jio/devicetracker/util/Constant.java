@@ -126,6 +126,9 @@ public class Constant {
     public static final String ADD_CONTACT_WARNING = "Please add contact first in the list to proceed further";
     public static final String GROUP_STATUS = "Group Status";
     public static final String GROUP_SELECTED = "groupSelected";
+    public static final String TRACKEE_NAME = "TrackeeName";
+    public static final String TRACKEE_NUMBER = "TrackeeNumber";
+
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
@@ -358,6 +361,7 @@ public class Constant {
 
     // Customize device
     public static final String DEVICE_NAME_TITLE = "Customize device ";
+    public static final String TITLE_NAME = "Title";
     public static final String REAL_ICON = "Real Icon";
     public static final String GROUP_ICON = "Group Icon";
     public static final String DEVICE_NUMBER = "DeviceNumber";

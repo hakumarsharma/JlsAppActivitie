@@ -78,7 +78,7 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
         if(Util.isValidMobileNumber(result.getText())){
         Intent intent = new Intent(this, DeviceNameActivity.class);
         intent.putExtra(Constant.GROUP_ID, groupId);
-        intent.putExtra("DeviceNumber", result.getText());
+        intent.putExtra(Constant.DEVICE_NUMBER, result.getText());
         startActivity(intent);
         } else {
             Intent intent = new Intent(this, QRCodeRescanActivity.class);
