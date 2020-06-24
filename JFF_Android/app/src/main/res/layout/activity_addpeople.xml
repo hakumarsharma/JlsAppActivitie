@@ -127,10 +127,10 @@
         android:layout_marginLeft="@dimen/margin_24"
         android:layout_marginRight="@dimen/margin_24"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/button_frame_white"
+        android:background="@drawable/login_selector"
         android:text="@string/add_later"
         android:textAllCaps="false"
-        android:textColor="@color/lite_blue"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/adddevice_content_font_size" />
 
 
