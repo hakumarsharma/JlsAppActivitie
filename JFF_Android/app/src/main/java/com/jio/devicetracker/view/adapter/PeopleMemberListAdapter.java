@@ -170,6 +170,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     break;
                 case R.id.deleteIndividualUser:
                     position = getAdapterPosition();
+                    PeopleMemberListAdapter.this.individualMemberOperationLayout = individualMemberOperationLayout;
                     makeDeleteGroupAPICall(mList.get(position).getGroupId());
                     break;
             }

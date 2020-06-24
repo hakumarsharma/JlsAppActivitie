@@ -120,7 +120,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         contactNumber = findViewById(R.id.deviceNumber);
         contactNumber.setTypeface(Util.mTypeface(this, 5));
 
-        if(CreateGroupActivity.trackeeNumber != null && CreateGroupActivity.trackeeName != null){
+        if (CreateGroupActivity.trackeeNumber != null && CreateGroupActivity.trackeeName != null) {
             contactName.setText(CreateGroupActivity.trackeeName);
             contactNumber.setText(CreateGroupActivity.trackeeNumber);
         }
@@ -135,7 +135,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         addContact_Continue = findViewById(R.id.addContact_Continue);
         addContact_Continue.setOnClickListener(this);
 
-        if(DashboardMainActivity.flowFromPeople){
+        if (DashboardMainActivity.flowFromPeople) {
             addToGroup.setVisibility(View.VISIBLE);
             addContact_Continue.setVisibility(View.INVISIBLE);
         }
@@ -268,11 +268,10 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                     Toast.makeText(this, Constant.ADD_CONTACT_WARNING, Toast.LENGTH_SHORT);
                 }
             }
-        } else if(v.getId() == R.id.add_to_group){
+        } else if (v.getId() == R.id.add_to_group) {
             gotoGroupFromPeopleActivity();
             setEditTextValues();
-
-        } else if(v.getId() == R.id.add_later){
+        } else if (v.getId() == R.id.add_later) {
             if (groupId == null || groupId.isEmpty()) {
                 validationCheck();
             } else {
@@ -288,8 +287,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
 
     private void gotoGroupFromPeopleActivity() {
         Intent chooseGroupIntent = new Intent(this, ChooseGroupFromPeopleFlow.class);
-        chooseGroupIntent.putExtra("TrackeeName",contactName.getText().toString());
-        chooseGroupIntent.putExtra("TrackeeNumber",contactNumber.getText().toString());
+        chooseGroupIntent.putExtra("TrackeeName", contactName.getText().toString());
+        chooseGroupIntent.putExtra("TrackeeNumber", contactNumber.getText().toString());
         startActivity(chooseGroupIntent);
     }
 
@@ -334,13 +333,13 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     public void getAllMembers(List<GroupMemberResponse.Data> memberList) {
         if (memberList != null) {
             listOfContacts = new ArrayList();
-            for(GroupMemberResponse.Data data : memberList) {
-                if(!data.getStatus().equalsIgnoreCase(Constant.REMOVED)) {
+            for (GroupMemberResponse.Data data : memberList) {
+                if (!data.getStatus().equalsIgnoreCase(Constant.REMOVED)) {
                     listOfContacts.add(data);
                 }
             }
             mAdapter = new AddPersonListAdapter(listOfContacts);
-            if(contactsListView == null){
+            if (contactsListView == null) {
                 contactsListView = this.findViewById(R.id.contactsListView);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 contactsListView.setLayoutManager(linearLayoutManager);

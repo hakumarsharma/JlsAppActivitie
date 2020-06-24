@@ -200,6 +200,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
      */
     private void addDatainList() {
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        List<HomeActivityListData> mGroupIconList = mDbManager.getAllGroupIconTableData();
         chooseGroupDataList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
@@ -212,13 +213,17 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
                     homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                     homeActivityListData.setFrom(data.getFrom());
                     homeActivityListData.setTo(data.getTo());
-                    homeActivityListData.setProfileImage(R.drawable.ic_group_button);
+                    for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
+                        if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+                            homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                        }
+                    }
                     chooseGroupDataList.add(homeActivityListData);
                 }
             }
         }
 
-        if(chooseGroupDataList.size() == 0) {
+        if(chooseGroupDataList.isEmpty()) {
             groupText.setVisibility(View.VISIBLE);
             cardViewGroup.setVisibility(View.INVISIBLE);
             continueChooseGroup.setEnabled(false);
