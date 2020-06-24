@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,10 +50,12 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
 
     private TextView userName;
     private TextView userNumber;
+    private TextView defaultText;
     private List listOnActiveSession;
     private DBManager mDbManager;
     private RecyclerView trackedList;
     private ProfileTrackedByListAdapter mAdapter;
+    private static CardView cardInstruction;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +74,9 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         userName.setText(intent.getStringExtra("Name"));
         userNumber.setText(intent.getStringExtra("Number"));
         trackedList = findViewById(R.id.tracked_list);
+        defaultText = findViewById(R.id.tracked_default_text);
+        defaultText.setTypeface(Util.mTypeface(this, 5));
+        cardInstruction = findViewById(R.id.default_text_card);
         Button editBtn = findViewById(R.id.edit_btn);
         editBtn.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -180,6 +186,11 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
                 }
                 listOnActiveSession.add(data);
             }
+        }
+        if (listOnActiveSession.isEmpty()){
+            cardInstruction.setVisibility(View.VISIBLE);
+        }else {
+            cardInstruction.setVisibility(View.INVISIBLE);
         }
         mAdapter = new ProfileTrackedByListAdapter(listOnActiveSession);
         trackedList.setAdapter(mAdapter);
