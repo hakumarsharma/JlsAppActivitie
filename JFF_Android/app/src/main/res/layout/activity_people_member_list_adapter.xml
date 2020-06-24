@@ -50,21 +50,21 @@
                 android:id="@+id/timer"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="10dp"
-                android:layout_toLeftOf="@+id/timeLeft"
-                android:background="@drawable/ic_timetimeline_outline" />
+                android:background="@drawable/calendar" />
 
             <TextView
                 android:id="@+id/timeLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="10dp"
-                android:text="00h 00min"
+                android:layout_toLeftOf="@+id/timer"
+                android:text="90 days"
                 android:textColor="@color/timerColor"
                 android:textSize="14dp" />
         </RelativeLayout>

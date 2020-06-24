@@ -95,8 +95,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         HomeActivityListData data = mList.get(position);
         holder.memberName.setTypeface(Util.mTypeface(mContext, 5));
         holder.memberName.setText(data.getGroupName());
-        holder.timeLeft.setText("00h 60min");
-
+        holder.timeLeft.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(),data.getTo()));
         holder.peopleList.setOnClickListener(v -> {
             itemListener.clickOnListLayout(data);
             return;
