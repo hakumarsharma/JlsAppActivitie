@@ -27,7 +27,9 @@
         <activity android:name=".view.signinsignup.SigninSignupActivity" />
         <activity android:name=".view.dashboard.DashboardActivity" />
         <activity android:name=".view.group.CreateGroupActivity" />
-        <activity android:name=".view.group.ChooseGroupActivity" />
+        <activity android:name=".view.group.ChooseGroupActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize"
+            />
         <activity android:name=".view.group.GroupNameActivity" />
         <activity android:name=".view.menu.ActiveMemberActivity" />
         <activity android:name=".view.menu.RefreshIntervalSettingActivity" />
@@ -116,6 +118,7 @@
             android:label="@string/map_name" />
         <activity
             android:name=".view.people.AddPeopleActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize"
             android:label="@string/map_name" />
         <activity
             android:name=".view.menu.NavigateUserProfileActivity"
@@ -155,6 +158,7 @@
             android:label="@string/map_name" />
         <activity
             android:name=".view.people.ChooseGroupFromPeopleFlow"
+            android:windowSoftInputMode="adjustPan|adjustResize"
             android:label="@string/map_name" />
 
         <activity
