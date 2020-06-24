@@ -4,7 +4,7 @@
     <item
         android:id="@+id/notification"
         android:icon="@drawable/notification"
-        android:title="Notification &amp; alerts" />
+        android:title="Notification &amp; Alerts" />
 
     <item
         android:id="@+id/silent_mode"

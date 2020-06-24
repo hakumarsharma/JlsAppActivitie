@@ -145,7 +145,7 @@
     <string name="name">Name</string>
     <string name="device">Device phone number</string>
     <string name="device_number_text">Device phone number</string>
-    <string name="device_number_content">Please enter you device phone number \nwhich is unique for your device. You can find \nit to back side of device package.</string>
+    <string name="device_number_content">Please enter your device phone number \nwhich is unique for device. You can find \nit at back side of device package.</string>
     <string name="about_app">About app</string>
     <string name="term_policy">Terms &amp; privacy policies</string>
     <string name="term_condition">Terms &amp; Conditions</string>

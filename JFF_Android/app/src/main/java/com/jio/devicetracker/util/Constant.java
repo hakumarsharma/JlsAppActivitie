@@ -120,8 +120,8 @@ public class Constant {
     public static final String SELECTION_ERROR = "You cannot track individual user and group at the same time, Please select one of them to track.";
     public static final String NO_EVENTS_FOUND_RESPONSE = "No events found matching the search keys.";
     public static final String FETCH_LOCATION_ERROR = "Location details are not available, Please try again!";
-    public static final String GROUP_NOT_ACTIVE = "Group is scheduled, please wait until it doesn't become active";
-    public static final String SESSION_COMPLETED = "Please request consent to track the group members";
+    public static final String GROUP_NOT_ACTIVE = "Please wait till clock ticks scheduled time.";
+    public static final String SESSION_COMPLETED = "Please request consent to track the group members.";
     public static final String CONSENT_PENDING_STATUS = "Consent is pending, please ask the user to accept consent for tracking";
     public static final String ADD_CONTACT_WARNING = "Please add contact first in the list to proceed further";
     public static final String GROUP_STATUS = "Group Status";
@@ -394,6 +394,10 @@ public class Constant {
     public static final String MIN_40 = "40 min";
     public static final String NOTIFICATION_CHANNEL_ID = "channel";
     public static final int NOTIFICATION__ID = 1;
+
+    // Notifications
+    public static final String NOTIFICATIONS_TITLE = "Notifications & Alerts";
+    public static final String SILENT_MODE = "Silent mode";
 
     // HowToUse Activity
     public static final String HOW_TO_ADD_TITLE = "How to use device";

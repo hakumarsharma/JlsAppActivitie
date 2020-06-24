@@ -100,6 +100,8 @@ import com.jio.devicetracker.view.group.CreateGroupActivity;
 import com.jio.devicetracker.view.menu.ActiveSessionActivity;
 import com.jio.devicetracker.view.menu.NavigateSupportActivity;
 import com.jio.devicetracker.view.menu.NavigateUserProfileActivity;
+import com.jio.devicetracker.view.menu.NotificationsActivity;
+import com.jio.devicetracker.view.menu.SilentModeActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 import com.jio.devicetracker.view.signinsignup.SigninSignupActivity;
 
@@ -453,7 +455,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                 int id = item.getItemId();
                 switch (id) {
                     case R.id.notification:
-                        //gotoNotificationActivity();
+                        gotoNotificationActivity();
+                        break;
+                    case R.id.silent_mode:
+                        gotoSilentModeActivity();
                         break;
                     case R.id.group_management:
                         gotoGroupManagementActivity();
@@ -472,6 +477,14 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         });
     }
 
+    private void gotoNotificationActivity() {
+        Intent intent = new Intent(this, NotificationsActivity.class);
+        startActivity(intent);
+    }
+    private void gotoSilentModeActivity() {
+        Intent intent = new Intent(this, SilentModeActivity.class);
+        startActivity(intent);
+    }
     private void gotoGroupManagementActivity() {
         Intent intent = new Intent(this, ActiveSessionActivity.class);
         startActivity(intent);

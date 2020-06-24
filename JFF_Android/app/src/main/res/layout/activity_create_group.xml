@@ -146,7 +146,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:layout_marginTop="20dp"
-                        android:background="@drawable/home_group" />
+                        android:background="@drawable/ic_home_group" />
 
 
                     <Button
@@ -156,7 +156,7 @@
                         android:layout_marginLeft="19dp"
                         android:layout_marginTop="20dp"
                         android:layout_toRightOf="@+id/homeGroupButton"
-                        android:background="@drawable/family_group" />
+                        android:background="@drawable/ic_family_group" />
 
 
                     <Button
@@ -166,7 +166,7 @@
                         android:layout_marginLeft="19dp"
                         android:layout_marginTop="20dp"
                         android:layout_toRightOf="@+id/familyGroupButton"
-                        android:background="@drawable/friends_group" />
+                        android:background="@drawable/ic_friends_group" />
 
 
                     <Button
@@ -176,7 +176,7 @@
                         android:layout_marginLeft="19dp"
                         android:layout_marginTop="20dp"
                         android:layout_toRightOf="@+id/friendsGroupButton"
-                        android:background="@drawable/group_pet" />
+                        android:background="@drawable/ic_group_pet" />
 
                 </RelativeLayout>
             </RelativeLayout>
