@@ -194,8 +194,8 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
             mDbManager.deleteSelectedDataFromGroup(groupId);
             mDbManager.deleteSelectedDataFromGroupMember(groupId);
             Util.progressDialog.dismiss();
-            removeItem(position);
             individualMemberOperationLayout.setVisibility(View.GONE);
+            removeItem(position);
             PeopleFragment.checkMemberPresent();
         }
     }

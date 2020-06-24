@@ -264,9 +264,11 @@ public class PeopleFragment extends Fragment {
                 homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                 homeActivityListData.setFrom(data.getSession().getFrom());
                 homeActivityListData.setTo(data.getSession().getTo());
-                homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
-                homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
-                homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
+                if(!(data.getGroupOwner().size() ==0)) {
+                    homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
+                    homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
+                    homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
+                }
                 groupList.add(homeActivityListData);
             }
         }

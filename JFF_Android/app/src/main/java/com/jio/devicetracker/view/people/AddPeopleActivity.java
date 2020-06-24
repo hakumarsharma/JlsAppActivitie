@@ -270,6 +270,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             }
         } else if(v.getId() == R.id.add_to_group){
             gotoGroupFromPeopleActivity();
+            setEditTextValues();
 
         } else if(v.getId() == R.id.add_later){
             if (groupId == null || groupId.isEmpty()) {

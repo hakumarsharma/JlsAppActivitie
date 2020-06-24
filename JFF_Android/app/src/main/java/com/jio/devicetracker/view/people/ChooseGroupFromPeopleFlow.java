@@ -40,6 +40,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
     private String phoneNumber;
     private TextView groupText;
     private List<HomeActivityListData> chooseGroupDataList;
+    private Button continueChooseGroup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         groupText = findViewById(R.id.group_detail_text);
         name = intent.getStringExtra("TrackeeName");
         phoneNumber = intent.getStringExtra("TrackeeNumber");
-        Button continueChooseGroup = findViewById(R.id.continueChooseGroup);
+        continueChooseGroup = findViewById(R.id.continueChooseGroup);
         continueChooseGroup.setOnClickListener(this);
         Button addLater = findViewById(R.id.addLater);
         addLater.setOnClickListener(this);
@@ -152,9 +153,11 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
             homeActivityListData.setUpdatedBy(data.getUpdatedBy());
             homeActivityListData.setFrom(data.getSession().getFrom());
             homeActivityListData.setTo(data.getSession().getTo());
-            homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
-            homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
-            homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
+            if(!(data.getGroupOwner().size() ==0)) {
+                homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
+                homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
+                homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
+            }
             groupList.add(homeActivityListData);
         }
         for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
@@ -218,6 +221,8 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         if(chooseGroupDataList.size() == 0) {
             groupText.setVisibility(View.VISIBLE);
             cardViewGroup.setVisibility(View.INVISIBLE);
+            continueChooseGroup.setEnabled(false);
+            continueChooseGroup.setBackground(getResources().getDrawable(R.drawable.selector));
         }
         GridLayoutManager mLayoutManager = new GridLayoutManager(this,4);
         RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);
@@ -241,8 +246,18 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         this.isFromCreateGroup = false;
         this.isGroupMember = false;
         this.isFromDevice = false;
-        createGroupAndAddContactAPICall(Constant.INDIVIDUAL_DEVICE_GROUP_NAME);
+        createGroupAndAddContactAPICall(Constant.INDIVIDUAL_USER_GROUP_NAME);
     }
+    /*private void setEditTextValues() {
+        if (addContact != null) {
+            setButtonBackground(addContact, false);
+        }
+        setEditTextBottomLineColor(contactName);
+        setEditTextBottomLineColor(contactNumber);
+        contactName.getText().clear();
+        contactNumber.getText().clear();
+
+    }*/
 
     private void updateUIInChooseGroupActivity(HomeActivityListData mData) {
         List<HomeActivityListData> mHomeActivityListData = new ArrayList<>();

@@ -149,7 +149,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
                 this.isFromCreateGroup = false;
                 memberName = trackeeName;
                 memberNumber = trackeeNumber;
-                isGroupMember = true;
+                isGroupMember = false;
                 createdGroupId = groupIdFromPeopleFlow;
                 isFromDevice = false;
             } else {

@@ -110,7 +110,7 @@ public class BaseActivity extends AppCompatActivity {
                     intent.putExtra(Constant.GROUP_ID, createdGroupId);
                     startActivity(intent);
                 } else if(DashboardMainActivity.flowFromPeople){
-                    addMemberInGroupAPICall();
+                    addIndividualUserInGroupAPICall();
                 } else if(isFromDevice) {
                     mDbManager.insertInToGroupIconTable(createdGroupId, memberIcon);
                     addIndividualUserInGroupAPICall();
