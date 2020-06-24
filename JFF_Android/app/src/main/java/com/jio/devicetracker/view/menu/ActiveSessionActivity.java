@@ -404,8 +404,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             if (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
                     && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
                     && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)
-                    && data.getGroupOwnerUserId() != null
-                    && !data.getGroupOwnerUserId().equalsIgnoreCase(userId)) {
+                    && data.getCreatedBy().equalsIgnoreCase(userId)) {
                 HomeActivityListData homeActivityListData = new HomeActivityListData();
                 homeActivityListData.setGroupName(data.getGroupName());
                 homeActivityListData.setGroupId(data.getGroupId());
@@ -421,7 +420,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         // Adding Tracking you in list of Active session
         List<TrackingYou> trackingYouList = new ArrayList<>();
         for(HomeActivityListData data : groupDetailList) {
-            if(userId.equalsIgnoreCase(data.getGroupOwnerUserId())) {
+            if(!userId.equalsIgnoreCase(data.getGroupOwnerUserId())) {
                 TrackingYou trackingYou = new TrackingYou();
                 trackingYou.setGroupOwnerName(data.getGroupOwnerName());
                 trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
@@ -458,6 +457,6 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         mTrackedByYouListAdapter = new TrackedByYouListAdapter(listOnActiveSession);
         mTrackingYouListAdapter = new TrackingYouListAdapter(trackingYouList);
         trackingByYouListRecyclerView.setAdapter(mTrackedByYouListAdapter);
-        trackingYouListRecyclerView.setAdapter(mTrackedByYouListAdapter);
+        trackingYouListRecyclerView.setAdapter(mTrackingYouListAdapter);
     }
 }

@@ -48,8 +48,7 @@
                 android:layout_marginTop="@dimen/twenty_dp"
                 android:text="Tracked by you"
                 android:textColor="@color/mine_shaft"
-                android:textSize="@dimen/fourteen_dp"
-                android:visibility="invisible" />
+                android:textSize="@dimen/fourteen_dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/trackingByYouList"
@@ -68,8 +67,7 @@
                 android:layout_marginTop="@dimen/twenty_dp"
                 android:text="Tracking you"
                 android:textColor="@color/mine_shaft"
-                android:textSize="@dimen/fourteen_dp"
-                android:visibility="invisible" />
+                android:textSize="@dimen/fourteen_dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/trackingYouList"

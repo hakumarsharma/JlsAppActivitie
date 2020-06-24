@@ -46,13 +46,14 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tracking_by_you_list_apater, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tracking_you_list_apater, parent, false);
         return new TrackingYouListAdapter.ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        TrackingYou trackingYou = mList.get(position);
+        holder.trackingYouGroupName.setText(trackingYou.getGroupOwnerName());
     }
 
     @Override
@@ -67,6 +68,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         private ImageView trackingYouclose;
         private TextView disableTracking;
         private TextView leaveGroup;
+        public TextView trackingYouGroupName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +81,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
             disableTracking.setOnClickListener(this);
             leaveGroup = itemView.findViewById(R.id.leaveGroup);
             leaveGroup.setOnClickListener(this);
+            trackingYouGroupName = itemView.findViewById(R.id.trackingYouGroupName);
         }
 
         @Override

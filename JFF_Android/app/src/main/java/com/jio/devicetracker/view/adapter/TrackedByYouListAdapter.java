@@ -61,7 +61,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tracking_you_list_apater, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tracking_by_you_list_apater, parent, false);
         return new TrackedByYouListAdapter.ViewHolder(itemView);
     }
 
