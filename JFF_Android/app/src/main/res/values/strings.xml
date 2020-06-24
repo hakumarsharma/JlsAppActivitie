@@ -65,6 +65,7 @@
     <string name="add_people_text">Add people from your contacts or add their name and mobile number</string>
     <string name="continue_text">Continue</string>
     <string name="add_later">Add later</string>
+    <string name="rescan_qrcode_instruction">Device not found. Please try \nscanning the QR code again or you can \nadd device manually by entering the \nIMEI number</string>
     <string name="add_to_group">Add to group</string>
     <string name="select_icon_text">Let\'s choose any one with whom you \nwant to attach your device</string>
     <string name="people_title">PEOPLE</string>

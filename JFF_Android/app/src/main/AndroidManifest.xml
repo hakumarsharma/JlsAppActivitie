@@ -151,6 +151,9 @@
             android:name=".view.device.AttachDeviceActivity"
             android:label="@string/map_name" />
         <activity
+            android:name=".view.device.QRCodeRescanActivity"
+            android:label="@string/map_name" />
+        <activity
             android:name=".view.people.ChooseGroupFromPeopleFlow"
             android:label="@string/map_name" />
 

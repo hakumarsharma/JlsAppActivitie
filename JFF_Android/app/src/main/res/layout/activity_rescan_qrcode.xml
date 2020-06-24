@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/rescanToolbar"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rescanToolbar"
+        android:background="@color/cardviewlayout_device_background_color"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rescan_qrcode_instruction"
+            android:layout_marginRight="@dimen/margin_30"
+            android:layout_marginLeft="@dimen/margin_30"
+            android:gravity="center"
+            android:textColor="@color/viewBackgroundColor"
+            android:textSize="@dimen/seventeen_dp"
+            />
+
+        <Button
+            android:id="@+id/scan_btn"
+            android:layout_width="@dimen/adddevice_button_width"
+            android:layout_height="@dimen/adddevice_button_height"
+            android:background="@drawable/button_frame_blue"
+            android:text="@string/scan_qr_code"
+            android:layout_above="@+id/manual_add"
+            android:layout_centerHorizontal="true"
+            android:textAllCaps="false"
+            android:layout_marginBottom="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/adddevice_content_font_size" />
+
+        <Button
+            android:id="@+id/manual_add"
+            android:layout_width="@dimen/adddevice_button_width"
+            android:layout_height="@dimen/adddevice_button_height"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/margin_24"
+            android:text="@string/add_manual"
+            android:layout_marginBottom="30dp"
+            android:textAllCaps="false"
+            android:background="@drawable/button_frame_white"
+            android:textColor="@color/lite_blue"
+            android:layout_marginRight="@dimen/margin_24"
+            android:layout_alignParentBottom="true"
+            android:textSize="@dimen/adddevice_content_font_size"
+
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -34,6 +34,7 @@ import androidx.core.content.ContextCompat;
 import com.google.zxing.Result;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -74,10 +75,15 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
      */
     @Override
     public void handleResult(Result result) {
+        if(Util.isValidMobileNumber(result.getText())){
         Intent intent = new Intent(this, DeviceNameActivity.class);
         intent.putExtra(Constant.GROUP_ID, groupId);
         intent.putExtra("DeviceNumber", result.getText());
         startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, QRCodeRescanActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

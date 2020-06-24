@@ -39,6 +39,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
     private String name;
     private String phoneNumber;
     private TextView groupText;
+    private List<HomeActivityListData> chooseGroupDataList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +70,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
     private void initUI() {
         cardViewGroup = findViewById(R.id.cardViewList);
         TextView title = findViewById(R.id.toolbar_title);
+        title.setText(Constant.ADD_GROUP);
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         ImageView add = findViewById(R.id.createGroup);
@@ -183,6 +185,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
                 @Override
                 public void groupButtonClicked(HomeActivityListData homeActivityListData) {
                     groupId = homeActivityListData.getGroupId();
+                    updateUIInChooseGroupActivity(homeActivityListData);
                     //addMemberToCreatedGroup(homeActivityListData.getGroupId());
                 }
             });
@@ -194,7 +197,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
      */
     private void addDatainList() {
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
-        List<HomeActivityListData> chooseGroupDataList = new ArrayList<>();
+        chooseGroupDataList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
                 if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME) && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME) && (data.getStatus().equalsIgnoreCase("Active") || data.getStatus().equalsIgnoreCase("Scheduled"))) {
@@ -239,5 +242,32 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         this.isGroupMember = false;
         this.isFromDevice = false;
         createGroupAndAddContactAPICall(Constant.INDIVIDUAL_DEVICE_GROUP_NAME);
+    }
+
+    private void updateUIInChooseGroupActivity(HomeActivityListData mData) {
+        List<HomeActivityListData> mHomeActivityListData = new ArrayList<>();
+        for (HomeActivityListData data : chooseGroupDataList) {
+            HomeActivityListData homeActivityListData = new HomeActivityListData();
+            homeActivityListData.setGroupName(data.getGroupName());
+            homeActivityListData.setGroupId(data.getGroupId());
+            homeActivityListData.setStatus(data.getStatus());
+            homeActivityListData.setCreatedBy(data.getCreatedBy());
+            homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+            homeActivityListData.setFrom(data.getFrom());
+            homeActivityListData.setTo(data.getTo());
+            if (mData.getGroupIcon() != null && mData.getGroupIcon().equalsIgnoreCase(Constant.GROUP_SELECTED)) {
+                homeActivityListData.setGroupIcon(data.getGroupIcon());
+            } else if (mData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+                homeActivityListData.setGroupIcon("groupSelected");
+            } else {
+                homeActivityListData.setGroupIcon(data.getGroupIcon());
+            }
+            mHomeActivityListData.add(homeActivityListData);
+        }
+        GridLayoutManager mLayoutManager = new GridLayoutManager(this, 4);
+        RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new ChooseGroupListAdapter(mHomeActivityListData, this);
+        mRecyclerView.setAdapter(mAdapter);
     }
 }
