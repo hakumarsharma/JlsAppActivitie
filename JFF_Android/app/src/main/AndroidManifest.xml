@@ -25,7 +25,7 @@
         tools:replace="android:allowBackup">
 
         <activity android:name=".view.signinsignup.SigninSignupActivity" />
-        <activity android:name=".view.dashboard.DashboardMainActivity" />
+        <activity android:name=".view.dashboard.DashboardActivity" />
         <activity android:name=".view.group.CreateGroupActivity" />
         <activity android:name=".view.group.ChooseGroupActivity" />
         <activity android:name=".view.group.GroupNameActivity" />
@@ -65,7 +65,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-            <activity android:name=".view.dashboard.DashboardActivity">
+            <activity android:name=".view.dashboard.DashboardMainActivity">
             <intent-filter android:label="@string/title_activity_maps">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -73,7 +73,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
                 <data
-                    android:host="stg.borqs.io"
+                    android:host="sit.dm.cats.jvts.net"
                     android:scheme="https" />
                 <!-- note that the leading "/" is required for pathPrefix -->
             </intent-filter>
