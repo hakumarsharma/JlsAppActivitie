@@ -99,6 +99,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         HomeActivityListData data = mList.get(position);
         holder.groupName.setTypeface(Util.mTypeface(mContext, 5));
         holder.groupName.setText(data.getGroupName());
+        holder.timeLeft.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(),data.getTo()));
         if(data.getGroupIcon() != null && !data.getGroupIcon().isEmpty()) {
             Resources res = mContext.getResources();
             int iconId = res.getIdentifier(data.getGroupIcon(), Constant.DRAWABLE, mContext.getPackageName());
@@ -159,6 +160,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         private TextView deleteOpt;
         public CardView mListlayout;
         private ImageView groupListmemberIcon;
+        private TextView timeLeft;
 
         /**
          * Constructor where we find element from .xml file
@@ -176,6 +178,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             deleteOpt = itemView.findViewById(R.id.deleteGroup);
             groupOptLayout = itemView.findViewById(R.id.oprationLayout);
             mListlayout = itemView.findViewById(R.id.groupListLayout);
+            timeLeft = itemView.findViewById(R.id.group_timeLeft);
             menuIcon.setOnClickListener(this);
             close.setOnClickListener(this);
             editOpt.setOnClickListener(this);

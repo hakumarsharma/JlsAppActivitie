@@ -238,6 +238,22 @@ public final class Util extends AppCompatActivity {
         return epochTime;
     }
 
+    public long createSessionEndDate() {
+        long epochTime = 0;
+        Date today = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(sdf.format(today)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.add(Calendar.DATE, 90);
+        sdf = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
+        Date date = new Date(c.getTimeInMillis());
+        epochTime = date.getTime() +  60 * 1000;
+        return epochTime;
+    }
     /**
      * Get Difference between two epoch time
      * @param fromTime
@@ -255,13 +271,13 @@ public final class Util extends AppCompatActivity {
             int diffmin = (int) (diff / (60 * 1000));
             int diffsec = (int) (diff / (1000));
             if (diffDays > 0) {
-                return crunchifyFormatter.format(diffDays) + "day";
+                return crunchifyFormatter.format(diffDays) + ((diffDays > 1) ? " days" : "day");
             } else if (diffhours > 0) {
-                return crunchifyFormatter.format(diffhours) + "hour";
+                return crunchifyFormatter.format(diffhours) + ((diffhours > 1) ? " hours" : "hour");
             } else if (diffmin > 0) {
-                return crunchifyFormatter.format(diffmin) + "min";
+                return crunchifyFormatter.format(diffmin) + ((diffmin > 1) ? " minutes" : "minute");
             }
-            return crunchifyFormatter.format(diffsec) + "sec";
+            return crunchifyFormatter.format(diffsec) + ((diffmin > 1) ? " seconds" : "second");
         } catch (ParseException e) {
             e.printStackTrace();
         }

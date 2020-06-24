@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,6 +94,7 @@ public class GroupsFragment extends Fragment {
         instruction2.setTypeface(Util.mTypeface(getActivity(), 3));
         instructionIcon = view.findViewById(R.id.group_default_icon);
         userId = mDbManager.getAdminLoginDetail().getUserId();
+        Log.d(String.valueOf(Util.getInstance().createSessionEndDate()), "epochtime: ");
     }
 
     /**
