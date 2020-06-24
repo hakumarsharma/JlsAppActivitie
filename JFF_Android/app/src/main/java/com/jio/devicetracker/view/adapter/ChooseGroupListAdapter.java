@@ -61,7 +61,7 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HomeActivityListData homeActivityListData = mData.get(position);
-        if(homeActivityListData.getGroupIcon() != null && homeActivityListData.getGroupIcon().equalsIgnoreCase("groupSelected")) {
+        if(homeActivityListData.getGroupIcon() != null && homeActivityListData.getGroupIcon().equalsIgnoreCase(Constant.GROUP_SELECTED)) {
             holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.groupselected));
         } else if (mData.get(position).getGroupIcon() != null) {
             Resources res = mContext.getResources();

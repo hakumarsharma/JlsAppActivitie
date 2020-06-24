@@ -57,6 +57,7 @@ public class BaseActivity extends AppCompatActivity {
     public Boolean isFromCreateGroup;
     public Boolean isGroupMember;
     public Boolean isFromDevice;
+    public Boolean isNavigateToGroupsFragment;
     public String selectedIcon;
     private String memberIcon;
 
@@ -182,13 +183,17 @@ public class BaseActivity extends AppCompatActivity {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
                 if(isGroupMember) {
                     getAllForOneGroupAPICall();
-                } else if (isFromDevice){
+                } else if (isFromDevice) {
                     Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
-                    if (!isFromCreateGroup) {
+                    if(isNavigateToGroupsFragment != null && isNavigateToGroupsFragment) {
+                        isNavigateToGroupsFragment = false;
+                        intent.putExtra(Constant.Add_Device, false);
+                        intent.putExtra(Constant.Add_People, false);
+                    } else if (!isFromCreateGroup) {
                         intent.putExtra(Constant.Add_Device, true);
                     }
                     startActivity(intent);
-                } else{
+                } else {
                     Util.progressDialog.dismiss();
                     Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
                     intent.putExtra(Constant.Add_People, true);

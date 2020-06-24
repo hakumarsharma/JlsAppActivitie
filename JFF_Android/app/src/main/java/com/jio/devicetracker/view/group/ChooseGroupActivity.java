@@ -75,8 +75,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_choose_group);
         Intent intent = getIntent();
         label = intent.getStringExtra("Title");
-        phoneNumber = intent.getStringExtra("DeviceNumber");
-        // groupId = intent.getStringExtra(Constant.GROUP_ID);
+        phoneNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         initUI();
         setMemberIcon(label);
         initDataMember();
@@ -98,7 +97,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.dog));
             } else if (label.equalsIgnoreCase("OtherPet")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other_pet));
-            } else if(label.equalsIgnoreCase(Constant.KID)) {
+            } else if (label.equalsIgnoreCase(Constant.KID)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.kid));
             } else if (label.equalsIgnoreCase(Constant.OTHER)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.other));
@@ -366,7 +365,8 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         this.memberNumber = phoneNumber;
         this.isFromCreateGroup = false;
         this.isGroupMember = false;
-        this.isFromDevice = false;
+        this.isFromDevice = true;
+        this.isNavigateToGroupsFragment = true;
         addMemberInGroupAPICall();
     }
 
@@ -382,7 +382,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
 
     private void updateUIInChooseGroupActivity(HomeActivityListData mData) {
         List<HomeActivityListData> mHomeActivityListData = new ArrayList<>();
-        for(HomeActivityListData data : chooseGroupDataList) {
+        for (HomeActivityListData data : chooseGroupDataList) {
             HomeActivityListData homeActivityListData = new HomeActivityListData();
             homeActivityListData.setGroupName(data.getGroupName());
             homeActivityListData.setGroupId(data.getGroupId());
@@ -391,7 +391,9 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             homeActivityListData.setUpdatedBy(data.getUpdatedBy());
             homeActivityListData.setFrom(data.getFrom());
             homeActivityListData.setTo(data.getTo());
-            if(mData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+            if (mData.getGroupIcon() != null && mData.getGroupIcon().equalsIgnoreCase(Constant.GROUP_SELECTED)) {
+                homeActivityListData.setGroupIcon(data.getGroupIcon());
+            } else if (mData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
                 homeActivityListData.setGroupIcon("groupSelected");
             } else {
                 homeActivityListData.setGroupIcon(data.getGroupIcon());

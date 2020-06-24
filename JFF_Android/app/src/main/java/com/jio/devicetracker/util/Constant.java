@@ -125,6 +125,7 @@ public class Constant {
     public static final String CONSENT_PENDING_STATUS = "Consent is pending, please ask the user to accept consent for tracking";
     public static final String ADD_CONTACT_WARNING = "Please add contact first in the list to proceed further";
     public static final String GROUP_STATUS = "Group Status";
+    public static final String GROUP_SELECTED = "groupSelected";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
