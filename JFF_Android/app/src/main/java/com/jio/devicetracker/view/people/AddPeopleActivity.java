@@ -109,6 +109,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
 
         addToGroup = findViewById(R.id.add_to_group);
         addToGroup.setOnClickListener(this);
+        Button addLater = findViewById(R.id.add_later);
+        addLater.setOnClickListener(this);
         TextView peopleText = findViewById(R.id.people_text);
         peopleText.setTypeface(Util.mTypeface(this, 3));
 
@@ -269,6 +271,16 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         } else if(v.getId() == R.id.add_to_group){
             gotoGroupFromPeopleActivity();
 
+        } else if(v.getId() == R.id.add_later){
+            if (groupId == null || groupId.isEmpty()) {
+                validationCheck();
+            } else {
+                if (listOfContacts != null && !listOfContacts.isEmpty()) {
+                    startActivity(new Intent(this, DashboardMainActivity.class));
+                } else {
+                    Toast.makeText(this, Constant.ADD_CONTACT_WARNING, Toast.LENGTH_SHORT);
+                }
+            }
         }
 
     }

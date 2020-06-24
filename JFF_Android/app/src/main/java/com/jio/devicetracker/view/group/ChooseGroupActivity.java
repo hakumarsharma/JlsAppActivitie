@@ -84,6 +84,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
 
     // Set the memberIcon
     private void setMemberIcon(String label) {
+        trackeeNameEditText.setText(label);
         if (label != null && !label.isEmpty()) {
             if (label.equalsIgnoreCase("Woman")) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
@@ -108,7 +109,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                         memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.wife));
                     }
                 }
-                trackeeNameEditText.setText(label);
+
             }
         }
     }
