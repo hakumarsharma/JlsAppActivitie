@@ -174,7 +174,7 @@ public class GroupsFragment extends Fragment {
                 List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
                 for (SearchEventResponse.Data data : mList) {
                     for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
-                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
+                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId()) && (grpMembers.getConsentStatus().equals(Constant.CONSET_STATUS_APPROVED) || grpMembers.getConsentStatus().equals(Constant.CONSET_STATUS_PENDING) || grpMembers.getConsentStatus().equals(Constant.CONSET_STATUS_EXPIRED))) {
                             MapData mapData = new MapData();
                             mapData.setLatitude(data.getLocation().getLat());
                             mapData.setLongitude(data.getLocation().getLng());
@@ -205,6 +205,10 @@ public class GroupsFragment extends Fragment {
      * Navigates to the Map activity
      */
     private void goToMapActivity(List<MapData> mapDataList) {
+        if (mapDataList.isEmpty()){
+            Util.alertDilogBox(Constant.ADD_DETAILS_TO_TRACK, Constant.ALERT_TITLE, getActivity());
+            return;
+        }
         Intent intent = new Intent(getContext(), LocationActivity.class);
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_ID, groupId);

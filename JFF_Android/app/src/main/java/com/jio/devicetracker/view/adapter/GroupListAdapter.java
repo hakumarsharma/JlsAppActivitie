@@ -205,6 +205,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                     deleteGroupAPICall(mList.get(position));
                     break;
                 case R.id.addNewMember:
+                    position = getAdapterPosition();
                     Intent intent = new Intent(mContext, AddDeviceActivity.class);
                     intent.putExtra(Constant.GROUP_ID, mList.get(position).getGroupId());
                     mContext.startActivity(intent);

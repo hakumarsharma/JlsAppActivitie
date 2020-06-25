@@ -129,6 +129,7 @@ public class Constant {
     public static final String GROUP_SELECTED = "groupSelected";
     public static final String TRACKEE_NAME = "TrackeeName";
     public static final String TRACKEE_NUMBER = "TrackeeNumber";
+    public static final String ADD_DETAILS_TO_TRACK = "Group is empty.Add contacts or devices to this group and track.";
 
 
     // Login Activity constants
@@ -315,6 +316,8 @@ public class Constant {
     public static final String GROUP_NAME_VALIDATION_ERROR = "Group name cannot be left empty";
     public static final String CONSET_STATUS_PENDING = "Pending";
     public static final String CONSET_STATUS_APPROVED = "Approved";
+    public static final String CONSET_STATUS_REMOVED = "Removed";
+    public static final String CONSET_STATUS_EXPIRED = "Expired";
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
     public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member in a group, Please try again!";
