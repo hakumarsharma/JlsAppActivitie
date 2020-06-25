@@ -47,6 +47,7 @@ import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
+import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -209,9 +210,10 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                 case R.id.edit:
                     break;
                 case R.id.remove_from_group:
-                    makeRemoveAPICall(mList.get(getAdapterPosition()),getAdapterPosition());
+                    makeRemoveAPICall(mList.get(getAdapterPosition()),getAdapterPosition(),true);
                     break;
                 case R.id.share_invite:
+                    makeRemoveAPICall(mList.get(getAdapterPosition()),getAdapterPosition(),false);
                     break;
 
             }
@@ -225,7 +227,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
      *
      * @param groupMemberDataList
      */
-    private void makeRemoveAPICall(GroupMemberDataList groupMemberDataList,int position) {
+    private void makeRemoveAPICall(GroupMemberDataList groupMemberDataList,int position,boolean isRemoveFromGroup) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -248,6 +250,9 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     Toast.makeText(mContext, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mDbManager.deleteSelectedDataFromGroupMember(groupMemberDataList.getConsentId());
                     removeItem(position);
+                    if(!isRemoveFromGroup){
+                        addMemberInGroupAPICall(groupMemberDataList);
+                    }
                 } else {
                     Util.progressDialog.dismiss();
                     Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, mContext);
@@ -287,9 +292,21 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         @Override
         public void onResponse(Object response) {
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
+            Util.progressDialog.dismiss();
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
-                mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
-
+                Util.alertDilogBox(Constant.INVITE_SENT, Constant.ALERT_TITLE, mContext);
+                for (GroupMemberResponse.Data data : groupMemberResponse.getData()) {
+                        GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+                        groupMemberDataList.setConsentId(data.getConsentId());
+                        groupMemberDataList.setNumber(data.getPhone());
+                        groupMemberDataList.setGroupAdmin(data.isGroupAdmin());
+                        groupMemberDataList.setGroupId(data.getGroupId());
+                        groupMemberDataList.setConsentStatus(data.getStatus());
+                        groupMemberDataList.setName(data.getName());
+                        groupMemberDataList.setUserId(data.getUserId());
+                        mList.add(groupMemberDataList);
+                }
+                notifyDataSetChanged();
             }
         }
     }
