@@ -152,7 +152,7 @@ public class Constant {
     public static final String GROUP_TAB = "Groups\n";
     public static final String GROUP_WITHOUT_NEXT_LINE = "Groups";
     public static final String PEOPLE_TAB = "People\n";
-    public static final String PEOPLE_WITHOUT_NEXT_LINE= "People";
+    public static final String PEOPLE_WITHOUT_NEXT_LINE = "People";
     public static final String DEVICES_TAB = "Devices\n";
     public static final String DEVICES_WITHOUT_NEXT_LINE = "Devices";
     public static final String WELCOME = "Welcome";
@@ -161,7 +161,6 @@ public class Constant {
     public static final String LOGIN_WITHOUT_DOT = "Login\n";
     public static final String SIGNUP_WITHOUT_DOT = "Sign up\n";
     public static final String SUCCESS = "success";
-
 
 
     // New Device Activity Constants
@@ -355,7 +354,10 @@ public class Constant {
     public static final String ENTER_NAME = "Please enter contact name";
     public static final String ADD_GROUP = "Add";
     public static final String DEVICE_NOT_FOUND_QR = "Device not found";
-
+    public static final String MEMBER_NAME = "memberName";
+    public static final String LAT = "lat";
+    public static final String LANG = "lang";
+    public static final String SHARE_LOCATION = "Share Location";
 
 
     // Custom Alert Constants
@@ -427,7 +429,6 @@ public class Constant {
     public static final String ANS_1 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
     public static final String ANS_2 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
     public static final String ANS_3 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
-
 
 
 }

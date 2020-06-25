@@ -52,6 +52,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.location.LocationActivity;
 import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
+import com.jio.devicetracker.view.location.ShareLocationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,9 @@ public class PeopleFragment extends Fragment {
     private String groupId;
     private static List<HomeActivityListData> groupList;
     private RecyclerView groupListRecyclerView;
+    private String memberName;
+    private String lat;
+    private  String lan;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -147,6 +151,9 @@ public class PeopleFragment extends Fragment {
                 public void clickOnListLayout(HomeActivityListData homeActivityListData) {
                     groupStatus = homeActivityListData.getStatus();
                     groupId = homeActivityListData.getGroupId();
+                    memberName = homeActivityListData.getName();
+                    lat = homeActivityListData.getLat();
+                    lan = homeActivityListData.getLng();
                     SearchEventData searchEventData = new SearchEventData();
                     List<String> mList = new ArrayList<>();
                     mList.add(Constant.LOCATION);
@@ -235,9 +242,10 @@ public class PeopleFragment extends Fragment {
      * Navigates to the Map activity
      */
     private void goToMapActivity(List<MapData> mapDataList) {
-        Intent intent = new Intent(getContext(), LocationActivity.class);
+        Intent intent = new Intent(getContext(), ShareLocationActivity.class);
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_STATUS, groupStatus);
+        intent.putExtra(Constant.MEMBER_NAME,memberName);
         startActivity(intent);
     }
 

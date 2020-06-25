@@ -160,6 +160,9 @@
             android:name=".view.device.QRCodeRescanActivity"
             android:label="@string/map_name" />
         <activity
+            android:name=".view.location.ShareLocationActivity"
+            android:label="@string/map_name" />
+        <activity
             android:name=".view.people.ChooseGroupFromPeopleFlow"
             android:windowSoftInputMode="adjustPan|adjustResize"
             android:label="@string/map_name" />
