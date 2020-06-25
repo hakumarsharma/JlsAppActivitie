@@ -342,7 +342,7 @@ public class Constant {
     public static final String IS_COMING_FROM_GROUP_LIST = "isComingFromGroupList";
     public static final String IS_COMING_FROM_CONTACT_LIST = "isComingFromContactList";
     public static final String CLOSED = "closed";
-
+    public static final String INVITE_SENT = "Consent invite sent successfully.";
     // Add Device constants
     public static final String Add_Device = "JioTrack";
     public static final String Add_People = "Add People";
