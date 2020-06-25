@@ -35,6 +35,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_location);
         fragmentMap = new MapFragment();
+        strAddress = new StringBuilder();
         initUI();
     }
 
@@ -42,6 +43,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.SHARE_LOCATION);
         Button backBtn = findViewById(R.id.back);
+        backBtn.setOnClickListener(this);
         backBtn.setVisibility(View.VISIBLE);
         FrameLayout mapFragment = findViewById(R.id.map_fragment);
         ImageView shareLocation = findViewById(R.id.share_location);
@@ -57,17 +59,30 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         } else {
             memberName.setText("Test");
         }
+        if(!(mapDataList.size() ==0)) {
+            memberAddrss.setText(getAddressFromLocation(mapDataList.get(0).getLatitude(), mapDataList.get(0).getLongitude()));
+        }
     }
 
     @Override
     public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.share_location:
+                Intent shareIntent =   new Intent(android.content.Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT,"Insert Subject here");
+                String app_url = "app url i have to enter here";
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,app_url);
+                startActivity(Intent.createChooser(shareIntent, "Share via"));
+                break;
 
-        Intent shareIntent =   new Intent(android.content.Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT,"Insert Subject here");
-        String app_url = "app url i have to enter here";
-        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,app_url);
-        startActivity(Intent.createChooser(shareIntent, "Share via"));
+            case R.id.back:
+                finish();
+                break;
+
+        }
+
+
     }
     /**
      * Returns real address based on Lat and Long(Geo Coding)

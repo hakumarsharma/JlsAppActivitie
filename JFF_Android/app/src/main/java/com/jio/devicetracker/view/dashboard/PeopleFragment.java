@@ -151,7 +151,7 @@ public class PeopleFragment extends Fragment {
                 public void clickOnListLayout(HomeActivityListData homeActivityListData) {
                     groupStatus = homeActivityListData.getStatus();
                     groupId = homeActivityListData.getGroupId();
-                    memberName = homeActivityListData.getName();
+                    memberName = homeActivityListData.getGroupName();
                     lat = homeActivityListData.getLat();
                     lan = homeActivityListData.getLng();
                     SearchEventData searchEventData = new SearchEventData();

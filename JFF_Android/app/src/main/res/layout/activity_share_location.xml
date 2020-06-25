@@ -8,7 +8,7 @@
         />
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="110dp"
         android:id="@+id/profile_layout"
         android:background="@drawable/layout_frame_blue"
         android:layout_below="@+id/shareLocationToolbar"
@@ -42,7 +42,6 @@
             android:text="Connected Reliance Corporate Park, Thane-Belapur road Navi Mumbai 12.30 PM "
             android:textSize="@dimen/margin_12"
             android:textColor="@color/white"
-            android:paddingBottom="@dimen/margin_25"
             />
         <ImageView
             android:layout_width="wrap_content"
