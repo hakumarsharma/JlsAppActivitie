@@ -125,7 +125,7 @@
             android:layout_marginLeft="@dimen/margin_22"
             android:layout_marginTop="@dimen/ten_dp"
             android:paddingBottom="@dimen/margin_12"
-            android:text="Delete all members"
+            android:text="Delete group"
             android:textColor="@color/white"
             android:textSize="@dimen/seventeen_dp" />
 

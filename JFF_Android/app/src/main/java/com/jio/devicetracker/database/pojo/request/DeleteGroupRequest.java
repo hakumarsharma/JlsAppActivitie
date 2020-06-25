@@ -33,7 +33,7 @@ public class DeleteGroupRequest implements IRequest {
     private String groupId;
     private String userId;
 
-    public DeleteGroupRequest(Response.Listener sucessListener, Response.ErrorListener errorListener,String groupId, String userId)
+    public DeleteGroupRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, String groupId, String userId)
     {
         this.sucessListener = sucessListener;
         this.errorListener = errorListener;

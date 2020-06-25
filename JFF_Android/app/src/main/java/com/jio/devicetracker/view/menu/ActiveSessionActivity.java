@@ -75,7 +75,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
     private TrackingYouListAdapter mTrackingYouListAdapter;
     private RecyclerView trackingByYouListRecyclerView;
     private RecyclerView trackingYouListRecyclerView;
-    private List listOnActiveSession;
+    private List<HomeActivityListData> listOnActiveSession;
     private TextView activeMemberPresent;
     private int position;
     private String errorMessage;
@@ -108,21 +108,6 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         trackingByYouListRecyclerView.setLayoutManager(linearLayoutManager);
         trackingYouListRecyclerView.setLayoutManager(linearLayoutManager1);
         makeGroupInfoPerUserRequestAPICall();
-    }
-
-    private void adapterEventListener() {
-        mTrackedByYouListAdapter.setOnItemClickPagerListener(new TrackedByYouListAdapter.RecyclerViewClickListener() {
-            @Override
-            public void clickOnListLayout(int image, String groupName, String groupId, String createdBy) {
-                if (image == R.drawable.ic_group_button) {
-                    Intent intent = new Intent(ActiveSessionActivity.this, ActiveMemberActivity.class);
-                    intent.putExtra(Constant.GROUPNAME, groupName);
-                    intent.putExtra(Constant.GROUP_ID, groupId);
-                    intent.putExtra(Constant.CREATED_BY, createdBy);
-                    ActiveSessionActivity.this.startActivity(intent);
-                }
-            }
-        });
     }
 
     /**
@@ -323,40 +308,6 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         });
     }
 
-    /**
-     * Delete the Group and update the database
-     */
-    private void makeDeleteGroupAPICall(String userId, String groupId) {
-        Util.getInstance().showProgressBarDialog(this);
-        GroupRequestHandler.getInstance(this).handleRequest(new DeleteGroupRequest(new DeleteGroupRequestSuccessListener(), new DeleteGroupRequestErrorListener(), groupId, userId));
-    }
-
-    /**
-     * Delete Group Request API Call Success Listener
-     */
-    private class DeleteGroupRequestSuccessListener implements com.android.volley.Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            Util.progressDialog.dismiss();
-            DBManager mDbManager = new DBManager(ActiveSessionActivity.this);
-            mDbManager.deleteSelectedDataFromGroup(groupId);
-            mDbManager.deleteSelectedDataFromGroupMember(groupId);
-            mTrackedByYouListAdapter.removeItem(position);
-            addDatainList();
-            isAnyMemberActive();
-        }
-    }
-
-    /**
-     * Delete Group Request API Call Error Listener
-     */
-    private class DeleteGroupRequestErrorListener implements com.android.volley.Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.GROUP_DELETION_FAILURE, Constant.ALERT_TITLE, ActiveSessionActivity.this);
-        }
-    }
 
     /**
      * Get All Group info per user API Call
@@ -372,7 +323,6 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         @Override
         public void onResponse(Object response) {
             addDatainList();
-            adapterEventListener();
             isAnyMemberActive();
         }
     }
@@ -419,13 +369,21 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
 
         // Adding Tracking you in list of Active session
         List<TrackingYou> trackingYouList = new ArrayList<>();
-        for(HomeActivityListData data : groupDetailList) {
-            if(!userId.equalsIgnoreCase(data.getGroupOwnerUserId())) {
-                TrackingYou trackingYou = new TrackingYou();
-                trackingYou.setGroupOwnerName(data.getGroupOwnerName());
-                trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
-                trackingYou.setGroupOwnerUserId(data.getGroupOwnerUserId());
-                trackingYouList.add(trackingYou);
+        for (HomeActivityListData data : groupDetailList) {
+            for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
+                if (!userId.equalsIgnoreCase(data.getGroupOwnerUserId())
+                        && data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
+                        && data.getGroupId().equalsIgnoreCase(groupMemberDataList.getGroupId())
+                        && groupMemberDataList.getUserId().equalsIgnoreCase(userId)
+                        && (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED))) {
+                    TrackingYou trackingYou = new TrackingYou();
+                    trackingYou.setGroupOwnerName(data.getGroupOwnerName());
+                    trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
+                    trackingYou.setGroupOwnerUserId(data.getGroupOwnerUserId());
+                    trackingYou.setGroupId(data.getGroupId());
+                    trackingYou.setGroupName(data.getGroupName());
+                    trackingYouList.add(trackingYou);
+                }
             }
         }
 
@@ -454,8 +412,8 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                 listOnActiveSession.add(data);
             }
         }*/
-        mTrackedByYouListAdapter = new TrackedByYouListAdapter(listOnActiveSession);
-        mTrackingYouListAdapter = new TrackingYouListAdapter(trackingYouList);
+        mTrackedByYouListAdapter = new TrackedByYouListAdapter(listOnActiveSession, this);
+        mTrackingYouListAdapter = new TrackingYouListAdapter(trackingYouList, this);
         trackingByYouListRecyclerView.setAdapter(mTrackedByYouListAdapter);
         trackingYouListRecyclerView.setAdapter(mTrackingYouListAdapter);
     }

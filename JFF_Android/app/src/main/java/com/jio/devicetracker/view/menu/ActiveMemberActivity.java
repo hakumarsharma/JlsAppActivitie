@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +58,8 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ActiveMemberActivity extends AppCompatActivity {
+public class ActiveMemberActivity extends AppCompatActivity implements View.OnClickListener{
+
     private String groupId;
     private DBManager mDbManager;
     private ActiveMemberListAdapter mAdapter;
@@ -66,8 +68,8 @@ public class ActiveMemberActivity extends AppCompatActivity {
     private String errorMessage;
     private String createdBy;
     private String userId;
-    private List<GroupMemberDataList> memberList;
     private RecyclerView mRecyclerList;
+    private Button backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,53 +79,19 @@ public class ActiveMemberActivity extends AppCompatActivity {
         userId = mDbManager.getAdminLoginDetail().getUserId();
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Intent intent = getIntent();
-        toolbarTitle.setText(intent.getStringExtra(Constant.GROUPNAME));
-        groupId = intent.getStringExtra(Constant.GROUP_ID);
+        toolbarTitle.setText(Constant.EDIT_MEMBER_TITLE);
         createdBy = intent.getStringExtra(Constant.CREATED_BY);
+        TextView groupNameTitle = findViewById(R.id.groupNameTitle);
+        groupNameTitle.setText(intent.getStringExtra(Constant.GROUP_NAME));
+        groupId = intent.getStringExtra(Constant.GROUP_ID);
         mRecyclerList = findViewById(R.id.trackerList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
-        mAdapter = new ActiveMemberListAdapter(addDataInList());
+        mAdapter = new ActiveMemberListAdapter(addDataInList(), this);
         mRecyclerList.setAdapter(mAdapter);
-        adapterEventListener();
-        isAnyMemberActive();
-    }
-
-    /**
-     * Adapter Listener
-     */
-    private void adapterEventListener() {
-        if (mAdapter != null) {
-            mAdapter.setOnItemClickPagerListener(new ActiveMemberListAdapter.RecyclerViewClickListener() {
-                @Override
-                public void onPopupMenuClicked(View v, int position, GroupMemberDataList groupMemberDataList) {
-                    PopupMenu popup = new PopupMenu(ActiveMemberActivity.this, v);
-                    ActiveMemberActivity.this.consentId = groupMemberDataList.getConsentId();
-                    ActiveMemberActivity.this.position = position;
-                    if (createdBy != null && createdBy.equalsIgnoreCase(userId)) { // Check through updated by not by isGroupAdmin
-                        popup.getMenu().add(Menu.NONE, 1, 1, Constant.REMOVE);
-                        errorMessage = Constant.REMOVE_FROM_GROUP_FAILURE;
-                    } else {
-                        popup.getMenu().add(Menu.NONE, 2, 2, Constant.EXIT);
-                        errorMessage = Constant.EXIT_FROM_GROUP_FAILURE;
-                    }
-                    popup.setOnMenuItemClickListener(item -> {
-                        switch (item.getItemId()) {
-                            case 1:
-                                ActiveMemberActivity.this.makeRemoveAPICall(groupMemberDataList.getNumber());
-                                break;
-                            case 2:
-                                ActiveMemberActivity.this.makeExitAPICall(groupMemberDataList.getNumber());
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    });
-                    popup.show();
-                }
-            });
-        }
+        backButton = findViewById(R.id.back);
+        backButton.setOnClickListener(this);
+        backButton.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -153,7 +121,6 @@ public class ActiveMemberActivity extends AppCompatActivity {
                     mDbManager.deleteSelectedDataFromGroupMember(groupId);
                     mAdapter.removeItem(position);
                     addDataInList();
-                    isAnyMemberActive();
                 } else {
                     Util.progressDialog.dismiss();
                     Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
@@ -198,7 +165,6 @@ public class ActiveMemberActivity extends AppCompatActivity {
                     mDbManager.deleteSelectedDataFromGroupMember(groupId);
                     mAdapter.removeItem(position);
                     addDataInList();
-                    isAnyMemberActive();
                 } else {
                     Util.progressDialog.dismiss();
                     Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
@@ -211,6 +177,15 @@ public class ActiveMemberActivity extends AppCompatActivity {
                 Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back:
+                finish();
+                break;
+        }
     }
 
     /**
@@ -237,21 +212,6 @@ public class ActiveMemberActivity extends AppCompatActivity {
         }
     }
 
-
-    /**
-     * Checks if any member inside the group is active if not display no active member found
-     */
-    private void isAnyMemberActive() {
-        TextView instructionOnActiveMember = findViewById(R.id.activeMemberInGroupPresent);
-        if (memberList.isEmpty()) {
-            mRecyclerList.setVisibility(View.INVISIBLE);
-            instructionOnActiveMember.setVisibility(View.VISIBLE);
-        } else {
-            instructionOnActiveMember.setVisibility(View.GONE);
-            mRecyclerList.setVisibility(View.VISIBLE);
-        }
-    }
-
     /**
      * Displays group member data in list
      *
@@ -259,8 +219,7 @@ public class ActiveMemberActivity extends AppCompatActivity {
      */
     private List<GroupMemberDataList> addDataInList() {
         List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
-        HomeActivityListData homeActivityListData = mDbManager.getGroupDetail(groupId);
-        memberList = new ArrayList<>();
+        List<GroupMemberDataList> memberList = new ArrayList<>();
         for (GroupMemberDataList data : mList) {
             if (!data.getConsentStatus().equalsIgnoreCase(Constant.EXITED) && !data.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
                 GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
@@ -275,11 +234,6 @@ public class ActiveMemberActivity extends AppCompatActivity {
                 memberList.add(groupMemberDataList);
             }
         }
-        GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
-        groupMemberDataList.setGroupOwnerName(homeActivityListData.getGroupOwnerName());
-        groupMemberDataList.setGroupOwnerNumber(homeActivityListData.getGroupOwnerPhoneNumber());
-        groupMemberDataList.setGroupOwnerUserId(homeActivityListData.getGroupOwnerUserId());
-        memberList.add(groupMemberDataList);
         return memberList;
     }
 }

@@ -103,6 +103,7 @@ public class Constant {
     public static final String APPROVED = "approved";
     public static final String REJECTED = "rejected";
     public static final String COMPLETED = "completed";
+    public static final String EXPIRED = "expired";
     public static final String EXIT_FROM_GROUP_FAILURE = "Exit from group failed, Please try again!";
     public static final String REMOVE_FROM_GROUP_FAILURE = "Remove from group failed, Please try again!";
     public static final String EXIT_FROM_GROUP_SUCCESS = "Sucessfully exited from Group!";
@@ -112,7 +113,7 @@ public class Constant {
     public static final String GET_GROUP_INFO_PER_USER_ERROR = "Unable to retrieve information from server, please try gain!";
     public static final String GROUP_NAME_CLASS_NAME = "com.jio.devicetracker.database.pojo.HomeActivityListData";
     public static final String GROUP = "group";
-    public static final String INDIVIDUAL_MEMBER = "individualMember";
+    public static final String INDIVIDUAL_MEMBER = "Individual Member";
     public static final String IS_GROUP_MEMBER = "isGroupMember";
     public static final String LOCATION = "location";
     public static final String SOS = "sos";
@@ -291,6 +292,7 @@ public class Constant {
     public static final String GROUP_NAME = "Group Name";
     public static final String GROUP_ID = "groupId";
     public static final String GROUPNAME = "groupName";
+    public static final String EDIT_MEMBER_TITLE = "Edit members";
     public static final String QR_CODE_VALUE = "QRCodeValue";
     public static final String SCAN_QR_CODE_TITLE = "Scan QR Code";
 

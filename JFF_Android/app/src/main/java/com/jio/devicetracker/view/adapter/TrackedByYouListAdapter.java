@@ -21,6 +21,8 @@
 
 package com.jio.devicetracker.view.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,24 +33,37 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.menu.ActiveMemberActivity;
 
 import java.util.List;
 
 public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouListAdapter.ViewHolder> {
-    private List mList;
-    private static RecyclerViewClickListener itemListener;
+    private List<HomeActivityListData> mList;
+    private Context mContext;
+    private RelativeLayout trackedByYouOprationLayout;
+    private DBManager mDbManager;
+    private String groupId;
+    private int position;
 
     /**
      * Constructor to display the active session devices list
      *
      * @param mList
      */
-    public TrackedByYouListAdapter(List mList) {
+    public TrackedByYouListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
+        this.mContext = mContext;
+        mDbManager = new DBManager(mContext);
     }
 
     /**
@@ -73,28 +88,9 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (mList.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_NAME_CLASS_NAME)) {
-            HomeActivityListData data = (HomeActivityListData) mList.get(position);
-            holder.profile.setImageResource(R.drawable.ic_family_group);
-            holder.name.setText(data.getGroupName());
-            holder.relativeLayout.setOnClickListener(v -> {
-                itemListener.clickOnListLayout(data.getProfileImage(), data.getGroupName(), data.getGroupId()
-                        , data.getCreatedBy());
-                return;
-            });
-        } else if (mList.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
-            GroupMemberDataList data = (GroupMemberDataList) mList.get(position);
-            holder.profile.setImageResource(R.drawable.ic_user);
-            holder.name.setText(data.getName());
-            holder.motherIcon.setVisibility(View.INVISIBLE);
-            holder.fatherIcon.setVisibility(View.INVISIBLE);
-            holder.kidIcon.setVisibility(View.INVISIBLE);
-            holder.dogIcon.setVisibility(View.INVISIBLE);
-            holder.relativeLayout.setOnClickListener(v -> {
-                itemListener.clickOnListLayout(data.getProfileImage(), data.getName(), data.getConsentId(), "");
-                return;
-            });
-        }
+        HomeActivityListData data = mList.get(position);
+        holder.profile.setImageResource(R.drawable.ic_family_group);
+        holder.name.setText(data.getGroupName());
     }
 
     /**
@@ -119,7 +115,6 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         public ImageView profile;
         public RelativeLayout relativeLayout;
         public ImageView trackedByYouOperationStatus;
-        private RelativeLayout trackedByYouOprationLayout;
         public ImageView trackedByYouClose;
         private TextView trackedByYouEdit;
         private TextView deleteAllMembers;
@@ -133,7 +128,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             super(itemView);
             name = itemView.findViewById(R.id.groupName);
             profile = itemView.findViewById(R.id.groupmemberIcon);
-            trackedByYouOprationLayout = itemView.findViewById(R.id.trackedByYouOprationLayout);
+            TrackedByYouListAdapter.this.trackedByYouOprationLayout = itemView.findViewById(R.id.trackedByYouOprationLayout);
             trackedByYouClose = itemView.findViewById(R.id.trackedByYouClose);
             trackedByYouClose.setOnClickListener(this);
             relativeLayout = itemView.findViewById(R.id.activeSessionLayout);
@@ -159,29 +154,48 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
                     trackedByYouOprationLayout.setVisibility(View.GONE);
                     break;
                 case R.id.trackedByYouEdit:
-                    // Todo
+                    TrackedByYouListAdapter.this.trackedByYouOprationLayout.setVisibility(View.GONE);
+                    gotoActiveMemberActivity(mList.get(getAdapterPosition()).getGroupName(), mList.get(getAdapterPosition()).getGroupId());
                     break;
                 case R.id.deleteAllMembers:
-                    // Todo
+                    position = getAdapterPosition();
+                    groupId = mList.get(position).getGroupId();
+                    makeDeleteGroupAPICall(groupId);
                     break;
             }
         }
     }
 
     /**
-     * Interface to override methods in ActiveSessionActivity to call this methods on particular item click
+     * Delete the Group and update the database
      */
-    public interface RecyclerViewClickListener {
-        void clickOnListLayout(int selectedGroupName, String name, String groupId, String createdBy);
+    private void makeDeleteGroupAPICall(String groupId) {
+        Util.getInstance().showProgressBarDialog(mContext);
+        GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteGroupRequest(new DeleteGroupRequestSuccessListener(), new DeleteGroupRequestErrorListener(), groupId, mDbManager.getAdminLoginDetail().getUserId()));
     }
 
     /**
-     * Register the listener
-     *
-     * @param mItemClickListener
+     * Delete Group Request API Call Success Listener and create new group if Session time is completed and Request Consent button is clicked
      */
-    public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
-        this.itemListener = mItemClickListener;
+    private class DeleteGroupRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
+            mDbManager.deleteSelectedDataFromGroup(groupId);
+            mDbManager.deleteSelectedDataFromGroupMember(groupId);
+            removeItem(position);
+        }
+    }
+
+    /**
+     * Delete Group Request API Call Error Listener
+     */
+    private class DeleteGroupRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            Util.alertDilogBox(Constant.GROUP_DELETION_FAILURE, Constant.ALERT_TITLE, mContext);
+        }
     }
 
     /**
@@ -193,6 +207,13 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         mList.remove(adapterPosition);
         notifyItemRemoved(adapterPosition);
         notifyDataSetChanged();
+    }
+
+    private void gotoActiveMemberActivity(String groupName, String groupId) {
+        Intent intent = new Intent(mContext, ActiveMemberActivity.class);
+        intent.putExtra(Constant.GROUP_NAME, groupName);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        mContext.startActivity(intent);
     }
 
 }

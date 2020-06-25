@@ -23,16 +23,15 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/ic_family_group" />
+                android:layout_marginTop="15dp"
+                android:background="@drawable/father" />
 
             <TextView
-                android:id="@+id/trackingYouGroupName"
+                android:id="@+id/trackingYouGroupOwnerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="85dp"
                 android:layout_marginTop="20dp"
-                android:text="Harish Kumar"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -76,6 +75,17 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="@dimen/ten_dp"
                 android:src="@drawable/ic_more_black" />
+
+            <TextView
+                android:id="@+id/trackingYouGroupName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/trackingYouOperationStatus"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
@@ -124,9 +134,30 @@
             android:layout_below="@+id/disableTrackingLine"
             android:layout_marginLeft="@dimen/margin_22"
             android:layout_marginTop="@dimen/ten_dp"
-            android:paddingBottom="@dimen/margin_12"
             android:text="Leave group"
             android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp" />
+
+        <View
+            android:id="@+id/leaveGroupLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/leaveGroup"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:layout_marginRight="@dimen/fourteen_dp"
+            android:background="@color/light_hash" />
+
+        <TextView
+            android:id="@+id/reverseTrack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/leaveGroupLine"
+            android:layout_marginLeft="@dimen/margin_22"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:text="Track"
+            android:textColor="@color/white"
+            android:paddingBottom="@dimen/margin_12"
             android:textSize="@dimen/seventeen_dp" />
 
     </RelativeLayout>

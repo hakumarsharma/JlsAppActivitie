@@ -18,8 +18,6 @@ import java.util.List;
 
 public class ProfileTrackedByListAdapter extends RecyclerView.Adapter<ProfileTrackedByListAdapter.ViewHolder> {
     private List mList;
-    private static TrackedByYouListAdapter.RecyclerViewClickListener itemListener;
-
     /**
      * Constructor to display the active session devices list
      *

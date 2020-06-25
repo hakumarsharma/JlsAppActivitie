@@ -210,7 +210,6 @@ public class GroupsFragment extends Fragment {
         intent.putExtra(Constant.GROUP_ID, groupId);
         intent.putExtra(Constant.GROUP_STATUS, homeActivityListData.getStatus());
         startActivity(intent);
-
     }
 
     /**
