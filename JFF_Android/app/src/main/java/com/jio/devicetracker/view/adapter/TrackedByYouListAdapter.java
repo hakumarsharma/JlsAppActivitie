@@ -118,7 +118,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         public ImageView dogIcon;
         public ImageView kidIcon;
         public ImageView profile;
-        public RelativeLayout relativeLayout;
+        public RelativeLayout trackedByYouOprationLayout;
         public ImageView trackedByYouOperationStatus;
         public ImageView trackedByYouClose;
         private TextView trackedByYouEdit;
@@ -133,10 +133,9 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             super(itemView);
             name = itemView.findViewById(R.id.groupName);
             profile = itemView.findViewById(R.id.groupmemberIcon);
-            TrackedByYouListAdapter.this.trackedByYouOprationLayout = itemView.findViewById(R.id.trackedByYouOprationLayout);
+            trackedByYouOprationLayout = itemView.findViewById(R.id.trackedByYouOprationLayout);
             trackedByYouClose = itemView.findViewById(R.id.trackedByYouClose);
             trackedByYouClose.setOnClickListener(this);
-            relativeLayout = itemView.findViewById(R.id.activeSessionLayout);
             trackedByYouOperationStatus = itemView.findViewById(R.id.trackedByYouOperationStatus);
             trackedByYouOperationStatus.setOnClickListener(this);
             motherIcon = itemView.findViewById(R.id.motherIcon);
@@ -159,14 +158,14 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
                     trackedByYouOprationLayout.setVisibility(View.GONE);
                     break;
                 case R.id.trackedByYouEdit:
-                    TrackedByYouListAdapter.this.trackedByYouOprationLayout.setVisibility(View.GONE);
+                    TrackedByYouListAdapter.this.trackedByYouOprationLayout = trackedByYouOprationLayout;
                     gotoActiveMemberActivity(mList.get(getAdapterPosition()).getGroupName(), mList.get(getAdapterPosition()).getGroupId());
                     break;
                 case R.id.deleteAllMembers:
                     position = getAdapterPosition();
                     groupId = mList.get(position).getGroupId();
+                    TrackedByYouListAdapter.this.trackedByYouOprationLayout = trackedByYouOprationLayout;
                     makeDeleteGroupAPICall(groupId);
-                    TrackedByYouListAdapter.this.trackedByYouOprationLayout.setVisibility(View.GONE);
                     break;
             }
         }
@@ -176,6 +175,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
      * Delete the Group and update the database
      */
     private void makeDeleteGroupAPICall(String groupId) {
+        trackedByYouOprationLayout.setVisibility(View.GONE);
         Util.getInstance().showProgressBarDialog(mContext);
         GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteGroupRequest(new DeleteGroupRequestSuccessListener(), new DeleteGroupRequestErrorListener(), groupId, mDbManager.getAdminLoginDetail().getUserId()));
     }
@@ -216,6 +216,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
     }
 
     private void gotoActiveMemberActivity(String groupName, String groupId) {
+        trackedByYouOprationLayout.setVisibility(View.GONE);
         Intent intent = new Intent(mContext, ActiveMemberActivity.class);
         intent.putExtra(Constant.GROUP_NAME, groupName);
         intent.putExtra(Constant.GROUP_ID, groupId);
