@@ -35,8 +35,14 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MapData;
+import com.jio.devicetracker.database.pojo.SearchEventData;
+import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.PeopleListAdapter;
+import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
+import com.jio.devicetracker.view.dashboard.PeopleFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -78,7 +84,9 @@ public class MapPeopleListFragment extends Fragment {
                 for (GroupMemberDataList groupMemberDataList : allGroupMemberDataBasedOnGroupId) {
                     if (groupMemberDataList.getConsentId().equalsIgnoreCase(mapData.getConsentId())) {
                         GroupMemberDataList groupDataList = new GroupMemberDataList();
+                        groupDataList.setGroupId(groupMemberDataList.getGroupId());
                         groupDataList.setName(groupMemberDataList.getName());
+                        groupDataList.setNumber(groupMemberDataList.getNumber());
                         groupDataList.setConsentStatus(groupMemberDataList.getConsentStatus().substring(0, 1).toUpperCase() + groupMemberDataList.getConsentStatus().substring(1));
                         groupDataList.setAddress(getAddressFromLocation(mapData.getLatitude(), mapData.getLongitude()));
                         groupDataList.setConsentId(mapData.getConsentId());
@@ -98,7 +106,9 @@ public class MapPeopleListFragment extends Fragment {
                     }
                     if (!isFound) {
                         GroupMemberDataList groupDataList = new GroupMemberDataList();
+                        groupDataList.setGroupId(groupMemberDataList.getGroupId());
                         groupDataList.setName(groupMemberDataList.getName());
+                        groupDataList.setNumber(groupMemberDataList.getNumber());
                         groupDataList.setConsentStatus(groupMemberDataList.getConsentStatus().substring(0, 1).toUpperCase() + groupMemberDataList.getConsentStatus().substring(1));
                         groupMemberList.add(groupDataList);
                     }
@@ -109,7 +119,9 @@ public class MapPeopleListFragment extends Fragment {
         else if (mapDataList.isEmpty()) {
             for (GroupMemberDataList allGroupMemberData : allGroupMemberDataBasedOnGroupId) {
                 GroupMemberDataList groupDataList = new GroupMemberDataList();
+                groupDataList.setGroupId(allGroupMemberData.getGroupId());
                 groupDataList.setName(allGroupMemberData.getName());
+                groupDataList.setNumber(allGroupMemberData.getNumber());
                 groupDataList.setConsentStatus(allGroupMemberData.getConsentStatus().substring(0, 1).toUpperCase() + allGroupMemberData.getConsentStatus().substring(1));
                 groupMemberList.add(groupDataList);
             }

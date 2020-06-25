@@ -43,6 +43,7 @@
                 android:textColor="@color/alert_text_color"/>
 
             <LinearLayout
+                android:id="@+id/button_Layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

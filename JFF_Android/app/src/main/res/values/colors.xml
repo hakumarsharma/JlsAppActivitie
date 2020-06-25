@@ -49,4 +49,8 @@
     <color name="status_connected">#1A8905</color>
     <color name="status_disconnected">#EC1C24</color>
     <color name="dull_black">#181818</color>
+
+    <color name="rejected_color">#E2130C</color>
+    <color name="approved_color">#6AC642</color>
+    <color name="pending_color">#FFD430</color>
 </resources>

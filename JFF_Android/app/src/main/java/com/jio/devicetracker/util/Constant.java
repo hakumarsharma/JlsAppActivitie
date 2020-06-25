@@ -255,9 +255,10 @@ public class Constant {
     public static final String SIT_URL = "https://sit.boapi.cats.jvts.net";
     //public static final String STG_URL = "https://stg.borqs.io";
     public static final String FMS_BASE_URL = "http://49.40.22.92:8080";
-    public static final String CONSENT_APPROVED_STATUS = "Consent Approved";
-    public static final String CONSENT_PENDING = "Consent Pending";
+    public static final String CONSENT_APPROVED_STATUS = "Consent approved";
+    public static final String CONSENT_PENDING = "Consent pending";
     public static final String REQUEST_CONSENT = "Request Consent";
+    public static final String CONSENT_Expired = "Consent expired";
     public static final String NUMBER_CARRIER = "number";
     public static final String GROUP_CHOOSE_CONDITION = "Choose any group to continue adding the device to that group or select Add later";
     public static final String GROUP_CHOOSE_MEMBER_CONDITION = "Choose any group to continue adding member to that group or select Add later";
@@ -306,8 +307,13 @@ public class Constant {
     public static final String REFRESH_INTERVAL_SETTING = "Settings";
     public static final String MAP_UPDATION_MSG = "Map will be updated after every ";
     public static final String PENDING = "pending";
+    public static final String CONSENT_PENDING_ADDRESS = "Address will be displayed after consent is approved.";
+    public static final String CONSENT_APPROVED_ADDRESS = "Address details are not available.";
+    public static final String CONSENT_EXPIRED_ADDRESS = "Consent time expired.Click on send invite present under three dots.";
     public static final String USER_LIMITATION = "You cannot create more than ten individual user and groups";
     public static final String GROUP_NAME_VALIDATION_ERROR = "Group name cannot be left empty";
+    public static final String CONSET_STATUS_PENDING = "Pending";
+    public static final String CONSET_STATUS_APPROVED = "Approved";
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
     public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member in a group, Please try again!";

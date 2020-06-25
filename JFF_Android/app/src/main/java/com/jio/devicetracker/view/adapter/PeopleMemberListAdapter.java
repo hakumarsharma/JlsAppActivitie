@@ -95,6 +95,14 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         HomeActivityListData data = mList.get(position);
         holder.memberName.setTypeface(Util.mTypeface(mContext, 5));
         holder.memberName.setText(data.getGroupName());
+        if (data.getConsentStaus().equals(Constant.PENDING)){
+           holder.memberIcon.setImageResource(R.drawable.pendinginvite);
+        }else if (data.getConsentStaus().equals(Constant.APPROVED)){
+            holder.memberIcon.setImageResource(R.drawable.inviteaccepted);
+        }else {
+            holder.memberIcon.setImageResource(R.drawable.invitetimeup);
+        }
+
         holder.timeLeft.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(),data.getTo()));
         holder.peopleList.setOnClickListener(v -> {
             itemListener.clickOnListLayout(data);
