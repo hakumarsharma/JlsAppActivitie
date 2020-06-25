@@ -89,8 +89,13 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HomeActivityListData data = mList.get(position);
-        holder.profile.setImageResource(R.drawable.ic_family_group);
-        holder.name.setText(data.getGroupName());
+        if(data.getConsentId() != null) {
+            holder.name.setText(data.getName());
+            holder.profile.setImageResource(R.drawable.mother);
+        } else {
+            holder.profile.setImageResource(R.drawable.ic_family_group);
+            holder.name.setText(data.getGroupName());
+        }
     }
 
     /**
@@ -161,6 +166,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
                     position = getAdapterPosition();
                     groupId = mList.get(position).getGroupId();
                     makeDeleteGroupAPICall(groupId);
+                    TrackedByYouListAdapter.this.trackedByYouOprationLayout.setVisibility(View.GONE);
                     break;
             }
         }

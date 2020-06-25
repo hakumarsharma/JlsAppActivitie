@@ -53,7 +53,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/trackingByYouList"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="250dp"
                 android:layout_below="@+id/tracked_title"
                 android:divider="#806326"
                 android:dividerHeight="1dp" />
