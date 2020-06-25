@@ -39,6 +39,7 @@ import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 
 import java.util.List;
@@ -67,7 +68,12 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
         this.mList = mList;
         this.mContext = mContext;
     }
-
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
     /**
      * Binds the given View to the position
      *
@@ -160,14 +166,14 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
                     removeItem(position);
                 } else {
                     Util.progressDialog.dismiss();
-                    Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, mContext);
+                    showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, mContext);
+                showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
             }
         });
     }

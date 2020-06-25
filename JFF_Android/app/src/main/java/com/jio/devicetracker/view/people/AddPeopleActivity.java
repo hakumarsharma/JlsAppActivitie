@@ -51,6 +51,7 @@ import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.dashboard.DashboardActivity;
@@ -149,6 +150,13 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         contactBtn.setOnClickListener(this);
         changeButtonColorOnDataEntry();
 
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     // Intent data to check whether use has come from group or individual
@@ -450,14 +458,14 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                     getAllForOneGroupAPICall();
                 } else {
                     Util.progressDialog.dismiss();
-                    Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, context);
+                    showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, context);
+                showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
             }
         });
     }

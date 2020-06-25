@@ -52,6 +52,7 @@ import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 
@@ -107,6 +108,13 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
         timerTextView.setTypeface(Util.mTypeface(getActivity(), 2));
         timerTextView.setOnClickListener(this);
         mDbManager = new DBManager(getActivity());
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     @Override
@@ -285,11 +293,11 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
             if (error.networkResponse.statusCode == Constant.INVALID_USER) {
-                Util.alertDilogBox(Constant.LOGIN_VALIDATION, Constant.ALERT_TITLE, getActivity());
+                showCustomAlertWithText(Constant.LOGIN_VALIDATION);
             } else if (error.networkResponse.statusCode == Constant.ACCOUNT_LOCK) {
-                Util.alertDilogBox(Constant.EMAIL_LOCKED, Constant.ALERT_TITLE, getActivity());
+                showCustomAlertWithText(Constant.EMAIL_LOCKED);
             } else {
-                Util.alertDilogBox(Constant.VALID_USER, Constant.ALERT_TITLE, getActivity());
+                showCustomAlertWithText(Constant.VALID_USER);
             }
             Util.progressDialog.dismiss();
         }

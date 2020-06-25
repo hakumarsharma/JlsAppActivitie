@@ -47,6 +47,7 @@ import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
@@ -151,6 +152,13 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         addLater.setOnClickListener(this);
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
+
     /**
      * To do event handling
      *
@@ -209,7 +217,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, ChooseGroupActivity.this);
+                showCustomAlertWithText(Constant.GET_GROUP_INFO_PER_USER_ERROR);
             }
         }
     }
@@ -322,14 +330,14 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.GROUP_MEMBER_ADDITION_FAILURE, Constant.ALERT_TITLE, ChooseGroupActivity.this);
+                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
             } else if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
                 // Make Verify and Assign call
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.DEVICE_NOT_FOUND, Constant.ALERT_TITLE, ChooseGroupActivity.this);
+                showCustomAlertWithText(Constant.DEVICE_NOT_FOUND);
             } else {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.GROUP_MEMBER_ADDITION_FAILURE, Constant.ALERT_TITLE, ChooseGroupActivity.this);
+                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
             }
         }
     }
@@ -379,7 +387,11 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
 
     private void addMemberToCreatedGroup(String groupId) {
         if(groupId == null || groupId.isEmpty()) {
-            Util.alertDilogBox(Constant.GROUP_CHOOSE_CONDITION,Constant.ALERT_TITLE,this);
+            showCustomAlertWithText(Constant.GROUP_CHOOSE_CONDITION);
+            return;
+        }
+        if (trackeeNameEditText.getText() == null || trackeeNameEditText.getText().length() == 0){
+            showCustomAlertWithText(Constant.NAME_VALIDATION);
             return;
         }
         this.createdGroupId = groupId;

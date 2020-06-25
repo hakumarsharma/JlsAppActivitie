@@ -44,6 +44,7 @@ import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DashboardActivity;
 
@@ -83,6 +84,13 @@ public class EditActivity extends Activity implements View.OnClickListener {
         userId = intent.getStringExtra(Constant.USER_ID);
         mName.setText(name);
         mNumber.setText(number);
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     @Override
@@ -133,7 +141,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.INDIVIDUAL_USER_EDIT_FAILURE, Constant.ALERT_TITLE, EditActivity.this);
+            showCustomAlertWithText(Constant.INDIVIDUAL_USER_EDIT_FAILURE);
         }
     }
 
@@ -174,7 +182,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.INDIVIDUAL_USER_EDIT_FAILURE, Constant.ALERT_TITLE, EditActivity.this);
+            showCustomAlertWithText(Constant.INDIVIDUAL_USER_EDIT_FAILURE);
         }
     }
 
@@ -216,7 +224,7 @@ public class EditActivity extends Activity implements View.OnClickListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.INDIVIDUAL_USER_EDIT_FAILURE, Constant.ALERT_TITLE, EditActivity.this);
+            showCustomAlertWithText(Constant.INDIVIDUAL_USER_EDIT_FAILURE);
         }
     }
 
@@ -273,10 +281,10 @@ public class EditActivity extends Activity implements View.OnClickListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GROUP_UPDATION_FAILURE, Constant.ALERT_TITLE, EditActivity.this);
+                showCustomAlertWithText(Constant.GROUP_UPDATION_FAILURE);
             }
             if (error.networkResponse.statusCode == 404) {
-                Util.alertDilogBox(Constant.NO_GROUP_FOUND, Constant.ALERT_TITLE, EditActivity.this);
+                showCustomAlertWithText(Constant.NO_GROUP_FOUND);
             }
         }
     }

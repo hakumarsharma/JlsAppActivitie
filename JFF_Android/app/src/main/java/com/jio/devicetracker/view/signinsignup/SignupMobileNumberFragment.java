@@ -47,6 +47,7 @@ import com.jio.devicetracker.database.pojo.request.GenerateTokenRequest;
 import com.jio.devicetracker.database.pojo.response.GenerateTokenResponse;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 
 /**
@@ -84,6 +85,13 @@ public class SignupMobileNumberFragment extends Fragment implements View.OnClick
         signupMobileNumberErrorCode.setTypeface(Util.mTypeface(getActivity(), 5));
         phoneNumberTextView = view.findViewById(R.id.phoneNumberTextView);
         name = getArguments().getString(Constant.NAME);
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     private void changeButtonColorOnDataEntry() {
@@ -190,7 +198,7 @@ public class SignupMobileNumberFragment extends Fragment implements View.OnClick
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, getActivity());
+                showCustomAlertWithText(Constant.REGISTRAION_ALERT_409);
                 return;
             }
         }

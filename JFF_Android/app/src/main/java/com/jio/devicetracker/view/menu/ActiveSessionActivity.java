@@ -50,6 +50,7 @@ import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.TrackingYouListAdapter;
 import com.jio.devicetracker.view.location.MapsActivity;
@@ -110,6 +111,13 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         makeGroupInfoPerUserRequestAPICall();
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
+
     /**
      * Track the group
      *
@@ -155,7 +163,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             Util.progressDialog.dismiss();
             SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
             if (searchEventResponse.getMessage().equalsIgnoreCase(Constant.NO_EVENTS_FOUND_RESPONSE)) {
-                Util.alertDilogBox(Constant.LOCATION_NOT_FOUND, Constant.ALERT_TITLE, ActiveSessionActivity.this);
+                showCustomAlertWithText(Constant.LOCATION_NOT_FOUND);
             } else {
                 List<MapData> mapDataList = new ArrayList<>();
                 List<SearchEventResponse.Data> mList = searchEventResponse.getData();
@@ -195,7 +203,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.FETCH_LOCATION_ERROR, Constant.ALERT_TITLE, ActiveSessionActivity.this);
+            showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
     }
 
@@ -250,14 +258,14 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                     isAnyMemberActive();
                 } else {
                     Util.progressDialog.dismiss();
-                    Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveSessionActivity.this);
+                    showCustomAlertWithText(errorMessage);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveSessionActivity.this);
+                showCustomAlertWithText(errorMessage);
             }
         });
     }
@@ -296,14 +304,14 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                     isAnyMemberActive();
                 } else {
                     Util.progressDialog.dismiss();
-                    Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveSessionActivity.this);
+                    showCustomAlertWithText(errorMessage);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveSessionActivity.this);
+                showCustomAlertWithText(errorMessage);
             }
         });
     }
@@ -334,7 +342,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, ActiveSessionActivity.this);
+                showCustomAlertWithText(Constant.GET_GROUP_INFO_PER_USER_ERROR);
             }
         }
     }

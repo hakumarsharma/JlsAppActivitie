@@ -22,6 +22,7 @@ import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.adapter.ChooseGroupListAdapter;
@@ -88,6 +89,13 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
 
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
+
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -133,7 +141,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, ChooseGroupFromPeopleFlow.this);
+                showCustomAlertWithText(Constant.GET_GROUP_INFO_PER_USER_ERROR);
             }
         }
     }
@@ -249,7 +257,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
 
     private void addMemberToCreatedGroup(String groupId) {
         if(groupId == null || groupId.isEmpty()) {
-            Util.alertDilogBox(Constant.GROUP_CHOOSE_MEMBER_CONDITION,Constant.ALERT_TITLE,this);
+            showCustomAlertWithText(Constant.GROUP_CHOOSE_MEMBER_CONDITION);
             return;
         }
         this.createdGroupId = groupId;

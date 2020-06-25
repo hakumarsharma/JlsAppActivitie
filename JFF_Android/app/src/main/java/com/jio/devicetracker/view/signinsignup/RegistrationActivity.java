@@ -53,6 +53,7 @@ import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 
 
@@ -102,6 +103,13 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         mPhone.setText(countryCode + phoneNumber);
         MessageListener messageListener = new RegistrationActivity();
         MessageReceiver.bindListener(messageListener);
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     /**
@@ -247,9 +255,9 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
-                Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, RegistrationActivity.this);
+                showCustomAlertWithText(Constant.REGISTRAION_ALERT_409);
             } else {
-                Util.alertDilogBox(Constant.REGISTRAION_FAILED, Constant.ALERT_TITLE, RegistrationActivity.this);
+                showCustomAlertWithText(Constant.REGISTRAION_FAILED);
             }
         }
     }
@@ -310,7 +318,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, RegistrationActivity.this);
+                showCustomAlertWithText(Constant.REGISTRAION_ALERT_409);
                 return;
             }
         }

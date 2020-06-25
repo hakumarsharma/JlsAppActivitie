@@ -43,6 +43,7 @@ import com.jio.devicetracker.database.pojo.request.GetGroupMemberRequest;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.people.ContactDetailsActivity;
 import com.jio.devicetracker.view.dashboard.DashboardActivity;
@@ -85,6 +86,13 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         makeGetGroupMemberAPICall();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     /**
@@ -160,7 +168,7 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         if (v.getId() == R.id.groupMembersListFloatButton) {
             gotoContactDetailsActivity();
         } else if (v.getId() == R.id.createGroupButtonOnToolbar) {
-            Util.alertDilogBox("Coming Soon...", "Alert", this);
+            showCustomAlertWithText("Coming Soon...");
         }
     }
 

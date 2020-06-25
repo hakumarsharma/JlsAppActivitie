@@ -24,6 +24,7 @@ import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.EditmemberListAdapter;
 
@@ -71,6 +72,13 @@ public class EditMemberActivity extends Activity implements View.OnClickListener
         groupId = getIntent().getStringExtra(Constant.GROUP_ID);
         mDbManager = new DBManager(this);
         userId = mDbManager.getAdminLoginDetail().getUserId();
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     @Override
@@ -149,14 +157,14 @@ public class EditMemberActivity extends Activity implements View.OnClickListener
                     makeGetGroupMemberAPICall();
                 } else {
                     Util.progressDialog.dismiss();
-                    Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, EditMemberActivity.this);
+                    showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, EditMemberActivity.this);
+                showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
             }
         });
     }

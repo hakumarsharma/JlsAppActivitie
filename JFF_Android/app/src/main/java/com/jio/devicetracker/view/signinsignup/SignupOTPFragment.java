@@ -49,6 +49,7 @@ import com.jio.devicetracker.network.MessageListener;
 import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 
 import java.util.Objects;
@@ -92,6 +93,13 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
         MessageListener messageListener = new SignupOTPFragment();
         MessageReceiver.bindListener(messageListener);
         startTimer(60000, 1000);
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     @Override
@@ -159,7 +167,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, getActivity());
+                showCustomAlertWithText(Constant.REGISTRAION_ALERT_409);
                 return;
             }
         }
@@ -212,9 +220,9 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
-                Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, getActivity());
+                showCustomAlertWithText(Constant.REGISTRAION_ALERT_409);
             } else {
-                Util.alertDilogBox(Constant.REGISTRAION_FAILED, Constant.ALERT_TITLE, getActivity());
+                showCustomAlertWithText(Constant.REGISTRAION_FAILED);
             }
         }
     }

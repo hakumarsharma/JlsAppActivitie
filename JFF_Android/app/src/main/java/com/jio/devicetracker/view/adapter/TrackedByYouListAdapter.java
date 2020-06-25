@@ -42,6 +42,7 @@ import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.menu.ActiveMemberActivity;
 
@@ -64,6 +65,13 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         this.mList = mList;
         this.mContext = mContext;
         mDbManager = new DBManager(mContext);
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     /**
@@ -200,7 +208,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.GROUP_DELETION_FAILURE, Constant.ALERT_TITLE, mContext);
+            showCustomAlertWithText(Constant.GROUP_DELETION_FAILURE);
         }
     }
 

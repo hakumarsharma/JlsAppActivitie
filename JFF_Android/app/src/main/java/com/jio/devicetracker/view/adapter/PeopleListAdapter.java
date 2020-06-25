@@ -52,6 +52,7 @@ import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.EditMemberActivity;
@@ -78,6 +79,13 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         this.mList = mList;
         this.mContext = mContext;
         mDbManager = new DBManager(mContext);
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     /**
@@ -255,14 +263,14 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     }
                 } else {
                     Util.progressDialog.dismiss();
-                    Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, mContext);
+                    showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, mContext);
+                showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
             }
         });
     }
@@ -294,7 +302,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             Util.progressDialog.dismiss();
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
-                Util.alertDilogBox(Constant.INVITE_SENT, Constant.ALERT_TITLE, mContext);
+                showCustomAlertWithText(Constant.INVITE_SENT);
                 for (GroupMemberResponse.Data data : groupMemberResponse.getData()) {
                         GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
                         groupMemberDataList.setConsentId(data.getConsentId());
@@ -319,14 +327,14 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.GROUP_MEMBER_ADDITION_FAILURE, Constant.ALERT_TITLE, mContext);
+                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
             } else if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
                 // Make Verify and Assign call
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.DEVICE_NOT_FOUND, Constant.ALERT_TITLE, mContext);
+                showCustomAlertWithText(Constant.DEVICE_NOT_FOUND);
             } else {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.GROUP_MEMBER_ADDITION_FAILURE, Constant.ALERT_TITLE, mContext);
+                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
             }
         }
     }

@@ -40,6 +40,7 @@ import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.ProfileTrackedByListAdapter;
 
@@ -84,7 +85,12 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         makeGroupInfoPerUserRequestAPICall();
 
     }
-
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -133,7 +139,7 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, NavigateUserProfileActivity.this);
+                showCustomAlertWithText(Constant.GET_GROUP_INFO_PER_USER_ERROR);
             }
         }
     }

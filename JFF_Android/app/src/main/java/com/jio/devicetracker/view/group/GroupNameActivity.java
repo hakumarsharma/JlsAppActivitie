@@ -43,6 +43,7 @@ import com.jio.devicetracker.database.pojo.request.CreateGroupRequest;
 import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DashboardActivity;
 
@@ -66,6 +67,13 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
         createGroup = findViewById(R.id.createGroupName);
         createGroup.setOnClickListener(this);
         changeButtonColorOnDataEntry();
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     /**
@@ -140,7 +148,7 @@ public class GroupNameActivity extends AppCompatActivity implements View.OnClick
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
             if(error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
-                Util.alertDilogBox(Constant.GROUP_CREATION_FAILURE, Constant.ALERT_TITLE, GroupNameActivity.this);
+                showCustomAlertWithText(Constant.GROUP_CREATION_FAILURE);
             }
         }
     }

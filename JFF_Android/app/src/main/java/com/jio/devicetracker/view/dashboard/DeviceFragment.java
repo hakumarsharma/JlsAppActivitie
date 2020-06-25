@@ -43,6 +43,7 @@ import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.DeviceListAdapter;
 
@@ -79,6 +80,13 @@ public class DeviceFragment extends Fragment {
         instructionIcon.setVisibility(View.VISIBLE);
         mDbManager = new DBManager(getActivity());
         deviceFragmentRecyclerView = view.findViewById(R.id.deviceListRecyclerView);
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     @Override
@@ -149,7 +157,7 @@ public class DeviceFragment extends Fragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, getActivity());
+                showCustomAlertWithText(Constant.GET_GROUP_INFO_PER_USER_ERROR);
             }
         }
     }

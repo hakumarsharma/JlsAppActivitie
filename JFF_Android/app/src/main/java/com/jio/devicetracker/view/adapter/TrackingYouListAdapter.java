@@ -49,6 +49,7 @@ import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.location.LocationActivity;
 
@@ -79,6 +80,13 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         this.mContext = mContext;
         mDbManager = new DBManager(mContext);
         userId = mDbManager.getAdminLoginDetail().getUserId();
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     @NonNull
@@ -208,7 +216,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
             trackingYouOprationLayout.setVisibility(View.GONE);
-            Util.alertDilogBox(Constant.FETCH_LOCATION_ERROR, Constant.ALERT_TITLE, mContext);
+            showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
 
     }
@@ -257,7 +265,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                     trackingYouOprationLayout.setVisibility(View.GONE);
                 } else {
                     Util.progressDialog.dismiss();
-                    Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, mContext);
+                    showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
                     trackingYouOprationLayout.setVisibility(View.GONE);
                 }
             }
@@ -265,7 +273,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.REMOVE_FROM_GROUP_FAILURE, Constant.ALERT_TITLE, mContext);
+                showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
                 trackingYouOprationLayout.setVisibility(View.GONE);
             }
         });

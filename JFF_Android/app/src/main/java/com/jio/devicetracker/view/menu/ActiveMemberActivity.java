@@ -44,6 +44,7 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.ActiveMemberListAdapter;
 
@@ -94,6 +95,13 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
         backButton.setVisibility(View.VISIBLE);
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
+
     /**
      * make an Exit API Call
      */
@@ -123,14 +131,14 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
                     addDataInList();
                 } else {
                     Util.progressDialog.dismiss();
-                    Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+                    showCustomAlertWithText(errorMessage);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+                showCustomAlertWithText(errorMessage);
             }
         });
     }
@@ -167,14 +175,14 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
                     addDataInList();
                 } else {
                     Util.progressDialog.dismiss();
-                    Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+                    showCustomAlertWithText(errorMessage);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+                showCustomAlertWithText(errorMessage);
             }
         });
     }
@@ -208,7 +216,7 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-            Util.alertDilogBox(errorMessage, Constant.ALERT_TITLE, ActiveMemberActivity.this);
+            showCustomAlertWithText(errorMessage);
         }
     }
 

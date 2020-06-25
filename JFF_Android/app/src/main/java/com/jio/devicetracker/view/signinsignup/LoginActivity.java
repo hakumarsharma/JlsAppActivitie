@@ -67,6 +67,7 @@ import com.jio.devicetracker.network.MessageReceiver;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.network.SendSMSTask;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.SplashScreenActivity;
@@ -129,6 +130,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         checkJioSIMSlot1();
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
     /**
      * Change the button color, when user enters something
      */
@@ -256,7 +263,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.REGISTRAION_ALERT_409, Constant.ALERT_TITLE, LoginActivity.this);
+                showCustomAlertWithText(Constant.REGISTRAION_ALERT_409);
                 jioMobileNumberEditText.setError(Constant.REGISTRAION_ALERT_409);
                 return;
             }
@@ -325,11 +332,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == Constant.INVALID_USER) {
-                Util.alertDilogBox(Constant.LOGIN_VALIDATION, Constant.ALERT_TITLE, LoginActivity.this);
+                showCustomAlertWithText(Constant.LOGIN_VALIDATION);
             } else if (error.networkResponse.statusCode == Constant.ACCOUNT_LOCK) {
-                Util.alertDilogBox(Constant.EMAIL_LOCKED, Constant.ALERT_TITLE, LoginActivity.this);
+                showCustomAlertWithText(Constant.EMAIL_LOCKED);
             } else {
-                Util.alertDilogBox(Constant.VALID_USER, Constant.ALERT_TITLE, LoginActivity.this);
+                showCustomAlertWithText(Constant.VALID_USER);
             }
             Util.progressDialog.dismiss();
         }

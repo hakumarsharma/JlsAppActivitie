@@ -46,6 +46,7 @@ import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.EditMemberActivity;
 import com.jio.devicetracker.view.dashboard.GroupsFragment;
@@ -73,6 +74,12 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         userId = mDbManager.getAdminLoginDetail().getUserId();
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
     /**
      * Binds the given View to the position
      *
@@ -191,6 +198,10 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.edit:
+                    if (mList.isEmpty()){
+                        showCustomAlertWithText(Constant.ADD_DETAILS_TO_TRACK);
+                        return;
+                    }
                     gotoEditMemberActivity(mList.get(position));
                     break;
                 case R.id.close:
@@ -249,7 +260,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.GROUP_DELETION_FAILURE, Constant.ALERT_TITLE, mContext);
+            showCustomAlertWithText(Constant.GROUP_DELETION_FAILURE);
         }
     }
 

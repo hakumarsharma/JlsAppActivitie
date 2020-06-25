@@ -37,6 +37,7 @@ import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.device.AddDeviceActivity;
@@ -68,6 +69,13 @@ public class BaseActivity extends AppCompatActivity {
         mDbManager = new DBManager(this);
     }
 
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
     /**
      * Adds individual contact in Dashboard, but it adds as a member of group.
      * Group Name is hardcoded as a Individual_User
@@ -131,7 +139,7 @@ public class BaseActivity extends AppCompatActivity {
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
             if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
-                Util.alertDilogBox(Constant.ADDING_INDIVIDUAL_USER_FAILED, Constant.ALERT_TITLE, BaseActivity.this);
+                showCustomAlertWithText(Constant.ADDING_INDIVIDUAL_USER_FAILED);
             }
         }
     }
@@ -216,14 +224,14 @@ public class BaseActivity extends AppCompatActivity {
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.GROUP_MEMBER_ADDITION_FAILURE, Constant.ALERT_TITLE, BaseActivity.this);
+                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
             } else if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
                 // Make Verify and Assign call
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.DEVICE_NOT_FOUND, Constant.ALERT_TITLE, BaseActivity.this);
+                showCustomAlertWithText(Constant.DEVICE_NOT_FOUND);
             } else {
                 Util.progressDialog.dismiss();
-                Util.alertDilogBox(Constant.GROUP_MEMBER_ADDITION_FAILURE, Constant.ALERT_TITLE, BaseActivity.this);
+                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
             }
         }
     }

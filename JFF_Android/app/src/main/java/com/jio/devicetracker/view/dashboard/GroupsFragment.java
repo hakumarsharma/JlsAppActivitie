@@ -51,6 +51,7 @@ import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.GroupListAdapter;
 import com.jio.devicetracker.view.location.LocationActivity;
@@ -97,6 +98,12 @@ public class GroupsFragment extends Fragment {
         Log.d(String.valueOf(Util.getInstance().createSessionEndDate()), "epochtime: ");
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
     /**
      * Get All Group info per user API Call
      */
@@ -124,7 +131,7 @@ public class GroupsFragment extends Fragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, getActivity());
+                showCustomAlertWithText(Constant.GET_GROUP_INFO_PER_USER_ERROR);
             }
         }
     }
@@ -196,7 +203,7 @@ public class GroupsFragment extends Fragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.FETCH_LOCATION_ERROR, Constant.ALERT_TITLE, getActivity());
+            showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
 
     }
@@ -206,7 +213,7 @@ public class GroupsFragment extends Fragment {
      */
     private void goToMapActivity(List<MapData> mapDataList) {
         if (mapDataList.isEmpty()){
-            Util.alertDilogBox(Constant.ADD_DETAILS_TO_TRACK, Constant.ALERT_TITLE, getActivity());
+            showCustomAlertWithText(Constant.ADD_DETAILS_TO_TRACK);
             return;
         }
         Intent intent = new Intent(getContext(), LocationActivity.class);

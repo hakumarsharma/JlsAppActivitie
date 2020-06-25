@@ -19,16 +19,31 @@
  **************************************************************/
 package com.jio.devicetracker.util;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jio.devicetracker.R;
 
-public class CustomAlertActivity extends AppCompatActivity implements View.OnClickListener {
+public class CustomAlertActivity extends Dialog implements View.OnClickListener {
+
+    private Button laterBtn;
+    private Button viewBtn;
+    private Button okBtn;
+    public Context mContext;
+    public TextView message;
+
+    public CustomAlertActivity(@NonNull Context context) {
+        super(context);
+        this.mContext = context;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,23 +54,44 @@ public class CustomAlertActivity extends AppCompatActivity implements View.OnCli
 
     private void initializeDataMember() {
         TextView title = findViewById(R.id.dialogue_title);
-        title.setText(Constant.Custom_Alert_Title);
-        title.setTypeface(Util.mTypeface(this,5));
-        TextView message = findViewById(R.id.dialogue_message);
+        title.setTypeface(Util.mTypeface(mContext,5));
+        message = findViewById(R.id.dialogue_message);
         message.setText(Constant.Custom_Alert_Message);
-        message.setTypeface(Util.mTypeface(this,3));
-        Button laterBtn = findViewById(R.id.btn_later);
-        laterBtn.setTypeface(Util.mTypeface(this,5));
-        Button viewBtn = findViewById(R.id.btn_view);
-        viewBtn.setTypeface(Util.mTypeface(this,5));
+        message.setTypeface(Util.mTypeface(mContext,3));
+        laterBtn = findViewById(R.id.btn_later);
+        laterBtn.setTypeface(Util.mTypeface(mContext,5));
+        viewBtn = findViewById(R.id.btn_view);
+        viewBtn.setTypeface(Util.mTypeface(mContext,5));
+        okBtn = findViewById(R.id.btn_ok);
+        okBtn.setTypeface(Util.mTypeface(mContext,5));
+        okBtn.setOnClickListener(this);
     }
 
-    @Override
+    // display alert with single button option
+    public void alertWithOkButton(String alertMessage){
+        message.setText(alertMessage);
+        okBtn.setVisibility(View.VISIBLE);
+        laterBtn.setVisibility(View.INVISIBLE);
+        viewBtn.setVisibility(View.INVISIBLE);
+    }
+
+    // display alert with two button options
+    public void alertWithTwoButtons(){
+
+    }
+
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_later) {
-
-        } else if (v.getId() == R.id.btn_view){
-
+        switch (v.getId()) {
+            case R.id.btn_ok:
+                dismiss();
+                break;
+            case R.id.btn_later:
+                dismiss();
+                break;
+            default:
+                break;
         }
+        dismiss();
     }
+
 }

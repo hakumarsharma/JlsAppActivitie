@@ -49,6 +49,7 @@ import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.location.LocationActivity;
 import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
@@ -90,6 +91,13 @@ public class PeopleFragment extends Fragment {
         instruction2.setTypeface(Util.mTypeface(getActivity(), 3));
         instructionIcon = view.findViewById(R.id.people_default_icon);
         groupListRecyclerView = view.findViewById(R.id.peopleListRecyclerView);
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 
     @Override
@@ -193,7 +201,7 @@ public class PeopleFragment extends Fragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error.networkResponse.statusCode == 409) {
-                Util.alertDilogBox(Constant.GET_GROUP_INFO_PER_USER_ERROR, Constant.ALERT_TITLE, getActivity());
+                showCustomAlertWithText(Constant.GET_GROUP_INFO_PER_USER_ERROR);
             }
         }
     }
@@ -234,7 +242,7 @@ public class PeopleFragment extends Fragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
-            Util.alertDilogBox(Constant.FETCH_LOCATION_ERROR, Constant.ALERT_TITLE, getContext());
+            showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
     }
 

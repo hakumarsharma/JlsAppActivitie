@@ -54,6 +54,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 
 import java.io.IOException;
@@ -117,6 +118,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         return view;
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
     /**
      * Call back method to load the map on screen
      * Show the alerts if group is not active or it is completed
@@ -127,11 +134,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mMap = googleMap;
         mMap.clear();
         if (groupStatus.equalsIgnoreCase(Constant.SCHEDULED)) {
-            Util.alertDilogBox(Constant.GROUP_NOT_ACTIVE, Constant.ALERT_TITLE, getActivity());
+            showCustomAlertWithText(Constant.GROUP_NOT_ACTIVE);
         } else if (groupStatus.equalsIgnoreCase(Constant.COMPLETED)) {
-            Util.alertDilogBox(Constant.SESSION_COMPLETED, Constant.ALERT_TITLE, getActivity());
+            showCustomAlertWithText(Constant.SESSION_COMPLETED);
         } else if(mapDataList.isEmpty()) {
-            Util.alertDilogBox(Constant.FETCH_LOCATION_ERROR, Constant.ALERT_TITLE, getActivity());
+            showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
         if (mapDataList != null && !mapDataList.isEmpty() && strAddress != null && groupStatus.equalsIgnoreCase(Constant.ACTIVE)) {
             for (MapData mapData : mapDataList) {

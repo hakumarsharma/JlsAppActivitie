@@ -12,8 +12,6 @@
         android:layout_height="170dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="@dimen/margin_32"
-        android:layout_marginRight="@dimen/margin_32"
         card_view:cardCornerRadius="8dp">
 
         <RelativeLayout
@@ -27,20 +25,38 @@
                 android:layout_marginLeft="@dimen/twenty_dp"
                 android:layout_marginRight="@dimen/twenty_dp"
                 android:layout_marginTop="@dimen/twenty_dp"
-                android:text="Invite"
-                android:textSize="17dp"
+                android:text="Alert"
+                android:textSize="20dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/dialogue_message"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_below="@id/dialogue_title"
                 android:layout_marginLeft="@dimen/twenty_dp"
                 android:layout_marginRight="@dimen/twenty_dp"
-                android:textSize="17dp"
+                android:textSize="16dp"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/alert_text_color"/>
+
+            <Button
+                android:id="@+id/btn_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/login_selector"
+                android:clickable="true"
+                android:text="OK"
+                android:textAllCaps="false"
+                android:layout_marginTop="10dp"
+                android:textSize="18dp"
+                android:textColor="@color/white"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/dialogue_message"
+                android:textStyle="bold"
+                android:visibility="invisible"/>
 
             <LinearLayout
                 android:id="@+id/button_Layout"
@@ -51,6 +67,7 @@
                 android:weightSum="2"
                 android:layout_below="@+id/dialogue_message"
                 android:background="@color/alert_btn_selected_color"
+                android:visibility="invisible"
                 android:orientation="horizontal" >
 
                 <Button
