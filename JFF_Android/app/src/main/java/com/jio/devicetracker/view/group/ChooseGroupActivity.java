@@ -68,6 +68,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private String groupId;
     private List<HomeActivityListData> chooseGroupDataList;
     private String label;
+    private Button continueBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +146,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         Button chooseGroupButton = findViewById(R.id.continueChooseGroup);
         chooseGroupButton.setTypeface(Util.mTypeface(this, 5));
         Button addLater = findViewById(R.id.addLater);
-        Button continueBtn = findViewById(R.id.continueChooseGroup);
+        continueBtn = findViewById(R.id.continueChooseGroup);
         continueBtn.setOnClickListener(this);
         addLater.setOnClickListener(this);
     }
@@ -262,10 +263,21 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         if (mAdapter != null) {
             mAdapter.setOnItemClickPagerListener(new ChooseGroupListAdapter.RecyclerViewClickListener() {
                 @Override
+                public void groupButtonClicked(HomeActivityListData homeActivityListData, String groupIconSelection) {
+                    updateUIInChooseGroupActivity(homeActivityListData);
+                    if(groupIconSelection != null && !groupIconSelection.equalsIgnoreCase(Constant.GROUP_SELECTED)){
+                        groupId = homeActivityListData.getGroupId();
+                    } else {
+                        groupId = "";
+                    }
+
+                }
+
+               /* @Override
                 public void groupButtonClicked(HomeActivityListData homeActivityListData) {
                     groupId = homeActivityListData.getGroupId();
                     updateUIInChooseGroupActivity(homeActivityListData);
-                }
+                }*/
             });
         }
     }
@@ -354,6 +366,9 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         if (chooseGroupDataList.size() == 0) {
             groupText.setVisibility(View.VISIBLE);
             cardViewGroup.setVisibility(View.INVISIBLE);
+            continueBtn.setBackground(getResources().getDrawable(R.drawable.selector));
+            continueBtn.setEnabled(false);
+
         }
         GridLayoutManager mLayoutManager = new GridLayoutManager(this, 4);
         RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);
@@ -363,6 +378,10 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void addMemberToCreatedGroup(String groupId) {
+        if(groupId.isEmpty()) {
+            Util.alertDilogBox(Constant.GROUP_CHOOSE_CONDITION,Constant.ALERT_TITLE,this);
+            return;
+        }
         this.createdGroupId = groupId;
         this.memberName = trackeeNameEditText.getText().toString();
         this.memberNumber = phoneNumber;
@@ -379,6 +398,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         this.isFromCreateGroup = false;
         this.isGroupMember = false;
         this.isFromDevice = true;
+        isNavigateToGroupsFragment = false;
         setUserIcon(label);
         createGroupAndAddContactAPICall(Constant.INDIVIDUAL_DEVICE_GROUP_NAME);
     }

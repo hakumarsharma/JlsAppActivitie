@@ -190,10 +190,10 @@ public class BaseActivity extends AppCompatActivity {
                         isNavigateToGroupsFragment = false;
                         intent.putExtra(Constant.Add_Device, false);
                         intent.putExtra(Constant.Add_People, false);
-                    } else if(DashboardMainActivity.flowFromDevice){
+                    } /*else if(isNavigateToGroupsFragment != null && ){
                         intent.putExtra(Constant.Add_Device, false);
                         intent.putExtra(Constant.Add_People, false);
-                    }
+                    }*/
                     else if (!isFromCreateGroup) {
                         intent.putExtra(Constant.Add_Device, true);
                     }

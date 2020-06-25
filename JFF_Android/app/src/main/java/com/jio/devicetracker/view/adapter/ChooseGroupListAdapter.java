@@ -72,7 +72,15 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
             holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.home_group));
         }
         holder.groupName.setText(mData.get(position).getGroupName());
-        holder.groupIcon.setOnClickListener(v -> itemListener.groupButtonClicked(homeActivityListData));
+        holder.groupIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemListener.groupButtonClicked(homeActivityListData, mData.get(position).getGroupIcon());
+            }
+        });
+       /* holder.groupIcon.setOnClickListener(v -> {
+            itemListener.groupButtonClicked(homeActivityListData, mData.get(position).getGroupIcon());
+        });*/
 
     }
 
@@ -98,7 +106,7 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
      * Interface to override methods in ChooseGroup Activity to call particular methods on button click
      */
     public interface RecyclerViewClickListener {
-        void groupButtonClicked(HomeActivityListData homeActivityListData);
+        void groupButtonClicked(HomeActivityListData homeActivityListData,String groupIconSelection);
     }
 
     /**

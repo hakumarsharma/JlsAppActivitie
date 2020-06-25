@@ -186,11 +186,22 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         if (mAdapter != null) {
             mAdapter.setOnItemClickPagerListener(new ChooseGroupListAdapter.RecyclerViewClickListener() {
                 @Override
+                public void groupButtonClicked(HomeActivityListData homeActivityListData, String groupIconSelection) {
+                    updateUIInChooseGroupActivity(homeActivityListData);
+                    if(groupIconSelection.equalsIgnoreCase(Constant.GROUP_SELECTED)){
+                        groupId = homeActivityListData.getGroupId();
+                    } else {
+                        groupId = "";
+                    }
+
+                }
+
+               /* @Override
                 public void groupButtonClicked(HomeActivityListData homeActivityListData) {
                     groupId = homeActivityListData.getGroupId();
                     updateUIInChooseGroupActivity(homeActivityListData);
                     //addMemberToCreatedGroup(homeActivityListData.getGroupId());
-                }
+                }*/
             });
         }
     }
