@@ -112,7 +112,7 @@ public class BaseActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else if(DashboardMainActivity.flowFromPeople){
                     addIndividualUserInGroupAPICall();
-                } else if(isFromDevice) {
+                } else if(isFromDevice && !isNavigateToGroupsFragment) {
                     mDbManager.insertInToGroupIconTable(createdGroupId, memberIcon);
                     addIndividualUserInGroupAPICall();
                 }

@@ -259,7 +259,8 @@ public class Constant {
     public static final String CONSENT_PENDING = "Consent Pending";
     public static final String REQUEST_CONSENT = "Request Consent";
     public static final String NUMBER_CARRIER = "number";
-    public static final String GROUP_CHOOSE_CONDITION = "Please select on group";
+    public static final String GROUP_CHOOSE_CONDITION = "Choose any group to continue adding the device to that group or select Add later";
+    public static final String GROUP_CHOOSE_MEMBER_CONDITION = "Choose any group to continue adding member to that group or select Add later";
     public static final String CONSENT_APPROVED_MESSAGE = "Thanks! you have approved the the group invitation request";
     public static final String CONSENT_REJECTED_MESSAGE = "You have rejected the consent.";
     public static final String CONSENT_NOT_APPROVED_MESSAGE = "Consent is not approved please try gain!";

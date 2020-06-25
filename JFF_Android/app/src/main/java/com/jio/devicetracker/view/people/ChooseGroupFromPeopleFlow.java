@@ -188,7 +188,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
                 @Override
                 public void groupButtonClicked(HomeActivityListData homeActivityListData, String groupIconSelection) {
                     updateUIInChooseGroupActivity(homeActivityListData);
-                    if(groupIconSelection.equalsIgnoreCase(Constant.GROUP_SELECTED)){
+                    if(groupIconSelection != null && !groupIconSelection.equalsIgnoreCase(Constant.GROUP_SELECTED)){
                         groupId = homeActivityListData.getGroupId();
                     } else {
                         groupId = "";
@@ -248,12 +248,17 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
     }
 
     private void addMemberToCreatedGroup(String groupId) {
+        if(groupId == null || groupId.isEmpty()) {
+            Util.alertDilogBox(Constant.GROUP_CHOOSE_MEMBER_CONDITION,Constant.ALERT_TITLE,this);
+            return;
+        }
         this.createdGroupId = groupId;
         this.memberName = name;
         this.memberNumber = phoneNumber;
         this.isFromCreateGroup = false;
         this.isGroupMember = false;
-        this.isFromDevice = false;
+        this.isFromDevice = true;
+        this.isNavigateToGroupsFragment = true;
         addMemberInGroupAPICall();
     }
     private void createGroupAndAddContactDetails() {

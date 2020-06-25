@@ -378,7 +378,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void addMemberToCreatedGroup(String groupId) {
-        if(groupId.isEmpty()) {
+        if(groupId == null || groupId.isEmpty()) {
             Util.alertDilogBox(Constant.GROUP_CHOOSE_CONDITION,Constant.ALERT_TITLE,this);
             return;
         }

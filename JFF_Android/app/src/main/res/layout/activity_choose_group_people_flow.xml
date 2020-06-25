@@ -82,13 +82,13 @@
         android:id="@+id/addLater"
         android:layout_width="232dp"
         android:layout_height="36dp"
-        android:textColor="@color/white"
+        android:textColor="@color/lite_blue"
         android:textSize="17dp"
         android:textAllCaps="false"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/twenty_dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/login_selector"
+        android:background="@drawable/button_frame_white"
         android:text="Add later"/>
 
 </RelativeLayout>

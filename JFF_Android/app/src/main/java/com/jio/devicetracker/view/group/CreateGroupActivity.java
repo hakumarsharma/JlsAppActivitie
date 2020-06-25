@@ -158,7 +158,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
                 isGroupMember = false;
                 this.isFromCreateGroup = false;
                 isFromDevice = true;
-
+                isNavigateToGroupsFragment = true;
             } else {
                 this.isFromCreateGroup = true;
             }
