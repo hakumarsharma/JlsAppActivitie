@@ -212,10 +212,10 @@ public class GroupsFragment extends Fragment {
      * Navigates to the Map activity
      */
     private void goToMapActivity(List<MapData> mapDataList) {
-        if (mapDataList.isEmpty()){
+       /* if (mapDataList.isEmpty()){
             showCustomAlertWithText(Constant.ADD_DETAILS_TO_TRACK);
             return;
-        }
+        }*/
         Intent intent = new Intent(getContext(), LocationActivity.class);
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_ID, groupId);
