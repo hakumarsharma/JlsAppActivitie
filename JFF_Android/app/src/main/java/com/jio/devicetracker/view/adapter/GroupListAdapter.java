@@ -118,12 +118,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         }else {
             holder.groupListmemberIcon.setBackgroundResource(R.drawable.ic_family_group);
         }
-        holder.mListlayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemListener.clickonListLayout(data);
-            }
-        });
+        holder.mListlayout.setOnClickListener(v -> itemListener.clickonListLayout(data));
         if (mList != null && !mList.isEmpty() &&  data.getConsentsCount() <= 4){
                 switch (data.getConsentsCount()) {
                 case 1:

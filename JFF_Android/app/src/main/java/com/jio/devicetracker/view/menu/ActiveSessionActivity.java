@@ -382,6 +382,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                 homeActivityListData.setFrom(data.getFrom());
                 homeActivityListData.setTo(data.getTo());
                 homeActivityListData.setConsentsCount(data.getConsentsCount());
+                listOnActiveSession.add(homeActivityListData);
             }
         }
 

@@ -23,7 +23,7 @@
                 android:layout_marginLeft="@dimen/twenty_dp"
                 android:layout_marginTop="10dp"
                 android:layout_centerVertical="true"
-                android:background="@drawable/ic_family_group" />
+                android:background="@drawable/secondaryuser" />
 
             <TextView
                 android:id="@+id/memberName"
@@ -35,15 +35,6 @@
                 android:layout_centerVertical="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/seventeen_dp" />
-
-            <ImageView
-                android:id="@+id/move_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/delete_icon"
-                android:layout_marginRight="@dimen/margin_30"
-                android:src="@drawable/move" />
 
             <ImageView
                 android:id="@+id/delete_icon"

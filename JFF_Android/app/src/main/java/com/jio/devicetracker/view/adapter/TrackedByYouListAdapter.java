@@ -133,7 +133,8 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
                 default:
                     break;
             }
-        }else {
+            holder.numberOfUsers.setText("");
+        }   else {
             holder.icon1.setVisibility(View.VISIBLE);
             holder.icon2.setVisibility(View.VISIBLE);
             holder.icon3.setVisibility(View.VISIBLE);
