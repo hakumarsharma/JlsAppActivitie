@@ -5,12 +5,15 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.fragment.app.FragmentManager;
 
 import com.jio.devicetracker.R;
@@ -68,11 +71,17 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.share_location:
+                String geoUri = null;
+                if(!(mapDataList.size() ==0)) {
+                    geoUri = "http://maps.google.com/maps?q=loc:" + mapDataList.get(0).getLatitude() + "," + mapDataList.get(0).getLongitude();
+                } else {
+                    Toast.makeText(this, "Location is not available", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent shareIntent =   new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT,"Insert Subject here");
-                String app_url = "app url i have to enter here";
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,app_url);
+
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,geoUri);
                 startActivity(Intent.createChooser(shareIntent, "Share via"));
                 break;
 
