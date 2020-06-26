@@ -129,6 +129,7 @@ public class Constant {
     public static final String GROUP_SELECTED = "groupSelected";
     public static final String TRACKEE_NAME = "TrackeeName";
     public static final String TRACKEE_NUMBER = "TrackeeNumber";
+    public static final String CONSENT_STATUS = "no";
     public static final String ADD_DETAILS_TO_TRACK = "Group is empty. Add devices or contacts to this group and track.";
 
 

@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -75,6 +73,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private static Context context = null;
     private List<MapData> mapDataList;
     private String groupStatus;
+    private String consentStatus;
+
+    public MapFragment() {
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,6 +90,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         strAddress = new StringBuilder();
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         groupStatus = getActivity().getIntent().getStringExtra(Constant.GROUP_STATUS);
+        consentStatus = getActivity().getIntent().getStringExtra(Constant.CONSENT_STATUS);
         if (mMap != null) {
             mMap.setInfoWindowAdapter(new MapFragment.MyInfoWindowAdapter(getContext()));
         }
@@ -110,19 +114,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
 
 
-
         return view;
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
     }
+
     /**
      * Call back method to load the map on screen
      * Show the alerts if group is not active or it is completed
+     *
      * @param googleMap
      */
     @Override
@@ -133,7 +138,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             showCustomAlertWithText(Constant.GROUP_NOT_ACTIVE);
         } else if (groupStatus.equalsIgnoreCase(Constant.COMPLETED)) {
             showCustomAlertWithText(Constant.SESSION_COMPLETED);
-        } else if(mapDataList.isEmpty()) {
+        } else if (mapDataList.isEmpty()) {
             showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
         if (mapDataList != null && !mapDataList.isEmpty() && strAddress != null && groupStatus.equalsIgnoreCase(Constant.ACTIVE)) {
@@ -142,7 +147,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 LatLng latLng = new LatLng(mapData.getLatitude(), mapData.getLongitude());
                 markerOptions.position(latLng);
                 markerOptions.title(mapData.getName());
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.kid));
+                if (consentStatus!= null && consentStatus.equalsIgnoreCase(Constant.APPROVED)) {
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.inviteaccepted));
+                } else if (consentStatus!= null && consentStatus.equalsIgnoreCase(Constant.PENDING)){
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pendinginvite));
+                } else {
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.invitetimeup));
+                }
                 markerOptions.snippet(getAddressFromLocation(mapData.getLatitude(), mapData.getLongitude()));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

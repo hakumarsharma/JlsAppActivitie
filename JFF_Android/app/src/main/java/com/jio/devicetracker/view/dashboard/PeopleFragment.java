@@ -72,7 +72,8 @@ public class PeopleFragment extends Fragment {
     private RecyclerView groupListRecyclerView;
     private String memberName;
     private String lat;
-    private  String lan;
+    private String lan;
+    private String consentStatus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,7 +95,7 @@ public class PeopleFragment extends Fragment {
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
@@ -157,6 +158,7 @@ public class PeopleFragment extends Fragment {
             peopleMemberListAdapter.setOnItemClickPagerListener(new PeopleMemberListAdapter.RecyclerViewClickListener() {
                 @Override
                 public void clickOnListLayout(HomeActivityListData homeActivityListData) {
+                    consentStatus = homeActivityListData.getConsentStaus();
                     groupStatus = homeActivityListData.getStatus();
                     groupId = homeActivityListData.getGroupId();
                     memberName = homeActivityListData.getGroupName();
@@ -253,7 +255,8 @@ public class PeopleFragment extends Fragment {
         Intent intent = new Intent(getContext(), ShareLocationActivity.class);
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_STATUS, groupStatus);
-        intent.putExtra(Constant.MEMBER_NAME,memberName);
+        intent.putExtra(Constant.MEMBER_NAME, memberName);
+        intent.putExtra(Constant.CONSENT_STATUS, consentStatus);
         startActivity(intent);
     }
 
@@ -280,7 +283,7 @@ public class PeopleFragment extends Fragment {
                 homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                 homeActivityListData.setFrom(data.getSession().getFrom());
                 homeActivityListData.setTo(data.getSession().getTo());
-                if(!(data.getGroupOwner().size() ==0)) {
+                if (!(data.getGroupOwner().size() == 0)) {
                     homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
                     homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
                     homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());

@@ -65,11 +65,12 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
     }
+
     /**
      * Binds the given View to the position
      *
@@ -90,7 +91,6 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
      */
     public interface RecyclerViewClickListener {
         void clickOnListLayout(HomeActivityListData homeActivityListData);
-
     }
 
     /**
@@ -105,15 +105,15 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         HomeActivityListData data = mList.get(position);
         holder.memberName.setTypeface(Util.mTypeface(mContext, 5));
         holder.memberName.setText(data.getGroupName());
-        if (data.getConsentStaus().equals(Constant.PENDING)){
-           holder.memberIcon.setImageResource(R.drawable.pendinginvite);
-        }else if (data.getConsentStaus().equals(Constant.APPROVED)){
+        if (data.getConsentStaus().equals(Constant.PENDING)) {
+            holder.memberIcon.setImageResource(R.drawable.pendinginvite);
+        } else if (data.getConsentStaus().equals(Constant.APPROVED)) {
             holder.memberIcon.setImageResource(R.drawable.inviteaccepted);
-        }else {
+        } else {
             holder.memberIcon.setImageResource(R.drawable.invitetimeup);
         }
 
-        holder.timeLeft.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(),data.getTo()));
+        holder.timeLeft.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(), data.getTo()));
         holder.peopleList.setOnClickListener(v -> {
             itemListener.clickOnListLayout(data);
             return;
@@ -194,11 +194,11 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     makeDeleteGroupAPICall(mList.get(position).getGroupId());
                     break;
                 case R.id.editIndividualMember:
-                    peopleEditFlag= true;
+                    peopleEditFlag = true;
                     Intent intent = new Intent(mContext, EditMemberDetailsActivity.class);
                     intent.putExtra(Constant.GROUP_ID, mList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(Constant.GROUPNAME,mList.get(getAdapterPosition()).getGroupName());
-                    intent.putExtra(Constant.CONSENT_ID,mList.get(getAdapterPosition()).getConsentId());
+                    intent.putExtra(Constant.GROUPNAME, mList.get(getAdapterPosition()).getGroupName());
+                    intent.putExtra(Constant.CONSENT_ID, mList.get(getAdapterPosition()).getConsentId());
                     mContext.startActivity(intent);
 
             }
