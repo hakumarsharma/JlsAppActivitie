@@ -104,24 +104,35 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             holder.profile.setImageResource(R.drawable.ic_family_group);
             holder.name.setText(data.getGroupName());
         }
-        if (mList != null && !mList.isEmpty() && mList.toArray().length <= 4){
-            switch (position) {
-                case 0:
-                    holder.motherIcon.setVisibility(View.VISIBLE);
-                    break;
+        if (mList != null && !mList.isEmpty() &&  data.getConsentsCount() <= 4) {
+            switch (data.getConsentsCount()) {
                 case 1:
-                    holder.fatherIcon.setVisibility(View.VISIBLE);
+                    holder.icon1.setVisibility(View.VISIBLE);
+                    holder.icon2.setVisibility(View.INVISIBLE);
+                    holder.icon3.setVisibility(View.INVISIBLE);
+                    holder.icon4.setVisibility(View.INVISIBLE);
                     break;
                 case 2:
-                    holder.kidIcon.setVisibility(View.VISIBLE);
+                    holder.icon1.setVisibility(View.VISIBLE);
+                    holder.icon2.setVisibility(View.VISIBLE);
+                    holder.icon3.setVisibility(View.INVISIBLE);
+                    holder.icon4.setVisibility(View.INVISIBLE);
                     break;
                 case 3:
-                    holder.dogIcon.setVisibility(View.VISIBLE);
+                    holder.icon1.setVisibility(View.VISIBLE);
+                    holder.icon2.setVisibility(View.VISIBLE);
+                    holder.icon3.setVisibility(View.VISIBLE);
+                    holder.icon4.setVisibility(View.INVISIBLE);
+                    break;
+                case 4:
+                    holder.icon1.setVisibility(View.VISIBLE);
+                    holder.icon2.setVisibility(View.VISIBLE);
+                    holder.icon3.setVisibility(View.VISIBLE);
+                    holder.icon4.setVisibility(View.VISIBLE);
                     break;
                 default:
                     break;
             }
-            holder.numberOfUsers.setText("");
         }else {
             holder.numberOfUsers.setText("+ "+ (mList.toArray().length - 4));
         }
@@ -142,10 +153,10 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView name;
-        public ImageView motherIcon;
-        public ImageView fatherIcon;
-        public ImageView dogIcon;
-        public ImageView kidIcon;
+        public ImageView icon1;
+        public ImageView icon2;
+        public ImageView icon3;
+        public ImageView icon4;
         public ImageView profile;
         public RelativeLayout trackedByYouOprationLayout;
         public ImageView trackedByYouOperationStatus;
@@ -168,10 +179,10 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             trackedByYouClose.setOnClickListener(this);
             trackedByYouOperationStatus = itemView.findViewById(R.id.trackedByYouOperationStatus);
             trackedByYouOperationStatus.setOnClickListener(this);
-            motherIcon = itemView.findViewById(R.id.session_motherIcon);
-            fatherIcon = itemView.findViewById(R.id.session_fatherIcon);
-            kidIcon = itemView.findViewById(R.id.session_kidIcon);
-            dogIcon = itemView.findViewById(R.id.session_dogIcon);
+            icon1 = itemView.findViewById(R.id.session_motherIcon);
+            icon2 = itemView.findViewById(R.id.session_fatherIcon);
+            icon3 = itemView.findViewById(R.id.session_kidIcon);
+            icon4 = itemView.findViewById(R.id.session_dogIcon);
             numberOfUsers = itemView.findViewById(R.id.session_numberOfUsers);
             trackedByYouEdit = itemView.findViewById(R.id.trackedByYouEdit);
             trackedByYouEdit.setOnClickListener(this);

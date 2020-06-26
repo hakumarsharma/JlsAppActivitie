@@ -539,6 +539,7 @@ public class DBManager {
             contentValue.put(DatabaseHelper.GROUP_OWNER_NAME, data.getGroupOwnerName());
             contentValue.put(DatabaseHelper.GROUP_OWNER_PHONE_NUMBER, data.getGroupOwnerPhoneNumber());
             contentValue.put(DatabaseHelper.GROUP_OWNER_USER_ID, data.getGroupOwnerUserId());
+            contentValue.put(DatabaseHelper.CONSENTS_COUNT,data.getConsentsCount());
             if (data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                 contentValue.put(DatabaseHelper.PROFILE_IMAGE, R.drawable.ic_user);
             } else {
@@ -586,7 +587,7 @@ public class DBManager {
         List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
         String[] column = {DatabaseHelper.GROUPID, DatabaseHelper.GROUP_NAME, DatabaseHelper.STATUS, DatabaseHelper.CREATED_BY, DatabaseHelper.UPDATED_BY, DatabaseHelper.PROFILE_IMAGE,
-                DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO, DatabaseHelper.GROUP_OWNER_NAME, DatabaseHelper.GROUP_OWNER_USER_ID, DatabaseHelper.GROUP_OWNER_PHONE_NUMBER};
+                DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO, DatabaseHelper.GROUP_OWNER_NAME, DatabaseHelper.GROUP_OWNER_USER_ID, DatabaseHelper.GROUP_OWNER_PHONE_NUMBER,DatabaseHelper.CONSENTS_COUNT};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP, column, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -603,6 +604,7 @@ public class DBManager {
                     data.setGroupOwnerName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_OWNER_NAME)));
                     data.setGroupOwnerPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_OWNER_PHONE_NUMBER)));
                     data.setGroupOwnerUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_OWNER_USER_ID)));
+                    data.setConsentsCount(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CONSENTS_COUNT)));
                     mlist.add(data);
                 }
             }

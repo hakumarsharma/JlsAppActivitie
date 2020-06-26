@@ -46,14 +46,17 @@ import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.database.pojo.SearchEventData;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
+import com.jio.devicetracker.database.pojo.request.GetGroupMemberRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
+import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.GroupListAdapter;
+import com.jio.devicetracker.view.group.GroupListActivity;
 import com.jio.devicetracker.view.location.LocationActivity;
 
 import java.util.ArrayList;
@@ -240,11 +243,31 @@ public class GroupsFragment extends Fragment {
                     homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                     homeActivityListData.setFrom(data.getSession().getFrom());
                     homeActivityListData.setTo(data.getSession().getTo());
+                    for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
+                        if ((consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                            homeActivityListData.setConsentsCount(data.getConsents().toArray().length);
+                        }
+                    }
                     if(!(data.getGroupOwner().size()==0)) {
                         homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
                         homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
                         homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
                     }
+//                    List<GroupMemberDataList> groupMemberList = new ArrayList<>();
+//                    for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
+//                        if ((consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+//                            GroupMemberDataList groupDataList = new GroupMemberDataList();
+//                            groupDataList.setName(consentData.getName());
+//                            groupDataList.setNumber(consentData.getPhone());
+//                            groupDataList.setConsentStatus(consentData.getStatus().substring(0, 1).toUpperCase() + consentData.getStatus().substring(1));
+//                            groupDataList.setConsentId(consentData.getConsentId());
+//                            groupMemberList.add(groupDataList);
+//                        }
+//                    }
+//                    if (groupMemberList != null & !groupMemberList.isEmpty()) {
+//                        homeActivityListData.setConsentApprovalTime(groupDetailList.toArray().length);
+//                        homeActivityListData.setListOfConsent(groupMemberList);
+//                    }
                     groupList.add(homeActivityListData);
                 }
             }
@@ -271,6 +294,7 @@ public class GroupsFragment extends Fragment {
                     homeActivityListData.setProfileImage(data.getProfileImage());
                     homeActivityListData.setFrom(data.getFrom());
                     homeActivityListData.setTo(data.getTo());
+                    homeActivityListData.setConsentsCount(data.getConsentsCount());
                     for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
                         if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
                             homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());

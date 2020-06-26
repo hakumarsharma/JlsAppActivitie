@@ -76,10 +76,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private List<MapData> mapDataList;
     private String groupStatus;
 
-    public MapFragment(){
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

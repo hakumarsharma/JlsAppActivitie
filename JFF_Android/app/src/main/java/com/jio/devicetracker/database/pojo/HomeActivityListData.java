@@ -55,6 +55,8 @@ public class HomeActivityListData {
     private String groupOwnerPhoneNumber;
     private String groupIcon;
     private String userId;
+    private List<GroupMemberDataList> consentsList;
+    private int consentsCount;
 
     public String getUserId() {
         return userId;
@@ -269,4 +271,19 @@ public class HomeActivityListData {
         return groupIcon;
     }
 
+    public void setListOfConsent(List<GroupMemberDataList> consentsList) {
+        this.consentsList = consentsList;
+    }
+
+    public List<GroupMemberDataList> getListOfConsents() {
+        return consentsList;
+    }
+
+    public int getConsentsCount() {
+        return consentsCount;
+    }
+
+    public void setConsentsCount(int consentsCount) {
+        this.consentsCount = consentsCount;
+    }
 }

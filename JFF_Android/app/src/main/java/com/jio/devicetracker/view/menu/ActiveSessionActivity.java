@@ -381,7 +381,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                 homeActivityListData.setProfileImage(R.drawable.ic_group_button);
                 homeActivityListData.setFrom(data.getFrom());
                 homeActivityListData.setTo(data.getTo());
-                listOnActiveSession.add(homeActivityListData);
+                homeActivityListData.setConsentsCount(data.getConsentsCount());
             }
         }
 
@@ -411,7 +411,6 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)
                     && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXITED)
-                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXPIRED)
                     && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());
