@@ -109,7 +109,7 @@
             android:background="@color/light_hash" />
 
         <TextView
-            android:id="@+id/addtoGroup"
+            android:id="@+id/addPeopleToGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editLineIndividualUser"
@@ -123,28 +123,7 @@
             android:id="@+id/addtoGroupLine"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/addtoGroup"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:layout_marginRight="@dimen/fourteen_dp"
-            android:background="@color/light_hash" />
-
-        <TextView
-            android:id="@+id/stopTracking"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/addtoGroupLine"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:text="Stop tracking"
-            android:textColor="@color/white"
-            android:textSize="@dimen/seventeen_dp" />
-
-        <View
-            android:id="@+id/stopTrackingLine"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/stopTracking"
+            android:layout_below="@+id/addPeopleToGroup"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/ten_dp"
             android:layout_marginRight="@dimen/fourteen_dp"
@@ -154,7 +133,7 @@
             android:id="@+id/resendInvite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/stopTrackingLine"
+            android:layout_below="@+id/addtoGroupLine"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/ten_dp"
             android:text="Resend invite"

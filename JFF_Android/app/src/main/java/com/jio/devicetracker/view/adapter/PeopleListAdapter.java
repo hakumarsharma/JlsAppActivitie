@@ -218,6 +218,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     break;
                 case R.id.edit:
                     Intent intent = new Intent(mContext, EditMemberDetailsActivity.class);
+                    intent.putExtra("isFromMap",true);
                     intent.putExtra(Constant.GROUP_ID, mList.get(getAdapterPosition()).getGroupId());
                     intent.putExtra(Constant.GROUPNAME, mList.get(getAdapterPosition()).getName());
                     intent.putExtra(Constant.CONSENT_ID, mList.get(getAdapterPosition()).getConsentId());

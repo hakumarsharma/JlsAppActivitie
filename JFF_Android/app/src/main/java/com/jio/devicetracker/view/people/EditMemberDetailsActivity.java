@@ -30,6 +30,7 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
     private String consentId;
     private EditText userName;
     private DBManager mDbmanager;
+    private boolean isFromMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         Intent intent = getIntent();
         userName = findViewById(R.id.editUserName);
         consentId = intent.getStringExtra(Constant.CONSENT_ID);
+        isFromMap = intent.getBooleanExtra("isFromMap",false);
         userName.setText(intent.getStringExtra(Constant.GROUPNAME));
         Button updateBtn = findViewById(R.id.updateName);
         updateBtn.setOnClickListener(this);
@@ -85,7 +87,7 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
             Util.progressDialog.dismiss();
             Log.d("respone","Checking response value"+response);
             Intent intent = new Intent(EditMemberDetailsActivity.this, DashboardMainActivity.class);
-            if(PeopleMemberListAdapter.peopleEditFlag){
+            if(PeopleMemberListAdapter.peopleEditFlag && !isFromMap){
                 intent.putExtra(Constant.Add_People, true);
             } else {
                 intent.putExtra(Constant.Add_People, false);

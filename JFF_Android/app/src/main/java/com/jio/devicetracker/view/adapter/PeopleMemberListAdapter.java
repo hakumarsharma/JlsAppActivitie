@@ -44,6 +44,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.PeopleFragment;
+import com.jio.devicetracker.view.people.ChooseGroupFromPeopleFlow;
 import com.jio.devicetracker.view.people.EditMemberDetailsActivity;
 
 import java.util.List;
@@ -154,6 +155,8 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         private ImageView closeOperation;
         private TextView deleteIndividualUser;
         private TextView editPeopleProfile;
+        private TextView addToGroup;
+        private TextView resendInvite;
 
         /**
          * Constructor where we find element from .xml file
@@ -176,6 +179,8 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
             deleteIndividualUser.setOnClickListener(this);
             editPeopleProfile = itemView.findViewById(R.id.editIndividualMember);
             editPeopleProfile.setOnClickListener(this);
+            addToGroup = itemView.findViewById(R.id.addPeopleToGroup);
+            addToGroup.setOnClickListener(this);
             PeopleMemberListAdapter.this.individualMemberOperationLayout = individualMemberOperationLayout;
         }
 
@@ -187,6 +192,12 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     break;
                 case R.id.closeOperation:
                     individualMemberOperationLayout.setVisibility(View.GONE);
+                    break;
+                case R.id.addPeopleToGroup:
+                    Intent chooseGroupIntent = new Intent(mContext, ChooseGroupFromPeopleFlow.class);
+                    chooseGroupIntent.putExtra(Constant.TRACKEE_NAME, mList.get(getAdapterPosition()).getGroupName());
+                    chooseGroupIntent.putExtra(Constant.TRACKEE_NUMBER,mList.get(getAdapterPosition()).getPhoneNumber());
+                    mContext.startActivity(chooseGroupIntent);
                     break;
                 case R.id.deleteIndividualUser:
                     position = getAdapterPosition();

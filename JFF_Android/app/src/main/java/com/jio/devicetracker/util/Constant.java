@@ -357,7 +357,7 @@ public class Constant {
     public static final String Choose_Group = "Choose group";
     public static final String CREATE_GROUP = "Create group";
     public static final String ENTER_NAME = "Please enter contact name";
-    public static final String ADD_GROUP = "Add";
+    public static final String ADD_GROUP = "Add to group";
     public static final String DEVICE_NOT_FOUND_QR = "Device not found";
     public static final String MEMBER_NAME = "memberName";
     public static final String LAT = "lat";
