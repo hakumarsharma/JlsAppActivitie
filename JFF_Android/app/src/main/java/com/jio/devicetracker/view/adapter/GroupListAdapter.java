@@ -149,7 +149,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                     break;
             }
             holder.numberOfUsers.setText("");
-        }else {
+        } else {
             holder.icon1.setVisibility(View.VISIBLE);
             holder.icon2.setVisibility(View.VISIBLE);
             holder.icon3.setVisibility(View.VISIBLE);

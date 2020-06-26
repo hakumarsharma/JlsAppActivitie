@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -77,6 +75,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     private static PeopleListAdapter.RecyclerViewClickListener itemListener;
     private DBManager mDbManager;
     private View itemView;
+    private RelativeLayout layoutOps;
 
     public PeopleListAdapter(List<GroupMemberDataList> mList, Context mContext) {
         this.mList = mList;
@@ -85,7 +84,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
@@ -125,27 +124,28 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         holder.memberName.setTypeface(Util.mTypeface(mContext, 5));
         holder.memberName.setText(data.getName());
         holder.memberAddress.setTypeface(Util.mTypeface(mContext, 3));
-        if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)){
+        if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)) {
             holder.memberStatus.setText(Constant.CONSENT_PENDING);
             holder.memberAddress.setText(Constant.CONSENT_PENDING_ADDRESS);
             holder.memberIcon.setImageResource(R.drawable.pendinginvite);
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.pending_color));
-        }else if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED)){
+        } else if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED)) {
             holder.memberStatus.setText(Constant.CONSENT_APPROVED_STATUS);
             holder.memberIcon.setImageResource(R.drawable.inviteaccepted);
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.approved_color));
-            if(data.getAddress() != null && data.getAddress().length() > 0){
+            if (data.getAddress() != null && data.getAddress().length() > 0) {
                 holder.memberAddress.setText(data.getAddress());
-            }else {
+            } else {
                 holder.memberAddress.setText(Constant.CONSENT_APPROVED_ADDRESS);
             }
-        }else {
+        } else {
             holder.memberStatus.setText(Constant.CONSENT_Expired);
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.rejected_color));
             holder.memberAddress.setText(Constant.CONSENT_EXPIRED_ADDRESS);
             holder.memberIcon.setImageResource(R.drawable.invitetimeup);
         }
     }
+
     /**
      * Register the listener
      *
@@ -180,7 +180,8 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         private TextView removeFromGroupText;
         private TextView shareInvite;
         public RelativeLayout layoutOps;
-        public  CardView peoplAddressLayout;
+        public CardView peoplAddressLayout;
+
         /**
          * Constructor where we find element from .xml file
          *
@@ -208,7 +209,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            switch(v.getId()){
+            switch (v.getId()) {
                 case R.id.close:
                     layoutOps.setVisibility(View.GONE);
                     break;
@@ -218,16 +219,17 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                 case R.id.edit:
                     Intent intent = new Intent(mContext, EditMemberDetailsActivity.class);
                     intent.putExtra(Constant.GROUP_ID, mList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(Constant.GROUPNAME,mList.get(getAdapterPosition()).getName());
-                    intent.putExtra(Constant.CONSENT_ID,mList.get(getAdapterPosition()).getConsentId());
+                    intent.putExtra(Constant.GROUPNAME, mList.get(getAdapterPosition()).getName());
+                    intent.putExtra(Constant.CONSENT_ID, mList.get(getAdapterPosition()).getConsentId());
                     mContext.startActivity(intent);
                     break;
                 case R.id.remove_from_group:
-                    makeRemoveAPICall(mList.get(getAdapterPosition()),getAdapterPosition(),true);
+                    PeopleListAdapter.this.layoutOps = layoutOps;
+                    makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition(), true);
                     break;
                 case R.id.share_invite:
-                    makeRemoveAPICall(mList.get(getAdapterPosition()),getAdapterPosition(),false);
                     layoutOps.setVisibility(View.GONE);
+                    makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition(), false);
                     break;
 
             }
@@ -241,7 +243,8 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
      *
      * @param groupMemberDataList
      */
-    private void makeRemoveAPICall(GroupMemberDataList groupMemberDataList,int position,boolean isRemoveFromGroup) {
+    private void makeRemoveAPICall(GroupMemberDataList groupMemberDataList, int position, boolean isRemoveFromGroup) {
+        layoutOps.setVisibility(View.GONE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -264,7 +267,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     Toast.makeText(mContext, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mDbManager.deleteSelectedDataFromGroupMember(groupMemberDataList.getConsentId());
                     removeItem(position);
-                    if(!isRemoveFromGroup){
+                    if (!isRemoveFromGroup) {
                         addMemberInGroupAPICall(groupMemberDataList);
                     }
                 } else {
@@ -310,15 +313,15 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 showCustomAlertWithText(Constant.INVITE_SENT);
                 for (GroupMemberResponse.Data data : groupMemberResponse.getData()) {
-                        GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
-                        groupMemberDataList.setConsentId(data.getConsentId());
-                        groupMemberDataList.setNumber(data.getPhone());
-                        groupMemberDataList.setGroupAdmin(data.isGroupAdmin());
-                        groupMemberDataList.setGroupId(data.getGroupId());
-                        groupMemberDataList.setConsentStatus(data.getStatus());
-                        groupMemberDataList.setName(data.getName());
-                        groupMemberDataList.setUserId(data.getUserId());
-                        mList.add(groupMemberDataList);
+                    GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+                    groupMemberDataList.setConsentId(data.getConsentId());
+                    groupMemberDataList.setNumber(data.getPhone());
+                    groupMemberDataList.setGroupAdmin(data.isGroupAdmin());
+                    groupMemberDataList.setGroupId(data.getGroupId());
+                    groupMemberDataList.setConsentStatus(data.getStatus());
+                    groupMemberDataList.setName(data.getName());
+                    groupMemberDataList.setUserId(data.getUserId());
+                    mList.add(groupMemberDataList);
                 }
                 notifyDataSetChanged();
             }

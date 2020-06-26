@@ -162,6 +162,7 @@ public class Constant {
     public static final String OTP_TEXTVIEW = "Please enter the OTP sent to \n your mobile no. ";
     public static final String LOGIN_WITHOUT_DOT = "Login\n";
     public static final String SIGNUP_WITHOUT_DOT = "Sign up\n";
+    public static final String EDIT_MEMBER = "Edit member";
     public static final String SUCCESS = "success";
 
 

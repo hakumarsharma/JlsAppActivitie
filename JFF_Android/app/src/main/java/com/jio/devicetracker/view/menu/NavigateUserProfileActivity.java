@@ -155,7 +155,8 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         for (HomeActivityListData data : groupDetailList) {
             if (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
                     && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
-                    && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)) {
+                    && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)
+                    && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
                 HomeActivityListData homeActivityListData = new HomeActivityListData();
                 homeActivityListData.setGroupName(data.getGroupName());
                 homeActivityListData.setGroupId(data.getGroupId());

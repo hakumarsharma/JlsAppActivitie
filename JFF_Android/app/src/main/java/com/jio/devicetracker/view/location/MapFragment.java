@@ -147,13 +147,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 LatLng latLng = new LatLng(mapData.getLatitude(), mapData.getLongitude());
                 markerOptions.position(latLng);
                 markerOptions.title(mapData.getName());
-                if (consentStatus!= null && consentStatus.equalsIgnoreCase(Constant.APPROVED)) {
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.inviteaccepted));
-                } else if (consentStatus!= null && consentStatus.equalsIgnoreCase(Constant.PENDING)){
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pendinginvite));
-                } else {
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.invitetimeup));
-                }
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.secondaryuser));
                 markerOptions.snippet(getAddressFromLocation(mapData.getLatitude(), mapData.getLongitude()));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

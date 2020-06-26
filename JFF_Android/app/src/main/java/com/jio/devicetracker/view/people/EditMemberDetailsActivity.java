@@ -8,20 +8,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.EditMemberDetailsData;
-import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
 import com.jio.devicetracker.database.pojo.request.EditMemberDetailsRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 
@@ -35,6 +35,10 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_member_details);
+        Toolbar toolbar = findViewById(R.id.editMemberDetailsToolbar);
+        TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setTypeface(Util.mTypeface(this, 5));
+        toolbarTitle.setText(Constant.EDIT_MEMBER);
         Intent intent = getIntent();
         userName = findViewById(R.id.editUserName);
         consentId = intent.getStringExtra(Constant.CONSENT_ID);
