@@ -134,7 +134,11 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
                     break;
             }
         }else {
-            holder.numberOfUsers.setText("+ "+ (mList.toArray().length - 4));
+            holder.icon1.setVisibility(View.VISIBLE);
+            holder.icon2.setVisibility(View.VISIBLE);
+            holder.icon3.setVisibility(View.VISIBLE);
+            holder.icon4.setVisibility(View.VISIBLE);
+            holder.numberOfUsers.setText("+ "+ (data.getConsentsCount() - 4) + " invited");
         }
     }
 
