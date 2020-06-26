@@ -243,9 +243,11 @@ public class GroupsFragment extends Fragment {
                     homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                     homeActivityListData.setFrom(data.getSession().getFrom());
                     homeActivityListData.setTo(data.getSession().getTo());
+                    int count = 0;
                     for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
                         if ((consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
-                            homeActivityListData.setConsentsCount(data.getConsents().toArray().length);
+                            count = count + 1;
+                            homeActivityListData.setConsentsCount(count);
                         }
                     }
                     if(!(data.getGroupOwner().size()==0)) {
