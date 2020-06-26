@@ -338,8 +338,8 @@ public class Constant {
     public static final String UPDATED_BY = "updatedBy";
     public static final String EVENTS = "events";
     public static final String ONE_TO_ONE = "one_to_one";
-    public static final String INDIVIDUAL_USER_GROUP_NAME = "Individual+People Tracker";
-    public static final String INDIVIDUAL_DEVICE_GROUP_NAME = "Individual+Device Tracker";
+    public static final String INDIVIDUAL_USER_GROUP_NAME = "IndPeplTrac";
+    public static final String INDIVIDUAL_DEVICE_GROUP_NAME = "IndDevTrac";
     public static final String IS_COMING_FROM_ADD_DEVICE = "isComingFromAddDevice";
     public static final String IS_COMING_FROM_ADD_CONTACT = "isComingFromAddContact";
     public static final String IS_COMING_FROM_GROUP_LIST = "isComingFromGroupList";
