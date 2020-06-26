@@ -20,6 +20,7 @@
 package com.jio.devicetracker.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.PeopleFragment;
+import com.jio.devicetracker.view.people.EditMemberDetailsActivity;
 
 import java.util.List;
 
@@ -53,6 +55,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
     private DBManager mDbManager;
     private String groupId;
     private int position;
+    public static boolean peopleEditFlag;
     private RelativeLayout individualMemberOperationLayout;
 
     public PeopleMemberListAdapter(List<HomeActivityListData> mList, Context mContext) {
@@ -150,6 +153,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         private RelativeLayout individualMemberOperationLayout;
         private ImageView closeOperation;
         private TextView deleteIndividualUser;
+        private TextView editPeopleProfile;
 
         /**
          * Constructor where we find element from .xml file
@@ -170,6 +174,8 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
             closeOperation.setOnClickListener(this);
             deleteIndividualUser = itemView.findViewById(R.id.deleteIndividualUser);
             deleteIndividualUser.setOnClickListener(this);
+            editPeopleProfile = itemView.findViewById(R.id.editIndividualMember);
+            editPeopleProfile.setOnClickListener(this);
             PeopleMemberListAdapter.this.individualMemberOperationLayout = individualMemberOperationLayout;
         }
 
@@ -187,6 +193,14 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     PeopleMemberListAdapter.this.individualMemberOperationLayout = individualMemberOperationLayout;
                     makeDeleteGroupAPICall(mList.get(position).getGroupId());
                     break;
+                case R.id.editIndividualMember:
+                    peopleEditFlag= true;
+                    Intent intent = new Intent(mContext, EditMemberDetailsActivity.class);
+                    intent.putExtra(Constant.GROUP_ID, mList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(Constant.GROUPNAME,mList.get(getAdapterPosition()).getGroupName());
+                    intent.putExtra(Constant.CONSENT_ID,mList.get(getAdapterPosition()).getConsentId());
+                    mContext.startActivity(intent);
+
             }
         }
     }

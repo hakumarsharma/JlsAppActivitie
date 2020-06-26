@@ -22,6 +22,7 @@ import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
+import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 
 public class EditMemberDetailsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -80,8 +81,12 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
             Util.progressDialog.dismiss();
             Log.d("respone","Checking response value"+response);
             Intent intent = new Intent(EditMemberDetailsActivity.this, DashboardMainActivity.class);
-            intent.putExtra(Constant.Add_People,false);
-            intent.putExtra(Constant.Add_Device,false);
+            if(PeopleMemberListAdapter.peopleEditFlag){
+                intent.putExtra(Constant.Add_People, true);
+            } else {
+                intent.putExtra(Constant.Add_People, false);
+                intent.putExtra(Constant.Add_Device, false);
+            }
             startActivity(intent);
         }
     }
