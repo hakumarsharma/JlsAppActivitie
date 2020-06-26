@@ -76,6 +76,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     private Context mContext;
     private static PeopleListAdapter.RecyclerViewClickListener itemListener;
     private DBManager mDbManager;
+    private View itemView;
 
     public PeopleListAdapter(List<GroupMemberDataList> mList, Context mContext) {
         this.mList = mList;
@@ -100,7 +101,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     @NonNull
     @Override
     public PeopleListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_people_list_adapter, parent, false);
+        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_people_list_adapter, parent, false);
         return new PeopleListAdapter.ViewHolder(itemView);
     }
 
@@ -124,9 +125,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         holder.memberName.setTypeface(Util.mTypeface(mContext, 5));
         holder.memberName.setText(data.getName());
         holder.memberAddress.setTypeface(Util.mTypeface(mContext, 3));
-        holder.peoplAddressLayout.setOnClickListener(new View.OnClickListener()  {
-            public void onClick(View v){itemListener.clickonListLayout(data);}
-        });
         if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)){
             holder.memberStatus.setText(Constant.CONSENT_PENDING);
             holder.memberAddress.setText(Constant.CONSENT_PENDING_ADDRESS);
@@ -181,7 +179,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         private TextView editText;
         private TextView removeFromGroupText;
         private TextView shareInvite;
-        private RelativeLayout layoutOps;
+        public RelativeLayout layoutOps;
         public  CardView peoplAddressLayout;
         /**
          * Constructor where we find element from .xml file
@@ -227,6 +225,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     break;
                 case R.id.share_invite:
                     makeRemoveAPICall(mList.get(getAdapterPosition()),getAdapterPosition(),false);
+                    layoutOps.setVisibility(View.GONE);
                     break;
 
             }
