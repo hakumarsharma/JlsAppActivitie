@@ -181,7 +181,7 @@ public class GroupsFragment extends Fragment {
                 List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
                 for (SearchEventResponse.Data data : mList) {
                     for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
-                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId()) && (grpMembers.getConsentStatus().equals(Constant.CONSET_STATUS_APPROVED) || grpMembers.getConsentStatus().equals(Constant.CONSET_STATUS_PENDING) || grpMembers.getConsentStatus().equals(Constant.CONSET_STATUS_EXPIRED))) {
+                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId()) && (grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
                             MapData mapData = new MapData();
                             mapData.setLatitude(data.getLocation().getLat());
                             mapData.setLongitude(data.getLocation().getLng());

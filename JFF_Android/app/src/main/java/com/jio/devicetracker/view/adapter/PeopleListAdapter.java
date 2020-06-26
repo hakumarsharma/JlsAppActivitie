@@ -57,6 +57,8 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.EditMemberActivity;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
+import com.jio.devicetracker.view.device.AddDeviceActivity;
+import com.jio.devicetracker.view.people.EditMemberDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,12 +127,12 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         holder.peoplAddressLayout.setOnClickListener(new View.OnClickListener()  {
             public void onClick(View v){itemListener.clickonListLayout(data);}
         });
-        if (data.getConsentStatus().equals(Constant.CONSET_STATUS_PENDING)){
+        if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)){
             holder.memberStatus.setText(Constant.CONSENT_PENDING);
             holder.memberAddress.setText(Constant.CONSENT_PENDING_ADDRESS);
             holder.memberIcon.setImageResource(R.drawable.pendinginvite);
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.pending_color));
-        }else if (data.getConsentStatus().equals(Constant.CONSET_STATUS_APPROVED)){
+        }else if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED)){
             holder.memberStatus.setText(Constant.CONSENT_APPROVED_STATUS);
             holder.memberIcon.setImageResource(R.drawable.inviteaccepted);
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.approved_color));
@@ -216,6 +218,9 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     layoutOps.setVisibility(View.VISIBLE);
                     break;
                 case R.id.edit:
+                    Intent intent = new Intent(mContext, EditMemberDetailsActivity.class);
+                    intent.putExtra(Constant.GROUP_ID, mList.get(getAdapterPosition()).getGroupId());
+                    mContext.startActivity(intent);
                     break;
                 case R.id.remove_from_group:
                     makeRemoveAPICall(mList.get(getAdapterPosition()),getAdapterPosition(),true);
