@@ -68,7 +68,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
@@ -97,7 +97,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HomeActivityListData data = mList.get(position);
-        if(data.getConsentId() != null) {
+        if (data.getConsentId() != null) {
             holder.name.setText(data.getName());
             holder.profile.setImageResource(R.drawable.mother);
         } else {
@@ -160,6 +160,9 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.trackedByYouOperationStatus:
+                    if (mList.get(getAdapterPosition()).getConsentStaus() != null) {
+                        deleteAllMembers.setText("Delete member");
+                    }
                     trackedByYouOprationLayout.setVisibility(View.VISIBLE);
                     break;
                 case R.id.trackedByYouClose:
