@@ -50,6 +50,32 @@
                 android:textColor="@color/mine_shaft"
                 android:textSize="@dimen/fourteen_dp" />
 
+            <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/default_tracked_text_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_below="@+id/tracked_title"
+                android:layout_marginTop="60dp"
+                android:orientation="horizontal"
+                android:padding="18dp"
+                android:visibility="invisible"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="8dp"
+                tools:context=".view.DashboardActivity">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tracked_by_default_text"
+                android:id="@+id/tracked_default_text"
+                android:textSize="18dp"
+                android:textAlignment="center"
+                android:padding="10dp"
+                />
+            </androidx.cardview.widget.CardView>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/trackingByYouList"
                 android:layout_width="match_parent"
@@ -69,6 +95,32 @@
                 android:textColor="@color/mine_shaft"
                 android:textSize="@dimen/fourteen_dp" />
 
+            <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/default_tracking_text_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_below="@+id/tracking_title"
+                android:orientation="horizontal"
+                android:padding="18dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="5dp"
+                android:visibility="invisible"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="8dp"
+                tools:context=".view.DashboardActivity">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tracking_by_default_text"
+                android:id="@+id/tracking_default_text"
+                android:textSize="18dp"
+                android:textAlignment="center"
+                android:padding="10dp"
+                />
+            </androidx.cardview.widget.CardView>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/trackingYouList"
                 android:layout_width="match_parent"

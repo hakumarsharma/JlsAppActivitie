@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -86,7 +87,10 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
     private boolean isGroup;
     private TextView trackedTitle;
     private TextView trackingTitle;
-
+    private TextView trackedDefaultText;
+    private TextView trackingDefaultText;
+    private CardView trackedCardInstruction;
+    private CardView trackingCardInstruction;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +104,12 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         trackingTitle = findViewById(R.id.tracking_title);
         trackedTitle.setTypeface(Util.mTypeface(this, 3));
         trackingTitle.setTypeface(Util.mTypeface(this, 3));
+        trackedDefaultText = findViewById(R.id.tracked_default_text);
+        trackedDefaultText.setTypeface(Util.mTypeface(this, 5));
+        trackingDefaultText = findViewById(R.id.tracking_default_text);
+        trackingDefaultText.setTypeface(Util.mTypeface(this, 5));
+        trackedCardInstruction =findViewById(R.id.default_tracked_text_card);
+        trackingCardInstruction = findViewById(R.id.default_tracking_text_card);
         trackingByYouListRecyclerView = findViewById(R.id.trackingByYouList);
         trackingYouListRecyclerView = findViewById(R.id.trackingYouList);
         activeMemberPresent = findViewById(R.id.activeMemberPresent);
@@ -415,6 +425,19 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                 listOnActiveSession.add(data);
             }
         }
+
+        if (listOnActiveSession.isEmpty()){
+            trackedCardInstruction.setVisibility(View.VISIBLE);
+        }else {
+            trackedCardInstruction.setVisibility(View.INVISIBLE);
+        }
+
+        if (trackingYouList.isEmpty()){
+            trackingCardInstruction.setVisibility(View.VISIBLE);
+        }else {
+            trackingCardInstruction.setVisibility(View.INVISIBLE);
+        }
+
         mTrackedByYouListAdapter = new TrackedByYouListAdapter(listOnActiveSession, this);
         mTrackingYouListAdapter = new TrackingYouListAdapter(trackingYouList, this);
         trackingByYouListRecyclerView.setAdapter(mTrackedByYouListAdapter);

@@ -84,7 +84,8 @@
     <string name="choose_group_icon">Add group picture</string>
     <string name="choose_group_icon_text">You can choose from below icon</string>
     <string name="terms_privacy_policy">Terms &amp; Privacy Policy</string>
-    <string name="tracked_by_default_text">Users who are tracking you will be displayed here.</string>
+    <string name="tracking_by_default_text">Users who are tracking you will be displayed here.</string>
+    <string name="tracked_by_default_text">Users whom you are tracking you will be displayed here.</string>
 
     <string-array name="device_type_array">
         <item>People Tracker</item>

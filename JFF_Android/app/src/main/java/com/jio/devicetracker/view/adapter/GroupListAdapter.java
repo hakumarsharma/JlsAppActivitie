@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,6 +52,8 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.EditMemberActivity;
 import com.jio.devicetracker.view.dashboard.GroupsFragment;
 import com.jio.devicetracker.view.device.AddDeviceActivity;
+import com.jio.devicetracker.view.location.MapFragment;
+import com.jio.devicetracker.view.location.MapPeopleListFragment;
 
 import java.util.List;
 
@@ -121,6 +124,27 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                 itemListener.clickonListLayout(data);
             }
         });
+        if (mList != null && !mList.isEmpty() && mList.toArray().length <= 4){
+            switch (position) {
+                case 0:
+                    holder.icon1.setVisibility(View.VISIBLE);
+                    break;
+                case 1:
+                    holder.icon2.setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    holder.icon3.setVisibility(View.VISIBLE);
+                    break;
+                case 3:
+                    holder.icon4.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    break;
+            }
+            holder.numberOfUsers.setText("");
+        }else {
+            holder.numberOfUsers.setText("+ "+ (mList.toArray().length - 4));
+        }
     }
 
     /**
@@ -168,6 +192,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public CardView mListlayout;
         private ImageView groupListmemberIcon;
         private TextView timeLeft;
+        private TextView numberOfUsers;
 
         /**
          * Constructor where we find element from .xml file
@@ -185,7 +210,12 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             deleteOpt = itemView.findViewById(R.id.deleteGroup);
             groupOptLayout = itemView.findViewById(R.id.oprationLayout);
             mListlayout = itemView.findViewById(R.id.groupListLayout);
+            numberOfUsers = itemView.findViewById(R.id.numberOfUsers);
             timeLeft = itemView.findViewById(R.id.group_timeLeft);
+            icon1 = itemView.findViewById(R.id.group_motherIcon);
+            icon2 = itemView.findViewById(R.id.group_fatherIcon);
+            icon3 = itemView.findViewById(R.id.group_kidIcon);
+            icon4 = itemView.findViewById(R.id.group_dogIcon);
             menuIcon.setOnClickListener(this);
             close.setOnClickListener(this);
             editOpt.setOnClickListener(this);

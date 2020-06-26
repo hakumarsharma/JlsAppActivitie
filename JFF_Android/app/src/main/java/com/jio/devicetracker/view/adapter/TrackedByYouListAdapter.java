@@ -104,6 +104,27 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             holder.profile.setImageResource(R.drawable.ic_family_group);
             holder.name.setText(data.getGroupName());
         }
+        if (mList != null && !mList.isEmpty() && mList.toArray().length <= 4){
+            switch (position) {
+                case 0:
+                    holder.motherIcon.setVisibility(View.VISIBLE);
+                    break;
+                case 1:
+                    holder.fatherIcon.setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    holder.kidIcon.setVisibility(View.VISIBLE);
+                    break;
+                case 3:
+                    holder.dogIcon.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    break;
+            }
+            holder.numberOfUsers.setText("");
+        }else {
+            holder.numberOfUsers.setText("+ "+ (mList.toArray().length - 4));
+        }
     }
 
     /**
@@ -131,6 +152,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         public ImageView trackedByYouClose;
         private TextView trackedByYouEdit;
         private TextView deleteAllMembers;
+        private TextView numberOfUsers;
 
         /**
          * Constructor where we find element from .xml file
@@ -146,10 +168,11 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             trackedByYouClose.setOnClickListener(this);
             trackedByYouOperationStatus = itemView.findViewById(R.id.trackedByYouOperationStatus);
             trackedByYouOperationStatus.setOnClickListener(this);
-            motherIcon = itemView.findViewById(R.id.motherIcon);
-            fatherIcon = itemView.findViewById(R.id.fatherIcon);
-            kidIcon = itemView.findViewById(R.id.kidIcon);
-            dogIcon = itemView.findViewById(R.id.dogIcon);
+            motherIcon = itemView.findViewById(R.id.session_motherIcon);
+            fatherIcon = itemView.findViewById(R.id.session_fatherIcon);
+            kidIcon = itemView.findViewById(R.id.session_kidIcon);
+            dogIcon = itemView.findViewById(R.id.session_dogIcon);
+            numberOfUsers = itemView.findViewById(R.id.session_numberOfUsers);
             trackedByYouEdit = itemView.findViewById(R.id.trackedByYouEdit);
             trackedByYouEdit.setOnClickListener(this);
             deleteAllMembers = itemView.findViewById(R.id.deleteAllMembers);

@@ -37,36 +37,55 @@
                 android:textSize="18sp" />
 
             <ImageView
-                android:id="@+id/motherIcon"
+                android:id="@+id/session_motherIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginLeft="80dp"
+                android:layout_toRightOf="@+id/groupmemberIcon"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/mother" />
+                android:layout_marginLeft="15dp"
+                android:visibility="invisible"
+                android:background="@drawable/secondaryuser" />
 
             <ImageView
-                android:id="@+id/fatherIcon"
+                android:id="@+id/session_fatherIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginLeft="96dp"
+                android:layout_marginLeft="-15dp"
+                android:layout_toRightOf="@+id/session_motherIcon"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/father" />
+                android:visibility="invisible"
+                android:background="@drawable/secondaryuser" />
 
             <ImageView
-                android:id="@+id/kidIcon"
+                android:id="@+id/session_kidIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginLeft="112dp"
+                android:layout_marginLeft="-15dp"
+                android:layout_toRightOf="@+id/session_fatherIcon"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/kid" />
+                android:visibility="invisible"
+                android:background="@drawable/secondaryuser" />
 
             <ImageView
-                android:id="@+id/dogIcon"
+                android:id="@+id/session_dogIcon"
                 android:layout_width="30dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="130dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="-15dp"
+                android:layout_toRightOf="@+id/session_kidIcon"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/dog" />
+                android:visibility="invisible"
+                android:background="@drawable/secondaryuser" />
+
+            <TextView
+                android:id="@+id/session_numberOfUsers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/session_dogIcon"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="52dp"
+                android:text="+ 1 invited"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/trackedByYouOperationStatus"
