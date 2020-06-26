@@ -124,6 +124,7 @@ public class MapPeopleListFragment extends Fragment {
                     groupDataList.setGroupId(allGroupMemberData.getGroupId());
                     groupDataList.setName(allGroupMemberData.getName());
                     groupDataList.setNumber(allGroupMemberData.getNumber());
+                    groupDataList.setConsentId(allGroupMemberData.getConsentId());
                     groupDataList.setConsentStatus(allGroupMemberData.getConsentStatus().substring(0, 1).toUpperCase() + allGroupMemberData.getConsentStatus().substring(1));
                     groupMemberList.add(groupDataList);
                 }

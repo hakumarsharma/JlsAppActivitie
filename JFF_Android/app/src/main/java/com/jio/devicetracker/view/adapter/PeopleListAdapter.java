@@ -218,6 +218,8 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                 case R.id.edit:
                     Intent intent = new Intent(mContext, EditMemberDetailsActivity.class);
                     intent.putExtra(Constant.GROUP_ID, mList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(Constant.GROUPNAME,mList.get(getAdapterPosition()).getName());
+                    intent.putExtra(Constant.CONSENT_ID,mList.get(getAdapterPosition()).getConsentId());
                     mContext.startActivity(intent);
                     break;
                 case R.id.remove_from_group:
