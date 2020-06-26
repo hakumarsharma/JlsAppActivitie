@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.jio.devicetracker.R;
@@ -81,8 +79,6 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 break;
 
         }
-
-
     }
     /**
      * Returns real address based on Lat and Long(Geo Coding)

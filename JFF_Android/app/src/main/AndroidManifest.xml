@@ -36,6 +36,7 @@
         <activity android:name=".view.menu.RefreshIntervalSettingActivity" />
         <activity android:name=".view.menu.NotificationsActivity"/>
         <activity android:name=".view.menu.SilentModeActivity"/>
+        <activity android:name=".view.people.EditMemberDetailsActivity"/>
 
         <service
             android:name=".network.SendLocationService"

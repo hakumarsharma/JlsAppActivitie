@@ -82,7 +82,7 @@ public class MapPeopleListFragment extends Fragment {
             int count = 0;
             for (MapData mapData : mapDataList) {
                 for (GroupMemberDataList groupMemberDataList : allGroupMemberDataBasedOnGroupId) {
-                    if (groupMemberDataList.getConsentId().equalsIgnoreCase(mapData.getConsentId()) && (groupMemberDataList.getConsentStatus().equals(Constant.CONSET_STATUS_APPROVED) || groupMemberDataList.getConsentStatus().equals(Constant.CONSET_STATUS_PENDING) || groupMemberDataList.getConsentStatus().equals(Constant.CONSET_STATUS_EXPIRED))) {
+                    if (groupMemberDataList.getConsentId().equalsIgnoreCase(mapData.getConsentId()) && (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
                         GroupMemberDataList groupDataList = new GroupMemberDataList();
                         groupDataList.setGroupId(groupMemberDataList.getGroupId());
                         groupDataList.setName(groupMemberDataList.getName());
@@ -104,7 +104,7 @@ public class MapPeopleListFragment extends Fragment {
                             isFound = true;
                         }
                     }
-                    if (!isFound && (groupMemberDataList.getConsentStatus().equals(Constant.CONSET_STATUS_APPROVED) || groupMemberDataList.getConsentStatus().equals(Constant.CONSET_STATUS_PENDING) || groupMemberDataList.getConsentStatus().equals(Constant.CONSET_STATUS_EXPIRED))) {
+                    if (!isFound && (groupMemberDataList.getConsentStatus().equals(Constant.CONSET_STATUS_APPROVED) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
                         GroupMemberDataList groupDataList = new GroupMemberDataList();
                         groupDataList.setGroupId(groupMemberDataList.getGroupId());
                         groupDataList.setName(groupMemberDataList.getName());
@@ -118,7 +118,7 @@ public class MapPeopleListFragment extends Fragment {
         // Location is not there for any of the group member
         else if (mapDataList.isEmpty()) {
             for (GroupMemberDataList allGroupMemberData : allGroupMemberDataBasedOnGroupId) {
-                if (allGroupMemberData.getConsentStatus().equals(Constant.CONSET_STATUS_APPROVED) || allGroupMemberData.getConsentStatus().equals(Constant.CONSET_STATUS_PENDING) || allGroupMemberData.getConsentStatus().equals(Constant.CONSET_STATUS_EXPIRED))
+                if (allGroupMemberData.getConsentStatus().equals(Constant.CONSET_STATUS_APPROVED) || allGroupMemberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || allGroupMemberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))
                 {
                     GroupMemberDataList groupDataList = new GroupMemberDataList();
                     groupDataList.setGroupId(allGroupMemberData.getGroupId());
