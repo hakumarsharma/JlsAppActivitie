@@ -411,7 +411,8 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)
-                    && groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.ACTIVE)) {
+                    && (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)
+                    || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING))) {
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());
                 data.setConsentStaus(groupMemberDataList.getConsentStatus());
