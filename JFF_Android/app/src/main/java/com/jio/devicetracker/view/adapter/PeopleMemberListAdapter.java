@@ -155,7 +155,6 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         private TextView deleteIndividualUser;
         private TextView editPeopleProfile;
         private TextView addToGroup;
-        private TextView resendInvite;
 
         /**
          * Constructor where we find element from .xml file
@@ -210,6 +209,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     intent.putExtra(Constant.GROUPNAME, mList.get(getAdapterPosition()).getGroupName());
                     intent.putExtra(Constant.CONSENT_ID, mList.get(getAdapterPosition()).getConsentId());
                     mContext.startActivity(intent);
+                    break;
                 default:
                     // Todo
                     break;

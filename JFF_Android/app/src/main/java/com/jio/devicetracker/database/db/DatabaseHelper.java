@@ -26,10 +26,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.jio.devicetracker.database.pojo.GroupMemberDataList;
-
-import java.util.List;
-
 /**
  * Implementation of database helper class to create and update the table for People Tracker application application.
  */

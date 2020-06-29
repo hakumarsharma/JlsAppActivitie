@@ -20,7 +20,6 @@
 
 package com.jio.devicetracker.view.dashboard;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.cardview.widget.CardView;
@@ -115,7 +114,7 @@ public class GroupsFragment extends Fragment {
         public void onResponse(Object response) {
             GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
             parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
-            displayGroupDataInDashboard(getView());
+            displayGroupDataInDashboard();
             adapterEventListener();
         }
     }
@@ -208,10 +207,6 @@ public class GroupsFragment extends Fragment {
      * Navigates to the Map activity
      */
     private void goToMapActivity(List<MapData> mapDataList) {
-       /* if (mapDataList.isEmpty()){
-            showCustomAlertWithText(Constant.ADD_DETAILS_TO_TRACK);
-            return;
-        }*/
         Intent intent = new Intent(getContext(), LocationActivity.class);
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_ID, groupId);
@@ -238,7 +233,7 @@ public class GroupsFragment extends Fragment {
                     homeActivityListData.setTo(data.getSession().getTo());
                     int count = 0;
                     for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
-                        if ((consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                        if (consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED)) {
                             count = count + 1;
                             homeActivityListData.setConsentsCount(count);
                         }
@@ -248,21 +243,6 @@ public class GroupsFragment extends Fragment {
                         homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
                         homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
                     }
-//                    List<GroupMemberDataList> groupMemberList = new ArrayList<>();
-//                    for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
-//                        if ((consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
-//                            GroupMemberDataList groupDataList = new GroupMemberDataList();
-//                            groupDataList.setName(consentData.getName());
-//                            groupDataList.setNumber(consentData.getPhone());
-//                            groupDataList.setConsentStatus(consentData.getStatus().substring(0, 1).toUpperCase() + consentData.getStatus().substring(1));
-//                            groupDataList.setConsentId(consentData.getConsentId());
-//                            groupMemberList.add(groupDataList);
-//                        }
-//                    }
-//                    if (groupMemberList != null & !groupMemberList.isEmpty()) {
-//                        homeActivityListData.setConsentApprovalTime(groupDetailList.toArray().length);
-//                        homeActivityListData.setListOfConsent(groupMemberList);
-//                    }
                     groupList.add(homeActivityListData);
                 }
             }
@@ -270,7 +250,7 @@ public class GroupsFragment extends Fragment {
         }
     }
 
-    private void displayGroupDataInDashboard(View view) {
+    private void displayGroupDataInDashboard() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();

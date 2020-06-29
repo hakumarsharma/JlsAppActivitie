@@ -443,31 +443,28 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             }
         });
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.notification:
-                        gotoNotificationActivity();
-                        break;
-                    case R.id.silent_mode:
-                        gotoSilentModeActivity();
-                        break;
-                    case R.id.group_management:
-                        gotoGroupManagementActivity();
-                        break;
-                    case R.id.howtoadd:
-                        goToHowtoUseActivity();
-                        break;
-                    case R.id.support:
-                        startActivity(new Intent(DashboardMainActivity.this, NavigateSupportActivity.class));
-                        break;
-                    default:
-                        break;
-                }
-                return true;
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.notification:
+                    gotoNotificationActivity();
+                    break;
+                case R.id.silent_mode:
+                    gotoSilentModeActivity();
+                    break;
+                case R.id.group_management:
+                    gotoGroupManagementActivity();
+                    break;
+                case R.id.howtoadd:
+                    goToHowtoUseActivity();
+                    break;
+                case R.id.support:
+                    startActivity(new Intent(DashboardMainActivity.this, NavigateSupportActivity.class));
+                    break;
+                default:
+                    break;
             }
+            return true;
         });
     }
 

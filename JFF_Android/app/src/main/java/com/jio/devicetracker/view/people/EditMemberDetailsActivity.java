@@ -54,17 +54,17 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         userName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                // Todo
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                // Todo
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!s.equals("")){
+                if(!Constant.EMPTY_STRING.equals(s)){
                     updateBtn.setBackground(getResources().getDrawable(R.drawable.login_selector));
                 }
             }

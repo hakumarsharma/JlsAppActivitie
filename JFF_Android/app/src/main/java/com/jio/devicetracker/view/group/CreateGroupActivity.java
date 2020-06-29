@@ -88,7 +88,6 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
         createGroup = findViewById(R.id.createGroupInCreateGroupActivity);
         createGroup.setTypeface(Util.mTypeface(this, 5));
         createGroup.setOnClickListener(this);
-        DBManager mDbManager = new DBManager(this);
         frameLayout = findViewById(R.id.chooseIcon_view);
 
         Button closeBtn = findViewById(R.id.closeFrameLayout);

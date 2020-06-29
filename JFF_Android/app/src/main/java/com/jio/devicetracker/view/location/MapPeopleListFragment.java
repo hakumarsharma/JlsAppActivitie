@@ -50,6 +50,7 @@ public class MapPeopleListFragment extends Fragment {
     private List<MapData> mapDataList;
     private static StringBuilder strAddress = null;
     private String groupId;
+    private Locale locale = Locale.ENGLISH;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,7 +81,7 @@ public class MapPeopleListFragment extends Fragment {
                         groupDataList.setGroupId(groupMemberDataList.getGroupId());
                         groupDataList.setName(groupMemberDataList.getName());
                         groupDataList.setNumber(groupMemberDataList.getNumber());
-                        groupDataList.setConsentStatus(groupMemberDataList.getConsentStatus().substring(0, 1).toUpperCase() + groupMemberDataList.getConsentStatus().substring(1));
+                        groupDataList.setConsentStatus(groupMemberDataList.getConsentStatus().substring(0, 1).toUpperCase(locale) + groupMemberDataList.getConsentStatus().substring(1));
                         groupDataList.setAddress(getAddressFromLocation(mapData.getLatitude(), mapData.getLongitude()));
                         groupDataList.setConsentId(mapData.getConsentId());
                         groupMemberList.add(groupDataList);
@@ -102,7 +103,7 @@ public class MapPeopleListFragment extends Fragment {
                         groupDataList.setGroupId(groupMemberDataList.getGroupId());
                         groupDataList.setName(groupMemberDataList.getName());
                         groupDataList.setNumber(groupMemberDataList.getNumber());
-                        groupDataList.setConsentStatus(groupMemberDataList.getConsentStatus().substring(0, 1).toUpperCase() + groupMemberDataList.getConsentStatus().substring(1));
+                        groupDataList.setConsentStatus(groupMemberDataList.getConsentStatus().substring(0, 1).toUpperCase(locale) + groupMemberDataList.getConsentStatus().substring(1));
                         groupMemberList.add(groupDataList);
                     }
                 }
@@ -118,7 +119,7 @@ public class MapPeopleListFragment extends Fragment {
                     groupDataList.setName(allGroupMemberData.getName());
                     groupDataList.setNumber(allGroupMemberData.getNumber());
                     groupDataList.setConsentId(allGroupMemberData.getConsentId());
-                    groupDataList.setConsentStatus(allGroupMemberData.getConsentStatus().substring(0, 1).toUpperCase() + allGroupMemberData.getConsentStatus().substring(1));
+                    groupDataList.setConsentStatus(allGroupMemberData.getConsentStatus().substring(0, 1).toUpperCase(locale) + allGroupMemberData.getConsentStatus().substring(1));
                     groupMemberList.add(groupDataList);
                 }
             }

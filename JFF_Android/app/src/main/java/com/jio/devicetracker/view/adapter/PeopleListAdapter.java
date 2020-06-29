@@ -64,9 +64,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.ViewHolder> {
     private List<GroupMemberDataList> mList;
     private Context mContext;
-    private static PeopleListAdapter.RecyclerViewClickListener itemListener;
     private DBManager mDbManager;
-    private View itemView;
     private RelativeLayout layoutOps;
 
     public PeopleListAdapter(List<GroupMemberDataList> mList, Context mContext) {
@@ -92,7 +90,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     @NonNull
     @Override
     public PeopleListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_people_list_adapter, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_people_list_adapter, parent, false);
         return new PeopleListAdapter.ViewHolder(itemView);
     }
 
@@ -136,15 +134,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             holder.memberAddress.setText(Constant.CONSENT_EXPIRED_ADDRESS);
             holder.memberIcon.setImageResource(R.drawable.invitetimeup);
         }
-    }
-
-    /**
-     * Register the listener
-     *
-     * @param mItemClickListener
-     */
-    public void setOnItemClickPagerListener(PeopleListAdapter.RecyclerViewClickListener mItemClickListener) {
-        this.itemListener = mItemClickListener;
     }
 
     /**

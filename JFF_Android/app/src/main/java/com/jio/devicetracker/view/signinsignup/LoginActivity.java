@@ -21,7 +21,6 @@
 package com.jio.devicetracker.view.signinsignup;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -70,7 +69,6 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
-import com.jio.devicetracker.view.SplashScreenActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -339,22 +337,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 showCustomAlertWithText(Constant.VALID_USER);
             }
             Util.progressDialog.dismiss();
-        }
-    }
-
-    /**
-     * Checks the DeepLinking URI which tracker receives from tracee
-     */
-    private void deepLinkingURiCheck() {
-        Intent intent = getIntent();
-        Uri data = intent.getData();
-        if (data != null && data.toString().contains("home")) {
-            String[] splitStr = data.toString().split("=");
-            String[] splitNamenumber = splitStr[1].split("&");
-            mbNumber = splitNamenumber[0];
-            /*String name = splitNamenumber[1];
-            String imei = splitNamenumber[2];*/
-            showDialog(mbNumber);
         }
     }
 

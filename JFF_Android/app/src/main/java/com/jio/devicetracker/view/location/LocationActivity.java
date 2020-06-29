@@ -37,7 +37,6 @@ import com.jio.devicetracker.view.adapter.LocationAdapter;
 public class LocationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager viewPager;
-    private LocationAdapter locationAdapter;
     private TextView mapTab;
     private TextView listTab;
 
@@ -65,7 +64,7 @@ public class LocationActivity extends AppCompatActivity implements View.OnClickL
 
     private void initUI() {
         viewPager = findViewById(R.id.locationViewPager);
-        locationAdapter = new LocationAdapter(getSupportFragmentManager(), 2);
+        LocationAdapter locationAdapter = new LocationAdapter(getSupportFragmentManager(), 2);
         viewPager.setAdapter(locationAdapter);
         onTabClicked();
     }

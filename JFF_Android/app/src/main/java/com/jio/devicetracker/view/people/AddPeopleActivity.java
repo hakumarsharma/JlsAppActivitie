@@ -30,7 +30,6 @@ import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -224,7 +223,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                     addContact_Continue.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.lite_blue));
                 } else if ((groupId == null || groupId.isEmpty()) && !Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
                     setButtonBackground(addContact_Continue, true);
-                } else if ((groupId != null && !groupId.isEmpty()) && !Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
+                } else if (groupId != null && !groupId.isEmpty() && !Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
                     setButtonBackground(addContact, true);
                     setButtonBackground(addContact_Continue, false);
                 } else {

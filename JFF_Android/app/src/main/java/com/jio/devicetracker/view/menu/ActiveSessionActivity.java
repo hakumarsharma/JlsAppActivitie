@@ -53,13 +53,9 @@ import java.util.List;
  */
 public class ActiveSessionActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TrackedByYouListAdapter mTrackedByYouListAdapter;
-    private TrackingYouListAdapter mTrackingYouListAdapter;
     private RecyclerView trackingByYouListRecyclerView;
     private RecyclerView trackingYouListRecyclerView;
     private DBManager mDbManager;
-    private TextView trackedDefaultText;
-    private TextView trackingDefaultText;
     private CardView trackedCardInstruction;
     private CardView trackingCardInstruction;
 
@@ -76,9 +72,9 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         TextView trackingTitle = findViewById(R.id.tracking_title);
         trackedTitle.setTypeface(Util.mTypeface(this, 3));
         trackingTitle.setTypeface(Util.mTypeface(this, 3));
-        trackedDefaultText = findViewById(R.id.tracked_default_text);
+        TextView trackedDefaultText = findViewById(R.id.tracked_default_text);
         trackedDefaultText.setTypeface(Util.mTypeface(this, 5));
-        trackingDefaultText = findViewById(R.id.tracking_default_text);
+        TextView trackingDefaultText = findViewById(R.id.tracking_default_text);
         trackingDefaultText.setTypeface(Util.mTypeface(this, 5));
         trackedCardInstruction = findViewById(R.id.default_tracked_text_card);
         trackingCardInstruction = findViewById(R.id.default_tracking_text_card);
@@ -170,7 +166,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                         && data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
                         && data.getGroupId().equalsIgnoreCase(groupMemberDataList.getGroupId())
                         && groupMemberDataList.getUserId().equalsIgnoreCase(userId)
-                        && (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED))) {
+                        && groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
                     TrackingYou trackingYou = new TrackingYou();
                     trackingYou.setGroupOwnerName(data.getGroupOwnerName());
                     trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
@@ -214,8 +210,8 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             trackingCardInstruction.setVisibility(View.INVISIBLE);
         }
 
-        mTrackedByYouListAdapter = new TrackedByYouListAdapter(listOnActiveSession, this);
-        mTrackingYouListAdapter = new TrackingYouListAdapter(trackingYouList, this);
+        TrackedByYouListAdapter mTrackedByYouListAdapter = new TrackedByYouListAdapter(listOnActiveSession, this);
+        TrackingYouListAdapter mTrackingYouListAdapter = new TrackingYouListAdapter(trackingYouList, this);
         trackingByYouListRecyclerView.setAdapter(mTrackedByYouListAdapter);
         trackingYouListRecyclerView.setAdapter(mTrackingYouListAdapter);
     }

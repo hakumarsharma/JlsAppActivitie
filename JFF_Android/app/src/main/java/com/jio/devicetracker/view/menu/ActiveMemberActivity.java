@@ -22,50 +22,27 @@
 package com.jio.devicetracker.view.menu;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
-import com.jio.devicetracker.database.pojo.HomeActivityListData;
-import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.CustomAlertActivity;
-import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.ActiveMemberListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class ActiveMemberActivity extends AppCompatActivity implements View.OnClickListener{
 
     private String groupId;
     private DBManager mDbManager;
-    private ActiveMemberListAdapter mAdapter;
-    private RecyclerView mRecyclerList;
-    private Button backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +55,12 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
         TextView groupNameTitle = findViewById(R.id.groupNameTitle);
         groupNameTitle.setText(intent.getStringExtra(Constant.GROUP_NAME));
         groupId = intent.getStringExtra(Constant.GROUP_ID);
-        mRecyclerList = findViewById(R.id.trackerList);
+        RecyclerView mRecyclerList = findViewById(R.id.trackerList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
-        mAdapter = new ActiveMemberListAdapter(addDataInList(), this);
+        ActiveMemberListAdapter mAdapter = new ActiveMemberListAdapter(addDataInList(), this);
         mRecyclerList.setAdapter(mAdapter);
-        backButton = findViewById(R.id.back);
+        Button backButton = findViewById(R.id.back);
         backButton.setOnClickListener(this);
         backButton.setVisibility(View.VISIBLE);
     }

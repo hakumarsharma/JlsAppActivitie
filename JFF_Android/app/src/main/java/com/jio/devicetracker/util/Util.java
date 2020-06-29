@@ -276,17 +276,17 @@ public final class Util extends AppCompatActivity {
             int diffmin = (int) (diff / (60 * 1000));
             int diffsec = (int) (diff / (1000));
             if (diffDays > 0) {
-                return crunchifyFormatter.format(diffDays) + ((diffDays > 1) ? " days" : "day");
+                return crunchifyFormatter.format(diffDays + ((diffDays > 1) ? " days" : "day"));
             } else if (diffhours > 0) {
-                return crunchifyFormatter.format(diffhours) + ((diffhours > 1) ? " hours" : "hour");
+                return crunchifyFormatter.format(diffhours + ((diffhours > 1) ? " hours" : "hour"));
             } else if (diffmin > 0) {
-                return crunchifyFormatter.format(diffmin) + ((diffmin > 1) ? " minutes" : "minute");
+                return crunchifyFormatter.format(diffmin + ((diffmin > 1) ? " minutes" : "minute"));
             }
-            return crunchifyFormatter.format(diffsec) + ((diffmin > 1) ? " seconds" : "second");
+            return crunchifyFormatter.format(diffsec + ((diffmin > 1) ? " seconds" : "second"));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return "";
+        return Constant.EMPTY_STRING;
     }
 
     /**
@@ -296,7 +296,7 @@ public final class Util extends AppCompatActivity {
      * @param message
      */
     public void showProgressBarDialog(Context context, String message) {
-        progressDialog = ProgressDialog.show(context, "", message, true);
+        progressDialog = ProgressDialog.show(context, Constant.EMPTY_STRING, message, true);
         progressDialog.setCancelable(true);
     }
 
@@ -306,7 +306,7 @@ public final class Util extends AppCompatActivity {
      * @param context
      */
     public void showProgressBarDialog(Context context) {
-        progressDialog = ProgressDialog.show(context, "", Constant.LOADING_DATA, true);
+        progressDialog = ProgressDialog.show(context, Constant.EMPTY_STRING, Constant.LOADING_DATA, true);
         progressDialog.setCancelable(true);
     }
 

@@ -1,6 +1,7 @@
 package com.jio.devicetracker.view.location;
 
 import androidx.fragment.app.FragmentTransaction;
+
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -10,11 +11,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.fragment.app.FragmentManager;
+
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.BaseActivity;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -24,14 +28,12 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
 
     private MapFragment fragmentMap;
     private List<MapData> mapDataList;
-    private static StringBuilder strAddress = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_location);
         fragmentMap = new MapFragment();
-        strAddress = new StringBuilder();
         initUI();
     }
 
@@ -47,14 +49,14 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         shareLocation.setOnClickListener(this);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.map_fragment,fragmentMap).commit();
+        transaction.add(R.id.map_fragment, fragmentMap).commit();
         mapDataList = getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
-        if(getIntent().getStringExtra(Constant.MEMBER_NAME) != null) {
+        if (getIntent().getStringExtra(Constant.MEMBER_NAME) != null) {
             memberName.setText(getIntent().getStringExtra(Constant.MEMBER_NAME));
         } else {
             memberName.setText("Test");
         }
-        if(!(mapDataList.isEmpty())) {
+        if (!mapDataList.isEmpty()) {
             memberAddrss.setText(getAddressFromLocation(mapDataList.get(0).getLatitude(), mapDataList.get(0).getLongitude()));
         } else {
             memberAddrss.setText(Constant.CONSENT_APPROVED_ADDRESS);
@@ -63,18 +65,17 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.share_location:
                 String geoUri = null;
-                if(!(mapDataList.size() ==0)) {
+                if (!mapDataList.isEmpty()) {
                     geoUri = "http://maps.google.com/maps?q=loc:" + mapDataList.get(0).getLatitude() + "," + mapDataList.get(0).getLongitude();
                 } else {
                     Toast.makeText(this, "Location is not available", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Intent shareIntent =   new Intent(Intent.ACTION_SEND);
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-
                 shareIntent.putExtra(Intent.EXTRA_TEXT, geoUri);
                 startActivity(Intent.createChooser(shareIntent, "Share via"));
                 break;
@@ -87,6 +88,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 break;
         }
     }
+
     /**
      * Returns real address based on Lat and Long(Geo Coding)
      *
@@ -96,6 +98,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
      */
     private String getAddressFromLocation(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
+        StringBuilder strAddress = new StringBuilder();
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (!addresses.isEmpty()) {

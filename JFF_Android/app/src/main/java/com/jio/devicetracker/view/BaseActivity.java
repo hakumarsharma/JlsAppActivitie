@@ -42,7 +42,6 @@ import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.device.AddDeviceActivity;
 import com.jio.devicetracker.view.device.DeviceNameActivity;
 import com.jio.devicetracker.view.group.CreateGroupActivity;
-import com.jio.devicetracker.view.group.GroupListActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 
 import java.util.ArrayList;

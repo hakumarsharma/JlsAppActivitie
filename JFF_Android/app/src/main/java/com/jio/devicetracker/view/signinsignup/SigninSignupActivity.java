@@ -124,10 +124,10 @@ public class SigninSignupActivity extends AppCompatActivity implements View.OnCl
         switch (requestCode) {
             case PERMIT_ALL: {
                 if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    // Todo
+                    System.out.println("Permission not granted");
                 }
                 if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                    // Todo
+                    System.out.println("Permission granted");
                 }
                 // If request is cancelled, the result arrays are empty.
                 for (int grantResult : grantResults) {

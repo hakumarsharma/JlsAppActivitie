@@ -119,7 +119,6 @@ import com.jio.devicetracker.view.menu.ActiveSessionActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 import com.jio.devicetracker.view.group.CreateGroupActivity;
 import com.jio.devicetracker.view.people.EditActivity;
-import com.jio.devicetracker.view.group.GroupListActivity;
 import com.jio.devicetracker.view.location.MapsActivity;
 import com.jio.devicetracker.view.menu.ProfileActivity;
 import com.jio.devicetracker.view.device.QRReaderInstruction;
