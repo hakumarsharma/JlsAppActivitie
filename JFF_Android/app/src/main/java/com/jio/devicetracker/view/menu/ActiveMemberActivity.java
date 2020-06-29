@@ -64,11 +64,6 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
     private String groupId;
     private DBManager mDbManager;
     private ActiveMemberListAdapter mAdapter;
-    private String consentId;
-    private int position;
-    private String errorMessage;
-    private String createdBy;
-    private String userId;
     private RecyclerView mRecyclerList;
     private Button backButton;
 
@@ -77,11 +72,9 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_member_list);
         mDbManager = new DBManager(this);
-        userId = mDbManager.getAdminLoginDetail().getUserId();
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Intent intent = getIntent();
         toolbarTitle.setText(Constant.EDIT_MEMBER_TITLE);
-        createdBy = intent.getStringExtra(Constant.CREATED_BY);
         TextView groupNameTitle = findViewById(R.id.groupNameTitle);
         groupNameTitle.setText(intent.getStringExtra(Constant.GROUP_NAME));
         groupId = intent.getStringExtra(Constant.GROUP_ID);
@@ -95,128 +88,15 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
         backButton.setVisibility(View.VISIBLE);
     }
 
-    // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
-        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
-        alertActivity.show();
-        alertActivity.alertWithOkButton(alertMessage);
-    }
-
-    /**
-     * make an Exit API Call
-     */
-    private void makeExitAPICall(String phoneNumber) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
-        ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
-        ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
-        consent.setPhone(phoneNumber);
-        consent.setStatus(Constant.EXITED);
-        exitRemovedGroupData.setConsent(consent);
-        RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
-        Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mDbManager.getAdminLoginDetail().getUserToken(),
-                Constant.APPLICATION_JSON, mDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, groupId, body);
-        Util.getInstance().showProgressBarDialog(this);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.code() == 200) {
-                    Util.progressDialog.dismiss();
-                    Toast.makeText(ActiveMemberActivity.this, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
-                    mDbManager.deleteSelectedDataFromGroupMember(groupId);
-                    mAdapter.removeItem(position);
-                    addDataInList();
-                } else {
-                    Util.progressDialog.dismiss();
-                    showCustomAlertWithText(errorMessage);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(errorMessage);
-            }
-        });
-    }
-
-    /**
-     * Make a Remove API Call
-     *
-     * @param phoneNumber
-     */
-    private void makeRemoveAPICall(String phoneNumber) {
-        DBManager mDbManager = new DBManager(this);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
-        ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
-        ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
-        consent.setPhone(phoneNumber);
-        consent.setStatus(Constant.REMOVED);
-        exitRemovedGroupData.setConsent(consent);
-        RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
-        Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mDbManager.getAdminLoginDetail().getUserToken(),
-                Constant.APPLICATION_JSON, mDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, groupId, body);
-        Util.getInstance().showProgressBarDialog(this);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.code() == 200) {
-                    Util.progressDialog.dismiss();
-                    Toast.makeText(ActiveMemberActivity.this, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
-                    mDbManager.deleteSelectedDataFromGroupMember(groupId);
-                    mAdapter.removeItem(position);
-                    addDataInList();
-                } else {
-                    Util.progressDialog.dismiss();
-                    showCustomAlertWithText(errorMessage);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(errorMessage);
-            }
-        });
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
                 finish();
                 break;
-        }
-    }
-
-    /**
-     * Exit API Call Success Listener
-     */
-    private class ExitFromGroupRequestSuccessListener implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            Util.progressDialog.dismiss();
-            mDbManager.deleteSelectedDataFromGroup(consentId);
-            mAdapter.removeItem(position);
-            addDataInList();
-        }
-    }
-
-    /**
-     * Exit API Call Error Listener
-     */
-    private class ExitFromGroupRequestErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.progressDialog.dismiss();
-            showCustomAlertWithText(errorMessage);
+            default:
+                // Todo
+                break;
         }
     }
 

@@ -36,7 +36,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -211,7 +210,9 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     intent.putExtra(Constant.GROUPNAME, mList.get(getAdapterPosition()).getGroupName());
                     intent.putExtra(Constant.CONSENT_ID, mList.get(getAdapterPosition()).getConsentId());
                     mContext.startActivity(intent);
-
+                default:
+                    // Todo
+                    break;
             }
         }
     }

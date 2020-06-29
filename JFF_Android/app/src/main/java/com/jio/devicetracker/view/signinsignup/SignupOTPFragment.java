@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -59,10 +58,8 @@ import java.util.Objects;
  */
 public class SignupOTPFragment extends Fragment implements View.OnClickListener, MessageListener {
 
-    private TextView signupEnterOTPTextView;
     private String phoneNumber;
     private static PinEntryEditText signupTxtPinEntry;
-    private Button signupSubmitLogin;
     private TextView signupTimerTextView;
     private String name;
 
@@ -79,12 +76,12 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
     private void setLayoutData(View view) {
         TextView signupSentOTPTextView = view.findViewById(R.id.signupSentOTPTextView);
         signupSentOTPTextView.setTypeface(Util.mTypeface(getActivity(), 5));
-        signupEnterOTPTextView = view.findViewById(R.id.signupEnterOTPTextView);
+        TextView signupEnterOTPTextView = view.findViewById(R.id.signupEnterOTPTextView);
         signupEnterOTPTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         signupEnterOTPTextView.setText(Constant.OTP_TEXTVIEW + phoneNumber);
         signupTxtPinEntry = view.findViewById(R.id.signup_txt_pin_entry);
         signupTxtPinEntry.setTypeface(Util.mTypeface(getActivity(), 5));
-        signupSubmitLogin = view.findViewById(R.id.signupSubmitLogin);
+        Button signupSubmitLogin = view.findViewById(R.id.signupSubmitLogin);
         signupSubmitLogin.setTypeface(Util.mTypeface(getActivity(), 5));
         signupSubmitLogin.setOnClickListener(this);
         signupTimerTextView = view.findViewById(R.id.signupTimerTextView);
@@ -233,7 +230,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
      * @param tick
      */
     public void startTimer(final long finish, long tick) {
-        CountDownTimer t = new CountDownTimer(finish, tick) {
+        new CountDownTimer(finish, tick) {
             public void onTick(long millisUntilFinished) {
                 long remainedSecs = millisUntilFinished / 1000 % 60;
                 if (remainedSecs % 60 < 10) {

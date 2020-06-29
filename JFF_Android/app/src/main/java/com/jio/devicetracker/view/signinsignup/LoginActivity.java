@@ -406,33 +406,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
-    /**
-     * Checks privacy policy flag to show privacy policy screen
-     */
-    private void checkTermandCondition(boolean termConditionsFlag) {
-        if (!termConditionsFlag) {
-            checkTermConditionStatus();
-        } else {
-            deepLinkingURiCheck();
-        }
-    }
-
-    private void checkTermConditionStatus() {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        adb.setTitle(Constant.ALERT_TITLE);
-        adb.setMessage(Constant.TERM_AND_CONDITION_STATUS_MSG);
-        adb.setPositiveButton("OK", (dialog, which) -> {
-            goToSplashnActivity();
-        });
-
-        adb.show();
-    }
-
-    private void goToSplashnActivity() {
-        Intent intent = new Intent(this, SplashScreenActivity.class);
-        startActivity(intent);
-    }
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override

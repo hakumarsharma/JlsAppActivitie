@@ -20,10 +20,8 @@
 
 package com.jio.devicetracker.view.group;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -153,7 +151,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(this);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
@@ -179,6 +177,9 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                 break;
             case R.id.continueChooseGroup:
                 addMemberToCreatedGroup(groupId);
+                break;
+            default:
+                // Todo
                 break;
         }
     }
@@ -238,7 +239,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             homeActivityListData.setUpdatedBy(data.getUpdatedBy());
             homeActivityListData.setFrom(data.getSession().getFrom());
             homeActivityListData.setTo(data.getSession().getTo());
-            if(!(data.getGroupOwner().size() ==0)) {
+            if (!(data.getGroupOwner().isEmpty())) {
                 homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
                 homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
                 homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
@@ -273,75 +274,16 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                 @Override
                 public void groupButtonClicked(HomeActivityListData homeActivityListData, String groupIconSelection) {
                     updateUIInChooseGroupActivity(homeActivityListData);
-                    if(groupIconSelection != null && !groupIconSelection.equalsIgnoreCase(Constant.GROUP_SELECTED)){
+                    if (groupIconSelection != null && !groupIconSelection.equalsIgnoreCase(Constant.GROUP_SELECTED)) {
                         groupId = homeActivityListData.getGroupId();
                     } else {
                         groupId = "";
                     }
 
                 }
-
-               /* @Override
-                public void groupButtonClicked(HomeActivityListData homeActivityListData) {
-                    groupId = homeActivityListData.getGroupId();
-                    updateUIInChooseGroupActivity(homeActivityListData);
-                }*/
             });
         }
     }
-
-    /**
-     * Add Members in Group API Call, member will be part of group
-     */
-    public void addMemberInGroupAPICall(HomeActivityListData homeActivityListData) {
-        AddMemberInGroupData addMemberInGroupData = new AddMemberInGroupData();
-        AddMemberInGroupData.Consents consents = new AddMemberInGroupData().new Consents();
-        List<AddMemberInGroupData.Consents> consentList = new ArrayList<>();
-        List<String> mList = new ArrayList<>();
-        mList.add(Constant.EVENTS);
-        consents.setEntities(mList);
-        consents.setPhone("8088422893");
-        consents.setName(trackeeNameEditText.getText().toString().trim());
-        consentList.add(consents);
-        addMemberInGroupData.setConsents(consentList);
-        Util.getInstance().showProgressBarDialog(this);
-        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new AddMemberInGroupRequestSuccessListener(), new AddMemberInGroupRequestErrorListener(), addMemberInGroupData, homeActivityListData.getGroupId(), userId));
-    }
-
-    /**
-     * Add Member in group Success Listener
-     */
-    private class AddMemberInGroupRequestSuccessListener implements Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
-            if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
-                mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
-                startActivity(new Intent(ChooseGroupActivity.this, DashboardMainActivity.class));
-            }
-        }
-    }
-
-    /**
-     * Add Member in Group Error Listener
-     */
-    private class AddMemberInGroupRequestErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
-            } else if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
-                // Make Verify and Assign call
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.DEVICE_NOT_FOUND);
-            } else {
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
-            }
-        }
-    }
-
 
     /**
      * Displays created group in recycler view
@@ -371,7 +313,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             }
         }
 
-        if (chooseGroupDataList.size() == 0) {
+        if (chooseGroupDataList.isEmpty()) {
             groupText.setVisibility(View.VISIBLE);
             cardViewGroup.setVisibility(View.INVISIBLE);
             continueBtn.setBackground(getResources().getDrawable(R.drawable.selector));
@@ -386,11 +328,11 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void addMemberToCreatedGroup(String groupId) {
-        if(groupId == null || groupId.isEmpty()) {
+        if (groupId == null || groupId.isEmpty()) {
             showCustomAlertWithText(Constant.GROUP_CHOOSE_CONDITION);
             return;
         }
-        if (trackeeNameEditText.getText() == null || trackeeNameEditText.getText().length() == 0){
+        if (trackeeNameEditText.getText() == null || trackeeNameEditText.getText().length() == 0) {
             showCustomAlertWithText(Constant.NAME_VALIDATION);
             return;
         }

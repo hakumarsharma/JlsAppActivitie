@@ -29,7 +29,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,8 +40,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.GroupData;
-import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -52,9 +49,6 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.EditMemberActivity;
 import com.jio.devicetracker.view.dashboard.GroupsFragment;
 import com.jio.devicetracker.view.device.AddDeviceActivity;
-import com.jio.devicetracker.view.location.MapFragment;
-import com.jio.devicetracker.view.location.MapPeopleListFragment;
-
 import java.util.List;
 
 /**
@@ -261,6 +255,10 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                     Intent intent = new Intent(mContext, AddDeviceActivity.class);
                     intent.putExtra(Constant.GROUP_ID, mList.get(position).getGroupId());
                     mContext.startActivity(intent);
+                    break;
+                default:
+                    // Todo
+                    break;
             }
         }
     }

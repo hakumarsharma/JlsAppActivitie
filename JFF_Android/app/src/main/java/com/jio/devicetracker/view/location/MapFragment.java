@@ -53,10 +53,8 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
-import com.jio.devicetracker.util.Util;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -73,11 +71,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private static Context context = null;
     private List<MapData> mapDataList;
     private String groupStatus;
-    private String consentStatus;
-
-    public MapFragment() {
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,7 +83,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         strAddress = new StringBuilder();
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         groupStatus = getActivity().getIntent().getStringExtra(Constant.GROUP_STATUS);
-        consentStatus = getActivity().getIntent().getStringExtra(Constant.CONSENT_STATUS);
         if (mMap != null) {
             mMap.setInfoWindowAdapter(new MapFragment.MyInfoWindowAdapter(getContext()));
         }
@@ -248,15 +240,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        Util.clearLocationFlagstatus(this);
-//        Util.setAutologinStatus(this, true);
-//        Intent intent = new Intent(this, DashboardActivity.class);
-//        startActivity(intent);
-//    }
-
     /**
      * Creates the notification channel
      */
@@ -271,21 +254,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             notificationManager.createNotificationChannel(channel);
         }
     }
-
-  /*  // Shows the Notification on map screen, after taping on notification the map activity will open and notification will dissapear
-    private void showNotifications(String title, String text) {
-        Intent intent = new Intent(this, MapsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constant.NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.app_icon)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText("Much longer text that cannot fit one line..."))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(Constant.NOTIFICATION__ID, builder.build());
-    }*/
 }

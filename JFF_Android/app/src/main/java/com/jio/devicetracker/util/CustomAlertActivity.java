@@ -19,7 +19,6 @@
  **************************************************************/
 package com.jio.devicetracker.util;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.jio.devicetracker.R;
 
@@ -54,30 +52,25 @@ public class CustomAlertActivity extends Dialog implements View.OnClickListener 
 
     private void initializeDataMember() {
         TextView title = findViewById(R.id.dialogue_title);
-        title.setTypeface(Util.mTypeface(mContext,5));
+        title.setTypeface(Util.mTypeface(mContext, 5));
         message = findViewById(R.id.dialogue_message);
         message.setText(Constant.Custom_Alert_Message);
-        message.setTypeface(Util.mTypeface(mContext,3));
+        message.setTypeface(Util.mTypeface(mContext, 3));
         laterBtn = findViewById(R.id.btn_later);
-        laterBtn.setTypeface(Util.mTypeface(mContext,5));
+        laterBtn.setTypeface(Util.mTypeface(mContext, 5));
         viewBtn = findViewById(R.id.btn_view);
-        viewBtn.setTypeface(Util.mTypeface(mContext,5));
+        viewBtn.setTypeface(Util.mTypeface(mContext, 5));
         okBtn = findViewById(R.id.btn_ok);
-        okBtn.setTypeface(Util.mTypeface(mContext,5));
+        okBtn.setTypeface(Util.mTypeface(mContext, 5));
         okBtn.setOnClickListener(this);
     }
 
     // display alert with single button option
-    public void alertWithOkButton(String alertMessage){
+    public void alertWithOkButton(String alertMessage) {
         message.setText(alertMessage);
         okBtn.setVisibility(View.VISIBLE);
         laterBtn.setVisibility(View.INVISIBLE);
         viewBtn.setVisibility(View.INVISIBLE);
-    }
-
-    // display alert with two button options
-    public void alertWithTwoButtons(){
-
     }
 
     public void onClick(View v) {

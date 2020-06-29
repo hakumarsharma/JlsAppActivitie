@@ -45,7 +45,6 @@ public class FaqActivity extends Activity {
     private String[] questionArr = {Constant.QUES_1,Constant.QUES_2,Constant.QUES_3};
     private String[] answerArr ={Constant.ANS_1,Constant.ANS_2,Constant.ANS_3};
     List<FAQData> faqDataList;
-    private FAQListAdapter faqAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +67,7 @@ public class FaqActivity extends Activity {
         faqRecyclerList = findViewById(R.id.faqList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         faqRecyclerList.setLayoutManager(linearLayoutManager);
-        faqAdapter = new FAQListAdapter(faqDataList,this);
+        FAQListAdapter faqAdapter = new FAQListAdapter(faqDataList,this);
         faqRecyclerList.setAdapter(faqAdapter);
 
 

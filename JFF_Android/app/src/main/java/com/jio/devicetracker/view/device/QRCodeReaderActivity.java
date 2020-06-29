@@ -44,7 +44,6 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class QRCodeReaderActivity extends Activity implements ZXingScannerView.ResultHandler {
 
     private ZXingScannerView mScannerView;
-    private String userId;
     private String groupId;
 
     @Override
@@ -60,7 +59,6 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
         toolbarLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.cardviewlayout_device_background_color));
         Intent intent = getIntent();
         groupId = intent.getStringExtra(Constant.GROUP_ID);
-        userId = intent.getStringExtra(Constant.USER_ID);
 
         RelativeLayout scanView = findViewById(R.id.scanframe);
         mScannerView = new ZXingScannerView(this);

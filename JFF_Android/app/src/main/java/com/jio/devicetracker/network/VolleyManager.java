@@ -30,8 +30,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.SplashScreenActivity;
-import com.jio.devicetracker.view.signinsignup.LoginFragment;
 import com.jio.devicetracker.view.signinsignup.OTPEntryFragment;
 
 import java.io.UnsupportedEncodingException;

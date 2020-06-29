@@ -64,9 +64,7 @@ import java.util.List;
  */
 public class OTPEntryFragment extends Fragment implements View.OnClickListener, MessageListener {
 
-    private TextView enterOTPTextView;
     private static PinEntryEditText pinEntryEditText;
-    private Button submitLogin;
     private String phoneNumber;
     private TextView timerTextView;
     private DBManager mDbManager;
@@ -96,12 +94,12 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     private void setLayoutData(View view) {
         TextView sentOTPTextView = view.findViewById(R.id.sentOTPTextView);
         sentOTPTextView.setTypeface(Util.mTypeface(getActivity(), 5));
-        enterOTPTextView = view.findViewById(R.id.enterOTPTextView);
+        TextView enterOTPTextView = view.findViewById(R.id.enterOTPTextView);
         enterOTPTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         enterOTPTextView.setText(Constant.OTP_TEXTVIEW + phoneNumber);
         pinEntryEditText = view.findViewById(R.id.txt_pin_entry);
         pinEntryEditText.setTypeface(Util.mTypeface(getActivity(), 5));
-        submitLogin = view.findViewById(R.id.submitLogin);
+        Button submitLogin = view.findViewById(R.id.submitLogin);
         submitLogin.setTypeface(Util.mTypeface(getActivity(), 5));
         submitLogin.setOnClickListener(this);
         timerTextView = view.findViewById(R.id.timerTextView);
@@ -156,7 +154,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
      * @param tick
      */
     public void startTimer(final long finish, long tick) {
-        CountDownTimer t = new CountDownTimer(finish, tick) {
+        new CountDownTimer(finish, tick) {
             public void onTick(long millisUntilFinished) {
                 long remainedSecs = millisUntilFinished / 1000 % 60;
                 if (remainedSecs % 60 < 10) {

@@ -54,7 +54,6 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.activity_choose_group_list_adapter, parent, false);
-        ;
         return new ViewHolder(view);
     }
 

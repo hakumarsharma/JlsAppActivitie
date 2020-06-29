@@ -45,7 +45,9 @@ public class QRCodeRescanActivity extends Activity implements View.OnClickListen
             case R.id.manual_add:
                 gotoAttachDeviceActivity();
                 break;
-
+            default:
+                // Todo
+                break;
 
         }
     }

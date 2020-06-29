@@ -54,10 +54,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -71,7 +67,6 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -80,8 +75,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabItem;
-import com.google.android.material.tabs.TabLayout;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
@@ -114,8 +107,6 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         LocationListener {
 
     private ViewPager viewPager;
-    private DashboardAdapter dashboardAdapter;
-    private ImageView addGroupInDashboard;
     private DrawerLayout drawerLayout;
     private static DBManager mDbManager;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
@@ -177,10 +168,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         peopleTitle.setTypeface(Util.mTypeface(this, 5));
         deviceTitle.setTypeface(Util.mTypeface(this, 5));
         viewPager = findViewById(R.id.viewPager);
-        addGroupInDashboard = findViewById(R.id.createGroup);
+        ImageView addGroupInDashboard = findViewById(R.id.createGroup);
         addGroupInDashboard.setVisibility(View.VISIBLE);
         addGroupInDashboard.setOnClickListener(this);
-        dashboardAdapter = new DashboardAdapter(getSupportFragmentManager(), 3);
+        DashboardAdapter dashboardAdapter = new DashboardAdapter(getSupportFragmentManager(), 3);
         viewPager.setAdapter(dashboardAdapter);
         pageChangeListener();
         deepLinkingURICheck();
@@ -271,6 +262,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                     flowFromGroup = false;
                     flowFromPeople = false;
                     startActivity(new Intent(this, QRReaderInstruction.class));
+                    break;
+                default:
+                    // Todo
                     break;
             }
         }
@@ -530,17 +524,17 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        // Todo
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        // Todo
     }
 
     @Override
     public void onLocationChanged(Location location) {
-
+        // Todo
     }
 
     private void checkPermissions() {

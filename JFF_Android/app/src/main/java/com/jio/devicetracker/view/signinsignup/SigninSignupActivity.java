@@ -31,22 +31,18 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.SubscriptionManager;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.material.tabs.TabLayout;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.SigninSignupAdapter;
 
 public class SigninSignupActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager signinSignupviewPager;
-    private SigninSignupAdapter signinSignupAdapter;
     private static final int PERMIT_ALL = 1;
     private TextView signinTextView;
     private TextView signupTextView;
@@ -64,7 +60,7 @@ public class SigninSignupActivity extends AppCompatActivity implements View.OnCl
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setTypeface(Util.mTypeface(this, 5));
         toolbarTitle.setText(Constant.WELCOME);
-        signinSignupAdapter = new SigninSignupAdapter(getSupportFragmentManager(), 2);
+        SigninSignupAdapter signinSignupAdapter = new SigninSignupAdapter(getSupportFragmentManager(), 2);
         signinSignupviewPager = findViewById(R.id.signinSignupviewPager);
         signinSignupviewPager.setAdapter(signinSignupAdapter);
         signinTextView = findViewById(R.id.signinTextView);
@@ -89,7 +85,7 @@ public class SigninSignupActivity extends AppCompatActivity implements View.OnCl
             public void onPageSelected(int position) {
                 if (position == 0) {
                     setSigninTabData();
-                } else if(position == 1){
+                } else if(position == 1) {
                     setSignoutTabData();
                 }
             }

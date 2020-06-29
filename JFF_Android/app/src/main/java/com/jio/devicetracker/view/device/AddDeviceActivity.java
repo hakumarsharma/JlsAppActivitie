@@ -35,7 +35,6 @@ import com.jio.devicetracker.view.people.AddPeopleActivity;
 
 public class AddDeviceActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Toolbar toolbar = null;
     private static String groupId;
     private static String groupName;
 
@@ -43,7 +42,7 @@ public class AddDeviceActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adddevice);
-        toolbar = findViewById(R.id.adddDeviceToolbar);
+        Toolbar toolbar = findViewById(R.id.adddDeviceToolbar);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.Add_Device);
         toolbar.setBackgroundColor(getResources().getColor(R.color.cardviewlayout_device_background_color));

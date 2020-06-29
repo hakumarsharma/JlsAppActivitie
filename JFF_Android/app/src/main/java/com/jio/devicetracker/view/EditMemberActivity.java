@@ -39,7 +39,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EditMemberActivity extends Activity implements View.OnClickListener {
-    private List<GroupMemberDataList> dataList;
     private String groupId;
     private DBManager mDbManager;
     private String userId;
@@ -61,7 +60,6 @@ public class EditMemberActivity extends Activity implements View.OnClickListener
         groupName.setTypeface(Util.mTypeface(this, 3));
         groupName.setText(getIntent().getStringExtra(Constant.GROUP_NAME));
         editMemberList = findViewById(R.id.editRecyclerList);
-        dataList = new ArrayList<>();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         editMemberList.setLayoutManager(mLayoutManager);
         initData();

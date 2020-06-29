@@ -21,8 +21,6 @@ package com.jio.devicetracker.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,19 +41,13 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
 import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
-import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
-import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.BaseActivity;
-import com.jio.devicetracker.view.EditMemberActivity;
-import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
-import com.jio.devicetracker.view.device.AddDeviceActivity;
 import com.jio.devicetracker.view.people.EditMemberDetailsActivity;
 
 import java.util.ArrayList;
@@ -232,7 +224,9 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     layoutOps.setVisibility(View.GONE);
                     makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition(), false);
                     break;
-
+                default:
+                    // Todo
+                    break;
             }
 
         }

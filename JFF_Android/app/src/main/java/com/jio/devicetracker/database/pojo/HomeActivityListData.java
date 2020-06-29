@@ -22,8 +22,6 @@
 
 package com.jio.devicetracker.database.pojo;
 
-import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
-
 import java.util.List;
 
 public class HomeActivityListData {

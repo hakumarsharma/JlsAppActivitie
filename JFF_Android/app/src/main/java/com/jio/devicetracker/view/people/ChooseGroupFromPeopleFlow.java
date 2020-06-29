@@ -111,6 +111,9 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
             case R.id.addLater:
                 createGroupAndAddContactDetails();
                 break;
+            default:
+                // Todo
+                break;
         }
     }
 
@@ -161,7 +164,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
             homeActivityListData.setUpdatedBy(data.getUpdatedBy());
             homeActivityListData.setFrom(data.getSession().getFrom());
             homeActivityListData.setTo(data.getSession().getTo());
-            if(!(data.getGroupOwner().size() ==0)) {
+            if(!(data.getGroupOwner().isEmpty())) {
                 homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
                 homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
                 homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
@@ -277,16 +280,6 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         this.isFromDevice = false;
         createGroupAndAddContactAPICall(Constant.INDIVIDUAL_USER_GROUP_NAME);
     }
-    /*private void setEditTextValues() {
-        if (addContact != null) {
-            setButtonBackground(addContact, false);
-        }
-        setEditTextBottomLineColor(contactName);
-        setEditTextBottomLineColor(contactNumber);
-        contactName.getText().clear();
-        contactNumber.getText().clear();
-
-    }*/
 
     private void updateUIInChooseGroupActivity(HomeActivityListData mData) {
         List<HomeActivityListData> mHomeActivityListData = new ArrayList<>();

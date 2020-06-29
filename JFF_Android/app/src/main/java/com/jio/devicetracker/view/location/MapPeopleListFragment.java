@@ -35,14 +35,8 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MapData;
-import com.jio.devicetracker.database.pojo.SearchEventData;
-import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
-import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.PeopleListAdapter;
-import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
-import com.jio.devicetracker.view.dashboard.PeopleFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,7 +48,6 @@ public class MapPeopleListFragment extends Fragment {
     private DBManager mDbManager;
     private static PeopleListAdapter peopleListAdapter;
     private List<MapData> mapDataList;
-    private List<HomeActivityListData> peopleList;
     private static StringBuilder strAddress = null;
     private String groupId;
 

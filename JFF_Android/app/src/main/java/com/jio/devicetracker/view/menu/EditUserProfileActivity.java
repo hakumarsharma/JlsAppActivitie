@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -35,10 +34,6 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 public class EditUserProfileActivity extends Activity implements View.OnClickListener {
-
-    private TextView userName;
-    private TextView userNumber;
-    private TextView userEmail;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,9 +46,8 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         Intent intent = getIntent();
-        userName = findViewById(R.id.update_edit_name);
-        userNumber = findViewById(R.id.update_edit_number);
-        userEmail = findViewById(R.id.update_edit_email);
+        TextView userName = findViewById(R.id.update_edit_name);
+        TextView userNumber = findViewById(R.id.update_edit_number);
         userName.setText(intent.getStringExtra("Name"));
         userNumber.setText(intent.getStringExtra("Number"));
         backBtn.setOnClickListener(this);

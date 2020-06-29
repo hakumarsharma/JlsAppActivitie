@@ -51,7 +51,6 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
     private EditText signUpEmailEditText;
     private Button continueEmailSignup;
     private TextView emailTextView;
-    private TextView signupAddLaterTextView;
     private TextView wrongEmailErrorTextView;
 
     @Override
@@ -79,7 +78,7 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
         TextView emailTermConditionTextView = view.findViewById(R.id.emailTermConditionTextView);
         emailTermConditionTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         emailTermConditionTextView.setOnClickListener(this);
-        signupAddLaterTextView = view.findViewById(R.id.signupAddLaterTextView);
+        TextView signupAddLaterTextView = view.findViewById(R.id.signupAddLaterTextView);
         signupAddLaterTextView.setTypeface(Util.mTypeface(getActivity(), 5));
         signupAddLaterTextView.setOnClickListener(this);
         wrongEmailErrorTextView = view.findViewById(R.id.wrongEmailErrorTextView);

@@ -481,18 +481,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Goto Group List Activity
-     */
-    private void goToGroupListActivity(String groupId, String userId) {
-        Intent intent = new Intent(this, GroupListActivity.class);
-        intent.putExtra(Constant.GROUP_ID, groupId);
-        intent.putExtra(Constant.USER_ID, userId);
-        intent.putExtra(Constant.GROUPNAME, groupName);
-        startActivity(intent);
-        finish();
-    }
-
-    /**
      * Goto add device activity
      */
     private void goToAddDeviceActivity(String groupId) {

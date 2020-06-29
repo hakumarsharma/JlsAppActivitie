@@ -52,8 +52,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     private EditText deviceName;
     private Button done;
     private String deviceNumber;
-    private String groupId;
-    private String iconName;
     public static String createdGroupIdFromPeople;
 
 
@@ -71,12 +69,11 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         done.setOnClickListener(this);
         done.setAlpha(.5f);
         Intent intent = getIntent();
-        groupId = intent.getStringExtra(Constant.GROUP_ID);
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         title.setTypeface(Util.mTypeface(this, 5));
         TextView iconSelectionText = findViewById(R.id.icon_selection);
         iconSelectionText.setTypeface(Util.mTypeface(this, 3));
-       // createdGroupIdFromPeople = this.createdGroupId;
+        // createdGroupIdFromPeople = this.createdGroupId;
         initiateUI();
     }
 
@@ -107,7 +104,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         String name = deviceName.getText().toString().trim();
         switch (v.getId()) {
             case R.id.mother_icon:
-                iconName = "Woman";
                 if (motherIcon.getTag() != null && motherIcon.getTag().equals(Constant.GROUP_ICON)
                         && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.MOM)) {
                     motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
@@ -129,7 +125,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 done.setAlpha(1);
                 break;
             case R.id.father_icon:
-                iconName = "Man";
                 if (fatherIcon.getTag() != null && fatherIcon.getTag().equals(Constant.GROUP_ICON)
                         && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.FATHER)) {
                     fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
@@ -151,7 +146,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 done.setAlpha(1);
                 break;
             case R.id.husband_icon:
-                iconName = "Boy";
                 if (husbandIcon.getTag() != null && husbandIcon.getTag().equals(Constant.GROUP_ICON)
                         && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.HUSBAND)) {
                     husbandIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.husband, null));
@@ -173,7 +167,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 done.setAlpha(1);
                 break;
             case R.id.wife_icon:
-                iconName = "Girl";
                 if (wifeIcon.getTag() != null && wifeIcon.getTag().equals(Constant.GROUP_ICON)
                         && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.WIFE)) {
                     wifeIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.wife, null));
@@ -195,7 +188,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 done.setAlpha(1);
                 break;
             case R.id.kid_icon:
-                iconName = "Kid";
                 if (kidIcon.getTag() != null && kidIcon.getTag().equals(Constant.GROUP_ICON)
                         && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.KID)) {
                     kidIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.kid, null));
@@ -217,7 +209,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 done.setAlpha(1);
                 break;
             case R.id.other_icon:
-                iconName = "Other";
                 if (otherIcon.getTag() != null && otherIcon.getTag().equals(Constant.GROUP_ICON)
                         && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.OTHER)) {
                     otherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other, null));
@@ -239,7 +230,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 done.setAlpha(1);
                 break;
             case R.id.dog_icon:
-                iconName = "Dog";
                 if (dogIcon.getTag() != null && dogIcon.getTag().equals(Constant.GROUP_ICON)
                         && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.DOG)) {
                     dogIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.dog, null));
@@ -261,7 +251,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 done.setAlpha(1);
                 break;
             case R.id.cat_icon:
-                iconName = "Cat";
                 if (catIcon.getTag() != null && catIcon.getTag().equals(Constant.GROUP_ICON)
                         && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.CAT)) {
                     catIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.cat, null));
@@ -283,7 +272,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 done.setAlpha(1);
                 break;
             case R.id.other_pet_icon:
-                iconName = "OtherPet";
                 if (otherPetIcon.getTag() != null && otherPetIcon.getTag().equals(Constant.GROUP_ICON)
                         && name.equalsIgnoreCase(Constant.EMPTY_STRING) || name.equalsIgnoreCase(Constant.OTHER_PET)) {
                     otherPetIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other_pet, null));
@@ -309,16 +297,11 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 if (deviceName.getText().length() == 0) {
                     deviceName.setError(Constant.ENTER_DEVICE_NAME);
                     return;
-                } else if(DashboardMainActivity.flowFromGroup){
+                } else if (DashboardMainActivity.flowFromGroup) {
                     addMemberToCreatedGroup();
                 } else {
-                    gotoChooseGroupActivity(iconName);
+                    gotoChooseGroupActivity(deviceName.getText().toString().trim());
                 }
-                /*if (groupId == null || groupId.isEmpty()) {
-                    createGroupAndAddContactDetails();
-                } else {
-                    addMemberToCreatedGroup();
-                }*/
                 break;
             case R.id.back:
                 finish();
@@ -327,15 +310,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 break;
 
         }
-    }
-
-    private void createGroupAndAddContactDetails() {
-        this.memberName = deviceName.getText().toString();
-        this.memberNumber = deviceNumber;
-        this.isFromCreateGroup = true;
-        this.isGroupMember = false;
-        this.isFromDevice = false;
-        createGroupAndAddContactAPICall(deviceName.getText().toString());
     }
 
     private void addMemberToCreatedGroup() {
@@ -348,12 +322,11 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         addMemberInGroupAPICall();
     }
 
-    public void gotoChooseGroupActivity(String iconName)
-    {
-        Intent intent = new Intent(DeviceNameActivity.this, ChooseGroupActivity.class);
+    public void gotoChooseGroupActivity(String iconName) {
+        Intent intent = new Intent(this, ChooseGroupActivity.class);
         intent.putExtra(Constant.GROUP_ID, createdGroupId);
-        intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
-        intent.putExtra(Constant.TITLE_NAME,iconName);
+        intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
+        intent.putExtra(Constant.TITLE_NAME, iconName);
         startActivity(intent);
     }
 }

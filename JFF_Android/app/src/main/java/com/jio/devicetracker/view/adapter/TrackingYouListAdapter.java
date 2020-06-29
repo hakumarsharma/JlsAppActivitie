@@ -39,8 +39,6 @@ import com.google.gson.Gson;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
-import com.jio.devicetracker.database.pojo.GroupMemberDataList;
-import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.database.pojo.SearchEventData;
 import com.jio.devicetracker.database.pojo.TrackingYou;
@@ -161,6 +159,9 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                 case R.id.reverseTrack:
                     TrackingYouListAdapter.this.trackingYouOprationLayout = trackingYouOprationLayout;
                     makeGetLocationAPICall(mList.get(position));
+                    break;
+                default:
+                    // Todo
                     break;
             }
         }

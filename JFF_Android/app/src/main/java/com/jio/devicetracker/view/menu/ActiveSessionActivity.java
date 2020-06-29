@@ -20,13 +20,10 @@
 
 package com.jio.devicetracker.view.menu;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,62 +32,37 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
-import com.jio.devicetracker.database.pojo.MapData;
-import com.jio.devicetracker.database.pojo.SearchEventData;
 import com.jio.devicetracker.database.pojo.TrackingYou;
-import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
-import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
-import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
-import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.TrackingYouListAdapter;
-import com.jio.devicetracker.view.location.MapsActivity;
 import com.jio.devicetracker.view.adapter.TrackedByYouListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 /**
  * This class shows all the active session(To whom you are tracking or you are tracked by)
  */
 public class ActiveSessionActivity extends AppCompatActivity implements View.OnClickListener {
+
     private TrackedByYouListAdapter mTrackedByYouListAdapter;
     private TrackingYouListAdapter mTrackingYouListAdapter;
     private RecyclerView trackingByYouListRecyclerView;
     private RecyclerView trackingYouListRecyclerView;
-    private List<HomeActivityListData> listOnActiveSession;
-    private TextView activeMemberPresent;
-    private int position;
-    private String errorMessage;
-    private String groupId;
-    private String groupMemberName;
     private DBManager mDbManager;
-    private boolean isGroup;
-    private TextView trackedTitle;
-    private TextView trackingTitle;
     private TextView trackedDefaultText;
     private TextView trackingDefaultText;
     private CardView trackedCardInstruction;
     private CardView trackingCardInstruction;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,19 +72,18 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         backBtn.setOnClickListener(this);
-        trackedTitle = findViewById(R.id.tracked_title);
-        trackingTitle = findViewById(R.id.tracking_title);
+        TextView trackedTitle = findViewById(R.id.tracked_title);
+        TextView trackingTitle = findViewById(R.id.tracking_title);
         trackedTitle.setTypeface(Util.mTypeface(this, 3));
         trackingTitle.setTypeface(Util.mTypeface(this, 3));
         trackedDefaultText = findViewById(R.id.tracked_default_text);
         trackedDefaultText.setTypeface(Util.mTypeface(this, 5));
         trackingDefaultText = findViewById(R.id.tracking_default_text);
         trackingDefaultText.setTypeface(Util.mTypeface(this, 5));
-        trackedCardInstruction =findViewById(R.id.default_tracked_text_card);
+        trackedCardInstruction = findViewById(R.id.default_tracked_text_card);
         trackingCardInstruction = findViewById(R.id.default_tracking_text_card);
         trackingByYouListRecyclerView = findViewById(R.id.trackingByYouList);
         trackingYouListRecyclerView = findViewById(R.id.trackingYouList);
-        activeMemberPresent = findViewById(R.id.activeMemberPresent);
         mDbManager = new DBManager(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getApplicationContext());
@@ -122,210 +93,16 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(this);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
-    }
-
-    /**
-     * Track the group
-     *
-     * @param homeActivityListData
-     */
-    private void trackUserForGroup(HomeActivityListData homeActivityListData) {
-        Util.getInstance().showProgressBarDialog(this);
-        SearchEventData searchEventData = new SearchEventData();
-        List<String> mList = new ArrayList<>();
-        mList.add(Constant.LOCATION);
-        mList.add(Constant.SOS);
-        searchEventData.setTypes(mList);
-        isGroup = true;
-        GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, mDbManager.getAdminLoginDetail().getUserId(), homeActivityListData.getGroupId(), Constant.GET_LOCATION_URL));
-    }
-
-    /**
-     * Track User for group Member
-     */
-    private void trackUser(GroupMemberDataList groupMemberDataList) {
-        groupMemberName = groupMemberDataList.getName();
-        Util.getInstance().showProgressBarDialog(this);
-        SearchEventData searchEventData = new SearchEventData();
-        List<String> mList = new ArrayList<>();
-        mList.add(Constant.LOCATION);
-        mList.add(Constant.SOS);
-        searchEventData.setTypes(mList);
-        isGroup = false;
-        GroupRequestHandler.getInstance(this).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, groupMemberDataList.getUserId(), groupMemberDataList.getGroupId(), Constant.GET_LOCATION_URL));
     }
 
     @Override
     public void onClick(View v) {
         finish();
     }
-
-    /**
-     * Search Event Request API call Success Listener
-     */
-    private class SearchEventRequestSuccessListener implements com.android.volley.Response.Listener {
-        @Override
-        public void onResponse(Object response) {
-            Util.progressDialog.dismiss();
-            SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
-            if (searchEventResponse.getMessage().equalsIgnoreCase(Constant.NO_EVENTS_FOUND_RESPONSE)) {
-                showCustomAlertWithText(Constant.LOCATION_NOT_FOUND);
-            } else {
-                List<MapData> mapDataList = new ArrayList<>();
-                List<SearchEventResponse.Data> mList = searchEventResponse.getData();
-                if (isGroup) {
-                    List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
-                    for (SearchEventResponse.Data data : mList) {
-                        for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
-                            if (grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
-                                MapData mapData = new MapData();
-                                mapData.setLatitude(data.getLocation().getLat());
-                                mapData.setLongitude(data.getLocation().getLng());
-                                mapData.setName(grpMembers.getName());
-                                mapDataList.add(mapData);
-                            }
-                        }
-                    }
-                } else {
-                    if (!mList.isEmpty()) {
-                        MapData mapData = new MapData();
-                        mapData.setLatitude(mList.get(0).getLocation().getLat());
-                        mapData.setLongitude(mList.get(0).getLocation().getLng());
-                        mapData.setName(groupMemberName);
-                        mapDataList.add(mapData);
-                    }
-                }
-                Intent intent = new Intent(ActiveSessionActivity.this, MapsActivity.class);
-                intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
-                startActivity(intent);
-            }
-        }
-    }
-
-    /**
-     * Search Event Request API Call Error listener
-     */
-    private class SearchEventRequestErrorListener implements com.android.volley.Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.progressDialog.dismiss();
-            showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
-        }
-    }
-
-    /**
-     * Checks if any group/member is in active state or else display no active member found
-     */
-    private void isAnyMemberActive() {
-        /*if (listOnActiveSession.isEmpty()) {
-            mRecyclerList.setVisibility(View.INVISIBLE);
-            activeMemberPresent.setVisibility(View.VISIBLE);
-        } else {
-            activeMemberPresent.setVisibility(View.GONE);
-            mRecyclerList.setVisibility(View.VISIBLE);
-            trackingTitle.setVisibility(View.VISIBLE);
-            trackedTitle.setVisibility(View.VISIBLE);
-            trackingList.setVisibility(View.VISIBLE);
-        }*/
-    }
-
-    /**
-     * Make Remove from Group API Call using retrofit
-     *
-     * @param phoneNumber
-     * @param groupId
-     */
-    private void makeRemoveAPICall(String phoneNumber, String groupId) {
-        DBManager mDbManager = new DBManager(this);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
-        ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
-        ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
-        consent.setPhone(phoneNumber);
-        consent.setStatus(Constant.REMOVED);
-        exitRemovedGroupData.setConsent(consent);
-        RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
-        Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mDbManager.getAdminLoginDetail().getUserToken(),
-                Constant.APPLICATION_JSON, mDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, groupId, body);
-        Util.getInstance().showProgressBarDialog(this);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.code() == 200) {
-                    Util.progressDialog.dismiss();
-                    Toast.makeText(ActiveSessionActivity.this, Constant.REMOVE_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
-                    mDbManager.deleteSelectedDataFromGroup(groupId);
-                    mDbManager.deleteSelectedDataFromGroupMember(groupId);
-                    mTrackedByYouListAdapter.removeItem(position);
-                    addDatainList();
-                    isAnyMemberActive();
-                } else {
-                    Util.progressDialog.dismiss();
-                    showCustomAlertWithText(errorMessage);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(errorMessage);
-            }
-        });
-    }
-
-    /**
-     * Make Exit from group API Call using retrofit
-     *
-     * @param phoneNumber
-     * @param groupId
-     */
-    private void makeExitAPICall(String phoneNumber, String groupId) {
-        DBManager mDbManager = new DBManager(this);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
-        ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
-        ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
-        consent.setPhone(phoneNumber);
-        consent.setStatus(Constant.EXITED);
-        exitRemovedGroupData.setConsent(consent);
-        RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
-        Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mDbManager.getAdminLoginDetail().getUserToken(),
-                Constant.APPLICATION_JSON, mDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, groupId, body);
-        Util.getInstance().showProgressBarDialog(this);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.code() == 200) {
-                    Util.progressDialog.dismiss();
-                    Toast.makeText(ActiveSessionActivity.this, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
-                    mDbManager.deleteSelectedDataFromGroupMember(groupId);
-                    mTrackedByYouListAdapter.removeItem(position);
-                    addDatainList();
-                    isAnyMemberActive();
-                } else {
-                    Util.progressDialog.dismiss();
-                    showCustomAlertWithText(errorMessage);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(errorMessage);
-            }
-        });
-    }
-
 
     /**
      * Get All Group info per user API Call
@@ -341,7 +118,6 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         @Override
         public void onResponse(Object response) {
             addDatainList();
-            isAnyMemberActive();
         }
     }
 
@@ -365,7 +141,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         String userId = mDbManager.getAdminLoginDetail().getUserId();
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
         List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
-        listOnActiveSession = new ArrayList<>();
+        List<HomeActivityListData> listOnActiveSession = new ArrayList<>();
 
         // Adding Tracked by you list in Active Session
         for (HomeActivityListData data : groupDetailList) {
@@ -426,15 +202,15 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             }
         }
 
-        if (listOnActiveSession.isEmpty()){
+        if (listOnActiveSession.isEmpty()) {
             trackedCardInstruction.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             trackedCardInstruction.setVisibility(View.INVISIBLE);
         }
 
-        if (trackingYouList.isEmpty()){
+        if (trackingYouList.isEmpty()) {
             trackingCardInstruction.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             trackingCardInstruction.setVisibility(View.INVISIBLE);
         }
 

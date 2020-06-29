@@ -37,7 +37,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -45,7 +44,6 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.menu.ActiveMemberActivity;
-
 import java.util.List;
 
 public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouListAdapter.ViewHolder> {
@@ -216,6 +214,9 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
                     groupId = mList.get(position).getGroupId();
                     TrackedByYouListAdapter.this.trackedByYouOprationLayout = trackedByYouOprationLayout;
                     makeDeleteGroupAPICall(groupId);
+                    break;
+                default:
+                    // Todo
                     break;
             }
         }

@@ -49,7 +49,6 @@ import com.jio.devicetracker.view.adapter.DeviceListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class DeviceFragment extends Fragment {
@@ -180,7 +179,7 @@ public class DeviceFragment extends Fragment {
         List<GroupMemberDataList> mGroupMemberDataLists = new ArrayList<>();
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
         for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-            if (data.getStatus() != null && (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)) || (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED)) || (data.getStatus().equalsIgnoreCase(Constant.COMPLETED))) {
+            if (data.getStatus() != null && (data.getStatus().equalsIgnoreCase(Constant.ACTIVE) || data.getStatus().equalsIgnoreCase(Constant.SCHEDULED) || data.getStatus().equalsIgnoreCase(Constant.COMPLETED))) {
                 for (HomeActivityListData groupDbData : groupDetailList) {
                     HomeActivityListData homeActivityListData = new HomeActivityListData();
                     homeActivityListData.setGroupName(data.getGroupName());
@@ -190,7 +189,7 @@ public class DeviceFragment extends Fragment {
                     homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                     homeActivityListData.setFrom(data.getSession().getFrom());
                     homeActivityListData.setTo(data.getSession().getTo());
-                    if(!(data.getGroupOwner().size() ==0)) {
+                    if(!data.getGroupOwner().isEmpty()) {
                         homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
                         homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
                         homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());

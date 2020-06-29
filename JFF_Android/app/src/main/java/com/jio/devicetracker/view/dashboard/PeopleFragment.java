@@ -51,7 +51,6 @@ import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.location.LocationActivity;
 import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
 import com.jio.devicetracker.view.location.ShareLocationActivity;
 
@@ -71,8 +70,6 @@ public class PeopleFragment extends Fragment {
     private static List<HomeActivityListData> groupList;
     private RecyclerView groupListRecyclerView;
     private String memberName;
-    private String lat;
-    private String lan;
     private String consentStatus;
 
     @Override
@@ -109,7 +106,7 @@ public class PeopleFragment extends Fragment {
         grpDataList = new CopyOnWriteArrayList<>();
     }
 
-    private void displayGroupDataInDashboard(View view) {
+    private void displayGroupDataInDashboard() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         groupListRecyclerView.setLayoutManager(mLayoutManager);
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
@@ -162,8 +159,6 @@ public class PeopleFragment extends Fragment {
                     groupStatus = homeActivityListData.getStatus();
                     groupId = homeActivityListData.getGroupId();
                     memberName = homeActivityListData.getGroupName();
-                    lat = homeActivityListData.getLat();
-                    lan = homeActivityListData.getLng();
                     SearchEventData searchEventData = new SearchEventData();
                     List<String> mList = new ArrayList<>();
                     mList.add(Constant.LOCATION);
@@ -192,7 +187,7 @@ public class PeopleFragment extends Fragment {
         public void onResponse(Object response) {
             GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
             parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
-            displayGroupDataInDashboard(getView());
+            displayGroupDataInDashboard();
         }
     }
 
@@ -274,7 +269,7 @@ public class PeopleFragment extends Fragment {
         List<HomeActivityListData> groupList = new ArrayList<>();
         List<GroupMemberDataList> mGroupMemberDataLists = new ArrayList<>();
         for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-            if (data.getStatus() != null && (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)) || (data.getStatus().equalsIgnoreCase(Constant.SCHEDULED)) || (data.getStatus().equalsIgnoreCase(Constant.COMPLETED))) {
+            if (data.getStatus() != null && data.getStatus().equalsIgnoreCase(Constant.ACTIVE) || data.getStatus().equalsIgnoreCase(Constant.SCHEDULED) || data.getStatus().equalsIgnoreCase(Constant.COMPLETED)) {
                 HomeActivityListData homeActivityListData = new HomeActivityListData();
                 homeActivityListData.setGroupName(data.getGroupName());
                 homeActivityListData.setCreatedBy(data.getCreatedBy());
@@ -283,7 +278,7 @@ public class PeopleFragment extends Fragment {
                 homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                 homeActivityListData.setFrom(data.getSession().getFrom());
                 homeActivityListData.setTo(data.getSession().getTo());
-                if (!(data.getGroupOwner().size() == 0)) {
+                if (!(data.getGroupOwner().isEmpty())) {
                     homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
                     homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
                     homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());

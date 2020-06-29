@@ -1,32 +1,27 @@
 package com.jio.devicetracker.view.location;
 
 import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.fragment.app.FragmentManager;
-
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.BaseActivity;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 
 public class ShareLocationActivity extends BaseActivity implements View.OnClickListener {
+
     private MapFragment fragmentMap;
     private List<MapData> mapDataList;
     private static StringBuilder strAddress = null;
@@ -46,7 +41,6 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         Button backBtn = findViewById(R.id.back);
         backBtn.setOnClickListener(this);
         backBtn.setVisibility(View.VISIBLE);
-        FrameLayout mapFragment = findViewById(R.id.map_fragment);
         ImageView shareLocation = findViewById(R.id.share_location);
         TextView memberName = findViewById(R.id.member_name);
         TextView memberAddrss = findViewById(R.id.member_address);
@@ -60,9 +54,9 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         } else {
             memberName.setText("Test");
         }
-        if(!(mapDataList.size() ==0)) {
+        if(!(mapDataList.isEmpty())) {
             memberAddrss.setText(getAddressFromLocation(mapDataList.get(0).getLatitude(), mapDataList.get(0).getLongitude()));
-        }else {
+        } else {
             memberAddrss.setText(Constant.CONSENT_APPROVED_ADDRESS);
         }
     }
@@ -78,17 +72,19 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                     Toast.makeText(this, "Location is not available", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Intent shareIntent =   new Intent(android.content.Intent.ACTION_SEND);
+                Intent shareIntent =   new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
 
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,geoUri);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, geoUri);
                 startActivity(Intent.createChooser(shareIntent, "Share via"));
                 break;
 
             case R.id.back:
                 finish();
                 break;
-
+            default:
+                // Todo
+                break;
         }
     }
     /**

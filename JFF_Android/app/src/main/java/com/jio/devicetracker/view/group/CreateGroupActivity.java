@@ -46,8 +46,6 @@ import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 public class CreateGroupActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText createGroupEditText;
-    private Button addGroupCreateGroup;
-    private DBManager mDbManager;
     private Button createGroup;
     public static String trackeeNumber;
     public static String trackeeName;
@@ -90,7 +88,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
         createGroup = findViewById(R.id.createGroupInCreateGroupActivity);
         createGroup.setTypeface(Util.mTypeface(this, 5));
         createGroup.setOnClickListener(this);
-        mDbManager = new DBManager(CreateGroupActivity.this);
+        DBManager mDbManager = new DBManager(this);
         frameLayout = findViewById(R.id.chooseIcon_view);
 
         Button closeBtn = findViewById(R.id.closeFrameLayout);

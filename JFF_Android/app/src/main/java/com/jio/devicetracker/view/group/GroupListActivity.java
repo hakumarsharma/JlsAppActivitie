@@ -111,7 +111,6 @@ public class GroupListActivity extends AppCompatActivity implements View.OnClick
         public void onResponse(Object response) {
             Util.progressDialog.dismiss();
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
-            List<HomeActivityListData> grouplist = mDbManager.getAllGroupDetail();
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
             }

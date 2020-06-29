@@ -51,11 +51,8 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
 
     private TextView userName;
     private TextView userNumber;
-    private TextView defaultText;
-    private List listOnActiveSession;
     private DBManager mDbManager;
     private RecyclerView trackedList;
-    private ProfileTrackedByListAdapter mAdapter;
     private static CardView cardInstruction;
 
     @Override
@@ -75,7 +72,7 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         userName.setText(intent.getStringExtra("Name"));
         userNumber.setText(intent.getStringExtra("Number"));
         trackedList = findViewById(R.id.tracked_list);
-        defaultText = findViewById(R.id.tracked_default_text);
+        TextView defaultText = findViewById(R.id.tracked_default_text);
         defaultText.setTypeface(Util.mTypeface(this, 5));
         cardInstruction = findViewById(R.id.default_text_card);
         Button editBtn = findViewById(R.id.edit_btn);
@@ -85,12 +82,14 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         makeGroupInfoPerUserRequestAPICall();
 
     }
+
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(this);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -99,6 +98,9 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
                 break;
             case R.id.edit_btn:
                 gotoUpdateProfileActivity();
+                break;
+            default:
+                // Todo
                 break;
         }
     }
@@ -151,7 +153,7 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         DBManager mDbManager = new DBManager(getApplicationContext());
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
         List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
-        listOnActiveSession = new ArrayList<>();
+        List listOnActiveSession = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             if (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
                     && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
@@ -194,14 +196,12 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
                 listOnActiveSession.add(data);
             }
         }
-        if (listOnActiveSession.isEmpty()){
+        if (listOnActiveSession.isEmpty()) {
             cardInstruction.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             cardInstruction.setVisibility(View.INVISIBLE);
         }
-        mAdapter = new ProfileTrackedByListAdapter(listOnActiveSession);
+        ProfileTrackedByListAdapter mAdapter = new ProfileTrackedByListAdapter(listOnActiveSession);
         trackedList.setAdapter(mAdapter);
-        // trackingList.setAdapter(mAdapter);
     }
-
 }

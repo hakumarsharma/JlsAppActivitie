@@ -30,9 +30,6 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -72,6 +69,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Singleton which returns single instance of a Util class
+     *
      * @return
      */
     public synchronized static Util getInstance() {
@@ -95,6 +93,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Returns Pojo class objects
+     *
      * @param response
      * @param pojo
      * @param <T>
@@ -127,6 +126,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Common alerts dialog box
+     *
      * @param message
      * @param title
      * @param context
@@ -168,6 +168,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Email id validation through RegEx
+     *
      * @param email
      * @return
      */
@@ -202,6 +203,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Convert current time to epoch time
+     *
      * @return
      */
     public long convertTimeToEpochtime() {
@@ -220,6 +222,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Convert current time + given time to epoch time
+     *
      * @param min
      * @return
      */
@@ -251,11 +254,13 @@ public final class Util extends AppCompatActivity {
         c.add(Calendar.DATE, 90);
         sdf = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
         Date date = new Date(c.getTimeInMillis());
-        epochTime = date.getTime() +  60 * 1000;
+        epochTime = date.getTime() + 60 * 1000;
         return epochTime;
     }
+
     /**
      * Get Difference between two epoch time
+     *
      * @param fromTime
      * @param toTime
      */
@@ -316,6 +321,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Sets the terms and condition flag
+     *
      * @param mContext
      * @param flag
      */
@@ -328,6 +334,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * returns the terms and condition flag
+     *
      * @param mContext
      * @return
      */
@@ -532,10 +539,8 @@ public final class Util extends AppCompatActivity {
         calendar.add(Calendar.MINUTE, 2);
         expiryTime = calendar.getTime();
     }
+
     public boolean isGoogleTokenExpired() {
-        if(Calendar.getInstance().getTime().after(expiryTime)) {
-            return true;
-        }
-        return false;
+        return Calendar.getInstance().getTime().after(expiryTime);
     }
 }

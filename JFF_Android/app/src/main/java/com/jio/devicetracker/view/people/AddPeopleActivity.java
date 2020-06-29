@@ -54,11 +54,8 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
-import com.jio.devicetracker.view.dashboard.DashboardActivity;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.adapter.AddPersonListAdapter;
-import com.jio.devicetracker.view.group.CreateGroupActivity;
-import com.jio.devicetracker.view.menu.ActiveSessionActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +80,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private Button addContact;
     private static Button addContact_Continue;
     private static Context context;
-    private Button addToGroup;
     private static DBManager mPeopleDbManager;
 
     @Override
@@ -108,10 +104,9 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         contactsListView.setLayoutManager(linearLayoutManager);
         getDataFromIntent(title);
 
-        addToGroup = findViewById(R.id.add_to_group);
+        Button addToGroup = findViewById(R.id.add_to_group);
         addToGroup.setOnClickListener(this);
-//        Button addLater = findViewById(R.id.add_later);
-//        addLater.setOnClickListener(this);
+
         TextView peopleText = findViewById(R.id.people_text);
         peopleText.setTypeface(Util.mTypeface(this, 3));
 
@@ -120,11 +115,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
 
         contactNumber = findViewById(R.id.deviceNumber);
         contactNumber.setTypeface(Util.mTypeface(this, 5));
-
-//        if (CreateGroupActivity.trackeeNumber != null && CreateGroupActivity.trackeeName != null) {
-//            contactName.setText(CreateGroupActivity.trackeeName);
-//            contactNumber.setText(CreateGroupActivity.trackeeNumber);
-//        }
 
         addContact = findViewById(R.id.addContactDetail);
         addContact_Continue = findViewById(R.id.add_later);
@@ -139,8 +129,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             addContact_Continue.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_frame_white, null));
             addContact_Continue.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.lite_blue));
         }
-
-
 
         if (DashboardMainActivity.flowFromPeople) {
             addToGroup.setVisibility(View.VISIBLE);
@@ -162,7 +150,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     // Intent data to check whether use has come from group or individual
     private void getDataFromIntent(TextView title) {
         Intent intent = getIntent();
-        String qrValue = intent.getStringExtra(Constant.QR_CODE_VALUE);
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         String groupName = intent.getStringExtra(Constant.GROUP_NAME);
 
@@ -189,6 +176,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Todo
             }
 
             @Override
@@ -201,9 +189,9 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 if (addContact_Continue.getText().equals("Add later")){
                     addContact_Continue.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_frame_white, null));
                     addContact_Continue.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.lite_blue));
-                }else if ((groupId == null || groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
+                }else if ((groupId == null || groupId.isEmpty()) && !Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
                     setButtonBackground(addContact_Continue, true);
-                } else if ((groupId != null && !groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
+                } else if (groupId != null && !groupId.isEmpty() && ! Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
                     setButtonBackground(addContact, true);
                     setButtonBackground(addContact_Continue, false);
                 } else  {
@@ -221,6 +209,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Todo
             }
 
             @Override
@@ -233,9 +222,9 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 if (addContact_Continue.getText().equals("Add later")){
                     addContact_Continue.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_frame_white, null));
                     addContact_Continue.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.lite_blue));
-                } else if ((groupId == null || groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
+                } else if ((groupId == null || groupId.isEmpty()) && !Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
                     setButtonBackground(addContact_Continue, true);
-                } else if ((groupId != null && !groupId.isEmpty()) && !"".equalsIgnoreCase(name) && !"".equalsIgnoreCase(number)) {
+                } else if ((groupId != null && !groupId.isEmpty()) && !Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
                     setButtonBackground(addContact, true);
                     setButtonBackground(addContact_Continue, false);
                 } else {
@@ -260,7 +249,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
 
     // change edit text bottom line color based on text entry
     private void setEditTextBottomLineColor(EditText contactEditText) {
-        if (!"".equalsIgnoreCase(contactEditText.getText().toString())) {
+        if (!Constant.EMPTY_STRING.equalsIgnoreCase(contactEditText.getText().toString())) {
             contactEditText.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.white));
         } else {
             contactEditText.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.hintColor));
@@ -374,15 +363,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         contactName.getText().clear();
         contactNumber.getText().clear();
 
-    }
-
-    // To dismiss Keyboard
-    public void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
     }
 
     /**

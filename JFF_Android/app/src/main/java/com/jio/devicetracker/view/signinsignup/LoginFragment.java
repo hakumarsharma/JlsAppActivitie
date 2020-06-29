@@ -23,7 +23,6 @@ package com.jio.devicetracker.view.signinsignup;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -57,7 +56,6 @@ import java.util.Objects;
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private EditText mobileNumberEditText;
-    private Button continueButton;
     private TextView mobileNumberTextView;
     private String phoneNumber;
     private TextView mobileNumberErrorCode;
@@ -79,7 +77,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         enterMobileNumberTextView.setTypeface(Util.mTypeface(getActivity(), 3));
         mobileNumberEditText = view.findViewById(R.id.mobileNumberEditText);
         mobileNumberEditText.setTypeface(Util.mTypeface(getActivity(), 5));
-        continueButton = view.findViewById(R.id.continueLogin);
+        Button continueButton = view.findViewById(R.id.continueLogin);
         continueButton.setTypeface(Util.mTypeface(getActivity(), 5));
         continueButton.setOnClickListener(this);
         TextView requestOTPTextView = view.findViewById(R.id.requestOTPTextView);

@@ -26,7 +26,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.android.gms.maps.model.Dash;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
 import com.jio.devicetracker.database.pojo.CreateGroupData;
@@ -42,7 +41,6 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.device.AddDeviceActivity;
 import com.jio.devicetracker.view.device.DeviceNameActivity;
-import com.jio.devicetracker.view.group.ChooseGroupActivity;
 import com.jio.devicetracker.view.group.CreateGroupActivity;
 import com.jio.devicetracker.view.group.GroupListActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
@@ -71,11 +69,12 @@ public class BaseActivity extends AppCompatActivity {
 
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(this);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
     }
+
     /**
      * Adds individual contact in Dashboard, but it adds as a member of group.
      * Group Name is hardcoded as a Individual_User
@@ -94,6 +93,7 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * sets the group icon
+     *
      * @param selectedIcon
      */
     public void setUserIcon(String selectedIcon) {
@@ -118,13 +118,12 @@ public class BaseActivity extends AppCompatActivity {
                     Intent intent = new Intent(BaseActivity.this, AddDeviceActivity.class);
                     intent.putExtra(Constant.GROUP_ID, createdGroupId);
                     startActivity(intent);
-                } else if(DashboardMainActivity.flowFromPeople){
+                } else if (DashboardMainActivity.flowFromPeople) {
                     addIndividualUserInGroupAPICall();
-                } else if(isFromDevice && !isNavigateToGroupsFragment) {
+                } else if (isFromDevice && !isNavigateToGroupsFragment) {
                     mDbManager.insertInToGroupIconTable(createdGroupId, memberIcon);
                     addIndividualUserInGroupAPICall();
-                }
-                else {
+                } else {
                     addIndividualUserInGroupAPICall();
                 }
             }
@@ -190,19 +189,18 @@ public class BaseActivity extends AppCompatActivity {
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
-                if(isGroupMember) {
+                if (isGroupMember) {
                     getAllForOneGroupAPICall();
                 } else if (isFromDevice) {
                     Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
-                    if(isNavigateToGroupsFragment != null && isNavigateToGroupsFragment) {
+                    if (isNavigateToGroupsFragment != null && isNavigateToGroupsFragment) {
                         isNavigateToGroupsFragment = false;
                         intent.putExtra(Constant.Add_Device, false);
                         intent.putExtra(Constant.Add_People, false);
                     } /*else if(isNavigateToGroupsFragment != null && ){
                         intent.putExtra(Constant.Add_Device, false);
                         intent.putExtra(Constant.Add_People, false);
-                    }*/
-                    else if (!isFromCreateGroup) {
+                    }*/ else if (!isFromCreateGroup) {
                         intent.putExtra(Constant.Add_Device, true);
                     }
                     startActivity(intent);
@@ -240,7 +238,7 @@ public class BaseActivity extends AppCompatActivity {
      * Get all members of a particular group and update the database
      */
     public void getAllForOneGroupAPICall() {
-        if(Util.progressDialog == null) {
+        if (Util.progressDialog == null) {
             Util.getInstance().showProgressBarDialog(this);
         }
         GroupRequestHandler.getInstance(this).handleRequest(new GetGroupMemberRequest(new GetGroupMemberRequestSuccessListener(), new GetGroupMemberRequestErrorListener(), createdGroupId, mDbManager.getAdminLoginDetail().getUserId()));
@@ -257,7 +255,7 @@ public class BaseActivity extends AppCompatActivity {
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
                 BaseActivity baseActivity = new AddPeopleActivity();
-                ((AddPeopleActivity)baseActivity).getAllMembers(groupMemberResponse.getData());
+                ((AddPeopleActivity) baseActivity).getAllMembers(groupMemberResponse.getData());
             }
         }
     }
@@ -271,13 +269,5 @@ public class BaseActivity extends AppCompatActivity {
             Util.progressDialog.dismiss();
         }
     }
-
-    private void gotoGroupListActivity() {
-        Intent intent = new Intent(this, GroupListActivity.class);
-        intent.putExtra(Constant.GROUP_ID, createdGroupId);
-        intent.putExtra(Constant.USER_ID, mDbManager.getAdminLoginDetail().getUserId());
-        startActivity(intent);
-    }
-
 
 }

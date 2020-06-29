@@ -1,6 +1,5 @@
 package com.jio.devicetracker.view;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
@@ -22,7 +21,6 @@ public class HowToUseActivity extends AppCompatActivity implements View.OnClickL
 
     // private TabLayout tabLayout;
     private ViewPager howToUseViewPager;
-    private HowToUseAdapter howToUseAdapter;
     private TextView qrCodeTitle;
     private TextView manualTitle;
 
@@ -49,7 +47,7 @@ public class HowToUseActivity extends AppCompatActivity implements View.OnClickL
         qrCodeTitle.setOnClickListener(this);
         manualTitle.setOnClickListener(this);
 
-        howToUseAdapter = new HowToUseAdapter(getSupportFragmentManager(), 2);
+        HowToUseAdapter howToUseAdapter = new HowToUseAdapter(getSupportFragmentManager(), 2);
         howToUseViewPager = findViewById(R.id.howToUsePager);
         howToUseViewPager.setAdapter(howToUseAdapter);
         pageChangeListener();
