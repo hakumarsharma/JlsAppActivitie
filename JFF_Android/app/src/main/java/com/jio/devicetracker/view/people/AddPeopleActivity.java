@@ -123,7 +123,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             addContact.setTypeface(Util.mTypeface(this, 5));
             addContact.setOnClickListener(this);
             addContact_Continue.setText("Continue");
-        }else {
+        } else {
             addContact_Continue.setText("Add later");
             addContact_Continue.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_frame_white, null));
             addContact_Continue.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.lite_blue));
@@ -140,7 +140,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(this);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
@@ -185,15 +185,15 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 setEditTextBottomLineColor(contactName);
 
                 // Displaying add button and continue based on groupid as groupid exists if user is coming from create group
-                if (addContact_Continue.getText().equals("Add later")){
+                if (addContact_Continue.getText().equals("Add later")) {
                     addContact_Continue.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_frame_white, null));
                     addContact_Continue.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.lite_blue));
-                }else if ((groupId == null || groupId.isEmpty()) && !Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
+                } else if ((groupId == null || groupId.isEmpty()) && !Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
                     setButtonBackground(addContact_Continue, true);
-                } else if (groupId != null && !groupId.isEmpty() && ! Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
+                } else if (groupId != null && !groupId.isEmpty() && !Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
                     setButtonBackground(addContact, true);
                     setButtonBackground(addContact_Continue, false);
-                } else  {
+                } else {
                     setButtonBackground(addContact_Continue, false);
                     setButtonBackground(addContact, false);
                 }
@@ -218,7 +218,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 setEditTextBottomLineColor(contactNumber);
 
                 // Displaying add button and continue based on groupid as groupid exists if user is coming from create group
-                if (addContact_Continue.getText().equals("Add later")){
+                if (addContact_Continue.getText().equals("Add later")) {
                     addContact_Continue.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_frame_white, null));
                     addContact_Continue.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.lite_blue));
                 } else if ((groupId == null || groupId.isEmpty()) && !Constant.EMPTY_STRING.equalsIgnoreCase(name) && !Constant.EMPTY_STRING.equalsIgnoreCase(number)) {
@@ -346,7 +346,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
 
             if (!listOfContacts.isEmpty() && addContact_Continue != null) {
                 setButtonBackground(addContact_Continue, true);
-            }else {
+            } else {
                 setButtonBackground(addContact_Continue, false);
             }
             adapterEventListener();
