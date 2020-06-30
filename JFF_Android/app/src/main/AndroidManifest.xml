@@ -150,7 +150,7 @@
             android:name=".view.location.LocationActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.HowToUseActivity"
+            android:name=".view.menu.HowToUseActivity"
             android:label="@string/map_name" />
         <activity
             android:name=".view.EditMemberActivity"

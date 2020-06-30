@@ -1,4 +1,4 @@
-package com.jio.devicetracker.view;
+package com.jio.devicetracker.view.menu;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

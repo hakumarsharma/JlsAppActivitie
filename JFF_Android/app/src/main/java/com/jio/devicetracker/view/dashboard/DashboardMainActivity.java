@@ -85,7 +85,7 @@ import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.HowToUseActivity;
+import com.jio.devicetracker.view.menu.HowToUseActivity;
 import com.jio.devicetracker.view.adapter.DashboardAdapter;
 import com.jio.devicetracker.view.device.QRReaderInstruction;
 import com.jio.devicetracker.view.group.CreateGroupActivity;

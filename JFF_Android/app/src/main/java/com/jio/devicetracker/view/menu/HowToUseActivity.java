@@ -1,4 +1,4 @@
-package com.jio.devicetracker.view;
+package com.jio.devicetracker.view.menu;
 
 import android.graphics.Color;
 import android.os.Bundle;
