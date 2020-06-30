@@ -210,7 +210,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition(), true);
                     break;
                 case R.id.share_invite:
-                    layoutOps.setVisibility(View.GONE);
+                    PeopleListAdapter.this.layoutOps = layoutOps;
                     makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition(), false);
                     break;
                 default:
