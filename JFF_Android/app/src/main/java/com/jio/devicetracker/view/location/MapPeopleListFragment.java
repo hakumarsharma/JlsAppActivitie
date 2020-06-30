@@ -109,7 +109,7 @@ public class MapPeopleListFragment extends Fragment {
         // Location is not there for any of the group member
         else if (mapDataList.isEmpty()) {
             for (GroupMemberDataList allGroupMemberData : allGroupMemberDataBasedOnGroupId) {
-                if (allGroupMemberData.getConsentStatus().equals(Constant.CONSET_STATUS_APPROVED) || allGroupMemberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || allGroupMemberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))
+                if (allGroupMemberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || allGroupMemberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || allGroupMemberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))
                 {
                     GroupMemberDataList groupDataList = new GroupMemberDataList();
                     groupDataList.setGroupId(allGroupMemberData.getGroupId());
