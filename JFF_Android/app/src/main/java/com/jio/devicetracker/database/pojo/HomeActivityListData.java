@@ -22,6 +22,8 @@
 
 package com.jio.devicetracker.database.pojo;
 
+import java.util.List;
+
 public class HomeActivityListData {
 
     private String name;
@@ -32,6 +34,7 @@ public class HomeActivityListData {
     private String lng;
     private String consentStaus;
     private String consentTime;
+    private String consentId;
     private int consentApprovalTime;
     private boolean isSelected;
     private String relationWithName;
@@ -48,6 +51,18 @@ public class HomeActivityListData {
     private String groupOwnerName;
     private String groupOwnerUserId;
     private String groupOwnerPhoneNumber;
+    private String groupIcon;
+    private String userId;
+    private List<GroupMemberDataList> consentsList;
+    private int consentsCount;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getGroupOwnerName() {
         return groupOwnerName;
@@ -135,6 +150,12 @@ public class HomeActivityListData {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getConsentId() { return consentId; }
+
+    public void setConsentId(String consentId) {
+        this.consentId = consentId;
     }
 
     public String getDeviceType() {
@@ -240,4 +261,27 @@ public class HomeActivityListData {
         this.relationWithName = relationWithName;
     }
 
+    public void setGroupIcon(String groupIcon) {
+        this.groupIcon = groupIcon;
+    }
+
+    public String getGroupIcon() {
+        return groupIcon;
+    }
+
+    public void setListOfConsent(List<GroupMemberDataList> consentsList) {
+        this.consentsList = consentsList;
+    }
+
+    public List<GroupMemberDataList> getListOfConsents() {
+        return consentsList;
+    }
+
+    public int getConsentsCount() {
+        return consentsCount;
+    }
+
+    public void setConsentsCount(int consentsCount) {
+        this.consentsCount = consentsCount;
+    }
 }

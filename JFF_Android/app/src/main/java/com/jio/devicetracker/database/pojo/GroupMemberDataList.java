@@ -42,6 +42,15 @@ public class GroupMemberDataList {
     private String groupOwnerName;
     private String groupOwnerNumber;
     private String groupOwnerUserId;
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getGroupOwnerNumber() {
         return groupOwnerNumber;

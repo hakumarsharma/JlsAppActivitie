@@ -54,7 +54,7 @@ public class CreateGroupRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return Constant.ACCOUNTS_API_USER_URL + userId + Constant.SESSION_GROUPS_URL;
+        return Constant.ACCOUNTS_API_USER_URL + userId + Constant.SESSION_GROUPS_URL1;
     }
 
     @Override

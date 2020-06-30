@@ -26,6 +26,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
@@ -58,6 +59,9 @@ public final class Util extends AppCompatActivity {
     public static String userToken = "";
     public static String userName = "";
     public static String userId = "";
+    public static String userNumber = "";
+    public static String googleToken;
+    private Date expiryTime;
 
     private Util() {
 
@@ -74,6 +78,7 @@ public final class Util extends AppCompatActivity {
         }
         return mUtils;
     }
+
 
     /**
      * Converts class to JSON object
@@ -198,6 +203,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Convert current time to epoch time
+     *
      * @return
      */
     public long convertTimeToEpochtime() {
@@ -216,6 +222,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Convert current time + given time to epoch time
+     *
      * @param min
      * @return
      */
@@ -234,34 +241,53 @@ public final class Util extends AppCompatActivity {
         return epochTime;
     }
 
+    public long createSessionEndDate() {
+        long epochTime = 0;
+        Date today = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(sdf.format(today)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.add(Calendar.DATE, 90);
+        sdf = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
+        Date date = new Date(c.getTimeInMillis());
+        epochTime = date.getTime() + 60 * 1000;
+        return epochTime;
+    }
+
     /**
      * Get Difference between two epoch time
+     *
      * @param fromTime
      * @param toTime
      */
     public String getTrackingExpirirationDuration(long fromTime, long toTime) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
-            Date fromDate = sdf.parse(sdf.format(new Date(fromTime)));
-            Date toDate = sdf.parse(sdf.format(new Date(toTime)));
-            long diff = toDate.getTime() - fromDate.getTime();
+            Date sessionEndTime = sdf.parse(sdf.format(new Date(toTime)));
+            long today = Calendar.getInstance().getTimeInMillis();
+            Date toDate = sdf.parse(sdf.format(new Date(today)));
+            long diff = sessionEndTime.getTime() - toDate.getTime();
             DecimalFormat crunchifyFormatter = new DecimalFormat("###,###");
             int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
             int diffhours = (int) (diff / (60 * 60 * 1000));
             int diffmin = (int) (diff / (60 * 1000));
             int diffsec = (int) (diff / (1000));
             if (diffDays > 0) {
-                return crunchifyFormatter.format(diffDays) + "day";
+                return crunchifyFormatter.format(diffDays) + (diffDays > 1 ? " days" : "day");
             } else if (diffhours > 0) {
-                return crunchifyFormatter.format(diffhours) + "hour";
+                return crunchifyFormatter.format(diffhours) + (diffhours > 1 ? " hours" : "hour");
             } else if (diffmin > 0) {
-                return crunchifyFormatter.format(diffmin) + "min";
+                return crunchifyFormatter.format(diffmin) + (diffmin > 1 ? " minutes" : "minute");
             }
-            return crunchifyFormatter.format(diffsec) + "sec";
+            return crunchifyFormatter.format(diffsec) + (diffmin > 1 ? " seconds" : "second");
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return "";
+        return Constant.EMPTY_STRING;
     }
 
     /**
@@ -271,7 +297,7 @@ public final class Util extends AppCompatActivity {
      * @param message
      */
     public void showProgressBarDialog(Context context, String message) {
-        progressDialog = ProgressDialog.show(context, "", message, true);
+        progressDialog = ProgressDialog.show(context, Constant.EMPTY_STRING, message, true);
         progressDialog.setCancelable(true);
     }
 
@@ -281,7 +307,7 @@ public final class Util extends AppCompatActivity {
      * @param context
      */
     public void showProgressBarDialog(Context context) {
-        progressDialog = ProgressDialog.show(context, "", Constant.LOADING_DATA, true);
+        progressDialog = ProgressDialog.show(context, Constant.EMPTY_STRING, Constant.LOADING_DATA, true);
         progressDialog.setCancelable(true);
     }
 
@@ -300,7 +326,7 @@ public final class Util extends AppCompatActivity {
      * @param mContext
      * @param flag
      */
-    public static void setTermconditionFlag(Context mContext, boolean flag) {
+    public void setTermconditionFlag(Context mContext, boolean flag) {
         sharedpreferences = mContext.getSharedPreferences(Constant.TERM_CONDITION_FLAG, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putBoolean("FLAG", flag);
@@ -316,11 +342,38 @@ public final class Util extends AppCompatActivity {
     public static boolean getTermconditionFlag(Context mContext) {
         sharedpreferences = mContext.getSharedPreferences(Constant.TERM_CONDITION_FLAG, Context.MODE_PRIVATE);
         if (sharedpreferences != null) {
-
             return sharedpreferences.getBoolean("FLAG", false);
         }
         return false;
     }
+
+    /**
+     * Sets the group Id
+     *
+     * @param mContext
+     * @param groupId
+     */
+    public static void setGroupId(Context mContext, String groupId) {
+        sharedpreferences = mContext.getSharedPreferences(Constant.GROUP_ID_VALUE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(Constant.GROUP_ID, groupId);
+        editor.commit();
+    }
+
+    /**
+     * returns the group_id
+     *
+     * @param mContext
+     * @return
+     */
+    public static String getGroupId(Context mContext) {
+        sharedpreferences = mContext.getSharedPreferences(Constant.GROUP_ID_VALUE, Context.MODE_PRIVATE);
+        if (sharedpreferences != null) {
+            return sharedpreferences.getString(Constant.GROUP_ID, "");
+        }
+        return "";
+    }
+
 
     /**
      * Sets Login status
@@ -328,7 +381,7 @@ public final class Util extends AppCompatActivity {
      * @param mContext
      * @param flag
      */
-    public static void setAutologinStatus(Context mContext, boolean flag) {
+    public void setAutologinStatus(Context mContext, boolean flag) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.AUTO_LOGIN_STATUS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedAutologin.edit();
         editor.putBoolean(Constant.AUTO_LOGIN, flag);
@@ -341,7 +394,7 @@ public final class Util extends AppCompatActivity {
      * @param mContext
      * @return
      */
-    public static boolean getAutologinStatus(Context mContext) {
+    public boolean getAutologinStatus(Context mContext) {
         SharedPreferences sharedAutologin = mContext.getSharedPreferences(Constant.AUTO_LOGIN_STATUS, Context.MODE_PRIVATE);
         return sharedAutologin.getBoolean(Constant.AUTO_LOGIN, false);
     }
@@ -452,6 +505,43 @@ public final class Util extends AppCompatActivity {
             userToken = adminLoginData.getUserToken();
             userName = adminLoginData.getName();
             userId = adminLoginData.getUserId();
+            userNumber = adminLoginData.getPhoneNumber();
         }
+    }
+
+    public static Typeface mTypeface(Context ctx, int typeface) {
+        Typeface font1 = null;
+        if (typeface == 1) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-Black.ttf");
+        } else if (typeface == 2) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-Bold.ttf");
+        } else if (typeface == 3) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-Light.ttf");
+        } else if (typeface == 4) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-LightItalic.ttf");
+        } else if (typeface == 5) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-Medium.ttf");
+        } else if (typeface == 6) {
+            font1 = Typeface.createFromAsset(ctx.getAssets(), "fonts/JioType-MediumItalic.ttf");
+        }
+        return font1;
+    }
+
+    public void updateGoogleToken(String googleToken) {
+        this.googleToken = googleToken;
+    }
+
+    public String getGoogleToken() {
+        return googleToken;
+    }
+
+    public void setExpiryTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 2);
+        expiryTime = calendar.getTime();
+    }
+
+    public boolean isGoogleTokenExpired() {
+        return Calendar.getInstance().getTime().after(expiryTime);
     }
 }

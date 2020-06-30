@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardviewlayout_device_background_color">
+
+    <include
+        android:id="@+id/signInSignUpToolbar"
+        layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/signInSignUpTab"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@+id/signInSignUpToolbar"
+        android:background="@drawable/layout_frame_blue">
+
+        <TextView
+            android:id="@+id/signinTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_24"
+            android:layout_marginTop="@dimen/margin_30"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/fourteen_dp" />
+
+        <TextView
+            android:id="@+id/signupTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/signinTextView"
+            android:layout_marginLeft="@dimen/margin_40"
+            android:layout_toRightOf="@+id/signinTextView"
+            android:gravity="center"
+            android:text="Sign up"
+            android:textColor="@color/tabBarUnselectedColor"
+            android:textSize="@dimen/fourteen_dp" />
+        
+    </RelativeLayout>
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/signinSignupviewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signInSignUpTab" />
+
+</RelativeLayout>

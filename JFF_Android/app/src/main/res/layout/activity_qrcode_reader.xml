@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardviewlayout_device_background_color"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/qrscanToolbar"
+        layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/scanFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/qrscanToolbar">
+
+        <!--<TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/scanText"
+            android:text="@string/qrcode_text"
+            android:layout_marginTop="@dimen/fifty_dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/twenty_dp"
+            />-->
+
+        <RelativeLayout
+            android:id="@+id/scanImage"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_qrcodescan"
+            >
+
+            <RelativeLayout
+                android:id="@+id/scanframe"
+                android:layout_width="270dp"
+                android:layout_height="270dp"
+                android:layout_centerInParent="true"
+               />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</RelativeLayout>

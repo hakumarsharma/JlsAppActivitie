@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/activeSessionLayout"
+    >
+
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:id="@+id/groupListLayout"
+        android:layout_height="90dp"
+        android:layout_margin="10dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/groupmemberIcon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/admin" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="20dp"
+                android:text="Harish Kumar"
+                android:textColor="@color/black"
+                android:textSize="@dimen/seventeen_dp" />
+           <!-- <TextView
+                android:id="@+id/group_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="5dp"
+                android:text="Group Name"
+                android:layout_below="@+id/user_name"
+                android:textColor="@color/alert_text_color"
+                android:textSize="@dimen/seventeen_dp" />-->
+
+
+
+            <ImageView
+                android:id="@+id/operationStatus"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="@dimen/ten_dp"
+                android:src="@drawable/ic_more_black" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+    <RelativeLayout
+        android:id="@+id/oprationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ten_dp"
+        android:elevation="@dimen/ten_dp"
+        android:visibility="gone"
+        android:background="@drawable/dialog_lightblue_background">
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:src="@drawable/ic_close" />
+
+        <TextView
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_22"
+            android:layout_marginTop="@dimen/margin_18"
+            android:text="Edit members"
+            android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp" />
+
+        <View
+            android:id="@+id/editLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/edit"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:layout_marginRight="@dimen/fourteen_dp"
+            android:background="@color/light_hash" />
+
+        <TextView
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editLine"
+            android:layout_marginLeft="@dimen/margin_22"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:text="Delete all members"
+            android:textColor="@color/white"
+            android:paddingBottom="@dimen/margin_12"
+            android:textSize="@dimen/seventeen_dp" />
+
+    </RelativeLayout>
+</RelativeLayout>

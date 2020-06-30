@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/bluebackground"
+    android:layout_marginLeft="16dp"
+    android:layout_marginTop="@dimen/ten_dp"
+    android:layout_marginRight="16dp"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="10dp"
+    android:layout_marginBottom="10dp"
+    card_view:cardElevation="8dp">
+     <RelativeLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/questionLayout"
+            android:paddingBottom="@dimen/twenty_dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="First Question ?"
+                android:id="@+id/question"
+                android:layout_marginTop="@dimen/twenty_dp"
+                android:layout_marginLeft="@dimen/twenty_dp"
+                android:textSize="@dimen/seventeen_dp"
+                android:textColor="@color/black"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/faq_arrowopen"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/question"
+                android:id="@+id/faq_open_close_icon"
+                android:layout_marginRight="@dimen/margin_18"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/answerLayout"
+            android:paddingBottom="@dimen/fifteen_dp"
+            android:layout_below="@+id/questionLayout"
+
+
+            >
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="@dimen/margin_18"
+                android:layout_marginRight="@dimen/margin_18"
+                android:background="@color/dull_text_color"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/answer"
+                android:layout_marginTop="@dimen/twenty_dp"
+                android:layout_marginRight="@dimen/twenty_dp"
+                android:layout_marginLeft="@dimen/twenty_dp"
+                android:text="Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat."
+                />
+
+        </RelativeLayout>
+     </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>

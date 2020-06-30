@@ -20,37 +20,55 @@
 
 package com.jio.devicetracker.view.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.google.gson.Gson;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
+import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
+import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
-
 import java.util.List;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Display the member's list available inside group
  */
 public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberListAdapter.ViewHolder> {
     private List<GroupMemberDataList> mList;
-    private static RecyclerViewClickListener itemListener;
+    private Context mContext;
 
     /**
      * Constructor to add devices inside group
      *
      * @param mList
      */
-    public ActiveMemberListAdapter(List<GroupMemberDataList> mList) {
+    public ActiveMemberListAdapter(List<GroupMemberDataList> mList, Context mContext) {
         this.mList = mList;
+        this.mContext = mContext;
     }
-
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
     /**
      * Binds the given View to the position
      *
@@ -62,7 +80,6 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_member_list, parent, false);
-
         return new ActiveMemberListAdapter.ViewHolder(itemView);
     }
 
@@ -74,34 +91,7 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
      */
     @Override
     public void onBindViewHolder(@NonNull ActiveMemberListAdapter.ViewHolder holder, int position) {
-        if (mList.get(position).getGroupOwnerName() != null) {
-            holder.phone.setText(mList.get(position).getGroupOwnerNumber());
-            holder.name.setText(mList.get(position).getGroupOwnerName());
-            holder.profile.setImageResource(mList.get(position).getProfileImage());
-        } else {
-            holder.phone.setText(mList.get(position).getNumber());
-            holder.name.setText(mList.get(position).getName());
-            holder.profile.setImageResource(mList.get(position).getProfileImage());
-            holder.durationtime.setText(Util.getInstance().getTrackingExpirirationDuration(mList.get(position).getFrom(), mList.get(position).getTo()));
-            holder.expirytime.setText(Util.getInstance().getTrackingExpirirationDuration(Util.getInstance().convertTimeToEpochtime(), mList.get(position).getTo()));
-        }
-        holder.activeMemberOptions.setOnClickListener(v -> itemListener.onPopupMenuClicked(holder.activeMemberOptions, position, mList.get(position)));
-    }
-
-    /**
-     * Register the listener
-     *
-     * @param mItemClickListener
-     */
-    public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
-        this.itemListener = mItemClickListener;
-    }
-
-    /**
-     * Interface to override methods in Dashboard to call those methods on particular item click
-     */
-    public interface RecyclerViewClickListener {
-        void onPopupMenuClicked(View v, int position, GroupMemberDataList groupMemberDataList);
+        holder.activeMemberName.setText(mList.get(position).getName());
     }
 
     /**
@@ -117,14 +107,9 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
     /**
      * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView phone;
-        public TextView name;
-        public TextView durationtime;
-        public TextView expirytime;
-        public ImageView profile;
-        public TextView activeMemberOptions;
-
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        private TextView activeMemberName;
+        private Button activeMemberDeleteButton;
         /**
          * Constructor where we find element from .xml file
          *
@@ -132,18 +117,64 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            phone = itemView.findViewById(R.id.mobileNumber);
-            name = itemView.findViewById(R.id.name);
-            durationtime = itemView.findViewById(R.id.durationTime);
-            expirytime = itemView.findViewById(R.id.expiryTime);
-            profile = itemView.findViewById(R.id.traceeImage);
-            activeMemberOptions = itemView.findViewById(R.id.activeMemberOptions);
+            activeMemberName = itemView.findViewById(R.id.activeMemberName);
+            activeMemberDeleteButton = itemView.findViewById(R.id.activeMemberDeleteButton);
+            activeMemberDeleteButton.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == R.id.activeMemberDeleteButton) {
+                makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition());
+            }
         }
     }
 
     /**
-     * Called when we remove device from active member screen
+     * Make a Remove API Call
      *
+     * @param groupMemberDataList
+     */
+    private void makeRemoveAPICall(GroupMemberDataList groupMemberDataList, int position) {
+        DBManager mDbManager = new DBManager(mContext);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
+        ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
+        ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
+        consent.setPhone(groupMemberDataList.getNumber());
+        consent.setStatus(Constant.REMOVED);
+        exitRemovedGroupData.setConsent(consent);
+        RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
+        Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mDbManager.getAdminLoginDetail().getUserToken(),
+                Constant.APPLICATION_JSON, mDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, groupMemberDataList.getGroupId(), body);
+        Util.getInstance().showProgressBarDialog(mContext);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    Util.progressDialog.dismiss();
+                    Toast.makeText(mContext, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
+                    mDbManager.deleteSelectedDataFromGroupMember(groupMemberDataList.getConsentId());
+                    removeItem(position);
+                } else {
+                    Util.progressDialog.dismiss();
+                    showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Util.progressDialog.dismiss();
+                showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
+            }
+        });
+    }
+
+    /**
+     * Called when we remove device from active member screen
      * @param adapterPosition
      */
     public void removeItem(int adapterPosition) {
@@ -151,6 +182,5 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
         notifyItemRemoved(adapterPosition);
         notifyDataSetChanged();
     }
-
 }
 

@@ -4,6 +4,8 @@
     package="com.jio.devicetracker">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
@@ -23,18 +25,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".view.GroupNameActivity" />
-        <activity android:name=".view.ActiveMemberActivity" />
-        <activity android:name=".view.RefreshIntervalSettingActivity" />
+
+        <activity android:name=".view.signinsignup.SigninSignupActivity" />
+        <activity android:name=".view.dashboard.DashboardActivity" />
+        <activity android:name=".view.group.CreateGroupActivity" />
+        <activity android:name=".view.group.ChooseGroupActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize"
+            />
+        <activity android:name=".view.group.GroupNameActivity" />
+        <activity android:name=".view.menu.ActiveMemberActivity" />
+        <activity android:name=".view.menu.RefreshIntervalSettingActivity" />
+        <activity android:name=".view.menu.NotificationsActivity"/>
+        <activity android:name=".view.menu.SilentModeActivity"/>
+        <activity android:name=".view.people.EditMemberDetailsActivity"/>
 
         <service
             android:name=".network.SendLocationService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".view.ProfileActivity" />
+        <activity android:name=".view.menu.ProfileActivity" />
         <activity
-            android:name=".view.LoginActivity"
+            android:name=".view.signinsignup.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter android:label="@string/title_activity_maps">
@@ -60,46 +72,103 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity android:name=".view.DashboardActivity">
+            <activity android:name=".view.dashboard.DashboardMainActivity">
             <intent-filter android:label="@string/title_activity_maps">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
                 <data
-                    android:host="stg.borqs.io"
+                    android:host="sit.dm.cats.jvts.net"
                     android:scheme="https" />
                 <!-- note that the leading "/" is required for pathPrefix -->
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.MapsActivity"
+            android:name=".view.device.AddDeviceActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.EditActivity"
+            android:name=".view.location.MapsActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.HelpActivity"
+            android:name=".view.people.EditActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.ActiveSessionActivity"
+            android:name=".view.menu.HelpActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.QRCodeReaderActivity"
+            android:name=".view.menu.ActiveSessionActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.PrivacyPolicyActivity"
+            android:name=".view.device.QRCodeReaderActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.RegistrationActivity"
+            android:name=".view.signinsignup.RegistrationActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.ContactDetailsActivity"
+            android:name=".view.people.ContactDetailsActivity"
             android:label="@string/map_name" />
         <activity
-            android:name=".view.GroupListActivity"
+            android:name=".view.group.GroupListActivity"
             android:label="@string/map_name" />
+        <activity
+            android:name=".view.device.QRReaderInstruction"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.device.DeviceNameActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".util.CustomAlertActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.people.AddPeopleActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.menu.NavigateUserProfileActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.menu.NavigateSupportActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.menu.TermAndConditionPolicyActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.menu.AboutAppActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.menu.FaqActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.menu.ContactUsActivity"
+            android:label="@string/map_name" />
+        <activity
+        android:name=".view.menu.EditUserProfileActivity"
+        android:label="@string/map_name" />
+        <activity
+            android:name=".view.location.LocationActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.menu.HowToUseActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.EditMemberActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.device.AttachDeviceActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.device.QRCodeRescanActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.location.ShareLocationActivity"
+            android:label="@string/map_name" />
+        <activity
+            android:name=".view.people.ChooseGroupFromPeopleFlow"
+            android:windowSoftInputMode="adjustPan|adjustResize"
+            android:label="@string/map_name" />
+
         <activity
             android:name=".view.SplashScreenActivity"
             android:theme="@style/SplashScreen">

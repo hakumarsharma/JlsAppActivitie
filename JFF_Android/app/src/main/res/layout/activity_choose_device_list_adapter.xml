@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/listLayout"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    card_view:cardCornerRadius="10dp"
+    android:layout_marginRight="14dp"
+    android:layout_marginLeft="14dp"
+    android:layout_marginTop="10dp"
+    card_view:cardElevation="8dp"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    tools:context=".view.group.ChooseGroupActivity">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/firstButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:visibility="invisible"
+            android:layout_marginLeft="22dp"
+            android:color="#FFFFFF"
+            android:alpha="0.25"
+            android:drawableTop="@drawable/ic_creategroup"
+            android:background="@drawable/button_shape"
+            android:layout_marginTop="28dp" />
+
+        <TextView
+            android:id="@+id/firstButtonTextView"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="34dp"
+            android:textSize="14dp"
+            android:layout_marginTop="110dp"/>
+
+        <Button
+            android:id="@+id/secondButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="28dp"
+            android:visibility="invisible"
+            android:layout_marginLeft="110dp"
+            android:color="#FFFFFF"
+            android:alpha="0.25"
+            android:drawableTop="@drawable/ic_creategroup"
+            android:background="@drawable/button_shape" />
+
+        <TextView
+            android:id="@+id/secondButtonTextView"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:layout_marginLeft="122dp"
+            android:visibility="invisible"
+            android:layout_marginTop="110dp"/>
+
+        <Button
+            android:id="@+id/thirdButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="28dp"
+            android:visibility="invisible"
+            android:layout_marginLeft="198dp"
+            android:color="#FFFFFF"
+            android:alpha="0.25"
+            android:drawableTop="@drawable/ic_creategroup"
+            android:background="@drawable/button_shape" />
+
+        <TextView
+            android:id="@+id/thirdButtonTextView"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:layout_marginLeft="212dp"
+            android:visibility="invisible"
+            android:layout_marginTop="110dp"/>
+
+        <Button
+            android:id="@+id/fourthButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="28dp"
+            android:visibility="invisible"
+            android:color="#FFFFFF"
+            android:alpha="0.25"
+            android:layout_marginLeft="288dp"
+            android:drawableTop="@drawable/ic_creategroup"
+            android:background="@drawable/button_shape" />
+
+        <TextView
+            android:id="@+id/fourthButtonTextView"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:layout_marginLeft="305dp"
+            android:visibility="invisible"
+            android:layout_marginTop="110dp"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

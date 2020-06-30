@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/cardviewlayout_device_background_color"
     android:layout_height="match_parent">
-
-
 
     <ImageView
         android:id="@+id/helpImage"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="30dp"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true"
         />
+
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/heading"
-        android:textSize="15sp"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="10dp"
+        android:textSize="17dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:layout_below="@+id/helpImage"
-        android:textColor="@color/black"
+        android:lineSpacingExtra="2dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
         android:text="Login :"
         />
 
@@ -27,13 +31,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/content"
-        android:textSize="12sp"
+        android:textSize="17dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/black"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:textColor="@color/white"
         android:lineSpacingExtra="2dp"
+        android:textAlignment="center"
         android:layout_below="@+id/heading"
-        android:text="User has to login with registered details. Which will help him to add a device and track"
-        />
+        android:layout_marginBottom="50dp"
+        android:text="User has to login with registered details. Which will help him to add a device and track"  />
 
 </RelativeLayout>

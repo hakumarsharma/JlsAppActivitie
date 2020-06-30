@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#EBEBEB"
-        tools:context=".view.DashboardActivity">
+        tools:context=".view.dashboard.DashboardActivity">
 
         <include
             android:id="@+id/customToolbar"
@@ -60,7 +60,7 @@
             android:layout_marginEnd="16dp">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/createGroup"
+                android:id="@+id/createGroupInDashboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/colorConsentNotSent"

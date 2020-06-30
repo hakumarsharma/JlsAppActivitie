@@ -9,24 +9,21 @@
         layout="@layout/toolbar" />
 
     <TextView
-        android:id="@+id/activeMemberInGroupPresent"
+        android:id="@+id/groupNameTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/instructionOnActiveMember"
-        android:lineSpacingExtra="5dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:textSize="18sp"
-        android:visibility="invisible" />
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="@dimen/ten_dp"
+        android:layout_below="@id/customToolbar"
+        android:textColor="@color/mine_shaft"
+        android:textSize="@dimen/fourteen_dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/trackerList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/customToolbar"
+        android:layout_below="@+id/groupNameTitle"
+        android:layout_marginTop="10dp"
         android:divider="#806326"
         android:dividerHeight="1dp" />
 

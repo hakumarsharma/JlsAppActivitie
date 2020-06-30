@@ -39,7 +39,7 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MultipleselectData;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.view.DashboardActivity;
+import com.jio.devicetracker.view.dashboard.DashboardActivity;
 
 import java.util.List;
 
@@ -358,7 +358,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     /**
      * Register the listener
-     *
      * @param mItemClickListener
      */
     public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
@@ -367,7 +366,6 @@ public class TrackerDeviceListAdapter extends RecyclerView.Adapter<TrackerDevice
 
     /**
      * Called when we remove device from home screen
-     *
      * @param adapterPosition
      */
     public void removeItem(int adapterPosition) {

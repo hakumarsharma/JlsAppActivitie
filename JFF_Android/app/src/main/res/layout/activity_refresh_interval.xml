@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    tools:context=".view.RefreshIntervalSettingActivity">
+    tools:context=".view.menu.RefreshIntervalSettingActivity">
 
     <include
         android:id="@+id/refreshIntervalToolbar"

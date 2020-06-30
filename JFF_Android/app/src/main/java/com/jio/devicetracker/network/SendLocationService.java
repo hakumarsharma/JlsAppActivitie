@@ -36,8 +36,8 @@ import android.os.IBinder;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.view.DashboardActivity;
-import com.jio.devicetracker.view.LoginActivity;
+import com.jio.devicetracker.view.dashboard.DashboardActivity;
+import com.jio.devicetracker.view.signinsignup.LoginActivity;
 
 /**
  * Service which sends location in particular time interval to the MQTT server

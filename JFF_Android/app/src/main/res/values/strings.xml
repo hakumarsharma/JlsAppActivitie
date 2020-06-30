@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">People Tracker</string>
+    <string name="app_name">JioTrack</string>
     <string name="title_activity_maps">People Tracker</string>
-    <string name="map_name">People Tracker</string>
+    <string name="map_name">JioTrack</string>
     <string name="action_settings">Setting</string>
     <string name="about_us">About Us</string>
     <string name="loginLabel">People Tracker</string>
@@ -11,8 +11,20 @@
     <string name="request_otp"><u>Request OTP</u></string>
     <string name="forget_password"> <b>Click Here</b></string>
     <string name="pagerindicater">&amp;#9673;</string>
+    <string name="white_indicater">&amp;#9673;</string>
     <string name="Open">Open</string>
     <string name="Close">Close</string>
+    <string name="helpScreen1heading">Don\'t lose sight of your loved ones</string>
+    <string name="helpScreen1desc">Track live location of device and view it on Maps</string>
+    <string name="helpScreen2heading">Share the location of loved ones</string>
+    <string name="helpScreen2desc">Share the location of device with your partner so they can track as well</string>
+    <string name="helpScreen3heading">Track people &amp; pets in a group</string>
+    <string name="helpScreen3desc">Create groups to track your loved ones collectively</string>
+    <string name="helpScreen4heading">Use SOS in case of Emergency</string>
+    <string name="helpScreen4desc">Utilize Emergency SOS calls to help in distressing situation</string>
+    <string name="helpScreen5heading">Receive active alerts</string>
+    <string name="helpScreen5desc">Get alerted on whereabouts of devices based on your own settings</string>
+
     <string name="instruction">* \t  Click on + icon to add details of device (associated with a person/pet), or to create a group of devices to be tracked. \n* \t Select Add Device or Add Person accordingly. \n* \t Device details may be entered manually or using QR code scanner. Person details may be addded manually or by selecting the contact from contacts. After adding the device/person/group, click on \"Request consent\" to obtain consent approval from the device/person. \n* \t After consent approval is received from the device/person over SMS, select the device/person from the  list and click on \"Track\" to start tracking.</string>
     <string name="instructionOnActiveSession">* \t  No active member/group found.\n* \t Please add member as a group/individual to view them in active session.</string>
     <string name="instructionOnActiveMember">No active member found for this group. Please add member to view them in group.</string>
@@ -33,14 +45,47 @@
     <string name="foreground_service_channel">Foreground Service Channel</string>
     <string name="notification_subtitle">Track friends and family</string>
     <string name="customintent">custom-intent</string>
-    <string name="approveURI">https://stg.borqs.io/fms-consent-status?consentId</string>
+    <string name="approveURI">https://sit.dm.cats.jvts.net/fms-consent-status?consentId</string>
     <string name="channel_name">channel_name</string>
     <string name="channel_description">channel_description</string>
     <string name="device_imei">IMEI*</string>
     <string name="trackee_number">Number*</string>
     <string name="trackee_name">Name*</string>
     <string name="group_name_textview">Please enter your group name</string>
-
+    <string name="add_manual">Add manually</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="qrscan_instruction">A QR code will be available to \nthe back side of your device \nbox.</string>
+    <string name="qrcode_text">Align QR Code with in the \nframe to scan</string>
+    <string name="add_device">Add Device</string>
+    <string name="add_contact">Add Contact</string>
+    <string name="add_device_later">Add device later</string>
+    <string name="add_device_info">To track any Device/Person choose below options to Add device/Add contact and then start tracking.</string>
+    <string name="purchase_info">Inorder to purchase device follow the link</string>
+    <string name="purchase_link">www.myjio/devices/JioTrack</string>
+    <string name="add_people_text">Add people from your contacts or add their name and mobile number</string>
+    <string name="continue_text">Continue</string>
+    <string name="add_later">Add later</string>
+    <string name="rescan_qrcode_instruction">Device not found. Please try \nscanning the QR code again or you can \nadd device manually by entering the \nIMEI number</string>
+    <string name="add_to_group">Add to group</string>
+    <string name="select_icon_text">Let\'s choose any one with whom you \nwant to attach your device</string>
+    <string name="people_title">PEOPLE</string>
+    <string name="pet_title">PET</string>
+    <string name="drawerOpen">Open </string>
+    <string name="drawerClose">Close</string>
+    <string name="chooseGroupText">Now choose any group or \ncreate new group in which \n \t you want to track</string>
+    <string name="signInHelloTextView">Hello! Let\'s get started</string>
+    <string name="sentOTPTextView">OTP has been sent</string>
+    <string name="customizeProfile">Customize profile</string>
+    <string name="alternate_number_textview">Mobile Number</string>
+    <string name="enterMobileNumberTextView">To Login please enter your\n \t \t \t \t mobile number</string>
+    <string name="customizeProfileTextView">To customize your profile,\nplease enter below details</string>
+    <string name="alternate_number_security_textview">Please enter your phone number \nwhich can be used for login</string>
+    <string name="requestOTPTextView">By requesting OTP you agree to the</string>
+    <string name="choose_group_icon">Add group picture</string>
+    <string name="choose_group_icon_text">You can choose from below icon</string>
+    <string name="terms_privacy_policy">Terms &amp; Privacy Policy</string>
+    <string name="tracking_by_default_text">Users who are tracking you will be displayed here.</string>
+    <string name="tracked_by_default_text">Users whom you are tracking you will be displayed here.</string>
 
     <string-array name="device_type_array">
         <item>People Tracker</item>
@@ -94,4 +139,41 @@
 <p>CONTACT INFORMATION :</p>
 <p>For any query, grievance, complaint or any other information that may be required by You, You may contact Our Privacy Compliance Officer at&nbsp;<a href="mailto:info@ril.com">info@ril.com</a>&nbsp;and We shall ensure that We help resolve the same within a period of 48 (forty eight) hours.</p>
         ]]>  </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_app_content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in et dolore magna \naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </string>
+    <string name="name">Name</string>
+    <string name="device">Device phone number</string>
+    <string name="device_number_text">Device phone number</string>
+    <string name="device_number_content">Please enter your device phone number \nwhich is unique for device. You can find \nit at back side of device package.</string>
+    <string name="about_app">About app</string>
+    <string name="term_policy">Terms &amp; privacy policies</string>
+    <string name="term_condition">Terms &amp; Conditions</string>
+    <string name="faq">FAQ</string>
+    <string name="contact_us">Contact us</string>
+    <string name="version">Version</string>
+    <string name="email_id">Email ID</string>
+    <string name="mobile_number">Alternate mobile number</string>
+    <string name="edit_button">Edit</string>
+    <string name="update_button">Update</string>
+    <string name="connect_button">Connect</string>
+    <string name="group_text">GROUPS</string>
+    <string name="detailsForGroup">A Group is a personal circle created by you to quickly track your loved ones collectively. You can track people and devices in the same group. Create a group by clicking on +" sign above" </string>
+    <string name="app_version">Version : v2.33.0003 </string>
+    <string name="contact_us_content">We are here to help and \nanswer your quireis </string>
+    <string name="contact_us_email">care@jio.com</string>
+    <string name="how_to_use_qrcode_1">When you clicks on "+" OR [Add Device] button, application to turn on camera with a QR code bracket.</string>
+    <string name="how_to_use_qrcode_2">You need to place QR code within \nthe bracket for the phone to scan \nthe code \nScanning of QR code would allow \napp to identify MAC ID of the \ndevice, and on verifying it will add \nthe device.</string>
+    <string name="how_to_use_manual_add_1">Enter 10 digit mobile number \nwhich comes with device. You can \nfind out {place on packet}</string>
+    <string name="how_to_use_manual_add_2">Please wait till the device is getting \nconnected with phone</string>
+    <string name="how_to_use_manual_add_3">Attached device to any asset and \nsave the information to get it track.</string>
+    <string name="group_instruction_1">No Groups yet !</string>
+    <string name="group_instruction_2">A Group is a personal circle created by \nyou to quickly track your loved ones \ncollectively. You can track people and \ndevices in the same group. \nCreate a group by clicking on +" sign \nabove" </string>
+    <string name="people_instruction">No Contacts yet !</string>
+    <string name="people_instruction_1">You can start tracking your loved ones \nthrough the application. Add a person \nby clicking on the "+" sign above</string>
+    <string name="people_instruction_2">Attached device to any asset and \nsave the information to get it track.</string>
+    <string name="device_instruction_1">No Devices yet !</string>
+    <string name="device_instruction_2">You can start tracking your loved ones \nwith a device. Add the device by \ntapping on "+" sign above \nDon\'t have a device? \nVisit //http:www.jio.com </string>
+
 </resources>
