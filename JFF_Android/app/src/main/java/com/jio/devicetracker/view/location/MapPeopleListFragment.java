@@ -48,7 +48,6 @@ public class MapPeopleListFragment extends Fragment {
     private DBManager mDbManager;
     private static PeopleListAdapter peopleListAdapter;
     private List<MapData> mapDataList;
-    private static StringBuilder strAddress = null;
     private String groupId;
     private Locale locale = Locale.ENGLISH;
 
@@ -60,7 +59,6 @@ public class MapPeopleListFragment extends Fragment {
         mDbManager = new DBManager(getActivity());
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         groupId = getActivity().getIntent().getStringExtra(Constant.GROUP_ID);
-        strAddress = new StringBuilder();
         displayGroupDataInDashboard(view);
         return view;
     }
@@ -72,7 +70,7 @@ public class MapPeopleListFragment extends Fragment {
         groupListRecyclerView.setLayoutManager(mLayoutManager);
         List<GroupMemberDataList> groupMemberList = new ArrayList<>();
         List<GroupMemberDataList> allGroupMemberDataBasedOnGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
-        if (!mapDataList.isEmpty() && strAddress != null) {
+        if (!mapDataList.isEmpty()) {
             int count = 0;
             for (MapData mapData : mapDataList) {
                 for (GroupMemberDataList groupMemberDataList : allGroupMemberDataBasedOnGroupId) {
@@ -138,6 +136,7 @@ public class MapPeopleListFragment extends Fragment {
      */
     private String getAddressFromLocation(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(getContext(), Locale.ENGLISH);
+        StringBuilder strAddress = new StringBuilder();
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (!addresses.isEmpty()) {

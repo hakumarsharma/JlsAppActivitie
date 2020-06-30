@@ -54,7 +54,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.text.Html;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -459,7 +458,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                     goToHowtoUseActivity();
                     break;
                 case R.id.support:
-                    startActivity(new Intent(DashboardMainActivity.this, NavigateSupportActivity.class));
+                    startActivity(new Intent(this, NavigateSupportActivity.class));
                     break;
                 default:
                     break;
@@ -681,7 +680,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                         switch (status.getStatusCode()) {
                             case LocationSettingsStatusCodes.SUCCESS:
                                 int permissionLocation1 = ContextCompat
-                                        .checkSelfPermission(DashboardMainActivity.this,
+                                        .checkSelfPermission(this,
                                                 Manifest.permission.ACCESS_FINE_LOCATION);
                                 if (permissionLocation1 == PackageManager.PERMISSION_GRANTED) {
                                     currentLocation = LocationServices.FusedLocationApi
@@ -690,7 +689,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                                 break;
                             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                                 try {
-                                    status.startResolutionForResult(DashboardMainActivity.this,
+                                    status.startResolutionForResult(this,
                                             REQUEST_CHECK_SETTINGS_GPS);
                                 } catch (IntentSender.SendIntentException e) {
                                     e.printStackTrace();

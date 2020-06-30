@@ -389,19 +389,14 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                             null, null);
                     phones.moveToFirst();
                     contactName.setText(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
-                    contactNumber.setText((phones.getString((phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))).replace(" ", "")));
+                    contactNumber.setText(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).replace(" ", Constant.EMPTY_STRING));
                 }
             }
         }
     }
 
     private void adapterEventListener() {
-        mAdapter.setOnItemClickPagerListener(new AddPersonListAdapter.RecyclerViewClickListener() {
-            @Override
-            public void onDeleteMemberClicked(View v, int position, String groupId, GroupMemberResponse.Data data) {
-                AddPeopleActivity.this.makeRemoveAPICall(data.getPhone(), groupId, position);
-            }
-        });
+        mAdapter.setOnItemClickPagerListener((v, position, groupId, data) -> AddPeopleActivity.this.makeRemoveAPICall(data.getPhone(), groupId, position));
     }
 
     /**

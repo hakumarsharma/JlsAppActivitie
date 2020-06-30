@@ -276,13 +276,13 @@ public final class Util extends AppCompatActivity {
             int diffmin = (int) (diff / (60 * 1000));
             int diffsec = (int) (diff / (1000));
             if (diffDays > 0) {
-                return crunchifyFormatter.format(diffDays + ((diffDays > 1) ? " days" : "day"));
+                return crunchifyFormatter.format(diffDays + diffDays > 1 ? " days" : "day");
             } else if (diffhours > 0) {
-                return crunchifyFormatter.format(diffhours + ((diffhours > 1) ? " hours" : "hour"));
+                return crunchifyFormatter.format(diffhours + diffhours > 1 ? " hours" : "hour");
             } else if (diffmin > 0) {
-                return crunchifyFormatter.format(diffmin + ((diffmin > 1) ? " minutes" : "minute"));
+                return crunchifyFormatter.format(diffmin + diffmin > 1 ? " minutes" : "minute");
             }
-            return crunchifyFormatter.format(diffsec + ((diffmin > 1) ? " seconds" : "second"));
+            return crunchifyFormatter.format(diffsec + diffmin > 1 ? " seconds" : "second");
         } catch (ParseException e) {
             e.printStackTrace();
         }
