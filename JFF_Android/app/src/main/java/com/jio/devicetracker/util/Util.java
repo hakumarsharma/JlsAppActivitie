@@ -267,9 +267,10 @@ public final class Util extends AppCompatActivity {
     public String getTrackingExpirirationDuration(long fromTime, long toTime) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
-            Date fromDate = sdf.parse(sdf.format(new Date(fromTime)));
-            Date toDate = sdf.parse(sdf.format(new Date(toTime)));
-            long diff = toDate.getTime() - fromDate.getTime();
+            Date sessionEndTime = sdf.parse(sdf.format(new Date(toTime)));
+            long today = Calendar.getInstance().getTimeInMillis();
+            Date toDate = sdf.parse(sdf.format(new Date(today)));
+            long diff = sessionEndTime.getTime() - toDate.getTime();
             DecimalFormat crunchifyFormatter = new DecimalFormat("###,###");
             int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
             int diffhours = (int) (diff / (60 * 60 * 1000));
