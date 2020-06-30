@@ -396,7 +396,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void adapterEventListener() {
-        mAdapter.setOnItemClickPagerListener((v, position, groupId, data) -> AddPeopleActivity.this.makeRemoveAPICall(data.getPhone(), groupId, position));
+        mAdapter.setOnItemClickPagerListener((v, position, groupId, data) -> this.makeRemoveAPICall(data.getPhone(), groupId, position));
     }
 
     /**
