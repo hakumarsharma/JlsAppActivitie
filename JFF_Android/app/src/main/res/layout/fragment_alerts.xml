@@ -65,24 +65,13 @@
         android:textColor="@color/black"
         android:layout_below="@id/memberDetailLayout" />
 
-    <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="40dp"
-        android:text="YESTERDAY"
-        android:layout_below="@id/alertTextView" />
-
     <View
         android:id="@+id/alertLine"
         android:layout_width="1dp"
-        android:layout_height="30dp"
+        android:layout_height="15dp"
         android:layout_marginLeft="@dimen/margin_25"
-        android:layout_marginTop="5dp"
         android:layout_below="@id/alertTextView"
         android:background="@android:color/darker_gray"/>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alertsList"
