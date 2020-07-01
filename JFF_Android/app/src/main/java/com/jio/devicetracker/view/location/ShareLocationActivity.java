@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +20,10 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.BaseActivity;
+import com.jio.devicetracker.view.geofence.GeofenceActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,6 +32,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
 
     private MapFragment fragmentMap;
     private List<MapData> mapDataList;
+    private RelativeLayout menuLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +48,15 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         Button backBtn = findViewById(R.id.back);
         backBtn.setOnClickListener(this);
         backBtn.setVisibility(View.VISIBLE);
-        ImageView shareLocation = findViewById(R.id.share_location);
+        ImageView menuOption = findViewById(R.id.menu_icon);
         TextView memberName = findViewById(R.id.member_name);
         TextView memberAddrss = findViewById(R.id.member_address);
+        TextView shareLocation = findViewById(R.id.share_location);
         shareLocation.setOnClickListener(this);
+        TextView createGeofence = findViewById(R.id.create_geofence);
+        createGeofence.setOnClickListener(this);
+        menuOption.setOnClickListener(this);
+        menuLayout = findViewById(R.id.menuOptionLayout);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.map_fragment, fragmentMap).commit();
@@ -67,6 +77,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.share_location:
+                menuLayout.setVisibility(View.GONE);
                 String geoUri = null;
                 if (!mapDataList.isEmpty()) {
                     geoUri = "http://maps.google.com/maps?q=loc:" + mapDataList.get(0).getLatitude() + "," + mapDataList.get(0).getLongitude();
@@ -79,9 +90,20 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 shareIntent.putExtra(Intent.EXTRA_TEXT, geoUri);
                 startActivity(Intent.createChooser(shareIntent, "Share via"));
                 break;
-
             case R.id.back:
                 finish();
+                break;
+            case R.id.create_geofence:
+                Intent intent = new Intent(this, GeofenceActivity.class);
+                intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+                intent.putExtra(Constant.MEMBER_NAME, memberName);
+                startActivity(intent);
+                break;
+            case R.id.close:
+                menuLayout.setVisibility(View.GONE);
+                break;
+            case R.id.menu_icon:
+                menuLayout.setVisibility(View.VISIBLE);
                 break;
             default:
                 // Todo

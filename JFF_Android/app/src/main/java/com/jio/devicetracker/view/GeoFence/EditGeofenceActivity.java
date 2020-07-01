@@ -1,4 +1,4 @@
-package com.jio.devicetracker.view.GeoFence;
+package com.jio.devicetracker.view.geofence;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -46,9 +46,9 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/sharelocation"
+            android:src="@drawable/more"
             android:layout_alignParentRight="true"
-            android:id="@+id/share_location"
+            android:id="@+id/menu_icon"
             android:layout_alignTop="@+id/profile_icon"
             android:layout_marginRight="@dimen/margin_18"
             />
@@ -59,5 +59,59 @@
         android:layout_below="@+id/profile_layout"
         android:id="@+id/map_fragment"
         />
+    <RelativeLayout
+        android:id="@+id/menuOptionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:background="@drawable/dialog_lightblue_background"
+        android:elevation="@dimen/ten_dp"
+        android:visibility="gone"
+        android:layout_below="@+id/shareLocationToolbar"
+        >
 
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:src="@drawable/ic_close" />
+
+        <TextView
+            android:id="@+id/share_location"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/margin_18"
+            android:text="Share Location"
+            android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp" />
+
+        <View
+            android:id="@+id/editLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/share_location"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/fourteen_dp"
+            android:background="@color/light_hash" />
+
+        <TextView
+            android:id="@+id/create_geofence"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editLine"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:text="Create GeoFence"
+            android:textColor="@color/white"
+            android:paddingBottom="@dimen/fifteen_dp"
+            android:textSize="@dimen/seventeen_dp" />
+
+
+
+</RelativeLayout>
 </RelativeLayout>

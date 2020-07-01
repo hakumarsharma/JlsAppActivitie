@@ -166,6 +166,10 @@
         <activity
             android:name=".view.location.ShareLocationActivity"
             android:label="@string/map_name" />
+			<activity
+            android:name=".view.geofence.GeofenceActivity"
+            android:label="@string/map_name" />
+
         <activity
             android:name=".view.people.ChooseGroupFromPeopleFlow"
             android:windowSoftInputMode="adjustPan|adjustResize"
