@@ -94,6 +94,7 @@ import com.jio.devicetracker.view.menu.NavigateSupportActivity;
 import com.jio.devicetracker.view.menu.NavigateUserProfileActivity;
 import com.jio.devicetracker.view.menu.NotificationsActivity;
 import com.jio.devicetracker.view.menu.SilentModeActivity;
+import com.jio.devicetracker.view.menu.settings.SettingsActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 import com.jio.devicetracker.view.signinsignup.SigninSignupActivity;
 
@@ -454,6 +455,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                 case R.id.group_management:
                     gotoGroupManagementActivity();
                     break;
+                case R.id.settings:
+                    gotoSettingsActivity();
+                    break;
                 case R.id.howtoadd:
                     goToHowtoUseActivity();
                     break;
@@ -477,6 +481,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     }
     private void gotoGroupManagementActivity() {
         Intent intent = new Intent(this, ActiveSessionActivity.class);
+        startActivity(intent);
+    }
+    private void gotoSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 

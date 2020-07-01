@@ -38,6 +38,8 @@
         <activity android:name=".view.menu.NotificationsActivity"/>
         <activity android:name=".view.menu.SilentModeActivity"/>
         <activity android:name=".view.people.EditMemberDetailsActivity"/>
+        <activity android:name=".view.GeoFence.EditGeofenceActivity"/>
+        <activity android:name=".view.menu.settings.SettingsActivity"/>
 
         <service
             android:name=".network.SendLocationService"

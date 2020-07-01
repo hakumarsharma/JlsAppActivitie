@@ -419,6 +419,9 @@ public class Constant {
     // HowToUse Activity
     public static final String HOW_TO_ADD_TITLE = "How to use device";
 
+    // Settings Activity
+    public static final String SETTINGS = "Settings";
+
     // NavigateSupport Activity
     public static final String SUPPORT_TITLE = "Support";
     public static final String ABOUT_APP_TITLE = "About app";
