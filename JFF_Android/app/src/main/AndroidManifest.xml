@@ -35,7 +35,7 @@
         <activity android:name=".view.group.GroupNameActivity" />
         <activity android:name=".view.menu.ActiveMemberActivity" />
         <activity android:name=".view.menu.RefreshIntervalSettingActivity" />
-        <activity android:name=".view.menu.NotificationsActivity"/>
+        <activity android:name=".view.menu.NotificationsAlertsActivity"/>
         <activity android:name=".view.menu.SilentModeActivity"/>
         <activity android:name=".view.people.EditMemberDetailsActivity"/>
         <activity android:name=".view.GeoFence.EditGeofenceActivity"/>

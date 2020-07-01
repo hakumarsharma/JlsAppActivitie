@@ -157,6 +157,10 @@ public class Constant {
     public static final String PEOPLE_WITHOUT_NEXT_LINE = "People";
     public static final String DEVICES_TAB = "Devices\n";
     public static final String DEVICES_WITHOUT_NEXT_LINE = "Devices";
+    public static final String NOTIFICATION_TAB = "Notification\n";
+    public static final String NOTIFICATION_WITHOUT_NEXT_LINE = "Notification";
+    public static final String ALERTS_TAB = "Alerts\n";
+    public static final String ALERTS_WITHOUT_NEXT_LINE = "Alerts";
     public static final String WELCOME = "Welcome";
     public static final String MOBILE_NUMBER = "Mobile Number";
     public static final String OTP_TEXTVIEW = "Please enter the OTP sent to \n your mobile no. ";
@@ -413,7 +417,7 @@ public class Constant {
     public static final int NOTIFICATION__ID = 1;
 
     // Notifications
-    public static final String NOTIFICATIONS_TITLE = "Notifications & Alerts";
+    public static final String NOTIFICATIONS_TITLE = "Notifications & alerts";
     public static final String SILENT_MODE = "Silent mode";
 
     // HowToUse Activity

@@ -92,7 +92,7 @@ import com.jio.devicetracker.view.group.CreateGroupActivity;
 import com.jio.devicetracker.view.menu.ActiveSessionActivity;
 import com.jio.devicetracker.view.menu.NavigateSupportActivity;
 import com.jio.devicetracker.view.menu.NavigateUserProfileActivity;
-import com.jio.devicetracker.view.menu.NotificationsActivity;
+import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
 import com.jio.devicetracker.view.menu.SilentModeActivity;
 import com.jio.devicetracker.view.menu.settings.SettingsActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
@@ -472,7 +472,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     }
 
     private void gotoNotificationActivity() {
-        Intent intent = new Intent(this, NotificationsActivity.class);
+        Intent intent = new Intent(this, NotificationsAlertsActivity.class);
         startActivity(intent);
     }
     private void gotoSilentModeActivity() {
