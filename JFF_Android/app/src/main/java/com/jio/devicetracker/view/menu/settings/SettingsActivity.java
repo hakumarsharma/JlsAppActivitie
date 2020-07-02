@@ -37,8 +37,11 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
         });
 
         RelativeLayout geofence = findViewById(R.id.geofence_app_layout);
+        geofence.setOnClickListener(this);
         RelativeLayout lowbattery = findViewById(R.id.low_battery_layout);
+        lowbattery.setOnClickListener(this);
         RelativeLayout sos = findViewById(R.id.sos_layout);
+        sos.setOnClickListener(this);
         RelativeLayout pollingfrequency = findViewById(R.id.polling_frequency_layout);
         TextView geofenceTitle = findViewById(R.id.geofence);
         TextView lowBatteryTitle = findViewById(R.id.low_battery);
