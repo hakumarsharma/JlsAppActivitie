@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Response;
@@ -51,6 +52,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     private DBManager mDbManager;
     private int position;
     private RelativeLayout devicesOperationLayout;
+    private static RecyclerViewClickListener itemListener;
 
     public DeviceListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
@@ -112,8 +114,29 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         } else {
             holder.deviceMemberIcon.setBackgroundResource(R.drawable.ic_family_group);
         }
+        holder.deviceListLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemListener.clickonListLayout(data);
+            }
+        });
     }
 
+    /**
+     * Interface to override methods in Groups Fragment to call these methods on particular item click
+     */
+    public interface RecyclerViewClickListener {
+        void clickonListLayout(HomeActivityListData homeActivityListData);
+    }
+
+    /**
+     * Register the listener
+     *
+     * @param mItemClickListener
+     */
+    public void setOnItemClickPagerListener(RecyclerViewClickListener mItemClickListener) {
+        this.itemListener = mItemClickListener;
+    }
 
     /**
      * return The total number of items in this adapter
@@ -137,6 +160,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         private TextView trackingDeviceName;
         private ImageView deviceMenubar;
         private ImageView deviceMemberIcon;
+        private CardView deviceListLayout;
 
         /**
          * Constructor where we find element from .xml file
@@ -152,6 +176,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             deviceMenubar = itemView.findViewById(R.id.deviceMenubar);
             devicesOperationLayout = itemView.findViewById(R.id.devicesOperationLayout);
             deviceMemberIcon = itemView.findViewById(R.id.deviceMemberIcon);
+            deviceListLayout = itemView.findViewById(R.id.deviceListLayout);
             deviceMenubar.setOnClickListener(this);
             shareDevices.setOnClickListener(this);
             devicesDelete.setOnClickListener(this);
