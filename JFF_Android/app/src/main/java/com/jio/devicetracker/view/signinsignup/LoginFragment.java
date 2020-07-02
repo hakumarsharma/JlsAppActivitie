@@ -187,6 +187,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             Util.progressDialog.dismiss();
             if (error.networkResponse.statusCode == 403) {
                 mobileNumberEditText.setError(Constant.GENERATE_TOKEN_FAILURE);
+            }else if (error.networkResponse.statusCode == 422){
+                mobileNumberEditText.setError(Constant.NOT_REGISTERED_MSG);
+            }else {
+                mobileNumberEditText.setError(Constant.TRY_AGAIN_LATER);
             }
         }
     }

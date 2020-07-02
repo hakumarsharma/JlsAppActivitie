@@ -247,6 +247,7 @@ public class Constant {
     public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
     public static final String TERM_AND_CONDITION_STATUS_MSG = "Please accept terms and conditions and login then again click on the link which is given in message";
     public static final String NOT_REGISTERED_MSG = "User is not registered";
+    public static final String TRY_AGAIN_LATER = "Please try again later";
     public static final String INVALID_TOKEN_MSG = "Invalid token please try again";
     public static final String PASSWORD_RESET_SUCCESS_MSG = "Password reset is successfull";
     public static final String VALID_EMAIL_ID = "Please enter the valid email id";
