@@ -31,16 +31,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
+import com.jio.devicetracker.database.pojo.response.AddDeviceResponse;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
+import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
@@ -64,6 +69,8 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private List<HomeActivityListData> chooseGroupDataList;
     private String label;
     private Button continueBtn;
+    private boolean isAddLater;
+    private boolean isNavigateToCreateGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,13 +173,19 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.createGroup:
-                gotoCreateGroupActivity();
+                isNavigateToCreateGroup = true;
+                isAddLater = false;
+                makeVerifyAndAssignAPICall();
                 break;
             case R.id.addLater:
-                createGroupAndAddContactDetails();
+                isNavigateToCreateGroup = false;
+                isAddLater = true;
+                makeVerifyAndAssignAPICall();
                 break;
             case R.id.continueChooseGroup:
-                addMemberToCreatedGroup(groupId);
+                isNavigateToCreateGroup = false;
+                isAddLater = false;
+                makeVerifyAndAssignAPICall();
                 break;
             default:
                 // Todo
@@ -378,6 +391,61 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ChooseGroupListAdapter(mHomeActivityListData, this);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    /**
+     * Verify and assign API Call for the white-listing of device
+     */
+    private void makeVerifyAndAssignAPICall() {
+        AddDeviceData addDeviceData = new AddDeviceData();
+        List<AddDeviceData.Devices> mList = new ArrayList<>();
+        AddDeviceData.Devices devices = new AddDeviceData().new Devices();
+        devices.setMac(phoneNumber);
+        devices.setPhone(phoneNumber);
+        devices.setIdentifier("imei");
+        devices.setName(memberName);
+        devices.setType("watch");
+        devices.setModel("watch");
+        AddDeviceData.Devices.Metaprofile metaprofile = new AddDeviceData().new Devices().new Metaprofile();
+        metaprofile.setFirst(memberName);
+        metaprofile.setSecond("success");
+        devices.setMetaprofile(metaprofile);
+        AddDeviceData.Flags flags = new AddDeviceData().new Flags();
+        flags.setSkipAddDeviceToGroup(false);
+        addDeviceData.setFlags(flags);
+        mList.add(devices);
+        addDeviceData.setDevices(mList);
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new AddDeviceRequestSuccessListener(), new AddDeviceRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserToken(), userId, addDeviceData));
+    }
+
+    /**
+     * Verify & Assign API call success listener
+     */
+    private class AddDeviceRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            AddDeviceResponse addDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), AddDeviceResponse.class);
+            if (addDeviceResponse.getCode() == 200) {
+                if (isNavigateToCreateGroup){
+                    gotoCreateGroupActivity();
+                }else if (isAddLater){
+                    createGroupAndAddContactDetails();
+                }else {
+                    addMemberToCreatedGroup(groupId);
+                }
+                //Toast.makeText(ChooseGroupActivity.this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Verify & Assign API call error listener
+     */
+    private class AddDeviceRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+           Toast.makeText(ChooseGroupActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

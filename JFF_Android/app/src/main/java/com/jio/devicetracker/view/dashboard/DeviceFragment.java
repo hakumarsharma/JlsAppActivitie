@@ -20,6 +20,7 @@
 
 package com.jio.devicetracker.view.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -27,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,13 +41,18 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.MapData;
+import com.jio.devicetracker.database.pojo.SearchEventData;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
+import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
+import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.DeviceListAdapter;
+import com.jio.devicetracker.view.location.LocationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +65,10 @@ public class DeviceFragment extends Fragment {
     private DBManager mDbManager;
     private RecyclerView deviceFragmentRecyclerView;
     private static List<HomeActivityListData> groupList;
+    private DeviceListAdapter deviceListAdapter;
+    private String groupId;
+    private HomeActivityListData homeActivityListData;
+    private String userId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,7 +89,9 @@ public class DeviceFragment extends Fragment {
         cardInstruction.setVisibility(View.VISIBLE);
         instructionIcon.setVisibility(View.VISIBLE);
         mDbManager = new DBManager(getActivity());
+        userId = mDbManager.getAdminLoginDetail().getUserId();
         deviceFragmentRecyclerView = view.findViewById(R.id.deviceListRecyclerView);
+        adapterEventListener();
     }
 
     // Show custom alert with alert message
@@ -126,8 +139,89 @@ public class DeviceFragment extends Fragment {
         checkMemberPresent();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         deviceFragmentRecyclerView.setLayoutManager(mLayoutManager);
-        DeviceListAdapter deviceListAdapter = new DeviceListAdapter(groupList, getActivity());
+        deviceListAdapter = new DeviceListAdapter(groupList, getActivity());
         deviceFragmentRecyclerView.setAdapter(deviceListAdapter);
+    }
+
+    /**
+     * Adapter Listener
+     */
+    private void adapterEventListener() {
+        if (deviceListAdapter != null) {
+            deviceListAdapter.setOnItemClickPagerListener(homeActivityListData -> {
+                makeGetLocationAPICall(homeActivityListData);
+            });
+        }
+    }
+
+    /**
+     * find locations for group members
+     *
+     * @param homeActivityListData
+     */
+    private void makeGetLocationAPICall(HomeActivityListData homeActivityListData) {
+        this.groupId = homeActivityListData.getGroupId();
+        this.homeActivityListData = homeActivityListData;
+        SearchEventData searchEventData = new SearchEventData();
+        List<String> mList = new ArrayList<>();
+        mList.add(Constant.LOCATION);
+        mList.add(Constant.SOS);
+        searchEventData.setTypes(mList);
+        Util.getInstance().showProgressBarDialog(getActivity());
+        GroupRequestHandler.getInstance(getActivity()).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, userId, groupId, Constant.GET_LOCATION_URL));
+    }
+
+    /**
+     * Search Event Request API call Success Listener
+     */
+    private class SearchEventRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
+            SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
+            List<MapData> mapDataList = new ArrayList<>();
+            List<SearchEventResponse.Data> mList = searchEventResponse.getData();
+            if (!mList.isEmpty()) {
+                List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+                for (SearchEventResponse.Data data : mList) {
+                    for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
+                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId()) && (grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                            MapData mapData = new MapData();
+                            mapData.setLatitude(data.getLocation().getLat());
+                            mapData.setLongitude(data.getLocation().getLng());
+                            mapData.setName(grpMembers.getName());
+                            mapData.setConsentId(grpMembers.getConsentId());
+                            mapDataList.add(mapData);
+                        }
+                    }
+                }
+            }
+            goToMapActivity(mapDataList);
+        }
+    }
+
+    /**
+     * Navigates to the Map activity
+     */
+    private void goToMapActivity(List<MapData> mapDataList) {
+        Intent intent = new Intent(getContext(), LocationActivity.class);
+        intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.GROUP_STATUS, homeActivityListData.getStatus());
+        startActivity(intent);
+    }
+
+
+    /**
+     * Search Event Request API Call Error listener
+     */
+    private class SearchEventRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
+        }
+
     }
 
     /**
@@ -146,6 +240,7 @@ public class DeviceFragment extends Fragment {
             GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
             parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
             displayGroupDataInDashboard();
+            adapterEventListener();
         }
     }
 
