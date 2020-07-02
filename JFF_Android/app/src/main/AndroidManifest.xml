@@ -38,8 +38,10 @@
         <activity android:name=".view.menu.NotificationsAlertsActivity"/>
         <activity android:name=".view.menu.SilentModeActivity"/>
         <activity android:name=".view.people.EditMemberDetailsActivity"/>
-        <activity android:name=".view.GeoFence.EditGeofenceActivity"/>
+        <activity android:name=".view.geofence.EditGeofenceActivity"/>
         <activity android:name=".view.menu.settings.SettingsActivity"/>
+        <activity android:name=".view.menu.settings.GeofenceSettingsAcivity"/>
+        <activity android:name=".view.menu.settings.LowBatteryActivity"/>
 
         <service
             android:name=".network.SendLocationService"

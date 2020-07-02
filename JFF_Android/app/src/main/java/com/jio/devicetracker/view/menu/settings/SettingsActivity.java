@@ -1,6 +1,7 @@
 package com.jio.devicetracker.view.menu.settings;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -54,8 +55,12 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
 
         switch (v.getId()){
             case R.id.geofence_app_layout :
+                Intent intent = new Intent(getApplicationContext(), GeofenceSettingsAcivity.class);
+                startActivity(intent);
                 break;
             case R.id.low_battery_layout :
+                Intent batteryIntent = new Intent(getApplicationContext(), LowBatteryActivity.class);
+                startActivity(batteryIntent);
                 break;
             case R.id.sos_layout :
                 break;

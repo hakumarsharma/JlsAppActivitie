@@ -86,6 +86,14 @@
     <string name="terms_privacy_policy">Terms &amp; Privacy Policy</string>
     <string name="tracking_by_default_text">Users who are tracking you will be displayed here.</string>
     <string name="tracked_by_default_text">Users whom you are tracking you will be displayed here.</string>
+    <string name="geofence_entry">Geofence entry</string>
+    <string name="geofence_exit">Geofence exit</string>
+    <string name="geofence_entry_desc">Receive notification when your loved one enters a geofence</string>
+    <string name="geofence_exit_desc">Receive notification when your loved one exits a geofence</string>
+    <string name="battery_text">Minimum battery</string>
+    <string name="battery_desc">Select minimum battery charge, below which the you will get alert.</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeat_desc">Repeat alert will receive if you don’t react to notification</string>
 
     <string-array name="device_type_array">
         <item>People Tracker</item>

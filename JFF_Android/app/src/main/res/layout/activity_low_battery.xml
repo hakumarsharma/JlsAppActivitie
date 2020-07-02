@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/dull_text_color"
+    >
+
+    <include
+        android:id="@+id/editToolbar"
+        layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/bluebackground"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@+id/editToolbar"
+        android:background="@drawable/layout_frame_blue" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/battery_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bluebackground"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="@dimen/twenty_dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/battery_img"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="6dp"
+                android:src="@drawable/battery"/>
+
+            <TextView
+                android:id="@+id/battery_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/battery_img"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/battery_text"
+                android:textColor="@color/black"
+                android:textSize="@dimen/seventeen_dp"
+                android:textStyle="bold"/>
+
+            <TextView
+            android:id="@+id/battery_desc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/battery_img"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_below="@+id/battery_text"
+            android:text="@string/battery_desc"
+            android:textColor="@color/mine_shaft"
+            android:layout_marginBottom="14dp"
+            android:textSize="@dimen/fourteen_dp" />
+
+            <TextView
+                android:id="@+id/battery_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="16dp"
+                android:layout_below="@+id/battery_img"
+                android:text="Battery Percentage"
+                android:textColor="@color/alert_text_color"
+                android:layout_marginBottom="14dp"
+                android:textSize="@dimen/fourteen_dp" />
+
+            <RelativeLayout
+                android:layout_width="90dp"
+                android:layout_height="28dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight=".28"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/battery_desc_text"
+                android:background="@drawable/background_spinner"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:spinnerMode="dropdown" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/faq_arrowopen" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/exit_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/battery_cardView"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="@dimen/twenty_dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/geofence_exit_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/repeat"/>
+
+        <TextView
+            android:id="@+id/geofence_exit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/geofence_exit_img"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/repeat"
+            android:textColor="@color/black"
+            android:textSize="@dimen/seventeen_dp"
+            android:textStyle="bold"/>
+
+        <Switch
+            android:id="@+id/exitSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:checked="true"/>
+
+        <TextView
+            android:id="@+id/geofence_exit_desc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/geofence_exit_img"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_below="@+id/geofence_exit_text"
+            android:text="@string/repeat_desc"
+            android:textColor="@color/mine_shaft"
+            android:layout_marginBottom="14dp"
+            android:textSize="@dimen/fourteen_dp" />
+    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>
