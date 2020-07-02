@@ -4,7 +4,8 @@
     package="com.jio.devicetracker">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+    <uses-permission
+        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
@@ -17,6 +18,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -29,19 +31,19 @@
         <activity android:name=".view.signinsignup.SigninSignupActivity" />
         <activity android:name=".view.dashboard.DashboardActivity" />
         <activity android:name=".view.group.CreateGroupActivity" />
-        <activity android:name=".view.group.ChooseGroupActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            />
+        <activity
+            android:name=".view.group.ChooseGroupActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity android:name=".view.group.GroupNameActivity" />
         <activity android:name=".view.menu.ActiveMemberActivity" />
         <activity android:name=".view.menu.RefreshIntervalSettingActivity" />
-        <activity android:name=".view.menu.NotificationsAlertsActivity"/>
-        <activity android:name=".view.menu.SilentModeActivity"/>
-        <activity android:name=".view.people.EditMemberDetailsActivity"/>
-        <activity android:name=".view.geofence.EditGeofenceActivity"/>
-        <activity android:name=".view.menu.settings.SettingsActivity"/>
-        <activity android:name=".view.menu.settings.GeofenceSettingsAcivity"/>
-        <activity android:name=".view.menu.settings.LowBatteryActivity"/>
+        <activity android:name=".view.menu.NotificationsAlertsActivity" />
+        <activity android:name=".view.menu.SilentModeActivity" />
+        <activity android:name=".view.people.EditMemberDetailsActivity" />
+        <activity android:name=".view.geofence.EditGeofenceActivity" />
+        <activity android:name=".view.menu.settings.SettingsActivity" />
+        <activity android:name=".view.menu.settings.GeofenceSettingsAcivity" />
+        <activity android:name=".view.menu.settings.LowBatteryActivity" />
 
         <service
             android:name=".network.SendLocationService"
@@ -76,7 +78,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-            <activity android:name=".view.dashboard.DashboardMainActivity">
+
+        <activity android:name=".view.dashboard.DashboardMainActivity">
             <intent-filter android:label="@string/title_activity_maps">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -127,8 +130,8 @@
             android:label="@string/map_name" />
         <activity
             android:name=".view.people.AddPeopleActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            android:label="@string/map_name" />
+            android:label="@string/map_name"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".view.menu.NavigateUserProfileActivity"
             android:label="@string/map_name" />
@@ -148,8 +151,8 @@
             android:name=".view.menu.ContactUsActivity"
             android:label="@string/map_name" />
         <activity
-        android:name=".view.menu.EditUserProfileActivity"
-        android:label="@string/map_name" />
+            android:name=".view.menu.EditUserProfileActivity"
+            android:label="@string/map_name" />
         <activity
             android:name=".view.location.LocationActivity"
             android:label="@string/map_name" />
@@ -168,14 +171,14 @@
         <activity
             android:name=".view.location.ShareLocationActivity"
             android:label="@string/map_name" />
-			<activity
+        <activity
             android:name=".view.geofence.GeofenceActivity"
             android:label="@string/map_name" />
 
         <activity
             android:name=".view.people.ChooseGroupFromPeopleFlow"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            android:label="@string/map_name" />
+            android:label="@string/map_name"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
 
         <activity
             android:name=".view.SplashScreenActivity"
@@ -196,6 +199,10 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".view.geofence.GeofenceBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

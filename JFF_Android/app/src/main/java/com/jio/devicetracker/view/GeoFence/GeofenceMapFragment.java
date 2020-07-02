@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -57,22 +58,26 @@ import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener  {
+public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener {
 
     public static GoogleMap mMap;
     public static final int MY_PERMISSIONS_REQUEST_MAPS = 101;
     public LocationManager locationManager;
+    public static String TAG = "GeofenceMapFragment";
     public Toolbar toolbar;
     @SuppressWarnings("PMD.AvoidStringBufferField")
     private static StringBuilder strAddress = null;
     private static Context context = null;
     private List<MapData> mapDataList;
     private LatLng latLng;
+    private GeofenceHelper geofenceHelper;
     private MarkerOptions markerOptions;
     private final static int GEOFENCE_RADIUS_IN_METERS = 200;
     double Longitude = 26.422;
     double Latitude = 82.084;
     private GeofencingClient mGeofencingClient;
+    private String GEOFENCE_ID = "JioTrack1";
+    private int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 1000;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -89,10 +94,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
 
             }
         }
-        /*if(mMap != null){
-            onMapReady(mMap);
-        }*/
-        //mGeofenceList = new ArrayList<>();
         context = getContext();
         strAddress = new StringBuilder();
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
@@ -108,6 +109,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         MapsInitializer.initialize(getContext());
         mGeofencingClient = LocationServices.getGeofencingClient(getActivity());
+        geofenceHelper = new GeofenceHelper(getActivity());
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
@@ -138,36 +140,18 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
-        if (mapDataList.isEmpty()) {
+        //if (mapDataList.isEmpty()) {
             markerOptions = new MarkerOptions();
             if(latLng == null){
                 latLng = new LatLng(Latitude, Longitude);
             }
             markerOptions.position(latLng);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.addMarker(markerOptions);
             addCircle(latLng,GEOFENCE_RADIUS_IN_METERS);
-        }
-        if (mapDataList != null && !mapDataList.isEmpty()) {
-            for (MapData mapData : mapDataList) {
-                markerOptions = new MarkerOptions();
-                if(latLng == null) {
-                    latLng = new LatLng(mapData.getLatitude(), mapData.getLongitude());
-                }
-                markerOptions.position(latLng);
-                markerOptions.title(mapData.getName());
-                markerOptions.snippet(getAddressFromLocation(mapData.getLatitude(), mapData.getLongitude()));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                mMap.addMarker(markerOptions);
-                addCircle(latLng,GEOFENCE_RADIUS_IN_METERS);
-                if (context != null) {
-                    mMap.setInfoWindowAdapter(new GeofenceMapFragment.MyInfoWindowAdapter(context));
-                }
-            }
-
-        }
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnMapClickListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -215,6 +199,11 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         Toast.makeText(getContext(), strAddress.toString(), Toast.LENGTH_SHORT).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onMapClick(LatLng latLng) {
+        handleMapLongClick(latLng);
+    }
 
 
     /**
@@ -250,6 +239,74 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     public void showMapOnTimeInterval() {
         if (mMap != null) {
             onMapReady(mMap);
+        }
+    }
+
+    private void addGeofence(LatLng latLng, float radius) {
+
+        Geofence geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT);
+        GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
+        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
+
+        mGeofencingClient.addGeofences(geofencingRequest, pendingIntent)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                       Log.d(TAG, "onSuccess: Geofence Added...");
+                    }
+                })
+                    .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        String errorMessage = geofenceHelper.getErrorString(e);
+                        Log.d(TAG, "OnFailure: Geofence not added..."+errorMessage);
+                    }
+                });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        if (Build.VERSION.SDK_INT >= 29) {
+            //We need background permission
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                handleMapLongClick(latLng);
+            } else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+                    //We show a dialog and ask for permission
+                    ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
+                }
+            }
+
+        } else {
+            handleMapLongClick(latLng);
+        }
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void handleMapLongClick(LatLng latLng) {
+        mMap.clear();
+        addMarker(latLng);
+        addCircle(latLng, GEOFENCE_RADIUS_IN_METERS);
+        addGeofence(latLng, GEOFENCE_RADIUS_IN_METERS);
+    }
+    private void addMarker(LatLng latLng) {
+        MarkerOptions markerOptions = new MarkerOptions().position(latLng);
+        mMap.addMarker(markerOptions);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == BACKGROUND_LOCATION_ACCESS_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+
+            }
         }
     }
 
