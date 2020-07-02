@@ -51,7 +51,6 @@ import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.adapter.ChooseGroupListAdapter;
-import com.jio.devicetracker.view.signinsignup.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;
