@@ -441,7 +441,14 @@ public final class Util extends AppCompatActivity {
      * @return
      */
     public static boolean isValidMobileNumber(String mobile) {
-        String mobileNumber = "^[6-9][0-9]{9}$";
+        String mobileNumber = "^[6-9][0-9]{9}|^\\d{13}$";
+        Pattern pat = Pattern.compile(mobileNumber);
+        return pat.matcher(mobile).matches();
+    }
+
+    // To check valid mobile number or imei number
+    public static boolean isValidMobileAndIMEINumber(String mobile) {
+        String mobileNumber = "^[6-9][0-9]{9}|^\\d{13}$";
         Pattern pat = Pattern.compile(mobileNumber);
         return pat.matcher(mobile).matches();
     }
