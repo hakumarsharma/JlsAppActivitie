@@ -52,6 +52,27 @@
             android:layout_centerVertical="true"
             android:background="@drawable/ic_next" />
 
+        <TextView
+            android:id="@+id/alertNumbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/margin_32"
+            android:textColor="@color/lite_blue"
+            android:layout_toLeftOf="@id/alertNextButton"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="12"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:textColor="@color/lite_blue"
+            android:layout_below="@id/alertNumbers"
+            android:layout_alignStart="@id/alertNumbers"
+            android:layout_marginRight="10dp"
+            android:text="Alerts"/>
+
     </RelativeLayout>
 
     <TextView

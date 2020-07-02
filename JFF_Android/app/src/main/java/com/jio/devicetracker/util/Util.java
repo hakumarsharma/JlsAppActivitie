@@ -557,24 +557,25 @@ public final class Util extends AppCompatActivity {
     /**
      * Creates the notification channel
      */
-    private void createNotificationChannel() {
+    public void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
+            CharSequence name = context.getString(R.string.channel_name);
+            String description = context.getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(Constant.NOTIFICATION_CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+            showNotifications("Hi", Constant.EMPTY_STRING, context);
         }
     }
 
     // Shows the Notification on map screen, after taping on notification the map activity will open and notification will dissapear
-    private void showNotifications(String title, String text) {
+    private void showNotifications(String title, String text, Context context) {
         Intent intent = new Intent(this, LocationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constant.NOTIFICATION_CHANNEL_ID)
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constant.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.app_icon)
                 .setContentTitle(title)
                 .setContentText(text)
@@ -582,7 +583,7 @@ public final class Util extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(Constant.NOTIFICATION__ID, builder.build());
     }
 

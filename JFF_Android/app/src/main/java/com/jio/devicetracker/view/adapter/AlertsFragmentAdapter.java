@@ -8,16 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 
 import java.util.List;
 
 public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAdapter.ViewHolder>{
 
-    private List<HomeActivityListData> homeActivityListData;
+    private List<GroupMemberDataList> groupMemberDataList;
 
-    public AlertsFragmentAdapter(List<HomeActivityListData> homeActivityListData) {
-        this.homeActivityListData = homeActivityListData;
+    public AlertsFragmentAdapter(List<GroupMemberDataList> homeActivityListData) {
+        this.groupMemberDataList = homeActivityListData;
     }
 
     @NonNull
@@ -33,7 +34,7 @@ public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAd
 
     @Override
     public int getItemCount() {
-        return homeActivityListData.size();
+        return groupMemberDataList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

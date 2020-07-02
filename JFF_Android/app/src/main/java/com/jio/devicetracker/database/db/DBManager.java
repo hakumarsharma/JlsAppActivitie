@@ -539,7 +539,7 @@ public class DBManager {
             contentValue.put(DatabaseHelper.GROUP_OWNER_NAME, data.getGroupOwnerName());
             contentValue.put(DatabaseHelper.GROUP_OWNER_PHONE_NUMBER, data.getGroupOwnerPhoneNumber());
             contentValue.put(DatabaseHelper.GROUP_OWNER_USER_ID, data.getGroupOwnerUserId());
-            contentValue.put(DatabaseHelper.CONSENTS_COUNT,data.getConsentsCount());
+            contentValue.put(DatabaseHelper.CONSENTS_COUNT, data.getConsentsCount());
             if (data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                 contentValue.put(DatabaseHelper.PROFILE_IMAGE, R.drawable.ic_user);
             } else {
@@ -551,6 +551,7 @@ public class DBManager {
 
     /**
      * Inserts group icon into the table along with groupid
+     *
      * @param groupId
      * @param groupIcon
      */
@@ -587,7 +588,7 @@ public class DBManager {
         List<HomeActivityListData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
         String[] column = {DatabaseHelper.GROUPID, DatabaseHelper.GROUP_NAME, DatabaseHelper.STATUS, DatabaseHelper.CREATED_BY, DatabaseHelper.UPDATED_BY, DatabaseHelper.PROFILE_IMAGE,
-                DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO, DatabaseHelper.GROUP_OWNER_NAME, DatabaseHelper.GROUP_OWNER_USER_ID, DatabaseHelper.GROUP_OWNER_PHONE_NUMBER,DatabaseHelper.CONSENTS_COUNT};
+                DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO, DatabaseHelper.GROUP_OWNER_NAME, DatabaseHelper.GROUP_OWNER_USER_ID, DatabaseHelper.GROUP_OWNER_PHONE_NUMBER, DatabaseHelper.CONSENTS_COUNT};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP, column, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
