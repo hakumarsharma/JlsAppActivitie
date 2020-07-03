@@ -29,7 +29,7 @@
                 android:id="@+id/search"
                 android:layout_marginLeft="@dimen/ten_dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/close"
+                android:src="@drawable/search"
                 />
         <EditText
             android:layout_width="match_parent"
