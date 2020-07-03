@@ -49,6 +49,8 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         backBtn.setOnClickListener(this);
         backBtn.setVisibility(View.VISIBLE);
         ImageView menuOption = findViewById(R.id.menu_icon);
+        ImageView closeOption = findViewById(R.id.close_icon);
+        closeOption.setOnClickListener(this);
         TextView memberName = findViewById(R.id.member_name);
         TextView memberAddrss = findViewById(R.id.member_address);
         TextView shareLocation = findViewById(R.id.share_location);
@@ -99,7 +101,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 intent.putExtra(Constant.MEMBER_NAME, memberName);
                 startActivity(intent);
                 break;
-            case R.id.close:
+            case R.id.close_icon:
                 menuLayout.setVisibility(View.GONE);
                 break;
             case R.id.menu_icon:
