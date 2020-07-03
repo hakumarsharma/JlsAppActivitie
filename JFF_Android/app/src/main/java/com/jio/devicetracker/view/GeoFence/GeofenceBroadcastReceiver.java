@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
@@ -15,6 +18,7 @@ import java.util.List;
 
 public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "GeofenceBroadcastReceiver";
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("LongLogTag")
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -44,6 +48,8 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
             case Geofence.GEOFENCE_TRANSITION_EXIT:
                 Toast.makeText(context, "GEOFENCE_TRANSITION_EXIT", Toast.LENGTH_SHORT).show();
                 notificationHelper.sendHighPriorityNotification("GEOFENCE_TRANSITION_EXIT", "", MapsActivity.class);
+                break;
+            default:
                 break;
         }
 

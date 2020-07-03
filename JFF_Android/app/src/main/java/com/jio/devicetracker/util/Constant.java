@@ -365,6 +365,8 @@ public class Constant {
     public static final String NOTIFICATION_CHANNEL_ID_NAME = "com.jio.devicetracker";
     public static final String GEOFENCE_SUCCESS_MESSAGE = "onSuccess: Geofence Added...";
     public static final String GEOFENCE_FAILURE_MESSAGE = "onFailure: Geofence not Added...";
+    public static final String PERMISSION_GRANTED = "Permission granted";
+    public static final String PERMISSION_NOT_GRANTED = "Permission not granted";
 
 
     // Add people constants

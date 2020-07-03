@@ -1,15 +1,10 @@
 package com.jio.devicetracker.view.geofence;
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,11 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -37,24 +29,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.jio.devicetracker.R;
-import com.jio.devicetracker.database.pojo.MapData;
-import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.CustomAlertActivity;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -66,12 +48,10 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     public static String TAG = "GeofenceMapFragment";
     public Toolbar toolbar;
     @SuppressWarnings("PMD.AvoidStringBufferField")
-    private static StringBuilder strAddress = null;
     private static Context context = null;
-    private List<MapData> mapDataList;
+    //private List<MapData> mapDataList;
     private LatLng latLng;
     private GeofenceHelper geofenceHelper;
-    private MarkerOptions markerOptions;
     private final static int GEOFENCE_RADIUS_IN_METERS = 200;
     double Longitude = 26.422;
     double Latitude = 82.084;
@@ -95,8 +75,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             }
         }
         context = getContext();
-        strAddress = new StringBuilder();
-        mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
+        //mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
 
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -120,7 +99,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         if (Build.VERSION.SDK_INT >= 29) {
             //We need background permission
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                //handleMapLongClick(latLng);
+                Log.d(TAG, Constant.PERMISSION_GRANTED);
             } else {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
                     //We show a dialog and ask for permission
@@ -146,7 +125,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.clear();
         //if (mapDataList.isEmpty()) {
-            markerOptions = new MarkerOptions();
+        MarkerOptions markerOptions = new MarkerOptions();
             if(latLng == null){
                 latLng = new LatLng(Latitude, Longitude);
             }
@@ -170,28 +149,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         circleOptions.strokeWidth(4);
         mMap.addCircle(circleOptions);
 
-    }
-
-    /**
-     * Returns real address based on Lat and Long(Geo Coding)
-     *
-     * @param latitude
-     * @param longitude
-     * @return
-     */
-    private String getAddressFromLocation(double latitude, double longitude) {
-        Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
-        try {
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (!addresses.isEmpty()) {
-                Address fetchedAddress = addresses.get(0);
-                strAddress.setLength(0);
-                strAddress.append(fetchedAddress.getAddressLine(0)).append(" ");
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return strAddress.toString();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -245,9 +202,9 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
 
         if (requestCode == BACKGROUND_LOCATION_ACCESS_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                Log.d(TAG, Constant.PERMISSION_GRANTED);
             } else {
-
+                Log.d(TAG, Constant.PERMISSION_NOT_GRANTED);
             }
         }
     }

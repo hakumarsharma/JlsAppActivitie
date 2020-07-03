@@ -26,11 +26,11 @@ public class GeofenceHelper extends ContextWrapper {
                 .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
                 .build();
     }
-    public Geofence getGeofence(String Id, LatLng latlng, float radius , int transitionType){
+    public Geofence getGeofence(String id, LatLng latlng, float radius , int transitionType){
 
         return new Geofence.Builder()
                 .setCircularRegion(latlng.latitude, latlng.longitude, radius)
-                .setRequestId(Id)
+                .setRequestId(id)
                 .setTransitionTypes(transitionType)
                 .setLoiteringDelay(3000)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
@@ -59,6 +59,8 @@ public class GeofenceHelper extends ContextWrapper {
                 case GeofenceStatusCodes
                         .GEOFENCE_TOO_MANY_PENDING_INTENTS:
                     return "GEOFENCE_TOO_MANY_PENDING_INTENTS";
+                default:
+                    break;
             }
         }
         return e.getLocalizedMessage();

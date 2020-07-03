@@ -2,11 +2,11 @@ package com.jio.devicetracker.view.geofence;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -20,6 +20,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
     private Button metersRadioButton;
     private Button kiloMetersRadioButton;
     private TextView radiusText;
+    private static final String TAG = "EditGeofenceActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +74,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             radiusText.setText("10 km");
         }else if (v.getId() == R.id.updateGeofence){
 
+            Log.d(TAG,"Update function implementation");
         }
 
     }
