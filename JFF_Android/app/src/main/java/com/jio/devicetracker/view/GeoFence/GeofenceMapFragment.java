@@ -58,7 +58,7 @@ import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener {
+public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,GoogleMap.OnMapClickListener {
 
     public static GoogleMap mMap;
     public static final int MY_PERMISSIONS_REQUEST_MAPS = 101;
@@ -117,16 +117,21 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                     MY_PERMISSIONS_REQUEST_MAPS);
         }
 
+        if (Build.VERSION.SDK_INT >= 29) {
+            //We need background permission
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                //handleMapLongClick(latLng);
+            } else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+                    //We show a dialog and ask for permission
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
+                }
+            }
 
+        }
         return view;
-    }
-
-
-    // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage) {
-        CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
-        alertActivity.show();
-        alertActivity.alertWithOkButton(alertMessage);
     }
 
     /**
@@ -150,6 +155,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.addMarker(markerOptions);
             addCircle(latLng,GEOFENCE_RADIUS_IN_METERS);
+            addGeofence(latLng, GEOFENCE_RADIUS_IN_METERS);
             mMap.setMyLocationEnabled(true);
             mMap.setOnMapClickListener(this);
     }
@@ -188,60 +194,16 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         return strAddress.toString();
     }
 
-
-    /**
-     * Called when you click on Markers, Markers will display the full address
-     *
-     * @param marker
-     */
-    @Override
-    public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(getContext(), strAddress.toString(), Toast.LENGTH_SHORT).show();
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMapClick(LatLng latLng) {
-        handleMapLongClick(latLng);
+
+        handleMapClick(latLng);
+
     }
-
-
     /**
-     * Class to show address when you click on marker
+     * Add the details in Geofence.
      */
-    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-        private final View myContentsView;
-
-        MyInfoWindowAdapter(Context context) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            myContentsView = inflater.inflate(R.layout.custom_info_contents, null);
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            TextView tvTitle = myContentsView.findViewById(R.id.title);
-            tvTitle.setText(marker.getTitle());
-            TextView tvSnippet = myContentsView.findViewById(R.id.snippet);
-            tvSnippet.setText(marker.getSnippet());
-            return null;
-        }
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-            return null;
-        }
-    }
-
-    /**
-     * Refresh the map on particular time interval
-     */
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void showMapOnTimeInterval() {
-        if (mMap != null) {
-            onMapReady(mMap);
-        }
-    }
-
     private void addGeofence(LatLng latLng, float radius) {
 
         Geofence geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT);
@@ -252,42 +214,22 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                       Log.d(TAG, "onSuccess: Geofence Added...");
+
+                       Log.d(TAG, Constant.GEOFENCE_SUCCESS_MESSAGE);
                     }
                 })
                     .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         String errorMessage = geofenceHelper.getErrorString(e);
-                        Log.d(TAG, "OnFailure: Geofence not added..."+errorMessage);
+                        Log.d(TAG, Constant.GEOFENCE_FAILURE_MESSAGE+errorMessage);
                     }
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onMapLongClick(LatLng latLng) {
-        if (Build.VERSION.SDK_INT >= 29) {
-            //We need background permission
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                handleMapLongClick(latLng);
-            } else {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
-                    //We show a dialog and ask for permission
-                    ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
-                } else {
-                    ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
-                }
-            }
-
-        } else {
-            handleMapLongClick(latLng);
-        }
-
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void handleMapLongClick(LatLng latLng) {
+    private void handleMapClick(LatLng latLng) {
         mMap.clear();
         addMarker(latLng);
         addCircle(latLng, GEOFENCE_RADIUS_IN_METERS);

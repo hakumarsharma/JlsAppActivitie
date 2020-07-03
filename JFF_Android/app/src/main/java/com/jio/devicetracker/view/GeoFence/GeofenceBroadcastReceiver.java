@@ -1,8 +1,10 @@
 package com.jio.devicetracker.view.geofence;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
@@ -12,6 +14,8 @@ import com.jio.devicetracker.view.location.MapsActivity;
 import java.util.List;
 
 public class GeofenceBroadcastReceiver extends BroadcastReceiver {
+    private static final String TAG = "GeofenceBroadcastReceiver";
+    @SuppressLint("LongLogTag")
     @Override
     public void onReceive(Context context, Intent intent) {
         NotificationHelper notificationHelper = new NotificationHelper(context);
@@ -24,7 +28,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
         List<Geofence> geofenceList = geofencingEvent.getTriggeringGeofences();
         for (Geofence geofence: geofenceList) {
-
+            Log.d(TAG, "onReceive: " + geofence.getRequestId());
         }
         int transitionType = geofencingEvent.getGeofenceTransition();
 
