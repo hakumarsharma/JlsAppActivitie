@@ -61,7 +61,7 @@
             android:layout_toLeftOf="@id/alertNextButton"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:text="12"/>
+            android:text="01"/>
 
         <TextView
             android:layout_width="wrap_content"

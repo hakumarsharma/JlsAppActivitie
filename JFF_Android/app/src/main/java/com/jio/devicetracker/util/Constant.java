@@ -378,7 +378,7 @@ public class Constant {
     public static final String MEMBER_NAME = "memberName";
     public static final String LAT = "lat";
     public static final String LANG = "lang";
-    public static final String SHARE_LOCATION = "Share Location";
+    public static final String SHARE_LOCATION = "Location";
 
 
     // Custom Alert Constants

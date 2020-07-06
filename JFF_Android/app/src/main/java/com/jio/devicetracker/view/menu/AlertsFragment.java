@@ -55,7 +55,8 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
         List<GroupMemberDataList> groupMemberDataLists = mDbManager.getAllGroupMemberData();
         groupMemberList = new ArrayList<>();
         for (GroupMemberDataList groupMemberDataList : groupMemberDataLists) {
-            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
+                && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)
                     && groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
                 groupMemberList.add(groupMemberDataList);
@@ -66,20 +67,22 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void displayIndividualUserDetail(int position) {
-        alertsMemberName.setText(groupMemberList.get(position).getName());
-        alertMemberAddress.setText("Nagina Singh Colony, Chapra, Bihar");
+        if (!groupMemberList.isEmpty()) {
+            alertsMemberName.setText(groupMemberList.get(position).getName());
+            alertMemberAddress.setText("Nagina Singh Colony, Chapra, Bihar");
+        }
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.alertBackButton) {
             if (position > 0) {
-                displayIndividualUserDetail(-- position);
+                displayIndividualUserDetail(--position);
                 Util.getInstance().createNotificationChannel(getActivity());
             }
         } else if (v.getId() == R.id.alertNextButton) {
             if (position < groupMemberList.size() - 1) {
-                displayIndividualUserDetail(++ position);
+                displayIndividualUserDetail(++position);
                 Util.getInstance().createNotificationChannel(getActivity());
             }
         }
