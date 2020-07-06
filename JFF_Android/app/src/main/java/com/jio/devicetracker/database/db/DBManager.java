@@ -27,6 +27,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.AlertHistoryData;
 import com.jio.devicetracker.database.pojo.ConsentTimeupdateData;
 import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
@@ -854,4 +855,33 @@ public class DBManager {
         mDatabase.delete(DatabaseHelper.TABLE_GROUP, null, null);
     }
 
+    public void insertIntoAlertHistoryTable(AlertHistoryData alertHistoryData) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.NAME, alertHistoryData.getName());
+        contentValue.put(DatabaseHelper.DEVICE_NUM, alertHistoryData.getNumber());
+        contentValue.put(DatabaseHelper.CONSENT_ID, alertHistoryData.getConsentId());
+        contentValue.put(DatabaseHelper.ALERT_TIME, alertHistoryData.getDate());
+        mDatabase.replace(DatabaseHelper.TABLE_ALERTS_HOSTORY, null, contentValue);
+    }
+
+    public List<AlertHistoryData> getHistoryTableData(String consentId) {
+        List<AlertHistoryData> mlist = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_ID, DatabaseHelper.ALERT_TIME};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_ALERTS_HOSTORY, column, null, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_ID)).equalsIgnoreCase(consentId)) {
+                    AlertHistoryData mAlertHistoryData = new AlertHistoryData();
+                    mAlertHistoryData.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
+                    mAlertHistoryData.setNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                    mAlertHistoryData.setConsentId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_ID)));
+                    mAlertHistoryData.setDate(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALERT_TIME)));
+                }
+            }
+        }
+        cursor.close();
+        return mlist;
+    }
 }

@@ -40,6 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_GROUP = "GroupData";
     public static final String TABLE_GROUP_MEMBER = "GroupMemberData";
     public static final String TABLE_GROUP_ICON = "GroupIconTable";
+    public static final String TABLE_ALERTS_HOSTORY = "AlertsHistoryTable";
 
     //Table Columns
     public static final String IMEI_NUM = "imei";
@@ -78,6 +79,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String GROUP_OWNER_PHONE_NUMBER = "groupOwnerPhoneNumber";
     public static final String GROUP_ICON = "groupIcon";
     public static final String CONSENTS_COUNT = "consentsCount";
+    public static final String ALERT_TIME = "alertTime";
+    public static final String ADDRESS = "address";
 
 
     //DB Information
@@ -89,11 +92,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " + CONSENT_STATUS + " TEXT, " + DEVICE_ID + " TEXT ," + GROUP_NAME + " TEXT, " + DEVICE_TYPE + " TEXT, " + IS_GROUP_MEMBER + " INTEGER ," + IS_CREATED + " INTEGER ," + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
 
     private static final String CREATE_TABLE_DEVICE = "create table " + TABLE_NAME_DEVICE + "(" + IMEI_NUM
-            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " +CONSENT_STATUS+ " TEXT, "+GROUP_NAME+ " TEXT," + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ," + IS_GROUP_MEMBER + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
+            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " + CONSENT_STATUS + " TEXT, "+ GROUP_NAME + " TEXT," + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ," + IS_GROUP_MEMBER + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
 
 
     private static final String CREATE_TABLE_FMS = "create table " + TABLE_NAME_FMS + "(" + IMEI_NUM
-            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + RELATION + " TEXT, " +CONSENT_STATUS+ " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ," +"PRIMARY KEY" +"(" +DEVICE_NUM +" ," +IMEI_NUM +"))";
+            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + RELATION + " TEXT, " +CONSENT_STATUS+ " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ," +"PRIMARY KEY" +"(" +DEVICE_NUM +" ," + IMEI_NUM +"))";
 
     private static final String CREATE_TABLE_USER = "create table " + TABLE_NAME_USER + "("+ NAME + " TEXT, " + EMAIL + " TEXT, " + DEVICE_NUM + " TEXT ," + DOB + " TEXT ," + PASS + " TEXT ," + USER_ID + " TEXT ,"+"PRIMARY KEY" +"("+DEVICE_NUM +" ," +EMAIL +"))";
 
@@ -104,6 +107,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_GROUP_MEMBER = "create table " + TABLE_GROUP_MEMBER + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + GROUPID + " TEXT, " + IS_GROUP_ADMIN + " INTEGER, " + DEVICE_NUM + " TEXT ," + PROFILE_IMAGE + " INTEGER ," + USER_ID + " TEXT ," + DEVICE_ID + " TEXT ," + STATUS + " TEXT, " + "PRIMARY KEY" +"("+ CONSENT_ID +"))";
 
     private static final String CREATE_GROUP_ICON_TABLE = "create table " + TABLE_GROUP_ICON + "(" + GROUPID + " TEXT, " + GROUP_ICON + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
+
+    private static final String CREATE_ALERTS_HISTORY_TABLE = "create table " + TABLE_ALERTS_HOSTORY + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + DEVICE_NUM + " TEXT, " + ALERT_TIME + " TEXT ," + ADDRESS + " TEXT, " + "PRIMARY KEY" + "(" + ALERT_TIME +"))";
 
 
     public DatabaseHelper(Context context) {
@@ -124,6 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_GROUP);
         db.execSQL(CREATE_TABLE_GROUP_MEMBER);
         db.execSQL(CREATE_GROUP_ICON_TABLE);
+        db.execSQL(CREATE_ALERTS_HISTORY_TABLE);
     }
 
     /**
@@ -140,6 +146,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP_MEMBER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP_ICON);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALERTS_HOSTORY);
         onCreate(db);
     }
 }

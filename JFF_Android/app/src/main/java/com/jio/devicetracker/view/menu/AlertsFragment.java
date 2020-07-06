@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AlertHistoryData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
@@ -25,11 +26,13 @@ import java.util.List;
 
 public class AlertsFragment extends Fragment implements View.OnClickListener {
 
-    private List<GroupMemberDataList> groupMemberList;
+    private List<AlertHistoryData> alertHistoryData;
     private TextView alertsMemberName;
     private TextView alertMemberAddress;
     private ImageView alertBackButton;
     private ImageView alertNextButton;
+    private DBManager mDbManager;
+    private String consentId;
     private int position = 0;
 
     @Override
@@ -42,34 +45,34 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
         alertNextButton = view.findViewById(R.id.alertNextButton);
         alertBackButton.setOnClickListener(this);
         alertNextButton.setOnClickListener(this);
-        displayDataInList(view);
+        getIndividualMemberList();
         displayIndividualUserDetail(position);
+        consentId = getActivity().getIntent().getStringExtra(Constant.CONSENT_ID);
+        getAlertsHistoryAndDisplay(consentId, view);
         return view;
     }
 
-    private void displayDataInList(View view) {
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        RecyclerView mRecyclerView = view.findViewById(R.id.alertsList);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        DBManager mDbManager = new DBManager(getActivity());
+    private void getIndividualMemberList() {
         List<GroupMemberDataList> groupMemberDataLists = mDbManager.getAllGroupMemberData();
-        groupMemberList = new ArrayList<>();
+        alertHistoryData = new ArrayList<>();
         for (GroupMemberDataList groupMemberDataList : groupMemberDataLists) {
             if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
-                && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)
                     && groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
-                groupMemberList.add(groupMemberDataList);
+                AlertHistoryData mAlertHistoryData = new AlertHistoryData();
+                mAlertHistoryData.setName(groupMemberDataList.getName());
+                mAlertHistoryData.setNumber(groupMemberDataList.getNumber());
+                mAlertHistoryData.setAddress(groupMemberDataList.getAddress());
+                alertHistoryData.add(mAlertHistoryData);
             }
         }
-        AlertsFragmentAdapter alertsFragmentAdapter = new AlertsFragmentAdapter(groupMemberList);
-        mRecyclerView.setAdapter(alertsFragmentAdapter);
     }
 
     private void displayIndividualUserDetail(int position) {
-        if (!groupMemberList.isEmpty()) {
-            alertsMemberName.setText(groupMemberList.get(position).getName());
-            alertMemberAddress.setText("Nagina Singh Colony, Chapra, Bihar");
+        if (!alertHistoryData.isEmpty()) {
+            alertsMemberName.setText(alertHistoryData.get(position).getName());
+            alertMemberAddress.setText(alertHistoryData.get(position).getAddress());
         }
     }
 
@@ -81,10 +84,20 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
                 Util.getInstance().createNotificationChannel(getActivity());
             }
         } else if (v.getId() == R.id.alertNextButton) {
-            if (position < groupMemberList.size() - 1) {
+            if (position < alertHistoryData.size() - 1) {
                 displayIndividualUserDetail(++position);
                 Util.getInstance().createNotificationChannel(getActivity());
             }
         }
+    }
+
+    private void getAlertsHistoryAndDisplay(String consentId, View view) {
+        mDbManager = new DBManager(getActivity());
+        List<AlertHistoryData> mAlertHistoryListData = mDbManager.getHistoryTableData(consentId);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView mRecyclerView = view.findViewById(R.id.alertsList);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        AlertsFragmentAdapter alertsFragmentAdapter = new AlertsFragmentAdapter(mAlertHistoryListData);
+        mRecyclerView.setAdapter(alertsFragmentAdapter);
     }
 }
