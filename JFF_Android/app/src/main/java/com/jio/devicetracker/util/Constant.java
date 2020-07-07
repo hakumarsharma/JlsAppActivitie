@@ -346,7 +346,6 @@ public class Constant {
     public static final String CREATED_BY = "createdBy";
     public static final String UPDATED_BY = "updatedBy";
     public static final String EVENTS = "events";
-    public static final String ONE_TO_ONE = "one_to_one";
     public static final String MANY_TO_MANY = "many_to_many";
 	public static final String GEOFENCE = "Geofence";
     public static final String GEOFENCE_EDIT = "Edit Geofence";
