@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -40,50 +39,50 @@
                 android:id="@+id/group_motherIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_toRightOf="@+id/groupListmemberIcon"
                 android:layout_marginTop="50dp"
-                android:visibility="invisible"
-                android:background="@drawable/secondaryuser" />
+                android:layout_toRightOf="@+id/groupListmemberIcon"
+                android:background="@drawable/secondaryuser"
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/group_fatherIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="-15dp"
-                android:layout_toRightOf="@+id/group_motherIcon"
                 android:layout_marginTop="50dp"
-                android:visibility="invisible"
-                android:background="@drawable/secondaryuser" />
+                android:layout_toRightOf="@+id/group_motherIcon"
+                android:background="@drawable/secondaryuser"
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/group_kidIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="-15dp"
-                android:layout_toRightOf="@+id/group_fatherIcon"
                 android:layout_marginTop="50dp"
-                android:visibility="invisible"
-                android:background="@drawable/secondaryuser" />
+                android:layout_toRightOf="@+id/group_fatherIcon"
+                android:background="@drawable/secondaryuser"
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/group_dogIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="-15dp"
-                android:layout_toRightOf="@+id/group_kidIcon"
                 android:layout_marginTop="50dp"
-                android:visibility="invisible"
-                android:background="@drawable/secondaryuser" />
+                android:layout_toRightOf="@+id/group_kidIcon"
+                android:background="@drawable/secondaryuser"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/numberOfUsers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/group_dogIcon"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="52dp"
-            android:text="+ 1 invited"
-            android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="52dp"
+                android:layout_toRightOf="@+id/group_dogIcon"
+                android:text="+ 1 invited"
+                android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <ImageView
@@ -94,6 +93,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="@dimen/ten_dp"
                 android:src="@drawable/ic_more_black" />
+
             <ImageView
                 android:id="@+id/group_timer"
                 android:layout_width="20dp"

@@ -23,8 +23,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/father" />
+                android:layout_marginTop="15dp" />
 
             <TextView
                 android:id="@+id/trackingYouGroupOwnerName"
@@ -76,16 +75,6 @@
                 android:layout_marginRight="@dimen/ten_dp"
                 android:src="@drawable/ic_more_black" />
 
-            <TextView
-                android:id="@+id/trackingYouGroupName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/trackingYouOperationStatus"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="20dp"
-                android:textColor="@color/black"
-                android:textSize="14dp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
@@ -156,6 +145,27 @@
             android:layout_marginLeft="@dimen/margin_22"
             android:layout_marginTop="@dimen/ten_dp"
             android:text="Track"
+            android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp" />
+
+        <View
+            android:id="@+id/reverseTrackLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/reverseTrack"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:layout_marginRight="@dimen/fourteen_dp"
+            android:background="@color/light_hash" />
+
+        <TextView
+            android:id="@+id/viewMembers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reverseTrackLine"
+            android:layout_marginLeft="@dimen/margin_22"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:text="View members"
             android:textColor="@color/white"
             android:paddingBottom="@dimen/margin_12"
             android:textSize="@dimen/seventeen_dp" />

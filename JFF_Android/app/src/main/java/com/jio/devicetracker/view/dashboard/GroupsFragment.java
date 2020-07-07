@@ -22,10 +22,12 @@ package com.jio.devicetracker.view.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
@@ -51,6 +54,7 @@ import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.GroupListAdapter;
 import com.jio.devicetracker.view.location.LocationActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,11 +98,12 @@ public class GroupsFragment extends Fragment {
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
     }
+
     /**
      * Get All Group info per user API Call
      */
@@ -176,7 +181,11 @@ public class GroupsFragment extends Fragment {
                 List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
                 for (SearchEventResponse.Data data : mList) {
                     for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
-                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId()) && (grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                        if (grpMembers.getDeviceId() != null
+                                && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice())
+                                && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())
+                                && !grpMembers.getUserId().equalsIgnoreCase(userId)
+                                && (grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
                             MapData mapData = new MapData();
                             mapData.setLatitude(data.getLocation().getLat());
                             mapData.setLongitude(data.getLocation().getLng());
@@ -238,7 +247,7 @@ public class GroupsFragment extends Fragment {
                             homeActivityListData.setConsentsCount(count);
                         }
                     }
-                    if(!data.getGroupOwner().isEmpty()) {
+                    if (!data.getGroupOwner().isEmpty()) {
                         homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
                         homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
                         homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());

@@ -298,12 +298,13 @@ public class Constant {
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";
     public static final String GROUP_ID = "groupId";
+    public static final String ACTIVE_MEMBER_TITLE = "View members";
     public static final String GROUPNAME = "groupName";
     public static final String EDIT_MEMBER_TITLE = "Edit members";
     public static final String QR_CODE_VALUE = "QRCodeValue";
     public static final String SCAN_QR_CODE_TITLE = "Scan QR Code";
 
-    public static final String ACTIVE_SESSION_TITLE = "Group Management";
+    public static final String TRACK_MANAGEMENT_TITLE = "Track management";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";
     public static final String CREATE_GROUP_LIST = "Track";
@@ -328,6 +329,7 @@ public class Constant {
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
     public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member in a group, Please try again!";
+    public static final String LOGGED_IN_USER_ADDITION_FAILURE = "Unable to add logged in user into the group";
     public static final String DEVICE_NOT_FOUND = "Device not found, Please try again!";
     public static final String REMOVE = "Remove";
     public static final String EXIT = "Exit";
@@ -345,6 +347,7 @@ public class Constant {
     public static final String UPDATED_BY = "updatedBy";
     public static final String EVENTS = "events";
     public static final String ONE_TO_ONE = "one_to_one";
+    public static final String MANY_TO_MANY = "many_to_many";
 	public static final String GEOFENCE = "Geofence";
     public static final String GEOFENCE_EDIT = "Edit Geofence";
 	public static final String LOWBATTERY = "Low Battery";

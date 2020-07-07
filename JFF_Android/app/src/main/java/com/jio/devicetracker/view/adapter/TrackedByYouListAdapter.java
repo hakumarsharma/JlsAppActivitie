@@ -167,6 +167,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         private TextView trackedByYouEdit;
         private TextView deleteAllMembers;
         private TextView numberOfUsers;
+        private View trackedByYouEditEditLine;
 
         /**
          * Constructor where we find element from .xml file
@@ -191,6 +192,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             trackedByYouEdit.setOnClickListener(this);
             deleteAllMembers = itemView.findViewById(R.id.deleteAllMembers);
             deleteAllMembers.setOnClickListener(this);
+            trackedByYouEditEditLine = itemView.findViewById(R.id.trackedByYouEditEditLine);
         }
 
         @Override
@@ -199,6 +201,8 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
                 case R.id.trackedByYouOperationStatus:
                     if (mList.get(getAdapterPosition()).getConsentStaus() != null) {
                         deleteAllMembers.setText("Delete member");
+                        trackedByYouEdit.setVisibility(View.GONE);
+                        trackedByYouEditEditLine.setVisibility(View.GONE);
                     }
                     trackedByYouOprationLayout.setVisibility(View.VISIBLE);
                     break;

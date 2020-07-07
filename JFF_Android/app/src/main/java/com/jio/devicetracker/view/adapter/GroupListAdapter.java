@@ -49,6 +49,7 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.EditMemberActivity;
 import com.jio.devicetracker.view.dashboard.GroupsFragment;
 import com.jio.devicetracker.view.device.AddDeviceActivity;
+
 import java.util.List;
 
 /**
@@ -72,11 +73,12 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
     }
+
     /**
      * Binds the given View to the position
      *
@@ -103,18 +105,18 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         HomeActivityListData data = mList.get(position);
         holder.groupName.setTypeface(Util.mTypeface(mContext, 5));
         holder.groupName.setText(data.getGroupName());
-        holder.timeLeft.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(),data.getTo()));
-        if(data.getGroupIcon() != null && !data.getGroupIcon().isEmpty()) {
+        holder.timeLeft.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(), data.getTo()));
+        if (data.getGroupIcon() != null && !data.getGroupIcon().isEmpty()) {
             Resources res = mContext.getResources();
             int iconId = res.getIdentifier(data.getGroupIcon(), Constant.DRAWABLE, mContext.getPackageName());
             Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
             holder.groupListmemberIcon.setImageDrawable(drawable);
-        }else {
+        } else {
             holder.groupListmemberIcon.setBackgroundResource(R.drawable.ic_family_group);
         }
         holder.mListlayout.setOnClickListener(v -> itemListener.clickonListLayout(data));
-        if (mList != null && !mList.isEmpty() &&  data.getConsentsCount() <= 4){
-                switch (data.getConsentsCount()) {
+        if (mList != null && !mList.isEmpty() && data.getConsentsCount() <= 5) {
+            switch (data.getConsentsCount() - 1) {
                 case 1:
                     holder.icon1.setVisibility(View.VISIBLE);
                     holder.icon2.setVisibility(View.INVISIBLE);
@@ -148,7 +150,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             holder.icon2.setVisibility(View.VISIBLE);
             holder.icon3.setVisibility(View.VISIBLE);
             holder.icon4.setVisibility(View.VISIBLE);
-            holder.numberOfUsers.setText("+ "+ (data.getConsentsCount() - 4) + " invited");
+            holder.numberOfUsers.setText("+ " + (data.getConsentsCount() - 4) + " invited");
         }
     }
 
@@ -233,7 +235,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.edit:
-                    if (mList.isEmpty()){
+                    if (mList.isEmpty()) {
                         showCustomAlertWithText(Constant.ADD_DETAILS_TO_TRACK);
                         return;
                     }

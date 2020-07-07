@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
@@ -39,7 +40,7 @@ import com.jio.devicetracker.view.adapter.ActiveMemberListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActiveMemberActivity extends AppCompatActivity implements View.OnClickListener{
+public class ActiveMemberActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String groupId;
     private DBManager mDbManager;
@@ -51,15 +52,21 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
         mDbManager = new DBManager(this);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Intent intent = getIntent();
-        toolbarTitle.setText(Constant.EDIT_MEMBER_TITLE);
         TextView groupNameTitle = findViewById(R.id.groupNameTitle);
         groupNameTitle.setText(intent.getStringExtra(Constant.GROUP_NAME));
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         RecyclerView mRecyclerList = findViewById(R.id.trackerList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerList.setLayoutManager(linearLayoutManager);
-        ActiveMemberListAdapter mAdapter = new ActiveMemberListAdapter(addDataInList(), this);
-        mRecyclerList.setAdapter(mAdapter);
+        if (intent.getStringExtra(Constant.ACTIVE_MEMBER_TITLE) != null) {
+            toolbarTitle.setText(Constant.ACTIVE_MEMBER_TITLE);
+            ActiveMemberListAdapter mAdapter = new ActiveMemberListAdapter(addTrackingYouDataInList(), this);
+            mRecyclerList.setAdapter(mAdapter);
+        } else {
+            toolbarTitle.setText(Constant.EDIT_MEMBER_TITLE);
+            ActiveMemberListAdapter mAdapter = new ActiveMemberListAdapter(addTrackedByYouDataInList(), this);
+            mRecyclerList.setAdapter(mAdapter);
+        }
         Button backButton = findViewById(R.id.back);
         backButton.setOnClickListener(this);
         backButton.setVisibility(View.VISIBLE);
@@ -82,11 +89,13 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
      *
      * @return List<GroupMemberDataList>
      */
-    private List<GroupMemberDataList> addDataInList() {
+    private List<GroupMemberDataList> addTrackedByYouDataInList() {
         List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
         List<GroupMemberDataList> memberList = new ArrayList<>();
         for (GroupMemberDataList data : mList) {
-            if (!data.getConsentStatus().equalsIgnoreCase(Constant.EXITED) && !data.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
+            if (!data.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
+                    && !data.getConsentStatus().equalsIgnoreCase(Constant.EXITED)
+                    && !data.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
                 GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
                 groupMemberDataList.setName(data.getName());
                 groupMemberDataList.setNumber(data.getNumber());
@@ -100,5 +109,31 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
             }
         }
         return memberList;
+    }
+
+    /**
+     * Displays tracking you data in list
+     *
+     * @return List<GroupMemberDataList>
+     */
+    private List<GroupMemberDataList> addTrackingYouDataInList() {
+        List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+        List<GroupMemberDataList> groupMemberDataLists = new ArrayList<>();
+        for(GroupMemberDataList groupMemberDataList : mList) {
+            if(groupMemberDataList.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
+                GroupMemberDataList data = new GroupMemberDataList();
+                data.setName("You");
+                data.setNumber(groupMemberDataList.getNumber());
+                data.setConsentStatus(groupMemberDataList.getConsentStatus());
+                data.setConsentId(groupMemberDataList.getConsentId());
+                data.setGroupId(groupMemberDataList.getGroupId());
+                data.setDeviceId(groupMemberDataList.getDeviceId());
+                data.setUserId(groupMemberDataList.getUserId());
+                groupMemberDataLists.add(data);
+            } else {
+                groupMemberDataLists.add(groupMemberDataList);
+            }
+        }
+        return groupMemberDataLists;
     }
 }
