@@ -81,7 +81,7 @@ public class BaseActivity extends AppCompatActivity {
     public void createGroupAndAddContactAPICall(String groupName) {
         CreateGroupData createGroupData = new CreateGroupData();
         createGroupData.setName(groupName);
-        createGroupData.setType(Constant.ONE_TO_ONE);
+        createGroupData.setType(Constant.MANY_TO_MANY);
         CreateGroupData.Session session = new CreateGroupData().new Session();
         session.setFrom(Util.getInstance().getTimeEpochFormatAfterCertainTime(1));
         session.setTo(Util.getInstance().createSessionEndDate());
@@ -113,10 +113,7 @@ public class BaseActivity extends AppCompatActivity {
                 CreateGroupActivity.groupIdFromPeopleFlow = createdGroupId;
                 mDbManager.insertInToGroupIconTable(createdGroupId, selectedIcon);
                 if (isFromCreateGroup) {
-                    Util.progressDialog.dismiss();
-                    Intent intent = new Intent(BaseActivity.this, AddDeviceActivity.class);
-                    intent.putExtra(Constant.GROUP_ID, createdGroupId);
-                    startActivity(intent);
+                    addLoggedInUserDetailInGroup(createdGroupId);
                 } else if (DashboardMainActivity.flowFromPeople) {
                     addIndividualUserInGroupAPICall();
                 } else if (isFromDevice && !isNavigateToGroupsFragment) {
@@ -266,6 +263,48 @@ public class BaseActivity extends AppCompatActivity {
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
+        }
+    }
+
+    // Add Logged in user details in every group creation
+    private void addLoggedInUserDetailInGroup(String createdGroupId) {
+        AddMemberInGroupData addMemberInGroupData = new AddMemberInGroupData();
+        AddMemberInGroupData.Consents consents = new AddMemberInGroupData().new Consents();
+        List<AddMemberInGroupData.Consents> consentList = new ArrayList<>();
+        List<String> mList = new ArrayList<>();
+        mList.add(Constant.EVENTS);
+        consents.setEntities(mList);
+        consents.setPhone(mDbManager.getAdminLoginDetail().getPhoneNumber());
+        consents.setName(mDbManager.getAdminLoginDetail().getName());
+        consentList.add(consents);
+        addMemberInGroupData.setConsents(consentList);
+        GroupRequestHandler.getInstance(this).handleRequest(new AddMemberInGroupRequest(new AddLoggedInUserDetailRequestSuccessListener(), new AddLoggedInUserDetailRequestErrorListener(), addMemberInGroupData, createdGroupId, mDbManager.getAdminLoginDetail().getUserId()));
+    }
+
+    /**
+     * Add Logged-in user details in group Success Listener
+     */
+    private class AddLoggedInUserDetailRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
+            if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
+                mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
+                Util.progressDialog.dismiss();
+                Intent intent = new Intent(BaseActivity.this, AddDeviceActivity.class);
+                intent.putExtra(Constant.GROUP_ID, createdGroupId);
+                startActivity(intent);
+            }
+        }
+    }
+
+    /**
+     * Add Member in Group Error Listener
+     */
+    private class AddLoggedInUserDetailRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            showCustomAlertWithText(Constant.LOGGED_IN_USER_ADDITION_FAILURE);
         }
     }
 

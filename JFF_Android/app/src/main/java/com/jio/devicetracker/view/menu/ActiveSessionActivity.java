@@ -64,7 +64,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_session);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(Constant.ACTIVE_SESSION_TITLE);
+        toolbarTitle.setText(Constant.TRACK_MANAGEMENT_TITLE);
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         backBtn.setOnClickListener(this);
@@ -158,8 +158,8 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             }
         }
 
-        // Adding Tracking you in list of Active session
-        List<TrackingYou> trackingYouList = new ArrayList<>();
+        // Add Tracking you in list of Active session
+        List<HomeActivityListData> trackingYouList = new ArrayList<>();
         for (HomeActivityListData data : groupDetailList) {
             for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
                 if (!userId.equalsIgnoreCase(data.getGroupOwnerUserId())
@@ -167,16 +167,29 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                         && data.getGroupId().equalsIgnoreCase(groupMemberDataList.getGroupId())
                         && groupMemberDataList.getUserId().equalsIgnoreCase(userId)
                         && groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
-                    TrackingYou trackingYou = new TrackingYou();
-                    trackingYou.setGroupOwnerName(data.getGroupOwnerName());
-                    trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
-                    trackingYou.setGroupOwnerUserId(data.getGroupOwnerUserId());
-                    trackingYou.setGroupId(data.getGroupId());
-                    trackingYou.setGroupName(data.getGroupName());
-                    trackingYouList.add(trackingYou);
+                    HomeActivityListData trackingYou = new HomeActivityListData();
+                    if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                        trackingYou.setGroupOwnerName(data.getGroupOwnerName());
+                        trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
+                        trackingYou.setGroupOwnerUserId(data.getGroupOwnerUserId());
+                        trackingYou.setGroupId(data.getGroupId());
+                        trackingYou.setGroupName(data.getGroupOwnerName());
+                        trackingYou.setConsentId(groupMemberDataList.getConsentId());
+                        trackingYou.setConsentsCount(data.getConsentsCount());
+                        trackingYouList.add(trackingYou);
+                    } else {
+                        trackingYou.setGroupOwnerName(data.getGroupOwnerName());
+                        trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
+                        trackingYou.setGroupOwnerUserId(data.getGroupOwnerUserId());
+                        trackingYou.setGroupId(data.getGroupId());
+                        trackingYou.setGroupName(data.getGroupName());
+                        trackingYou.setConsentsCount(data.getConsentsCount());
+                        trackingYouList.add(trackingYou);
+                    }
                 }
             }
         }
+
 
         for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
             HomeActivityListData data = new HomeActivityListData();

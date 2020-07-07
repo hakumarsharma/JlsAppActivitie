@@ -136,7 +136,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         contactBtn.setVisibility(View.VISIBLE);
         contactBtn.setOnClickListener(this);
         changeButtonColorOnDataEntry();
-
     }
 
     // Show custom alert with alert message
@@ -331,7 +330,9 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             listOfContacts = new ArrayList();
             for (GroupMemberResponse.Data data : memberList) {
                 if (!data.getStatus().equalsIgnoreCase(Constant.REMOVED)) {
-                    listOfContacts.add(data);
+                    if (!data.getUserId().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getUserId())) {
+                        listOfContacts.add(data);
+                    }
                 }
             }
             mAdapter = new AddPersonListAdapter(listOfContacts);
