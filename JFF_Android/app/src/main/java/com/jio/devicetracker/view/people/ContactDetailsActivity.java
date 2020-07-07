@@ -268,7 +268,7 @@ public class ContactDetailsActivity extends AppCompatActivity implements View.On
     private void createGroupAndAddContactAPICall() {
         CreateGroupData createGroupData = new CreateGroupData();
         createGroupData.setName(Constant.INDIVIDUAL_USER_GROUP_NAME);
-        createGroupData.setType(Constant.ONE_TO_ONE);
+        createGroupData.setType(Constant.MANY_TO_MANY);
         CreateGroupData.Session session = new CreateGroupData().new Session();
         session.setFrom(Util.getInstance().getTimeEpochFormatAfterCertainTime(1));
         session.setTo(Util.getInstance().getTimeEpochFormatAfterCertainTime(60));
