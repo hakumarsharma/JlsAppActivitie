@@ -1,8 +1,29 @@
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.jio.devicetracker.view.geofence;
 
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.LocationManager;
@@ -32,15 +53,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 
-
 import static android.content.Context.LOCATION_SERVICE;
 
-public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,GoogleMap.OnMapClickListener {
+public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     public static GoogleMap mMap;
     public static final int MY_PERMISSIONS_REQUEST_MAPS = 101;
@@ -57,6 +78,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     double Latitude = 82.084;
     private GeofencingClient mGeofencingClient;
     private String GEOFENCE_ID = "JioTrack1";
+    private boolean createGeofence;
     private int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 1000;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -68,6 +90,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         if(getArguments() != null) {
             double lat = getArguments().getDouble(Constant.LATITUDE);
             double lang = getArguments().getDouble(Constant.LONGNITUDE);
+            createGeofence = getArguments().getBoolean(Constant.CREATE_GEOFENCE);
             if (lat != 0 && lang != 0) {
                 latLng = new LatLng( lat
                         , lang);
@@ -133,8 +156,10 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.addMarker(markerOptions);
-            addCircle(latLng,GEOFENCE_RADIUS_IN_METERS);
-            addGeofence(latLng, GEOFENCE_RADIUS_IN_METERS);
+            if(createGeofence){
+                addCircle(latLng,GEOFENCE_RADIUS_IN_METERS);
+                addGeofence(latLng, GEOFENCE_RADIUS_IN_METERS);
+            }
             mMap.setMyLocationEnabled(true);
             mMap.setOnMapClickListener(this);
     }
@@ -148,6 +173,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         circleOptions.fillColor(Color.argb(.5f, 28, 96, 171));
         circleOptions.strokeWidth(4);
         mMap.addCircle(circleOptions);
+
 
     }
 
@@ -209,4 +235,13 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+  /* public void makeApicallForTrackeeLocation(){
+       SearchEventData searchEventData = new SearchEventData();
+       List<String> mList = new ArrayList<>();
+       mList.add(Constant.LOCATION);
+       mList.add(Constant.SOS);
+       searchEventData.setTypes(mList);
+       Util.getInstance().showProgressBarDialog(getActivity());
+       GroupRequestHandler.getInstance(getContext()).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, mDbManager.getAdminLoginDetail().getUserId(), homeActivityListData.getGroupId(), Constant.GET_LOCATION_URL));
+    }*/
 }

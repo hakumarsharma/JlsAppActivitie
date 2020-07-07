@@ -5,16 +5,20 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
+<include
+    layout="@layout/toolbar"
+    android:id="@+id/attachToolbar"
+    />
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/attachToolbar"
-        android:layout_margin="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="@dimen/twenty_dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         app:cardElevation="8dp">
 
         <RelativeLayout
@@ -30,7 +34,7 @@
                 android:textCursorDrawable="@color/black"
                 android:layout_margin="20dp"
                 android:textSize="@dimen/seventeen_dp"
-                android:text="Location name"
+                android:hint="Location name"
                 android:textStyle="bold" />
 
             <TextView

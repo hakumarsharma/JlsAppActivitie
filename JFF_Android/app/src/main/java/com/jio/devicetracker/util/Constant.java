@@ -345,9 +345,11 @@ public class Constant {
     public static final String EVENTS = "events";
     public static final String ONE_TO_ONE = "one_to_one";
 	public static final String GEOFENCE = "Geofence";
+    public static final String GEOFENCE_EDIT = "Edit Geofence";
 	public static final String LOWBATTERY = "Low Battery";
     public static final String LATITUDE = "Latitude";
     public static final String LONGNITUDE = "Longitude";
+    public static final String CREATE_GEOFENCE = "CreateGeofence";
     public static final String ADDRESS_MESSAGE = "LatLong is not available for this address";
     public static final String INDIVIDUAL_USER_GROUP_NAME = "IndPeplTrac";
     public static final String INDIVIDUAL_DEVICE_GROUP_NAME = "IndDevTrac";

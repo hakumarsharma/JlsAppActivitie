@@ -176,7 +176,9 @@
             android:label="@string/map_name" />
         <activity
             android:name=".view.geofence.GeofenceActivity"
-            android:label="@string/map_name" />
+            android:label="@string/map_name"
+            android:theme="@style/MenuTheme"
+            />
 
         <activity
             android:name=".view.people.ChooseGroupFromPeopleFlow"

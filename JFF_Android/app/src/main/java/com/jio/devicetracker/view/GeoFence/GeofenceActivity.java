@@ -1,8 +1,34 @@
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.jio.devicetracker.view.geofence;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +37,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -25,6 +54,8 @@ import java.util.List;
 public class GeofenceActivity extends BaseActivity implements View.OnClickListener  {
     private GeofenceMapFragment fragmentMap;
     private EditText addressText;
+    private ImageView menuOption;
+
 
 
     @Override
@@ -35,6 +66,13 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         initUI();
     }
     private void initUI() {
+        Toolbar toolbar = findViewById(R.id.geofenceToolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar;
+        actionBar = getSupportActionBar();
+        ColorDrawable colorDrawable
+                = new ColorDrawable(Color.parseColor("#1C60AB"));
+        actionBar.setBackgroundDrawable(colorDrawable);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.GEOFENCE);
         Button backBtn = findViewById(R.id.back);
@@ -45,8 +83,12 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         addressText = findViewById(R.id.address);
         ImageView searchAddress = findViewById(R.id.search);
         ImageView cancelAddress = findViewById(R.id.clear);
+       /* menuOption = findViewById(R.id.menu_option);
+        menuOption.setVisibility(View.VISIBLE);
+        menuOption.setOnClickListener(this);*/
         searchAddress.setOnClickListener(this);
         cancelAddress.setOnClickListener(this);
+
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.map_fragment, fragmentMap).commit();
@@ -69,6 +111,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
             case R.id.back:
                 finish();
                 break;
+            //case R.id.menu_option:
             default:
                 break;
         }
@@ -102,6 +145,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         Bundle bundle = new Bundle();
         bundle.putDouble(Constant.LATITUDE, latLng.latitude);
         bundle.putDouble(Constant.LONGNITUDE, latLng.longitude);
+        bundle.putBoolean(Constant.CREATE_GEOFENCE,true);
         fragmentMap.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -110,4 +154,24 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         transaction.add(R.id.map_fragment,fragmentMap).commit();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.geofence_edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.edit_geofence:
+                Intent intent = new Intent(this,EditGeofenceActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
+    }
 }
