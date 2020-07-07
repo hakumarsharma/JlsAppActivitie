@@ -80,6 +80,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private String GEOFENCE_ID = "JioTrack1";
     private boolean createGeofence;
     private int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 1000;
+    private int editGeofenceRadius =0;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -90,6 +91,8 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         if(getArguments() != null) {
             double lat = getArguments().getDouble(Constant.LATITUDE);
             double lang = getArguments().getDouble(Constant.LONGNITUDE);
+            editGeofenceRadius = getArguments().getInt(Constant.GEOFENCE_RADIUS);
+
             createGeofence = getArguments().getBoolean(Constant.CREATE_GEOFENCE);
             if (lat != 0 && lang != 0) {
                 latLng = new LatLng( lat
@@ -157,8 +160,13 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.addMarker(markerOptions);
             if(createGeofence){
-                addCircle(latLng,GEOFENCE_RADIUS_IN_METERS);
-                addGeofence(latLng, GEOFENCE_RADIUS_IN_METERS);
+                if(editGeofenceRadius == 0) {
+                    addCircle(latLng, GEOFENCE_RADIUS_IN_METERS);
+                    addGeofence(latLng, GEOFENCE_RADIUS_IN_METERS);
+                } else {
+                    addCircle(latLng, editGeofenceRadius);
+                    addGeofence(latLng, editGeofenceRadius);
+                }
             }
             mMap.setMyLocationEnabled(true);
             mMap.setOnMapClickListener(this);
