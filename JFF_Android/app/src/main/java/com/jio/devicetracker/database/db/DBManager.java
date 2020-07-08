@@ -724,6 +724,7 @@ public class DBManager {
             contentValue.put(DatabaseHelper.USER_ID, responseData.getUserId());
             contentValue.put(DatabaseHelper.NAME, responseData.getName());
             contentValue.put(DatabaseHelper.PROFILE_IMAGE, R.drawable.ic_user);
+            contentValue.put(DatabaseHelper.DEVICE_ID,responseData.getDeviceId());
             mDatabase.replace(DatabaseHelper.TABLE_GROUP_MEMBER, null, contentValue);
         }
     }

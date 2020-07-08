@@ -127,6 +127,7 @@ public class DeviceFragment extends Fragment {
                     homeActivityListData.setProfileImage(data.getProfileImage());
                     homeActivityListData.setFrom(data.getFrom());
                     homeActivityListData.setTo(data.getTo());
+                    homeActivityListData.setDeviceId(data.getDeviceId());
                     for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
                         if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
                             homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
@@ -309,6 +310,7 @@ public class DeviceFragment extends Fragment {
                     groupMemberDataList.setConsentStatus(mConsents.getStatus());
                     groupMemberDataList.setName(mConsents.getName());
                     groupMemberDataList.setUserId(mConsents.getUserId());
+                    groupMemberDataList.setDeviceId(mConsents.getDevice());
                     mGroupMemberDataLists.add(groupMemberDataList);
                 }
             }

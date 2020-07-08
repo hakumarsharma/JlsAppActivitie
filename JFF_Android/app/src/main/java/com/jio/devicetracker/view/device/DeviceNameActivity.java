@@ -27,16 +27,32 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AddDeviceData;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
+import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
+import com.jio.devicetracker.database.pojo.request.GetUserDevicesListRequest;
+import com.jio.devicetracker.database.pojo.response.AddDeviceResponse;
+import com.jio.devicetracker.database.pojo.response.GetUserDevicesListResponse;
+import com.jio.devicetracker.network.GroupRequestHandler;
+import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.group.ChooseGroupActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeviceNameActivity extends BaseActivity implements View.OnClickListener {
 
@@ -52,7 +68,9 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     private EditText deviceName;
     private Button done;
     private String deviceNumber;
-    public static String createdGroupIdFromPeople;
+    private String deviceImei;
+    public static String groupId;
+    private DBManager mDbManager;
 
 
     @Override
@@ -68,8 +86,13 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         done.setVisibility(View.VISIBLE);
         done.setOnClickListener(this);
         done.setAlpha(.5f);
+
+        mDbManager = new DBManager(this);
+
         Intent intent = getIntent();
-        deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
+        deviceNumber = intent.getStringExtra(Constant.DEVICE_PHONE_NUMBER);
+        deviceImei = intent.getStringExtra(Constant.DEVICE_IMEI_NUMBER);
+        groupId = intent.getStringExtra(Constant.GROUP_ID);
         title.setTypeface(Util.mTypeface(this, 5));
         TextView iconSelectionText = findViewById(R.id.icon_selection);
         iconSelectionText.setTypeface(Util.mTypeface(this, 3));
@@ -313,7 +336,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     }
 
     private void addMemberToCreatedGroup() {
-        this.createdGroupId = createdGroupIdFromPeople;
+        this.createdGroupId = groupId;
         this.memberName = deviceName.getText().toString();
         this.memberNumber = deviceNumber;
         this.isFromCreateGroup = true;
@@ -328,5 +351,106 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
         intent.putExtra(Constant.TITLE_NAME, iconName);
         startActivity(intent);
+    }
+
+    /**
+     * Get User Devices list API call
+     */
+    private void getUserDevicesList(){
+        AdminLoginData adminLoginDetail = mDbManager.getAdminLoginDetail();
+        List<String> data = new ArrayList<>();
+        if (adminLoginDetail != null) {
+            data.add(adminLoginDetail.getUserId());
+            SearchDeviceStatusData searchDeviceStatusData = new SearchDeviceStatusData();
+            SearchDeviceStatusData.Device device = searchDeviceStatusData.new Device();
+            device.setUsersAssigned(data);
+            searchDeviceStatusData.setDevice(device);
+            GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new GetUserDevicesListRequest(new DeviceNameActivity.getDeviceRequestSuccessListener(), new DeviceNameActivity.getDeviceRequestErrorListener(),searchDeviceStatusData));
+        }
+    }
+
+    /**
+     * Get Devices list API call success listener
+     */
+    private class getDeviceRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GetUserDevicesListResponse getDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetUserDevicesListResponse.class);
+            if (getDeviceResponse.getCode() == 200) {
+                boolean isNumberExists = false;
+                for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData() ){
+                    // for (GetUserDevicesListResponse.Devices devices : data.getDevices()){
+                    if (data.getDevices().getPhone().equalsIgnoreCase(deviceNumber)) {
+                        isNumberExists = true;
+                        break;
+                    }
+                    // }
+                }
+                if (isNumberExists){
+                        addMemberToCreatedGroup();
+                }else {
+                    makeVerifyAndAssignAPICall();
+                }
+            }
+        }
+    }
+
+    /**
+     * Get Devices list API call error listener
+     */
+    private class getDeviceRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Toast.makeText(DeviceNameActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADD, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Verify and assign API Call for the white-listing of device
+     */
+    private void makeVerifyAndAssignAPICall() {
+        AddDeviceData addDeviceData = new AddDeviceData();
+        List<AddDeviceData.Devices> mList = new ArrayList<>();
+        AddDeviceData.Devices devices = new AddDeviceData().new Devices();
+        devices.setMac(deviceImei);
+        devices.setPhone(deviceNumber);
+        devices.setIdentifier(deviceImei);
+        devices.setName(deviceName.getText().toString());
+        devices.setType("watch");
+        devices.setModel("watch");
+        AddDeviceData.Devices.Metaprofile metaprofile = new AddDeviceData().new Devices().new Metaprofile();
+        metaprofile.setFirst(deviceName.getText().toString());
+        metaprofile.setSecond("success");
+        devices.setMetaprofile(metaprofile);
+        AddDeviceData.Flags flags = new AddDeviceData().new Flags();
+        flags.setSkipAddDeviceToGroup(false);
+        addDeviceData.setFlags(flags);
+        mList.add(devices);
+        addDeviceData.setDevices(mList);
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new DeviceNameActivity.AddDeviceRequestSuccessListener(), new DeviceNameActivity.AddDeviceRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserToken(), mDbManager.getAdminLoginDetail().getUserId(), addDeviceData));
+    }
+
+    /**
+     * Verify & Assign API call success listener
+     */
+    private class AddDeviceRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            AddDeviceResponse addDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), AddDeviceResponse.class);
+            if (addDeviceResponse.getCode() == 200) {
+                    addMemberToCreatedGroup();
+                //Toast.makeText(ChooseGroupActivity.this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Verify & Assign API call error listener
+     */
+    private class AddDeviceRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Toast.makeText(DeviceNameActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+        }
     }
 }
