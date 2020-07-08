@@ -20,18 +20,27 @@
 package com.jio.devicetracker.view.geofence;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+
+import java.io.IOException;
+import java.util.List;
 
 public class EditGeofenceActivity  extends Activity implements View.OnClickListener {
 
@@ -39,7 +48,11 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
     String  meterOrKiloMeter;
     private Button metersRadioButton;
     private Button kiloMetersRadioButton;
+    private EditText locationName;
     private TextView radiusText;
+    String geofenceAddress;
+    private LatLng latlang;
+    int progressChangedValue=0;
     private static final String TAG = "EditGeofenceActivity";
 
     @Override
@@ -52,15 +65,22 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
 
         radiusText = findViewById(R.id.radiusText);
         radiusText.setTypeface(Util.mTypeface(this,5));
+        locationName = findViewById(R.id.location_name);
 
         metersRadioButton = findViewById(R.id.metersButton);
         metersRadioButton.setOnClickListener(this);
         kiloMetersRadioButton = findViewById(R.id.kiloMetersButton);
         kiloMetersRadioButton.setOnClickListener(this);
+        Button updateBtn = findViewById(R.id.updateGeofence);
+        updateBtn.setOnClickListener(this);
+        Intent intent = getIntent();
+        geofenceAddress = intent.getStringExtra(Constant.GEOFENCE_ADDRESS);
+        if(!geofenceAddress.isEmpty()){
+            locationName.setText(geofenceAddress);
+        }
 
         radiusSeekBar=(SeekBar)findViewById(R.id.radiusSeekBar);
         radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressChangedValue = 0;
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressChangedValue = progress;
@@ -94,9 +114,52 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             radiusSeekBar.setProgress(10);
             radiusText.setText("10 km");
         }else if (v.getId() == R.id.updateGeofence){
-
+            if(locationName.getText().toString().isEmpty()){
+                Toast.makeText(this,"Please enter the location name",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            latlang = getLocationFromAddress(locationName.getText().toString());
             Log.d(TAG,"Update function implementation");
+            if(latlang == null){
+                Toast.makeText(this,Constant.ADDRESS_MESSAGE,Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String radius = radiusText.getText().toString();
+            if(radius.contains("km")){
+                progressChangedValue = progressChangedValue * 1000;
+            }
+            Intent intent = new Intent(this,GeofenceActivity.class);
+            intent.putExtra("Radius",progressChangedValue);
+            intent.putExtra(Constant.LATITUDE,latlang.latitude);
+            intent.putExtra(Constant.LONGNITUDE,latlang.longitude);
+            intent.putExtra("EditGeofence",true);
+            startActivity(intent);
+
         }
 
     }
+
+    public LatLng getLocationFromAddress(String strAddress) {
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 10);
+            if (address == null) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
+    }
+
 }
