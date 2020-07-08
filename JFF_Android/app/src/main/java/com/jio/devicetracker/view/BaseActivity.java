@@ -115,7 +115,7 @@ public class BaseActivity extends AppCompatActivity {
                 if (isFromCreateGroup) {
                     addLoggedInUserDetailInGroup(createdGroupId);
                 } else if (DashboardMainActivity.flowFromPeople) {
-                    addIndividualUserInGroupAPICall();
+                    addLoggedInUserDetailInGroup(createdGroupId);
                 } else if (isFromDevice && !isNavigateToGroupsFragment) {
                     mDbManager.insertInToGroupIconTable(createdGroupId, memberIcon);
                     addIndividualUserInGroupAPICall();
@@ -291,9 +291,13 @@ public class BaseActivity extends AppCompatActivity {
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
                 Util.progressDialog.dismiss();
-                Intent intent = new Intent(BaseActivity.this, AddDeviceActivity.class);
-                intent.putExtra(Constant.GROUP_ID, createdGroupId);
-                startActivity(intent);
+                if(isFromCreateGroup) {
+                    Intent intent = new Intent(BaseActivity.this, AddDeviceActivity.class);
+                    intent.putExtra(Constant.GROUP_ID, createdGroupId);
+                    startActivity(intent);
+                } else if(DashboardMainActivity.flowFromPeople){
+                    addIndividualUserInGroupAPICall();
+                }
             }
         }
     }
