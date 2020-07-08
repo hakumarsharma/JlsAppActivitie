@@ -109,7 +109,7 @@ public class BaseActivity extends AppCompatActivity {
             if (createGroupResponse.getCode() == 200) {
                 mDbManager.insertIntoGroupTable(createGroupResponse);
                 createdGroupId = createGroupResponse.getData().getId();
-                DeviceNameActivity.createdGroupIdFromPeople = createdGroupId;
+                DeviceNameActivity.groupId = createdGroupId;
                 CreateGroupActivity.groupIdFromPeopleFlow = createdGroupId;
                 mDbManager.insertInToGroupIconTable(createdGroupId, selectedIcon);
                 if (isFromCreateGroup) {

@@ -194,6 +194,7 @@ public class Constant {
     public static final String SUCCESSFULL_DEVICE_ADDITION_RESPONSE = "1 device(s) are assigned to one user.";
     public static final String SUCCESSFULL_DEVICE_ADDITION = "Device is successfully added";
     public static final String UNSUCCESSFULL_DEVICE_ADDITION = "Device can not be added, please try again later";
+    public static final String UNSUCCESSFULL_DEVICE_ADD = "Device can not be added, check the number which you have entered.";
     public static final long FREQUENCY_FOR_LOCATION_UPDATE = 10;
     public static final long PRIORITY_BALANCED_POWER_ACCURACY = 10;
     public static final int EPOCH_TIME_DURATION = 15;
@@ -242,6 +243,7 @@ public class Constant {
     public static final String STATUS_URL = "/status";
     public static final String SESSION_GROUP_CONSENTS_URL1 = "/sessiongroupconsents/";
     public static final String GET_LOCATION_URL = "/events/search";
+    public static final String GET_DEVICES_LIST = "/accounts/api/devicestatuses/search?skip=0&limit=20&tsp=1593767974741";
 
     //Privacy Policy
     public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
@@ -303,6 +305,8 @@ public class Constant {
     public static final String EDIT_MEMBER_TITLE = "Edit members";
     public static final String QR_CODE_VALUE = "QRCodeValue";
     public static final String SCAN_QR_CODE_TITLE = "Scan QR Code";
+    public static final String DEVICE_PHONE_NUMBER = "DeviceNumber";
+    public static final String DEVICE_IMEI_NUMBER = "DeviceImei";
 
     public static final String TRACK_MANAGEMENT_TITLE = "Track management";
     public static final String TRACKER_TITLE = "Trackers";
@@ -328,8 +332,9 @@ public class Constant {
     public static final String CONSET_STATUS_EXPIRED = "Expired";
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
-    public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member in a group, Please try again!";
     public static final String LOGGED_IN_USER_ADDITION_FAILURE = "Unable to add logged in user into the group";
+    public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member, Please try again!";
+
     public static final String DEVICE_NOT_FOUND = "Device not found, Please try again!";
     public static final String REMOVE = "Remove";
     public static final String EXIT = "Exit";
