@@ -144,10 +144,22 @@ public class GroupsFragment extends Fragment {
             groupListAdapter.setOnItemClickPagerListener(new GroupListAdapter.RecyclerViewClickListener() {
                 @Override
                 public void clickonListLayout(HomeActivityListData homeActivityListData) {
+                    if(checkIfMemberPresentInGroup(homeActivityListData.getGroupId())) {
+                        showCustomAlertWithText("No members are added, Please add it to track");
+                        return;
+                    }
                     makeGetLocationAPICall(homeActivityListData);
                 }
             });
         }
+    }
+
+    private boolean checkIfMemberPresentInGroup(String groupId) {
+        List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+        if(mList.size() == 1) {
+            return true;
+        }
+        return false;
     }
 
     /**

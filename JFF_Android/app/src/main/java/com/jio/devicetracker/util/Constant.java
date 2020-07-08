@@ -303,6 +303,7 @@ public class Constant {
     public static final String EDIT_MEMBER_TITLE = "Edit members";
     public static final String QR_CODE_VALUE = "QRCodeValue";
     public static final String SCAN_QR_CODE_TITLE = "Scan QR Code";
+    public static final String LEFT_GROUP_INFORMATION = " has left the group.";
 
     public static final String TRACK_MANAGEMENT_TITLE = "Track management";
     public static final String TRACKER_TITLE = "Trackers";
