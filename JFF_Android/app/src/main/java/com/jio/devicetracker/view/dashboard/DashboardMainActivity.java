@@ -81,6 +81,7 @@ import com.jio.devicetracker.database.pojo.ApproveRejectConsentData;
 import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
 import com.jio.devicetracker.database.pojo.request.RejectConsentRequest;
 import com.jio.devicetracker.database.pojo.response.ApproveRejectAPIResponse;
+import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.Constant;
@@ -110,8 +111,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private DrawerLayout drawerLayout;
     private static DBManager mDbManager;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
-    private Location currentLocation;
-    private GoogleApiClient googleApiClient;
+    private static Location currentLocation;
+    private static GoogleApiClient googleApiClient;
     private static int signalStrengthValue;
     private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     private static Double latitude;
@@ -629,8 +630,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
      */
     public void publishMessage() {
         if (getCurrentLocation() != null) {
-            latitude = getCurrentLocation().getLatitude();
-            longitude = getCurrentLocation().getLongitude();
+            Location location = getCurrentLocation();
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
             String message = "{\"did\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                     "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
             String topic = "jioiot/svcd/tracker/" + userPhoneNumber + "/uc/fwd/locinfo";

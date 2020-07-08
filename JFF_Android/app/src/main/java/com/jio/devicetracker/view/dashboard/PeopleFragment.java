@@ -156,21 +156,22 @@ public class PeopleFragment extends Fragment {
      */
     private void adapterEventListener() {
         if (peopleMemberListAdapter != null) {
-            peopleMemberListAdapter.setOnItemClickPagerListener(new PeopleMemberListAdapter.RecyclerViewClickListener() {
-                @Override
-                public void clickOnListLayout(HomeActivityListData homeActivityListData) {
-                    consentStatus = homeActivityListData.getConsentStaus();
-                    groupStatus = homeActivityListData.getStatus();
-                    groupId = homeActivityListData.getGroupId();
-                    memberName = homeActivityListData.getGroupName();
-                    SearchEventData searchEventData = new SearchEventData();
-                    List<String> mList = new ArrayList<>();
-                    mList.add(Constant.LOCATION);
-                    mList.add(Constant.SOS);
-                    searchEventData.setTypes(mList);
-                    Util.getInstance().showProgressBarDialog(getActivity());
-                    GroupRequestHandler.getInstance(getContext()).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, mDbManager.getAdminLoginDetail().getUserId(), homeActivityListData.getGroupId(), Constant.GET_LOCATION_URL));
+            peopleMemberListAdapter.setOnItemClickPagerListener(homeActivityListData -> {
+                consentStatus = homeActivityListData.getConsentStaus();
+                memberName = homeActivityListData.getGroupName();
+                if(consentStatus.equalsIgnoreCase(Constant.EXITED)) {
+                    showCustomAlertWithText(memberName + Constant.LEFT_GROUP_INFORMATION);
+                    return;
                 }
+                groupStatus = homeActivityListData.getStatus();
+                groupId = homeActivityListData.getGroupId();
+                SearchEventData searchEventData = new SearchEventData();
+                List<String> mList = new ArrayList<>();
+                mList.add(Constant.LOCATION);
+                mList.add(Constant.SOS);
+                searchEventData.setTypes(mList);
+                Util.getInstance().showProgressBarDialog(getActivity());
+                GroupRequestHandler.getInstance(getContext()).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, mDbManager.getAdminLoginDetail().getUserId(), homeActivityListData.getGroupId(), Constant.GET_LOCATION_URL));
             });
         }
     }
@@ -221,7 +222,10 @@ public class PeopleFragment extends Fragment {
                 List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
                 for (SearchEventResponse.Data data : mList) {
                     for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
-                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
+                        if (grpMembers.getDeviceId() != null
+                                && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice())
+                                && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())
+                                && !grpMembers.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
                             MapData mapData = new MapData();
                             mapData.setLatitude(data.getLocation().getLat());
                             mapData.setLongitude(data.getLocation().getLng());
