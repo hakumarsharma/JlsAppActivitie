@@ -231,7 +231,6 @@ public class GroupsFragment extends Fragment {
         List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
         if (groupDetailList != null && !groupDetailList.isEmpty()) {
             for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
-                if (data.getStatus() != null && (data.getStatus().equalsIgnoreCase(Constant.ACTIVE) || data.getStatus().equalsIgnoreCase(Constant.COMPLETED) || data.getStatus().equalsIgnoreCase(Constant.SCHEDULED))) {
                     HomeActivityListData homeActivityListData = new HomeActivityListData();
                     homeActivityListData.setGroupName(data.getGroupName());
                     homeActivityListData.setCreatedBy(data.getCreatedBy());
@@ -254,7 +253,6 @@ public class GroupsFragment extends Fragment {
                     }
                     groupList.add(homeActivityListData);
                 }
-            }
             mDbManager.insertAllDataIntoGroupTable(groupList);
         }
     }
