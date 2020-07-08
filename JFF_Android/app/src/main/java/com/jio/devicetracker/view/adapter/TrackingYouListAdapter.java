@@ -74,7 +74,6 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
     private String userId;
     private DBManager mDbManager;
     private String groupId;
-    private String name;
 
     public TrackingYouListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
@@ -101,7 +100,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HomeActivityListData trackingYou = mList.get(position);
         holder.trackingYouGroupOwnerName.setText(trackingYou.getGroupName());
-        if(trackingYou.getConsentId() != null) {
+        if (trackingYou.getConsentId() != null) {
             holder.trackingYouGroupMemberIcon.setImageResource(R.drawable.secondaryuser);
         } else {
             holder.trackingYouGroupMemberIcon.setImageResource(R.drawable.ic_family_group);
@@ -153,7 +152,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                 case R.id.trackingYouOperationStatus:
                     if (mList.get(position).getConsentId() != null) {
                         viewMembers.setVisibility(View.GONE);
-                        reverseTrack.setPadding(0,0,0,16);
+                        reverseTrack.setPadding(0, 0, 0, 16);
                         reverseTrackLine.setVisibility(View.GONE);
                     }
                     trackingYouOprationLayout.setVisibility(View.VISIBLE);
@@ -190,7 +189,6 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
      */
     private void makeGetLocationAPICall(HomeActivityListData trackingYou) {
         this.groupId = trackingYou.getGroupId();
-        name = trackingYou.getGroupOwnerName();
         SearchEventData searchEventData = new SearchEventData();
         List<String> mList = new ArrayList<>();
         mList.add(Constant.LOCATION);
@@ -211,14 +209,21 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
             trackingYouOprationLayout.setVisibility(View.GONE);
             SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
             List<MapData> mapDataList = new ArrayList<>();
+            List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
             List<SearchEventResponse.Data> mList = searchEventResponse.getData();
             if (!mList.isEmpty()) {
                 for (SearchEventResponse.Data data : mList) {
-                    MapData mapData = new MapData();
-                    mapData.setLatitude(data.getLocation().getLat());
-                    mapData.setLongitude(data.getLocation().getLng());
-                    mapData.setName(name);
-                    mapDataList.add(mapData);
+                    if (!data.getUserId().equalsIgnoreCase(userId)) {
+                    for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
+                        if (grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
+                                MapData mapData = new MapData();
+                                mapData.setLatitude(data.getLocation().getLat());
+                                mapData.setLongitude(data.getLocation().getLng());
+                                mapData.setName(grpMembers.getName());
+                                mapDataList.add(mapData);
+                            }
+                        }
+                    }
                 }
             }
             goToMapActivity(mapDataList);
