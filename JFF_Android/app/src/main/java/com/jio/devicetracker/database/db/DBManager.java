@@ -29,6 +29,7 @@ import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.AlertHistoryData;
 import com.jio.devicetracker.database.pojo.ConsentTimeupdateData;
+import com.jio.devicetracker.database.pojo.DeviceTableData;
 import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
@@ -724,7 +725,7 @@ public class DBManager {
             contentValue.put(DatabaseHelper.USER_ID, responseData.getUserId());
             contentValue.put(DatabaseHelper.NAME, responseData.getName());
             contentValue.put(DatabaseHelper.PROFILE_IMAGE, R.drawable.ic_user);
-            contentValue.put(DatabaseHelper.DEVICE_ID,responseData.getDeviceId());
+            contentValue.put(DatabaseHelper.DEVICE_ID, responseData.getDeviceId());
             mDatabase.replace(DatabaseHelper.TABLE_GROUP_MEMBER, null, contentValue);
         }
     }
@@ -885,4 +886,49 @@ public class DBManager {
         cursor.close();
         return mlist;
     }
+
+    // Inserts data into the Device table
+    public void insertIntoDeviceTable(DeviceTableData deviceTableData) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.IMEI_NUM, deviceTableData.getImeiNumber());
+        contentValue.put(DatabaseHelper.DEVICE_NUM, deviceTableData.getPhoneNumber());
+        contentValue.put(DatabaseHelper.COUNT, deviceTableData.getAdditionCount());
+        mDatabase.replace(DatabaseHelper.TABLE_DEVICE, null, contentValue);
+    }
+
+    // Update device table
+    public void updateIntoDeviceTable(DeviceTableData deviceTableData) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COUNT, deviceTableData.getAdditionCount());
+        mDatabase.update(DatabaseHelper.TABLE_DEVICE, values, DatabaseHelper.DEVICE_NUM + "= " + deviceTableData.getPhoneNumber(), null);
+    }
+
+    // Delete from Device table
+    public void deleteFromDeviceTable(String imeiNumber) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        mDatabase.delete(DatabaseHelper.TABLE_DEVICE, DatabaseHelper.IMEI_NUM + "= '" + imeiNumber + "';", null);
+    }
+
+    // Returns Device Table data
+    public DeviceTableData getDeviceTableData(String phoneNumber) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        DeviceTableData deviceTableData = null;
+        String query = "SELECT * FROM " + DatabaseHelper.TABLE_DEVICE + " WHERE " + DatabaseHelper.DEVICE_NUM + " = ?";
+        if (phoneNumber != null) {
+            Cursor cursor = mDatabase.rawQuery(query, new String[]{phoneNumber});
+            if (cursor != null) {
+                if (cursor.moveToNext()) {
+                    deviceTableData = new DeviceTableData();
+                    deviceTableData.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
+                    deviceTableData.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                    deviceTableData.setAdditionCount(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COUNT)));
+                }
+                cursor.close();
+            }
+        }
+        return deviceTableData;
+    }
+
 }

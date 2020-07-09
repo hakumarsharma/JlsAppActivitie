@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
 import com.jio.devicetracker.database.pojo.CreateGroupData;
+import com.jio.devicetracker.database.pojo.DeviceTableData;
 import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
 import com.jio.devicetracker.database.pojo.request.CreateGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupMemberRequest;
@@ -185,6 +186,14 @@ public class BaseActivity extends AppCompatActivity {
             GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
+                DeviceTableData deviceTableData = mDbManager.getDeviceTableData(memberNumber);
+                if (deviceTableData != null && deviceTableData.getPhoneNumber().equalsIgnoreCase(memberNumber)) {
+                    int count = deviceTableData.getAdditionCount();
+                    DeviceTableData mDeviceTableData = new DeviceTableData();
+                    mDeviceTableData.setAdditionCount(++count);
+                    mDeviceTableData.setPhoneNumber(memberNumber);
+                    mDbManager.updateIntoDeviceTable(mDeviceTableData);
+                }
                 if (isGroupMember) {
                     getAllForOneGroupAPICall();
                 } else if (isFromDevice) {
@@ -291,11 +300,11 @@ public class BaseActivity extends AppCompatActivity {
             if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
                 mDbManager.insertGroupMemberDataInTable(groupMemberResponse);
                 Util.progressDialog.dismiss();
-                if(isFromCreateGroup) {
+                if (isFromCreateGroup) {
                     Intent intent = new Intent(BaseActivity.this, AddDeviceActivity.class);
                     intent.putExtra(Constant.GROUP_ID, createdGroupId);
                     startActivity(intent);
-                } else if(DashboardMainActivity.flowFromPeople){
+                } else if (DashboardMainActivity.flowFromPeople) {
                     addIndividualUserInGroupAPICall();
                 }
             }

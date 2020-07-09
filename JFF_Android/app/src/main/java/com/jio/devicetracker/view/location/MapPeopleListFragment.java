@@ -120,6 +120,16 @@ public class MapPeopleListFragment extends Fragment {
                     groupDataList.setConsentId(allGroupMemberData.getConsentId());
                     groupDataList.setConsentStatus(allGroupMemberData.getConsentStatus().substring(0, 1).toUpperCase(locale) + allGroupMemberData.getConsentStatus().substring(1));
                     groupMemberList.add(groupDataList);
+                } else if (allGroupMemberData.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
+                        && !allGroupMemberData.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())
+                        && (allGroupMemberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || allGroupMemberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || allGroupMemberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                    GroupMemberDataList groupDataList = new GroupMemberDataList();
+                    groupDataList.setGroupId(allGroupMemberData.getGroupId());
+                    groupDataList.setName(allGroupMemberData.getName());
+                    groupDataList.setNumber(allGroupMemberData.getNumber());
+                    groupDataList.setConsentId(allGroupMemberData.getConsentId());
+                    groupDataList.setConsentStatus(allGroupMemberData.getConsentStatus().substring(0, 1).toUpperCase(locale) + allGroupMemberData.getConsentStatus().substring(1));
+                    groupMemberList.add(groupDataList);
                 }
             }
         }
