@@ -71,6 +71,7 @@ public final class Util extends AppCompatActivity {
     public static String userNumber = "";
     public static String googleToken;
     private Date expiryTime;
+    public static String signInEmailId;
 
     private Util() {
 
@@ -553,6 +554,14 @@ public final class Util extends AppCompatActivity {
     public boolean isGoogleTokenExpired() {
         return Calendar.getInstance().getTime().after(expiryTime);
     }
+
+    /**
+     * Store and get email id used during signin
+     */
+
+    public void setSignInEmailId(String signInEmailId) {this.signInEmailId = signInEmailId;}
+
+    public String getSignInEmailId() { return  signInEmailId;}
 
     /**
      * Creates the notification channel

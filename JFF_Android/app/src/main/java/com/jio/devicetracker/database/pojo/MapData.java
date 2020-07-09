@@ -31,6 +31,7 @@ public class MapData implements Parcelable {
     private double latitude;
     private double longitude;
     private String consentId;
+    private String groupId;
 
     protected MapData(Parcel in) {
         name = in.readString();
@@ -73,6 +74,14 @@ public class MapData implements Parcelable {
 
     public double getLongitude() {
         return longitude;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     public void setLongitude(double longitude) {

@@ -42,7 +42,7 @@ public class GeofenceHelper extends ContextWrapper {
 
         return new GeofencingRequest.Builder()
                 .addGeofence(geofence)
-                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_DWELL)
                 .build();
     }
     public Geofence getGeofence(String id, LatLng latlng, float radius , int transitionType){

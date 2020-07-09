@@ -69,8 +69,8 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
         backBtn.setOnClickListener(this);
         userName = findViewById(R.id.userName);
         userNumber = findViewById(R.id.userNumber);
-        userName.setText(intent.getStringExtra("Name"));
-        userNumber.setText(intent.getStringExtra("Number"));
+        userName.setText(mDbManager.getAdminLoginDetail().getName());
+        userNumber.setText(mDbManager.getAdminLoginDetail().getPhoneNumber());
         trackedList = findViewById(R.id.tracked_list);
         TextView defaultText = findViewById(R.id.tracked_default_text);
         defaultText.setTypeface(Util.mTypeface(this, 5));

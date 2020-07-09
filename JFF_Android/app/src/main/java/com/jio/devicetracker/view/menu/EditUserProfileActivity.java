@@ -25,15 +25,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.EditMemberDetailsData;
+import com.jio.devicetracker.database.pojo.request.EditUserDetailsRequest;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
+
 public class EditUserProfileActivity extends Activity implements View.OnClickListener {
+
+    private  TextView userName;
+    private  EditText userEmail;
+    private DBManager mDbManager;
+    private EditText userNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,11 +59,14 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
         title.setTypeface(Util.mTypeface(this,5));
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
+        mDbManager = new DBManager(this);
         Intent intent = getIntent();
-        TextView userName = findViewById(R.id.update_edit_name);
-        TextView userNumber = findViewById(R.id.update_edit_number);
-        userName.setText(intent.getStringExtra("Name"));
-        userNumber.setText(intent.getStringExtra("Number"));
+        userName = findViewById(R.id.update_edit_name);
+        userNumber = findViewById(R.id.update_edit_number);
+        userEmail = findViewById(R.id.update_edit_email);
+        userName.setText(mDbManager.getAdminLoginDetail().getName());
+        userNumber.setText(mDbManager.getAdminLoginDetail().getPhoneNumber());
+        userEmail.setText(mDbManager.getAdminLoginDetail().getEmailId());
         backBtn.setOnClickListener(this);
         updateBtn.setOnClickListener(this);
     }
@@ -62,11 +79,45 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
                 break;
 
             case R.id.update_btn:
-               // Toast.makeText(this,"Coming soon.... please wait",Toast.LENGTH_SHORT).show();
+                if(userName.getText().toString().isEmpty()){
+                    userName.setError(Constant.NAME_VALIDATION);
+                    return;
+                }
+                if(userEmail.getText().toString().isEmpty() && Util.isValidEmailId(userEmail.getText().toString())){
+                    userEmail.setError(Constant.VALID_EMAIL_ID);
+                    return;
+                }
+                EditMemberDetailsData data = new EditMemberDetailsData();
+                data.setName(userName.getText().toString());
+                long epochTime = Util.getInstance().convertTimeToEpochtime();
+                String userId = mDbManager.getAdminLoginDetail().getUserId();
+                GroupRequestHandler.getInstance(this).handleRequest(new EditUserDetailsRequest(new EditUserSuccessListener(), new EditUserErrorListener(), data, epochTime, userId));
                 break;
             default:
                 // Todo
                 break;
+        }
+    }
+
+    private class EditUserSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+           mDbManager.updateAdminLoginTable(userNumber.getText().toString(),userEmail.getText().toString(),userName.getText().toString());
+           gotoNavigateUserProfileActivity();
+        }
+    }
+
+    private void gotoNavigateUserProfileActivity() {
+        Intent intent = new Intent(this,NavigateUserProfileActivity.class);
+        startActivity(intent);
+
+    }
+
+    private class EditUserErrorListener implements Response.ErrorListener{
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            Toast.makeText(EditUserProfileActivity.this,"User name didn't update ",Toast.LENGTH_SHORT).show();
         }
     }
 }
