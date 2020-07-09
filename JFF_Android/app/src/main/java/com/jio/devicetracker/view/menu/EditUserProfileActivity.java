@@ -35,6 +35,9 @@ import com.jio.devicetracker.util.Util;
 
 public class EditUserProfileActivity extends Activity implements View.OnClickListener {
 
+    private  TextView userName;
+    private  TextView userEmail;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,10 +49,12 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         Intent intent = getIntent();
-        TextView userName = findViewById(R.id.update_edit_name);
+        userName = findViewById(R.id.update_edit_name);
         TextView userNumber = findViewById(R.id.update_edit_number);
+        userEmail = findViewById(R.id.update_text_email);
         userName.setText(intent.getStringExtra("Name"));
         userNumber.setText(intent.getStringExtra("Number"));
+        userEmail.setText(Util.getInstance().getSignInEmailId());
         backBtn.setOnClickListener(this);
         updateBtn.setOnClickListener(this);
     }
@@ -62,6 +67,7 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
                 break;
 
             case R.id.update_btn:
+                Util.getInstance().setSignInEmailId(userEmail.getText().toString());
                // Toast.makeText(this,"Coming soon.... please wait",Toast.LENGTH_SHORT).show();
                 break;
             default:
