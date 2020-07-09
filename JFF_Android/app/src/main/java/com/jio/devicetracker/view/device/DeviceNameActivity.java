@@ -22,6 +22,8 @@ package com.jio.devicetracker.view.device;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +48,7 @@ import com.jio.devicetracker.database.pojo.response.GetUserDevicesListResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
@@ -71,7 +74,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     private String deviceImei;
     public static String groupId;
     private DBManager mDbManager;
-
+    public  String selectedIcon;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +91,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         done.setAlpha(.5f);
 
         mDbManager = new DBManager(this);
+        selectedIcon = Constant.OTHER;
 
         Intent intent = getIntent();
         deviceNumber = intent.getStringExtra(Constant.DEVICE_PHONE_NUMBER);
@@ -122,6 +126,13 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         otherPetIcon.setOnClickListener(this);
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage) {
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
+
     @Override
     public void onClick(View v) {
         String name = deviceName.getText().toString().trim();
@@ -132,10 +143,12 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
                     motherIcon.setTag(Constant.REAL_ICON);
                     deviceName.setText(Constant.EMPTY_STRING);
+                    selectedIcon = Constant.OTHER;
                 } else {
                     motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
                     motherIcon.setTag(Constant.GROUP_ICON);
                     deviceName.setText(Constant.MOM);
+                    selectedIcon = Constant.MOM;
                 }
                 fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
                 husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
@@ -153,10 +166,12 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
                     fatherIcon.setTag(Constant.REAL_ICON);
                     deviceName.setText(Constant.EMPTY_STRING);
+                    selectedIcon = Constant.OTHER;
                 } else {
                     fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
                     fatherIcon.setTag(Constant.GROUP_ICON);
                     deviceName.setText(Constant.FATHER);
+                    selectedIcon = Constant.FATHER;
                 }
                 motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
                 husbandIcon.setImageDrawable(getResources().getDrawable(R.drawable.husband));
@@ -174,10 +189,12 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     husbandIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.husband, null));
                     husbandIcon.setTag(Constant.REAL_ICON);
                     deviceName.setText(Constant.EMPTY_STRING);
+                    selectedIcon = Constant.OTHER;
                 } else {
                     husbandIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
                     husbandIcon.setTag(Constant.GROUP_ICON);
                     deviceName.setText(Constant.HUSBAND);
+                    selectedIcon = Constant.HUSBAND;
                 }
                 motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
                 fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
@@ -195,10 +212,12 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     wifeIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.wife, null));
                     wifeIcon.setTag(Constant.REAL_ICON);
                     deviceName.setText(Constant.EMPTY_STRING);
+                    selectedIcon = Constant.OTHER;
                 } else {
                     wifeIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
                     wifeIcon.setTag(Constant.GROUP_ICON);
                     deviceName.setText(Constant.WIFE);
+                    selectedIcon = Constant.WIFE;
                 }
                 motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
                 fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
@@ -216,10 +235,12 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     kidIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.kid, null));
                     kidIcon.setTag(Constant.REAL_ICON);
                     deviceName.setText(Constant.EMPTY_STRING);
+                    selectedIcon = Constant.OTHER;
                 } else {
                     kidIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
                     kidIcon.setTag(Constant.GROUP_ICON);
                     deviceName.setText(Constant.KID);
+                    selectedIcon = Constant.KID;
                 }
                 motherIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
                 fatherIcon.setImageDrawable(getResources().getDrawable(R.drawable.father));
@@ -237,10 +258,12 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     otherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other, null));
                     otherIcon.setTag(Constant.REAL_ICON);
                     deviceName.setText(Constant.EMPTY_STRING);
+                    selectedIcon = Constant.OTHER;
                 } else {
                     otherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
                     otherIcon.setTag(Constant.GROUP_ICON);
                     deviceName.setText(Constant.OTHER);
+                    selectedIcon = Constant.OTHER;
                 }
                 motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
                 fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
@@ -258,10 +281,12 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     dogIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.dog, null));
                     dogIcon.setTag(Constant.REAL_ICON);
                     deviceName.setText(Constant.EMPTY_STRING);
+                    selectedIcon = Constant.OTHER;
                 } else {
                     dogIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
                     dogIcon.setTag(Constant.GROUP_ICON);
                     deviceName.setText(Constant.DOG);
+                    selectedIcon = Constant.DOG;
                 }
                 motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
                 fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
@@ -279,10 +304,12 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     catIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.cat, null));
                     catIcon.setTag(Constant.REAL_ICON);
                     deviceName.setText(Constant.EMPTY_STRING);
+                    selectedIcon = Constant.OTHER;
                 } else {
                     catIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
                     catIcon.setTag(Constant.GROUP_ICON);
                     deviceName.setText(Constant.CAT);
+                    selectedIcon = Constant.CAT;
                 }
                 motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
                 fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
@@ -300,10 +327,12 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     otherPetIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.other_pet, null));
                     otherPetIcon.setTag(Constant.REAL_ICON);
                     deviceName.setText(Constant.EMPTY_STRING);
+                    selectedIcon = Constant.OTHER;
                 } else {
                     otherPetIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.groupselected, null));
                     otherPetIcon.setTag(Constant.GROUP_ICON);
                     deviceName.setText(Constant.OTHER_PET);
+                    selectedIcon = Constant.OTHER_PET;
                 }
                 motherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.mother, null));
                 fatherIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.father, null));
@@ -323,7 +352,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 } else if (DashboardMainActivity.flowFromGroup) {
                     addMemberToCreatedGroup();
                 } else {
-                    gotoChooseGroupActivity(deviceName.getText().toString().trim());
+                    gotoChooseGroupActivity(selectedIcon);
                 }
                 break;
             case R.id.back:
@@ -348,8 +377,10 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     public void gotoChooseGroupActivity(String iconName) {
         Intent intent = new Intent(this, ChooseGroupActivity.class);
         intent.putExtra(Constant.GROUP_ID, createdGroupId);
-        intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
-        intent.putExtra(Constant.TITLE_NAME, iconName);
+        intent.putExtra(Constant.DEVICE_PHONE_NUMBER, deviceNumber);
+        intent.putExtra(Constant.DEVICE_IMEI_NUMBER, deviceImei);
+        intent.putExtra(Constant.REAL_ICON, iconName);
+        intent.putExtra(Constant.TITLE_NAME,deviceName.getText().toString());
         startActivity(intent);
     }
 
@@ -380,8 +411,8 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                 boolean isNumberExists = false;
                 for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData() ){
                     // for (GetUserDevicesListResponse.Devices devices : data.getDevices()){
-                    if (data.getDevices().getPhone().equalsIgnoreCase(deviceNumber)) {
-                        isNumberExists = true;
+                    if (data.getDevices().getImei().equalsIgnoreCase(deviceImei)) {
+                            isNumberExists = true;
                         break;
                     }
                     // }
@@ -414,7 +445,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         AddDeviceData.Devices devices = new AddDeviceData().new Devices();
         devices.setMac(deviceImei);
         devices.setPhone(deviceNumber);
-        devices.setIdentifier(deviceImei);
+        devices.setIdentifier("imei");
         devices.setName(deviceName.getText().toString());
         devices.setType("watch");
         devices.setModel("watch");

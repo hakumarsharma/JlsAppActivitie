@@ -71,6 +71,8 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private TextView groupText;
     private CardView cardViewGroup;
     private String phoneNumber;
+    private String imeiNumber;
+    private String devicename;
     private String groupId;
     private List<HomeActivityListData> chooseGroupDataList;
     private String label;
@@ -83,8 +85,10 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_group);
         Intent intent = getIntent();
-        label = intent.getStringExtra(Constant.TITLE_NAME);
-        phoneNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
+        label = intent.getStringExtra(Constant.REAL_ICON);
+        phoneNumber = intent.getStringExtra(Constant.DEVICE_PHONE_NUMBER);
+        imeiNumber = intent.getStringExtra(Constant.DEVICE_IMEI_NUMBER);
+        devicename = intent.getStringExtra(Constant.TITLE_NAME);
         initUI();
         setMemberIcon(label);
         initDataMember();
@@ -93,7 +97,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
 
     // Set the memberIcon
     private void setMemberIcon(String label) {
-        trackeeNameEditText.setText(label);
+        trackeeNameEditText.setText(devicename);
         if (label != null && !label.isEmpty()) {
             if (label.equalsIgnoreCase(Constant.MOM)) {
                 memberIcon.setImageDrawable(getResources().getDrawable(R.drawable.mother));
@@ -406,14 +410,14 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         AddDeviceData addDeviceData = new AddDeviceData();
         List<AddDeviceData.Devices> mList = new ArrayList<>();
         AddDeviceData.Devices devices = new AddDeviceData().new Devices();
-        devices.setMac(phoneNumber);
+        devices.setMac(imeiNumber);
         devices.setPhone(phoneNumber);
         devices.setIdentifier("imei");
-        devices.setName(memberName);
+        devices.setName(trackeeNameEditText.getText().toString());
         devices.setType("watch");
         devices.setModel("watch");
         AddDeviceData.Devices.Metaprofile metaprofile = new AddDeviceData().new Devices().new Metaprofile();
-        metaprofile.setFirst(memberName);
+        metaprofile.setFirst(trackeeNameEditText.getText().toString());
         metaprofile.setSecond("success");
         devices.setMetaprofile(metaprofile);
         AddDeviceData.Flags flags = new AddDeviceData().new Flags();
@@ -459,6 +463,10 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
      * Get User Devices list API call
      */
     private void getUserDevicesList(){
+        if(trackeeNameEditText == null || trackeeNameEditText.getText().toString().isEmpty()){
+            showCustomAlertWithText(Constant.DEVICE_NAME_VALIDATION);
+            return;
+        }
         AdminLoginData adminLoginDetail = mDbManager.getAdminLoginDetail();
         List<String> data = new ArrayList<>();
         if (adminLoginDetail != null) {
@@ -483,7 +491,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
               for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData() ){
 
                 // for (GetUserDevicesListResponse.Devices devices : data.getDevices()){
-                       if (data.getDevices().getPhone().equalsIgnoreCase(phoneNumber)) {
+                       if (data.getDevices().getImei().equalsIgnoreCase(imeiNumber)) {
                            isNumberExists = true;
                            break;
                        }

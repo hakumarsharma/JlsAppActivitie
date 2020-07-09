@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorLogin"
         android:gravity="center"
-        android:hint="Name of the trackee"
+        android:hint="Name of the device"
         android:textColor="@color/white"
         android:textColorHint="@color/hintColor"
         android:textCursorDrawable="@color/colorLogin"
