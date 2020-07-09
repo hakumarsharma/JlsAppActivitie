@@ -102,7 +102,7 @@
                 android:background="@android:color/transparent"
                 android:focusedByDefault="true"
                 android:inputType="text"
-                android:text=""
+                android:hint="Email Id"
                 android:textColor="@color/mine_shaft"
                 android:textStyle="bold"/>
 
@@ -130,7 +130,7 @@
                 android:textStyle="bold"
                 android:visibility="visible"/>
 
-            <TextView
+            <EditText
                 android:id="@+id/update_edit_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -140,6 +140,8 @@
                 android:background="@android:color/transparent"
                 android:focusedByDefault="true"
                 android:inputType="text"
+                android:hint="Mobile number"
+                android:enabled="false"
                 android:text=""
                 android:textColor="@color/mine_shaft"
                 android:textStyle="bold"/>

@@ -228,6 +228,22 @@ public class DBManager {
     }
 
     /**
+     * Update User details in Login table
+     *
+     * @param phoneNumber
+     * @param emailId
+     * @param name
+     */
+    public void updateAdminLoginTable(String phoneNumber, String emailId,String name) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.USER_NAME,name);
+        values.put(DatabaseHelper.EMAIL, emailId);
+        mDatabase.update(DatabaseHelper.TABLE_USER_LOGIN, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
+
+    }
+
+    /**
      * Update Logout data in TABLE_USER_LOGIN table
      */
     public void updateLogoutData() {
@@ -350,12 +366,13 @@ public class DBManager {
     public AdminLoginData getAdminLoginDetail() {
         mDatabase = mDBHelper.getWritableDatabase();
         AdminLoginData adminData = null;
-        String[] column = {DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME, DatabaseHelper.PHONE_COUNTRY_CODE, DatabaseHelper.DEVICE_NUM};
+        String[] column = {DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME, DatabaseHelper.PHONE_COUNTRY_CODE, DatabaseHelper.DEVICE_NUM, DatabaseHelper.EMAIL};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_USER_LOGIN, column, null, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 adminData = new AdminLoginData();
                 adminData.setUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_ID)));
+                adminData.setEmailId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.EMAIL)));
                 adminData.setUserToken(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_TOKEN)));
                 adminData.setTokenExpirytime(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TOKEN_EXPIRY_TIME)));
                 adminData.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USER_NAME)));
