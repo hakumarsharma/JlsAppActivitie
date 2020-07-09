@@ -114,17 +114,26 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
                 makeSafetyNetCall(token);
             }
         } else if(v.getId() == R.id.signupTimerTextView) {
-            generateRegistrationTokenAPICall();
+            String token = signupTxtPinEntry.getText().toString().trim();
+            makeSafetyNetCall(token);
         }
     }
 
     private void makeSafetyNetCall(String token) {
         SafetyNet.getClient(Objects.requireNonNull(getActivity())).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
                 .addOnSuccessListener(getActivity(), response -> {
-                    if (!response.getTokenResult().isEmpty()) {
-                        Util.getInstance().setExpiryTime();
-                        Util.getInstance().updateGoogleToken(response.getTokenResult());
-                        makeRegisterAPICall(token);
+                    if (token == null || token.isEmpty()){
+                        if (!response.getTokenResult().isEmpty()) {
+                            Util.getInstance().setExpiryTime();
+                            Util.getInstance().updateGoogleToken(response.getTokenResult());
+                            generateRegistrationTokenAPICall();
+                        }
+                    }else {
+                        if (!response.getTokenResult().isEmpty()) {
+                            Util.getInstance().setExpiryTime();
+                            Util.getInstance().updateGoogleToken(response.getTokenResult());
+                            makeRegisterAPICall(token);
+                        }
                     }
                 })
                 .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());
