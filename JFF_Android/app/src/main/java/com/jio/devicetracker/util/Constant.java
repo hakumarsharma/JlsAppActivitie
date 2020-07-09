@@ -461,13 +461,15 @@ public class Constant {
     public static final String CONTACT_TITLE = "Contact us";
 
     //FAQ Activity
-    public static final String QUES_1 = "First Question ?";
-    public static final String QUES_2 = "Second Question ?";
-    public static final String QUES_3 = "Third Question ?";
+    public static final String QUES_1 = "I am unable to track the location of my family members/pets. How do I fix this?";
+    public static final String QUES_2 = "How long does it take for the tracking frequency changes to reflect in the app? Do I need to wait for tracking duration time to locate the tracked individual / pet?";
+    public static final String QUES_3 = "I had unpaired my tracking device from the app. However, I no longer have the Packing Box. How do I re-configure my device with the app?";
+    public static final String QUES_4 = "How do I ensure the location data is safe and secure? ";
 
-    public static final String ANS_1 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
-    public static final String ANS_2 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
-    public static final String ANS_3 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
+    public static final String ANS_1 = "For app enabled tracking, please verify if the tracked person has approved the request to track. If yes, please check if the Smartphone has enabled GPS under location settings and is within a network coverage area. If the problem persists, please visit the nearest Service center or alternatively write to us at care@jio.com \nFor Tracker Device, ensure that the device is paired with your Tracking app. Also verify that it is switched ON and the network LED is blinking ON as per the booklet. In case issue persists, please try moving around a bit to help optimise the GPS signals. Alternatively, please visit the nearest Service center or write to us at care@jio.com";
+    public static final String ANS_2 = "Please wait for 5 to 10 minutes for confirmation of tracking duration changes from Server end. Alternatively, you may click on the fetch location Icon to trace the trackee on real time basis";
+    public static final String ANS_3 = "As an alternative, you may input the IMEI number to re-associate the tracking device with the app. Please note that the earlier tracking data is retained only for a limited duration after disassociating a device from the app and may not reflect under your account.";
+    public static final String ANS_4 = "At Jio, we follow end to end encryption of user data with state of the art Cyber Security policies. Your data is accessible to only you and no one else. Please be careful that your Smartphone app doesn’t fall into unwanted hands and avoid tampering with tracking device software.";
 
 
 }

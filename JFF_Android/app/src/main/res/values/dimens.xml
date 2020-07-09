@@ -12,6 +12,7 @@
     <dimen name="thirteen_dp">13dp</dimen>
     <dimen name="adddevice_button_height">40dp</dimen>
     <dimen name="adddevice_button_width">232dp</dimen>
+    <dimen name="margin_2dp">2dp</dimen>
     <dimen name="fifty_dp">50dp</dimen>
     <dimen name="margin_65">65dp</dimen>
     <dimen name="margin_12">12dp</dimen>
