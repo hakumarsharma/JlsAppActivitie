@@ -63,7 +63,7 @@
                 android:background="@android:color/transparent"
                 android:focusedByDefault="true"
                 android:inputType="text"
-                android:text="Ashish Singh"
+                android:text=""
                 android:textColor="@color/mine_shaft"
                 android:textSize="@dimen/seventeen_dp"
                 android:textStyle="bold"/>
@@ -102,7 +102,7 @@
                 android:background="@android:color/transparent"
                 android:focusedByDefault="true"
                 android:inputType="text"
-                android:text="abc@gmail.com"
+                android:text=""
                 android:textColor="@color/mine_shaft"
                 android:textStyle="bold"/>
 
@@ -130,7 +130,7 @@
                 android:textStyle="bold"
                 android:visibility="visible"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/update_edit_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
                 android:background="@android:color/transparent"
                 android:focusedByDefault="true"
                 android:inputType="text"
-                android:text="+9100000000"
+                android:text=""
                 android:textColor="@color/mine_shaft"
                 android:textStyle="bold"/>
 
