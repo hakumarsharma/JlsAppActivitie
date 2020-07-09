@@ -81,6 +81,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
         signupEnterOTPTextView.setText(Constant.OTP_TEXTVIEW + phoneNumber);
         signupTxtPinEntry = view.findViewById(R.id.signup_txt_pin_entry);
         signupTxtPinEntry.setTypeface(Util.mTypeface(getActivity(), 5));
+        signupTxtPinEntry.setEnabled(false);
         Button signupSubmitLogin = view.findViewById(R.id.signupSubmitLogin);
         signupSubmitLogin.setTypeface(Util.mTypeface(getActivity(), 5));
         signupSubmitLogin.setOnClickListener(this);
@@ -103,6 +104,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
     public void messageReceived(String message, String phoneNum) {
         if (message.contains(Constant.OTP_SMS) && signupTxtPinEntry != null) {
             signupTxtPinEntry.setText(message.substring(message.indexOf(":") + 2, message.indexOf(":") + 7));
+
         }
     }
 

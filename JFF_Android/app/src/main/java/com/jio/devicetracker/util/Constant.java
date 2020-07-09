@@ -242,6 +242,7 @@ public class Constant {
     public static final String SESSION_GROUP_CONSENTS_TOKEN_URL = "/sessiongroupconsents/tokens";
     public static final String APPROVE_REJECT_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";
     public static final String STATUS_URL = "/status";
+    public static final String EDIT_USER_DETAIL_URL = "?tsp=1593753373067";
     public static final String SESSION_GROUP_CONSENTS_URL1 = "/sessiongroupconsents/";
     public static final String GET_LOCATION_URL = "/events/search";
     public static final String GET_DEVICES_LIST = "/accounts/api/devicestatuses/search?skip=0&limit=20&tsp=1593767974741";
