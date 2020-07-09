@@ -462,7 +462,7 @@ public final class Util extends AppCompatActivity {
      * @return
      */
     public static boolean isValidMobileNumberForPet(String mobile) {
-        String mobileNumber = "^[0-9]{13}$";
+        String mobileNumber = "^\\d{9}|^\\d{10}|^\\d{13}$";
         Pattern pat = Pattern.compile(mobileNumber);
         return pat.matcher(mobile).matches();
     }

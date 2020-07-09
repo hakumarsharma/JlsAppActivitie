@@ -187,6 +187,7 @@ public class Constant {
     public static final String PEOPLE_TRACKER_DEVICE_TYPE = "People Tracker";
     public static final String ADD_GROUP_MEMBER_INSTRUCTION1 = "* Click on + button to add member inside the group  ";
     public static final String ADD_GROUP_MEMBER_INSTRUCTION2 = "\n* Once added go to Home screen, select the group  from list and click on Track button to know the location of group members";
+    public static final String DEVICE_NAME_VALIDATION = "Please enter device name";
 
     // MAPs Activity constants
     public static final String MAP_TITLE = "Location";
