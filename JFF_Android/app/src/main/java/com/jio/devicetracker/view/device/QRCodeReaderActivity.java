@@ -56,7 +56,7 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
         Button closeBtn = findViewById(R.id.close);
         closeBtn.setVisibility(View.VISIBLE);
         RelativeLayout toolbarLayout = findViewById(R.id.toolbarlayout);
-        toolbarLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.cardviewlayout_device_background_color));
+        toolbarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.cardviewlayout_device_background_color));
         Intent intent = getIntent();
         groupId = intent.getStringExtra(Constant.GROUP_ID);
 
@@ -81,11 +81,11 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
                 intent.putExtra(Constant.DEVICE_PHONE_NUMBER, resultArr[0]);
                 intent.putExtra(Constant.DEVICE_IMEI_NUMBER, resultArr[1]);
                 startActivity(intent);
-            }else {
+            } else {
                 Intent intent = new Intent(this, QRCodeRescanActivity.class);
                 startActivity(intent);
             }
-        }else {
+        } else {
             if (resultArr.length == 2 && Util.isValidIMEINumber(resultArr[0])) {
                 if (Util.isValidMobileNumberForPet(resultArr[1])) {
                     Intent intent = new Intent(this, DeviceNameActivity.class);
@@ -93,11 +93,11 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
                     intent.putExtra(Constant.DEVICE_PHONE_NUMBER, resultArr[1]);
                     intent.putExtra(Constant.DEVICE_IMEI_NUMBER, resultArr[0]);
                     startActivity(intent);
-                }else {
+                } else {
                     Intent intent = new Intent(this, QRCodeRescanActivity.class);
                     startActivity(intent);
                 }
-            }else {
+            } else {
                 Intent intent = new Intent(this, QRCodeRescanActivity.class);
                 startActivity(intent);
             }

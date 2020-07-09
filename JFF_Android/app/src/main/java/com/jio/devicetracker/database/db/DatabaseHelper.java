@@ -41,6 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_GROUP_MEMBER = "GroupMemberData";
     public static final String TABLE_GROUP_ICON = "GroupIconTable";
     public static final String TABLE_ALERTS_HOSTORY = "AlertsHistoryTable";
+    public static final String TABLE_DEVICE = "DeviceTable";
 
     //Table Columns
     public static final String IMEI_NUM = "imei";
@@ -81,6 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CONSENTS_COUNT = "consentsCount";
     public static final String ALERT_TIME = "alertTime";
     public static final String ADDRESS = "address";
+    public static final String COUNT = "count";
 
 
     //DB Information
@@ -110,6 +112,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_ALERTS_HISTORY_TABLE = "create table " + TABLE_ALERTS_HOSTORY + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + DEVICE_NUM + " TEXT, " + ALERT_TIME + " TEXT ," + ADDRESS + " TEXT, " + "PRIMARY KEY" + "(" + ALERT_TIME +"))";
 
+    private static final String CREATE_DEVICE_TABLE = "create table " + TABLE_DEVICE + "(" + DEVICE_NUM + " TEXT ," + IMEI_NUM + " TEXT, "  + COUNT + " INTEGER ," + "PRIMARY KEY" + "(" + IMEI_NUM +"))";
+
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -130,6 +134,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_GROUP_MEMBER);
         db.execSQL(CREATE_GROUP_ICON_TABLE);
         db.execSQL(CREATE_ALERTS_HISTORY_TABLE);
+        db.execSQL(CREATE_DEVICE_TABLE);
     }
 
     /**
@@ -147,6 +152,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP_MEMBER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP_ICON);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALERTS_HOSTORY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEVICE);
         onCreate(db);
     }
 }

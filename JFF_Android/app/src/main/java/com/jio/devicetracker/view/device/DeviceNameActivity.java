@@ -40,6 +40,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.database.pojo.DeviceTableData;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
 import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.GetUserDevicesListRequest;
@@ -74,7 +75,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     private String deviceImei;
     public static String groupId;
     private DBManager mDbManager;
-    public  String selectedIcon;
+    public String selectedIcon;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -380,14 +381,14 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         intent.putExtra(Constant.DEVICE_PHONE_NUMBER, deviceNumber);
         intent.putExtra(Constant.DEVICE_IMEI_NUMBER, deviceImei);
         intent.putExtra(Constant.REAL_ICON, iconName);
-        intent.putExtra(Constant.TITLE_NAME,deviceName.getText().toString());
+        intent.putExtra(Constant.TITLE_NAME, deviceName.getText().toString());
         startActivity(intent);
     }
 
     /**
      * Get User Devices list API call
      */
-    private void getUserDevicesList(){
+    private void getUserDevicesList() {
         AdminLoginData adminLoginDetail = mDbManager.getAdminLoginDetail();
         List<String> data = new ArrayList<>();
         if (adminLoginDetail != null) {
@@ -396,30 +397,30 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
             SearchDeviceStatusData.Device device = searchDeviceStatusData.new Device();
             device.setUsersAssigned(data);
             searchDeviceStatusData.setDevice(device);
-            GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new GetUserDevicesListRequest(new DeviceNameActivity.getDeviceRequestSuccessListener(), new DeviceNameActivity.getDeviceRequestErrorListener(),searchDeviceStatusData));
+            GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new GetUserDevicesListRequest(new GetDeviceRequestSuccessListener(), new GetDeviceRequestErrorListener(), searchDeviceStatusData));
         }
     }
 
     /**
      * Get Devices list API call success listener
      */
-    private class getDeviceRequestSuccessListener implements Response.Listener {
+    private class GetDeviceRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
             GetUserDevicesListResponse getDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetUserDevicesListResponse.class);
             if (getDeviceResponse.getCode() == 200) {
                 boolean isNumberExists = false;
-                for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData() ){
+                for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData()) {
                     // for (GetUserDevicesListResponse.Devices devices : data.getDevices()){
                     if (data.getDevices().getImei().equalsIgnoreCase(deviceImei)) {
-                            isNumberExists = true;
+                        isNumberExists = true;
                         break;
                     }
                     // }
                 }
-                if (isNumberExists){
-                        addMemberToCreatedGroup();
-                }else {
+                if (isNumberExists) {
+                    addMemberToCreatedGroup();
+                } else {
                     makeVerifyAndAssignAPICall();
                 }
             }
@@ -429,7 +430,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     /**
      * Get Devices list API call error listener
      */
-    private class getDeviceRequestErrorListener implements Response.ErrorListener {
+    private class GetDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             Toast.makeText(DeviceNameActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADD, Toast.LENGTH_SHORT).show();
@@ -458,7 +459,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         addDeviceData.setFlags(flags);
         mList.add(devices);
         addDeviceData.setDevices(mList);
-        RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new DeviceNameActivity.AddDeviceRequestSuccessListener(), new DeviceNameActivity.AddDeviceRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserToken(), mDbManager.getAdminLoginDetail().getUserId(), addDeviceData));
+        RequestHandler.getInstance(getApplicationContext()).handleRequest(new AddDeviceRequest(new AddDeviceRequestSuccessListener(), new AddDeviceRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserToken(), mDbManager.getAdminLoginDetail().getUserId(), addDeviceData));
     }
 
     /**
@@ -469,7 +470,20 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         public void onResponse(Object response) {
             AddDeviceResponse addDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), AddDeviceResponse.class);
             if (addDeviceResponse.getCode() == 200) {
-                    addMemberToCreatedGroup();
+                DeviceTableData deviceTableData = mDbManager.getDeviceTableData(deviceImei);
+                if (deviceTableData == null) {
+                    DeviceTableData mDeviceTableData = new DeviceTableData();
+                    mDeviceTableData.setPhoneNumber(deviceNumber);
+                    mDeviceTableData.setImeiNumber(deviceImei);
+                    mDeviceTableData.setAdditionCount(0);
+                    mDbManager.insertIntoDeviceTable(mDeviceTableData);
+                } else {
+                    int count = deviceTableData.getAdditionCount();
+                    DeviceTableData mDeviceTableData = new DeviceTableData();
+                    mDeviceTableData.setAdditionCount(++count);
+                    mDbManager.updateIntoDeviceTable(mDeviceTableData);
+                }
+                addMemberToCreatedGroup();
                 //Toast.makeText(ChooseGroupActivity.this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
             }
         }
