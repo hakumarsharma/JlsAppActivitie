@@ -42,8 +42,8 @@ import java.util.List;
 public class FaqActivity extends Activity {
 
     RecyclerView faqRecyclerList;
-    private String[] questionArr = {Constant.QUES_1,Constant.QUES_2,Constant.QUES_3};
-    private String[] answerArr ={Constant.ANS_1,Constant.ANS_2,Constant.ANS_3};
+    private String[] questionArr = {Constant.QUES_1,Constant.QUES_2,Constant.QUES_3,Constant.QUES_4};
+    private String[] answerArr ={Constant.ANS_1,Constant.ANS_2,Constant.ANS_3,Constant.ANS_4};
     List<FAQData> faqDataList;
 
     @Override
