@@ -332,6 +332,9 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 if (!data.getStatus().equalsIgnoreCase(Constant.REMOVED)) {
                     if (!data.getUserId().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getUserId())) {
                         listOfContacts.add(data);
+                    } else if(data.getUserId().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getUserId())
+                            && !data.getPhone().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getPhoneNumber())) {
+                        listOfContacts.add(data);
                     }
                 }
             }
