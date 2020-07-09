@@ -350,7 +350,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     deviceName.setError(Constant.ENTER_DEVICE_NAME);
                     return;
                 } else if (DashboardMainActivity.flowFromGroup) {
-                    addMemberToCreatedGroup();
+                    getUserDevicesList();
                 } else {
                     gotoChooseGroupActivity(selectedIcon);
                 }
