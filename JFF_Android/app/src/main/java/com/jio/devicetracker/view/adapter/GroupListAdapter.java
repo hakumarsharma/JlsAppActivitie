@@ -20,7 +20,9 @@
 
 package com.jio.devicetracker.view.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -250,8 +252,9 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                     break;
                 case R.id.deleteGroup:
                     position = getAdapterPosition();
-                    GroupListAdapter.this.groupOptLayout = groupOptLayout;
-                    deleteGroupAPICall(mList.get(position));
+                    deleteAlertBox(position);
+                    /*GroupListAdapter.this.groupOptLayout = groupOptLayout;
+                    deleteGroupAPICall(mList.get(position));*/
                     break;
                 case R.id.addNewMember:
                     position = getAdapterPosition();
@@ -264,6 +267,23 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                     // Todo
                     break;
             }
+        }
+
+        private void deleteAlertBox(int position) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
+            adb.setTitle(Constant.ALERT_TITLE);
+            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
+            adb.setIcon(android.R.drawable.ic_dialog_alert);
+            adb.setPositiveButton("OK", (dialog, which) -> {
+                GroupListAdapter.this.groupOptLayout = groupOptLayout;
+                deleteGroupAPICall(mList.get(position));
+            });
+            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            adb.show();
         }
     }
 
@@ -317,4 +337,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         notifyItemRemoved(adapterPosition);
         notifyDataSetChanged();
     }
+
+
+
 }

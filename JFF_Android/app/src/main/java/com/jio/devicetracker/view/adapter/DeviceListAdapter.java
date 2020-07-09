@@ -20,7 +20,9 @@
 
 package com.jio.devicetracker.view.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -193,14 +195,31 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
                     devicesOperationLayout.setVisibility(View.GONE);
                     break;
                 case R.id.devicesDelete:
-                    DeviceListAdapter.this.position = getAdapterPosition();
-                    DeviceListAdapter.this.devicesOperationLayout = devicesOperationLayout;
-                    makeDeleteGroupAPICall(mList.get(getAdapterPosition()).getGroupId());
+                    //DeviceListAdapter.this.position = getAdapterPosition();
+                    position = getAdapterPosition();
+                    deleteAlertBox(position);
                     break;
                 default:
                     // Todo
                     break;
             }
+        }
+
+        private void deleteAlertBox(int position) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
+            adb.setTitle(Constant.ALERT_TITLE);
+            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
+            adb.setIcon(android.R.drawable.ic_dialog_alert);
+            adb.setPositiveButton("OK", (dialog, which) -> {
+                DeviceListAdapter.this.devicesOperationLayout = devicesOperationLayout;
+                makeDeleteGroupAPICall(mList.get(getAdapterPosition()).getGroupId());
+            });
+            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            adb.show();
         }
     }
 

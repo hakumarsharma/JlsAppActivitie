@@ -19,7 +19,9 @@
  **************************************************************/
 package com.jio.devicetracker.view.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -199,8 +201,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     break;
                 case R.id.deleteIndividualUser:
                     position = getAdapterPosition();
-                    PeopleMemberListAdapter.this.individualMemberOperationLayout = individualMemberOperationLayout;
-                    makeDeleteGroupAPICall(mList.get(position).getGroupId());
+                    deleteAlertBox(position);
                     break;
                 case R.id.editIndividualMember:
                     peopleEditFlag = true;
@@ -214,6 +215,24 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     // Todo
                     break;
             }
+        }
+
+        private void deleteAlertBox(int position) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
+            adb.setTitle(Constant.ALERT_TITLE);
+            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
+            adb.setIcon(android.R.drawable.ic_dialog_alert);
+            adb.setPositiveButton("OK", (dialog, which) -> {
+                PeopleMemberListAdapter.this.individualMemberOperationLayout = individualMemberOperationLayout;
+                makeDeleteGroupAPICall(mList.get(position).getGroupId());
+
+            });
+            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            adb.show();
         }
     }
 
@@ -262,5 +281,6 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         notifyItemRemoved(adapterPosition);
         notifyDataSetChanged();
     }
+
 
 }
