@@ -27,7 +27,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Implementation of database helper class to create and update the table for People Tracker application application.
+ * Implementation of database helper class to create and update the table for Jio Tracker application application.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 

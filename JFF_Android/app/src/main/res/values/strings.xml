@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">JioTrack</string>
-    <string name="title_activity_maps">People Tracker</string>
+    <string name="title_activity_maps">JioTrack</string>
     <string name="map_name">JioTrack</string>
     <string name="action_settings">Setting</string>
     <string name="about_us">About Us</string>
