@@ -24,11 +24,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AddedDeviceData;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.AlertHistoryData;
 import com.jio.devicetracker.database.pojo.ConsentTimeupdateData;
+import com.jio.devicetracker.database.pojo.GeofenceDetails;
 import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
@@ -210,6 +212,22 @@ public class DBManager {
     }
 
     /**
+     * Update lat and long in to the TABLE_NAME_BORQS table
+     *
+     * @param latLng
+     * @param radius
+     */
+    public void updateGeofenceDetailInGroupMemberTable(LatLng latLng, int radius ,String deviceNumber) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.LAT, latLng.latitude);
+        values.put(DatabaseHelper.LON, latLng.longitude);
+        values.put(DatabaseHelper.RADIUS, radius);
+        mDatabase.update(DatabaseHelper.TABLE_GROUP_MEMBER, values, DatabaseHelper.DEVICE_NUM + "= " + deviceNumber, null);
+
+    }
+
+    /**
      * Update Logout data in TABLE_USER_LOGIN table
      */
     public void updateLogoutData() {
@@ -347,6 +365,29 @@ public class DBManager {
             cursor.close();
         }
         return adminData;
+    }
+
+    /**
+     * Returns geofence detail
+     *
+     * @return geofence details
+     */
+    public GeofenceDetails getGeofenceDetails(String deviceNumber) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        GeofenceDetails geofenceDetails = null;
+        String[] column = {DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.RADIUS};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP_MEMBER, column, DatabaseHelper.DEVICE_NUM + " = " + deviceNumber, null, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                geofenceDetails = new GeofenceDetails();
+                geofenceDetails.setLat(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LAT)));
+                geofenceDetails.setLng(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LON)));
+                geofenceDetails.setRadius(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.RADIUS)));
+
+            }
+            cursor.close();
+        }
+        return geofenceDetails;
     }
 
     /**

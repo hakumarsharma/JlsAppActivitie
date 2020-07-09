@@ -70,6 +70,7 @@ public class PeopleFragment extends Fragment {
     private static List<HomeActivityListData> groupList;
     private RecyclerView groupListRecyclerView;
     private String memberName;
+    private String deviceNumber;
     private String consentStatus;
 
     @Override
@@ -158,6 +159,7 @@ public class PeopleFragment extends Fragment {
         if (peopleMemberListAdapter != null) {
             peopleMemberListAdapter.setOnItemClickPagerListener(homeActivityListData -> {
                 consentStatus = homeActivityListData.getConsentStaus();
+                deviceNumber = homeActivityListData.getPhoneNumber();
                 memberName = homeActivityListData.getGroupName();
                 if(consentStatus.equalsIgnoreCase(Constant.EXITED)) {
                     showCustomAlertWithText(memberName + Constant.LEFT_GROUP_INFORMATION);
@@ -230,6 +232,7 @@ public class PeopleFragment extends Fragment {
                             mapData.setLatitude(data.getLocation().getLat());
                             mapData.setLongitude(data.getLocation().getLng());
                             mapData.setName(grpMembers.getName());
+                            mapData.setGroupId(data.getGroupId());
                             mapData.setConsentId(grpMembers.getConsentId());
                             mapDataList.add(mapData);
                         }
@@ -259,6 +262,8 @@ public class PeopleFragment extends Fragment {
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_STATUS, groupStatus);
         intent.putExtra(Constant.MEMBER_NAME, memberName);
+        intent.putExtra(Constant.GROUP_ID,groupId);
+        intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
         intent.putExtra(Constant.CONSENT_STATUS, consentStatus);
         startActivity(intent);
     }
