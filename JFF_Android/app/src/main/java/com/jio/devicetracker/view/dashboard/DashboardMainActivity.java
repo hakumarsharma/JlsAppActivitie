@@ -326,7 +326,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.number_display_dialog);
         dialog.setTitle(Constant.TITLE);
-        dialog.getWindow().setLayout(1000, 500);
+        dialog.getWindow().setLayout(750, 500);
         final Button yes = dialog.findViewById(R.id.positive);
         final Button no = dialog.findViewById(R.id.negative);
         yes.setOnClickListener(v -> {

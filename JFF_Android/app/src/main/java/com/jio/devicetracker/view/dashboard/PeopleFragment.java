@@ -272,7 +272,6 @@ public class PeopleFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        makeGroupInfoPerUserRequestAPICall();
     }
 
     /**
