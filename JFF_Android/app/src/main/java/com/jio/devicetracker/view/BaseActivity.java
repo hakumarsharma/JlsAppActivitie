@@ -232,6 +232,12 @@ public class BaseActivity extends AppCompatActivity {
                 // Make Verify and Assign call
                 Util.progressDialog.dismiss();
                 showCustomAlertWithText(Constant.DEVICE_NOT_FOUND);
+            } else if(error.networkResponse.statusCode == Constant.STATUS_CODE_429){
+                Util.progressDialog.dismiss();
+                showCustomAlertWithText(Constant.GROUP_LIMIT_EXCEED);
+            } else if(error.networkResponse.statusCode == Constant.STATUS_CODE_401){
+                Util.progressDialog.dismiss();
+                showCustomAlertWithText(Constant.USER_ALREADY_ADDED_ERROR);
             } else {
                 Util.progressDialog.dismiss();
                 showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);

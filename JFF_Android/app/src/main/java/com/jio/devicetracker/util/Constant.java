@@ -326,6 +326,7 @@ public class Constant {
     public static final String REFRESH_INTERVAL_SETTING = "Settings";
     public static final String MAP_UPDATION_MSG = "Map will be updated after every ";
     public static final String PENDING = "pending";
+    public static final String RE_SEND_INVITE = "re-send invite";
     public static final String CONSENT_PENDING_ADDRESS = "Address will be displayed after consent is approved.";
     public static final String CONSENT_APPROVED_ADDRESS = "Address details are not available.";
     public static final String CONSENT_EXPIRED_ADDRESS = "Consent time expired.Click on send invite present under three dots.";
@@ -338,9 +339,11 @@ public class Constant {
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
     public static final String LOGGED_IN_USER_ADDITION_FAILURE = "Unable to add logged in user into the group";
-    public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member, Please try again!";
+    public static final String GROUP_MEMBER_ADDITION_FAILURE = "Adding same device to same group is not allowed.";
 
     public static final String DEVICE_NOT_FOUND = "Device not found, Please try again!";
+    public static final String GROUP_LIMIT_EXCEED = "Group exceeded maximum consents count";
+    public static final String USER_ALREADY_ADDED_ERROR = "Member is already present in the group";
     public static final String REMOVE = "Remove";
     public static final String EXIT = "Exit";
     public static final String SESSION_GROUPS = "sessiongroups";
@@ -432,6 +435,7 @@ public class Constant {
     public static final int STATUS_CODE_417 = 417;
     public static final int SUCCESS_CODE_200 = 200;
     public static final int STATUS_CODE_401 = 401;
+    public static final int STATUS_CODE_429 = 429;
 
 
     // Track device Activity

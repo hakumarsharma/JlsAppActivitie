@@ -119,6 +119,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)) {
             holder.memberStatus.setText(Constant.CONSENT_PENDING);
             holder.memberAddress.setText(Constant.CONSENT_PENDING_ADDRESS);
+            holder.shareInvite.setText(Constant.RE_SEND_INVITE);
             holder.memberIcon.setImageResource(R.drawable.pendinginvite);
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.pending_color));
         } else if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED)) {
@@ -135,6 +136,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.rejected_color));
             holder.memberAddress.setText(Constant.CONSENT_EXPIRED_ADDRESS);
             holder.memberIcon.setImageResource(R.drawable.invitetimeup);
+            holder.shareInvite.setText(Constant.RE_SEND_INVITE);
         }
     }
 

@@ -469,7 +469,8 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private class AddDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Toast.makeText(ChooseGroupActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADD, Toast.LENGTH_SHORT).show();
+            showCustomAlertWithText(Constant.UNSUCCESSFULL_DEVICE_ADD);
+
         }
     }
 
@@ -534,7 +535,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private class GetDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Toast.makeText(ChooseGroupActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADD, Toast.LENGTH_SHORT).show();
+            showCustomAlertWithText(Constant.UNSUCCESSFULL_DEVICE_ADD);
         }
     }
 }
