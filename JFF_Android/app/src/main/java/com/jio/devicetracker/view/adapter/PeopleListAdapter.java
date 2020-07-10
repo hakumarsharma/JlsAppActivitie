@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -120,6 +119,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)) {
             holder.memberStatus.setText(Constant.CONSENT_PENDING);
             holder.memberAddress.setText(Constant.CONSENT_PENDING_ADDRESS);
+            holder.shareInvite.setText(Constant.RE_SEND_INVITE);
             holder.memberIcon.setImageResource(R.drawable.pendinginvite);
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.pending_color));
         } else if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED)) {
@@ -136,6 +136,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.rejected_color));
             holder.memberAddress.setText(Constant.CONSENT_EXPIRED_ADDRESS);
             holder.memberIcon.setImageResource(R.drawable.invitetimeup);
+            holder.shareInvite.setText(Constant.RE_SEND_INVITE);
         }
     }
 
@@ -211,8 +212,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                 case R.id.remove_from_group:
                     position = getAdapterPosition();
                     deleteAlertBox(position);
-                    /*PeopleListAdapter.this.layoutOps = layoutOps;
-                    makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition(), true);*/
                     break;
                 case R.id.share_invite:
                     PeopleListAdapter.this.layoutOps = layoutOps;
@@ -270,7 +269,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.code() == 200) {
                     Util.progressDialog.dismiss();
-                    Toast.makeText(mContext, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mDbManager.deleteSelectedDataFromGroupMember(groupMemberDataList.getConsentId());
                     removeItem(position);
                     if (!isRemoveFromGroup) {

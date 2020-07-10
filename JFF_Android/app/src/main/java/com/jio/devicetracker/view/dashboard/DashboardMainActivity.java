@@ -383,6 +383,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private class ApproveConsentRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            if(error.networkResponse.statusCode == 401){
+
+            }
             Toast.makeText(DashboardMainActivity.this, Constant.CONSENT_NOT_APPROVED_MESSAGE, Toast.LENGTH_SHORT).show();
         }
     }
@@ -422,6 +425,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private class RejectConsentRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            if(error.networkResponse.statusCode == 401){
+
+            }
             Toast.makeText(DashboardMainActivity.this, Constant.CONSENT_NOT_REJECTED_MESSAGE, Toast.LENGTH_SHORT).show();
         }
     }
