@@ -38,13 +38,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.DeviceTableData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.request.DeleteDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DeviceFragment;
+
 import java.util.List;
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.ViewHolder> {
@@ -55,6 +58,8 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     private int position;
     private RelativeLayout devicesOperationLayout;
     private static RecyclerViewClickListener itemListener;
+    private String phoneNumber;
+    private String deviceId;
 
     public DeviceListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
@@ -63,11 +68,12 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
     }
+
     /**
      * Binds the given View to the position
      *
@@ -212,6 +218,8 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             adb.setIcon(android.R.drawable.ic_dialog_alert);
             adb.setPositiveButton("OK", (dialog, which) -> {
                 DeviceListAdapter.this.devicesOperationLayout = devicesOperationLayout;
+                phoneNumber = mList.get(getAdapterPosition()).getPhoneNumber();
+                deviceId = mDbManager.getGroupMemberDetailByConsentId(mList.get(getAdapterPosition()).getConsentId()).getDeviceId();
                 makeDeleteGroupAPICall(mList.get(getAdapterPosition()).getGroupId());
             });
             adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -244,6 +252,15 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             removeItem(position);
             devicesOperationLayout.setVisibility(View.GONE);
             DeviceFragment.checkMemberPresent();
+            DeviceTableData mDeviceTableData = mDbManager.getDeviceTableData(phoneNumber);
+            if (mDeviceTableData != null) {
+                int count = mDeviceTableData.getAdditionCount();
+                DeviceTableData deviceTableData = new DeviceTableData();
+                deviceTableData.setAdditionCount(--count);
+                deviceTableData.setPhoneNumber(phoneNumber);
+                mDbManager.updateIntoDeviceTable(deviceTableData);
+            }
+            checkToDeleteDeviceAPICall();
         }
     }
 
@@ -255,6 +272,34 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
             showCustomAlertWithText(Constant.GROUP_DELETION_FAILURE);
+        }
+    }
+
+    // Make a delete device API call if it is the last delete from app
+    private void checkToDeleteDeviceAPICall() {
+        if (mDbManager.getDeviceTableData(phoneNumber) != null
+                && mDbManager.getDeviceTableData(phoneNumber).getAdditionCount() == 0) {
+            GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteDeviceRequest(new DeleteDeviceRequestSuccessListener(), new DeleteDeviceRequestErrorListener(), deviceId));
+        }
+    }
+
+    /**
+     * Delete device for user Success Listener
+     */
+    private class DeleteDeviceRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            System.out.println("Device deleted from user account");
+        }
+    }
+
+    /**
+     * Delete device for user error listener
+     */
+    private class DeleteDeviceRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            System.out.println("Error in deleting device from user account");
         }
     }
 

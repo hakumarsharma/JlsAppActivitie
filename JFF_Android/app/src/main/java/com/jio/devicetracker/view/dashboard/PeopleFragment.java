@@ -309,6 +309,7 @@ public class PeopleFragment extends Fragment {
                     groupMemberDataList.setConsentStatus(mConsents.getStatus());
                     groupMemberDataList.setName(mConsents.getName());
                     groupMemberDataList.setUserId(mConsents.getUserId());
+                    groupMemberDataList.setDeviceId(mConsents.getDevice());
                     mGroupMemberDataLists.add(groupMemberDataList);
                 }
             }

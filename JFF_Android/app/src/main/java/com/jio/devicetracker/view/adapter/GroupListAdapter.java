@@ -42,7 +42,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.DeviceTableData;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.request.DeleteDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
@@ -307,6 +310,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     private class DeleteGroupRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
+            updateDeviceTable();
             mDbManager.deleteSelectedDataFromGroup(groupId);
             mDbManager.deleteSelectedDataFromGroupMember(groupId);
             groupOptLayout.setVisibility(View.GONE);
@@ -327,6 +331,55 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         }
     }
 
+    // Update device table after deletion of group
+    private void updateDeviceTable() {
+        List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+        List<DeviceTableData> mDeviceListData = mDbManager.getAllDeviceTableData();
+        for (GroupMemberDataList groupMemberDataList : mList) {
+            for (DeviceTableData deviceTableData : mDeviceListData) {
+                if (groupMemberDataList.getNumber().equalsIgnoreCase(deviceTableData.getPhoneNumber())) {
+                    int count = deviceTableData.getAdditionCount();
+                    DeviceTableData data = new DeviceTableData();
+                    data.setAdditionCount(--count);
+                    data.setPhoneNumber(deviceTableData.getPhoneNumber());
+                    mDbManager.updateIntoDeviceTable(data);
+                }
+            }
+        }
+
+        // If last delete then make an delete device api call for that user
+        List<DeviceTableData> updatedDeviceListData = mDbManager.getAllDeviceTableData();
+        for (GroupMemberDataList groupMemberDataList : mList) {
+            for (DeviceTableData deviceTableData : updatedDeviceListData) {
+                if (groupMemberDataList.getNumber().equalsIgnoreCase(deviceTableData.getPhoneNumber())
+                        && groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)
+                        && deviceTableData.getAdditionCount() == 0) {
+                    GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteDeviceRequest(new DeleteDeviceRequestSuccessListener(), new DeleteDeviceRequestErrorListener(), groupMemberDataList.getDeviceId()));
+                }
+            }
+        }
+    }
+
+    /**
+     * Delete device for user Success Listener
+     */
+    private class DeleteDeviceRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            System.out.println("Device deleted from user account");
+        }
+    }
+
+    /**
+     * Delete device for user error listener
+     */
+    private class DeleteDeviceRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            System.out.println("Error in deleting device from user account");
+        }
+    }
+
     /**
      * Called when we delete group
      *
@@ -337,7 +390,5 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         notifyItemRemoved(adapterPosition);
         notifyDataSetChanged();
     }
-
-
 
 }
