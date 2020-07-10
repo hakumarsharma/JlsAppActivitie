@@ -118,7 +118,7 @@ public class PeopleFragment extends Fragment {
                     && data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                 List<GroupMemberDataList> memberDataList = mDbManager.getAllGroupMemberDataBasedOnGroupId(data.getGroupId());
                 for (GroupMemberDataList memberData : memberDataList) {
-                    if(!memberData.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
+                    if (!memberData.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
                         HomeActivityListData homeActivityListData = new HomeActivityListData();
                         homeActivityListData.setGroupName(memberData.getName());
                         homeActivityListData.setPhoneNumber(memberData.getNumber());
@@ -161,7 +161,7 @@ public class PeopleFragment extends Fragment {
                 consentStatus = homeActivityListData.getConsentStaus();
                 deviceNumber = homeActivityListData.getPhoneNumber();
                 memberName = homeActivityListData.getGroupName();
-                if(consentStatus.equalsIgnoreCase(Constant.EXITED)) {
+                if (consentStatus.equalsIgnoreCase(Constant.EXITED)) {
                     showCustomAlertWithText(memberName + Constant.LEFT_GROUP_INFORMATION);
                     return;
                 }
@@ -262,8 +262,8 @@ public class PeopleFragment extends Fragment {
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_STATUS, groupStatus);
         intent.putExtra(Constant.MEMBER_NAME, memberName);
-        intent.putExtra(Constant.GROUP_ID,groupId);
-        intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
         intent.putExtra(Constant.CONSENT_STATUS, consentStatus);
         startActivity(intent);
     }
