@@ -59,7 +59,7 @@
     <string name="add_device">Add Device</string>
     <string name="add_contact">Add Contact</string>
     <string name="add_device_later">Add device later</string>
-    <string name="add_device_info">To track any Device/Person choose below options to Add device/Add contact and then start tracking.</string>
+    <string name="add_device_info">To track any Device/Person choose below options to Add Device/Add Contact and then start tracking.</string>
     <string name="purchase_info">Inorder to purchase device follow the link</string>
     <string name="purchase_link">www.myjio/devices/JioTrack</string>
     <string name="add_people_text">Add people from your contacts or add their name and mobile number</string>

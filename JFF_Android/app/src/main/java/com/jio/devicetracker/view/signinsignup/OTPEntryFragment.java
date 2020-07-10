@@ -122,7 +122,8 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
                 isComingFromRequestOTP = true;
                 makeSafetyNetCall();
             } else {
-                generateLoginTokenAPICall();
+                isComingFromRequestOTP = true;
+                makeSafetyNetCall();
             }
         } else if (v.getId() == R.id.submitLogin) {
             if (Util.getInstance().isGoogleTokenExpired()) {
