@@ -43,12 +43,16 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.DeviceTableData;
 import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
+import com.jio.devicetracker.database.pojo.request.DeleteDeviceRequest;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
@@ -80,6 +84,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private static Button addContact_Continue;
     private static Context context;
     private static DBManager mPeopleDbManager;
+    private String deviceId;
+    private String phNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -332,7 +338,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 if (!data.getStatus().equalsIgnoreCase(Constant.REMOVED)) {
                     if (!data.getUserId().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getUserId())) {
                         listOfContacts.add(data);
-                    } else if(data.getUserId().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getUserId())
+                    } else if (data.getUserId().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getUserId())
                             && !data.getPhone().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getPhoneNumber())) {
                         listOfContacts.add(data);
                     }
@@ -400,7 +406,14 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void adapterEventListener() {
-        mAdapter.setOnItemClickPagerListener((v, position, groupId, data) -> this.makeRemoveAPICall(data.getPhone(), groupId, position));
+        mAdapter.setOnItemClickPagerListener(new AddPersonListAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onDeleteMemberClicked(View v, int position, String groupId, GroupMemberResponse.Data data) {
+                deviceId = data.getDeviceId();
+                phNumber = data.getPhone();
+                AddPeopleActivity.this.makeRemoveAPICall(data.getPhone(), groupId, position);
+            }
+        });
     }
 
     /**
@@ -432,8 +445,17 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                     Toast.makeText(context, Constant.REMOVE_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mPeopleDbManager.deleteSelectedDataFromGroup(groupId);
                     mPeopleDbManager.deleteSelectedDataFromGroupMember(groupId);
+                    DeviceTableData mDeviceTableData = mPeopleDbManager.getDeviceTableData(phoneNumber);
+                    if (mDeviceTableData != null) {
+                        int count = mDeviceTableData.getAdditionCount();
+                        DeviceTableData deviceTableData = new DeviceTableData();
+                        deviceTableData.setAdditionCount(--count);
+                        deviceTableData.setPhoneNumber(phoneNumber);
+                        mPeopleDbManager.updateIntoDeviceTable(deviceTableData);
+                    }
                     mAdapter.removeItem(position);
                     getAllForOneGroupAPICall();
+                    checkToDeleteDeviceAPICall();
                 } else {
                     Util.progressDialog.dismiss();
                     showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
@@ -447,4 +469,33 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             }
         });
     }
+
+    // Make a delete device API call if it is the last delete from app
+    private void checkToDeleteDeviceAPICall() {
+        if (mPeopleDbManager.getDeviceTableData(phNumber) != null
+                && mPeopleDbManager.getDeviceTableData(phNumber).getAdditionCount() == 0) {
+            GroupRequestHandler.getInstance(context).handleRequest(new DeleteDeviceRequest(new DeleteDeviceRequestSuccessListener(), new DeleteDeviceRequestErrorListener(), deviceId));
+        }
+    }
+
+    /**
+     * Delete device for user Success Listener
+     */
+    private class DeleteDeviceRequestSuccessListener implements com.android.volley.Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            System.out.println("Device deleted from user account");
+        }
+    }
+
+    /**
+     * Delete device for user error listener
+     */
+    private class DeleteDeviceRequestErrorListener implements com.android.volley.Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            System.out.println("Error in deleting device from user account");
+        }
+    }
+
 }

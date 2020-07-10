@@ -366,6 +366,7 @@ public class DBManager {
      */
     public AdminLoginData getAdminLoginDetail() {
         mDatabase = mDBHelper.getWritableDatabase();
+        mDatabase = mDBHelper.getWritableDatabase();
         AdminLoginData adminData = null;
         String[] column = {DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME, DatabaseHelper.PHONE_COUNTRY_CODE, DatabaseHelper.DEVICE_NUM, DatabaseHelper.EMAIL};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_USER_LOGIN, column, null, null, null, null, null);
@@ -969,7 +970,7 @@ public class DBManager {
         mDatabase.delete(DatabaseHelper.TABLE_DEVICE, DatabaseHelper.IMEI_NUM + "= '" + imeiNumber + "';", null);
     }
 
-    // Returns Device Table data
+    // Returns Device Table data which matches with the phoneNumber
     public DeviceTableData getDeviceTableData(String phoneNumber) {
         mDatabase = mDBHelper.getWritableDatabase();
         DeviceTableData deviceTableData = null;
@@ -987,6 +988,25 @@ public class DBManager {
             }
         }
         return deviceTableData;
+    }
+
+    // Returns all device table data
+    public List<DeviceTableData> getAllDeviceTableData() {
+        List<DeviceTableData> mlist = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String[] column = {DatabaseHelper.IMEI_NUM, DatabaseHelper.DEVICE_NUM, DatabaseHelper.COUNT};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_DEVICE, column, null, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                DeviceTableData data = new DeviceTableData();
+                data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
+                data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                data.setAdditionCount(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COUNT)));
+                mlist.add(data);
+            }
+        }
+        cursor.close();
+        return mlist;
     }
 
 }

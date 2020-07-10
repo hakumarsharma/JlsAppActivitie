@@ -247,6 +247,7 @@ public class Constant {
     public static final String SESSION_GROUP_CONSENTS_URL1 = "/sessiongroupconsents/";
     public static final String GET_LOCATION_URL = "/events/search";
     public static final String GET_DEVICES_LIST = "/accounts/api/devicestatuses/search?skip=0&limit=20&tsp=1593767974741";
+    public static final String DELETE_DEVICE_URL = "/accounts/api/devices/";
 
     //Privacy Policy
     public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
