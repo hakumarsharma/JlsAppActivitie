@@ -323,6 +323,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         this.isFromDevice = false;
         setEditTextValues();
         addMemberInGroupAPICall();
+        setButtonBackground(addContact_Continue, true);
+
     }
 
     public void getAllMembers(List<GroupMemberResponse.Data> memberList) {
