@@ -40,7 +40,8 @@
                 android:layout_height="30dp"
                 android:layout_marginLeft="80dp"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/mother" />
+                android:visibility="invisible"
+                android:background="@drawable/secondaryuser" />
 
             <ImageView
                 android:id="@+id/fatherIcon"
@@ -48,7 +49,8 @@
                 android:layout_height="30dp"
                 android:layout_marginLeft="96dp"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/father" />
+                android:visibility="invisible"
+                android:background="@drawable/secondaryuser" />
 
             <ImageView
                 android:id="@+id/kidIcon"
@@ -56,15 +58,28 @@
                 android:layout_height="30dp"
                 android:layout_marginLeft="112dp"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/kid" />
+                android:visibility="invisible"
+                android:background="@drawable/secondaryuser" />
 
             <ImageView
                 android:id="@+id/dogIcon"
                 android:layout_width="30dp"
-                android:layout_height="25dp"
+                android:layout_height="30dp"
                 android:layout_marginLeft="130dp"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/dog" />
+                android:visibility="invisible"
+                android:background="@drawable/secondaryuser" />
+
+            <TextView
+                android:id="@+id/trackingYou_numberOfUsers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/dogIcon"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="52dp"
+                android:text="+ 1 invited"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/trackingYouOperationStatus"
