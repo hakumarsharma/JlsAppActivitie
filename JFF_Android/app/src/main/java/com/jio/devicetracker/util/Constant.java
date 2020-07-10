@@ -89,7 +89,7 @@ public class Constant {
     public static final String CONSENT_APPROVED = "Consent status is already approved for this number";
     public static final String FMS_SERVERISSUE = "FMS server is down please call back after some time";
     public static final String TOKEN_NULL = "Token is null";
-    public static final String LOADING_DATA = "Please wait loading data...";
+    public static final String LOADING_DATA = "Loading,Please wait...";
     public static final String GROUP_CREATION_FAILURE = "You have exceeded maximum allowed active groups, Please delete one of the group members to add any other group.";
     public static final String GROUP_UPDATION_FAILURE = "Group name updation failed";
     public static final String INDIVIDUAL_USER_EDIT_FAILURE = "User name updation failed!, Please try again";
@@ -380,6 +380,7 @@ public class Constant {
     // Add Device constants
     public static final String Add_Device = "JioTrack";
     public static final String Add_People = "Add People";
+    public static final String ADD_CONTACT = "Add Contact";
     public static final String ENTER_DEVICE_NAME = "Please enter device name";
     public static final String NOTIFICATION_CHANNEL = "High priority channel";
     public static final String NOTIFICATION_CHANNEL_ID_NAME = "com.jio.devicetracker";

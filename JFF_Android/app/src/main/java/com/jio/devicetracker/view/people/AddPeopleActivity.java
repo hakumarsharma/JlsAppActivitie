@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -97,7 +98,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private void initializeData() {
         Toolbar toolbar = findViewById(R.id.addPeopleToolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(Constant.Add_People);
+        title.setText(Constant.ADD_CONTACT);
         toolbar.setBackgroundColor(getResources().getColor(R.color.cardviewlayout_device_background_color));
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);

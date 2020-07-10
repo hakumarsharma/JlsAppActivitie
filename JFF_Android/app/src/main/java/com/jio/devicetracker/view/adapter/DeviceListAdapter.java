@@ -23,6 +23,7 @@ package com.jio.devicetracker.view.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.dashboard.DeviceFragment;
+import com.jio.devicetracker.view.people.EditMemberDetailsActivity;
 
 import java.util.List;
 
@@ -60,6 +62,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     private static RecyclerViewClickListener itemListener;
     private String phoneNumber;
     private String deviceId;
+    public static boolean deviceEditFlag;
 
     public DeviceListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
@@ -163,7 +166,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
 
         private RelativeLayout devicesOperationLayout;
         private ImageView devicesCloseOperation;
-        private TextView shareDevices;
+        private TextView editDevices;
         private TextView devicesDelete;
         private TextView trackingDeviceName;
         private ImageView deviceMenubar;
@@ -179,14 +182,14 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             super(itemView);
             trackingDeviceName = itemView.findViewById(R.id.trackingDeviceName);
             devicesCloseOperation = itemView.findViewById(R.id.devicesCloseOperation);
-            shareDevices = itemView.findViewById(R.id.shareDevices);
+            editDevices = itemView.findViewById(R.id.editDevices);
             devicesDelete = itemView.findViewById(R.id.devicesDelete);
             deviceMenubar = itemView.findViewById(R.id.deviceMenubar);
             devicesOperationLayout = itemView.findViewById(R.id.devicesOperationLayout);
             deviceMemberIcon = itemView.findViewById(R.id.deviceMemberIcon);
             deviceListLayout = itemView.findViewById(R.id.deviceListLayout);
             deviceMenubar.setOnClickListener(this);
-            shareDevices.setOnClickListener(this);
+            editDevices.setOnClickListener(this);
             devicesDelete.setOnClickListener(this);
             devicesCloseOperation.setOnClickListener(this);
         }
@@ -204,6 +207,14 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
                     //DeviceListAdapter.this.position = getAdapterPosition();
                     position = getAdapterPosition();
                     deleteAlertBox(position);
+                    break;
+                case R.id.editDevices:
+                    deviceEditFlag = true;
+                    Intent intent = new Intent(mContext, EditMemberDetailsActivity.class);
+                    intent.putExtra(Constant.GROUP_ID, mList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(Constant.GROUPNAME, mList.get(getAdapterPosition()).getGroupName());
+                    intent.putExtra(Constant.CONSENT_ID, mList.get(getAdapterPosition()).getConsentId());
+                    mContext.startActivity(intent);
                     break;
                 default:
                     // Todo

@@ -22,6 +22,7 @@ import com.jio.devicetracker.database.pojo.request.EditMemberDetailsRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.adapter.DeviceListAdapter;
 import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 
@@ -100,6 +101,9 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
             Intent intent = new Intent(EditMemberDetailsActivity.this, DashboardMainActivity.class);
             if(PeopleMemberListAdapter.peopleEditFlag && !isFromMap){
                 intent.putExtra(Constant.Add_People, true);
+            } else if (DeviceListAdapter.deviceEditFlag){
+                intent.putExtra(Constant.Add_People, false);
+                intent.putExtra(Constant.Add_Device, true);
             } else {
                 intent.putExtra(Constant.Add_People, false);
                 intent.putExtra(Constant.Add_Device, false);
