@@ -51,6 +51,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
     private FrameLayout frameLayout;
     private ImageView userIconCreateGroup;
     public static String groupIdFromPeopleFlow;
+    public static boolean addMemberInGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +148,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
                 memberName = trackeeName;
                 memberNumber = trackeeNumber;
                 isGroupMember = false;
+                addMemberInGroup = true;
                 createdGroupId = groupIdFromPeopleFlow;
                 isFromDevice = false;
             } else if (DashboardMainActivity.flowFromDevice) {

@@ -86,6 +86,7 @@ import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.menu.HowToUseActivity;
 import com.jio.devicetracker.view.adapter.DashboardAdapter;
@@ -383,10 +384,11 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private class ApproveConsentRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if(error.networkResponse.statusCode == 401){
-
+            if(error.networkResponse.statusCode == Constant.STATUS_CODE_401){
+                showCustomAlertWithText(Constant.CONSENT_NOT_APPROVED_MESSAGE);
+            } else {
+                showCustomAlertWithText(Constant.CONSENT_NOT_APPROVED_MESSAGE);
             }
-            Toast.makeText(DashboardMainActivity.this, Constant.CONSENT_NOT_APPROVED_MESSAGE, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -425,10 +427,12 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private class RejectConsentRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if(error.networkResponse.statusCode == 401){
-
+            if(error.networkResponse.statusCode == Constant.STATUS_CODE_401){
+                showCustomAlertWithText(Constant.CONSENT_NOT_REJECTED_MESSAGE);
+            } else {
+                showCustomAlertWithText(Constant.CONSENT_NOT_REJECTED_MESSAGE);
             }
-            Toast.makeText(DashboardMainActivity.this, Constant.CONSENT_NOT_REJECTED_MESSAGE, Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -751,4 +755,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         startActivity(new Intent(this, SigninSignupActivity.class));
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage) {
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
 }

@@ -138,6 +138,7 @@
             android:layout_marginTop="@dimen/ten_dp"
             android:text="Resend invite"
             android:textColor="@color/white"
+            android:visibility="gone"
             android:textSize="@dimen/seventeen_dp" />
 
         <View
@@ -148,7 +149,9 @@
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/ten_dp"
             android:layout_marginRight="@dimen/fourteen_dp"
-            android:background="@color/light_hash" />
+            android:background="@color/light_hash"
+            android:visibility="gone"
+            />
 
         <TextView
             android:id="@+id/deleteIndividualUser"
