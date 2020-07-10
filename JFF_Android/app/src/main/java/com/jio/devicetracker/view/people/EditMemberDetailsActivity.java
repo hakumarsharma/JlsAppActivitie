@@ -40,6 +40,9 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setTypeface(Util.mTypeface(this, 5));
         toolbarTitle.setText(Constant.EDIT_MEMBER);
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
         Intent intent = getIntent();
         userName = findViewById(R.id.editUserName);
         consentId = intent.getStringExtra(Constant.CONSENT_ID);
@@ -75,10 +78,18 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
 
     @Override
     public void onClick(View v) {
-        EditMemberDetailsData data = new EditMemberDetailsData();
-        data.setName(userName.getText().toString());
-        Util.getInstance().showProgressBarDialog(this);
-        GroupRequestHandler.getInstance(this).handleRequest(new EditMemberDetailsRequest(new EditdetailSuccessListener(), new EditdetailErrorListener(), data, consentId, mDbmanager.getAdminLoginDetail().getUserId()));
+
+        switch (v.getId()){
+            case R.id.back:
+                finish();
+                break;
+            case R.id.updateName:
+                EditMemberDetailsData data = new EditMemberDetailsData();
+                data.setName(userName.getText().toString());
+                Util.getInstance().showProgressBarDialog(this);
+                GroupRequestHandler.getInstance(this).handleRequest(new EditMemberDetailsRequest(new EditdetailSuccessListener(), new EditdetailErrorListener(), data, consentId, mDbmanager.getAdminLoginDetail().getUserId()));
+                break;
+        }
     }
 
     private class EditdetailSuccessListener implements Response.Listener {
