@@ -52,6 +52,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.location.LocationActivity;
+import com.jio.devicetracker.view.location.ShareLocationActivity;
 import com.jio.devicetracker.view.menu.ActiveMemberActivity;
 
 import java.util.ArrayList;
@@ -74,6 +75,9 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
     private String userId;
     private DBManager mDbManager;
     private String groupId;
+    private boolean gotoSharedLocation;
+    private String memberName;
+    private String deviceNumber;
 
     public TrackingYouListAdapter(List<HomeActivityListData> mList, Context mContext) {
         this.mList = mList;
@@ -105,6 +109,50 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         } else {
             holder.trackingYouGroupMemberIcon.setImageResource(R.drawable.ic_family_group);
         }
+        if (mList != null && !mList.isEmpty() && trackingYou.getConsentsCount() <= 4) {
+            switch (trackingYou.getConsentsCount()) {
+                case 1:
+                    holder.motherIcon.setVisibility(View.VISIBLE);
+                    holder.fatherIcon.setVisibility(View.INVISIBLE);
+                    holder.kidIcon.setVisibility(View.INVISIBLE);
+                    holder.dogIcon.setVisibility(View.INVISIBLE);
+                    break;
+                case 2:
+                    if (trackingYou.getConsentId() != null) {
+                        holder.motherIcon.setVisibility(View.INVISIBLE);
+                        holder.fatherIcon.setVisibility(View.INVISIBLE);
+                        holder.kidIcon.setVisibility(View.INVISIBLE);
+                        holder.dogIcon.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.motherIcon.setVisibility(View.VISIBLE);
+                        holder.fatherIcon.setVisibility(View.VISIBLE);
+                        holder.kidIcon.setVisibility(View.INVISIBLE);
+                        holder.dogIcon.setVisibility(View.INVISIBLE);
+                    }
+                    break;
+                case 3:
+                    holder.motherIcon.setVisibility(View.VISIBLE);
+                    holder.fatherIcon.setVisibility(View.VISIBLE);
+                    holder.kidIcon.setVisibility(View.VISIBLE);
+                    holder.dogIcon.setVisibility(View.INVISIBLE);
+                    break;
+                case 4:
+                    holder.motherIcon.setVisibility(View.VISIBLE);
+                    holder.fatherIcon.setVisibility(View.VISIBLE);
+                    holder.kidIcon.setVisibility(View.VISIBLE);
+                    holder.dogIcon.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    break;
+            }
+            holder.trackingYouNumberOfUsers.setText("");
+        } else {
+            holder.motherIcon.setVisibility(View.VISIBLE);
+            holder.fatherIcon.setVisibility(View.VISIBLE);
+            holder.kidIcon.setVisibility(View.VISIBLE);
+            holder.dogIcon.setVisibility(View.VISIBLE);
+            holder.trackingYouNumberOfUsers.setText("+ " + (trackingYou.getConsentsCount() - 4) + " invited");
+        }
     }
 
     @Override
@@ -124,6 +172,11 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         private TextView viewMembers;
         private ImageView trackingYouGroupMemberIcon;
         private View reverseTrackLine;
+        private ImageView motherIcon;
+        private ImageView fatherIcon;
+        private ImageView kidIcon;
+        private ImageView dogIcon;
+        private TextView trackingYouNumberOfUsers;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -143,6 +196,11 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
             viewMembers.setOnClickListener(this);
             trackingYouGroupMemberIcon = itemView.findViewById(R.id.trackingYouGroupMemberIcon);
             reverseTrackLine = itemView.findViewById(R.id.reverseTrackLine);
+            motherIcon = itemView.findViewById(R.id.motherIcon);
+            fatherIcon = itemView.findViewById(R.id.fatherIcon);
+            kidIcon = itemView.findViewById(R.id.kidIcon);
+            dogIcon = itemView.findViewById(R.id.dogIcon);
+            trackingYouNumberOfUsers = itemView.findViewById(R.id.trackingYou_numberOfUsers);
         }
 
         @Override
@@ -169,7 +227,13 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                     break;
                 case R.id.reverseTrack:
                     TrackingYouListAdapter.this.trackingYouOprationLayout = trackingYouOprationLayout;
-                    makeGetLocationAPICall(mList.get(position));
+                    HomeActivityListData mData = mList.get(position);
+                    if(mData.getConsentId() != null) {
+                        gotoSharedLocation = true;
+                    }
+                    memberName = mData.getName();
+                    deviceNumber = mData.getNumber();
+                    makeGetLocationAPICall(mData);
                     break;
                 case R.id.viewMembers:
                     TrackingYouListAdapter.this.trackingYouOprationLayout = trackingYouOprationLayout;
@@ -214,19 +278,32 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
             if (!mList.isEmpty()) {
                 for (SearchEventResponse.Data data : mList) {
                     if (!data.getUserId().equalsIgnoreCase(userId)) {
-                    for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
-                        if (grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
+                        for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
+                            if (grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
                                 MapData mapData = new MapData();
                                 mapData.setLatitude(data.getLocation().getLat());
                                 mapData.setLongitude(data.getLocation().getLng());
                                 mapData.setName(grpMembers.getName());
+                                mapData.setConsentId(grpMembers.getConsentId());
                                 mapDataList.add(mapData);
                             }
                         }
                     }
                 }
             }
-            goToMapActivity(mapDataList);
+            if(gotoSharedLocation) {
+                gotoSharedLocation = false;
+                Intent intent = new Intent(mContext, ShareLocationActivity.class);
+                intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+                intent.putExtra(Constant.GROUP_STATUS, Constant.ACTIVE);
+                intent.putExtra(Constant.MEMBER_NAME, memberName);
+                intent.putExtra(Constant.GROUP_ID, groupId);
+                intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+                intent.putExtra(Constant.CONSENT_STATUS, Constant.APPROVED);
+                mContext.startActivity(intent);
+            } else {
+                goToMapActivity(mapDataList);
+            }
         }
     }
 
