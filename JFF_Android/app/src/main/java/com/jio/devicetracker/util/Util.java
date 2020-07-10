@@ -276,7 +276,7 @@ public final class Util extends AppCompatActivity {
      */
     public String getTrackingExpirirationDuration(long fromTime, long toTime) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy");
             Date sessionEndTime = sdf.parse(sdf.format(new Date(toTime)));
             long today = Calendar.getInstance().getTimeInMillis();
             Date toDate = sdf.parse(sdf.format(new Date(today)));
