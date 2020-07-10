@@ -58,6 +58,7 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.adapter.ChooseGroupListAdapter;
 import com.jio.devicetracker.view.dashboard.DashboardActivity;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -206,6 +207,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
 
     private void gotoCreateGroupActivity() {
         Intent createGroupIntent = new Intent(this, CreateGroupActivity.class);
+        DashboardMainActivity.flowFromDevice = true;
         createGroupIntent.putExtra(Constant.TRACKEE_NAME, trackeeNameEditText.getText().toString());
         createGroupIntent.putExtra(Constant.TRACKEE_NUMBER, phoneNumber);
         startActivity(createGroupIntent);
