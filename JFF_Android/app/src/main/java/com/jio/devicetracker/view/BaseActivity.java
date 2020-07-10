@@ -209,6 +209,12 @@ public class BaseActivity extends AppCompatActivity {
                         intent.putExtra(Constant.Add_Device, true);
                     }
                     startActivity(intent);
+                } else if(CreateGroupActivity.addMemberInGroup) {
+                    Util.progressDialog.dismiss();
+                    Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
+                    intent.putExtra(Constant.Add_People, false);
+                    intent.putExtra(Constant.Add_Device, false);
+                    startActivity(intent);
                 } else {
                     Util.progressDialog.dismiss();
                     Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
