@@ -44,6 +44,7 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
 
     private String groupId;
     private DBManager mDbManager;
+    public static boolean isTrackedByYouList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +61,11 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
         mRecyclerList.setLayoutManager(linearLayoutManager);
         if (intent.getStringExtra(Constant.ACTIVE_MEMBER_TITLE) != null) {
             toolbarTitle.setText(Constant.ACTIVE_MEMBER_TITLE);
+            isTrackedByYouList = true;
             ActiveMemberListAdapter mAdapter = new ActiveMemberListAdapter(addTrackingYouDataInList(), this);
             mRecyclerList.setAdapter(mAdapter);
         } else {
+            isTrackedByYouList = false;
             toolbarTitle.setText(Constant.EDIT_MEMBER_TITLE);
             ActiveMemberListAdapter mAdapter = new ActiveMemberListAdapter(addTrackedByYouDataInList(), this);
             mRecyclerList.setAdapter(mAdapter);
