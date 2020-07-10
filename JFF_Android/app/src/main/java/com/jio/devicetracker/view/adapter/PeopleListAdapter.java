@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -211,8 +210,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                 case R.id.remove_from_group:
                     position = getAdapterPosition();
                     deleteAlertBox(position);
-                    /*PeopleListAdapter.this.layoutOps = layoutOps;
-                    makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition(), true);*/
                     break;
                 case R.id.share_invite:
                     PeopleListAdapter.this.layoutOps = layoutOps;
@@ -270,7 +267,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.code() == 200) {
                     Util.progressDialog.dismiss();
-                    Toast.makeText(mContext, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mDbManager.deleteSelectedDataFromGroupMember(groupMemberDataList.getConsentId());
                     removeItem(position);
                     if (!isRemoveFromGroup) {
