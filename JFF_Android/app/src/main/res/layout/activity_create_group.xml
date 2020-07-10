@@ -61,7 +61,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="28dp"
         android:background="@drawable/create_group_style"
-        android:text="Add"
+        android:text="Create"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="17dp" />
