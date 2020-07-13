@@ -90,6 +90,9 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
                 Util.getInstance().showProgressBarDialog(this);
                 GroupRequestHandler.getInstance(this).handleRequest(new EditMemberDetailsRequest(new EditdetailSuccessListener(), new EditdetailErrorListener(), data, consentId, mDbmanager.getAdminLoginDetail().getUserId()));
                 break;
+            default:
+                // Todo
+                break;
         }
     }
 

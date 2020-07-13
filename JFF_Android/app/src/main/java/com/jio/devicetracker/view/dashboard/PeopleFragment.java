@@ -268,12 +268,6 @@ public class PeopleFragment extends Fragment {
         startActivity(intent);
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     /**
      * Parse the response and store in DB(Group Table and Member table)
      */

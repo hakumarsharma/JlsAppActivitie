@@ -44,8 +44,8 @@ import com.jio.devicetracker.util.Util;
 
 public class EditUserProfileActivity extends Activity implements View.OnClickListener {
 
-    private  TextView userName;
-    private  EditText userEmail;
+    private TextView userName;
+    private EditText userEmail;
     private DBManager mDbManager;
     private EditText userNumber;
 
@@ -56,11 +56,10 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
         Button updateBtn = findViewById(R.id.update_btn);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.EDIT_PROFILE_TITLE);
-        title.setTypeface(Util.mTypeface(this,5));
+        title.setTypeface(Util.mTypeface(this, 5));
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         mDbManager = new DBManager(this);
-        Intent intent = getIntent();
         userName = findViewById(R.id.update_edit_name);
         userNumber = findViewById(R.id.update_edit_number);
         userEmail = findViewById(R.id.update_edit_email);
@@ -73,25 +72,24 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.back:
                 finish();
                 break;
 
             case R.id.update_btn:
-                if(userName.getText().toString().isEmpty()){
+                if (userName.getText().toString().isEmpty()) {
                     userName.setError(Constant.NAME_VALIDATION);
                     return;
                 }
-                if(userEmail.getText().toString().isEmpty() && Util.isValidEmailId(userEmail.getText().toString())){
+                if (userEmail.getText().toString().isEmpty() && Util.isValidEmailId(userEmail.getText().toString())) {
                     userEmail.setError(Constant.VALID_EMAIL_ID);
                     return;
                 }
                 EditMemberDetailsData data = new EditMemberDetailsData();
                 data.setName(userName.getText().toString());
-                long epochTime = Util.getInstance().convertTimeToEpochtime();
                 String userId = mDbManager.getAdminLoginDetail().getUserId();
-                GroupRequestHandler.getInstance(this).handleRequest(new EditUserDetailsRequest(new EditUserSuccessListener(), new EditUserErrorListener(), data, epochTime, userId));
+                GroupRequestHandler.getInstance(this).handleRequest(new EditUserDetailsRequest(new EditUserSuccessListener(), new EditUserErrorListener(), data, userId));
                 break;
             default:
                 // Todo
@@ -102,22 +100,22 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
     private class EditUserSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-           mDbManager.updateAdminLoginTable(userNumber.getText().toString(),userEmail.getText().toString(),userName.getText().toString());
-           gotoNavigateUserProfileActivity();
+            mDbManager.updateAdminLoginTable(userNumber.getText().toString(), userEmail.getText().toString(), userName.getText().toString());
+            gotoNavigateUserProfileActivity();
         }
     }
 
     private void gotoNavigateUserProfileActivity() {
-        Intent intent = new Intent(this,NavigateUserProfileActivity.class);
+        Intent intent = new Intent(this, NavigateUserProfileActivity.class);
         startActivity(intent);
 
     }
 
-    private class EditUserErrorListener implements Response.ErrorListener{
+    private class EditUserErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
 
-            Toast.makeText(EditUserProfileActivity.this,"User name didn't update ",Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditUserProfileActivity.this, "User name didn't update ", Toast.LENGTH_SHORT).show();
         }
     }
 }

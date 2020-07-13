@@ -43,7 +43,6 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.database.pojo.SearchEventData;
-import com.jio.devicetracker.database.pojo.TrackingYou;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
 import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;

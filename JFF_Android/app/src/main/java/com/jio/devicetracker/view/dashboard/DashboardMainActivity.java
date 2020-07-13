@@ -82,7 +82,6 @@ import com.jio.devicetracker.database.pojo.ApproveRejectConsentData;
 import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
 import com.jio.devicetracker.database.pojo.request.RejectConsentRequest;
 import com.jio.devicetracker.database.pojo.response.ApproveRejectAPIResponse;
-import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.Constant;

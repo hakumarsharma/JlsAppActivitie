@@ -10,15 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AlertHistoryData;
-import com.jio.devicetracker.database.pojo.GroupMemberDataList;
-import com.jio.devicetracker.database.pojo.HomeActivityListData;
 
 import java.util.List;
 
 public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAdapter.ViewHolder>{
 
     private List<AlertHistoryData> mAlertHistoryData;
-    private String dateStatus;
 
     public AlertsFragmentAdapter(List<AlertHistoryData> mAlertHistoryData) {
         this.mAlertHistoryData = mAlertHistoryData;

@@ -247,7 +247,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    /*@RequiresApi(api = Build.VERSION_CODES.O)
     private void handleMapClick(LatLng latLng) {
         mMap.clear();
         addMarker(latLng);
@@ -256,7 +256,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         float distance = distance((float) latLng.latitude, (float) latLng.longitude, (float) Latitude, (float) Longitude);
         int radiusDifference = (int) distance;
         trackGeofenceTransition(radiusDifference);
-    }
+    }*/
 
     private void addMarker(LatLng latLng) {
         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
@@ -352,12 +352,12 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
            // showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
     }*/
-    public float distance(float lat_a, float lng_a, float lat_b, float lng_b) {
+    public float distance(float latA, float lngA, float latB, float lngB) {
         double earthRadius = 3958.75;
-        double latDiff = Math.toRadians(lat_b - lat_a);
-        double lngDiff = Math.toRadians(lng_b - lng_a);
+        double latDiff = Math.toRadians(latB - latA);
+        double lngDiff = Math.toRadians(lngB - lngA);
         double a = Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
-                Math.cos(Math.toRadians(lat_a)) * Math.cos(Math.toRadians(lat_b)) *
+                Math.cos(Math.toRadians(latA)) * Math.cos(Math.toRadians(latB)) *
                         Math.sin(lngDiff / 2) * Math.sin(lngDiff / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double distance = earthRadius * c;

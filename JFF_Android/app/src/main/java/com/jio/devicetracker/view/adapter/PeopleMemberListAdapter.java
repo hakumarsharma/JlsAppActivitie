@@ -41,7 +41,6 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
 import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
-import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
@@ -68,14 +67,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberListAdapter.ViewHolder> {
     private List<HomeActivityListData> mList;
-    private List<HomeActivityListData> deleteDataList;
     private Context mContext;
     private static RecyclerViewClickListener itemListener;
     private DBManager mDbManager;
     private String groupId;
     private int position;
     public static boolean peopleEditFlag;
-    private boolean resendInvite;
     private RelativeLayout individualMemberOperationLayout;
     private HomeActivityListData homeActivityList;
 
@@ -386,7 +383,6 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
      */
     private void makeDeleteGroupAPICall(String groupId,boolean isRemove) {
         this.groupId = groupId;
-        resendInvite = isRemove;
         Util.getInstance().showProgressBarDialog(mContext);
         GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteGroupRequest(new DeleteGroupRequestSuccessListener(), new DeleteGroupRequestErrorListener(), groupId, mDbManager.getAdminLoginDetail().getUserId()));
     }

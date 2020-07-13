@@ -22,8 +22,6 @@ package com.jio.devicetracker.view.device;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -125,13 +123,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         dogIcon.setOnClickListener(this);
         catIcon.setOnClickListener(this);
         otherPetIcon.setOnClickListener(this);
-    }
-
-    // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage) {
-        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
-        alertActivity.show();
-        alertActivity.alertWithOkButton(alertMessage);
     }
 
     @Override
