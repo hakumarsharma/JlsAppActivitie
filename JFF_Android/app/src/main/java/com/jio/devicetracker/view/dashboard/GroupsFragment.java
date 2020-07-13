@@ -156,10 +156,7 @@ public class GroupsFragment extends Fragment {
 
     private boolean checkIfMemberPresentInGroup(String groupId) {
         List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
-        if (mList.size() == 1) {
-            return true;
-        }
-        return false;
+        return mList.size() == 0;
     }
 
     /**

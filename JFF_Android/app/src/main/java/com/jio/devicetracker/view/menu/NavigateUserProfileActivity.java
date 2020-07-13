@@ -59,7 +59,6 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        Intent intent = getIntent();
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.PROFILE_TITLE);
         mDbManager = new DBManager(this);

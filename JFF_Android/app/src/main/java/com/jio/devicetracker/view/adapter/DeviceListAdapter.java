@@ -206,7 +206,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
                 case R.id.devicesDelete:
                     //DeviceListAdapter.this.position = getAdapterPosition();
                     position = getAdapterPosition();
-                    deleteAlertBox(position);
+                    deleteAlertBox();
                     break;
                 case R.id.editDevices:
                     deviceEditFlag = true;
@@ -222,7 +222,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             }
         }
 
-        private void deleteAlertBox(int position) {
+        private void deleteAlertBox() {
             AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
             adb.setTitle(Constant.ALERT_TITLE);
             adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);

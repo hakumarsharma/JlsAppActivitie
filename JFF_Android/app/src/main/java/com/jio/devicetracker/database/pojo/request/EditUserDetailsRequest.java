@@ -13,13 +13,11 @@ public class EditUserDetailsRequest implements IRequest {
     private Response.ErrorListener errorListener;
     private String userId;
     private EditMemberDetailsData data;
-    private long epochTime;
 
-    public EditUserDetailsRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, EditMemberDetailsData data, long epochTime, String userId)
+    public EditUserDetailsRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, EditMemberDetailsData data, String userId)
     {
         this.sucessListener = sucessListener;
         this.errorListener = errorListener;
-        this.epochTime = epochTime;
         this.userId = userId;
         this.data = data;
     }

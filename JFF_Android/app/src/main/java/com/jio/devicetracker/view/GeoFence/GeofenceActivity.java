@@ -51,13 +51,9 @@ import com.jio.devicetracker.view.BaseActivity;
 import java.io.IOException;
 import java.util.List;
 
-public class GeofenceActivity extends BaseActivity implements View.OnClickListener  {
+public class GeofenceActivity extends BaseActivity implements View.OnClickListener {
     private GeofenceMapFragment fragmentMap;
     private EditText addressText;
-    private ImageView menuOption;
-    private Intent intent;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +62,14 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         fragmentMap = new GeofenceMapFragment();
         initUI();
     }
+
     private void initUI() {
         Toolbar toolbar = findViewById(R.id.geofenceToolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar;
         actionBar = getSupportActionBar();
-        intent = getIntent();
-        boolean editGeofence = intent.getBooleanExtra("EditGeofence",false);
+        Intent intent = getIntent();
+        boolean editGeofence = intent.getBooleanExtra("EditGeofence", false);
 
         ColorDrawable colorDrawable
                 = new ColorDrawable(Color.parseColor("#1C60AB"));
@@ -97,21 +94,21 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.map_fragment, fragmentMap).commit();
 
-        if(editGeofence){
-            LatLng latlang = new LatLng(intent.getDoubleExtra(Constant.LATITUDE,0.0d),intent.getDoubleExtra(Constant.LONGNITUDE,0.0d));
-            addFragment(latlang,intent.getIntExtra("Radius",0));
+        if (editGeofence) {
+            LatLng latlang = new LatLng(intent.getDoubleExtra(Constant.LATITUDE, 0.0d), intent.getDoubleExtra(Constant.LONGNITUDE, 0.0d));
+            addFragment(latlang, intent.getIntExtra("Radius", 0));
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.search:
                 LatLng latlng = getLocationFromAddress(addressText.getText().toString());
-                if(latlng != null) {
-                    addFragment(latlng,0);
+                if (latlng != null) {
+                    addFragment(latlng, 0);
                 } else {
-                    Toast.makeText(this,Constant.ADDRESS_MESSAGE,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, Constant.ADDRESS_MESSAGE, Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.clear:
@@ -140,7 +137,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
             }
 
             Address location = address.get(0);
-            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
 
         } catch (IOException ex) {
 
@@ -150,12 +147,12 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         return p1;
     }
 
-    private void addFragment(LatLng latLng,int radius){
+    private void addFragment(LatLng latLng, int radius) {
         Bundle bundle = new Bundle();
         bundle.putDouble(Constant.LATITUDE, latLng.latitude);
         bundle.putDouble(Constant.LONGNITUDE, latLng.longitude);
-        bundle.putBoolean(Constant.CREATE_GEOFENCE,true);
-        if(!(radius ==0)) {
+        bundle.putBoolean(Constant.CREATE_GEOFENCE, true);
+        if (radius != 0) {
             bundle.putInt(Constant.GEOFENCE_RADIUS, radius);
         }
         fragmentMap.setArguments(bundle);
@@ -163,7 +160,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.remove(fragmentMap);
         transaction.addToBackStack(null);
-        transaction.add(R.id.map_fragment,fragmentMap).commit();
+        transaction.add(R.id.map_fragment, fragmentMap).commit();
     }
 
     @Override
@@ -175,10 +172,10 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.edit_geofence:
-                Intent intent = new Intent(this,EditGeofenceActivity.class);
-                if(!addressText.getText().toString().isEmpty()) {
+                Intent intent = new Intent(this, EditGeofenceActivity.class);
+                if (!addressText.getText().toString().isEmpty()) {
                     intent.putExtra(Constant.GEOFENCE_ADDRESS, addressText.getText().toString());
                 }
                 startActivity(intent);

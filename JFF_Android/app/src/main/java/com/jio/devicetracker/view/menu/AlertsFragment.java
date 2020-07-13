@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +15,6 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AlertHistoryData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
-import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.AlertsFragmentAdapter;
@@ -29,10 +27,7 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
     private List<AlertHistoryData> alertHistoryData;
     private TextView alertsMemberName;
     private TextView alertMemberAddress;
-    private ImageView alertBackButton;
-    private ImageView alertNextButton;
     private DBManager mDbManager;
-    private String consentId;
     private int position = 0;
 
     @Override
@@ -41,11 +36,11 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_alerts, container, false);
         alertsMemberName = view.findViewById(R.id.alertsMemberName);
         alertMemberAddress = view.findViewById(R.id.alertMemberAddress);
-        alertBackButton = view.findViewById(R.id.alertBackButton);
-        alertNextButton = view.findViewById(R.id.alertNextButton);
+        ImageView alertBackButton = view.findViewById(R.id.alertBackButton);
+        ImageView alertNextButton = view.findViewById(R.id.alertNextButton);
         alertBackButton.setOnClickListener(this);
         alertNextButton.setOnClickListener(this);
-        consentId = getActivity().getIntent().getStringExtra(Constant.CONSENT_ID);
+        String consentId = getActivity().getIntent().getStringExtra(Constant.CONSENT_ID);
         mDbManager = new DBManager(getActivity());
         getAlertsHistoryAndDisplay(consentId, view);
         alertHistoryData = new ArrayList<>();

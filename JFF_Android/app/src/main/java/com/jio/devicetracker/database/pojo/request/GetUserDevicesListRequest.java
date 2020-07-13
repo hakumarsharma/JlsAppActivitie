@@ -2,14 +2,10 @@ package com.jio.devicetracker.database.pojo.request;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
 import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GetUserDevicesListRequest implements IRequest {
     private Response.Listener sucessListener;
