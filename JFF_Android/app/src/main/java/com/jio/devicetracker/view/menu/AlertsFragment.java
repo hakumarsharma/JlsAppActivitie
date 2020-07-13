@@ -45,16 +45,16 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
         alertNextButton = view.findViewById(R.id.alertNextButton);
         alertBackButton.setOnClickListener(this);
         alertNextButton.setOnClickListener(this);
-        getIndividualMemberList();
-        displayIndividualUserDetail(position);
         consentId = getActivity().getIntent().getStringExtra(Constant.CONSENT_ID);
+        mDbManager = new DBManager(getActivity());
         getAlertsHistoryAndDisplay(consentId, view);
+        alertHistoryData = new ArrayList<>();
+        getIndividualMemberList();
         return view;
     }
 
     private void getIndividualMemberList() {
         List<GroupMemberDataList> groupMemberDataLists = mDbManager.getAllGroupMemberData();
-        alertHistoryData = new ArrayList<>();
         for (GroupMemberDataList groupMemberDataList : groupMemberDataLists) {
             if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
@@ -92,7 +92,6 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getAlertsHistoryAndDisplay(String consentId, View view) {
-        mDbManager = new DBManager(getActivity());
         List<AlertHistoryData> mAlertHistoryListData = mDbManager.getHistoryTableData(consentId);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         RecyclerView mRecyclerView = view.findViewById(R.id.alertsList);

@@ -326,7 +326,7 @@ public class Constant {
     public static final String REFRESH_INTERVAL_SETTING = "Settings";
     public static final String MAP_UPDATION_MSG = "Map will be updated after every ";
     public static final String PENDING = "pending";
-    public static final String RE_SEND_INVITE = "re-send invite";
+    public static final String RE_SEND_INVITE = "Resend invite";
     public static final String CONSENT_PENDING_ADDRESS = "Address will be displayed after consent is approved.";
     public static final String CONSENT_APPROVED_ADDRESS = "Address details are not available.";
     public static final String CONSENT_EXPIRED_ADDRESS = "Consent time expired.Click on send invite present under three dots.";
