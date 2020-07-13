@@ -402,6 +402,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
             Util.progressDialog.dismiss();
             individualMemberOperationLayout.setVisibility(View.GONE);
             removeItem(position);
+            PeopleFragment.checkMemberPresent();
            // if(resendInvite){
                 //HomeActivityListData homeActivityListData = mList.get(position);
                     //addMemberInGroupAPICall(homeActivityListData);

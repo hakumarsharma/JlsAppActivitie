@@ -384,7 +384,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private class ApproveConsentRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if(error.networkResponse.statusCode == Constant.STATUS_CODE_401){
+            if (error.networkResponse.statusCode == Constant.STATUS_CODE_401) {
                 showCustomAlertWithText(Constant.CONSENT_NOT_APPROVED_MESSAGE);
             } else {
                 showCustomAlertWithText(Constant.CONSENT_NOT_APPROVED_MESSAGE);
@@ -427,7 +427,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private class RejectConsentRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if(error.networkResponse.statusCode == Constant.STATUS_CODE_401){
+            if (error.networkResponse.statusCode == Constant.STATUS_CODE_401) {
                 showCustomAlertWithText(Constant.CONSENT_NOT_REJECTED_MESSAGE);
             } else {
                 showCustomAlertWithText(Constant.CONSENT_NOT_REJECTED_MESSAGE);
@@ -495,14 +495,17 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         Intent intent = new Intent(this, NotificationsAlertsActivity.class);
         startActivity(intent);
     }
+
     private void gotoSilentModeActivity() {
         Intent intent = new Intent(this, SilentModeActivity.class);
         startActivity(intent);
     }
+
     private void gotoGroupManagementActivity() {
         Intent intent = new Intent(this, ActiveSessionActivity.class);
         startActivity(intent);
     }
+
     private void gotoSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
@@ -636,7 +639,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                 try {
                     makeMQTTConnection();
                     Thread.sleep(30000);
-                    publishMessage();
+                    if (currentLocation != null) {
+                        publishMessage();
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -650,8 +655,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     public void publishMessage() {
         if (getCurrentLocation() != null) {
             Location location = getCurrentLocation();
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+            if(location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
             String message = "{\"did\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                     "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
             String topic = "jioiot/svcd/tracker/" + userPhoneNumber + "/uc/fwd/locinfo";
