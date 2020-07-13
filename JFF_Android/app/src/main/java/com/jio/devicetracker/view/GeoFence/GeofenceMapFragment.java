@@ -60,6 +60,7 @@ import com.jio.devicetracker.database.pojo.GeofenceDetails;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.location.MapsActivity;
+
 import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -72,13 +73,11 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     public static String TAG = "GeofenceMapFragment";
     public Toolbar toolbar;
     @SuppressWarnings("PMD.AvoidStringBufferField")
-    private static Context context = null;
     //private List<MapData> mapDataList;
-    private LatLng latLng;
     private DBManager mDbManager;
     private GeofenceHelper geofenceHelper;
     private int GEOFENCE_RADIUS_IN_METERS = 200;
-    double Longitude =73.76976049999999;
+    double Longitude = 73.76976049999999;
     double Latitude = 19.9756696;
     private GeofencingClient mGeofencingClient;
     private String GEOFENCE_ID = "JioTrack1";
@@ -106,7 +105,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             lat = getArguments().getDouble(Constant.LATITUDE);
             lang = getArguments().getDouble(Constant.LONGNITUDE);
             editGeofenceRadius = getArguments().getInt(Constant.GEOFENCE_RADIUS);
-            if (!(editGeofenceRadius == 0)) {
+            if (editGeofenceRadius != 0) {
                 GEOFENCE_RADIUS_IN_METERS = editGeofenceRadius;
             }
 
@@ -117,7 +116,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
 
             }*/
         }
-        context = getContext();
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         mDbManager = new DBManager(getActivity());
@@ -173,9 +171,9 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         mMap.clear();
         //if (mapDataList.isEmpty()) {
         MarkerOptions markerOptions = new MarkerOptions();
-        if (!(geofenceDetails.getLat() == 0) && !(geofenceDetails.getLng() == 0) && !createGeofence) {
+        if (geofenceDetails.getLat() != 0 && geofenceDetails.getLng() != 0 && !createGeofence) {
             geoFenceLatlng = new LatLng(geofenceDetails.getLat(), geofenceDetails.getLng());
-        } else if(createGeofence) {
+        } else if (createGeofence) {
             geoFenceLatlng = new LatLng(lat, lang);
         } else {
             geoFenceLatlng = new LatLng(Latitude, Longitude);
@@ -263,7 +261,9 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         mMap.addMarker(markerOptions);
     }
 
-  /*  *//**
+    /*  */
+
+    /**
      * Fetch trackee location after every 30 seconds
      *//*
     public class FetchLocation implements Runnable {
@@ -279,7 +279,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             }
         }
     }*/
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -367,11 +366,11 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         return new Float(distance * meterConversion).floatValue();
     }
 
-    public void trackGeofenceTransition(int distance){
-        if(distance < GEOFENCE_RADIUS_IN_METERS){
+    public void trackGeofenceTransition(int distance) {
+        if (distance < GEOFENCE_RADIUS_IN_METERS) {
             geoFenceEntryExit = true;
             notificationHelper.sendHighPriorityNotification("GEOFENCE_TRANSITION_ENTER", "", MapsActivity.class);
-        } else if(distance > GEOFENCE_RADIUS_IN_METERS && geoFenceEntryExit ) {
+        } else if (distance > GEOFENCE_RADIUS_IN_METERS && geoFenceEntryExit) {
             geoFenceEntryExit = false;
             notificationHelper.sendHighPriorityNotification("GEOFENCE_TRANSITION_EXIT", "", MapsActivity.class);
         }

@@ -47,7 +47,6 @@ import com.jio.devicetracker.database.pojo.response.GetUserDevicesListResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;

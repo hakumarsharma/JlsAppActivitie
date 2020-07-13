@@ -254,7 +254,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
             adb.setIcon(android.R.drawable.ic_dialog_alert);
             adb.setPositiveButton("OK", (dialog, which) -> {
                 PeopleMemberListAdapter.this.individualMemberOperationLayout = individualMemberOperationLayout;
-                makeDeleteGroupAPICall(mList.get(position).getGroupId(),true);
+                makeDeleteGroupAPICall(mList.get(position).getGroupId());
 
             });
             adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -381,7 +381,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
     /**
      * Delete the Group and update the database
      */
-    private void makeDeleteGroupAPICall(String groupId,boolean isRemove) {
+    private void makeDeleteGroupAPICall(String groupId) {
         this.groupId = groupId;
         Util.getInstance().showProgressBarDialog(mContext);
         GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteGroupRequest(new DeleteGroupRequestSuccessListener(), new DeleteGroupRequestErrorListener(), groupId, mDbManager.getAdminLoginDetail().getUserId()));
