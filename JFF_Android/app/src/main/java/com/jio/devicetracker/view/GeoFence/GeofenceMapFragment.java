@@ -22,7 +22,6 @@ package com.jio.devicetracker.view.geofence;
 
 import android.Manifest;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
