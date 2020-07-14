@@ -47,6 +47,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.EditMemberActivity;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.dashboard.GroupsFragment;
 import com.jio.devicetracker.view.device.AddDeviceActivity;
 
@@ -254,6 +255,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                     break;
                 case R.id.addNewMember:
                     position = getAdapterPosition();
+                    DashboardMainActivity.flowFromGroup = true;
                     Intent intent = new Intent(mContext, AddDeviceActivity.class);
                     intent.putExtra(Constant.GROUP_ID, mList.get(position).getGroupId());
                     mContext.startActivity(intent);

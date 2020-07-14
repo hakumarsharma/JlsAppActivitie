@@ -38,12 +38,17 @@ import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddDeviceData;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.SearchDeviceStatusData;
 import com.jio.devicetracker.database.pojo.request.AddDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
+import com.jio.devicetracker.database.pojo.request.GetUserDevicesListRequest;
+import com.jio.devicetracker.database.pojo.request.SearchDeviceStatusRequest;
 import com.jio.devicetracker.database.pojo.response.AddDeviceResponse;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
+import com.jio.devicetracker.database.pojo.response.GetUserDevicesListResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
@@ -51,6 +56,7 @@ import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.adapter.ChooseGroupListAdapter;
+import com.jio.devicetracker.view.dashboard.DashboardActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,17 +181,17 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             case R.id.createGroup:
                 isNavigateToCreateGroup = true;
                 isAddLater = false;
-                makeVerifyAndAssignAPICall();
+                getUserDevicesList();
                 break;
             case R.id.addLater:
                 isNavigateToCreateGroup = false;
                 isAddLater = true;
-                makeVerifyAndAssignAPICall();
+                getUserDevicesList();
                 break;
             case R.id.continueChooseGroup:
                 isNavigateToCreateGroup = false;
                 isAddLater = false;
-                makeVerifyAndAssignAPICall();
+                getUserDevicesList();
                 break;
             default:
                 // Todo
@@ -444,9 +450,69 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private class AddDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-           Toast.makeText(ChooseGroupActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
+           Toast.makeText(ChooseGroupActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADD, Toast.LENGTH_SHORT).show();
         }
     }
 
+
+    /**
+     * Get User Devices list API call
+     */
+    private void getUserDevicesList(){
+        AdminLoginData adminLoginDetail = mDbManager.getAdminLoginDetail();
+        List<String> data = new ArrayList<>();
+        if (adminLoginDetail != null) {
+            data.add(adminLoginDetail.getUserId());
+            SearchDeviceStatusData searchDeviceStatusData = new SearchDeviceStatusData();
+            SearchDeviceStatusData.Device device = searchDeviceStatusData.new Device();
+            device.setUsersAssigned(data);
+            searchDeviceStatusData.setDevice(device);
+            GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new GetUserDevicesListRequest(new ChooseGroupActivity.getDeviceRequestSuccessListener(), new ChooseGroupActivity.getDeviceRequestErrorListener(),searchDeviceStatusData));
+        }
+    }
+
+    /**
+     * Get Devices list API call success listener
+     */
+    private class getDeviceRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GetUserDevicesListResponse getDeviceResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetUserDevicesListResponse.class);
+            if (getDeviceResponse.getCode() == 200) {
+                boolean isNumberExists = false;
+              for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData() ){
+
+                // for (GetUserDevicesListResponse.Devices devices : data.getDevices()){
+                       if (data.getDevices().getPhone().equalsIgnoreCase(phoneNumber)) {
+                           isNumberExists = true;
+                           break;
+                       }
+                 // }
+
+              }
+                if (isNumberExists){
+                    if (isNavigateToCreateGroup){
+                        gotoCreateGroupActivity();
+                    }else if (isAddLater){
+                        createGroupAndAddContactDetails();
+                    }else {
+                        addMemberToCreatedGroup(groupId);
+                    }
+                }else {
+                    makeVerifyAndAssignAPICall();
+                }
+            }
+        }
+    }
+
+    /**
+     * Get Devices list API call error listener
+     */
+    private class getDeviceRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Toast.makeText(ChooseGroupActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADD, Toast.LENGTH_SHORT).show();
+        }
+    }
 }
 
