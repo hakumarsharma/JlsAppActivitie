@@ -221,14 +221,13 @@ public class DBManager {
      * @param latLng
      * @param radius
      */
-    public void updateGeofenceDetailInGroupMemberTable(LatLng latLng, int radius ,String deviceNumber) {
+    public void updateGeofenceDetailInGroupMemberTable(LatLng latLng, int radius, String deviceNumber) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.LAT, latLng.latitude);
         values.put(DatabaseHelper.LON, latLng.longitude);
         values.put(DatabaseHelper.RADIUS, radius);
         mDatabase.update(DatabaseHelper.TABLE_GROUP_MEMBER, values, DatabaseHelper.DEVICE_NUM + "= " + deviceNumber, null);
-
     }
 
     /**
@@ -238,13 +237,13 @@ public class DBManager {
      * @param emailId
      * @param name
      */
-    public void updateAdminLoginTable(String phoneNumber, String emailId,String name) {
+
+    public void updateAdminLoginTable(String phoneNumber, String emailId, String name) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.USER_NAME,name);
+        values.put(DatabaseHelper.USER_NAME, name);
         values.put(DatabaseHelper.EMAIL, emailId);
         mDatabase.update(DatabaseHelper.TABLE_USER_LOGIN, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
-
     }
 
     /**
