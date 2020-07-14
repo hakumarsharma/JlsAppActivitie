@@ -22,5 +22,60 @@
 
 package com.jio.devicetracker.view.menu.settings;
 
-public class PollingFrequencyActivity {
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+
+import com.jio.devicetracker.R;
+import com.jio.devicetracker.util.Constant;
+
+public class PollingFrequencyActivity extends Activity implements AdapterView.OnItemSelectedListener,View.OnClickListener {
+
+    String[] pollingFreq = { "5  |  min", "10  |  min", "15  |  min", "20  |  min", "25  |  min", "30  |  min", "35  |  min", "40  |  min", "45  |  min","50  |  min"};
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_polling_frequency);
+
+        TextView title = findViewById(R.id.toolbar_title);
+        title.setText(Constant.POLLING_FREQUENCY);
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setOnClickListener(this);
+        backBtn.setVisibility(View.VISIBLE);
+
+        //Getting the instance of Spinner and applying OnItemSelectedListener on it
+        Spinner spin = (Spinner) findViewById(R.id.freq_spinner);
+        spin.setOnItemSelectedListener(this);
+
+        //Creating the ArrayAdapter instance having the frequency list
+        ArrayAdapter aa = new ArrayAdapter(this,R.layout.spinner_item,pollingFreq);
+        aa.setDropDownViewResource(R.layout.spinner_item);
+        //Setting the ArrayAdapter data on the Spinner
+        spin.setAdapter(aa);
+
+    }
+
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
