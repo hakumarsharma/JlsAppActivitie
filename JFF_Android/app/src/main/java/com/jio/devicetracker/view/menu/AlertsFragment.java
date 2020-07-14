@@ -40,6 +40,7 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.AlertsFragmentAdapter;
+import com.jio.devicetracker.view.geofence.GeofenceMapFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,9 +63,8 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
         ImageView alertNextButton = view.findViewById(R.id.alertNextButton);
         alertBackButton.setOnClickListener(this);
         alertNextButton.setOnClickListener(this);
-        String consentId = getActivity().getIntent().getStringExtra(Constant.CONSENT_ID);
         mDbManager = new DBManager(getActivity());
-        getAlertsHistoryAndDisplay(consentId, view);
+        getAlertsHistoryAndDisplay(GeofenceMapFragment.consentId, view);
         alertHistoryData = new ArrayList<>();
         getIndividualMemberList();
         return view;
@@ -98,12 +98,10 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
         if (v.getId() == R.id.alertBackButton) {
             if (position > 0) {
                 displayIndividualUserDetail(--position);
-                Util.getInstance().createNotificationChannel(getActivity());
             }
         } else if (v.getId() == R.id.alertNextButton) {
             if (position < alertHistoryData.size() - 1) {
                 displayIndividualUserDetail(++position);
-                Util.getInstance().createNotificationChannel(getActivity());
             }
         }
     }
