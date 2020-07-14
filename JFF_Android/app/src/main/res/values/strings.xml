@@ -94,6 +94,9 @@
     <string name="battery_desc">Select minimum battery charge, below which the you will get alert.</string>
     <string name="repeat">Repeat</string>
     <string name="repeat_desc">Repeat alert will receive if you don’t react to notification</string>
+    <string name="polling_frequency">Polling frequency</string>
+    <string name="polling_freq_text">Configure Set the interval at which you want to receive the location</string>
+    <string name="select_time">Select time</string>
 
     <string-array name="device_type_array">
         <item>People Tracker</item>

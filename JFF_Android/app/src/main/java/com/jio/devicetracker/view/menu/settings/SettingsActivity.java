@@ -65,6 +65,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
         RelativeLayout sos = findViewById(R.id.sos_layout);
         sos.setOnClickListener(this);
         RelativeLayout pollingfrequency = findViewById(R.id.polling_frequency_layout);
+        pollingfrequency.setOnClickListener(this);
         TextView geofenceTitle = findViewById(R.id.geofence);
         TextView lowBatteryTitle = findViewById(R.id.low_battery);
         TextView sosTitle = findViewById(R.id.sos);
@@ -90,6 +91,8 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
             case R.id.sos_layout :
                 break;
             case R.id.polling_frequency_layout :
+                Intent pollingFreq = new Intent(getApplicationContext(), PollingFrequencyActivity.class);
+                startActivity(pollingFreq);
                 break;
         }
     }

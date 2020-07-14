@@ -116,7 +116,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/exit_cardView"
+        android:id="@+id/repeat_cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/battery_cardView"
@@ -132,7 +132,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/geofence_exit_img"
+            android:id="@+id/repeat_img"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
@@ -140,10 +140,10 @@
             android:src="@drawable/repeat"/>
 
         <TextView
-            android:id="@+id/geofence_exit_text"
+            android:id="@+id/repeat_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/geofence_exit_img"
+            android:layout_toRightOf="@+id/repeat_img"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:text="@string/repeat"
@@ -161,14 +161,14 @@
             android:checked="true"/>
 
         <TextView
-            android:id="@+id/geofence_exit_desc_text"
+            android:id="@+id/repeat_desc_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/geofence_exit_img"
+            android:layout_toRightOf="@+id/repeat_img"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="16dp"
-            android:layout_below="@+id/geofence_exit_text"
+            android:layout_below="@+id/repeat_text"
             android:text="@string/repeat_desc"
             android:textColor="@color/mine_shaft"
             android:layout_marginBottom="14dp"
