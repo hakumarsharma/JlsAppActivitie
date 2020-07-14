@@ -31,6 +31,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -48,11 +50,13 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.view.location.LocationActivity;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -594,6 +598,29 @@ public final class Util extends AppCompatActivity {
                 .setAutoCancel(true);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(Constant.NOTIFICATION__ID, builder.build());
+    }
+
+    /**
+     * Returns real address based on Lat and Long(Geo Coding)
+     *
+     * @param latitude
+     * @param longitude
+     * @return
+     */
+    public static String getAddressFromLocation(double latitude, double longitude,Context context) {
+        Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
+        StringBuilder strAddress = new StringBuilder();
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (!addresses.isEmpty()) {
+                Address fetchedAddress = addresses.get(0);
+                strAddress.setLength(0);
+                strAddress.append(fetchedAddress.getAddressLine(0)).append(" ");
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return strAddress.toString();
     }
 
 }

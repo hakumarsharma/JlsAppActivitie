@@ -1,3 +1,23 @@
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.jio.devicetracker.view.location;
 
 import androidx.fragment.app.FragmentTransaction;
@@ -34,6 +54,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     private List<MapData> mapDataList;
     private RelativeLayout menuLayout;
     private String deviceNumber;
+    private String groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +85,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.map_fragment, fragmentMap).commit();
         mapDataList = getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
+        groupId = getIntent().getStringExtra(Constant.GROUP_ID);
         deviceNumber = getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         if (getIntent().getStringExtra(Constant.MEMBER_NAME) != null) {
             memberName.setText(getIntent().getStringExtra(Constant.MEMBER_NAME));
@@ -101,6 +123,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 Intent intent = new Intent(this, GeofenceActivity.class);
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
                 intent.putExtra(Constant.MEMBER_NAME, memberName);
+                intent.putExtra(Constant.GROUP_ID,groupId);
                 intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
                 startActivity(intent);
                 break;
