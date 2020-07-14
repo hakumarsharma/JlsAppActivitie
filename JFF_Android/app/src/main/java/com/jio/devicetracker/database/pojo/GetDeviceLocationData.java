@@ -1,4 +1,3 @@
-
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
@@ -24,6 +23,7 @@
 /**
  * This is the pojo class which is helping to  maintain the get device location api data.
  */
+
 package com.jio.devicetracker.database.pojo;
 
 public class GetDeviceLocationData {
