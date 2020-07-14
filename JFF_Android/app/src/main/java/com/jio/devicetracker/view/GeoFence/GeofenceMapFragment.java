@@ -27,21 +27,17 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.location.Geofence;
@@ -70,12 +66,9 @@ import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.location.MapsActivity;
 import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static android.content.Context.LOCATION_SERVICE;
 
 public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
@@ -108,6 +101,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private double lang;
     private GeofenceDetails geofenceDetails;
     private AlertHistoryData alertHistoryData;
+    public static String consentId;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -341,7 +335,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         public void onResponse(Object response) {
            // Util.progressDialog.dismiss();
             SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
-            List<MapData> mapDataList = new ArrayList<>();
             List<SearchEventResponse.Data> mList = searchEventResponse.getData();
             if (!mList.isEmpty()) {
                 List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
@@ -359,8 +352,8 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                             alertHistoryData.setNumber(grpMembers.getNumber());
                             trackeeLatlng = new LatLng(data.getLocation().getLat(),data.getLocation().getLng());
                             float distanceBetweenRadius = distance((float)geoFenceLatlng.latitude,(float)geoFenceLatlng.longitude,(float)trackeeLatlng.latitude,(float)trackeeLatlng.longitude);
+                            consentId = grpMembers.getConsentId();
                             trackGeofenceTransition((int)distanceBetweenRadius);
-
                         }
                     }
                 }

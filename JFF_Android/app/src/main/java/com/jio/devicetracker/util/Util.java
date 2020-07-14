@@ -569,7 +569,7 @@ public final class Util extends AppCompatActivity {
 
     /**
      * Creates the notification channel
-     */
+     *//*
     public void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = context.getString(R.string.channel_name);
@@ -599,7 +599,7 @@ public final class Util extends AppCompatActivity {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(Constant.NOTIFICATION__ID, builder.build());
     }
-
+*/
     /**
      * Returns real address based on Lat and Long(Geo Coding)
      *
