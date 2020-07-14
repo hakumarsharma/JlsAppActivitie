@@ -363,6 +363,7 @@ public class Constant {
 	public static final String GEOFENCE = "    Geofence";
     public static final String GEOFENCE_EDIT = "Edit Geofence";
 	public static final String LOWBATTERY = "Low Battery";
+    public static final String POLLING_FREQUENCY = "Polling frequency";
     public static final String LATITUDE = "Latitude";
     public static final String LONGNITUDE = "Longitude";
     public static final String CREATE_GEOFENCE = "CreateGeofence";

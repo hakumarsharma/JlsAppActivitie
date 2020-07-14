@@ -37,13 +37,14 @@
         <activity android:name=".view.group.GroupNameActivity" />
         <activity android:name=".view.menu.ActiveMemberActivity" />
         <activity android:name=".view.menu.RefreshIntervalSettingActivity" />
-        <activity android:name=".view.menu.NotificationsAlertsActivity" />
-        <activity android:name=".view.menu.SilentModeActivity" />
-        <activity android:name=".view.people.EditMemberDetailsActivity" />
-        <activity android:name=".view.geofence.EditGeofenceActivity" />
-        <activity android:name=".view.menu.settings.SettingsActivity" />
-        <activity android:name=".view.menu.settings.GeofenceSettingsAcivity" />
-        <activity android:name=".view.menu.settings.LowBatteryActivity" />
+        <activity android:name=".view.menu.NotificationsAlertsActivity"/>
+        <activity android:name=".view.menu.SilentModeActivity"/>
+        <activity android:name=".view.people.EditMemberDetailsActivity"/>
+        <activity android:name=".view.geofence.EditGeofenceActivity"/>
+        <activity android:name=".view.menu.settings.SettingsActivity"/>
+        <activity android:name=".view.menu.settings.GeofenceSettingsAcivity"/>
+        <activity android:name=".view.menu.settings.LowBatteryActivity"/>
+        <activity android:name=".view.menu.settings.PollingFrequencyActivity"/>
 
         <service
             android:name=".network.SendLocationService"

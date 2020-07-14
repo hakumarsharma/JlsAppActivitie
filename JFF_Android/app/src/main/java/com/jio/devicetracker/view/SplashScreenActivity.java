@@ -33,6 +33,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.geofence.GeofenceActivity;
 import com.jio.devicetracker.view.menu.HelpActivity;
+import com.jio.devicetracker.view.menu.settings.PollingFrequencyActivity;
 import com.jio.devicetracker.view.signinsignup.SigninSignupActivity;
 
 
