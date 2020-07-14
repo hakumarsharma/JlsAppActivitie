@@ -23,6 +23,7 @@
 /**
  * Implementation of this class to create the request for GetLocation API.
  */
+
 package com.jio.devicetracker.database.pojo.request;
 
 import com.android.volley.Request;
