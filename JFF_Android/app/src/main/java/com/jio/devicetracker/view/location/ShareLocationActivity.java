@@ -33,6 +33,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     private MapFragment fragmentMap;
     private List<MapData> mapDataList;
     private RelativeLayout menuLayout;
+    private String deviceNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.map_fragment, fragmentMap).commit();
         mapDataList = getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
+        deviceNumber = getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         if (getIntent().getStringExtra(Constant.MEMBER_NAME) != null) {
             memberName.setText(getIntent().getStringExtra(Constant.MEMBER_NAME));
         } else {
@@ -99,6 +101,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 Intent intent = new Intent(this, GeofenceActivity.class);
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
                 intent.putExtra(Constant.MEMBER_NAME, memberName);
+                intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
                 startActivity(intent);
                 break;
             case R.id.close_icon:

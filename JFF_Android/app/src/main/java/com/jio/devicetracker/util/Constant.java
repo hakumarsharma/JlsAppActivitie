@@ -354,7 +354,7 @@ public class Constant {
     public static final String UPDATED_BY = "updatedBy";
     public static final String EVENTS = "events";
     public static final String MANY_TO_MANY = "many_to_many";
-	public static final String GEOFENCE = "Geofence";
+	public static final String GEOFENCE = "    Geofence";
     public static final String GEOFENCE_EDIT = "Edit Geofence";
 	public static final String LOWBATTERY = "Low Battery";
     public static final String LATITUDE = "Latitude";
