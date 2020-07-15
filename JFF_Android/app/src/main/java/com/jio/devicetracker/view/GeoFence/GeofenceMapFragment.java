@@ -105,6 +105,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private double lang;
     //private GeofenceDetails geofenceDetails;
     private AlertHistoryData alertHistoryData;
+    public static String consentId;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -215,10 +216,8 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMapClick(LatLng latLng) {
-
-        //addMarker(trackeeLatlng);
-        handleMapClick(latLng);
-
+//        addMarker(trackeeLatlng);
+//       handleMapClick(latLng);
     }
 
     /**
@@ -266,13 +265,11 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         mMap.addMarker(markerOptions);
     }
 
-
     /**
      * Fetch trackee location after every 30 seconds
      */
     public class FetchLocation implements Runnable {
         public void run() {
-
             while (true) {
                 Log.d("Geofence", "call method in background");
                 try {
@@ -302,9 +299,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         //handleMapClick(latLng);
     }
 
-
-
-
     public void makeApicallForTrackeeLocation(){
         SearchEventData searchEventData = new SearchEventData();
         List<String> mList = new ArrayList<>();
@@ -327,7 +321,9 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 List<GroupMemberDataList> grpMembersOfParticularGroupId = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
                 for (SearchEventResponse.Data data : mList) {
                     for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
-                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
+                        if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice())
+                                && !grpMembers.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
+                                && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
                             onMapReady(mMap);
                             alertHistoryData = new AlertHistoryData();
                             String alertAddress = Util.getAddressFromLocation(data.getLocation().getLat(),data.getLocation().getLng(),getActivity());
@@ -338,8 +334,8 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                             alertHistoryData.setNumber(grpMembers.getNumber());
                             trackeeLatlng = new LatLng(data.getLocation().getLat(),data.getLocation().getLng());
                             float distanceBetweenRadius = distance((float)geoFenceLatlng.latitude,(float)geoFenceLatlng.longitude,(float)trackeeLatlng.latitude,(float)trackeeLatlng.longitude);
+                            consentId = grpMembers.getConsentId();
                             trackGeofenceTransition((int)distanceBetweenRadius);
-
                         }
                     }
                 }
@@ -355,7 +351,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private class SearchEventRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            // Todo
         }
     }
     public float distance(float latA, float lngA, float latB, float lngB) {
@@ -367,9 +363,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                         Math.sin(lngDiff / 2) * Math.sin(lngDiff / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double distance = earthRadius * c;
-
         int meterConversion = 1609;
-
         return new Float(distance * meterConversion).floatValue();
     }
 

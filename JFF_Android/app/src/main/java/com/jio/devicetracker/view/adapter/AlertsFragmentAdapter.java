@@ -32,12 +32,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AlertHistoryData;
+import com.jio.devicetracker.util.Constant;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
-public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAdapter.ViewHolder>{
+public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAdapter.ViewHolder> {
 
     private List<AlertHistoryData> mAlertHistoryData;
+    private String currentDateValues = Constant.EMPTY_STRING;
 
     public AlertsFragmentAdapter(List<AlertHistoryData> mAlertHistoryData) {
         this.mAlertHistoryData = mAlertHistoryData;
@@ -52,8 +57,32 @@ public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAd
 
     @Override
     public void onBindViewHolder(@NonNull AlertsFragmentAdapter.ViewHolder holder, int position) {
-        holder.dateTextView.setText(mAlertHistoryData.get(position).getDate());
-        holder.geofenceAddress.setText(mAlertHistoryData.get(position).getAddress());
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy");
+            Long oldDateLong = Long.parseLong(mAlertHistoryData.get(position).getDate());
+            Long todayDateLong = System.currentTimeMillis();
+            Date oldDate = simpleDateFormat.parse(simpleDateFormat.format(new Date(oldDateLong)));
+            Date todayDate = simpleDateFormat.parse(simpleDateFormat.format(new Date(todayDateLong)));
+            long diffInMillies = todayDate.getTime() - oldDate.getTime();
+            int diffDays = (int) (diffInMillies / (24 * 60 * 60 * 1000));
+            if (diffDays == 0) {
+                if(!currentDateValues.equalsIgnoreCase(Constant.TODAY)) {
+                    holder.dateTextView.setText(Constant.TODAY);
+                    currentDateValues = Constant.TODAY;
+                }
+            } else if (diffDays == 1) {
+                if(!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY)) {
+                    holder.dateTextView.setText(Constant.YESTERDAY);
+                    currentDateValues = Constant.YESTERDAY;
+                }
+            } else {
+                holder.dateTextView.setText(oldDate.toString());
+            }
+            holder.geofenceAddress.setText(mAlertHistoryData.get(position).getAddress());
+        } catch (
+                ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

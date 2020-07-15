@@ -396,7 +396,9 @@ public class Constant {
     public static final String GEOFENCE_FAILURE_MESSAGE = "onFailure: Geofence not Added...";
     public static final String PERMISSION_GRANTED = "Permission granted";
     public static final String PERMISSION_NOT_GRANTED = "Permission not granted";
-
+    public static final String TODAY = "Today";
+    public static final String YESTERDAY = "Yesterday";
+    public static final String ALERTS_ERRORS = "Alert details are not there for other member";
 
     // Add people constants
     public static final String Choose_Group = "Choose group";

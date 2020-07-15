@@ -31,13 +31,9 @@ import android.graphics.Color;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
-
-import java.util.Random;
 
 public class NotificationHelper extends ContextWrapper {
     NotificationManager manager;
@@ -63,11 +59,8 @@ public class NotificationHelper extends ContextWrapper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void sendHighPriorityNotification(String title, String body, Class activityName) {
-
         Intent intent = new Intent(this, activityName);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 2607, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
         Notification notification = new Notification.Builder(this)
                 .setContentTitle(title)
                 .setContentText(body)
