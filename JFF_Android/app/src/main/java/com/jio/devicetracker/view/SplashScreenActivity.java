@@ -20,42 +20,22 @@
 
 package com.jio.devicetracker.view;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.WindowManager;
-import android.widget.Toast;
-
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.safetynet.SafetyNet;
-import com.google.android.gms.safetynet.SafetyNetApi;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
+import com.jio.devicetracker.view.geofence.GeofenceActivity;
 import com.jio.devicetracker.view.menu.HelpActivity;
+import com.jio.devicetracker.view.menu.settings.PollingFrequencyActivity;
 import com.jio.devicetracker.view.signinsignup.SigninSignupActivity;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Implementation of Splash Screen.This class creates splash screen for People tracker application

@@ -33,6 +33,16 @@ public class AdminLoginData {
     private String name;
     private String phoneCountryCode;
     private String phoneNumber;
+    private String emailId;
+
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;

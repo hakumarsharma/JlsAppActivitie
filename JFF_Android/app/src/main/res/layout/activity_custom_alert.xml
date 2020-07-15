@@ -33,7 +33,7 @@
             <TextView
                 android:id="@+id/dialogue_message"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/dialogue_title"
                 android:layout_marginLeft="@dimen/twenty_dp"
                 android:layout_marginRight="@dimen/twenty_dp"

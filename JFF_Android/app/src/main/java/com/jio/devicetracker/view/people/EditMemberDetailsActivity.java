@@ -1,3 +1,25 @@
+/*************************************************************
+ *
+ * Reliance Digital Platform & Product Services Ltd.
+
+ * CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (C) 2020 Reliance Digital Platform & Product Services Ltd.–
+ *
+ *  ALL RIGHTS RESERVED.
+ *
+ * NOTICE:  All information including computer software along with source code and associated *documentation contained herein is, and
+ * remains the property of Reliance Digital Platform & Product Services Ltd..  The
+ * intellectual and technical concepts contained herein are
+ * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
+ * copyright law or as trade secret under confidentiality obligations.
+
+ * Dissemination, storage, transmission or reproduction of this information
+ * in any part or full is strictly forbidden unless prior written
+ * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
+ **************************************************************/
+
 package com.jio.devicetracker.view.people;
 
 import android.content.Intent;
@@ -22,6 +44,7 @@ import com.jio.devicetracker.database.pojo.request.EditMemberDetailsRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.adapter.DeviceListAdapter;
 import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 
@@ -40,6 +63,9 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setTypeface(Util.mTypeface(this, 5));
         toolbarTitle.setText(Constant.EDIT_MEMBER);
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
         Intent intent = getIntent();
         userName = findViewById(R.id.editUserName);
         consentId = intent.getStringExtra(Constant.CONSENT_ID);
@@ -75,10 +101,21 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
 
     @Override
     public void onClick(View v) {
-        EditMemberDetailsData data = new EditMemberDetailsData();
-        data.setName(userName.getText().toString());
-        Util.getInstance().showProgressBarDialog(this);
-        GroupRequestHandler.getInstance(this).handleRequest(new EditMemberDetailsRequest(new EditdetailSuccessListener(), new EditdetailErrorListener(), data, consentId, mDbmanager.getAdminLoginDetail().getUserId()));
+
+        switch (v.getId()){
+            case R.id.back:
+                finish();
+                break;
+            case R.id.updateName:
+                EditMemberDetailsData data = new EditMemberDetailsData();
+                data.setName(userName.getText().toString());
+                Util.getInstance().showProgressBarDialog(this);
+                GroupRequestHandler.getInstance(this).handleRequest(new EditMemberDetailsRequest(new EditdetailSuccessListener(), new EditdetailErrorListener(), data, consentId, mDbmanager.getAdminLoginDetail().getUserId()));
+                break;
+            default:
+                // Todo
+                break;
+        }
     }
 
     private class EditdetailSuccessListener implements Response.Listener {
@@ -89,6 +126,9 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
             Intent intent = new Intent(EditMemberDetailsActivity.this, DashboardMainActivity.class);
             if(PeopleMemberListAdapter.peopleEditFlag && !isFromMap){
                 intent.putExtra(Constant.Add_People, true);
+            } else if (DeviceListAdapter.deviceEditFlag){
+                intent.putExtra(Constant.Add_People, false);
+                intent.putExtra(Constant.Add_Device, true);
             } else {
                 intent.putExtra(Constant.Add_People, false);
                 intent.putExtra(Constant.Add_Device, false);

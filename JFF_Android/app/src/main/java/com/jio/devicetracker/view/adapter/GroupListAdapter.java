@@ -20,7 +20,9 @@
 
 package com.jio.devicetracker.view.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -40,15 +42,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.DeviceTableData;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.request.DeleteDeviceRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.EditMemberActivity;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.dashboard.GroupsFragment;
 import com.jio.devicetracker.view.device.AddDeviceActivity;
+
 import java.util.List;
 
 /**
@@ -72,11 +79,12 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(mContext);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
     }
+
     /**
      * Binds the given View to the position
      *
@@ -103,18 +111,18 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         HomeActivityListData data = mList.get(position);
         holder.groupName.setTypeface(Util.mTypeface(mContext, 5));
         holder.groupName.setText(data.getGroupName());
-        holder.timeLeft.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(),data.getTo()));
-        if(data.getGroupIcon() != null && !data.getGroupIcon().isEmpty()) {
+        holder.timeLeft.setText(Util.getInstance().getTrackingExpirirationDuration(data.getFrom(), data.getTo()));
+        if (data.getGroupIcon() != null && !data.getGroupIcon().isEmpty()) {
             Resources res = mContext.getResources();
             int iconId = res.getIdentifier(data.getGroupIcon(), Constant.DRAWABLE, mContext.getPackageName());
             Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
             holder.groupListmemberIcon.setImageDrawable(drawable);
-        }else {
+        } else {
             holder.groupListmemberIcon.setBackgroundResource(R.drawable.ic_family_group);
         }
         holder.mListlayout.setOnClickListener(v -> itemListener.clickonListLayout(data));
-        if (mList != null && !mList.isEmpty() &&  data.getConsentsCount() <= 4){
-                switch (data.getConsentsCount()) {
+        if (mList != null && !mList.isEmpty() && data.getConsentsCount() <= 5) {
+            switch (data.getConsentsCount() - 1) {
                 case 1:
                     holder.icon1.setVisibility(View.VISIBLE);
                     holder.icon2.setVisibility(View.INVISIBLE);
@@ -148,7 +156,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             holder.icon2.setVisibility(View.VISIBLE);
             holder.icon3.setVisibility(View.VISIBLE);
             holder.icon4.setVisibility(View.VISIBLE);
-            holder.numberOfUsers.setText("+ "+ (data.getConsentsCount() - 4) + " invited");
+            holder.numberOfUsers.setText("+ " + (data.getConsentsCount() - 4) + " invited");
         }
     }
 
@@ -233,7 +241,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.edit:
-                    if (mList.isEmpty()){
+                    if (mList.isEmpty()) {
                         showCustomAlertWithText(Constant.ADD_DETAILS_TO_TRACK);
                         return;
                     }
@@ -247,11 +255,13 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                     break;
                 case R.id.deleteGroup:
                     position = getAdapterPosition();
-                    GroupListAdapter.this.groupOptLayout = groupOptLayout;
-                    deleteGroupAPICall(mList.get(position));
+                    deleteAlertBox(position);
+                    /*GroupListAdapter.this.groupOptLayout = groupOptLayout;
+                    deleteGroupAPICall(mList.get(position));*/
                     break;
                 case R.id.addNewMember:
                     position = getAdapterPosition();
+                    DashboardMainActivity.flowFromGroup = true;
                     Intent intent = new Intent(mContext, AddDeviceActivity.class);
                     intent.putExtra(Constant.GROUP_ID, mList.get(position).getGroupId());
                     mContext.startActivity(intent);
@@ -260,6 +270,23 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                     // Todo
                     break;
             }
+        }
+
+        private void deleteAlertBox(int position) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
+            adb.setTitle(Constant.ALERT_TITLE);
+            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
+            adb.setIcon(android.R.drawable.ic_dialog_alert);
+            adb.setPositiveButton("OK", (dialog, which) -> {
+                GroupListAdapter.this.groupOptLayout = groupOptLayout;
+                deleteGroupAPICall(mList.get(position));
+            });
+            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            adb.show();
         }
     }
 
@@ -283,6 +310,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     private class DeleteGroupRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
+            updateDeviceTable();
             mDbManager.deleteSelectedDataFromGroup(groupId);
             mDbManager.deleteSelectedDataFromGroupMember(groupId);
             groupOptLayout.setVisibility(View.GONE);
@@ -303,6 +331,55 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         }
     }
 
+    // Update device table after deletion of group
+    private void updateDeviceTable() {
+        List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
+        List<DeviceTableData> mDeviceListData = mDbManager.getAllDeviceTableData();
+        for (GroupMemberDataList groupMemberDataList : mList) {
+            for (DeviceTableData deviceTableData : mDeviceListData) {
+                if (groupMemberDataList.getNumber().equalsIgnoreCase(deviceTableData.getPhoneNumber())) {
+                    int count = deviceTableData.getAdditionCount();
+                    DeviceTableData data = new DeviceTableData();
+                    data.setAdditionCount(--count);
+                    data.setPhoneNumber(deviceTableData.getPhoneNumber());
+                    mDbManager.updateIntoDeviceTable(data);
+                }
+            }
+        }
+
+        // If last delete then make an delete device api call for that user
+        List<DeviceTableData> updatedDeviceListData = mDbManager.getAllDeviceTableData();
+        for (GroupMemberDataList groupMemberDataList : mList) {
+            for (DeviceTableData deviceTableData : updatedDeviceListData) {
+                if (groupMemberDataList.getNumber().equalsIgnoreCase(deviceTableData.getPhoneNumber())
+                        && groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)
+                        && deviceTableData.getAdditionCount() == 0) {
+                    GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteDeviceRequest(new DeleteDeviceRequestSuccessListener(), new DeleteDeviceRequestErrorListener(), groupMemberDataList.getDeviceId()));
+                }
+            }
+        }
+    }
+
+    /**
+     * Delete device for user Success Listener
+     */
+    private class DeleteDeviceRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            System.out.println("Device deleted from user account");
+        }
+    }
+
+    /**
+     * Delete device for user error listener
+     */
+    private class DeleteDeviceRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            System.out.println("Error in deleting device from user account");
+        }
+    }
+
     /**
      * Called when we delete group
      *
@@ -313,4 +390,5 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         notifyItemRemoved(adapterPosition);
         notifyDataSetChanged();
     }
+
 }

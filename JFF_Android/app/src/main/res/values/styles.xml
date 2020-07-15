@@ -36,5 +36,10 @@
         <item name="android:textColor">@color/white</item>
         <item name="iconSize">23dp</item>
     </style>
+    <style name="MenuTheme" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/geofence_background</item>
+        <item name="colorPrimaryDark">@color/geofence_background</item>
+        <item name="colorAccent">@color/geofence_background</item>
+    </style>
 
 </resources>

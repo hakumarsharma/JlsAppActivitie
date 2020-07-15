@@ -153,6 +153,16 @@ public class GetGroupInfoPerUserResponse implements Serializable {
         private String name;
         @SerializedName("user")
         private String userId;
+        @SerializedName("device")
+        private String device;
+
+        public String getDevice() {
+            return device;
+        }
+
+        public void setDevice(String device) {
+            this.device = device;
+        }
 
         public String getUserId() {
             return userId;

@@ -38,6 +38,8 @@ import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.menu.ActiveMemberActivity;
+
 import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -92,6 +94,9 @@ public class ActiveMemberListAdapter extends RecyclerView.Adapter<ActiveMemberLi
     @Override
     public void onBindViewHolder(@NonNull ActiveMemberListAdapter.ViewHolder holder, int position) {
         holder.activeMemberName.setText(mList.get(position).getName());
+        if(ActiveMemberActivity.isTrackedByYouList) {
+            holder.activeMemberDeleteButton.setVisibility(View.GONE);
+        }
     }
 
     /**

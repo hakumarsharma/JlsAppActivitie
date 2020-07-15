@@ -68,12 +68,12 @@
             android:src="@drawable/ic_close" />
 
         <TextView
-            android:id="@+id/shareDevices"
+            android:id="@+id/editDevices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/margin_18"
-            android:text="Share device"
+            android:text="Edit device"
             android:textColor="@color/white"
             android:textSize="@dimen/seventeen_dp" />
 
@@ -81,7 +81,7 @@
             android:id="@+id/shareDevicesLine"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/shareDevices"
+            android:layout_below="@+id/editDevices"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/ten_dp"
             android:layout_marginRight="@dimen/fourteen_dp"

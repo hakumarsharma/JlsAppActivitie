@@ -51,6 +51,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
     private FrameLayout frameLayout;
     private ImageView userIconCreateGroup;
     public static String groupIdFromPeopleFlow;
+    public static boolean addMemberInGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,19 +137,21 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
      */
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.createGroupInCreateGroupActivity ) {
+        if (v.getId() == R.id.createGroupInCreateGroupActivity) {
             String groupName = createGroupEditText.getText().toString();
             if ("".equalsIgnoreCase(groupName)) {
                 createGroupEditText.setError(Constant.GROUP_NAME_VALIDATION_ERROR);
                 return;
-            } if(DashboardMainActivity.flowFromPeople){
+            }
+            if (DashboardMainActivity.flowFromPeople) {
                 this.isFromCreateGroup = false;
                 memberName = trackeeName;
                 memberNumber = trackeeNumber;
                 isGroupMember = false;
+                addMemberInGroup = true;
                 createdGroupId = groupIdFromPeopleFlow;
                 isFromDevice = false;
-            } else if(DashboardMainActivity.flowFromDevice){
+            } else if (DashboardMainActivity.flowFromDevice) {
                 memberName = trackeeName;
                 memberNumber = trackeeNumber;
                 isGroupMember = false;
@@ -158,30 +161,29 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
             } else {
                 this.isFromCreateGroup = true;
             }
-
             createGroupAndAddContactAPICall(groupName);
-        }else if (v.getId() == R.id.back){
+        } else if (v.getId() == R.id.back) {
             finish();
-        }else  if (v.getId() == R.id.userIconCreateGroup){
-             frameLayout.setVisibility(View.VISIBLE);
-        }else if(v.getId() == R.id.closeFrameLayout){
-            this.selectedIcon  = "ic_creategroup";
-             userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_creategroup));
-             frameLayout.setVisibility(View.INVISIBLE);
-        }else if(v.getId() == R.id.homeGroupButton){
-            this.selectedIcon  = "ic_home_group";
+        } else if (v.getId() == R.id.userIconCreateGroup) {
+            frameLayout.setVisibility(View.VISIBLE);
+        } else if (v.getId() == R.id.closeFrameLayout) {
+            this.selectedIcon = "ic_creategroup";
+            userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_creategroup));
+            frameLayout.setVisibility(View.INVISIBLE);
+        } else if (v.getId() == R.id.homeGroupButton) {
+            this.selectedIcon = "ic_home_group";
             userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.home_group));
             frameLayout.setVisibility(View.INVISIBLE);
-        }else if(v.getId() == R.id.familyGroupButton){
-            this.selectedIcon  = "ic_family_group";
+        } else if (v.getId() == R.id.familyGroupButton) {
+            this.selectedIcon = "ic_family_group";
             userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.family_group));
             frameLayout.setVisibility(View.INVISIBLE);
-        }else if(v.getId() == R.id.friendsGroupButton){
-            this.selectedIcon  = "ic_friends_group";
+        } else if (v.getId() == R.id.friendsGroupButton) {
+            this.selectedIcon = "ic_friends_group";
             userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.friends_group));
             frameLayout.setVisibility(View.INVISIBLE);
-        }else if(v.getId() == R.id.petGroupButton){
-            this.selectedIcon  = "ic_group_pet";
+        } else if (v.getId() == R.id.petGroupButton) {
+            this.selectedIcon = "ic_group_pet";
             userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.group_pet));
             frameLayout.setVisibility(View.INVISIBLE);
         }

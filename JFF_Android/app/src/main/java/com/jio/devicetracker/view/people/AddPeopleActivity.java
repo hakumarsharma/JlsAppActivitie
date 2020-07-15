@@ -17,11 +17,14 @@
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
  **************************************************************/
+
 package com.jio.devicetracker.view.people;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -43,12 +46,16 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.DeviceTableData;
 import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
+import com.jio.devicetracker.database.pojo.request.DeleteDeviceRequest;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
@@ -80,6 +87,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private static Button addContact_Continue;
     private static Context context;
     private static DBManager mPeopleDbManager;
+    private String deviceId;
+    private String phNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +100,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     private void initializeData() {
         Toolbar toolbar = findViewById(R.id.addPeopleToolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(Constant.Add_People);
+        title.setText(Constant.ADD_CONTACT);
         toolbar.setBackgroundColor(getResources().getColor(R.color.cardviewlayout_device_background_color));
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
@@ -136,7 +145,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         contactBtn.setVisibility(View.VISIBLE);
         contactBtn.setOnClickListener(this);
         changeButtonColorOnDataEntry();
-
     }
 
     // Show custom alert with alert message
@@ -258,8 +266,17 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.contactAdd) {
-            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-            startActivityForResult(intent, 1);
+            PackageManager pm = context.getPackageManager();
+            int hasPerm = pm.checkPermission(
+                    Manifest.permission.READ_CONTACTS,
+                    context.getPackageName());
+            if (hasPerm == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(intent, 1);
+            }else {
+                Toast.makeText(this, Constant.CONTACTS_PERMISSION, Toast.LENGTH_LONG);
+            }
+
         } else if (v.getId() == R.id.addContactDetail) {
             validationCheck();
         } else if (v.getId() == R.id.back) {
@@ -324,6 +341,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         this.isFromDevice = false;
         setEditTextValues();
         addMemberInGroupAPICall();
+        setButtonBackground(addContact_Continue, true);
+
     }
 
     public void getAllMembers(List<GroupMemberResponse.Data> memberList) {
@@ -331,7 +350,12 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             listOfContacts = new ArrayList();
             for (GroupMemberResponse.Data data : memberList) {
                 if (!data.getStatus().equalsIgnoreCase(Constant.REMOVED)) {
-                    listOfContacts.add(data);
+                    if (!data.getUserId().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getUserId())) {
+                        listOfContacts.add(data);
+                    } else if (data.getUserId().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getUserId())
+                            && !data.getPhone().equalsIgnoreCase(mPeopleDbManager.getAdminLoginDetail().getPhoneNumber())) {
+                        listOfContacts.add(data);
+                    }
                 }
             }
             mAdapter = new AddPersonListAdapter(listOfContacts);
@@ -396,7 +420,14 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void adapterEventListener() {
-        mAdapter.setOnItemClickPagerListener((v, position, groupId, data) -> this.makeRemoveAPICall(data.getPhone(), groupId, position));
+        mAdapter.setOnItemClickPagerListener(new AddPersonListAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onDeleteMemberClicked(View v, int position, String groupId, GroupMemberResponse.Data data) {
+                deviceId = data.getDeviceId();
+                phNumber = data.getPhone();
+                AddPeopleActivity.this.makeRemoveAPICall(data.getPhone(), groupId, position);
+            }
+        });
     }
 
     /**
@@ -428,8 +459,17 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                     Toast.makeText(context, Constant.REMOVE_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mPeopleDbManager.deleteSelectedDataFromGroup(groupId);
                     mPeopleDbManager.deleteSelectedDataFromGroupMember(groupId);
+                    DeviceTableData mDeviceTableData = mPeopleDbManager.getDeviceTableData(phoneNumber);
+                    if (mDeviceTableData != null) {
+                        int count = mDeviceTableData.getAdditionCount();
+                        DeviceTableData deviceTableData = new DeviceTableData();
+                        deviceTableData.setAdditionCount(--count);
+                        deviceTableData.setPhoneNumber(phoneNumber);
+                        mPeopleDbManager.updateIntoDeviceTable(deviceTableData);
+                    }
                     mAdapter.removeItem(position);
                     getAllForOneGroupAPICall();
+                    checkToDeleteDeviceAPICall();
                 } else {
                     Util.progressDialog.dismiss();
                     showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
@@ -443,4 +483,33 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             }
         });
     }
+
+    // Make a delete device API call if it is the last delete from app
+    private void checkToDeleteDeviceAPICall() {
+        if (mPeopleDbManager.getDeviceTableData(phNumber) != null
+                && mPeopleDbManager.getDeviceTableData(phNumber).getAdditionCount() == 0) {
+            GroupRequestHandler.getInstance(context).handleRequest(new DeleteDeviceRequest(new DeleteDeviceRequestSuccessListener(), new DeleteDeviceRequestErrorListener(), deviceId));
+        }
+    }
+
+    /**
+     * Delete device for user Success Listener
+     */
+    private class DeleteDeviceRequestSuccessListener implements com.android.volley.Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            System.out.println("Device deleted from user account");
+        }
+    }
+
+    /**
+     * Delete device for user error listener
+     */
+    private class DeleteDeviceRequestErrorListener implements com.android.volley.Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            System.out.println("Error in deleting device from user account");
+        }
+    }
+
 }

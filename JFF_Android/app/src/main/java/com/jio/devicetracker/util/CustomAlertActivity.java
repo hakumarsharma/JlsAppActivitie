@@ -29,14 +29,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.jio.devicetracker.R;
-
+@SuppressWarnings("PMD")
 public class CustomAlertActivity extends Dialog implements View.OnClickListener {
+
 
     private Button laterBtn;
     private Button viewBtn;
     private Button okBtn;
     public Context mContext;
     public TextView message;
+
+    public void CustomAlertActivity() {
+        //TODO
+    }
 
     public CustomAlertActivity(@NonNull Context context) {
         super(context);

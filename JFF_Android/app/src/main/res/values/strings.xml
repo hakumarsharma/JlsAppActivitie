@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">JioTrack</string>
-    <string name="title_activity_maps">People Tracker</string>
+    <string name="title_activity_maps">JioTrack</string>
     <string name="map_name">JioTrack</string>
     <string name="action_settings">Setting</string>
     <string name="about_us">About Us</string>
@@ -59,7 +59,7 @@
     <string name="add_device">Add Device</string>
     <string name="add_contact">Add Contact</string>
     <string name="add_device_later">Add device later</string>
-    <string name="add_device_info">To track any Device/Person choose below options to Add device/Add contact and then start tracking.</string>
+    <string name="add_device_info">To track any Device/Person choose below options to Add Device/Add Contact and then start tracking.</string>
     <string name="purchase_info">Inorder to purchase device follow the link</string>
     <string name="purchase_link">www.myjio/devices/JioTrack</string>
     <string name="add_people_text">Add people from your contacts or add their name and mobile number</string>
@@ -86,6 +86,17 @@
     <string name="terms_privacy_policy">Terms &amp; Privacy Policy</string>
     <string name="tracking_by_default_text">Users who are tracking you will be displayed here.</string>
     <string name="tracked_by_default_text">Users whom you are tracking you will be displayed here.</string>
+    <string name="geofence_entry">Geofence entry</string>
+    <string name="geofence_exit">Geofence exit</string>
+    <string name="geofence_entry_desc">Receive notification when your loved one enters a geofence</string>
+    <string name="geofence_exit_desc">Receive notification when your loved one exits a geofence</string>
+    <string name="battery_text">Minimum battery</string>
+    <string name="battery_desc">Select minimum battery charge, below which the you will get alert.</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeat_desc">Repeat alert will receive if you don’t react to notification</string>
+    <string name="polling_frequency">Polling frequency</string>
+    <string name="polling_freq_text">Configure Set the interval at which you want to receive the location</string>
+    <string name="select_time">Select time</string>
 
     <string-array name="device_type_array">
         <item>People Tracker</item>
@@ -146,7 +157,8 @@
     <string name="name">Name</string>
     <string name="device">Device phone number</string>
     <string name="device_number_text">Device phone number</string>
-    <string name="device_number_content">Please enter your device phone number \nwhich is unique for device. You can find \nit at back side of device package.</string>
+    <string name="device_imei_text">Device IMEI</string>
+    <string name="device_number_content">Please enter your device phone number and device IMEI \nwhich is unique for device. You can find \nit at back side of device package.</string>
     <string name="about_app">About app</string>
     <string name="term_policy">Terms &amp; privacy policies</string>
     <string name="term_condition">Terms &amp; Conditions</string>
