@@ -123,7 +123,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.create_geofence:
-                if(consentStatus != null && !consentStatus.equalsIgnoreCase(Constant.CONSENT_APPROVED_STATUS)){
+                if(consentStatus != null && !consentStatus.equalsIgnoreCase(Constant.APPROVED)){
                     showCustomAlertWithText(Constant.GEOFENCE_Alert_Message);
                     return;
                 }

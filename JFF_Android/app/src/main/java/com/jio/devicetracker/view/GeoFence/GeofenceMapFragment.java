@@ -26,9 +26,6 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -70,7 +67,6 @@ import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.location.MapsActivity;
 import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
 import com.jio.devicetracker.view.menu.settings.GeofenceSettingsAcivity;
 
@@ -107,7 +103,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private String groupId;
     private double lat;
     private double lang;
-    private GeofenceDetails geofenceDetails;
+    //private GeofenceDetails geofenceDetails;
     private AlertHistoryData alertHistoryData;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -181,7 +177,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.clear();
         MarkerOptions markerOptions = new MarkerOptions();
-        geofenceDetails = mDbManager.getGeofenceDetails(deviceNumber);
+        GeofenceDetails geofenceDetails = mDbManager.getGeofenceDetails(deviceNumber);
         if (geofenceDetails.getLat() != 0 && geofenceDetails.getLng() != 0) {
             geoFenceLatlng = new LatLng(geofenceDetails.getLat(), geofenceDetails.getLng());
         } else {
@@ -221,7 +217,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapClick(LatLng latLng) {
 
         //addMarker(trackeeLatlng);
-        //handleMapClick(latLng);
+        handleMapClick(latLng);
 
     }
 

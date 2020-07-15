@@ -27,6 +27,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,16 +47,19 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.BaseActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GeofenceActivity extends BaseActivity implements View.OnClickListener {
     private GeofenceMapFragment fragmentMap;
     private EditText addressText;
     private String deviceNumber;
+    private List<MapData> mapDataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         ActionBar actionBar;
         actionBar = getSupportActionBar();
         Intent intent = getIntent();
+        mapDataList = intent.getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         boolean editGeofence = intent.getBooleanExtra("EditGeofence", false);
 
@@ -182,6 +187,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
                     intent.putExtra(Constant.GEOFENCE_ADDRESS, addressText.getText().toString());
                 }
                 intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+                intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
                 startActivity(intent);
                 return true;
             default:

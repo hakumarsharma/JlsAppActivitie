@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,10 +38,12 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EditGeofenceActivity  extends Activity implements View.OnClickListener {
@@ -55,6 +58,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
     private LatLng latlang;
     private String deviceNumber;
     int progressChangedValue=0;
+    private List<MapData> mapDataList;
     private static final String TAG = "EditGeofenceActivity";
 
     @Override
@@ -78,6 +82,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         Button updateBtn = findViewById(R.id.updateGeofence);
         updateBtn.setOnClickListener(this);
         Intent intent = getIntent();
+        mapDataList = intent.getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         geofenceAddress = intent.getStringExtra(Constant.GEOFENCE_ADDRESS);
         if(geofenceAddress != null){
@@ -137,6 +142,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             intent.putExtra("Radius",progressChangedValue);
             intent.putExtra(Constant.LATITUDE,latlang.latitude);
             intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+            intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
             intent.putExtra(Constant.LONGNITUDE,latlang.longitude);
 
             intent.putExtra("EditGeofence",true);
