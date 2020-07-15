@@ -53,6 +53,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
     private TextView radiusText;
     String geofenceAddress;
     private LatLng latlang;
+    private String deviceNumber;
     int progressChangedValue=0;
     private static final String TAG = "EditGeofenceActivity";
 
@@ -67,7 +68,9 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         radiusText = findViewById(R.id.radiusText);
         radiusText.setTypeface(Util.mTypeface(this,5));
         locationName = findViewById(R.id.location_name);
-
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
         metersRadioButton = findViewById(R.id.metersButton);
         metersRadioButton.setOnClickListener(this);
         kiloMetersRadioButton = findViewById(R.id.kiloMetersButton);
@@ -75,8 +78,9 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         Button updateBtn = findViewById(R.id.updateGeofence);
         updateBtn.setOnClickListener(this);
         Intent intent = getIntent();
+        deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         geofenceAddress = intent.getStringExtra(Constant.GEOFENCE_ADDRESS);
-        if(!geofenceAddress.isEmpty()){
+        if(geofenceAddress != null){
             locationName.setText(geofenceAddress);
         }
 
@@ -132,10 +136,14 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             Intent intent = new Intent(this,GeofenceActivity.class);
             intent.putExtra("Radius",progressChangedValue);
             intent.putExtra(Constant.LATITUDE,latlang.latitude);
+            intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
             intent.putExtra(Constant.LONGNITUDE,latlang.longitude);
+
             intent.putExtra("EditGeofence",true);
             startActivity(intent);
 
+        } else {
+            finish();
         }
 
     }

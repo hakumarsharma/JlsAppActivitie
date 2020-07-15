@@ -40,6 +40,7 @@ import com.jio.devicetracker.util.Constant;
 import java.util.Random;
 
 public class NotificationHelper extends ContextWrapper {
+    NotificationManager manager;
     @RequiresApi(api = Build.VERSION_CODES.O)
     public NotificationHelper(Context base) {
         super(base);
@@ -56,24 +57,26 @@ public class NotificationHelper extends ContextWrapper {
         notificationChannel.enableVibration(true);
         notificationChannel.setLightColor(Color.RED);
         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.createNotificationChannel(notificationChannel);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void sendHighPriorityNotification(String title, String body, Class activityName) {
 
         Intent intent = new Intent(this, activityName);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 2607, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+
+        Notification notification = new Notification.Builder(this)
+                .setContentTitle(title)
+                .setContentText(body)
                 .setSmallIcon(R.drawable.ic_launcher_background)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(title).bigText(body))
+                .setChannelId(CHANNEL_ID)
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
                 .build();
 
-        NotificationManagerCompat.from(this).notify(new Random().nextInt(), notification);
+        manager.notify(10, notification);
 
 
     }
