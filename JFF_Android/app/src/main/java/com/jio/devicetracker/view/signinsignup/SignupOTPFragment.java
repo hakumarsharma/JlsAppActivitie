@@ -81,6 +81,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
         signupEnterOTPTextView.setText(Constant.OTP_TEXTVIEW + phoneNumber);
         signupTxtPinEntry = view.findViewById(R.id.signup_txt_pin_entry);
         signupTxtPinEntry.setTypeface(Util.mTypeface(getActivity(), 5));
+        signupTxtPinEntry.setEnabled(false);
         Button signupSubmitLogin = view.findViewById(R.id.signupSubmitLogin);
         signupSubmitLogin.setTypeface(Util.mTypeface(getActivity(), 5));
         signupSubmitLogin.setOnClickListener(this);
@@ -103,6 +104,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
     public void messageReceived(String message, String phoneNum) {
         if (message.contains(Constant.OTP_SMS) && signupTxtPinEntry != null) {
             signupTxtPinEntry.setText(message.substring(message.indexOf(":") + 2, message.indexOf(":") + 7));
+
         }
     }
 
@@ -114,17 +116,26 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
                 makeSafetyNetCall(token);
             }
         } else if(v.getId() == R.id.signupTimerTextView) {
-            generateRegistrationTokenAPICall();
+            String token = signupTxtPinEntry.getText().toString().trim();
+            makeSafetyNetCall(token);
         }
     }
 
     private void makeSafetyNetCall(String token) {
         SafetyNet.getClient(Objects.requireNonNull(getActivity())).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
                 .addOnSuccessListener(getActivity(), response -> {
-                    if (!response.getTokenResult().isEmpty()) {
-                        Util.getInstance().setExpiryTime();
-                        Util.getInstance().updateGoogleToken(response.getTokenResult());
-                        makeRegisterAPICall(token);
+                    if (token == null || token.isEmpty()){
+                        if (!response.getTokenResult().isEmpty()) {
+                            Util.getInstance().setExpiryTime();
+                            Util.getInstance().updateGoogleToken(response.getTokenResult());
+                            generateRegistrationTokenAPICall();
+                        }
+                    }else {
+                        if (!response.getTokenResult().isEmpty()) {
+                            Util.getInstance().setExpiryTime();
+                            Util.getInstance().updateGoogleToken(response.getTokenResult());
+                            makeRegisterAPICall(token);
+                        }
                     }
                 })
                 .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());

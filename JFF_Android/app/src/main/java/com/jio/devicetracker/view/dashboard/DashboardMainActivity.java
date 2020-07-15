@@ -54,6 +54,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -84,6 +85,7 @@ import com.jio.devicetracker.database.pojo.response.ApproveRejectAPIResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.menu.HowToUseActivity;
 import com.jio.devicetracker.view.adapter.DashboardAdapter;
@@ -92,8 +94,9 @@ import com.jio.devicetracker.view.group.CreateGroupActivity;
 import com.jio.devicetracker.view.menu.ActiveSessionActivity;
 import com.jio.devicetracker.view.menu.NavigateSupportActivity;
 import com.jio.devicetracker.view.menu.NavigateUserProfileActivity;
-import com.jio.devicetracker.view.menu.NotificationsActivity;
+import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
 import com.jio.devicetracker.view.menu.SilentModeActivity;
+import com.jio.devicetracker.view.menu.settings.SettingsActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 import com.jio.devicetracker.view.signinsignup.SigninSignupActivity;
 
@@ -109,8 +112,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private DrawerLayout drawerLayout;
     private static DBManager mDbManager;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
-    private Location currentLocation;
-    private GoogleApiClient googleApiClient;
+    private static Location currentLocation;
+    private static GoogleApiClient googleApiClient;
     private static int signalStrengthValue;
     private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     private static Double latitude;
@@ -187,6 +190,14 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    // Blocking user to go back to login screen, after login
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     /**
      * Called when you change the page
@@ -315,7 +326,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.number_display_dialog);
         dialog.setTitle(Constant.TITLE);
-        dialog.getWindow().setLayout(1000, 500);
+        dialog.getWindow().setLayout(750, 500);
         final Button yes = dialog.findViewById(R.id.positive);
         final Button no = dialog.findViewById(R.id.negative);
         yes.setOnClickListener(v -> {
@@ -372,7 +383,11 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private class ApproveConsentRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Toast.makeText(DashboardMainActivity.this, Constant.CONSENT_NOT_APPROVED_MESSAGE, Toast.LENGTH_SHORT).show();
+            if (error.networkResponse.statusCode == Constant.STATUS_CODE_401) {
+                showCustomAlertWithText(Constant.CONSENT_NOT_APPROVED_MESSAGE);
+            } else {
+                showCustomAlertWithText(Constant.CONSENT_NOT_APPROVED_MESSAGE);
+            }
         }
     }
 
@@ -411,7 +426,12 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private class RejectConsentRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Toast.makeText(DashboardMainActivity.this, Constant.CONSENT_NOT_REJECTED_MESSAGE, Toast.LENGTH_SHORT).show();
+            if (error.networkResponse.statusCode == Constant.STATUS_CODE_401) {
+                showCustomAlertWithText(Constant.CONSENT_NOT_REJECTED_MESSAGE);
+            } else {
+                showCustomAlertWithText(Constant.CONSENT_NOT_REJECTED_MESSAGE);
+            }
+
         }
     }
 
@@ -454,6 +474,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                 case R.id.group_management:
                     gotoGroupManagementActivity();
                     break;
+                case R.id.settings:
+                    gotoSettingsActivity();
+                    break;
                 case R.id.howtoadd:
                     goToHowtoUseActivity();
                     break;
@@ -468,15 +491,22 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     }
 
     private void gotoNotificationActivity() {
-        Intent intent = new Intent(this, NotificationsActivity.class);
+        Intent intent = new Intent(this, NotificationsAlertsActivity.class);
         startActivity(intent);
     }
+
     private void gotoSilentModeActivity() {
         Intent intent = new Intent(this, SilentModeActivity.class);
         startActivity(intent);
     }
+
     private void gotoGroupManagementActivity() {
         Intent intent = new Intent(this, ActiveSessionActivity.class);
+        startActivity(intent);
+    }
+
+    private void gotoSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
@@ -608,7 +638,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                 try {
                     makeMQTTConnection();
                     Thread.sleep(30000);
-                    publishMessage();
+                    if (currentLocation != null) {
+                        publishMessage();
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -621,8 +653,11 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
      */
     public void publishMessage() {
         if (getCurrentLocation() != null) {
-            latitude = getCurrentLocation().getLatitude();
-            longitude = getCurrentLocation().getLongitude();
+            Location location = getCurrentLocation();
+            if(location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
             String message = "{\"did\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                     "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
             String topic = "jioiot/svcd/tracker/" + userPhoneNumber + "/uc/fwd/locinfo";
@@ -726,4 +761,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         startActivity(new Intent(this, SigninSignupActivity.class));
     }
 
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage) {
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
 }

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.menu.AlertsFragment">
+
+    <RelativeLayout
+        android:id="@+id/memberDetailLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/layout_frame_blue">
+
+        <ImageView
+            android:id="@+id/alertBackButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/back" />
+
+        <ImageView
+            android:id="@+id/memberNameIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/alertBackButton"
+            android:background="@drawable/secondaryuser" />
+
+        <TextView
+            android:id="@+id/alertsMemberName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_toRightOf="@id/memberNameIcon"
+            android:textColor="@color/white"
+            android:textSize="17dp" />
+
+        <TextView
+            android:id="@+id/alertMemberAddress"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/alertsMemberName"
+            android:layout_toRightOf="@id/memberNameIcon"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
+
+        <ImageView
+            android:id="@+id/alertNextButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_next" />
+
+        <TextView
+            android:id="@+id/alertNumbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/margin_32"
+            android:textColor="@color/lite_blue"
+            android:layout_toLeftOf="@id/alertNextButton"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="01"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:textColor="@color/lite_blue"
+            android:layout_below="@id/alertNumbers"
+            android:layout_alignStart="@id/alertNumbers"
+            android:layout_marginRight="10dp"
+            android:text="Alerts"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/alertTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="14dp"
+        android:text="ALERTS"
+        android:textColor="@color/black"
+        android:layout_below="@id/memberDetailLayout" />
+
+    <View
+        android:id="@+id/alertLine"
+        android:layout_width="1dp"
+        android:layout_height="15dp"
+        android:layout_marginLeft="@dimen/margin_25"
+        android:layout_below="@id/alertTextView"
+        android:background="@android:color/darker_gray"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/alertsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/alertLine"
+        android:divider="#806326"
+        android:dividerHeight="1dp" />
+
+</RelativeLayout>

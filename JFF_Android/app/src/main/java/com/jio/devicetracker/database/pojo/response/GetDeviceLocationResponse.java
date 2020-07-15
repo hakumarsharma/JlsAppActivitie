@@ -23,6 +23,7 @@
 /**
  * This class is using to handle the getLocation API response and converting the response in pojo class.
  */
+
 package com.jio.devicetracker.database.pojo.response;
 
 import com.google.gson.annotations.SerializedName;

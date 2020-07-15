@@ -123,10 +123,11 @@ public class SignupEmailFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.continueEmailSignup) {
-            if(signUpEmailEditText.getText().toString().trim().equalsIgnoreCase(Constant.EMPTY_STRING)) {
+            if(!Util.isValidEmailId(signUpEmailEditText.getText().toString())) {
                 wrongEmailErrorTextView.setVisibility(View.VISIBLE);
                 return;
             }
+            Util.getInstance().setSignInEmailId(signUpEmailEditText.getText().toString());
             navigateToMobileFragment(signUpEmailEditText.getText().toString());
         } else if (v.getId() == R.id.signupAddLaterTextView) {
            navigateToMobileFragment(signUpEmailEditText.getText().toString());

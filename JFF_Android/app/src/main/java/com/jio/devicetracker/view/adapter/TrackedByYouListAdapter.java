@@ -97,13 +97,13 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         HomeActivityListData data = mList.get(position);
         if (data.getConsentId() != null) {
             holder.name.setText(data.getName());
-            holder.profile.setImageResource(R.drawable.mother);
+            holder.profile.setImageResource(R.drawable.secondaryuser);
         } else {
             holder.profile.setImageResource(R.drawable.ic_family_group);
             holder.name.setText(data.getGroupName());
         }
-        if (mList != null && !mList.isEmpty() &&  data.getConsentsCount() <= 4) {
-            switch (data.getConsentsCount()) {
+        if (mList != null && !mList.isEmpty() &&  data.getConsentsCount() <= 5) {
+            switch (data.getConsentsCount() - 1) {
                 case 1:
                     holder.icon1.setVisibility(View.VISIBLE);
                     holder.icon2.setVisibility(View.INVISIBLE);
@@ -167,6 +167,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         private TextView trackedByYouEdit;
         private TextView deleteAllMembers;
         private TextView numberOfUsers;
+        private View trackedByYouEditEditLine;
 
         /**
          * Constructor where we find element from .xml file
@@ -191,6 +192,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             trackedByYouEdit.setOnClickListener(this);
             deleteAllMembers = itemView.findViewById(R.id.deleteAllMembers);
             deleteAllMembers.setOnClickListener(this);
+            trackedByYouEditEditLine = itemView.findViewById(R.id.trackedByYouEditEditLine);
         }
 
         @Override
@@ -199,6 +201,8 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
                 case R.id.trackedByYouOperationStatus:
                     if (mList.get(getAdapterPosition()).getConsentStaus() != null) {
                         deleteAllMembers.setText("Delete member");
+                        trackedByYouEdit.setVisibility(View.GONE);
+                        trackedByYouEditEditLine.setVisibility(View.GONE);
                     }
                     trackedByYouOprationLayout.setVisibility(View.VISIBLE);
                     break;

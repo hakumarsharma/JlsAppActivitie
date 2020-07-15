@@ -19,7 +19,9 @@
  **************************************************************/
 package com.jio.devicetracker.view.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -66,6 +67,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     private Context mContext;
     private DBManager mDbManager;
     private RelativeLayout layoutOps;
+    private int position;
 
     public PeopleListAdapter(List<GroupMemberDataList> mList, Context mContext) {
         this.mList = mList;
@@ -117,6 +119,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)) {
             holder.memberStatus.setText(Constant.CONSENT_PENDING);
             holder.memberAddress.setText(Constant.CONSENT_PENDING_ADDRESS);
+            holder.shareInvite.setText(Constant.RE_SEND_INVITE);
             holder.memberIcon.setImageResource(R.drawable.pendinginvite);
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.pending_color));
         } else if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED)) {
@@ -133,6 +136,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.rejected_color));
             holder.memberAddress.setText(Constant.CONSENT_EXPIRED_ADDRESS);
             holder.memberIcon.setImageResource(R.drawable.invitetimeup);
+            holder.shareInvite.setText(Constant.RE_SEND_INVITE);
         }
     }
 
@@ -206,8 +210,8 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     mContext.startActivity(intent);
                     break;
                 case R.id.remove_from_group:
-                    PeopleListAdapter.this.layoutOps = layoutOps;
-                    makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition(), true);
+                    position = getAdapterPosition();
+                    deleteAlertBox(position);
                     break;
                 case R.id.share_invite:
                     PeopleListAdapter.this.layoutOps = layoutOps;
@@ -218,6 +222,23 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     break;
             }
 
+        }
+
+        private void deleteAlertBox(int position) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
+            adb.setTitle(Constant.ALERT_TITLE);
+            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
+            adb.setIcon(android.R.drawable.ic_dialog_alert);
+            adb.setPositiveButton("OK", (dialog, which) -> {
+                PeopleListAdapter.this.layoutOps = layoutOps;
+                makeRemoveAPICall(mList.get(position), position, true);
+            });
+            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            adb.show();
         }
     }
 
@@ -248,7 +269,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.code() == 200) {
                     Util.progressDialog.dismiss();
-                    Toast.makeText(mContext, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mDbManager.deleteSelectedDataFromGroupMember(groupMemberDataList.getConsentId());
                     removeItem(position);
                     if (!isRemoveFromGroup) {

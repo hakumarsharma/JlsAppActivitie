@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/device_number_content"
                 android:layout_marginLeft="@dimen/margin_22"
-                android:layout_marginTop="@dimen/margin_30"
+                android:layout_marginTop="10dp"
                 android:gravity="left"
                 android:text="@string/device"
                 android:textColor="@color/light_blue"
@@ -109,6 +109,60 @@
                 android:textSize="@dimen/ten_dp"
                 android:textStyle="bold"
                 android:visibility="invisible"/>
+
+            <TextView
+                android:id="@+id/device_imei"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/number_validation_text"
+                android:layout_marginLeft="@dimen/margin_22"
+                android:gravity="left"
+                android:text="@string/device_imei_text"
+                android:textColor="@color/light_blue"
+                android:textSize="@dimen/ten_dp"
+                android:textStyle="bold"
+                android:visibility="invisible"/>
+
+            <EditText
+                android:id="@+id/device_edit_imei"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/device_imei"
+                android:layout_marginLeft="@dimen/margin_22"
+                android:layout_marginTop="@dimen/five_dp"
+                android:background="@android:color/transparent"
+                android:focusedByDefault="true"
+                android:hint="Device IMEI"
+                android:inputType="phone"
+                android:textColor="@color/mine_shaft"
+                android:textSize="@dimen/seventeen_dp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/imei_edit_line"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/device_edit_imei"
+                android:layout_marginLeft="@dimen/margin_22"
+                android:layout_marginTop="@dimen/five_dp"
+                android:layout_marginRight="@dimen/sixteen_dp"
+                android:background="@color/timerColor" />
+
+            <TextView
+                android:id="@+id/imei_validation_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imei_edit_line"
+                android:layout_marginLeft="@dimen/margin_22"
+                android:layout_marginTop="@dimen/five_dp"
+                android:gravity="left"
+                android:text="Invalid IMEI number"
+                android:textColor="@color/errorColor"
+                android:textSize="@dimen/ten_dp"
+                android:textStyle="bold"
+                android:visibility="invisible"/>
+
+
 
             <Button
                 android:id="@+id/connect_btn"

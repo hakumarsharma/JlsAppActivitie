@@ -87,6 +87,7 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
 
     private void gotoAttachDeviceActivity() {
         Intent startMain = new Intent(this, AttachDeviceActivity.class);
+        startMain.putExtra(Constant.GROUP_ID, groupId);
         startActivity(startMain);
     }
 

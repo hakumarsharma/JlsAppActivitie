@@ -22,28 +22,41 @@ package com.jio.devicetracker.util;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
+import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
+import com.jio.devicetracker.view.location.LocationActivity;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -62,6 +75,7 @@ public final class Util extends AppCompatActivity {
     public static String userNumber = "";
     public static String googleToken;
     private Date expiryTime;
+    public static String signInEmailId;
 
     private Util() {
 
@@ -266,7 +280,7 @@ public final class Util extends AppCompatActivity {
      */
     public String getTrackingExpirirationDuration(long fromTime, long toTime) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS zzz");
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy");
             Date sessionEndTime = sdf.parse(sdf.format(new Date(toTime)));
             long today = Calendar.getInstance().getTimeInMillis();
             Date toDate = sdf.parse(sdf.format(new Date(today)));
@@ -441,14 +455,7 @@ public final class Util extends AppCompatActivity {
      * @return
      */
     public static boolean isValidMobileNumber(String mobile) {
-        String mobileNumber = "^[6-9][0-9]{9}|^\\d{13}$";
-        Pattern pat = Pattern.compile(mobileNumber);
-        return pat.matcher(mobile).matches();
-    }
-
-    // To check valid mobile number or imei number
-    public static boolean isValidMobileAndIMEINumber(String mobile) {
-        String mobileNumber = "^[6-9][0-9]{9}|^\\d{13}$";
+        String mobileNumber = "^[6-9][0-9]{9}$";
         Pattern pat = Pattern.compile(mobileNumber);
         return pat.matcher(mobile).matches();
     }
@@ -460,7 +467,7 @@ public final class Util extends AppCompatActivity {
      * @return
      */
     public static boolean isValidMobileNumberForPet(String mobile) {
-        String mobileNumber = "^[0-9]{13}$";
+        String mobileNumber = "^\\d{9}|^\\d{10}|^\\d{13}$";
         Pattern pat = Pattern.compile(mobileNumber);
         return pat.matcher(mobile).matches();
     }
@@ -551,4 +558,69 @@ public final class Util extends AppCompatActivity {
     public boolean isGoogleTokenExpired() {
         return Calendar.getInstance().getTime().after(expiryTime);
     }
+
+    /**
+     * Store and get email id used during signin
+     */
+
+    public void setSignInEmailId(String signInEmailId) {this.signInEmailId = signInEmailId;}
+
+    public String getSignInEmailId() { return  signInEmailId;}
+
+    /**
+     * Creates the notification channel
+     *//*
+    public void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = context.getString(R.string.channel_name);
+            String description = context.getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(Constant.NOTIFICATION_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            showNotifications("Hi", Constant.EMPTY_STRING, context);
+        }
+    }
+
+    // Shows the Notification on map screen, after taping on notification the map activity will open and notification will dissapear
+    private void showNotifications(String title, String text, Context context) {
+        Intent intent = new Intent(this, LocationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constant.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.app_icon)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText("Much longer text that cannot fit one line..."))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(Constant.NOTIFICATION__ID, builder.build());
+    }
+*/
+    /**
+     * Returns real address based on Lat and Long(Geo Coding)
+     *
+     * @param latitude
+     * @param longitude
+     * @return
+     */
+    public static String getAddressFromLocation(double latitude, double longitude,Context context) {
+        Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
+        StringBuilder strAddress = new StringBuilder();
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (!addresses.isEmpty()) {
+                Address fetchedAddress = addresses.get(0);
+                strAddress.setLength(0);
+                strAddress.append(fetchedAddress.getAddressLine(0)).append(" ");
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return strAddress.toString();
+    }
+
 }

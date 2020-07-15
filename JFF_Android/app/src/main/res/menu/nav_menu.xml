@@ -13,8 +13,14 @@
 
     <item
         android:id="@+id/group_management"
+        android:icon="@drawable/locationoutline"
+        android:title="Track management" />
+
+    <item
+        android:id="@+id/settings"
         android:icon="@drawable/settings"
-        android:title="Group management" />
+        android:title="Settings" />
+
     <item
         android:id="@+id/howtoadd"
         android:icon="@drawable/howtouse"

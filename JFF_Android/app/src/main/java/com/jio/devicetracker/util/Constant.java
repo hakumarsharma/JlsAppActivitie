@@ -89,7 +89,7 @@ public class Constant {
     public static final String CONSENT_APPROVED = "Consent status is already approved for this number";
     public static final String FMS_SERVERISSUE = "FMS server is down please call back after some time";
     public static final String TOKEN_NULL = "Token is null";
-    public static final String LOADING_DATA = "Please wait loading data...";
+    public static final String LOADING_DATA = "Loading,Please wait...";
     public static final String GROUP_CREATION_FAILURE = "You have exceeded maximum allowed active groups, Please delete one of the group members to add any other group.";
     public static final String GROUP_UPDATION_FAILURE = "Group name updation failed";
     public static final String INDIVIDUAL_USER_EDIT_FAILURE = "User name updation failed!, Please try again";
@@ -120,7 +120,7 @@ public class Constant {
     public static final String CONSENT_ID = "consentId";
     public static final String SELECTION_ERROR = "You cannot track individual user and group at the same time, Please select one of them to track.";
     public static final String NO_EVENTS_FOUND_RESPONSE = "No events found matching the search keys.";
-    public static final String FETCH_LOCATION_ERROR = "Location details are not available, Please try again!";
+    public static final String FETCH_LOCATION_ERROR = "Location details will be displayed when one or more group members approve consent.";
     public static final String GROUP_NOT_ACTIVE = "Please wait till clock ticks scheduled time.";
     public static final String SESSION_COMPLETED = "Please request consent to track the group members.";
     public static final String CONSENT_PENDING_STATUS = "Consent is pending, please ask the user to accept consent for tracking";
@@ -157,6 +157,10 @@ public class Constant {
     public static final String PEOPLE_WITHOUT_NEXT_LINE = "People";
     public static final String DEVICES_TAB = "Devices\n";
     public static final String DEVICES_WITHOUT_NEXT_LINE = "Devices";
+    public static final String NOTIFICATION_TAB = "Notification\n";
+    public static final String NOTIFICATION_WITHOUT_NEXT_LINE = "Notification";
+    public static final String ALERTS_TAB = "Alerts\n";
+    public static final String ALERTS_WITHOUT_NEXT_LINE = "Alerts";
     public static final String WELCOME = "Welcome";
     public static final String MOBILE_NUMBER = "Mobile Number";
     public static final String OTP_TEXTVIEW = "Please enter the OTP sent to \n your mobile no. ";
@@ -177,12 +181,14 @@ public class Constant {
     public static final String CHECK_DETAILS = "Please Enter the details";
     public static final String DUPLICATE_NUMBER = "This number is already added";
     public static final String LOGOUT_CONFIRMATION_MESSAGE = "Are you sure you want to logout ?";
+    public static final String DELETE_CONFIRMATION_MESSAGE = "Are you sure you want to delete ?";
     public static final String IMEI = "imei";
     public static final String PROGRESSBAR_MSG = "Please wait adding device";
     public static final String PET_TRACKER_DEVICE_TYPE = "Pet Tracker";
     public static final String PEOPLE_TRACKER_DEVICE_TYPE = "People Tracker";
     public static final String ADD_GROUP_MEMBER_INSTRUCTION1 = "* Click on + button to add member inside the group  ";
     public static final String ADD_GROUP_MEMBER_INSTRUCTION2 = "\n* Once added go to Home screen, select the group  from list and click on Track button to know the location of group members";
+    public static final String DEVICE_NAME_VALIDATION = "Please enter device name";
 
     // MAPs Activity constants
     public static final String MAP_TITLE = "Location";
@@ -190,6 +196,7 @@ public class Constant {
     public static final String SUCCESSFULL_DEVICE_ADDITION_RESPONSE = "1 device(s) are assigned to one user.";
     public static final String SUCCESSFULL_DEVICE_ADDITION = "Device is successfully added";
     public static final String UNSUCCESSFULL_DEVICE_ADDITION = "Device can not be added, please try again later";
+    public static final String UNSUCCESSFULL_DEVICE_ADD = "Device can not be added, check the number which you have entered.";
     public static final long FREQUENCY_FOR_LOCATION_UPDATE = 10;
     public static final long PRIORITY_BALANCED_POWER_ACCURACY = 10;
     public static final int EPOCH_TIME_DURATION = 15;
@@ -236,8 +243,11 @@ public class Constant {
     public static final String SESSION_GROUP_CONSENTS_TOKEN_URL = "/sessiongroupconsents/tokens";
     public static final String APPROVE_REJECT_CONSENT_URL1 = "/accounts/api/users/sessiongroupconsents/";
     public static final String STATUS_URL = "/status";
+    public static final String EDIT_USER_DETAIL_URL = "?tsp=1593753373067";
     public static final String SESSION_GROUP_CONSENTS_URL1 = "/sessiongroupconsents/";
     public static final String GET_LOCATION_URL = "/events/search";
+    public static final String GET_DEVICES_LIST = "/accounts/api/devicestatuses/search?skip=0&limit=20&tsp=1593767974741";
+    public static final String DELETE_DEVICE_URL = "/accounts/api/devices/";
 
     //Privacy Policy
     public static final String TERM_AND_CONDITION_ALERT = "Please accept privacy policy to proceed with the application";
@@ -268,7 +278,7 @@ public class Constant {
     public static final String GROUP_CHOOSE_MEMBER_CONDITION = "Choose any group to continue adding member to that group or select Add later";
     public static final String CONSENT_APPROVED_MESSAGE = "Thanks! you have approved the the group invitation request";
     public static final String CONSENT_REJECTED_MESSAGE = "You have rejected the consent.";
-    public static final String CONSENT_NOT_APPROVED_MESSAGE = "Consent is not approved please try gain!";
+    public static final String CONSENT_NOT_APPROVED_MESSAGE = "Consent cannot be approved, Please try again later!";
     public static final String CONSENT_NOT_REJECTED_MESSAGE = "Consent rejection failed!";
     public static final String CONSENT_STATUS_MSG = "Yes JioTracker";
     public static final String CONSENT_MSG_SENT = "Consent sent";
@@ -294,12 +304,16 @@ public class Constant {
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";
     public static final String GROUP_ID = "groupId";
+    public static final String ACTIVE_MEMBER_TITLE = "View members";
     public static final String GROUPNAME = "groupName";
     public static final String EDIT_MEMBER_TITLE = "Edit members";
     public static final String QR_CODE_VALUE = "QRCodeValue";
     public static final String SCAN_QR_CODE_TITLE = "Scan QR Code";
+    public static final String LEFT_GROUP_INFORMATION = " has left the group.";
+    public static final String DEVICE_PHONE_NUMBER = "DeviceNumber";
+    public static final String DEVICE_IMEI_NUMBER = "DeviceImei";
 
-    public static final String ACTIVE_SESSION_TITLE = "Group Management";
+    public static final String TRACK_MANAGEMENT_TITLE = "Track management";
     public static final String TRACKER_TITLE = "Trackers";
     public static final String GROUP_TITLE = "Group List";
     public static final String CREATE_GROUP_LIST = "Track";
@@ -312,6 +326,7 @@ public class Constant {
     public static final String REFRESH_INTERVAL_SETTING = "Settings";
     public static final String MAP_UPDATION_MSG = "Map will be updated after every ";
     public static final String PENDING = "pending";
+    public static final String RE_SEND_INVITE = "Resend invite";
     public static final String CONSENT_PENDING_ADDRESS = "Address will be displayed after consent is approved.";
     public static final String CONSENT_APPROVED_ADDRESS = "Address details are not available.";
     public static final String CONSENT_EXPIRED_ADDRESS = "Consent time expired.Click on send invite present under three dots.";
@@ -323,8 +338,12 @@ public class Constant {
     public static final String CONSET_STATUS_EXPIRED = "Expired";
     public static final String RELATION_WITH_GROUP_ERROR = "Please enter the relation with group member, it cannot be left empty";
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
-    public static final String GROUP_MEMBER_ADDITION_FAILURE = "Unable to add member in a group, Please try again!";
+    public static final String LOGGED_IN_USER_ADDITION_FAILURE = "Unable to add logged in user into the group";
+    public static final String GROUP_MEMBER_ADDITION_FAILURE = "Adding same device to same group is not allowed.";
+
     public static final String DEVICE_NOT_FOUND = "Device not found, Please try again!";
+    public static final String GROUP_LIMIT_EXCEED = "Group exceeded maximum consents count";
+    public static final String USER_ALREADY_ADDED_ERROR = "Member is already present in the group";
     public static final String REMOVE = "Remove";
     public static final String EXIT = "Exit";
     public static final String SESSION_GROUPS = "sessiongroups";
@@ -340,19 +359,37 @@ public class Constant {
     public static final String CREATED_BY = "createdBy";
     public static final String UPDATED_BY = "updatedBy";
     public static final String EVENTS = "events";
-    public static final String ONE_TO_ONE = "one_to_one";
+    public static final String MANY_TO_MANY = "many_to_many";
+	public static final String GEOFENCE = "    Geofence";
+    public static final String GEOFENCE_EDIT = "Edit Geofence";
+	public static final String LOWBATTERY = "Low Battery";
+    public static final String POLLING_FREQUENCY = "Polling frequency";
+    public static final String LATITUDE = "Latitude";
+    public static final String LONGNITUDE = "Longitude";
+    public static final String CREATE_GEOFENCE = "CreateGeofence";
+    public static final String ADDRESS_MESSAGE = "LatLong is not available for this address";
     public static final String INDIVIDUAL_USER_GROUP_NAME = "IndPeplTrac";
     public static final String INDIVIDUAL_DEVICE_GROUP_NAME = "IndDevTrac";
     public static final String IS_COMING_FROM_ADD_DEVICE = "isComingFromAddDevice";
     public static final String IS_COMING_FROM_ADD_CONTACT = "isComingFromAddContact";
     public static final String IS_COMING_FROM_GROUP_LIST = "isComingFromGroupList";
     public static final String IS_COMING_FROM_CONTACT_LIST = "isComingFromContactList";
+    public static final String GEOFENCE_RADIUS = "Geofence radius";
+    public static final String GEOFENCE_ADDRESS = "Geofence address";
     public static final String CLOSED = "closed";
     public static final String INVITE_SENT = "Consent invite sent successfully.";
     // Add Device constants
     public static final String Add_Device = "JioTrack";
     public static final String Add_People = "Add People";
+    public static final String ADD_CONTACT = "Add Contact";
     public static final String ENTER_DEVICE_NAME = "Please enter device name";
+    public static final String NOTIFICATION_CHANNEL = "High priority channel";
+    public static final String NOTIFICATION_CHANNEL_ID_NAME = "com.jio.devicetracker";
+    public static final String GEOFENCE_SUCCESS_MESSAGE = "onSuccess: Geofence Added...";
+    public static final String GEOFENCE_FAILURE_MESSAGE = "onFailure: Geofence not Added...";
+    public static final String PERMISSION_GRANTED = "Permission granted";
+    public static final String PERMISSION_NOT_GRANTED = "Permission not granted";
+
 
     // Add people constants
     public static final String Choose_Group = "Choose group";
@@ -363,7 +400,7 @@ public class Constant {
     public static final String MEMBER_NAME = "memberName";
     public static final String LAT = "lat";
     public static final String LANG = "lang";
-    public static final String SHARE_LOCATION = "Share Location";
+    public static final String SHARE_LOCATION = "Location";
 
 
     // Custom Alert Constants
@@ -400,6 +437,7 @@ public class Constant {
     public static final int STATUS_CODE_417 = 417;
     public static final int SUCCESS_CODE_200 = 200;
     public static final int STATUS_CODE_401 = 401;
+    public static final int STATUS_CODE_429 = 429;
 
 
     // Track device Activity
@@ -414,11 +452,14 @@ public class Constant {
     public static final int NOTIFICATION__ID = 1;
 
     // Notifications
-    public static final String NOTIFICATIONS_TITLE = "Notifications & Alerts";
+    public static final String NOTIFICATIONS_TITLE = "Notifications & alerts";
     public static final String SILENT_MODE = "Silent mode";
 
     // HowToUse Activity
     public static final String HOW_TO_ADD_TITLE = "How to use device";
+
+    // Settings Activity
+    public static final String SETTINGS = "Settings";
 
     // NavigateSupport Activity
     public static final String SUPPORT_TITLE = "Support";
@@ -428,13 +469,15 @@ public class Constant {
     public static final String CONTACT_TITLE = "Contact us";
 
     //FAQ Activity
-    public static final String QUES_1 = "First Question ?";
-    public static final String QUES_2 = "Second Question ?";
-    public static final String QUES_3 = "Third Question ?";
+    public static final String QUES_1 = "I am unable to track the location of my family members/pets. How do I fix this?";
+    public static final String QUES_2 = "How long does it take for the tracking frequency changes to reflect in the app? Do I need to wait for tracking duration time to locate the tracked individual / pet?";
+    public static final String QUES_3 = "I had unpaired my tracking device from the app. However, I no longer have the Packing Box. How do I re-configure my device with the app?";
+    public static final String QUES_4 = "How do I ensure the location data is safe and secure? ";
 
-    public static final String ANS_1 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
-    public static final String ANS_2 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
-    public static final String ANS_3 = "Lorem ipsum dolor sit amet, consectetuer \nadipiscing elit, sed diam nonummy nibh \neuismod tincidunt ut laoreet dolore magna \naliquam erat volutpat.";
+    public static final String ANS_1 = "For app enabled tracking, please verify if the tracked person has approved the request to track. If yes, please check if the Smartphone has enabled GPS under location settings and is within a network coverage area. If the problem persists, please visit the nearest Service center or alternatively write to us at care@jio.com \nFor Tracker Device, ensure that the device is paired with your Tracking app. Also verify that it is switched ON and the network LED is blinking ON as per the booklet. In case issue persists, please try moving around a bit to help optimise the GPS signals. Alternatively, please visit the nearest Service center or write to us at care@jio.com";
+    public static final String ANS_2 = "Please wait for 5 to 10 minutes for confirmation of tracking duration changes from Server end. Alternatively, you may click on the fetch location Icon to trace the trackee on real time basis";
+    public static final String ANS_3 = "As an alternative, you may input the IMEI number to re-associate the tracking device with the app. Please note that the earlier tracking data is retained only for a limited duration after disassociating a device from the app and may not reflect under your account.";
+    public static final String ANS_4 = "At Jio, we follow end to end encryption of user data with state of the art Cyber Security policies. Your data is accessible to only you and no one else. Please be careful that your Smartphone app doesn’t fall into unwanted hands and avoid tampering with tracking device software.";
 
 
 }
