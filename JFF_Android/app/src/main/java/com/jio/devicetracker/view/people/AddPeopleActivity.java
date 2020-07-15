@@ -20,9 +20,11 @@
 
 package com.jio.devicetracker.view.people;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -264,8 +266,17 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.contactAdd) {
-            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-            startActivityForResult(intent, 1);
+            PackageManager pm = context.getPackageManager();
+            int hasPerm = pm.checkPermission(
+                    Manifest.permission.READ_CONTACTS,
+                    context.getPackageName());
+            if (hasPerm == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(intent, 1);
+            }else {
+                Toast.makeText(this, Constant.CONTACTS_PERMISSION, Toast.LENGTH_LONG);
+            }
+
         } else if (v.getId() == R.id.addContactDetail) {
             validationCheck();
         } else if (v.getId() == R.id.back) {

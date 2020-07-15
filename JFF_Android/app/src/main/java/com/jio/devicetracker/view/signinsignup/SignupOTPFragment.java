@@ -249,15 +249,19 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
                 } else {
                     signupTimerTextView.setText(Constant.RESEND_OTP + "00" + ":" + remainedSecs);
                 }
-                signupTimerTextView.setTextColor(getResources().getColor(R.color.unselected_button_background));
-                signupTimerTextView.setEnabled(false);
+                if (getContext() != null) {
+                    signupTimerTextView.setTextColor(getResources().getColor(R.color.unselected_button_background));
+                    signupTimerTextView.setEnabled(false);
+                }
             }
 
             public void onFinish() {
                 signupTxtPinEntry.getText().clear();
                 signupTimerTextView.setText(Constant.REQUEST_OTP);
                 signupTimerTextView.setEnabled(true);
-                signupTimerTextView.setTextColor(getResources().getColor(R.color.timerTextViewColor));
+                if (getContext() != null) {
+                    signupTimerTextView.setTextColor(getResources().getColor(R.color.timerTextViewColor));
+                }
                 cancel();
             }
         }.start();
