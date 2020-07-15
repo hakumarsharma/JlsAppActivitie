@@ -29,10 +29,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.jio.devicetracker.R;
-
+@SuppressWarnings("PMD")
 public class CustomAlertActivity extends Dialog implements View.OnClickListener {
 
-    @SuppressWarnings("PMD.AvoidStringBufferField")
+
     private Button laterBtn;
     private Button viewBtn;
     private Button okBtn;
