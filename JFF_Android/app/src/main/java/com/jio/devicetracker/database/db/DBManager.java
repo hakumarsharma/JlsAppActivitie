@@ -689,7 +689,7 @@ public class DBManager {
         if (groupId != null) {
             String[] column = {DatabaseHelper.GROUP_NAME, DatabaseHelper.GROUPID, DatabaseHelper.STATUS, DatabaseHelper.CREATED_BY, DatabaseHelper.UPDATED_BY,
                     DatabaseHelper.PROFILE_IMAGE, DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO, DatabaseHelper.GROUP_OWNER_NAME,
-                    DatabaseHelper.GROUP_OWNER_PHONE_NUMBER, DatabaseHelper.GROUP_OWNER_USER_ID};
+                    DatabaseHelper.GROUP_OWNER_PHONE_NUMBER, DatabaseHelper.GROUP_OWNER_USER_ID,DatabaseHelper.CONSENTS_COUNT};
             String[] arg = {groupId};
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP, column, DatabaseHelper.GROUPID + " = ? ", arg, null, null, null);
             if (cursor != null && cursor.getCount() > 0) {
@@ -705,6 +705,7 @@ public class DBManager {
                     data.setGroupOwnerUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_OWNER_USER_ID)));
                     data.setGroupOwnerName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_OWNER_NAME)));
                     data.setGroupOwnerPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_OWNER_PHONE_NUMBER)));
+                    data.setConsentsCount(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CONSENTS_COUNT)));
                 }
                 cursor.close();
             }

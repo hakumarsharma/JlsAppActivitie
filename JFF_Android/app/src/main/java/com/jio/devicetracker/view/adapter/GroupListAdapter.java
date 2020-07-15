@@ -122,7 +122,13 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         }
         holder.mListlayout.setOnClickListener(v -> itemListener.clickonListLayout(data));
         if (mList != null && !mList.isEmpty() && data.getConsentsCount() <= 5) {
-            switch (data.getConsentsCount() - 1) {
+            switch (data.getConsentsCount()) {
+                case 0:
+                    holder.icon1.setVisibility(View.INVISIBLE);
+                    holder.icon2.setVisibility(View.INVISIBLE);
+                    holder.icon3.setVisibility(View.INVISIBLE);
+                    holder.icon4.setVisibility(View.INVISIBLE);
+                    break;
                 case 1:
                     holder.icon1.setVisibility(View.VISIBLE);
                     holder.icon2.setVisibility(View.INVISIBLE);
