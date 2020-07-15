@@ -32,6 +32,7 @@ import com.jio.devicetracker.R;
 
 public class CustomAlertActivity extends Dialog implements View.OnClickListener {
 
+    @SuppressWarnings("PMD.AvoidStringBufferField")
     private Button laterBtn;
     private Button viewBtn;
     private Button okBtn;
