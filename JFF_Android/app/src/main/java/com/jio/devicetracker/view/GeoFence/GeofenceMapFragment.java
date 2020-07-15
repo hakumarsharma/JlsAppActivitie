@@ -99,7 +99,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private String groupId;
     private double lat;
     private double lang;
-    private GeofenceDetails geofenceDetails;
     private AlertHistoryData alertHistoryData;
     public static String consentId;
 
@@ -182,7 +181,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         mMap.clear();
         //if (mapDataList.isEmpty()) {
         MarkerOptions markerOptions = new MarkerOptions();
-        geofenceDetails = mDbManager.getGeofenceDetails(deviceNumber);
+        GeofenceDetails geofenceDetails = mDbManager.getGeofenceDetails(deviceNumber);
         if (geofenceDetails.getLat() != 0 && geofenceDetails.getLng() != 0 && !createGeofence) {
             geoFenceLatlng = new LatLng(geofenceDetails.getLat(), geofenceDetails.getLng());
         } else if (createGeofence) {
@@ -341,7 +340,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 for (SearchEventResponse.Data data : mList) {
                     for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
                         if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice()) && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
-                            MapData mapData = new MapData();
                             onMapReady(mMap);
                             alertHistoryData = new AlertHistoryData();
                             String alertAddress = Util.getAddressFromLocation(data.getLocation().getLat(),data.getLocation().getLng(),getActivity());

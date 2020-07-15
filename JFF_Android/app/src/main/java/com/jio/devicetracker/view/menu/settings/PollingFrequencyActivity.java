@@ -24,6 +24,7 @@ package com.jio.devicetracker.view.menu.settings;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,6 +38,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 
 public class PollingFrequencyActivity extends Activity implements AdapterView.OnItemSelectedListener,View.OnClickListener {
+    private String TAG = "PollingFrequencyActivity";
 
     String[] pollingFreq = { "5  |  min", "10  |  min", "15  |  min", "20  |  min", "25  |  min", "30  |  min", "35  |  min", "40  |  min", "45  |  min","50  |  min"};
 
@@ -66,16 +68,16 @@ public class PollingFrequencyActivity extends Activity implements AdapterView.On
 
     @Override
     public void onClick(View v) {
-
+        Log.d(TAG,"provide clicklistner functionality");
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+        Log.d(TAG,"provide onItemSelected functionality");
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
+        Log.d(TAG,"provide onNothingSelected functionality");
     }
 }
