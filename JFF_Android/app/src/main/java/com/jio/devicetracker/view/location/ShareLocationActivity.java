@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -41,6 +39,7 @@ import androidx.fragment.app.FragmentManager;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.geofence.GeofenceActivity;
 
@@ -57,6 +56,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     private RelativeLayout menuLayout;
     private String deviceNumber;
     private String groupId;
+    private String consentStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         mapDataList = getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         groupId = getIntent().getStringExtra(Constant.GROUP_ID);
         deviceNumber = getIntent().getStringExtra(Constant.DEVICE_NUMBER);
+        consentStatus = getIntent().getStringExtra(Constant.CONSENT_STATUS);
         if (getIntent().getStringExtra(Constant.MEMBER_NAME) != null) {
             memberName.setText(getIntent().getStringExtra(Constant.MEMBER_NAME));
         } else {
@@ -122,6 +123,10 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.create_geofence:
+                if(consentStatus != null && !consentStatus.equalsIgnoreCase(Constant.CONSENT_APPROVED_STATUS)){
+                    showCustomAlertWithText(Constant.GEOFENCE_Alert_Message);
+                    return;
+                }
                 Intent intent = new Intent(this, GeofenceActivity.class);
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
                 intent.putExtra(Constant.MEMBER_NAME, memberName);
@@ -162,5 +167,12 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
             ex.printStackTrace();
         }
         return strAddress.toString();
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage) {
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 }

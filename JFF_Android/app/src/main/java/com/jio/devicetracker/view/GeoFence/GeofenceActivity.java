@@ -20,6 +20,7 @@
 
 package com.jio.devicetracker.view.geofence;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -54,6 +55,7 @@ import java.util.List;
 public class GeofenceActivity extends BaseActivity implements View.OnClickListener {
     private GeofenceMapFragment fragmentMap;
     private EditText addressText;
+    private String deviceNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         ActionBar actionBar;
         actionBar = getSupportActionBar();
         Intent intent = getIntent();
+        deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         boolean editGeofence = intent.getBooleanExtra("EditGeofence", false);
 
         ColorDrawable colorDrawable
@@ -178,6 +181,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
                 if (!addressText.getText().toString().isEmpty()) {
                     intent.putExtra(Constant.GEOFENCE_ADDRESS, addressText.getText().toString());
                 }
+                intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
                 startActivity(intent);
                 return true;
             default:
