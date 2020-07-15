@@ -123,7 +123,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         } else if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("OtherPet")) {
             holder.deviceMemberIcon.setBackgroundResource(R.drawable.other_pet);
         } else {
-            holder.deviceMemberIcon.setBackgroundResource(R.drawable.ic_family_group);
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.device_default);
         }
         holder.deviceListLayout.setOnClickListener(new View.OnClickListener() {
             @Override

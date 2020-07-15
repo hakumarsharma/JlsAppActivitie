@@ -118,7 +118,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
             holder.groupListmemberIcon.setImageDrawable(drawable);
         } else {
-            holder.groupListmemberIcon.setBackgroundResource(R.drawable.ic_family_group);
+            holder.groupListmemberIcon.setBackgroundResource(R.drawable.ic_creategroup);
         }
         holder.mListlayout.setOnClickListener(v -> itemListener.clickonListLayout(data));
         if (mList != null && !mList.isEmpty() && data.getConsentsCount() <= 5) {
