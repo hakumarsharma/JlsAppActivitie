@@ -144,8 +144,8 @@ public class GroupsFragment extends Fragment {
             groupListAdapter.setOnItemClickPagerListener(new GroupListAdapter.RecyclerViewClickListener() {
                 @Override
                 public void clickonListLayout(HomeActivityListData homeActivityListData) {
-                    if (checkIfMemberPresentInGroup(homeActivityListData.getGroupId())) {
-                        showCustomAlertWithText("No members are added, Please add it to track");
+                    if (!checkIfMemberPresentInGroup(homeActivityListData.getGroupId())) {
+                        showCustomAlertWithText(Constant.ADD_MEMBERS_TO_GROUP);
                         return;
                     }
                     makeGetLocationAPICall(homeActivityListData);
@@ -155,8 +155,9 @@ public class GroupsFragment extends Fragment {
     }
 
     private boolean checkIfMemberPresentInGroup(String groupId) {
-        List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
-        return mList.isEmpty();
+        HomeActivityListData groupDetail = mDbManager.getGroupDetail(groupId);
+        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        return groupDetail.getConsentsCount() > 0 ? true : false;
     }
 
     /**
@@ -251,7 +252,7 @@ public class GroupsFragment extends Fragment {
                 homeActivityListData.setTo(data.getSession().getTo());
                 int count = 0;
                 for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
-                    if (consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED)) {
+                    if ((!consentData.getUserId().equalsIgnoreCase(userId)) && (consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
                         count = count + 1;
                         homeActivityListData.setConsentsCount(count);
                     }

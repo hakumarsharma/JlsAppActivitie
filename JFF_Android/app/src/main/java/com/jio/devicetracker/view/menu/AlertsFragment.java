@@ -63,7 +63,7 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
         alertBackButton.setOnClickListener(this);
         alertNextButton.setOnClickListener(this);
         mDbManager = new DBManager(getActivity());
-        getAlertsHistoryAndDisplay(GeofenceMapFragment.consentId, view);
+        //getAlertsHistoryAndDisplay(GeofenceMapFragment.consentId, view);
         alertHistoryData = new ArrayList<>();
         getIndividualMemberList();
         return view;

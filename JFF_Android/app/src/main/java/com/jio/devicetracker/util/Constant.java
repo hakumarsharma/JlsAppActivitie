@@ -341,6 +341,7 @@ public class Constant {
     public static final String DEVICE_DETAIL_VALIDATION = "Entered device detail doesn't match with the server data, please enter the correct device detail";
     public static final String LOGGED_IN_USER_ADDITION_FAILURE = "Unable to add logged in user into the group";
     public static final String GROUP_MEMBER_ADDITION_FAILURE = "Adding same device to same group is not allowed.";
+    public static final String ADD_MEMBERS_TO_GROUP = "Please add members to group and track";
 
     public static final String DEVICE_NOT_FOUND = "Device not found, Please try again!";
     public static final String GROUP_LIMIT_EXCEED = "Group exceeded maximum consents count";

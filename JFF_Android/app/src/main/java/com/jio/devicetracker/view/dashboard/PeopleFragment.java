@@ -284,6 +284,13 @@ public class PeopleFragment extends Fragment {
                 homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                 homeActivityListData.setFrom(data.getSession().getFrom());
                 homeActivityListData.setTo(data.getSession().getTo());
+                int count = 0;
+                for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
+                    if ((!consentData.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) && (consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                        count = count + 1;
+                        homeActivityListData.setConsentsCount(count);
+                    }
+                }
                 if (!(data.getGroupOwner().isEmpty())) {
                     homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
                     homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
