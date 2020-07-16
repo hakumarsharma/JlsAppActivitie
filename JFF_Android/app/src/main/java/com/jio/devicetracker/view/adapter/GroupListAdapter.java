@@ -121,7 +121,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             holder.groupListmemberIcon.setBackgroundResource(R.drawable.ic_creategroup);
         }
         holder.mListlayout.setOnClickListener(v -> itemListener.clickonListLayout(data));
-        if (mList != null && !mList.isEmpty() && data.getConsentsCount() <= 5) {
+        if (mList != null && !mList.isEmpty() && data.getConsentsCount() <= 4) {
             switch (data.getConsentsCount()) {
                 case 0:
                     holder.icon1.setVisibility(View.INVISIBLE);

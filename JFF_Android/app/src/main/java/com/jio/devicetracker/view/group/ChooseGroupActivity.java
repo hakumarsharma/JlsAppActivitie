@@ -326,8 +326,6 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                         for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
                             if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
                                 homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
-                            } else {
-                                homeActivityListData.setGroupIcon("ic_creategroup");
                             }
                         }
                     }else {

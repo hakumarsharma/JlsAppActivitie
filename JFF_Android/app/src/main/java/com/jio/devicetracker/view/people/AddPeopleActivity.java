@@ -274,7 +274,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
                 Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(intent, 1);
             }else {
-                Toast.makeText(this, Constant.CONTACTS_PERMISSION, Toast.LENGTH_LONG);
+                showCustomAlertWithText(Constant.CONTACTS_PERMISSION);
             }
 
         } else if (v.getId() == R.id.addContactDetail) {
