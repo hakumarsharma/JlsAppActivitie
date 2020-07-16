@@ -63,6 +63,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
     private GeofenceMapFragment fragmentMap;
     private EditText addressText;
     private String deviceNumber;
+    private String memberAddress;
     private List<MapData> mapDataList;
 
     @Override
@@ -79,6 +80,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         ActionBar actionBar;
         actionBar = getSupportActionBar();
         Intent intent = getIntent();
+        memberAddress = intent.getStringExtra(Constant.MEMBER_ADDRESS);
         mapDataList = intent.getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         boolean editGeofence = intent.getBooleanExtra("EditGeofence", false);
@@ -95,6 +97,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         toolbarLayout.setBackgroundColor(getResources().getColor(R.color.geofence_background));
         addressText = findViewById(R.id.address);
         ImageView searchAddress = findViewById(R.id.search);
+        addressText.setText(memberAddress);
         ImageView cancelAddress = findViewById(R.id.clear);
        /* menuOption = findViewById(R.id.menu_option);
         menuOption.setVisibility(View.VISIBLE);

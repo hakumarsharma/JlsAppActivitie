@@ -413,6 +413,7 @@ public class Constant {
     public static final String ADD_GROUP = "Add to group";
     public static final String DEVICE_NOT_FOUND_QR = "Device not found";
     public static final String MEMBER_NAME = "memberName";
+    public static final String MEMBER_ADDRESS = "memberAddress";
     public static final String LAT = "lat";
     public static final String LANG = "lang";
     public static final String SHARE_LOCATION = "Location";

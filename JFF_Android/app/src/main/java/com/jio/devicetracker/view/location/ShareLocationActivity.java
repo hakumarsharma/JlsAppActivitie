@@ -55,6 +55,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     private List<MapData> mapDataList;
     private RelativeLayout menuLayout;
     private String deviceNumber;
+    private TextView memberAddrss;
     private String groupId;
     private String consentStatus;
     private boolean deviceLocationflag;
@@ -77,7 +78,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         ImageView closeOption = findViewById(R.id.close_icon);
         closeOption.setOnClickListener(this);
         TextView memberName = findViewById(R.id.member_name);
-        TextView memberAddrss = findViewById(R.id.member_address);
+        memberAddrss = findViewById(R.id.member_address);
         TextView shareLocation = findViewById(R.id.share_location);
         shareLocation.setOnClickListener(this);
         TextView createGeofence = findViewById(R.id.create_geofence);
@@ -190,6 +191,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         Intent intent = new Intent(this, GeofenceActivity.class);
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.MEMBER_NAME, memberName);
+        intent.putExtra(Constant.MEMBER_ADDRESS,memberAddrss.getText().toString());
         intent.putExtra(Constant.GROUP_ID,groupId);
         intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
         startActivity(intent);

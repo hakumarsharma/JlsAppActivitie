@@ -23,6 +23,8 @@ package com.jio.devicetracker.view.geofence;
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,6 +54,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -70,8 +73,10 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
 import com.jio.devicetracker.view.menu.settings.GeofenceSettingsAcivity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -86,9 +91,10 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     //private List<MapData> mapDataList;
     private DBManager mDbManager;
     private GeofenceHelper geofenceHelper;
-    private int GEOFENCE_RADIUS_IN_METERS = 200;
+    private int GEOFENCE_RADIUS_IN_METERS = 5000;
     double Longitude = 73.76976049999999;
     double Latitude = 19.9756696;
+    private String name;
     private GeofencingClient mGeofencingClient;
     private String GEOFENCE_ID = "JioTrack1";
     private LatLng trackeeLatlng;
@@ -178,6 +184,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.clear();
         if (mapDataList != null && !mapDataList.isEmpty()) {
+            name = mapDataList.get(0).getName();
             trackeeLatlng = new LatLng(mapDataList.get(0).getLatitude(), mapDataList.get(0).getLongitude());
             addMarker(trackeeLatlng);
         }
@@ -191,7 +198,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         }
         //markerOptions.position(geoFenceLatlng);
         //mMap.addMarker(markerOptions);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(geoFenceLatlng, 14));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(geoFenceLatlng, 12));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         addCircle(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS);
         addGeofence(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS);
@@ -268,6 +275,29 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private void addMarker(LatLng latLng) {
         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
         mMap.addMarker(markerOptions);
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+                List<Address> addresses = null; //1 num of possible location returned
+                try {
+                    addresses = geocoder.getFromLocation(trackeeLatlng.latitude,trackeeLatlng.longitude, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String address = addresses.get(0).getAddressLine(0); //0 to obtain first possible address
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                //create your custom title
+                String title = address +"-"+city+"-"+state;
+                marker.setTitle(title);
+                marker.showInfoWindow();
+
+                return true;
+            }
+        });
     }
 
     /**
@@ -278,7 +308,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             while (true) {
                 Log.d("Geofence", "call method in background");
                 try {
-                    //makeApicallForTrackeeLocation();
+                    makeApicallForTrackeeLocation();
                     Thread.sleep(100000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -377,11 +407,15 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         notificationHelper = new NotificationHelper(getActivity());
         if (distance < GEOFENCE_RADIUS_IN_METERS && GeofenceSettingsAcivity.geoFenceEntryNotificationFlag) {
             geoFenceEntryExit = true;
-            mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
+            if(alertHistoryData != null) {
+                mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
+            }
             notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE,Constant.GEOFENCE_ENTRY_MESSAGE, NotificationsAlertsActivity.class);
         } else if (distance > GEOFENCE_RADIUS_IN_METERS && geoFenceEntryExit && GeofenceSettingsAcivity.geoFenceExitNotificationFlag) {
             geoFenceEntryExit = false;
-            mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
+            if(alertHistoryData != null) {
+                mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
+            }
             notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
         }
     }
