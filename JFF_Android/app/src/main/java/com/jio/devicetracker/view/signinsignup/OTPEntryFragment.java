@@ -20,7 +20,9 @@
 
 package com.jio.devicetracker.view.signinsignup;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -83,6 +85,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
         View view = inflater.inflate(R.layout.fragment_otp_entry, container, false);
         setLayoutData(view);
         startTimer(60000, 1000);
+        checkPermission();
         return view;
     }
 
@@ -354,6 +357,19 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
         public void onErrorResponse(VolleyError error) {
             isDeviceAdditionRequired = false;
             System.out.println("Error in Device Addition");
+        }
+    }
+
+    // Check the SMS read pemission
+    private void checkPermission() {
+        PackageManager pm = getActivity().getPackageManager();
+        int hasPerm = pm.checkPermission(
+                Manifest.permission.READ_SMS,
+                getActivity().getPackageName());
+        if (hasPerm == PackageManager.PERMISSION_GRANTED) {
+            System.out.println("Permission is already granted");
+        } else {
+            showCustomAlertWithText(Constant.SMS_PERMISSION);
         }
     }
 }

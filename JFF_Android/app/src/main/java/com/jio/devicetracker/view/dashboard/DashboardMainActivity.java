@@ -155,7 +155,6 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         });
         initUI();
         initializeDataMembers();
-
     }
 
     private void initUI() {
@@ -590,6 +589,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             MyPhoneStateListener myPhoneStateListener = new MyPhoneStateListener();
             TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        } else {
+            showCustomAlertWithText(Constant.LOCATION_PERMISSION);
         }
     }
 
@@ -654,7 +655,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     public void publishMessage() {
         if (getCurrentLocation() != null) {
             Location location = getCurrentLocation();
-            if(location != null) {
+            if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
             }
@@ -767,4 +768,5 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
     }
+
 }

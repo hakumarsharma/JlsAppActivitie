@@ -20,7 +20,9 @@
 
 package com.jio.devicetracker.view.signinsignup;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -70,6 +72,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
         name = getArguments().getString(Constant.NAME);
         View view = inflater.inflate(R.layout.fragment_signup_otp, container, false);
         setLayoutData(view);
+        checkPermission();
         return view;
     }
 
@@ -94,7 +97,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
@@ -104,7 +107,6 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
     public void messageReceived(String message, String phoneNum) {
         if (message.contains(Constant.OTP_SMS) && signupTxtPinEntry != null) {
             signupTxtPinEntry.setText(message.substring(message.indexOf(":") + 2, message.indexOf(":") + 7));
-
         }
     }
 
@@ -115,7 +117,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
             if (!token.equalsIgnoreCase(Constant.EMPTY_STRING)) {
                 makeSafetyNetCall(token);
             }
-        } else if(v.getId() == R.id.signupTimerTextView) {
+        } else if (v.getId() == R.id.signupTimerTextView) {
             String token = signupTxtPinEntry.getText().toString().trim();
             makeSafetyNetCall(token);
         }
@@ -124,13 +126,13 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
     private void makeSafetyNetCall(String token) {
         SafetyNet.getClient(Objects.requireNonNull(getActivity())).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
                 .addOnSuccessListener(getActivity(), response -> {
-                    if (token == null || token.isEmpty()){
+                    if (token == null || token.isEmpty()) {
                         if (!response.getTokenResult().isEmpty()) {
                             Util.getInstance().setExpiryTime();
                             Util.getInstance().updateGoogleToken(response.getTokenResult());
                             generateRegistrationTokenAPICall();
                         }
-                    }else {
+                    } else {
                         if (!response.getTokenResult().isEmpty()) {
                             Util.getInstance().setExpiryTime();
                             Util.getInstance().updateGoogleToken(response.getTokenResult());
@@ -237,6 +239,7 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
 
     /**
      * Starts the timer for 60 second
+     *
      * @param finish
      * @param tick
      */
@@ -265,6 +268,19 @@ public class SignupOTPFragment extends Fragment implements View.OnClickListener,
                 cancel();
             }
         }.start();
+    }
+
+    // Check the SMS read pemission
+    private void checkPermission() {
+        PackageManager pm = getActivity().getPackageManager();
+        int hasPerm = pm.checkPermission(
+                Manifest.permission.RECEIVE_SMS,
+                getActivity().getPackageName());
+        if (hasPerm == PackageManager.PERMISSION_GRANTED) {
+            System.out.println("Permission is already granted");
+        } else {
+            showCustomAlertWithText(Constant.SMS_PERMISSION);
+        }
     }
 
 }
