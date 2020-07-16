@@ -31,12 +31,15 @@ import android.graphics.Color;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 
 public class NotificationHelper extends ContextWrapper {
     NotificationManager manager;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public NotificationHelper(Context base) {
         super(base);
@@ -48,29 +51,29 @@ public class NotificationHelper extends ContextWrapper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createChannels() {
-        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
-        notificationChannel.enableLights(true);
-        notificationChannel.enableVibration(true);
-        notificationChannel.setLightColor(Color.RED);
-        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.createNotificationChannel(notificationChannel);
+        CharSequence name = this.getString(R.string.channel_name);
+        String description = this.getString(R.string.channel_description);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel(Constant.NOTIFICATION_CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+        manager = this.getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(channel);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void sendHighPriorityNotification(String title, String body, Class activityName) {
         Intent intent = new Intent(this, activityName);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 2607, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification notification = new Notification.Builder(this)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constant.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.app_icon)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setChannelId(CHANNEL_ID)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText("Jio track alert!"))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
-                .build();
-
-        manager.notify(10, notification);
-
-
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(Constant.NOTIFICATION__ID, builder.build());
     }
 }

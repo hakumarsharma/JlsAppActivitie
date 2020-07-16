@@ -32,6 +32,7 @@ import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
+import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.location.MapsActivity;
 
 import java.util.List;
@@ -58,16 +59,16 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
         switch (transitionType) {
             case Geofence.GEOFENCE_TRANSITION_ENTER:
-                Toast.makeText(context, "GEOFENCE_TRANSITION_ENTER", Toast.LENGTH_SHORT).show();
-                notificationHelper.sendHighPriorityNotification("GEOFENCE_TRANSITION_ENTER", "", MapsActivity.class);
+                Toast.makeText(context, Constant.GEOFENCE_ENTRY_TITLE, Toast.LENGTH_SHORT).show();
+                notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE, "", MapsActivity.class);
                 break;
             case Geofence.GEOFENCE_TRANSITION_DWELL:
                 Toast.makeText(context, "GEOFENCE_TRANSITION_DWELL", Toast.LENGTH_SHORT).show();
                 notificationHelper.sendHighPriorityNotification("GEOFENCE_TRANSITION_DWELL", "", MapsActivity.class);
                 break;
             case Geofence.GEOFENCE_TRANSITION_EXIT:
-                Toast.makeText(context, "GEOFENCE_TRANSITION_EXIT", Toast.LENGTH_SHORT).show();
-                notificationHelper.sendHighPriorityNotification("GEOFENCE_TRANSITION_EXIT", "", MapsActivity.class);
+                Toast.makeText(context, Constant.GEOFENCE_EXIT_TITLE, Toast.LENGTH_SHORT).show();
+                notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, "", MapsActivity.class);
                 break;
             default:
                 break;

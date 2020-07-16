@@ -364,8 +364,8 @@ public class Constant {
     public static final String MANY_TO_MANY = "many_to_many";
 	public static final String GEOFENCE = "    Geofence";
     public static final String GEOFENCE_EDIT = "Edit Geofence";
-    public static final String GEOFENCE_ENTRY_TITLE = "GEOFENCE_TRANSITION_ENTER";
-    public static final String GEOFENCE_EXIT_TITLE = "GEOFENCE_TRANSITION_EXIT";
+    public static final String GEOFENCE_ENTRY_TITLE = "Geofence entry alert";
+    public static final String GEOFENCE_EXIT_TITLE = "Geofence exit alert";
     public static final String GEOFENCE_ENTRY_MESSAGE = "Trackee entered in geofence";
     public static final String GEOFENCE_EXIT_MESSAGE = "Trackee left the geofence";
     public static final String GEOFENCE_Alert_Message = "Geofence can not be created. Please wait till consent is approved";
