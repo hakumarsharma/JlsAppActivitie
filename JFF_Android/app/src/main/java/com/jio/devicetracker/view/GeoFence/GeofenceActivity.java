@@ -28,10 +28,12 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -98,6 +100,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         searchAddress.setOnClickListener(this);
         cancelAddress.setOnClickListener(this);
 
+
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.map_fragment, fragmentMap).commit();
@@ -106,7 +109,27 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
             LatLng latlang = new LatLng(intent.getDoubleExtra(Constant.LATITUDE, 0.0d), intent.getDoubleExtra(Constant.LONGNITUDE, 0.0d));
             addFragment(latlang, intent.getIntExtra("Radius", 0));
         }
+
+        addressText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    /* Write your logic here that will be executed when user taps next button */
+                    LatLng latlng = getLocationFromAddress(addressText.getText().toString());
+                    if (latlng != null) {
+                        addFragment(latlng, 0);
+                    } else {
+                        Toast.makeText(GeofenceActivity.this, Constant.ADDRESS_MESSAGE, Toast.LENGTH_SHORT).show();
+                    }
+
+                    handled = true;
+                }
+                return handled;
+            }
+        });
     }
+
 
     @Override
     public void onClick(View v) {

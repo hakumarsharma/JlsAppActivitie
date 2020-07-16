@@ -38,7 +38,9 @@
             android:layout_toLeftOf="@+id/clear"
             android:layout_marginLeft="@dimen/fifteen_dp"
             android:id="@+id/address"
+            android:singleLine="true"
             android:layout_marginRight="@dimen/fifteen_dp"
+            android:imeOptions="actionDone"
             android:background="@android:color/transparent"
             android:textColor="@color/white" />
             <ImageView
