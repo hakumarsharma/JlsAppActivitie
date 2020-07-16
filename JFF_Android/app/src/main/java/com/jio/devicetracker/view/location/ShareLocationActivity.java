@@ -125,13 +125,23 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.create_geofence:
-                if(consentStatus != null && !consentStatus.equalsIgnoreCase(Constant.APPROVED)){
-                    showCustomAlertWithText(Constant.GEOFENCE_Alert_Message);
-                    return;
-                } else if(deviceLocationflag){
-                    gotoGeofenceActivity();
+                if(consentStatus != null){
+                    if(!consentStatus.equalsIgnoreCase(Constant.APPROVED)) {
+                        showCustomAlertWithText(Constant.GEOFENCE_Alert_Message);
+                        return;
+                    } else {
+                        gotoGeofenceActivity();
+                    }
                 } else {
-                    gotoGeofenceActivity();
+                    if(deviceLocationflag && mapDataList.size() == 0){
+                        showCustomAlertWithText(Constant.GEOFENCE_DEVICE_Alert_Message);
+                        return;
+                    } else if(deviceLocationflag && !(mapDataList.size() == 0) && (mapDataList.get(0).getLatitude() == 0) && (mapDataList.get(0).getLongitude()==0) ) {
+                        showCustomAlertWithText(Constant.GEOFENCE_DEVICE_Alert_Message);
+                        return;
+                    } else {
+                        gotoGeofenceActivity();
+                    }
                 }
                 break;
             case R.id.close_icon:

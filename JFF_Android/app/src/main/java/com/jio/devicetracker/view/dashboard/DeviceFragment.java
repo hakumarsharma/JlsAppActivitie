@@ -70,6 +70,8 @@ public class DeviceFragment extends Fragment {
     private String groupId;
     private HomeActivityListData homeActivityListData;
     private String userId;
+    private String memberName;
+    private String deviceNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -164,6 +166,8 @@ public class DeviceFragment extends Fragment {
     private void makeGetLocationAPICall(HomeActivityListData homeActivityListData) {
         this.groupId = homeActivityListData.getGroupId();
         this.homeActivityListData = homeActivityListData;
+        memberName = homeActivityListData.getGroupName();
+        deviceNumber = homeActivityListData.getPhoneNumber();
         SearchEventData searchEventData = new SearchEventData();
         List<String> mList = new ArrayList<>();
         mList.add(Constant.LOCATION);
@@ -210,6 +214,8 @@ public class DeviceFragment extends Fragment {
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_ID, groupId);
         intent.putExtra(Constant.DEVICE_LOCATION_FLAG,true);
+        intent.putExtra(Constant.MEMBER_NAME, memberName);
+        intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
         intent.putExtra(Constant.GROUP_STATUS, homeActivityListData.getStatus());
         startActivity(intent);
     }
