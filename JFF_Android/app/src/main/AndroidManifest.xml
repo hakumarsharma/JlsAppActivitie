@@ -51,7 +51,9 @@
         <activity android:name=".view.people.EditMemberDetailsActivity"
             android:screenOrientation = "portrait"/>
         <activity android:name=".view.geofence.EditGeofenceActivity"
-            android:screenOrientation = "portrait"/>
+            android:screenOrientation = "portrait"
+            android:launchMode="singleTask"
+            />
         <activity android:name=".view.menu.settings.SettingsActivity"
             android:screenOrientation = "portrait"/>
         <activity android:name=".view.menu.settings.GeofenceSettingsAcivity"

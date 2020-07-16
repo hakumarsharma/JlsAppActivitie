@@ -58,6 +58,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
     private LatLng latlang;
     private String deviceNumber;
     int progressChangedValue=0;
+    int radiusValue = 0;
     private List<MapData> mapDataList;
     private static final String TAG = "EditGeofenceActivity";
 
@@ -136,10 +137,12 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             }
             String radius = radiusText.getText().toString();
             if(radius.contains("km")){
-                progressChangedValue = progressChangedValue * 1000;
+                radiusValue = progressChangedValue * 1000;
+            } else {
+                radiusValue = progressChangedValue;
             }
             Intent intent = new Intent(this,GeofenceActivity.class);
-            intent.putExtra("Radius",progressChangedValue);
+            intent.putExtra("Radius",radiusValue);
             intent.putExtra(Constant.LATITUDE,latlang.latitude);
             intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
             intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);

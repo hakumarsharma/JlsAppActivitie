@@ -177,24 +177,29 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
+        if (mapDataList != null && !mapDataList.isEmpty()) {
+            trackeeLatlng = new LatLng(mapDataList.get(0).getLatitude(), mapDataList.get(0).getLongitude());
+            addMarker(trackeeLatlng);
+        }
+
         MarkerOptions markerOptions = new MarkerOptions();
         GeofenceDetails geofenceDetails = mDbManager.getGeofenceDetails(deviceNumber);
         if (geofenceDetails != null && geofenceDetails.getLat() != 0 && geofenceDetails.getLng() != 0) {
             geoFenceLatlng = new LatLng(geofenceDetails.getLat(), geofenceDetails.getLng());
         } else {
-            geoFenceLatlng = new LatLng(Latitude, Longitude);
+            geoFenceLatlng = new LatLng(trackeeLatlng.latitude, trackeeLatlng.longitude);
         }
-        markerOptions.position(geoFenceLatlng);
-        mMap.addMarker(markerOptions);
+        //markerOptions.position(geoFenceLatlng);
+        //mMap.addMarker(markerOptions);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(geoFenceLatlng, 14));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         addCircle(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS);
         addGeofence(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS);
+        float distance = distance((float) geoFenceLatlng.latitude, (float) geoFenceLatlng.longitude, (float) trackeeLatlng.latitude, (float) trackeeLatlng.longitude);
+        int radiusDifference = (int) distance;
+        trackGeofenceTransition(radiusDifference);
 
-        if (mapDataList != null && !mapDataList.isEmpty()) {
-            trackeeLatlng = new LatLng(mapDataList.get(0).getLatitude(), mapDataList.get(0).getLongitude());
-            addMarker(trackeeLatlng);
-        }
+
         //mMap.setMyLocationEnabled(true);
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
@@ -217,7 +222,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapClick(LatLng latLng) {
 //        addMarker(trackeeLatlng);
-//       handleMapClick(latLng);
+      handleMapClick(latLng);
     }
 
     /**
@@ -273,7 +278,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             while (true) {
                 Log.d("Geofence", "call method in background");
                 try {
-                    makeApicallForTrackeeLocation();
+                    //makeApicallForTrackeeLocation();
                     Thread.sleep(100000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -372,11 +377,11 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         notificationHelper = new NotificationHelper(getActivity());
         if (distance < GEOFENCE_RADIUS_IN_METERS && GeofenceSettingsAcivity.geoFenceEntryNotificationFlag) {
             geoFenceEntryExit = true;
-            mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
+            //mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE,Constant.GEOFENCE_ENTRY_MESSAGE, NotificationsAlertsActivity.class);
         } else if (distance > GEOFENCE_RADIUS_IN_METERS && geoFenceEntryExit && GeofenceSettingsAcivity.geoFenceExitNotificationFlag) {
             geoFenceEntryExit = false;
-            mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
+            //mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
         }
     }
