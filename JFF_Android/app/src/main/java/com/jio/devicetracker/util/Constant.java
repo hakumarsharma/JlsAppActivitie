@@ -305,6 +305,7 @@ public class Constant {
     public static final String EDIT = "Edit";
     public static final String GROUP_NAME = "Group Name";
     public static final String GROUP_ID = "groupId";
+    public static final String DEVICE_LOCATION_FLAG = "DeviceLocationFlag";
     public static final String ACTIVE_MEMBER_TITLE = "View members";
     public static final String GROUPNAME = "groupName";
     public static final String EDIT_MEMBER_TITLE = "Edit members";
