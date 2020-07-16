@@ -179,7 +179,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         mMap.clear();
         MarkerOptions markerOptions = new MarkerOptions();
         GeofenceDetails geofenceDetails = mDbManager.getGeofenceDetails(deviceNumber);
-        if (geofenceDetails.getLat() != 0 && geofenceDetails.getLng() != 0) {
+        if (geofenceDetails != null && geofenceDetails.getLat() != 0 && geofenceDetails.getLng() != 0) {
             geoFenceLatlng = new LatLng(geofenceDetails.getLat(), geofenceDetails.getLng());
         } else {
             geoFenceLatlng = new LatLng(Latitude, Longitude);

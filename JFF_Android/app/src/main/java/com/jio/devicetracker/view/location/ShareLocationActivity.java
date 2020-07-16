@@ -57,6 +57,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     private String deviceNumber;
     private String groupId;
     private String consentStatus;
+    private boolean deviceLocationflag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         transaction.add(R.id.map_fragment, fragmentMap).commit();
         mapDataList = getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         groupId = getIntent().getStringExtra(Constant.GROUP_ID);
+        deviceLocationflag = getIntent().getBooleanExtra(Constant.DEVICE_LOCATION_FLAG,false);
         deviceNumber = getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         consentStatus = getIntent().getStringExtra(Constant.CONSENT_STATUS);
         if (getIntent().getStringExtra(Constant.MEMBER_NAME) != null) {
@@ -126,13 +128,11 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 if(consentStatus != null && !consentStatus.equalsIgnoreCase(Constant.APPROVED)){
                     showCustomAlertWithText(Constant.GEOFENCE_Alert_Message);
                     return;
+                } else if(deviceLocationflag){
+                    gotoGeofenceActivity();
+                } else {
+                    gotoGeofenceActivity();
                 }
-                Intent intent = new Intent(this, GeofenceActivity.class);
-                intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
-                intent.putExtra(Constant.MEMBER_NAME, memberName);
-                intent.putExtra(Constant.GROUP_ID,groupId);
-                intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
-                startActivity(intent);
                 break;
             case R.id.close_icon:
                 menuLayout.setVisibility(View.GONE);
@@ -174,5 +174,14 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         CustomAlertActivity alertActivity = new CustomAlertActivity(this);
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
+    }
+
+    public void gotoGeofenceActivity(){
+        Intent intent = new Intent(this, GeofenceActivity.class);
+        intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+        intent.putExtra(Constant.MEMBER_NAME, memberName);
+        intent.putExtra(Constant.GROUP_ID,groupId);
+        intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+        startActivity(intent);
     }
 }

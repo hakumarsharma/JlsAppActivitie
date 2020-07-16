@@ -53,6 +53,7 @@ import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.DeviceListAdapter;
 import com.jio.devicetracker.view.location.LocationActivity;
+import com.jio.devicetracker.view.location.ShareLocationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -205,9 +206,10 @@ public class DeviceFragment extends Fragment {
      * Navigates to the Map activity
      */
     private void goToMapActivity(List<MapData> mapDataList) {
-        Intent intent = new Intent(getContext(), LocationActivity.class);
+        Intent intent = new Intent(getContext(), ShareLocationActivity.class);
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.DEVICE_LOCATION_FLAG,true);
         intent.putExtra(Constant.GROUP_STATUS, homeActivityListData.getStatus());
         startActivity(intent);
     }
