@@ -329,7 +329,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                             }
                         }
                     }else {
-                        homeActivityListData.setGroupIcon("ic_creategroup");
+                        homeActivityListData.setGroupIcon("default_group");
                     }
                     chooseGroupDataList.add(homeActivityListData);
                 }

@@ -257,11 +257,16 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
                     homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                     homeActivityListData.setFrom(data.getFrom());
                     homeActivityListData.setTo(data.getTo());
-                    for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
-                        if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
-                            homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                    if (mGroupIconList.toArray().length > 0) {
+                        for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
+                            if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+                                homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                            }
                         }
+                    }else {
+                        homeActivityListData.setGroupIcon("default_group");
                     }
+
                     chooseGroupDataList.add(homeActivityListData);
                 }
             }
