@@ -251,7 +251,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                         showCustomAlertWithText(Constant.ADD_DETAILS_TO_TRACK);
                         return;
                     }
-                    gotoEditMemberActivity(mList.get(position));
+                    gotoEditMemberActivity(mList.get(getAdapterPosition()));
                     break;
                 case R.id.close:
                     groupOptLayout.setVisibility(View.GONE);

@@ -72,7 +72,7 @@ public class ProfileTrackedByListAdapter extends RecyclerView.Adapter<ProfileTra
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (mList.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_NAME_CLASS_NAME)) {
             HomeActivityListData data = (HomeActivityListData) mList.get(position);
-            //holder.profile.setImageResource(R.drawable.ic_family_group);
+            holder.profile.setImageResource(R.drawable.ic_family_group);
             holder.name.setText(data.getGroupName());
             /*holder.relativeLayout.setOnClickListener(v -> {
                 itemListener.clickOnListLayout(data.getProfileImage(), data.getGroupName(), data.getGroupId()
@@ -81,7 +81,7 @@ public class ProfileTrackedByListAdapter extends RecyclerView.Adapter<ProfileTra
             });*/
         } else if (mList.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
             GroupMemberDataList data = (GroupMemberDataList) mList.get(position);
-            //holder.profile.setImageResource(R.drawable.ic_user);
+            holder.profile.setImageResource(R.drawable.secondaryuser);
             holder.name.setText(data.getName());
             /*holder.relativeLayout.setOnClickListener(v -> {
                 itemListener.clickOnListLayout(data.getProfileImage(), data.getName(), data.getConsentId(), "");
@@ -116,8 +116,8 @@ public class ProfileTrackedByListAdapter extends RecyclerView.Adapter<ProfileTra
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.user_name);
-            /*profile = itemView.findViewById(R.id.groupmemberIcon);
-            groupOptLayout = itemView.findViewById(R.id.oprationLayout);
+            profile = itemView.findViewById(R.id.groupmemberIcon);
+            /*groupOptLayout = itemView.findViewById(R.id.oprationLayout);
             close = itemView.findViewById(R.id.close);
             close.setOnClickListener(this);
             relativeLayout = itemView.findViewById(R.id.activeSessionLayout);

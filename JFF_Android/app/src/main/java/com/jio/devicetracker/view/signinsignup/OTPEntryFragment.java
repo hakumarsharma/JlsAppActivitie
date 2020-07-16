@@ -112,7 +112,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
@@ -226,23 +226,21 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void makeSafetyNetCall() {
-        if (Util.getInstance().isGoogleTokenExpired()) {
-            SafetyNet.getClient(getActivity()).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
-                    .addOnSuccessListener(getActivity(), response -> {
-                        if (!response.getTokenResult().isEmpty()) {
-                            Util.getInstance().setExpiryTime();
-                            Util.getInstance().updateGoogleToken(response.getTokenResult());
-                            if (isComingFromRequestOTP) {
-                                generateLoginTokenAPICall();
-                                isComingFromRequestOTP = false;
-                            } else if (isComingFromLogin) {
-                                onLoginButtonClick();
-                                isComingFromLogin = false;
-                            }
+        SafetyNet.getClient(getActivity()).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
+                .addOnSuccessListener(getActivity(), response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        Util.getInstance().setExpiryTime();
+                        Util.getInstance().updateGoogleToken(response.getTokenResult());
+                        if (isComingFromRequestOTP) {
+                            generateLoginTokenAPICall();
+                            isComingFromRequestOTP = false;
+                        } else if (isComingFromLogin) {
+                            onLoginButtonClick();
+                            isComingFromLogin = false;
                         }
-                    })
-                    .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());
-        }
+                    }
+                })
+                .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());
     }
 
     /**

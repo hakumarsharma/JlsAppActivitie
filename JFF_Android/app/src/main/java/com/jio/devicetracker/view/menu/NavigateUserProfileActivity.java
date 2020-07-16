@@ -174,9 +174,9 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
             GroupMemberDataList data = new GroupMemberDataList();
             if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
-                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)
-                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXITED)
-                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
+                    && !groupMemberDataList.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)) {
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());
                 data.setConsentStatus(groupMemberDataList.getConsentStatus());
