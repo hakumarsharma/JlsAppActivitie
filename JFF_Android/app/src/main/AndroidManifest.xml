@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="LockedOrientationActivity"
     package="com.jio.devicetracker">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -25,36 +26,52 @@
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup">
+        android:theme="@style/AppTheme" tools:replace="android:allowBackup">
 
-        <activity android:name=".view.signinsignup.SigninSignupActivity" />
-        <activity android:name=".view.dashboard.DashboardActivity" />
-        <activity android:name=".view.group.CreateGroupActivity" />
+        <activity android:name=".view.signinsignup.SigninSignupActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.dashboard.DashboardActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.group.CreateGroupActivity"
+            android:screenOrientation = "portrait"/>
         <activity
             android:name=".view.group.ChooseGroupActivity"
+            android:screenOrientation = "portrait"
             android:windowSoftInputMode="adjustPan|adjustResize" />
-        <activity android:name=".view.group.GroupNameActivity" />
-        <activity android:name=".view.menu.ActiveMemberActivity" />
-        <activity android:name=".view.menu.RefreshIntervalSettingActivity" />
-        <activity android:name=".view.menu.NotificationsAlertsActivity"/>
-        <activity android:name=".view.menu.SilentModeActivity"/>
-        <activity android:name=".view.people.EditMemberDetailsActivity"/>
-        <activity android:name=".view.geofence.EditGeofenceActivity"/>
-        <activity android:name=".view.menu.settings.SettingsActivity"/>
-        <activity android:name=".view.menu.settings.GeofenceSettingsAcivity"/>
-        <activity android:name=".view.menu.settings.LowBatteryActivity"/>
-        <activity android:name=".view.menu.settings.PollingFrequencyActivity"/>
+        <activity android:name=".view.group.GroupNameActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.menu.ActiveMemberActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.menu.RefreshIntervalSettingActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.menu.NotificationsAlertsActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.menu.SilentModeActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.people.EditMemberDetailsActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.geofence.EditGeofenceActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.menu.settings.SettingsActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.menu.settings.GeofenceSettingsAcivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.menu.settings.LowBatteryActivity"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".view.menu.settings.PollingFrequencyActivity"
+            android:screenOrientation = "portrait"/>
 
         <service
             android:name=".network.SendLocationService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".view.menu.ProfileActivity" />
+        <activity android:name=".view.menu.ProfileActivity"
+            android:screenOrientation = "portrait"/>
         <activity
             android:name=".view.signinsignup.LoginActivity"
             android:label="@string/title_activity_login"
+            android:screenOrientation = "portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter android:label="@string/title_activity_maps">
                 <action android:name="android.intent.action.VIEW" />
@@ -83,7 +100,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".view.dashboard.DashboardMainActivity">
+        <activity android:name=".view.dashboard.DashboardMainActivity"
+            android:screenOrientation = "portrait">
             <intent-filter android:label="@string/title_activity_maps">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -98,96 +116,125 @@
         </activity>
         <activity
             android:name=".view.device.AddDeviceActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.location.MapsActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.people.EditActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.menu.HelpActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.menu.ActiveSessionActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.device.QRCodeReaderActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.signinsignup.RegistrationActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.people.ContactDetailsActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.group.GroupListActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.device.QRReaderInstruction"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.device.DeviceNameActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".util.CustomAlertActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.people.AddPeopleActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".view.menu.NavigateUserProfileActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.menu.NavigateSupportActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.menu.TermAndConditionPolicyActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.menu.AboutAppActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.menu.FaqActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.menu.ContactUsActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.menu.EditUserProfileActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.location.LocationActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.menu.HowToUseActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.EditMemberActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.device.AttachDeviceActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.device.QRCodeRescanActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.location.ShareLocationActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name" />
         <activity
             android:name=".view.geofence.GeofenceActivity"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name"
             android:theme="@style/MenuTheme"
             />
 
         <activity
             android:name=".view.people.ChooseGroupFromPeopleFlow"
+            android:screenOrientation = "portrait"
             android:label="@string/map_name"
             android:windowSoftInputMode="adjustPan|adjustResize" />
 
         <activity
             android:name=".view.SplashScreenActivity"
+            android:screenOrientation = "portrait"
             android:theme="@style/SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
