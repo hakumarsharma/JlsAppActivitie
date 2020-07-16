@@ -167,8 +167,8 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
         } else if (v.getId() == R.id.userIconCreateGroup) {
             frameLayout.setVisibility(View.VISIBLE);
         } else if (v.getId() == R.id.closeFrameLayout) {
-            this.selectedIcon = "ic_creategroup";
-            userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_creategroup));
+            this.selectedIcon = "default_group";
+            userIconCreateGroup.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_group));
             frameLayout.setVisibility(View.INVISIBLE);
         } else if (v.getId() == R.id.homeGroupButton) {
             this.selectedIcon = "ic_home_group";

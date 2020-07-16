@@ -95,17 +95,20 @@ public class HelpActivity extends Activity implements View.OnClickListener {
                 HelpActivity.this.position = position;
                 if (position == 0) {
                     backImageView.setVisibility(View.INVISIBLE);
-                    mSkip.setVisibility(View.VISIBLE);
+                    mSkip.setText("SKIP");
+                    //mSkip.setVisibility(View.VISIBLE);
                 } else if (position == 4) {
                     backImageView.setVisibility(View.INVISIBLE);
                     backImageView.setVisibility(View.VISIBLE);
                     forwardImageView.setVisibility(View.INVISIBLE);
-                    mSkip.setVisibility(View.INVISIBLE);
+                    mSkip.setText("DONE");
+                    //mSkip.setVisibility(View.INVISIBLE);
                 } else {
                     backImageView.setVisibility(View.INVISIBLE);
                     backImageView.setVisibility(View.VISIBLE);
                     forwardImageView.setVisibility(View.VISIBLE);
-                    mSkip.setVisibility(View.VISIBLE);
+                    mSkip.setText("SKIP");
+                    //mSkip.setVisibility(View.VISIBLE);
                 }
             }
 
