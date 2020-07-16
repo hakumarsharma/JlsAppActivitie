@@ -125,7 +125,10 @@ public class Constant {
     public static final String SESSION_COMPLETED = "Please request consent to track the group members.";
     public static final String CONSENT_PENDING_STATUS = "Consent is pending, please ask the user to accept consent for tracking";
     public static final String ADD_CONTACT_WARNING = "Please add contact first in the list to proceed further";
-    public static final String CONTACTS_PERMISSION = "To choose a contact from contact list, enable contacts permission through settings.";
+    public static final String CONTACTS_PERMISSION = "To choose a contact from contact list, enable contacts permission through settings";
+    public static final String CAMERA_PERMISSION = "To scan device, enable camera permission through settings";
+    public static final String LOCATION_PERMISSION = "To share your location with others, please enable location through setting.";
+    public static final String SMS_PERMISSION = "To read OTP, enable SMS permission through settings.";
     public static final String GROUP_STATUS = "Group Status";
     public static final String GROUP_SELECTED = "groupSelected";
     public static final String TRACKEE_NAME = "TrackeeName";
