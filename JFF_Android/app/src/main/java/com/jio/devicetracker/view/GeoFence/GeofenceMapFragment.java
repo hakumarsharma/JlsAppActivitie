@@ -94,7 +94,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private LatLng trackeeLatlng;
     private LatLng geoFenceLatlng;
     private boolean createGeofence;
-    private boolean geoFenceEntryExit;
+    private static boolean geoFenceEntryExit;
     private int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 1000;
     private int editGeofenceRadius = 0;
     private List<MapData> mapDataList;
@@ -377,11 +377,11 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         notificationHelper = new NotificationHelper(getActivity());
         if (distance < GEOFENCE_RADIUS_IN_METERS && GeofenceSettingsAcivity.geoFenceEntryNotificationFlag) {
             geoFenceEntryExit = true;
-            //mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
+            mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE,Constant.GEOFENCE_ENTRY_MESSAGE, NotificationsAlertsActivity.class);
         } else if (distance > GEOFENCE_RADIUS_IN_METERS && geoFenceEntryExit && GeofenceSettingsAcivity.geoFenceExitNotificationFlag) {
             geoFenceEntryExit = false;
-            //mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
+            mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
         }
     }

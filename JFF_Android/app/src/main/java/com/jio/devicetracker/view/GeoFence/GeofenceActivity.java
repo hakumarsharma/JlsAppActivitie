@@ -34,6 +34,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -52,6 +53,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.BaseActivity;
+import com.jio.devicetracker.view.location.ShareLocationActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,6 +125,8 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
                         Toast.makeText(GeofenceActivity.this, Constant.ADDRESS_MESSAGE, Toast.LENGTH_SHORT).show();
                     }
 
+                    InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     handled = true;
                 }
                 return handled;
@@ -218,5 +222,11 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
 
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

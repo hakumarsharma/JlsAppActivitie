@@ -97,7 +97,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         } else {
             memberName.setText("Test");
         }
-        if (!mapDataList.isEmpty()) {
+        if (mapDataList != null && !mapDataList.isEmpty()) {
             memberAddrss.setText(getAddressFromLocation(mapDataList.get(0).getLatitude(), mapDataList.get(0).getLongitude()));
         } else {
             memberAddrss.setText(Constant.CONSENT_APPROVED_ADDRESS);

@@ -64,9 +64,9 @@ public class GeofenceSettingsAcivity extends Activity implements View.OnClickLis
         geofenceExitDesc.setTypeface(Util.mTypeface(this, 3));
 
         Switch geoentry = findViewById(R.id.entrySwitch);
-        geoFenceEntryNotificationFlag = geoentry.isChecked();
+        geoentry.setChecked(geoFenceEntryNotificationFlag);
         Switch geoexit = findViewById(R.id.exitSwitch);
-        geoFenceExitNotificationFlag = geoexit.isChecked();
+        geoexit.setChecked(geoFenceExitNotificationFlag);
         geoentry.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 geoFenceEntryNotificationFlag = isChecked;
