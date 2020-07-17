@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,6 +56,7 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
     private EditText userName;
     private DBManager mDbmanager;
     private boolean isFromMap;
+    private ImageView userIconCreateGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +76,11 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         userName.setText(intent.getStringExtra(Constant.GROUPNAME));
         Button updateBtn = findViewById(R.id.updateName);
         updateBtn.setOnClickListener(this);
+        userIconCreateGroup = findViewById(R.id.userIconCreateGroup);
         mDbmanager = new DBManager(this);
+        if (DeviceListAdapter.deviceEditFlag) {
+            userIconCreateGroup.setImageResource(R.drawable.device_default);
+        }
         if(!userName.getText().toString().isEmpty()){
             updateBtn.setBackground(getResources().getDrawable(R.drawable.login_selector));
         }
@@ -123,11 +129,11 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         @Override
         public void onResponse(Object response) {
             Util.progressDialog.dismiss();
-            Log.d("respone","Checking response value"+response);
+            Log.d("respone","Checking response value" + response);
             Intent intent = new Intent(EditMemberDetailsActivity.this, DashboardMainActivity.class);
-            if(PeopleMemberListAdapter.peopleEditFlag && !isFromMap){
+            if(!isFromMap && PeopleMemberListAdapter.peopleEditFlag) {
                 intent.putExtra(Constant.Add_People, true);
-            } else if (DeviceListAdapter.deviceEditFlag){
+            } else if (DeviceListAdapter.deviceEditFlag) {
                 intent.putExtra(Constant.Add_People, false);
                 intent.putExtra(Constant.Add_Device, true);
             } else {

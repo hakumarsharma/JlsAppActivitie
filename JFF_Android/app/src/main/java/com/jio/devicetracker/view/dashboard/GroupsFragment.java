@@ -219,7 +219,6 @@ public class GroupsFragment extends Fragment {
             Util.progressDialog.dismiss();
             showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
-
     }
 
     /**

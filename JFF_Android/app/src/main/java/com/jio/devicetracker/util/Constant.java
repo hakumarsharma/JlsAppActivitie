@@ -136,7 +136,6 @@ public class Constant {
     public static final String CONSENT_STATUS = "no";
     public static final String ADD_DETAILS_TO_TRACK = "Group is empty. Add devices or contacts to this group and track.";
 
-
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
     public static final String EMAILID_VALIDATION = "Email id cannot be left blank.";

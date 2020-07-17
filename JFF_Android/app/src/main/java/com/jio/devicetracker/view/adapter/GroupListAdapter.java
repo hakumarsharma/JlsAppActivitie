@@ -21,14 +21,17 @@
 package com.jio.devicetracker.view.adapter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -279,20 +282,23 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         }
 
         private void deleteAlertBox(int position) {
-            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
-            adb.setTitle(Constant.ALERT_TITLE);
-            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
-            adb.setIcon(android.R.drawable.ic_dialog_alert);
-            adb.setPositiveButton("OK", (dialog, which) -> {
+            final Dialog dialog = new Dialog(mContext);
+            dialog.setContentView(R.layout.number_display_dialog);
+            dialog.setTitle(Constant.ALERT_TITLE);
+            dialog.getWindow().setLayout(750, 500);
+            final Button yes = dialog.findViewById(R.id.positive);
+            final Button no = dialog.findViewById(R.id.negative);
+            yes.setOnClickListener(v -> {
                 GroupListAdapter.this.groupOptLayout = groupOptLayout;
                 deleteGroupAPICall(mList.get(position));
+                dialog.dismiss();
             });
-            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
+
+            no.setOnClickListener(v -> {
+                dialog.dismiss();
+                groupOptLayout.setVisibility(View.GONE);
             });
-            adb.show();
+            dialog.show();
         }
     }
 
@@ -384,6 +390,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public void onErrorResponse(VolleyError error) {
             System.out.println("Error in deleting device from user account");
         }
+
     }
 
     /**
