@@ -325,10 +325,16 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                     if (mGroupIconList.toArray().length > 0) {
                         for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
                             if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
-                                homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                                    homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
                             }
                         }
                     }else {
+                        homeActivityListData.setGroupIcon("default_group");
+                    }
+
+                    // If user uninstalls and installs app, and creates a group then groupiconlist will not be empty
+                    // so in that case groupicon will icon be null as our groupid is captured based on selection this condition is placed
+                    if (homeActivityListData.getGroupIcon() == null){
                         homeActivityListData.setGroupIcon("default_group");
                     }
                     chooseGroupDataList.add(homeActivityListData);
