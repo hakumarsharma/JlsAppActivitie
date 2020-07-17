@@ -84,6 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String ALERT_TIME = "alertTime";
     public static final String ADDRESS = "address";
     public static final String COUNT = "count";
+    public static final String STATE = "state";
 
 
     //DB Information
@@ -111,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_GROUP_ICON_TABLE = "create table " + TABLE_GROUP_ICON + "(" + GROUPID + " TEXT, " + GROUP_ICON + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
 
-    private static final String CREATE_ALERTS_HISTORY_TABLE = "create table " + TABLE_ALERTS_HOSTORY + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + DEVICE_NUM + " TEXT, " + ALERT_TIME + " TEXT ," + ADDRESS + " TEXT, " + "PRIMARY KEY" + "(" + ALERT_TIME +"))";
+    private static final String CREATE_ALERTS_HISTORY_TABLE = "create table " + TABLE_ALERTS_HOSTORY + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + DEVICE_NUM + " TEXT, " + ALERT_TIME + " TEXT ," + STATE + " TEXT ," + ADDRESS + " TEXT, " + "PRIMARY KEY" + "(" + ALERT_TIME +"))";
 
     private static final String CREATE_DEVICE_TABLE = "create table " + TABLE_DEVICE + "(" + DEVICE_NUM + " TEXT ," + IMEI_NUM + " TEXT, "  + COUNT + " INTEGER ," + "PRIMARY KEY" + "(" + IMEI_NUM +"))";
 

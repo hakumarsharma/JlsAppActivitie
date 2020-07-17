@@ -374,6 +374,9 @@ public class Constant {
     public static final String GEOFENCE_EXIT_MESSAGE = "Trackee left the geofence";
     public static final String GEOFENCE_Alert_Message = "Geofence can not be created. Please wait till consent is approved";
     public static final String GEOFENCE_DEVICE_Alert_Message = "Geofence can not be created. Location is not available for this device";
+    public static final String ENTRY = "entry";
+    public static final String GEOFENCE_ENTRY = "Geofence entry";
+    public static final String GEOFENCE_EXIT = "Geofence exit";
 
     public static final String LOWBATTERY = "Low Battery";
     public static final String POLLING_FREQUENCY = "Polling frequency";

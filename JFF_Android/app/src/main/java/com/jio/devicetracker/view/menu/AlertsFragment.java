@@ -143,6 +143,7 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
             alertMemberAddress.setText(mAlertHistoryListData.get(0).getAddress());
         }
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.removeAllViewsInLayout();
         mRecyclerView.setLayoutManager(mLayoutManager);
         AlertsFragmentAdapter alertsFragmentAdapter = new AlertsFragmentAdapter(mAlertHistoryListData);
         mRecyclerView.setAdapter(alertsFragmentAdapter);

@@ -34,10 +34,13 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AlertHistoryData;
 import com.jio.devicetracker.util.Constant;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAdapter.ViewHolder> {
 
@@ -58,12 +61,12 @@ public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAd
     @Override
     public void onBindViewHolder(@NonNull AlertsFragmentAdapter.ViewHolder holder, int position) {
         try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy");
-            Long oldDateLong = Long.parseLong(mAlertHistoryData.get(position).getDate());
-            Long todayDateLong = System.currentTimeMillis();
-            Date oldDate = simpleDateFormat.parse(simpleDateFormat.format(new Date(oldDateLong)));
-            Date todayDate = simpleDateFormat.parse(simpleDateFormat.format(new Date(todayDateLong)));
-            long diffInMillies = todayDate.getTime() - oldDate.getTime();
+            AlertHistoryData mAlertHistroryData = mAlertHistoryData.get(position);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
+            Long oldDateLong = simpleDateFormat.parse(mAlertHistroryData.getDate()).getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+            Long todayDateLong = sdf.parse(new Date().toString()).getTime();
+            long diffInMillies = todayDateLong - oldDateLong;
             int diffDays = (int) (diffInMillies / (24 * 60 * 60 * 1000));
             if (diffDays == 0) {
                 if(!currentDateValues.equalsIgnoreCase(Constant.TODAY)) {
@@ -76,11 +79,17 @@ public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAd
                     currentDateValues = Constant.YESTERDAY;
                 }
             } else {
-                holder.dateTextView.setText(oldDate.toString());
+                holder.dateTextView.setText(mAlertHistroryData.getDate());
             }
-            holder.geofenceAddress.setText(mAlertHistoryData.get(position).getAddress());
-        } catch (
-                ParseException e) {
+            holder.time.setText(mAlertHistroryData.getDate());
+            holder.geofenceAddress.setText(mAlertHistroryData.getAddress());
+            if(mAlertHistroryData.getState().equalsIgnoreCase(Constant.ENTRY)) {
+                holder.geofenceBreachTextView.setText(Constant.GEOFENCE_ENTRY);
+            } else if(mAlertHistroryData.getState().equalsIgnoreCase(Constant.EXIT)) {
+                holder.geofenceBreachTextView.setText(Constant.GEOFENCE_EXIT);
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -94,11 +103,15 @@ public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAd
 
         private TextView dateTextView;
         private TextView geofenceAddress;
+        private TextView geofenceBreachTextView;
+        private TextView time;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             dateTextView = itemView.findViewById(R.id.dateTextView);
             geofenceAddress = itemView.findViewById(R.id.geofenceAddress);
+            geofenceBreachTextView = itemView.findViewById(R.id.geofenceBreachTextView);
+            time = itemView.findViewById(R.id.time);
         }
     }
 }

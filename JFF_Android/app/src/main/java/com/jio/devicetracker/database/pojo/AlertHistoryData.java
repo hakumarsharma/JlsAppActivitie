@@ -28,6 +28,15 @@ public class AlertHistoryData {
     private String consentId;
     private String date;
     private String address;
+    private String state;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getAddress() {
         return address;

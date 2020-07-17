@@ -74,7 +74,9 @@ import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
 import com.jio.devicetracker.view.menu.settings.GeofenceSettingsAcivity;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -360,11 +362,12 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                                 && !grpMembers.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
                                 && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
                             onMapReady(mMap);
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
                             alertHistoryData = new AlertHistoryData();
                             String alertAddress = Util.getAddressFromLocation(data.getLocation().getLat(),data.getLocation().getLng(),getActivity());
                             alertHistoryData.setAddress(alertAddress);
                             alertHistoryData.setConsentId(grpMembers.getConsentId());
-                            alertHistoryData.setDate(String.valueOf(System.currentTimeMillis()));
+                            alertHistoryData.setDate(dateFormat.format(new Date()));
                             alertHistoryData.setName(grpMembers.getName());
                             alertHistoryData.setNumber(grpMembers.getNumber());
                             trackeeLatlng = new LatLng(data.getLocation().getLat(),data.getLocation().getLng());
@@ -408,12 +411,14 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         if (distance < GEOFENCE_RADIUS_IN_METERS && GeofenceSettingsAcivity.geoFenceEntryNotificationFlag) {
             geoFenceEntryExit = true;
             if(alertHistoryData != null) {
+                alertHistoryData.setState(Constant.ENTRY);
                 mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             }
             notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE,Constant.GEOFENCE_ENTRY_MESSAGE, NotificationsAlertsActivity.class);
         } else if (distance > GEOFENCE_RADIUS_IN_METERS && geoFenceEntryExit && GeofenceSettingsAcivity.geoFenceExitNotificationFlag) {
             geoFenceEntryExit = false;
             if(alertHistoryData != null) {
+                alertHistoryData.setState(Constant.EXIT);
                 mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             }
             notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
