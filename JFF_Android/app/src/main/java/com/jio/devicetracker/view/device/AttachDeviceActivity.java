@@ -60,6 +60,10 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
         deviceNumber = findViewById(R.id.device_edit_name);
         underLine = findViewById(R.id.number_edit_line);
 
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
+
         imeiErrorText = findViewById(R.id.imei_validation_text);
         deviceImei = findViewById(R.id.device_edit_imei);
         imeiUnderLine = findViewById(R.id.imei_edit_line);
@@ -129,6 +133,10 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
     }
     @Override
     public void onClick(View v) {
+
+        if (v.getId() == R.id.back){
+            finish();
+        }
 
         if((deviceNumber.getText().toString().isEmpty() || !Util.isValidMobileNumberForPet(deviceNumber.getText().toString())) && (deviceImei.getText().toString().isEmpty() || !Util.isValidIMEINumber(deviceImei.getText().toString()))){
             errorText.setVisibility(View.VISIBLE);
