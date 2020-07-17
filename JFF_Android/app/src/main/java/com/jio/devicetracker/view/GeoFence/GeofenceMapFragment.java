@@ -94,8 +94,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private DBManager mDbManager;
     private GeofenceHelper geofenceHelper;
     private int GEOFENCE_RADIUS_IN_METERS = 5000;
-    double Longitude = 73.76976049999999;
-    double Latitude = 19.9756696;
     private String name;
     private GeofencingClient mGeofencingClient;
     private String GEOFENCE_ID = "JioTrack1";
@@ -233,7 +231,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapClick(LatLng latLng) {
 //        addMarker(trackeeLatlng);
-      handleMapClick(latLng);
+      //handleMapClick(latLng);
     }
 
     /**
