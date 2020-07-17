@@ -41,7 +41,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 /**
  * Class which is responsible for reading the QR code
  */
-public class QRCodeReaderActivity extends Activity implements ZXingScannerView.ResultHandler {
+public class QRCodeReaderActivity extends Activity implements ZXingScannerView.ResultHandler,View.OnClickListener {
 
     private ZXingScannerView mScannerView;
     private String groupId;
@@ -55,6 +55,7 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
         title.setText(Constant.SCAN_QR_CODE_TITLE);
         Button closeBtn = findViewById(R.id.close);
         closeBtn.setVisibility(View.VISIBLE);
+        closeBtn.setOnClickListener(this);
         RelativeLayout toolbarLayout = findViewById(R.id.toolbarlayout);
         toolbarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.cardviewlayout_device_background_color));
         Intent intent = getIntent();
@@ -115,5 +116,12 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
         super.onResume();
         mScannerView.setResultHandler(this);
         mScannerView.startCamera();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.close){
+            finish();
+        }
     }
 }
