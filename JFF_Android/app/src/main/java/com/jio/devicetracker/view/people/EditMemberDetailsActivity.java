@@ -43,6 +43,7 @@ import com.jio.devicetracker.database.pojo.EditMemberDetailsData;
 import com.jio.devicetracker.database.pojo.request.EditMemberDetailsRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.DeviceListAdapter;
 import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
@@ -141,7 +142,16 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
+            showCustomAlertWithText(Constant.INDIVIDUAL_USER_EDIT_FAILURE);
             Log.d("respone","Checking response value"+error);
         }
     }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
+
 }

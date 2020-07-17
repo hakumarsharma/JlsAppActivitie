@@ -166,6 +166,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         private TextView shareInvite;
         public RelativeLayout layoutOps;
         public CardView peoplAddressLayout;
+        private View removeFromGroupLine;
 
         /**
          * Constructor where we find element from .xml file
@@ -190,23 +191,30 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             shareInvite.setOnClickListener(this);
             menuIcon.setOnClickListener(this);
             closeBtn.setOnClickListener(this);
+            removeFromGroupLine = itemView.findViewById(R.id.remove_from_group_line);
         }
 
         @Override
         public void onClick(View v) {
+            int position = getAdapterPosition();
             switch (v.getId()) {
                 case R.id.close:
                     layoutOps.setVisibility(View.GONE);
                     break;
                 case R.id.consentStatus:
+                    if(mList.get(position).getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
+                        shareInvite.setVisibility(View.GONE);
+                        removeFromGroupLine.setVisibility(View.INVISIBLE);
+                        removeFromGroupText.setPadding(0,0,0,16);
+                    }
                     layoutOps.setVisibility(View.VISIBLE);
                     break;
                 case R.id.edit:
                     Intent intent = new Intent(mContext, EditMemberDetailsActivity.class);
                     intent.putExtra("isFromMap",true);
-                    intent.putExtra(Constant.GROUP_ID, mList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(Constant.GROUPNAME, mList.get(getAdapterPosition()).getName());
-                    intent.putExtra(Constant.CONSENT_ID, mList.get(getAdapterPosition()).getConsentId());
+                    intent.putExtra(Constant.GROUP_ID, mList.get(position).getGroupId());
+                    intent.putExtra(Constant.GROUPNAME, mList.get(position).getName());
+                    intent.putExtra(Constant.CONSENT_ID, mList.get(position).getConsentId());
                     mContext.startActivity(intent);
                     break;
                 case R.id.remove_from_group:
@@ -215,7 +223,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     break;
                 case R.id.share_invite:
                     PeopleListAdapter.this.layoutOps = layoutOps;
-                    makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition(), false);
+                    makeRemoveAPICall(mList.get(position), position, false);
                     break;
                 default:
                     // Todo

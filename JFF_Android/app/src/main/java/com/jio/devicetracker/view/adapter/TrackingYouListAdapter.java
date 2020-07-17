@@ -216,7 +216,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                     if (mList.get(position).getConsentId() != null) {
                         viewMembers.setVisibility(View.GONE);
                         reverseTrack.setPadding(0, 0, 0, 16);
-                        reverseTrackLine.setVisibility(View.GONE);
+                        reverseTrackLine.setVisibility(View.INVISIBLE);
                     }
                     trackingYouOprationLayout.setVisibility(View.VISIBLE);
                     break;
