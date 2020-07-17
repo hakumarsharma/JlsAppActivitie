@@ -57,6 +57,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
     String geofenceAddress;
     private LatLng latlang;
     private String deviceNumber;
+    private String memberName;
     int progressChangedValue=0;
     int radiusValue = 0;
     private List<MapData> mapDataList;
@@ -85,6 +86,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         Intent intent = getIntent();
         mapDataList = intent.getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
+        memberName = intent.getStringExtra(Constant.MEMBER_NAME);
         geofenceAddress = intent.getStringExtra(Constant.GEOFENCE_ADDRESS);
         if(geofenceAddress != null){
             locationName.setText(geofenceAddress);
@@ -145,6 +147,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             intent.putExtra("Radius",radiusValue);
             intent.putExtra(Constant.LATITUDE,latlang.latitude);
             intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+            intent.putExtra(Constant.MEMBER_NAME,memberName);
             intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
             intent.putExtra(Constant.LONGNITUDE,latlang.longitude);
 
