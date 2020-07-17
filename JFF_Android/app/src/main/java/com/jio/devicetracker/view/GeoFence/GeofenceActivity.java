@@ -65,6 +65,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
     private String deviceNumber;
     private String memberAddress;
     private List<MapData> mapDataList;
+    private String memberName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         ActionBar actionBar;
         actionBar = getSupportActionBar();
         Intent intent = getIntent();
+        memberName = intent.getStringExtra(Constant.MEMBER_NAME);
         memberAddress = intent.getStringExtra(Constant.MEMBER_ADDRESS);
         mapDataList = intent.getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
@@ -217,6 +219,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
                     intent.putExtra(Constant.GEOFENCE_ADDRESS, addressText.getText().toString());
                 }
                 intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+                intent.putExtra(Constant.MEMBER_NAME,memberName);
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
                 startActivity(intent);
                 return true;

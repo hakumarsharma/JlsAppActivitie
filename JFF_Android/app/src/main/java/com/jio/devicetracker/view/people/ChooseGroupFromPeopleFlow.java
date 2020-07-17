@@ -267,6 +267,11 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
                         homeActivityListData.setGroupIcon("default_group");
                     }
 
+                    // If user uninstalls and installs app, and creates a group then groupiconlist will not be empty
+                    // so in that case groupicon will icon be null as our groupid is captured based on selection this condition is placed
+                    if (homeActivityListData.getGroupIcon() == null){
+                        homeActivityListData.setGroupIcon("default_group");
+                    }
                     chooseGroupDataList.add(homeActivityListData);
                 }
             }

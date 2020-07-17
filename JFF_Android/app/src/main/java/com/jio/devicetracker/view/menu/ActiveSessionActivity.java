@@ -37,10 +37,12 @@ import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
+import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.adapter.GroupListAdapter;
 import com.jio.devicetracker.view.adapter.TrackingYouListAdapter;
 import com.jio.devicetracker.view.adapter.TrackedByYouListAdapter;
 
@@ -112,6 +114,9 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
     private class GetGroupInfoPerUserRequestSuccessListener implements com.android.volley.Response.Listener {
         @Override
         public void onResponse(Object response) {
+            GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
+            parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
+//            displayGroupDataInDashboard();
             addDatainList();
         }
     }
@@ -127,6 +132,93 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
             }
         }
     }
+
+    /**
+     * Parse the response and store in DB(Group Table and Member table)
+     */
+    public void parseResponseStoreInDatabase(GetGroupInfoPerUserResponse getGroupInfoPerUserResponse) {
+        List<HomeActivityListData> groupList = new ArrayList<>();
+        List<GroupMemberDataList> mGroupMemberDataLists = new ArrayList<>();
+        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        if (groupDetailList != null && !groupDetailList.isEmpty()) {
+            for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
+                HomeActivityListData homeActivityListData = new HomeActivityListData();
+                homeActivityListData.setGroupName(data.getGroupName());
+                homeActivityListData.setCreatedBy(data.getCreatedBy());
+                homeActivityListData.setGroupId(data.getId());
+                homeActivityListData.setStatus(data.getStatus());
+                homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+                homeActivityListData.setFrom(data.getSession().getFrom());
+                homeActivityListData.setTo(data.getSession().getTo());
+                int count = 0;
+                for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
+                    if ((!consentData.getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())) && (consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                        count = count + 1;
+                        homeActivityListData.setConsentsCount(count);
+                    }
+                }
+                if (!data.getGroupOwner().isEmpty()) {
+                    homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
+                    homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());
+                    homeActivityListData.setGroupOwnerUserId(data.getGroupOwner().get(0).getUserId());
+                }
+                groupList.add(homeActivityListData);
+            }
+            for (GetGroupInfoPerUserResponse.Data data : getGroupInfoPerUserResponse.getData()) {
+                if (!data.getStatus().equalsIgnoreCase(Constant.CLOSED)) {
+                    for (GetGroupInfoPerUserResponse.Consents mConsents : data.getConsents()) {
+                        GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+                        groupMemberDataList.setConsentId(mConsents.getConsentId());
+                        groupMemberDataList.setNumber(mConsents.getPhone());
+                        groupMemberDataList.setGroupAdmin(mConsents.isGroupAdmin());
+                        groupMemberDataList.setGroupId(data.getId());
+                        groupMemberDataList.setConsentStatus(mConsents.getStatus());
+                        groupMemberDataList.setName(mConsents.getName());
+                        groupMemberDataList.setUserId(mConsents.getUserId());
+                        groupMemberDataList.setDeviceId(mConsents.getDevice());
+                        mGroupMemberDataLists.add(groupMemberDataList);
+                    }
+                }
+            }
+            mDbManager.insertAllDataIntoGroupTable(groupList);
+            mDbManager.insertGroupMemberDataInListFormat(mGroupMemberDataLists);
+        }
+    }
+
+//    private void displayGroupDataInDashboard() {
+//        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+//        groupListRecyclerView.setLayoutManager(mLayoutManager);
+//        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+//        List<HomeActivityListData> mGroupIconList = mDbManager.getAllGroupIconTableData();
+//        groupList = new ArrayList<>();
+//        for (HomeActivityListData data : groupDetailList) {
+//            if (data.getCreatedBy() != null && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
+//                    && !data.getStatus().equalsIgnoreCase(Constant.COMPLETED)) {
+//                if (!data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME) && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)) {
+//                    HomeActivityListData homeActivityListData = new HomeActivityListData();
+//                    homeActivityListData.setGroupName(data.getGroupName());
+//                    homeActivityListData.setGroupId(data.getGroupId());
+//                    homeActivityListData.setStatus(data.getStatus());
+//                    homeActivityListData.setCreatedBy(data.getCreatedBy());
+//                    homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+//                    homeActivityListData.setProfileImage(data.getProfileImage());
+//                    homeActivityListData.setFrom(data.getFrom());
+//                    homeActivityListData.setTo(data.getTo());
+//                    homeActivityListData.setConsentsCount(data.getConsentsCount());
+//                    for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
+//                        if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+//                            homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+//                        }
+//                    }
+//                    groupList.add(homeActivityListData);
+//                }
+//            }
+//        }
+//        checkIsGroupPresent();
+//        groupListAdapter = new GroupListAdapter(groupList, getContext());
+//        groupListRecyclerView.setAdapter(groupListAdapter);
+//    }
+
 
     /**
      * Adds data in List
@@ -174,7 +266,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                         trackingYou.setGroupId(data.getGroupId());
                         trackingYou.setGroupName(data.getGroupOwnerName());
                         trackingYou.setConsentId(groupMemberDataList.getConsentId());
-                        trackingYou.setConsentsCount(data.getConsentsCount());
+                        trackingYou.setConsentsCount(0);
                         trackingYouList.add(trackingYou);
                     } else {
                         trackingYou.setGroupOwnerName(data.getGroupOwnerName());

@@ -115,10 +115,10 @@ public class PeopleFragment extends Fragment {
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null
                     && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
-                    && data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                    && data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME)&& data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                 List<GroupMemberDataList> memberDataList = mDbManager.getAllGroupMemberDataBasedOnGroupId(data.getGroupId());
                 for (GroupMemberDataList memberData : memberDataList) {
-                    if (!memberData.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
+                    if (!memberData.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId()) && !memberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_REMOVED)) {
                         HomeActivityListData homeActivityListData = new HomeActivityListData();
                         homeActivityListData.setGroupName(memberData.getName());
                         homeActivityListData.setPhoneNumber(memberData.getNumber());

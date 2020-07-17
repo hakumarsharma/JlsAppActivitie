@@ -59,6 +59,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     private String groupId;
     private String consentStatus;
     private boolean deviceLocationflag;
+    private TextView memberName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         ImageView menuOption = findViewById(R.id.menu_icon);
         ImageView closeOption = findViewById(R.id.close_icon);
         closeOption.setOnClickListener(this);
-        TextView memberName = findViewById(R.id.member_name);
+        memberName = findViewById(R.id.member_name);
         memberAddrss = findViewById(R.id.member_address);
         TextView shareLocation = findViewById(R.id.share_location);
         shareLocation.setOnClickListener(this);
@@ -190,7 +191,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     public void gotoGeofenceActivity(){
         Intent intent = new Intent(this, GeofenceActivity.class);
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
-        intent.putExtra(Constant.MEMBER_NAME, memberName);
+        intent.putExtra(Constant.MEMBER_NAME, memberName.getText().toString());
         intent.putExtra(Constant.MEMBER_ADDRESS,memberAddrss.getText().toString());
         intent.putExtra(Constant.GROUP_ID,groupId);
         intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);

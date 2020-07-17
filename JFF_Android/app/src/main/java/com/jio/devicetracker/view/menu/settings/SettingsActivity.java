@@ -89,6 +89,8 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
                 startActivity(batteryIntent);
                 break;
             case R.id.sos_layout :
+                Intent sos = new Intent(getApplicationContext(), SOSActivity.class);
+                startActivity(sos);
                 break;
             case R.id.polling_frequency_layout :
                 Intent pollingFreq = new Intent(getApplicationContext(), PollingFrequencyActivity.class);

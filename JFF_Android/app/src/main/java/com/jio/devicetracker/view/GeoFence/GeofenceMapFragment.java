@@ -106,6 +106,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 1000;
     private int editGeofenceRadius = 0;
     private List<MapData> mapDataList;
+    private String memberName;
     private NotificationHelper notificationHelper;
     private String deviceNumber;
     private String groupId;
@@ -124,6 +125,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         groupId = getActivity().getIntent().getStringExtra(Constant.GROUP_ID);
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
+        memberName = getActivity().getIntent().getStringExtra(Constant.MEMBER_NAME);
         mDbManager = new DBManager(getActivity());
         if (getArguments() != null) {
             lat = getArguments().getDouble(Constant.LATITUDE);
@@ -414,14 +416,14 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 alertHistoryData.setState(Constant.ENTRY);
                 mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             }
-            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE,Constant.GEOFENCE_ENTRY_MESSAGE, NotificationsAlertsActivity.class);
+            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE,memberName+Constant.GEOFENCE_ENTRY_MESSAGE, NotificationsAlertsActivity.class);
         } else if (distance > GEOFENCE_RADIUS_IN_METERS && geoFenceEntryExit && GeofenceSettingsAcivity.geoFenceExitNotificationFlag) {
             geoFenceEntryExit = false;
             if(alertHistoryData != null) {
                 alertHistoryData.setState(Constant.EXIT);
                 mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             }
-            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
+            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, memberName+Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
         }
     }
 }

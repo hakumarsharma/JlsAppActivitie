@@ -104,12 +104,18 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         HomeActivityListData trackingYou = mList.get(position);
         holder.trackingYouGroupOwnerName.setText(trackingYou.getGroupName());
         if (trackingYou.getConsentId() != null) {
-            holder.trackingYouGroupMemberIcon.setImageResource(R.drawable.secondaryuser);
+            holder.trackingYouGroupMemberIcon.setImageResource(R.drawable.default_user);
         } else {
             holder.trackingYouGroupMemberIcon.setImageResource(R.drawable.ic_family_group);
         }
         if (mList != null && !mList.isEmpty() && trackingYou.getConsentsCount() <= 4) {
             switch (trackingYou.getConsentsCount()) {
+                case 0:
+                    holder.motherIcon.setVisibility(View.INVISIBLE);
+                    holder.fatherIcon.setVisibility(View.INVISIBLE);
+                    holder.kidIcon.setVisibility(View.INVISIBLE);
+                    holder.dogIcon.setVisibility(View.INVISIBLE);
+                    break;
                 case 1:
                     holder.motherIcon.setVisibility(View.VISIBLE);
                     holder.fatherIcon.setVisibility(View.INVISIBLE);
