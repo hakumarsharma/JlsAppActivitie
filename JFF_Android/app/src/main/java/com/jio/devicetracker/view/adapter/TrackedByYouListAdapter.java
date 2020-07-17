@@ -97,7 +97,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         HomeActivityListData data = mList.get(position);
         if (data.getConsentId() != null) {
             holder.name.setText(data.getName());
-            holder.profile.setImageResource(R.drawable.secondaryuser);
+            holder.profile.setImageResource(R.drawable.default_user);
         } else {
             holder.profile.setImageResource(R.drawable.ic_family_group);
             holder.name.setText(data.getGroupName());

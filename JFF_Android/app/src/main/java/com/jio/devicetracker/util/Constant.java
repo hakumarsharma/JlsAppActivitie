@@ -476,6 +476,7 @@ public class Constant {
 
     // Settings Activity
     public static final String SETTINGS = "Settings";
+    public static final String SOS_MODE = "SOS";
 
     // NavigateSupport Activity
     public static final String SUPPORT_TITLE = "Support";

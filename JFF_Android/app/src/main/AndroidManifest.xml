@@ -62,6 +62,9 @@
             android:screenOrientation = "portrait"/>
         <activity android:name=".view.menu.settings.PollingFrequencyActivity"
             android:screenOrientation = "portrait"/>
+        <activity android:name=".view.menu.settings.SOSActivity"
+            android:screenOrientation = "portrait"/>
+
 
         <service
             android:name=".network.SendLocationService"
