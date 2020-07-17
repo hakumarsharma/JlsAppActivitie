@@ -73,6 +73,7 @@ public class DeviceFragment extends Fragment {
     private String memberName;
     private String deviceNumber;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -216,6 +217,7 @@ public class DeviceFragment extends Fragment {
         intent.putExtra(Constant.DEVICE_LOCATION_FLAG,true);
         intent.putExtra(Constant.MEMBER_NAME, memberName);
         intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
+        intent.putExtra(Constant.DEVICE_LOCATION,true);
         intent.putExtra(Constant.GROUP_STATUS, homeActivityListData.getStatus());
         startActivity(intent);
     }

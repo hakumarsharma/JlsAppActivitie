@@ -72,6 +72,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private static Context context = null;
     private List<MapData> mapDataList;
     private String groupStatus;
+    private boolean deviceLocation;
+    private boolean peopleLocation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +84,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         createNotificationChannel();
         context = getContext();
         strAddress = new StringBuilder();
+        deviceLocation = getActivity().getIntent().getBooleanExtra(Constant.DEVICE_LOCATION,false);
+        peopleLocation = getActivity().getIntent().getBooleanExtra(Constant.PEOPLE_LOCATION,false);
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         groupStatus = getActivity().getIntent().getStringExtra(Constant.GROUP_STATUS);
         if (mMap != null) {
@@ -131,8 +135,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             showCustomAlertWithText(Constant.GROUP_NOT_ACTIVE);
         } else if (groupStatus.equalsIgnoreCase(Constant.COMPLETED)) {
             showCustomAlertWithText(Constant.SESSION_COMPLETED);
-        } else if (mapDataList.isEmpty()) {
+        } else if (mapDataList.isEmpty() && peopleLocation) {
             showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
+        } else if(mapDataList.isEmpty() && deviceLocation){
+            showCustomAlertWithText(Constant.FETCH_DEVICE_LOCATION_ERROR);
         }
         if (mapDataList != null && !mapDataList.isEmpty() && strAddress != null && groupStatus.equalsIgnoreCase(Constant.ACTIVE)) {
             for (MapData mapData : mapDataList) {

@@ -120,7 +120,8 @@ public class Constant {
     public static final String CONSENT_ID = "consentId";
     public static final String SELECTION_ERROR = "You cannot track individual user and group at the same time, Please select one of them to track.";
     public static final String NO_EVENTS_FOUND_RESPONSE = "No events found matching the search keys.";
-    public static final String FETCH_LOCATION_ERROR = "Location details will be displayed when one or more group members approve consent.";
+    public static final String FETCH_LOCATION_ERROR = "Location details will be displayed when consent is approved.";
+    public static final String FETCH_DEVICE_LOCATION_ERROR = "Location details are not available for this device";
     public static final String GROUP_NOT_ACTIVE = "Please wait till clock ticks scheduled time.";
     public static final String SESSION_COMPLETED = "Please request consent to track the group members.";
     public static final String CONSENT_PENDING_STATUS = "Consent is pending, please ask the user to accept consent for tracking";
@@ -438,6 +439,8 @@ public class Constant {
     public static final String REAL_ICON = "Real Icon";
     public static final String GROUP_ICON = "Group Icon";
     public static final String DEVICE_NUMBER = "DeviceNumber";
+    public static final String DEVICE_LOCATION = "DeviceLocation";
+    public static final String PEOPLE_LOCATION = "PeopleLocation";
     public static final String MOM = "Woman";
     public static final String FATHER = "Man";
     public static final String KID = "Kid";

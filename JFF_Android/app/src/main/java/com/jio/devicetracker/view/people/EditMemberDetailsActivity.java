@@ -133,9 +133,11 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
             Intent intent = new Intent(EditMemberDetailsActivity.this, DashboardMainActivity.class);
             if(!isFromMap && PeopleMemberListAdapter.peopleEditFlag) {
                 intent.putExtra(Constant.Add_People, true);
+                PeopleMemberListAdapter.peopleEditFlag = false;
             } else if (DeviceListAdapter.deviceEditFlag) {
                 intent.putExtra(Constant.Add_People, false);
                 intent.putExtra(Constant.Add_Device, true);
+                DeviceListAdapter.deviceEditFlag = false;
             } else {
                 intent.putExtra(Constant.Add_People, false);
                 intent.putExtra(Constant.Add_Device, false);

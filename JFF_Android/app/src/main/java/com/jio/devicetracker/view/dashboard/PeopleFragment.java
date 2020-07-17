@@ -73,6 +73,7 @@ public class PeopleFragment extends Fragment {
     private String deviceNumber;
     private String consentStatus;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -262,6 +263,7 @@ public class PeopleFragment extends Fragment {
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_STATUS, groupStatus);
         intent.putExtra(Constant.MEMBER_NAME, memberName);
+        intent.putExtra(Constant.PEOPLE_LOCATION, true);
         intent.putExtra(Constant.GROUP_ID, groupId);
         intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
         intent.putExtra(Constant.CONSENT_STATUS, consentStatus);
