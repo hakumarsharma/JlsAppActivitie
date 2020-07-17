@@ -435,7 +435,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         List<AddDeviceData.Devices> mList = new ArrayList<>();
         AddDeviceData.Devices devices = new AddDeviceData().new Devices();
         devices.setMac(deviceImei);
-        devices.setPhone(deviceNumber);
+        devices.setPhone(deviceImei);
         devices.setIdentifier("imei");
         devices.setName(deviceName.getText().toString());
         devices.setType("watch");

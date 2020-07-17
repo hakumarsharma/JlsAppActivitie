@@ -421,7 +421,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         List<AddDeviceData.Devices> mList = new ArrayList<>();
         AddDeviceData.Devices devices = new AddDeviceData().new Devices();
         devices.setMac(imeiNumber);
-        devices.setPhone(phoneNumber);
+        devices.setPhone(imeiNumber);
         devices.setIdentifier("imei");
         devices.setName(trackeeNameEditText.getText().toString());
         devices.setType("watch");
