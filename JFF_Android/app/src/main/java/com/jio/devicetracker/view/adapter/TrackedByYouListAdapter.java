@@ -102,8 +102,14 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             holder.profile.setImageResource(R.drawable.ic_family_group);
             holder.name.setText(data.getGroupName());
         }
-        if (mList != null && !mList.isEmpty() &&  data.getConsentsCount() <= 5) {
-            switch (data.getConsentsCount() - 1) {
+        if (mList != null && !mList.isEmpty() &&  data.getConsentsCount() <= 4) {
+            switch (data.getConsentsCount() ) {
+                case 0:
+                    holder.icon1.setVisibility(View.INVISIBLE);
+                    holder.icon2.setVisibility(View.INVISIBLE);
+                    holder.icon3.setVisibility(View.INVISIBLE);
+                    holder.icon4.setVisibility(View.INVISIBLE);
+                    break;
                 case 1:
                     holder.icon1.setVisibility(View.VISIBLE);
                     holder.icon2.setVisibility(View.INVISIBLE);
