@@ -81,7 +81,7 @@ public class ProfileTrackedByListAdapter extends RecyclerView.Adapter<ProfileTra
             });*/
         } else if (mList.get(position).getClass().getName().equalsIgnoreCase(Constant.GROUP_MEMBER_CLASS_NAME)) {
             GroupMemberDataList data = (GroupMemberDataList) mList.get(position);
-            holder.profile.setImageResource(R.drawable.secondaryuser);
+            holder.profile.setImageResource(R.drawable.default_user);
             holder.name.setText(data.getName());
             /*holder.relativeLayout.setOnClickListener(v -> {
                 itemListener.clickOnListLayout(data.getProfileImage(), data.getName(), data.getConsentId(), "");
