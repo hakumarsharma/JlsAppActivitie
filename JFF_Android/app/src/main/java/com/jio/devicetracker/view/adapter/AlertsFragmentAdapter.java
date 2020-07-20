@@ -33,14 +33,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AlertHistoryData;
 import com.jio.devicetracker.util.Constant;
-
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAdapter.ViewHolder> {
 

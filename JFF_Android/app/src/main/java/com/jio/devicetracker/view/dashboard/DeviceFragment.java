@@ -52,9 +52,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.DeviceListAdapter;
-import com.jio.devicetracker.view.location.LocationActivity;
 import com.jio.devicetracker.view.location.ShareLocationActivity;
-
 import java.util.ArrayList;
 import java.util.List;
 

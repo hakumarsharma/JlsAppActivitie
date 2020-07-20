@@ -67,7 +67,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     private Context mContext;
     private DBManager mDbManager;
     private RelativeLayout layoutOps;
-    private int position;
 
     public PeopleListAdapter(List<GroupMemberDataList> mList, Context mContext) {
         this.mList = mList;

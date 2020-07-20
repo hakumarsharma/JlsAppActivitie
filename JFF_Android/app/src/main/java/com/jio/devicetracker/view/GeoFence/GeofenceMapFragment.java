@@ -94,18 +94,15 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private DBManager mDbManager;
     private GeofenceHelper geofenceHelper;
     private int GEOFENCE_RADIUS_IN_METERS = 5000;
-    private String name;
     private GeofencingClient mGeofencingClient;
     private String GEOFENCE_ID = "JioTrack1";
     private LatLng trackeeLatlng;
     private LatLng geoFenceLatlng;
-    private boolean createGeofence;
     private static boolean geoFenceEntryExit;
     private int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 1000;
     private int editGeofenceRadius = 0;
     private List<MapData> mapDataList;
     private String memberName;
-    private NotificationHelper notificationHelper;
     private String deviceNumber;
     private String groupId;
     private double lat;
@@ -132,9 +129,8 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             if (editGeofenceRadius != 0) {
                 GEOFENCE_RADIUS_IN_METERS = editGeofenceRadius;
             }
-            geoFenceLatlng = new LatLng(lat,lang);
+            geoFenceLatlng = new LatLng(lat, lang);
             mDbManager.updateGeofenceDetailInGroupMemberTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
-            createGeofence = getArguments().getBoolean(Constant.CREATE_GEOFENCE);
         }
         new Thread(new FetchLocation()).start();
 
@@ -186,12 +182,10 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.clear();
         if (mapDataList != null && !mapDataList.isEmpty()) {
-            name = mapDataList.get(0).getName();
             trackeeLatlng = new LatLng(mapDataList.get(0).getLatitude(), mapDataList.get(0).getLongitude());
             addMarker(trackeeLatlng);
         }
 
-        MarkerOptions markerOptions = new MarkerOptions();
         GeofenceDetails geofenceDetails = mDbManager.getGeofenceDetails(deviceNumber);
         if (geofenceDetails != null && geofenceDetails.getLat() != 0 && geofenceDetails.getLng() != 0) {
             geoFenceLatlng = new LatLng(geofenceDetails.getLat(), geofenceDetails.getLng());
@@ -231,7 +225,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapClick(LatLng latLng) {
 //        addMarker(trackeeLatlng);
-      //handleMapClick(latLng);
+        //handleMapClick(latLng);
     }
 
     /**
@@ -263,7 +257,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    /*@RequiresApi(api = Build.VERSION_CODES.O)
     private void handleMapClick(LatLng latLng) {
         mMap.clear();
         addMarker(trackeeLatlng);
@@ -272,7 +266,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         float distance = distance((float) latLng.latitude, (float) latLng.longitude, (float) trackeeLatlng.latitude, (float) trackeeLatlng.longitude);
         int radiusDifference = (int) distance;
         trackGeofenceTransition(radiusDifference);
-    }
+    }*/
 
     private void addMarker(LatLng latLng) {
         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
@@ -283,17 +277,15 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
                 List<Address> addresses = null; //1 num of possible location returned
                 try {
-                    addresses = geocoder.getFromLocation(trackeeLatlng.latitude,trackeeLatlng.longitude, 1);
+                    addresses = geocoder.getFromLocation(trackeeLatlng.latitude, trackeeLatlng.longitude, 1);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 String address = addresses.get(0).getAddressLine(0); //0 to obtain first possible address
                 String city = addresses.get(0).getLocality();
                 String state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
-                String postalCode = addresses.get(0).getPostalCode();
                 //create your custom title
-                String title = address +"-"+city+"-"+state;
+                String title = address + "-" + city + "-" + state;
                 marker.setTitle(title);
                 marker.showInfoWindow();
 
@@ -318,6 +310,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             }
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -336,7 +329,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         //handleMapClick(latLng);
     }
 
-    public void makeApicallForTrackeeLocation(){
+    public void makeApicallForTrackeeLocation() {
         SearchEventData searchEventData = new SearchEventData();
         List<String> mList = new ArrayList<>();
         mList.add(Constant.LOCATION);
@@ -364,23 +357,22 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                             onMapReady(mMap);
                             SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
                             alertHistoryData = new AlertHistoryData();
-                            String alertAddress = Util.getAddressFromLocation(data.getLocation().getLat(),data.getLocation().getLng(),getActivity());
+                            String alertAddress = Util.getAddressFromLocation(data.getLocation().getLat(), data.getLocation().getLng(), getActivity());
                             alertHistoryData.setAddress(alertAddress);
                             alertHistoryData.setConsentId(grpMembers.getConsentId());
                             alertHistoryData.setDate(dateFormat.format(new Date()));
                             alertHistoryData.setName(grpMembers.getName());
                             alertHistoryData.setNumber(grpMembers.getNumber());
-                            trackeeLatlng = new LatLng(data.getLocation().getLat(),data.getLocation().getLng());
-                            float distanceBetweenRadius = distance((float)geoFenceLatlng.latitude,(float)geoFenceLatlng.longitude,(float)trackeeLatlng.latitude,(float)trackeeLatlng.longitude);
+                            trackeeLatlng = new LatLng(data.getLocation().getLat(), data.getLocation().getLng());
+                            float distanceBetweenRadius = distance((float) geoFenceLatlng.latitude, (float) geoFenceLatlng.longitude, (float) trackeeLatlng.latitude, (float) trackeeLatlng.longitude);
                             consentId = grpMembers.getConsentId();
-                            trackGeofenceTransition((int)distanceBetweenRadius);
+                            trackGeofenceTransition((int) distanceBetweenRadius);
                         }
                     }
                 }
             }
         }
     }
-
 
 
     /**
@@ -392,6 +384,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             // Todo
         }
     }
+
     public float distance(float latA, float lngA, float latB, float lngB) {
         double earthRadius = 3958.75;
         double latDiff = Math.toRadians(latB - latA);
@@ -407,21 +400,21 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void trackGeofenceTransition(int distance) {
-        notificationHelper = new NotificationHelper(getActivity());
+        NotificationHelper notificationHelper = new NotificationHelper(getActivity());
         if (distance < GEOFENCE_RADIUS_IN_METERS && GeofenceSettingsAcivity.geoFenceEntryNotificationFlag) {
             geoFenceEntryExit = true;
-            if(alertHistoryData != null) {
+            if (alertHistoryData != null) {
                 alertHistoryData.setState(Constant.ENTRY);
                 mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             }
-            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE,memberName+Constant.GEOFENCE_ENTRY_MESSAGE, NotificationsAlertsActivity.class);
+            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE, memberName + Constant.GEOFENCE_ENTRY_MESSAGE, NotificationsAlertsActivity.class);
         } else if (distance > GEOFENCE_RADIUS_IN_METERS && geoFenceEntryExit && GeofenceSettingsAcivity.geoFenceExitNotificationFlag) {
             geoFenceEntryExit = false;
-            if(alertHistoryData != null) {
+            if (alertHistoryData != null) {
                 alertHistoryData.setState(Constant.EXIT);
                 mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             }
-            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, memberName+Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
+            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, memberName + Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
         }
     }
 }

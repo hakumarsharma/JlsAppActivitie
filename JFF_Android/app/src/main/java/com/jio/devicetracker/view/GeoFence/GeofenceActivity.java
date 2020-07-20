@@ -53,7 +53,6 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.BaseActivity;
-import com.jio.devicetracker.view.location.ShareLocationActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,7 +62,6 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
     private GeofenceMapFragment fragmentMap;
     private EditText addressText;
     private String deviceNumber;
-    private String memberAddress;
     private List<MapData> mapDataList;
     private String memberName;
 
@@ -82,7 +80,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         actionBar = getSupportActionBar();
         Intent intent = getIntent();
         memberName = intent.getStringExtra(Constant.MEMBER_NAME);
-        memberAddress = intent.getStringExtra(Constant.MEMBER_ADDRESS);
+        String memberAddress = intent.getStringExtra(Constant.MEMBER_ADDRESS);
         mapDataList = intent.getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         boolean editGeofence = intent.getBooleanExtra("EditGeofence", false);
@@ -218,8 +216,8 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
                 if (!addressText.getText().toString().isEmpty()) {
                     intent.putExtra(Constant.GEOFENCE_ADDRESS, addressText.getText().toString());
                 }
-                intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
-                intent.putExtra(Constant.MEMBER_NAME,memberName);
+                intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
+                intent.putExtra(Constant.MEMBER_NAME, memberName);
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
                 startActivity(intent);
                 return true;

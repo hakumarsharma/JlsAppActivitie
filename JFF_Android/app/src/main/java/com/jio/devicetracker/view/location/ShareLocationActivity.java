@@ -131,7 +131,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                     if(!consentStatus.equalsIgnoreCase(Constant.APPROVED)) {
                         showCustomAlertWithText(Constant.GEOFENCE_Alert_Message);
                         return;
-                    } else if(consentStatus.equalsIgnoreCase(Constant.APPROVED)&& !(mapDataList.size() == 0) && (mapDataList.get(0).getLatitude() == 0) && (mapDataList.get(0).getLongitude()==0)){
+                    } else if(consentStatus.equalsIgnoreCase(Constant.APPROVED) && !mapDataList.isEmpty() && mapDataList.get(0).getLatitude() == 0 && mapDataList.get(0).getLongitude() == 0) {
                         showCustomAlertWithText(Constant.GEOFENCE_PEOPLE_Alert_Message);
                         return;
                     }
@@ -139,10 +139,10 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                         gotoGeofenceActivity();
                     }
                 } else {
-                    if(deviceLocationflag && mapDataList.size() == 0){
+                    if(deviceLocationflag && mapDataList.isEmpty()){
                         showCustomAlertWithText(Constant.GEOFENCE_DEVICE_Alert_Message);
                         return;
-                    } else if(deviceLocationflag && !(mapDataList.size() == 0) && (mapDataList.get(0).getLatitude() == 0) && (mapDataList.get(0).getLongitude()==0) ) {
+                    } else if(deviceLocationflag && !mapDataList.isEmpty() && mapDataList.get(0).getLatitude() == 0 && mapDataList.get(0).getLongitude() == 0) {
                         showCustomAlertWithText(Constant.GEOFENCE_DEVICE_Alert_Message);
                         return;
                     } else {

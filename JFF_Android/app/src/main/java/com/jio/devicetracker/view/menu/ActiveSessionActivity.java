@@ -42,7 +42,6 @@ import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.adapter.GroupListAdapter;
 import com.jio.devicetracker.view.adapter.TrackingYouListAdapter;
 import com.jio.devicetracker.view.adapter.TrackedByYouListAdapter;
 
@@ -152,7 +151,9 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                 homeActivityListData.setTo(data.getSession().getTo());
                 int count = 0;
                 for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
-                    if ((!consentData.getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())) && (consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                    if (!consentData.getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber()) && (consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED)
+                            || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)
+                            || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
                         count = count + 1;
                         homeActivityListData.setConsentsCount(count);
                     }

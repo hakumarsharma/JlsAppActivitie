@@ -56,7 +56,6 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
     private EditText userName;
     private DBManager mDbmanager;
     private boolean isFromMap;
-    private ImageView userIconCreateGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         userName.setText(intent.getStringExtra(Constant.GROUPNAME));
         Button updateBtn = findViewById(R.id.updateName);
         updateBtn.setOnClickListener(this);
-        userIconCreateGroup = findViewById(R.id.userIconCreateGroup);
+        ImageView userIconCreateGroup = findViewById(R.id.userIconCreateGroup);
         mDbmanager = new DBManager(this);
         if (DeviceListAdapter.deviceEditFlag) {
             userIconCreateGroup.setImageResource(R.drawable.device_default);
