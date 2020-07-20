@@ -57,8 +57,8 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
     private RecyclerView trackingByYouListRecyclerView;
     private RecyclerView trackingYouListRecyclerView;
     private DBManager mDbManager;
-    private CardView trackedCardInstruction;
-    private CardView trackingCardInstruction;
+    public static CardView trackedCardInstruction;
+    public static CardView trackingCardInstruction;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

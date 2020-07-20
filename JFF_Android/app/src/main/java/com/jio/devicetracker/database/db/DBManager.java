@@ -368,7 +368,6 @@ public class DBManager {
      */
     public AdminLoginData getAdminLoginDetail() {
         mDatabase = mDBHelper.getWritableDatabase();
-        mDatabase = mDBHelper.getWritableDatabase();
         AdminLoginData adminData = null;
         String[] column = {DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME, DatabaseHelper.PHONE_COUNTRY_CODE, DatabaseHelper.DEVICE_NUM, DatabaseHelper.EMAIL};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_USER_LOGIN, column, null, null, null, null, null);

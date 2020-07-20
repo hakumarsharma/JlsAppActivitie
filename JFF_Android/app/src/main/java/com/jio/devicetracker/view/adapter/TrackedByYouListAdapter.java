@@ -37,6 +37,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -44,6 +45,9 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.menu.ActiveMemberActivity;
+import com.jio.devicetracker.view.menu.ActiveSessionActivity;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouListAdapter.ViewHolder> {
@@ -251,6 +255,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             mDbManager.deleteSelectedDataFromGroup(groupId);
             mDbManager.deleteSelectedDataFromGroupMember(groupId);
             removeItem(position);
+            checkAfterDeletion();
         }
     }
 
@@ -282,6 +287,65 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
         intent.putExtra(Constant.GROUP_NAME, groupName);
         intent.putExtra(Constant.GROUP_ID, groupId);
         mContext.startActivity(intent);
+    }
+
+    /**
+     * checks data in List
+     */
+    private void checkAfterDeletion() {
+        DBManager mDbManager = new DBManager(mContext);
+        String userId = mDbManager.getAdminLoginDetail().getUserId();
+        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
+        List<HomeActivityListData> listOnActiveSession = new ArrayList<>();
+
+        // Adding Tracked by you list in Active Session
+        for (HomeActivityListData data : groupDetailList) {
+            if (data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
+                    && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                    && !data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)
+                    && data.getCreatedBy().equalsIgnoreCase(userId)) {
+                HomeActivityListData homeActivityListData = new HomeActivityListData();
+                homeActivityListData.setGroupName(data.getGroupName());
+                homeActivityListData.setGroupId(data.getGroupId());
+                homeActivityListData.setCreatedBy(data.getCreatedBy());
+                homeActivityListData.setUpdatedBy(data.getUpdatedBy());
+                homeActivityListData.setProfileImage(R.drawable.ic_group_button);
+                homeActivityListData.setFrom(data.getFrom());
+                homeActivityListData.setTo(data.getTo());
+                homeActivityListData.setConsentsCount(data.getConsentsCount());
+                listOnActiveSession.add(homeActivityListData);
+            }
+        }
+
+        for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
+            HomeActivityListData data = new HomeActivityListData();
+            if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(userId)
+                    && !groupMemberDataList.getUserId().equalsIgnoreCase(userId)
+                    && (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)
+                    || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING))) {
+                data.setName(groupMemberDataList.getName());
+                data.setNumber(groupMemberDataList.getNumber());
+                data.setConsentStaus(groupMemberDataList.getConsentStatus());
+                data.setConsentId(groupMemberDataList.getConsentId());
+                data.setUserId(groupMemberDataList.getUserId());
+                data.setDeviceId(groupMemberDataList.getDeviceId());
+                data.setGroupId(groupMemberDataList.getGroupId());
+                data.setFrom(mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getFrom());
+                data.setTo(mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getTo());
+                listOnActiveSession.add(data);
+            }
+        }
+
+        if (listOnActiveSession.isEmpty()) {
+            ActiveSessionActivity.trackedCardInstruction.setVisibility(View.VISIBLE);
+        } else {
+            ActiveSessionActivity.trackedCardInstruction.setVisibility(View.INVISIBLE);
+        }
+
     }
 
 }

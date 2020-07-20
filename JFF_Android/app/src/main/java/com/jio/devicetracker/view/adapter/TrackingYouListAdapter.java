@@ -53,6 +53,7 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.location.LocationActivity;
 import com.jio.devicetracker.view.location.ShareLocationActivity;
 import com.jio.devicetracker.view.menu.ActiveMemberActivity;
+import com.jio.devicetracker.view.menu.ActiveSessionActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -365,8 +366,10 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                     Util.progressDialog.dismiss();
                     Toast.makeText(mContext, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mDbManager.deleteSelectedDataFromGroupMember(groupId);
+                    mDbManager.deleteSelectedDataFromGroup(groupId);
                     removeItem(position);
                     trackingYouOprationLayout.setVisibility(View.GONE);
+                    checkAfterDeletion();
                 } else {
                     Util.progressDialog.dismiss();
                     showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
@@ -403,4 +406,50 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         notifyDataSetChanged();
     }
 
+    /**
+     * checks data in List
+     */
+    private void checkAfterDeletion() {
+        DBManager mDbManager = new DBManager(mContext);
+        String userId = mDbManager.getAdminLoginDetail().getUserId();
+        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
+
+        /// Add Tracking you in list of Active session
+        List<HomeActivityListData> trackingYouList = new ArrayList<>();
+        for (HomeActivityListData data : groupDetailList) {
+            for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
+                if (!userId.equalsIgnoreCase(data.getGroupOwnerUserId())
+                        && data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
+                        && data.getGroupId().equalsIgnoreCase(groupMemberDataList.getGroupId())
+                        && groupMemberDataList.getUserId().equalsIgnoreCase(userId)
+                        && groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
+                    HomeActivityListData trackingYou = new HomeActivityListData();
+                    if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                        trackingYou.setGroupOwnerName(data.getGroupOwnerName());
+                        trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
+                        trackingYou.setGroupOwnerUserId(data.getGroupOwnerUserId());
+                        trackingYou.setGroupId(data.getGroupId());
+                        trackingYou.setGroupName(data.getGroupOwnerName());
+                        trackingYou.setConsentId(groupMemberDataList.getConsentId());
+                        trackingYou.setConsentsCount(0);
+                        trackingYouList.add(trackingYou);
+                    } else {
+                        trackingYou.setGroupOwnerName(data.getGroupOwnerName());
+                        trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
+                        trackingYou.setGroupOwnerUserId(data.getGroupOwnerUserId());
+                        trackingYou.setGroupId(data.getGroupId());
+                        trackingYou.setGroupName(data.getGroupName());
+                        trackingYou.setConsentsCount(data.getConsentsCount());
+                        trackingYouList.add(trackingYou);
+                    }
+                }
+            }
+        }
+        if (trackingYouList.isEmpty()) {
+            ActiveSessionActivity.trackingCardInstruction.setVisibility(View.VISIBLE);
+        } else {
+            ActiveSessionActivity.trackingCardInstruction.setVisibility(View.INVISIBLE);
+        }
+    }
 }
