@@ -196,7 +196,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
             numberOfUsers = itemView.findViewById(R.id.session_numberOfUsers);
             trackedByYouEdit = itemView.findViewById(R.id.trackedByYouEdit);
             trackedByYouEdit.setOnClickListener(this);
-            deleteAllMembers = itemView.findViewById(R.id.deleteAllMembers);
+            deleteAllMembers = itemView.findViewById(R.id.deleteGroupFromActiveSession);
             deleteAllMembers.setOnClickListener(this);
             trackedByYouEditEditLine = itemView.findViewById(R.id.trackedByYouEditEditLine);
         }
@@ -219,7 +219,7 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
                     TrackedByYouListAdapter.this.trackedByYouOprationLayout = trackedByYouOprationLayout;
                     gotoActiveMemberActivity(mList.get(getAdapterPosition()).getGroupName(), mList.get(getAdapterPosition()).getGroupId());
                     break;
-                case R.id.deleteAllMembers:
+                case R.id.deleteGroupFromActiveSession:
                     position = getAdapterPosition();
                     groupId = mList.get(position).getGroupId();
                     TrackedByYouListAdapter.this.trackedByYouOprationLayout = trackedByYouOprationLayout;

@@ -515,22 +515,27 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         startActivity(intent);
     }
 
+    // Called at the time of logout and update the database
     private void updateLogoutData() {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        adb.setTitle(Constant.ALERT_TITLE);
-        adb.setMessage(Constant.LOGOUT_CONFIRMATION_MESSAGE);
-        adb.setIcon(android.R.drawable.ic_dialog_alert);
-        adb.setPositiveButton("OK", (dialog, which) -> {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.number_display_dialog);
+        dialog.setTitle(Constant.ALERT_TITLE);
+        TextView alertMessage = dialog.findViewById(R.id.selectNumber);
+        alertMessage.setText(Constant.LOGOUT_CONFIRMATION_MESSAGE);
+        dialog.getWindow().setLayout(750, 500);
+        final Button yes = dialog.findViewById(R.id.positive);
+        final Button no = dialog.findViewById(R.id.negative);
+        yes.setOnClickListener(v -> {
             Util.clearAutologinstatus(this);
             mDbManager.updateLogoutData();
             goToLoginActivity();
+            dialog.dismiss();
         });
-        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
+
+        no.setOnClickListener(v -> {
+            dialog.dismiss();
         });
-        adb.show();
+        dialog.show();
     }
 
     /**
