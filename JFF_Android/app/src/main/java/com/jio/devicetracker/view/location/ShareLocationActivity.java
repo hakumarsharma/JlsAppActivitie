@@ -131,7 +131,11 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                     if(!consentStatus.equalsIgnoreCase(Constant.APPROVED)) {
                         showCustomAlertWithText(Constant.GEOFENCE_Alert_Message);
                         return;
-                    } else {
+                    } else if(consentStatus.equalsIgnoreCase(Constant.APPROVED)&& !(mapDataList.size() == 0) && (mapDataList.get(0).getLatitude() == 0) && (mapDataList.get(0).getLongitude()==0)){
+                        showCustomAlertWithText(Constant.GEOFENCE_PEOPLE_Alert_Message);
+                        return;
+                    }
+                    else {
                         gotoGeofenceActivity();
                     }
                 } else {
