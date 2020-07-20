@@ -97,6 +97,7 @@ public class ActiveMemberActivity extends AppCompatActivity implements View.OnCl
         List<GroupMemberDataList> memberList = new ArrayList<>();
         for (GroupMemberDataList data : mList) {
             if (!data.getConsentStatus().equalsIgnoreCase(Constant.EXITED)
+                    && !data.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())
                     && !data.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
                 GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
                 groupMemberDataList.setName(data.getName());

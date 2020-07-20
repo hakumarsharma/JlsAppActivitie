@@ -91,7 +91,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         transaction.add(R.id.map_fragment, fragmentMap).commit();
         mapDataList = getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         groupId = getIntent().getStringExtra(Constant.GROUP_ID);
-        deviceLocationflag = getIntent().getBooleanExtra(Constant.DEVICE_LOCATION_FLAG,false);
+        deviceLocationflag = getIntent().getBooleanExtra(Constant.DEVICE_LOCATION_FLAG, false);
         deviceNumber = getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         consentStatus = getIntent().getStringExtra(Constant.CONSENT_STATUS);
         if (getIntent().getStringExtra(Constant.MEMBER_NAME) != null) {
@@ -127,22 +127,21 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.create_geofence:
-                if(consentStatus != null){
-                    if(!consentStatus.equalsIgnoreCase(Constant.APPROVED)) {
+                if (consentStatus != null) {
+                    if (!consentStatus.equalsIgnoreCase(Constant.APPROVED)) {
                         showCustomAlertWithText(Constant.GEOFENCE_Alert_Message);
                         return;
-                    } else if(consentStatus.equalsIgnoreCase(Constant.APPROVED) && !mapDataList.isEmpty() && mapDataList.get(0).getLatitude() == 0 && mapDataList.get(0).getLongitude() == 0) {
+                    } else if (consentStatus.equalsIgnoreCase(Constant.APPROVED) && !mapDataList.isEmpty() && mapDataList.get(0).getLatitude() == 0 && mapDataList.get(0).getLongitude() == 0) {
                         showCustomAlertWithText(Constant.GEOFENCE_PEOPLE_Alert_Message);
                         return;
-                    }
-                    else {
+                    } else {
                         gotoGeofenceActivity();
                     }
                 } else {
-                    if(deviceLocationflag && mapDataList.isEmpty()){
+                    if (deviceLocationflag && mapDataList.isEmpty()) {
                         showCustomAlertWithText(Constant.GEOFENCE_DEVICE_Alert_Message);
                         return;
-                    } else if(deviceLocationflag && !mapDataList.isEmpty() && mapDataList.get(0).getLatitude() == 0 && mapDataList.get(0).getLongitude() == 0) {
+                    } else if (deviceLocationflag && !mapDataList.isEmpty() && mapDataList.get(0).getLatitude() == 0 && mapDataList.get(0).getLongitude() == 0) {
                         showCustomAlertWithText(Constant.GEOFENCE_DEVICE_Alert_Message);
                         return;
                     } else {
@@ -192,13 +191,17 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         alertActivity.alertWithOkButton(alertMessage);
     }
 
-    public void gotoGeofenceActivity(){
-        Intent intent = new Intent(this, GeofenceActivity.class);
-        intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
-        intent.putExtra(Constant.MEMBER_NAME, memberName.getText().toString());
-        intent.putExtra(Constant.MEMBER_ADDRESS,memberAddrss.getText().toString());
-        intent.putExtra(Constant.GROUP_ID,groupId);
-        intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
-        startActivity(intent);
+    public void gotoGeofenceActivity() {
+        if (mapDataList.isEmpty()) {
+            showCustomAlertWithText(Constant.CREATE_GEOFENCE_WARNING);
+        } else {
+            Intent intent = new Intent(this, GeofenceActivity.class);
+            intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+            intent.putExtra(Constant.MEMBER_NAME, memberName.getText().toString());
+            intent.putExtra(Constant.MEMBER_ADDRESS, memberAddrss.getText().toString());
+            intent.putExtra(Constant.GROUP_ID, groupId);
+            intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
+            startActivity(intent);
+        }
     }
 }

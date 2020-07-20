@@ -44,7 +44,6 @@ public class NotificationHelper extends ContextWrapper {
         createChannels();
     }
 
-    private String CHANNEL_NAME = Constant.NOTIFICATION_CHANNEL;
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createChannels() {
         CharSequence name = this.getString(R.string.channel_name);

@@ -212,7 +212,7 @@ public class Constant {
     public static final String MAP_TAB_WITHOUT_NEXTLINE = "Map";
     public static final String LIST_TAB = "List\n";
     public static final String LIST_TAB_WITHOUT_NEXTLINE = "List";
-
+    public static final String CREATE_GEOFENCE_WARNING = "Location is not available so you can not create Geofence";
     public static final String PEOPLE_DATA = "People_Data";
 
 
