@@ -234,7 +234,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                 case R.id.reverseTrack:
                     TrackingYouListAdapter.this.trackingYouOprationLayout = trackingYouOprationLayout;
                     HomeActivityListData mData = mList.get(position);
-                    if(mData.getConsentId() != null) {
+                    if (mData.getConsentId() != null) {
                         gotoSharedLocation = true;
                     }
                     memberName = mData.getName();
@@ -297,14 +297,14 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                     }
                 }
             }
-            if(gotoSharedLocation) {
+            if (gotoSharedLocation) {
                 gotoSharedLocation = false;
                 Intent intent = new Intent(mContext, ShareLocationActivity.class);
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
                 intent.putExtra(Constant.GROUP_STATUS, Constant.ACTIVE);
                 intent.putExtra(Constant.MEMBER_NAME, memberName);
                 intent.putExtra(Constant.GROUP_ID, groupId);
-                intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+                intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
                 intent.putExtra(Constant.CONSENT_STATUS, Constant.APPROVED);
                 mContext.startActivity(intent);
             } else {
@@ -446,6 +446,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                 }
             }
         }
+
         if (trackingYouList.isEmpty()) {
             ActiveSessionActivity.trackingCardInstruction.setVisibility(View.VISIBLE);
         } else {
