@@ -21,12 +21,14 @@
 package com.jio.devicetracker.view.adapter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -223,22 +225,27 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         }
 
         private void deleteAlertBox() {
-            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
-            adb.setTitle(Constant.ALERT_TITLE);
-            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
-            adb.setIcon(android.R.drawable.ic_dialog_alert);
-            adb.setPositiveButton("OK", (dialog, which) -> {
+            final Dialog dialog = new Dialog(mContext);
+            dialog.setContentView(R.layout.number_display_dialog);
+            dialog.setTitle(Constant.ALERT_TITLE);
+            TextView alertMessage = dialog.findViewById(R.id.selectNumber);
+            alertMessage.setText(Constant.DELETE_DEVICE_MESSAGE);
+            dialog.getWindow().setLayout(750, 500);
+            final Button yes = dialog.findViewById(R.id.positive);
+            final Button no = dialog.findViewById(R.id.negative);
+            yes.setOnClickListener(v -> {
                 DeviceListAdapter.this.devicesOperationLayout = devicesOperationLayout;
                 phoneNumber = mList.get(getAdapterPosition()).getPhoneNumber();
                 deviceId = mDbManager.getGroupMemberDetailByConsentId(mList.get(getAdapterPosition()).getConsentId()).getDeviceId();
                 makeDeleteGroupAPICall(mList.get(getAdapterPosition()).getGroupId());
+                dialog.dismiss();
             });
-            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
+
+            no.setOnClickListener(v -> {
+                dialog.dismiss();
+                devicesOperationLayout.setVisibility(View.GONE);
             });
-            adb.show();
+            dialog.show();
         }
     }
 

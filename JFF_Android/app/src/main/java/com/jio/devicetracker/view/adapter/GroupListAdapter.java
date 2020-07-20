@@ -285,6 +285,8 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             final Dialog dialog = new Dialog(mContext);
             dialog.setContentView(R.layout.number_display_dialog);
             dialog.setTitle(Constant.ALERT_TITLE);
+            TextView alertMessage = dialog.findViewById(R.id.selectNumber);
+            alertMessage.setText(Constant.DELETE_GROUP_MESSAGE);
             dialog.getWindow().setLayout(750, 500);
             final Button yes = dialog.findViewById(R.id.positive);
             final Button no = dialog.findViewById(R.id.negative);

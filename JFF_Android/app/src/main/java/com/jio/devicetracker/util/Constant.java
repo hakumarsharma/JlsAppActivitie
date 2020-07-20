@@ -186,6 +186,9 @@ public class Constant {
     public static final String DUPLICATE_NUMBER = "This number is already added";
     public static final String LOGOUT_CONFIRMATION_MESSAGE = "Are you sure you want to logout ?";
     public static final String DELETE_CONFIRMATION_MESSAGE = "Are you sure you want to delete ?";
+    public static final String DELETE_GROUP_MESSAGE = "Are you sure you want to delete this group ?";
+    public static final String DELETE_PERSON_MESSAGE = "Are you sure you want to delete this person ?";
+    public static final String DELETE_DEVICE_MESSAGE = "Are you sure you want to delete this device ?";
     public static final String IMEI = "imei";
     public static final String PROGRESSBAR_MSG = "Please wait adding device";
     public static final String PET_TRACKER_DEVICE_TYPE = "Pet Tracker";

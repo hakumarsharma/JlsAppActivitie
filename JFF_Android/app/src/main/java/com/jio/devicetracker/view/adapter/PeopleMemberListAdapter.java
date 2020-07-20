@@ -20,12 +20,14 @@
 package com.jio.devicetracker.view.adapter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -221,7 +223,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                 case R.id.addPeopleToGroup:
                     Intent chooseGroupIntent = new Intent(mContext, ChooseGroupFromPeopleFlow.class);
                     chooseGroupIntent.putExtra(Constant.TRACKEE_NAME, mList.get(getAdapterPosition()).getGroupName());
-                    chooseGroupIntent.putExtra(Constant.TRACKEE_NUMBER,mList.get(getAdapterPosition()).getPhoneNumber());
+                    chooseGroupIntent.putExtra(Constant.TRACKEE_NUMBER, mList.get(getAdapterPosition()).getPhoneNumber());
                     mContext.startActivity(chooseGroupIntent);
                     break;
                 case R.id.deleteIndividualUser:
@@ -248,21 +250,25 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         }
 
         private void deleteAlertBox(int position) {
-            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
-            adb.setTitle(Constant.ALERT_TITLE);
-            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
-            adb.setIcon(android.R.drawable.ic_dialog_alert);
-            adb.setPositiveButton("OK", (dialog, which) -> {
+            final Dialog dialog = new Dialog(mContext);
+            dialog.setContentView(R.layout.number_display_dialog);
+            TextView mAlertMessage = dialog.findViewById(R.id.selectNumber);
+            mAlertMessage.setText(Constant.DELETE_PERSON_MESSAGE);
+            dialog.setTitle(Constant.ALERT_TITLE);
+            dialog.getWindow().setLayout(750, 500);
+            final Button yes = dialog.findViewById(R.id.positive);
+            final Button no = dialog.findViewById(R.id.negative);
+            yes.setOnClickListener(v -> {
                 PeopleMemberListAdapter.this.individualMemberOperationLayout = individualMemberOperationLayout;
                 makeDeleteGroupAPICall(mList.get(position).getGroupId());
+                dialog.dismiss();
+            });
 
+            no.setOnClickListener(v -> {
+                dialog.dismiss();
+                individualMemberOperationLayout.setVisibility(View.GONE);
             });
-            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            adb.show();
+            dialog.show();
         }
     }
 
@@ -335,8 +341,6 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
 
     /**
      * Make a Remove API Call
-     *
-     *
      */
     private void makeRemoveAPICall(HomeActivityListData homeActivityListData) {
         individualMemberOperationLayout.setVisibility(View.GONE);
@@ -362,7 +366,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     mDbManager.deleteSelectedDataFromGroupMember(homeActivityListData.getConsentId());
                     removeItem(position);
                     //if (!isRemoveFromGroup) {
-                        addMemberInGroupAPICall(homeActivityListData);
+                    addMemberInGroupAPICall(homeActivityListData);
                     //}
                 } else {
                     Util.progressDialog.dismiss();
@@ -399,11 +403,11 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
             individualMemberOperationLayout.setVisibility(View.GONE);
             removeItem(position);
             PeopleFragment.checkMemberPresent();
-           // if(resendInvite){
-                //HomeActivityListData homeActivityListData = mList.get(position);
-                    //addMemberInGroupAPICall(homeActivityListData);
-                //}
-           // }
+            // if(resendInvite){
+            //HomeActivityListData homeActivityListData = mList.get(position);
+            //addMemberInGroupAPICall(homeActivityListData);
+            //}
+            // }
 
         }
     }
@@ -429,7 +433,6 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         notifyItemRemoved(adapterPosition);
         notifyDataSetChanged();
     }
-
 
 
 }
