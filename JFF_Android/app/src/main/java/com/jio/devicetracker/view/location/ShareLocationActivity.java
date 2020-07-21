@@ -207,7 +207,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
             Intent intent = new Intent(this, GeofenceActivity.class);
             intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
             intent.putExtra(Constant.MEMBER_NAME, memberName.getText().toString());
-            if(!geofenceAddress.toString().isEmpty()){
+            if(geofenceAddress != null && !geofenceAddress.isEmpty()){
                 intent.putExtra(Constant.MEMBER_ADDRESS, geofenceAddress);
             } else {
                 intent.putExtra(Constant.MEMBER_ADDRESS, memberAddrss.getText().toString());

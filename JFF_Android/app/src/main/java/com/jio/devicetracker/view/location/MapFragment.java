@@ -139,7 +139,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         } else if(mapDataList.isEmpty() && deviceLocation){
             showCustomAlertWithText(Constant.FETCH_DEVICE_LOCATION_ERROR);
-        }else {
+        }else if(mapDataList.isEmpty()) {
             showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
         if (mapDataList != null && !mapDataList.isEmpty() && strAddress != null && groupStatus.equalsIgnoreCase(Constant.ACTIVE)) {
