@@ -47,6 +47,11 @@ public class Constant {
     public static final String MQTT_CIT_USER_NAME = "borqs-sit";
     public static final String MQTT_CIT_PASSWORD = "borqs-sit@987";
     public static final int MQTT_TIME_INTERVAL = 10;
+    public static final String DEV_URL = "tcp://dsit.tnt.cats.jvts.net:1883";
+    public static final String DEV_USERNAME = "borqsdevmqtt";
+    public static final String DEV_PASSWORD = "borqsdevmqtt@1234";
+
+
 
     //  Common Text
     public static final String ALERT_TITLE = "Alert";
@@ -136,6 +141,7 @@ public class Constant {
     public static final String TRACKEE_NUMBER = "TrackeeNumber";
     public static final String CONSENT_STATUS = "no";
     public static final String ADD_DETAILS_TO_TRACK = "Group is empty. Add devices or contacts to this group and track.";
+    public static final String DEEPLINK_MESSAGE = "To join the tracking invitation request please click on Yes, to reject click on No.";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";
@@ -274,7 +280,8 @@ public class Constant {
     public static final String VALID_PHONE_NUMBER = "Please enter valid phone number";
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
     public static final String SIT_URL = "https://sit.boapi.cats.jvts.net";
-    //public static final String STG_URL = "https://stg.borqs.io";
+    public static final String STG_URL = "https://stg.borqs.io";
+    public static final String DEVE_URL = "https://dev.borqs.io/";
     public static final String FMS_BASE_URL = "http://49.40.22.92:8080";
     public static final String CONSENT_APPROVED_STATUS = "Consent approved";
     public static final String CONSENT_PENDING = "Consent pending";

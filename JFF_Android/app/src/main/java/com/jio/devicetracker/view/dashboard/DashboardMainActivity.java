@@ -321,6 +321,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     public void showDialog(Uri data) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.number_display_dialog);
+        TextView mAlertDialogMessage = dialog.findViewById(R.id.selectNumber);
+        mAlertDialogMessage.setText(Constant.DEEPLINK_MESSAGE);
         dialog.setTitle(Constant.TITLE);
         dialog.getWindow().setLayout(750, 500);
         final Button yes = dialog.findViewById(R.id.positive);
