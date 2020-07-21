@@ -130,7 +130,12 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 GEOFENCE_RADIUS_IN_METERS = editGeofenceRadius;
             }
             geoFenceLatlng = new LatLng(lat, lang);
-            mDbManager.updateGeofenceDetailInGroupMemberTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+            int updateStatus = mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+            if (updateStatus == 1) {
+                Log.d(TAG, "geofence details updated");
+            } else {
+                mDbManager.insertGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+            }
         }
         new Thread(new FetchLocation()).start();
 
@@ -191,6 +196,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             geoFenceLatlng = new LatLng(geofenceDetails.getLat(), geofenceDetails.getLng());
         } else {
             geoFenceLatlng = new LatLng(trackeeLatlng.latitude, trackeeLatlng.longitude);
+           // geoFenceLatlng = new LatLng(trackeeLatlng.latitude, trackeeLatlng.longitude);
         }
         //markerOptions.position(geoFenceLatlng);
         //mMap.addMarker(markerOptions);
@@ -243,7 +249,12 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                     public void onSuccess(Void aVoid) {
 
                         Log.d(TAG, Constant.GEOFENCE_SUCCESS_MESSAGE);
-                        mDbManager.updateGeofenceDetailInGroupMemberTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+                        int updateStatus = mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+                        if (updateStatus == 1) {
+                            Log.d(TAG, "geofence details updated");
+                        } else {
+                            mDbManager.insertGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+                        }
 
                     }
                 })

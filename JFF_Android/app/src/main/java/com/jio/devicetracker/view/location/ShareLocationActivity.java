@@ -37,6 +37,8 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentManager;
 
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.GeofenceDetails;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
@@ -60,12 +62,14 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     private String consentStatus;
     private boolean deviceLocationflag;
     private TextView memberName;
+    private DBManager mDbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_location);
         fragmentMap = new MapFragment();
+        mDbManager = new DBManager(this);
         initUI();
     }
 
@@ -195,10 +199,19 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         if (mapDataList.isEmpty()) {
             showCustomAlertWithText(Constant.CREATE_GEOFENCE_WARNING);
         } else {
+            String geofenceAddress = null;
+            GeofenceDetails geofenceDetails = mDbManager.getGeofenceDetails(deviceNumber);
+            if(geofenceDetails != null){
+                geofenceAddress = getAddressFromLocation(geofenceDetails.getLat(),geofenceDetails.getLng());
+            }
             Intent intent = new Intent(this, GeofenceActivity.class);
             intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
             intent.putExtra(Constant.MEMBER_NAME, memberName.getText().toString());
-            intent.putExtra(Constant.MEMBER_ADDRESS, memberAddrss.getText().toString());
+            if(!geofenceAddress.toString().isEmpty()){
+                intent.putExtra(Constant.MEMBER_ADDRESS, geofenceAddress);
+            } else {
+                intent.putExtra(Constant.MEMBER_ADDRESS, memberAddrss.getText().toString());
+            }
             intent.putExtra(Constant.GROUP_ID, groupId);
             intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
             startActivity(intent);

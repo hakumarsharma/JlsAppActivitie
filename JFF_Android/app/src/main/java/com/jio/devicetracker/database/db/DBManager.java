@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -221,14 +219,31 @@ public class DBManager {
      * @param latLng
      * @param radius
      */
-    public void updateGeofenceDetailInGroupMemberTable(LatLng latLng, int radius, String deviceNumber) {
+    public int updateGeofenceDetailInGeofenceTable(LatLng latLng, int radius, String deviceNumber) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.LAT, latLng.latitude);
         values.put(DatabaseHelper.LON, latLng.longitude);
         values.put(DatabaseHelper.RADIUS, radius);
-        mDatabase.update(DatabaseHelper.TABLE_GROUP_MEMBER, values, DatabaseHelper.DEVICE_NUM + "= " + deviceNumber, null);
+        return mDatabase.update(DatabaseHelper.TABLE_GROUP_MEMBER, values, DatabaseHelper.DEVICE_NUM + "= " + deviceNumber, null);
     }
+
+    /**
+     * Insert lat and long in to the TABLE_NAME_BORQS table
+     *
+     * @param latLng
+     * @param radius
+     */
+    public void insertGeofenceDetailInGeofenceTable(LatLng latLng, int radius, String deviceNumber) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.LAT, latLng.latitude);
+        values.put(DatabaseHelper.LON, latLng.longitude);
+        values.put(DatabaseHelper.RADIUS, radius);
+        values.put(DatabaseHelper.DEVICE_NUM, deviceNumber);
+        mDatabase.insert(DatabaseHelper.TABLE_GEOFENCE, null, values);
+    }
+
 
     /**
      * Update User details in Login table
@@ -396,7 +411,7 @@ public class DBManager {
         mDatabase = mDBHelper.getWritableDatabase();
         GeofenceDetails geofenceDetails = null;
         String[] column = {DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.RADIUS};
-        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP_MEMBER, column, DatabaseHelper.DEVICE_NUM + " = " + deviceNumber, null, null, null, null);
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GEOFENCE, column, DatabaseHelper.DEVICE_NUM + " = " + deviceNumber, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 geofenceDetails = new GeofenceDetails();
@@ -688,7 +703,7 @@ public class DBManager {
         if (groupId != null) {
             String[] column = {DatabaseHelper.GROUP_NAME, DatabaseHelper.GROUPID, DatabaseHelper.STATUS, DatabaseHelper.CREATED_BY, DatabaseHelper.UPDATED_BY,
                     DatabaseHelper.PROFILE_IMAGE, DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO, DatabaseHelper.GROUP_OWNER_NAME,
-                    DatabaseHelper.GROUP_OWNER_PHONE_NUMBER, DatabaseHelper.GROUP_OWNER_USER_ID,DatabaseHelper.CONSENTS_COUNT};
+                    DatabaseHelper.GROUP_OWNER_PHONE_NUMBER, DatabaseHelper.GROUP_OWNER_USER_ID, DatabaseHelper.CONSENTS_COUNT};
             String[] arg = {groupId};
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP, column, DatabaseHelper.GROUPID + " = ? ", arg, null, null, null);
             if (cursor != null && cursor.getCount() > 0) {
