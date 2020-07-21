@@ -225,7 +225,7 @@ public class DBManager {
         values.put(DatabaseHelper.LAT, latLng.latitude);
         values.put(DatabaseHelper.LON, latLng.longitude);
         values.put(DatabaseHelper.RADIUS, radius);
-        return mDatabase.update(DatabaseHelper.TABLE_GROUP_MEMBER, values, DatabaseHelper.DEVICE_NUM + "= " + deviceNumber, null);
+        return mDatabase.update(DatabaseHelper.TABLE_GEOFENCE, values, DatabaseHelper.DEVICE_NUM + "= " + deviceNumber, null);
     }
 
     /**
