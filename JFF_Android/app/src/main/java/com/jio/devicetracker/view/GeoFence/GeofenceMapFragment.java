@@ -219,8 +219,8 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         CircleOptions circleOptions = new CircleOptions();
         circleOptions.center(latLng);
         circleOptions.radius(geofenceRadiusInMeters);
-        circleOptions.strokeColor(getResources().getColor(R.color.geofence_background_fill_color));
-        circleOptions.fillColor(getResources().getColor(R.color.geofence_background_fill_color));
+        circleOptions.strokeColor(getActivity().getResources().getColor(R.color.geofence_background_fill_color));
+        circleOptions.fillColor(getActivity().getResources().getColor(R.color.geofence_background_fill_color));
         circleOptions.strokeWidth(4);
         mMap.addCircle(circleOptions);
 
