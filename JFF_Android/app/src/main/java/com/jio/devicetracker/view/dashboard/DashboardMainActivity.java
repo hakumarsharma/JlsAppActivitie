@@ -665,7 +665,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             }
             String message = "{\"did\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                     "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
-            String topic = "jioiot/svcd/tracker/" + userPhoneNumber + "/uc/fwd/locinfo";
+            String topic = "jioiot/svcdd/tracker/" + userPhoneNumber + "/uc/fwd/locinfo";
             System.out.println("Message --> " + message);
             System.out.println("Topic -->" + topic);
             new MQTTManager().publishMessage(topic, message);

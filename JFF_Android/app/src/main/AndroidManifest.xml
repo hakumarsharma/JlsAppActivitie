@@ -114,7 +114,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
                 <data
-                    android:host="sit.dm.cats.jvts.net"
+                    android:host="stg.borqs.io"
                     android:scheme="https" />
                 <!-- note that the leading "/" is required for pathPrefix -->
             </intent-filter>
