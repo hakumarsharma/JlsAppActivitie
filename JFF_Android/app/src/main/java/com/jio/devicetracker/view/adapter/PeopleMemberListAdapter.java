@@ -50,6 +50,7 @@ import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.dashboard.PeopleFragment;
 import com.jio.devicetracker.view.people.ChooseGroupFromPeopleFlow;
 import com.jio.devicetracker.view.people.EditMemberDetailsActivity;
@@ -219,6 +220,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     individualMemberOperationLayout.setVisibility(View.GONE);
                     break;
                 case R.id.addPeopleToGroup:
+                    DashboardMainActivity.flowFromPeople = true;
                     Intent chooseGroupIntent = new Intent(mContext, ChooseGroupFromPeopleFlow.class);
                     chooseGroupIntent.putExtra(Constant.TRACKEE_NAME, mList.get(getAdapterPosition()).getGroupName());
                     chooseGroupIntent.putExtra(Constant.TRACKEE_NUMBER, mList.get(getAdapterPosition()).getPhoneNumber());
