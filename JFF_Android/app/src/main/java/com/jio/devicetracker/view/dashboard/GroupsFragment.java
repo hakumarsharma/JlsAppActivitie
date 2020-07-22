@@ -192,7 +192,7 @@ public class GroupsFragment extends Fragment {
                     for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
                         if (grpMembers.getDeviceId() != null
                                 && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice())
-                                && !grpMembers.getUserId().equalsIgnoreCase(userId)
+                                && !grpMembers.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())
                                 && (grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
                             MapData mapData = new MapData();
                             mapData.setLatitude(data.getLocation().getLat());

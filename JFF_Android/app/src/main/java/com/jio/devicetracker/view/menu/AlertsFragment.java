@@ -67,7 +67,6 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
         alertBackButton.setOnClickListener(this);
         alertNextButton.setOnClickListener(this);
         mDbManager = new DBManager(getActivity());
-
         alertHistoryData = new ArrayList<>();
         alertNumbers = view.findViewById(R.id.alertNumbers);
         getIndividualMemberList();

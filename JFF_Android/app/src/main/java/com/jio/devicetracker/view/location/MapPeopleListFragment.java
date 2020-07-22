@@ -74,7 +74,7 @@ public class MapPeopleListFragment extends Fragment {
             for (MapData mapData : mapDataList) {
                 for (GroupMemberDataList groupMemberDataList : allGroupMemberDataBasedOnGroupId) {
                     if (groupMemberDataList.getConsentId().equalsIgnoreCase(mapData.getConsentId())
-                            && !groupMemberDataList.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
+                            && !groupMemberDataList.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())
                             && (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
                         GroupMemberDataList groupDataList = new GroupMemberDataList();
                         groupDataList.setGroupId(groupMemberDataList.getGroupId());

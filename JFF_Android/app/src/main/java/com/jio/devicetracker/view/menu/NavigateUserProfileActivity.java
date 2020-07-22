@@ -43,6 +43,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.ProfileTrackedByListAdapter;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +94,7 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                finish();
+                startActivity(new Intent(this, DashboardMainActivity.class));
                 break;
             case R.id.edit_btn:
                 gotoUpdateProfileActivity();
