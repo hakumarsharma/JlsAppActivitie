@@ -30,7 +30,7 @@
                 android:layout_width="88dp"
                 android:layout_height="88dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/fifty_dp"
+                android:layout_marginTop="40dp"
                 android:src="@drawable/ic_login_signup" />
 
             <TextView
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/profile_icon"
                 android:layout_marginLeft="@dimen/margin_12"
-                android:layout_marginTop="@dimen/twenty_dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="@string/device_number_text"
                 android:textColor="@color/mine_shaft"
@@ -51,7 +51,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/device_number_title"
-                android:layout_marginLeft="@dimen/margin_12"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_marginTop="@dimen/fifteen_dp"
                 android:gravity="center"
                 android:text="@string/device_number_content"
@@ -111,10 +112,23 @@
                 android:visibility="invisible"/>
 
             <TextView
-                android:id="@+id/device_imei"
+                android:id="@+id/or"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/number_validation_text"
+                android:layout_marginLeft="@dimen/margin_22"
+                android:gravity="center"
+                android:text="OR"
+                android:textColor="@color/light_blue"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/device_imei"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/or"
                 android:layout_marginLeft="@dimen/margin_22"
                 android:gravity="left"
                 android:text="@string/device_imei_text"

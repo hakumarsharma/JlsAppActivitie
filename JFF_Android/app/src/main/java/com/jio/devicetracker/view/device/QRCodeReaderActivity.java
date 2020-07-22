@@ -32,9 +32,13 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.google.zxing.Result;
+import com.google.zxing.common.StringUtils;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -74,35 +78,35 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
      */
     @Override
     public void handleResult(Result result) {
+
+//        if (result.getText().contains("<IMEI>") || result.getText().contains("<EAN>")){
+//            Pattern pattern = Pattern.compile("<IMEI>(.+?)</IMEI>", Pattern.DOTALL);
+//            Matcher matcher = pattern.matcher(result.getText());
+//            System.out.println(matcher.group(1));
+//        }
         String[] resultArr = result.getText().split("\n");
-        if (resultArr.length == 2 && Util.isValidMobileNumberForPet(resultArr[0])) {
-            if (Util.isValidIMEINumber(resultArr[1])) {
-                Intent intent = new Intent(this, DeviceNameActivity.class);
-                intent.putExtra(Constant.GROUP_ID, groupId);
-                intent.putExtra(Constant.DEVICE_PHONE_NUMBER, resultArr[0]);
-                intent.putExtra(Constant.DEVICE_IMEI_NUMBER, resultArr[1]);
-                startActivity(intent);
-            } else {
+        if (resultArr.length == 2){
+            if (Util.isValidIMEINumber(resultArr[0]) && Util.isValidMobileNumberForPet(resultArr[1])){
+                goToDeviceActivityScreen(resultArr[0],resultArr[1]);
+            }else {
                 Intent intent = new Intent(this, QRCodeRescanActivity.class);
                 startActivity(intent);
             }
-        } else {
-            if (resultArr.length == 2 && Util.isValidIMEINumber(resultArr[0])) {
-                if (Util.isValidMobileNumberForPet(resultArr[1])) {
-                    Intent intent = new Intent(this, DeviceNameActivity.class);
-                    intent.putExtra(Constant.GROUP_ID, groupId);
-                    intent.putExtra(Constant.DEVICE_PHONE_NUMBER, resultArr[1]);
-                    intent.putExtra(Constant.DEVICE_IMEI_NUMBER, resultArr[0]);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(this, QRCodeRescanActivity.class);
-                    startActivity(intent);
-                }
-            } else {
-                Intent intent = new Intent(this, QRCodeRescanActivity.class);
-                startActivity(intent);
-            }
+        }else if (resultArr.length == 1 && (Util.isValidIMEINumber(resultArr[0]) || Util.isValidMobileNumberForPet(resultArr[0]))){
+                goToDeviceActivityScreen(resultArr[0],resultArr[0]);
+        }else {
+            Intent intent = new Intent(this, QRCodeRescanActivity.class);
+            startActivity(intent);
         }
+
+    }
+
+    private void goToDeviceActivityScreen(String imeiNumber,String phoneNumber){
+        Intent intent = new Intent(this, DeviceNameActivity.class);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.DEVICE_PHONE_NUMBER, phoneNumber);
+        intent.putExtra(Constant.DEVICE_IMEI_NUMBER, imeiNumber);
+        startActivity(intent);
     }
 
     @Override

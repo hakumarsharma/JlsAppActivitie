@@ -31,6 +31,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -98,11 +99,11 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
             public void afterTextChanged(Editable s) {
                 if(!s.toString().isEmpty()){
                     deviceTitle.setVisibility(View.VISIBLE);
-                    if (deviceImei != null && !deviceImei.getText().toString().isEmpty()){
-                        connectBtn.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
-                    }
+                    connectBtn.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
                 } else {
                     deviceTitle.setVisibility(View.INVISIBLE);
+                    errorText.setVisibility(View.INVISIBLE);
+                    underLine.setBackgroundColor(getResources().getColor(R.color.timerColor));
                 }
             }
         });
@@ -122,11 +123,11 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
             public void afterTextChanged(Editable s) {
                 if(!s.toString().isEmpty()){
                     deviceImeiTitle.setVisibility(View.VISIBLE);
-                    if (deviceImei != null && !deviceImei.getText().toString().isEmpty()){
-                        connectBtn.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
-                    }
+                    connectBtn.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
                 } else {
                     deviceImeiTitle.setVisibility(View.INVISIBLE);
+                    imeiErrorText.setVisibility(View.INVISIBLE);
+                    imeiUnderLine.setBackgroundColor(getResources().getColor(R.color.timerColor));
                 }
             }
         });
@@ -138,23 +139,20 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
             finish();
         }
 
-        if((deviceNumber.getText().toString().isEmpty() || !Util.isValidMobileNumberForPet(deviceNumber.getText().toString())) && (deviceImei.getText().toString().isEmpty() || !Util.isValidIMEINumber(deviceImei.getText().toString()))){
-            errorText.setVisibility(View.VISIBLE);
-            underLine.setBackgroundColor(getResources().getColor(R.color.errorColor));
-            imeiErrorText.setVisibility(View.VISIBLE);
-            imeiUnderLine.setBackgroundColor(getResources().getColor(R.color.errorColor));
+        if (deviceNumber.getText().toString().isEmpty() && deviceImei.getText().toString().isEmpty()){
+            Toast.makeText(AttachDeviceActivity.this, Constant.ENTER_PHONE_OR_IMEI, Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(deviceNumber.getText().toString().isEmpty() || !Util.isValidMobileNumberForPet(deviceNumber.getText().toString())){
-            errorText.setVisibility(View.VISIBLE);
-            underLine.setBackgroundColor(getResources().getColor(R.color.errorColor));
-            imeiErrorText.setVisibility(View.INVISIBLE);
-            imeiUnderLine.setBackgroundColor(getResources().getColor(R.color.timerColor));
-            return;
+        if (!deviceNumber.getText().toString().isEmpty() && !Util.isValidMobileNumberForPet(deviceNumber.getText().toString())){
+                errorText.setVisibility(View.VISIBLE);
+                underLine.setBackgroundColor(getResources().getColor(R.color.errorColor));
+                imeiErrorText.setVisibility(View.INVISIBLE);
+                imeiUnderLine.setBackgroundColor(getResources().getColor(R.color.timerColor));
+                return;
         }
 
-        if(deviceImei.getText().toString().isEmpty() || !Util.isValidIMEINumber(deviceImei.getText().toString())){
+        if(!deviceImei.getText().toString().isEmpty() && !Util.isValidIMEINumber(deviceImei.getText().toString())){
             errorText.setVisibility(View.INVISIBLE);
             underLine.setBackgroundColor(getResources().getColor(R.color.timerColor));
             imeiErrorText.setVisibility(View.VISIBLE);

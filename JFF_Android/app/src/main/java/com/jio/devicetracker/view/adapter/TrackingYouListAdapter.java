@@ -352,7 +352,11 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
         ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
         ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
-        consent.setPhone(phoneNumber);
+        if (phoneNumber.length() == 15){
+            consent.setImei(phoneNumber);
+        }else {
+            consent.setPhone(phoneNumber);
+        }
         consent.setStatus(Constant.EXITED);
         exitRemovedGroupData.setConsent(consent);
         RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));

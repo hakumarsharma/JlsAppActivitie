@@ -34,6 +34,7 @@ public class ExitRemovedGroupData {
     public class Consent {
         private String phone;
         private String status;
+        private String imei;
 
         public String getPhone() {
             return phone;
@@ -49,6 +50,14 @@ public class ExitRemovedGroupData {
 
         public void setStatus(String status) {
             this.status = status;
+        }
+
+        public String getImei() {
+            return imei;
+        }
+
+        public void setImei(String imei) {
+            this.imei = imei;
         }
     }
 }

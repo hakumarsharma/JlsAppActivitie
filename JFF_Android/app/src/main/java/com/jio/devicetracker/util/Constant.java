@@ -114,6 +114,7 @@ public class Constant {
     public static final String EXIT_FROM_GROUP_SUCCESS = "Sucessfully exited from Group!";
     public static final String REMOVE_FROM_GROUP_SUCCESS = "Sucessfully removed from the Group!";
     public static final String ADDING_INDIVIDUAL_USER_FAILED = "Adding individual user failed, Please try again!";
+    public static final String EXCEEDED_LIMT = "Exceeded maximum limit to create a group.";
     public static final String GROUP_MEMBER_CLASS_NAME = "com.jio.devicetracker.database.pojo.GroupMemberDataList";
     public static final String GET_GROUP_INFO_PER_USER_ERROR = "Unable to retrieve information from server, please try gain!";
     public static final String GROUP_NAME_CLASS_NAME = "com.jio.devicetracker.database.pojo.HomeActivityListData";
@@ -202,6 +203,7 @@ public class Constant {
     public static final String ADD_GROUP_MEMBER_INSTRUCTION1 = "* Click on + button to add member inside the group  ";
     public static final String ADD_GROUP_MEMBER_INSTRUCTION2 = "\n* Once added go to Home screen, select the group  from list and click on Track button to know the location of group members";
     public static final String DEVICE_NAME_VALIDATION = "Please enter device name";
+    public static final String ENTER_PHONE_OR_IMEI = "Please enter either device phone number or imei number to proceed";
 
     // MAPs Activity constants
     public static final String MAP_TITLE = "Location";

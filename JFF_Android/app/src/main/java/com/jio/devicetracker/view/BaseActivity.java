@@ -136,7 +136,7 @@ public class BaseActivity extends AppCompatActivity {
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
             if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
-                showCustomAlertWithText(Constant.ADDING_INDIVIDUAL_USER_FAILED);
+                showCustomAlertWithText(Constant.EXCEEDED_LIMT);
             }
         }
     }
@@ -152,7 +152,11 @@ public class BaseActivity extends AppCompatActivity {
         List<String> mList = new ArrayList<>();
         mList.add(Constant.EVENTS);
         consents.setEntities(mList);
-        consents.setPhone(memberNumber);
+        if (memberNumber.length() == 15){
+            consents.setImei(memberNumber);
+        }else {
+            consents.setPhone(memberNumber);
+        }
         consents.setName(memberName);
         consentList.add(consents);
         addMemberInGroupData.setConsents(consentList);
@@ -170,7 +174,11 @@ public class BaseActivity extends AppCompatActivity {
         List<String> mList = new ArrayList<>();
         mList.add(Constant.EVENTS);
         consents.setEntities(mList);
-        consents.setPhone(memberNumber);
+        if (memberNumber.length() == 15){
+            consents.setImei(memberNumber);
+        }else {
+            consents.setPhone(memberNumber);
+        }
         consents.setName(memberName);
         consentList.add(consents);
         addMemberInGroupData.setConsents(consentList);
