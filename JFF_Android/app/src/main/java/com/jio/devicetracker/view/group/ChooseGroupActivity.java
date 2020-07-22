@@ -488,6 +488,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private class AddDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
             showCustomAlertWithText(Constant.UNSUCCESSFULL_DEVICE_ADD);
 
         }
@@ -525,13 +526,16 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             if (getDeviceResponse.getCode() == 200) {
                 boolean isNumberExists = false;
                 for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData()) {
-
-                    // for (GetUserDevicesListResponse.Devices devices : data.getDevices()){
-                    if (data.getDevices().getImei().equalsIgnoreCase(imeiNumber) || data.getDevices().getPhone().equalsIgnoreCase(phoneNumber)) {
+                    if (data.getDevices().getImei().equalsIgnoreCase(imeiNumber) && data.getDevices().getPhone().equalsIgnoreCase(phoneNumber)){
+                            isNumberExists = true;
+                            break;
+                    }else if(data.getDevices().getImei().equalsIgnoreCase(imeiNumber) && data.getDevices().getImei().equalsIgnoreCase(phoneNumber)){
+                        isNumberExists = true;
+                        break;
+                    }else if(data.getDevices().getPhone().equalsIgnoreCase(imeiNumber) && data.getDevices().getPhone().equalsIgnoreCase(phoneNumber)){
                         isNumberExists = true;
                         break;
                     }
-                    // }
 
                 }
 

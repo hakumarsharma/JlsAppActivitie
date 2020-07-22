@@ -370,6 +370,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         this.isFromCreateGroup = true;
         this.isGroupMember = false;
         this.isFromDevice = true;
+        Util.progressDialog.dismiss();
         addMemberInGroupAPICall();
     }
 
@@ -410,15 +411,19 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
             if (getDeviceResponse.getCode() == 200) {
                 boolean isNumberExists = false;
                 for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData()) {
-                    // for (GetUserDevicesListResponse.Devices devices : data.getDevices()){
-                    if (data.getDevices().getImei().equalsIgnoreCase(deviceImei) || data.getDevices().getPhone().equalsIgnoreCase(deviceNumber)) {
+                    if (data.getDevices().getImei().equalsIgnoreCase(deviceImei) && data.getDevices().getPhone().equalsIgnoreCase(deviceNumber)){
+                        isNumberExists = true;
+                        break;
+                    }else if(data.getDevices().getImei().equalsIgnoreCase(deviceImei) && data.getDevices().getImei().equalsIgnoreCase(deviceNumber)){
+                        isNumberExists = true;
+                        break;
+                    }else if(data.getDevices().getPhone().equalsIgnoreCase(deviceImei) && data.getDevices().getPhone().equalsIgnoreCase(deviceNumber)){
                         isNumberExists = true;
                         break;
                     }
-                    // }
                 }
+
                 if (isNumberExists) {
-                    Util.progressDialog.dismiss();
                     addMemberToCreatedGroup();
                 } else {
                     makeVerifyAndAssignAPICall();
@@ -433,6 +438,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     private class GetDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
             Toast.makeText(DeviceNameActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADD, Toast.LENGTH_SHORT).show();
         }
     }
@@ -496,6 +502,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     private class AddDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
             Toast.makeText(DeviceNameActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
         }
     }

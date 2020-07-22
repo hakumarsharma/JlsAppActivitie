@@ -108,6 +108,7 @@ public class GroupsFragment extends Fragment {
      * Get All Group info per user API Call
      */
     protected void makeGroupInfoPerUserRequestAPICall() {
+        Util.getInstance().showProgressBarDialog(getActivity());
         GroupRequestHandler.getInstance(getActivity()).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), userId));
     }
 
@@ -117,6 +118,7 @@ public class GroupsFragment extends Fragment {
     private class GetGroupInfoPerUserRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
             GetGroupInfoPerUserResponse getGroupInfoPerUserResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetGroupInfoPerUserResponse.class);
             parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
             displayGroupDataInDashboard();
