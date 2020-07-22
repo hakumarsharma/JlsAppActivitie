@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -37,6 +38,9 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -78,34 +82,62 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
      */
     @Override
     public void handleResult(Result result) {
-
-//        if (result.getText().contains("<IMEI>") || result.getText().contains("<EAN>")){
-//            Pattern pattern = Pattern.compile("<IMEI>(.+?)</IMEI>", Pattern.DOTALL);
-//            Matcher matcher = pattern.matcher(result.getText());
-//            System.out.println(matcher.group(1));
-//        }
-        String[] resultArr = result.getText().split("\n");
-        if (resultArr.length == 2){
-            if (Util.isValidIMEINumber(resultArr[0]) && Util.isValidMobileNumberForPet(resultArr[1])){
-                goToDeviceActivityScreen(resultArr[0],resultArr[1]);
+        // QR code scan with IMEI and EAN can be used
+        if (result.getText().contains("<IMEI>")){
+            String imeiNumber = getTagValues(result.getText());
+            if (imeiNumber.length() != 0){
+                goToDeviceActivityScreen(imeiNumber,imeiNumber);
             }else {
-                Intent intent = new Intent(this, QRCodeRescanActivity.class);
-                startActivity(intent);
+                goTOQrRescanActivity();
             }
-        }else if (resultArr.length == 1 && (Util.isValidIMEINumber(resultArr[0]) || Util.isValidMobileNumberForPet(resultArr[0]))){
-                goToDeviceActivityScreen(resultArr[0],resultArr[0]);
-        }else {
-            Intent intent = new Intent(this, QRCodeRescanActivity.class);
-            startActivity(intent);
+        } else { // QR scan with IMEI and Phone number entered through QR generator
+            String[] resultArr = result.getText().split("\n");
+            if (resultArr.length == 2) {
+                if (Util.isValidIMEINumber(resultArr[0]) && Util.isValidMobileNumberForPet(resultArr[1])) {
+                    goToDeviceActivityScreen(resultArr[0], resultArr[1]);
+                } else {
+                    goTOQrRescanActivity();
+                }
+            } else if (resultArr.length == 1 && (Util.isValidIMEINumber(resultArr[0]) || Util.isValidMobileNumberForPet(resultArr[0]))) {
+                goToDeviceActivityScreen(resultArr[0], resultArr[0]);
+            } else {
+                goTOQrRescanActivity();
+            }
         }
-
     }
 
+    /**
+      * Regex to fetch IMEI and EAN tags from QR code
+    * */
+    private static String getTagValues(final String str) {
+        final Pattern TAG_REGEX = Pattern.compile("<IMEI>(.+?)</IMEI>", Pattern.DOTALL);
+        final List<String> tagValues = new ArrayList<String>();
+        final Matcher matcher = TAG_REGEX.matcher(str);
+        while (matcher.find()) {
+            tagValues.add(matcher.group(1));
+        }
+        if (tagValues.toArray().length > 0){
+            return tagValues.get(0);
+        }else {
+            return "";
+        }
+    }
+
+    /**
+     * Navigate to device activity
+     * @param imeiNumber
+     * @param phoneNumber
+     */
     private void goToDeviceActivityScreen(String imeiNumber,String phoneNumber){
         Intent intent = new Intent(this, DeviceNameActivity.class);
         intent.putExtra(Constant.GROUP_ID, groupId);
         intent.putExtra(Constant.DEVICE_PHONE_NUMBER, phoneNumber);
         intent.putExtra(Constant.DEVICE_IMEI_NUMBER, imeiNumber);
+        startActivity(intent);
+    }
+
+    private void goTOQrRescanActivity(){
+        Intent intent = new Intent(this, QRCodeRescanActivity.class);
         startActivity(intent);
     }
 
