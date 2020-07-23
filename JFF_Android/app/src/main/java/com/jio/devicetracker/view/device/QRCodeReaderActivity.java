@@ -85,21 +85,15 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
         // QR code scan with IMEI and EAN can be used
         if (result.getText().contains("<IMEI>")){
             String imeiNumber = getTagValues(result.getText());
-            if (imeiNumber.length() != 0){
+            if (imeiNumber.length() > 0){
                 goToDeviceActivityScreen(imeiNumber,imeiNumber);
             }else {
                 goTOQrRescanActivity();
             }
         } else { // QR scan with IMEI and Phone number entered through QR generator
             String[] resultArr = result.getText().split("\n");
-            if (resultArr.length == 2) {
-                if (Util.isValidIMEINumber(resultArr[0]) && Util.isValidMobileNumberForPet(resultArr[1])) {
-                    goToDeviceActivityScreen(resultArr[0], resultArr[1]);
-                } else {
-                    goTOQrRescanActivity();
-                }
-            } else if (resultArr.length == 1 && (Util.isValidIMEINumber(resultArr[0]) || Util.isValidMobileNumberForPet(resultArr[0]))) {
-                goToDeviceActivityScreen(resultArr[0], resultArr[0]);
+            if ((resultArr.length == 2 || resultArr.length == 1) && Util.isValidIMEINumber(resultArr[0])) {
+                    goToDeviceActivityScreen(resultArr[0], resultArr[0]);
             } else {
                 goTOQrRescanActivity();
             }

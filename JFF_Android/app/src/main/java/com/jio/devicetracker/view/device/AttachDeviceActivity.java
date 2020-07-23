@@ -99,7 +99,7 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
             public void afterTextChanged(Editable s) {
                 if(!s.toString().isEmpty()){
                     deviceTitle.setVisibility(View.VISIBLE);
-                    connectBtn.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
+
                 } else {
                     deviceTitle.setVisibility(View.INVISIBLE);
                     errorText.setVisibility(View.INVISIBLE);
@@ -139,7 +139,7 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
             finish();
         }
 
-        if (deviceNumber.getText().toString().isEmpty() && deviceImei.getText().toString().isEmpty()){
+        if (deviceImei.getText().toString().isEmpty()){
             Toast.makeText(AttachDeviceActivity.this, Constant.ENTER_PHONE_OR_IMEI, Toast.LENGTH_LONG).show();
             return;
         }
@@ -167,7 +167,7 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
 
         Intent intent = new Intent(this,DeviceNameActivity.class);
         intent.putExtra(Constant.GROUP_ID, groupId);
-        intent.putExtra(Constant.DEVICE_PHONE_NUMBER,deviceNumber.getText().toString());
+        intent.putExtra(Constant.DEVICE_PHONE_NUMBER,deviceImei.getText().toString());
         intent.putExtra(Constant.DEVICE_IMEI_NUMBER,deviceImei.getText().toString());
         startActivity(intent);
     }

@@ -88,13 +88,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         phoneNumber = intent.getStringExtra(Constant.DEVICE_PHONE_NUMBER);
         imeiNumber = intent.getStringExtra(Constant.DEVICE_IMEI_NUMBER);
         devicename = intent.getStringExtra(Constant.TITLE_NAME);
-        if (phoneNumber == null || phoneNumber.isEmpty()) {
-            if (imeiNumber != null || !imeiNumber.isEmpty()) {
-                phoneNumber = imeiNumber;
-            }
-        }else if (imeiNumber == null || imeiNumber.isEmpty()) {
-            imeiNumber = phoneNumber;
-        }
+
         initUI();
         setMemberIcon(label);
         initDataMember();
@@ -526,19 +520,11 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             if (getDeviceResponse.getCode() == 200) {
                 boolean isNumberExists = false;
                 for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData()) {
-                    if (data.getDevices().getImei().equalsIgnoreCase(imeiNumber) && data.getDevices().getPhone().equalsIgnoreCase(phoneNumber)){
-                            isNumberExists = true;
-                            break;
-                    }else if(data.getDevices().getImei().equalsIgnoreCase(imeiNumber) && data.getDevices().getImei().equalsIgnoreCase(phoneNumber)){
-                        isNumberExists = true;
-                        break;
-                    }else if(data.getDevices().getPhone().equalsIgnoreCase(imeiNumber) && data.getDevices().getPhone().equalsIgnoreCase(phoneNumber)){
+                    if (data.getDevices().getImei().equalsIgnoreCase(imeiNumber)){
                         isNumberExists = true;
                         break;
                     }
-
                 }
-
                 if (isNumberExists) {
                     if (isNavigateToCreateGroup) {
                         Util.progressDialog.dismiss();

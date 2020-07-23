@@ -203,7 +203,7 @@ public class Constant {
     public static final String ADD_GROUP_MEMBER_INSTRUCTION1 = "* Click on + button to add member inside the group  ";
     public static final String ADD_GROUP_MEMBER_INSTRUCTION2 = "\n* Once added go to Home screen, select the group  from list and click on Track button to know the location of group members";
     public static final String DEVICE_NAME_VALIDATION = "Please enter device name";
-    public static final String ENTER_PHONE_OR_IMEI = "Please enter either device phone number or imei number to proceed";
+    public static final String ENTER_PHONE_OR_IMEI = "Please enter device imei number to proceed.";
 
     // MAPs Activity constants
     public static final String MAP_TITLE = "Location";

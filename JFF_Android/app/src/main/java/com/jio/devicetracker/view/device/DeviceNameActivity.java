@@ -94,13 +94,6 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         Intent intent = getIntent();
         deviceNumber = intent.getStringExtra(Constant.DEVICE_PHONE_NUMBER);
         deviceImei = intent.getStringExtra(Constant.DEVICE_IMEI_NUMBER);
-        if (deviceNumber == null || deviceNumber.isEmpty()) {
-            if (deviceImei != null || !deviceImei.isEmpty()) {
-                deviceNumber = deviceImei;
-            }
-        }else if (deviceImei == null || deviceImei.isEmpty()) {
-            deviceImei = deviceNumber;
-        }
 
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         title.setTypeface(Util.mTypeface(this, 5));
@@ -411,13 +404,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
             if (getDeviceResponse.getCode() == 200) {
                 boolean isNumberExists = false;
                 for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData()) {
-                    if (data.getDevices().getImei().equalsIgnoreCase(deviceImei) && data.getDevices().getPhone().equalsIgnoreCase(deviceNumber)){
-                        isNumberExists = true;
-                        break;
-                    }else if(data.getDevices().getImei().equalsIgnoreCase(deviceImei) && data.getDevices().getImei().equalsIgnoreCase(deviceNumber)){
-                        isNumberExists = true;
-                        break;
-                    }else if(data.getDevices().getPhone().equalsIgnoreCase(deviceImei) && data.getDevices().getPhone().equalsIgnoreCase(deviceNumber)){
+                    if (data.getDevices().getImei().equalsIgnoreCase(deviceImei)){
                         isNumberExists = true;
                         break;
                     }
