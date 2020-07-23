@@ -294,7 +294,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     // Make a delete device API call if it is the last delete from app
     private void checkToDeleteDeviceAPICall() {
         if (mDbManager.getDeviceTableData(phoneNumber) != null
-                && mDbManager.getDeviceTableData(phoneNumber).getAdditionCount() == 0) {
+                && mDbManager.getDeviceTableData(phoneNumber).getAdditionCount() == 0 && deviceId != null) {
             GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteDeviceRequest(new DeleteDeviceRequestSuccessListener(), new DeleteDeviceRequestErrorListener(), deviceId));
         }
     }

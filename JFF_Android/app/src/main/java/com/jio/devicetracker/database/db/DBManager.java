@@ -786,12 +786,17 @@ public class DBManager {
         List<GroupMemberDataList> mList = getAllGroupMemberData();
         for (GroupMemberDataList responseData : mGroupMemberDataLists) {
             ContentValues contentValue = new ContentValues();
-            if (!mList.isEmpty()) {
+            if (!mList.isEmpty() &&  responseData.getDeviceId() == null) {
                 for (GroupMemberDataList groupMemberDataList : mList) {
-                    if (responseData.getDeviceId() != null && groupMemberDataList.getConsentId() != null && responseData.getConsentId() != null && (groupMemberDataList.getConsentId().equalsIgnoreCase(responseData.getConsentId()))) {
+                    if (groupMemberDataList.getConsentId() != null && responseData.getConsentId() != null && (groupMemberDataList.getConsentId().equalsIgnoreCase(responseData.getConsentId()))) {
                         contentValue.put(DatabaseHelper.DEVICE_ID, groupMemberDataList.getDeviceId());
                     }
                 }
+            }else {
+                contentValue.put(DatabaseHelper.DEVICE_ID, responseData.getDeviceId());
+            }
+            if (!contentValue.containsKey(DatabaseHelper.DEVICE_ID)){
+                contentValue.put(DatabaseHelper.DEVICE_ID, responseData.getDeviceId());
             }
             contentValue.put(DatabaseHelper.CONSENT_ID, responseData.getConsentId());
             contentValue.put(DatabaseHelper.DEVICE_NUM, responseData.getNumber());
@@ -801,7 +806,6 @@ public class DBManager {
             contentValue.put(DatabaseHelper.USER_ID, responseData.getUserId());
             contentValue.put(DatabaseHelper.NAME, responseData.getName());
             contentValue.put(DatabaseHelper.PROFILE_IMAGE, R.drawable.ic_user);
-            contentValue.put(DatabaseHelper.DEVICE_ID, responseData.getDeviceId());
             mDatabase.replace(DatabaseHelper.TABLE_GROUP_MEMBER, null, contentValue);
         }
     }
