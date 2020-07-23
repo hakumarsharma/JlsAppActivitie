@@ -132,6 +132,7 @@ public class GroupsFragment extends Fragment {
     private class GetGroupInfoPerUserRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
             if (error.networkResponse.statusCode == 409) {
                 showCustomAlertWithText(Constant.GET_GROUP_INFO_PER_USER_ERROR);
             }
