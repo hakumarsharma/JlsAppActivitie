@@ -788,7 +788,7 @@ public class DBManager {
             ContentValues contentValue = new ContentValues();
             if (!mList.isEmpty()) {
                 for (GroupMemberDataList groupMemberDataList : mList) {
-                    if (groupMemberDataList.getConsentId().equalsIgnoreCase(responseData.getConsentId()) && responseData.getDeviceId() == null) {
+                    if (responseData.getDeviceId() != null && groupMemberDataList.getConsentId() != null && responseData.getConsentId() != null && (groupMemberDataList.getConsentId().equalsIgnoreCase(responseData.getConsentId()))) {
                         contentValue.put(DatabaseHelper.DEVICE_ID, groupMemberDataList.getDeviceId());
                     }
                 }
