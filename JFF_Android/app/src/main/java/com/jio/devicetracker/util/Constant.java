@@ -142,7 +142,7 @@ public class Constant {
     public static final String TRACKEE_NUMBER = "TrackeeNumber";
     public static final String CONSENT_STATUS = "no";
     public static final String ADD_DETAILS_TO_TRACK = "Group is empty. Add devices or contacts to this group and track.";
-    public static final String DEEPLINK_MESSAGE = "To join the tracking invitation request please click on Yes, to reject click on No.";
+    public static final String DEEPLINK_MESSAGE = "Respond YES to invitation, to track and to be tracked by requested user. Click NO to reject invitation.";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";

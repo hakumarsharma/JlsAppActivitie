@@ -22,6 +22,7 @@ package com.jio.devicetracker.view.dashboard;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Size;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -40,6 +41,7 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Location;
 import android.net.Uri;
 import android.os.BatteryManager;
@@ -52,6 +54,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -319,12 +322,15 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
      * Display Dialog when you click on Deep link URI
      */
     public void showDialog(Uri data) {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.number_display_dialog);
         TextView mAlertDialogMessage = dialog.findViewById(R.id.selectNumber);
         mAlertDialogMessage.setText(Constant.DEEPLINK_MESSAGE);
         dialog.setTitle(Constant.TITLE);
-        dialog.getWindow().setLayout(750, 500);
+        dialog.getWindow().setLayout(size.x, 500);
         final Button yes = dialog.findViewById(R.id.positive);
         final Button no = dialog.findViewById(R.id.negative);
         yes.setOnClickListener(v -> {
