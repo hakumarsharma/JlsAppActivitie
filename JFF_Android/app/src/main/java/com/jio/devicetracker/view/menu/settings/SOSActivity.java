@@ -49,6 +49,7 @@ import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.SOSContactData;
 import com.jio.devicetracker.database.pojo.SOSData;
 import com.jio.devicetracker.database.pojo.request.CreateSOSContactRequest;
+import com.jio.devicetracker.database.pojo.request.DeleteSOSContactRequest;
 import com.jio.devicetracker.database.pojo.request.GetAllSOSDetailRequest;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
@@ -234,18 +235,24 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
             sosContactData.setNumber(contact1);
             sosContactData.setPriority(1);
             mList.add(sosContactData);
+        } else if (contact1.equalsIgnoreCase(Constant.EMPTY_STRING)) {
+            // Call Delete API
         }
         if (!contact2.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact2)) {
             SOSContactData sosContactData = new SOSContactData();
             sosContactData.setNumber(contact2);
             sosContactData.setPriority(2);
             mList.add(sosContactData);
+        } else if (contact2.equalsIgnoreCase(Constant.EMPTY_STRING)) {
+            // Call Delete API
         }
         if (!contact3.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact3)) {
             SOSContactData sosContactData = new SOSContactData();
             sosContactData.setNumber(contact3);
             sosContactData.setPriority(3);
             mList.add(sosContactData);
+        } else if (contact3.equalsIgnoreCase(Constant.EMPTY_STRING)) {
+            // Call Delete API
         }
         if (mList.isEmpty()) {
             showCustomAlertWithText(Constant.SOS_WARNINGS);
@@ -329,6 +336,32 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
      * Error Listener of Create SOS request
      */
     private class GetAllSOSDetailErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            // Todo
+        }
+    }
+
+    // Delete SOS contact API call
+    private void deleteSOSContact() {
+        RequestHandler.getInstance(this).handleRequest(new DeleteSOSContactRequest(new DeleteSOSContactSuccessListener(), new DeleteSOSContactErrorListener(), "phonebookId", userToken));
+    }
+
+    /**
+     * Success Listener of Create SOS request
+     */
+    public class DeleteSOSContactSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            // Todo
+            // Update DB
+        }
+    }
+
+    /**
+     * Error Listener of Create SOS request
+     */
+    private class DeleteSOSContactErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             // Todo
