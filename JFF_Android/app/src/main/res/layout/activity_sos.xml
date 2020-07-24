@@ -22,35 +22,242 @@
         card_view:cardCornerRadius="10dp"
         card_view:cardElevation="8dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/sosTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
-                android:text="Configure SOS Contacts"
-                android:textColor="@color/black"
-                android:textSize="20dp" />
+            <RelativeLayout
+                android:id="@+id/sosTextViewLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/sos1ContactNumber"
-                android:layout_width="250dp"
-                android:layout_height="48dp"
-                android:layout_below="@id/sosTextView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/margin_30"
-                android:background="@drawable/selector"
-                android:gravity="center"
-                android:hint="Contact 1"
-                android:textColor="@color/black"
-                android:textColorHint="@color/hintColor" />
+                <TextView
+                    android:id="@+id/sosTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="50dp"
+                    android:text="Configure SOS Contacts"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
 
-        </RelativeLayout>
+            </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/contact1_layout"
+                    android:layout_width="280dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="@dimen/margin_30"
+                    android:background="@drawable/selector">
+
+                    <EditText
+                        android:id="@+id/sos1ContactNumber"
+                        android:layout_width="230dp"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="#0000004D"
+                        android:hint="Contact 1"
+                        android:inputType="phone"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/hintColor"
+                        android:textCursorDrawable="@color/black" />
+
+                    <View
+                        android:id="@+id/deviderLine"
+                        android:layout_width="2dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toRightOf="@id/sos1ContactNumber"
+                        android:background="@android:color/darker_gray" />
+
+                    <TextView
+                        android:id="@+id/mTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_toRightOf="@id/deviderLine"
+                        android:text="M"
+                        android:textColor="@color/black"
+                        android:textSize="17dp" />
+
+                    <Spinner
+                        android:id="@+id/sosSpinner"
+                        style="@style/SpinnerStyle"
+                        android:layout_width="25dp"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/ic_arrow_configure"
+                        android:popupBackground="@drawable/spinner_layout"
+                        android:layout_toRightOf="@id/mTextView" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/contact1ImageView"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginTop="42dp"
+                    android:layout_toRightOf="@id/contact1_layout"
+                    android:background="@drawable/ic_addfromcontact" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/contact2_layout"
+                    android:layout_width="280dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="@dimen/margin_30"
+                    android:background="@drawable/selector">
+
+                    <EditText
+                        android:id="@+id/sos2ContactNumber"
+                        android:layout_width="230dp"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="#0000004D"
+                        android:hint="Contact 2"
+                        android:inputType="phone"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/hintColor"
+                        android:textCursorDrawable="@color/black" />
+
+                    <View
+                        android:id="@+id/devider2Line"
+                        android:layout_width="2dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toRightOf="@id/sos2ContactNumber"
+                        android:background="@android:color/darker_gray" />
+
+                    <TextView
+                        android:id="@+id/mTextView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_toRightOf="@id/devider2Line"
+                        android:text="M"
+                        android:textColor="@color/black"
+                        android:textSize="17dp" />
+
+                    <Spinner
+                        android:id="@+id/sosSpinner2"
+                        style="@style/SpinnerStyle"
+                        android:layout_width="25dp"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_toRightOf="@id/mTextView2"
+                        android:popupBackground="@drawable/spinner_layout"
+                        android:background="@drawable/ic_arrow_configure" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/contact2ImageView"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginTop="42dp"
+                    android:layout_toRightOf="@id/contact2_layout"
+                    android:background="@drawable/ic_addfromcontact" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/contact3_layout"
+                    android:layout_width="280dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="@dimen/margin_30"
+                    android:background="@drawable/selector">
+
+                    <EditText
+                        android:id="@+id/sos3ContactNumber"
+                        android:layout_width="230dp"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="#0000004D"
+                        android:hint="Contact 3"
+                        android:inputType="phone"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/hintColor"
+                        android:textCursorDrawable="@color/black" />
+
+                    <View
+                        android:id="@+id/devider3Line"
+                        android:layout_width="2dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toRightOf="@id/sos3ContactNumber"
+                        android:background="@android:color/darker_gray" />
+
+                    <TextView
+                        android:id="@+id/mTextView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_toRightOf="@id/devider3Line"
+                        android:text="M"
+                        android:textColor="@color/black"
+                        android:textSize="17dp" />
+
+                    <Spinner
+                        android:id="@+id/sosSpinner3"
+                        style="@android:style/Widget.Holo.Light.Spinner"
+                        android:layout_width="25dp"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_toRightOf="@id/mTextView3"
+                        android:popupBackground="@drawable/spinner_layout"
+                        android:background="@drawable/ic_arrow_configure" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/contact3ImageView"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginTop="42dp"
+                    android:layout_toRightOf="@id/contact3_layout"
+                    android:background="@drawable/ic_addfromcontact" />
+
+                <Button
+                    android:id="@+id/sosSaveButton"
+                    android:layout_width="200dp"
+                    android:layout_height="@dimen/margin_40"
+                    android:layout_marginTop="80dp"
+                    android:background="@drawable/login_selector"
+                    android:layout_centerHorizontal="true"
+                    android:text="Save"
+                    android:textColor="@color/white"
+                    android:layout_below="@id/contact3ImageView" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

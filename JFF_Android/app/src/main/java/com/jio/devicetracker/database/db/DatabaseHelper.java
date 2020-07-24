@@ -41,6 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_ALERTS_HOSTORY = "AlertsHistoryTable";
     public static final String TABLE_DEVICE = "DeviceTable";
     public static final String TABLE_GEOFENCE = "GeofenceTable";
+    public static final String TABLE_SOS = "SOSTable";
 
     //Table Columns
     public static final String IMEI_NUM = "imei";
@@ -84,6 +85,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String ADDRESS = "address";
     public static final String COUNT = "count";
     public static final String STATE = "state";
+    public static final String PRIORITY = "priority";
+    public static final String PHONEBOOK_ID = "phonebookId";
 
 
     //DB Information
@@ -117,6 +120,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_GEOFENCE_TABLE = "create table " + TABLE_GEOFENCE + "(" + DEVICE_NUM + " TEXT ," + LAT + " DOUBLE ," + LON + " DOUBLE ," + RADIUS + " INTEGER ," + "PRIMARY KEY" + "(" + DEVICE_NUM + "))";
 
+    private static final String CREATE_SOS_TABLE = "create table " + TABLE_SOS + "(" + DEVICE_NUM + " TEXT ," + PRIORITY + " INTEGER ," + PHONEBOOK_ID + " TEXT ," + "PRIMARY KEY" + "(" + DEVICE_NUM + "))";
+
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -140,6 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_ALERTS_HISTORY_TABLE);
         db.execSQL(CREATE_DEVICE_TABLE);
         db.execSQL(CREATE_GEOFENCE_TABLE);
+        db.execSQL(CREATE_SOS_TABLE);
     }
 
     /**
@@ -160,6 +166,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALERTS_HOSTORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEVICE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GEOFENCE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SOS);
         onCreate(db);
     }
 }
