@@ -43,6 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
@@ -219,7 +220,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
                 intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
                 intent.putExtra(Constant.MEMBER_NAME, memberName);
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
-                startActivity(intent);
+                startActivityForResult(intent,120);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -232,5 +233,13 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==120){
+            finish();
+        }
     }
 }

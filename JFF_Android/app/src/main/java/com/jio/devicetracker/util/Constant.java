@@ -207,6 +207,7 @@ public class Constant {
 
     // MAPs Activity constants
     public static final String MAP_TITLE = "Location";
+    public static final String GEOFENCE_AREA = "Geofence Area";
     public static final String LOCATION_UPDATE = "Location will be updated after every";
     public static final String SUCCESSFULL_DEVICE_ADDITION_RESPONSE = "1 device(s) are assigned to one user.";
     public static final String SUCCESSFULL_DEVICE_ADDITION = "Device is successfully added";
@@ -216,6 +217,7 @@ public class Constant {
     public static final long PRIORITY_BALANCED_POWER_ACCURACY = 10;
     public static final int EPOCH_TIME_DURATION = 15;
     public static final String MAP_DATA = "Map_Data";
+    public static final String AREA_COVERED = "Area covered ";
     public static final String MAP_TAB = "Map\n";
     public static final String MAP_TAB_WITHOUT_NEXTLINE = "Map";
     public static final String LIST_TAB = "List\n";

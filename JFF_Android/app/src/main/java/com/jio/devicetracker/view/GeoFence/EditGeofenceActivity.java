@@ -152,7 +152,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             intent.putExtra(Constant.LONGNITUDE,latlang.longitude);
 
             intent.putExtra("EditGeofence",true);
-            startActivity(intent);
+            startActivityForResult(intent,100);
 
         } else {
             finish();
@@ -183,4 +183,11 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         return p1;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100){
+            finish();
+        }
+    }
 }

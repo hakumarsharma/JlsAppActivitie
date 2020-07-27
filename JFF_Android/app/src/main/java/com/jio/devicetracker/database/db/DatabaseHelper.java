@@ -118,7 +118,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_DEVICE_TABLE = "create table " + TABLE_DEVICE + "(" + DEVICE_NUM + " TEXT ," + IMEI_NUM + " TEXT, " + COUNT + " INTEGER ," + "PRIMARY KEY" + "(" + IMEI_NUM + "))";
 
-    private static final String CREATE_GEOFENCE_TABLE = "create table " + TABLE_GEOFENCE + "(" + DEVICE_NUM + " TEXT ," + LAT + " DOUBLE ," + LON + " DOUBLE ," + RADIUS + " INTEGER ," + "PRIMARY KEY" + "(" + DEVICE_NUM + "))";
+    private static final String CREATE_GEOFENCE_TABLE = "create table " + TABLE_GEOFENCE + "(" + DEVICE_NUM + " TEXT ," + LAT + " DOUBLE ," + LON + " DOUBLE ," + RADIUS + " INTEGER ," + "PRIMARY KEY" + "("  + LAT +","+ LON+ "))";
 
     private static final String CREATE_SOS_TABLE = "create table " + TABLE_SOS + "(" + DEVICE_NUM + " TEXT ," + PRIORITY + " INTEGER ," + PHONEBOOK_ID + " TEXT ," + "PRIMARY KEY" + "(" + DEVICE_NUM + "))";
 

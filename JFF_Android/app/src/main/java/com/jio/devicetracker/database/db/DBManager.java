@@ -216,20 +216,23 @@ public class DBManager {
     /**
      * Update lat and long in to the TABLE_NAME_BORQS table
      *
-     * @param latLng
+     * @param latLngNew
      * @param radius
      */
-    public int updateGeofenceDetailInGeofenceTable(LatLng latLng, int radius, String deviceNumber) {
+    public int updateGeofenceDetailInGeofenceTable(LatLng latLngNew, int radius, String deviceNumber,LatLng latLngOld) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.LAT, latLng.latitude);
-        values.put(DatabaseHelper.LON, latLng.longitude);
+        if(latLngNew != null){
+        values.put(DatabaseHelper.LAT, latLngNew.latitude);
+        values.put(DatabaseHelper.LON, latLngNew.longitude);
+        }
         values.put(DatabaseHelper.RADIUS, radius);
-        return mDatabase.update(DatabaseHelper.TABLE_GEOFENCE, values, DatabaseHelper.DEVICE_NUM + "= " + deviceNumber, null);
+
+        return mDatabase.update(DatabaseHelper.TABLE_GEOFENCE, values, DatabaseHelper.LAT + "= " + latLngOld.latitude +" AND "+ DatabaseHelper.LON + "= "+ latLngOld.longitude, null);
     }
 
     /**
-     * Insert lat and long in to the TABLE_NAME_BORQS table
+     * Insert lat and long in to the TABLE_GEOFENCE table
      *
      * @param latLng
      * @param radius
@@ -424,6 +427,32 @@ public class DBManager {
         }
         return geofenceDetails;
     }
+
+    /**
+     * Returns geofence detail list
+     *
+     * @return geofence details
+     */
+    public List<GeofenceDetails> getGeofenceDetailsList(String deviceNumber) {
+        List<GeofenceDetails> geofenceList = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        GeofenceDetails geofenceDetails = null;
+        String[] column = {DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.RADIUS};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GEOFENCE, column, DatabaseHelper.DEVICE_NUM + " = " + deviceNumber, null, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                geofenceDetails = new GeofenceDetails();
+                geofenceDetails.setLat(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LAT)));
+                geofenceDetails.setLng(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LON)));
+                geofenceDetails.setRadius(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.RADIUS)));
+                geofenceList.add(geofenceDetails);
+
+            }
+            cursor.close();
+        }
+        return geofenceList;
+    }
+
 
     /**
      * Returns user phone number

@@ -43,6 +43,7 @@ import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.view.BaseActivity;
+import com.jio.devicetracker.view.geofence.GeoFenceMapAndListViewActivity;
 import com.jio.devicetracker.view.geofence.GeofenceActivity;
 
 import java.io.IOException;
@@ -63,6 +64,8 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     private boolean deviceLocationflag;
     private TextView memberName;
     private DBManager mDbManager;
+    private RelativeLayout geofenceAreaNumber;
+    private TextView geofenceCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +84,12 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         backBtn.setVisibility(View.VISIBLE);
         ImageView menuOption = findViewById(R.id.menu_icon);
         ImageView closeOption = findViewById(R.id.close_icon);
+        geofenceCount = findViewById(R.id.geofence_count);
         closeOption.setOnClickListener(this);
         memberName = findViewById(R.id.member_name);
         memberAddrss = findViewById(R.id.member_address);
+        geofenceAreaNumber = findViewById(R.id.geofence_area_number);
+        geofenceAreaNumber.setOnClickListener(this);
         TextView shareLocation = findViewById(R.id.share_location);
         shareLocation.setOnClickListener(this);
         TextView createGeofence = findViewById(R.id.create_geofence);
@@ -108,6 +114,9 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         } else {
             memberAddrss.setText(Constant.CONSENT_APPROVED_ADDRESS);
         }
+        List<GeofenceDetails> geofenceList = mDbManager.getGeofenceDetailsList(deviceNumber);
+        geofenceCount.setText(String.valueOf(geofenceList.size()));
+
     }
 
     @Override
@@ -131,6 +140,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.create_geofence:
+                menuLayout.setVisibility(View.GONE);
                 if (consentStatus != null) {
                     if (!consentStatus.equalsIgnoreCase(Constant.APPROVED)) {
                         showCustomAlertWithText(Constant.GEOFENCE_Alert_Message);
@@ -159,10 +169,19 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
             case R.id.menu_icon:
                 menuLayout.setVisibility(View.VISIBLE);
                 break;
+
+            case R.id.geofence_area_number:
+                gotoGeoFenceMapAndListViewActivity();
             default:
                 // Todo
                 break;
         }
+    }
+
+    private void gotoGeoFenceMapAndListViewActivity() {
+        Intent intent = new Intent(this, GeoFenceMapAndListViewActivity.class);
+        intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+        startActivity(intent);
     }
 
     /**

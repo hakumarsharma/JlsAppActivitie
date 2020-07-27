@@ -27,6 +27,15 @@ public class GeofenceDetails {
     private double lat;
     private double lng;
     private int radius;
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public double getLat() {
         return lat;

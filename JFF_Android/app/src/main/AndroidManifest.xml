@@ -65,6 +65,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".view.geofence.GeoFenceMapAndListViewActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".view.menu.settings.SettingsActivity"
             android:screenOrientation="portrait" />
         <activity

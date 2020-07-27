@@ -1,0 +1,111 @@
+package com.jio.devicetracker.view.geofence;
+
+import android.app.Activity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.text.Html;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
+import com.jio.devicetracker.R;
+import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.adapter.GeofenceViewAdapter;
+import com.jio.devicetracker.view.adapter.LocationAdapter;
+
+public class GeoFenceMapAndListViewActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private TextView mapTab;
+    private TextView listTab;
+    private ViewPager viewPager;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_geofence_area);
+        Toolbar toolbar = findViewById(R.id.locationToolbar);
+        TextView title = findViewById(R.id.toolbar_title);
+        title.setText(Constant.GEOFENCE_AREA);
+        title.setTypeface(Util.mTypeface(this, 5));
+        mapTab = findViewById(R.id.map_view);
+        listTab = findViewById(R.id.list_view);
+        listTab.setOnClickListener(this);
+        mapTab.setOnClickListener(this);
+        mapTab.setTypeface(Util.mTypeface(this, 5));
+        listTab.setTypeface(Util.mTypeface(this, 5));
+        mapTab.setText(Constant.MAP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        setSupportActionBar(toolbar);
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
+        initUI();
+    }
+
+    private void initUI() {
+        viewPager = findViewById(R.id.geofence_view_pager);
+        GeofenceViewAdapter locationAdapter = new GeofenceViewAdapter(getSupportFragmentManager(), 2);
+        viewPager.setAdapter(locationAdapter);
+        onTabClicked();
+    }
+
+    private void onTabClicked() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // Todo
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    setMapTab();
+                } else if (position == 1) {
+                    setListTab();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // Todo
+            }
+        });
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.back) {
+            finish();
+        } else if(v.getId() == R.id.map_view) {
+            viewPager.setCurrentItem(0);
+            setMapTab();
+        } else if(v.getId() == R.id.list_view) {
+            viewPager.setCurrentItem(1);
+            setListTab();
+        }
+    }
+
+    // Sets the Map tab data
+    private void setMapTab() {
+        mapTab.setText(Constant.MAP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        mapTab.setTextColor(Color.WHITE);
+        listTab.setText(Constant.LIST_TAB_WITHOUT_NEXTLINE);
+        listTab.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+    }
+
+    // Sets the List tab data
+    private void setListTab() {
+        listTab.setText(Constant.LIST_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+        listTab.setTextColor(Color.WHITE);
+        mapTab.setText(Constant.MAP_TAB_WITHOUT_NEXTLINE);
+        mapTab.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+    }
+
+}
+

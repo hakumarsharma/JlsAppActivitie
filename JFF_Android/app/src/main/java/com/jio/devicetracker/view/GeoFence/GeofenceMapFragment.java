@@ -122,20 +122,27 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         memberName = getActivity().getIntent().getStringExtra(Constant.MEMBER_NAME);
         mDbManager = new DBManager(getActivity());
+        /*List<GeofenceDetails> geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
+        LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size()-1).getLat(),geofenceDetail.get(geofenceDetail.size()-1).getLng());*/
         if (getArguments() != null) {
             lat = getArguments().getDouble(Constant.LATITUDE);
             lang = getArguments().getDouble(Constant.LONGNITUDE);
             editGeofenceRadius = getArguments().getInt(Constant.GEOFENCE_RADIUS);
             if (editGeofenceRadius != 0) {
                 GEOFENCE_RADIUS_IN_METERS = editGeofenceRadius;
+                List<GeofenceDetails> geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
+                LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size()-1).getLat(),geofenceDetail.get(geofenceDetail.size()-1).getLng());
+                int updateStatus = mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber,latlngOld);
             }
             geoFenceLatlng = new LatLng(lat, lang);
-            int updateStatus = mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+           /* List<GeofenceDetails> geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
+            LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size()-1).getLat(),geofenceDetail.get(geofenceDetail.size()-1).getLng());*/
+           /* int updateStatus = mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber,latlngOld);
             if (updateStatus == 1) {
                 Log.d(TAG, "geofence details updated");
-            } else {
+            } else {*/
                 mDbManager.insertGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
-            }
+           // }
         }
         new Thread(new FetchLocation()).start();
 
@@ -247,12 +254,14 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                     public void onSuccess(Void aVoid) {
 
                         Log.d(TAG, Constant.GEOFENCE_SUCCESS_MESSAGE);
-                        int updateStatus = mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+                       /* List<GeofenceDetails> geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
+                        LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size()-1).getLat(),geofenceDetail.get(geofenceDetail.size()-1).getLng());
+                        int updateStatus = mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber,latlngOld);
                         if (updateStatus == 1) {
                             Log.d(TAG, "geofence details updated");
-                        } else {
+                        } else {*/
                             mDbManager.insertGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
-                        }
+                       // }
 
                     }
                 })
