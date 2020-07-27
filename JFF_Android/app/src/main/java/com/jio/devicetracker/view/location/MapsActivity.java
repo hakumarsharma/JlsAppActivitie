@@ -55,7 +55,6 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.dashboard.DashboardActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -233,15 +232,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mMap != null) {
             onMapReady(mMap);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Util.clearLocationFlagstatus(this);
-//        Util.setAutologinStatus(this, true);
-        Intent intent = new Intent(this, DashboardActivity.class);
-        startActivity(intent);
     }
 
     /**
