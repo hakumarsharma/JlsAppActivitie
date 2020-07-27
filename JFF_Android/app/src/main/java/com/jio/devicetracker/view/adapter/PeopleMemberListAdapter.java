@@ -351,9 +351,9 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
         ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
         ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
-        if (homeActivityListData.getNumber().length() == 15){
+        if (homeActivityListData.getNumber().length() == 15) {
             consent.setImei(homeActivityListData.getNumber());
-        }else {
+        } else {
             consent.setPhone(homeActivityListData.getNumber());
         }
         consent.setStatus(Constant.REMOVED);

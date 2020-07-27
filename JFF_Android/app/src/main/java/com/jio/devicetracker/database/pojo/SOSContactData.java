@@ -23,6 +23,15 @@ package com.jio.devicetracker.database.pojo;
 public class SOSContactData {
     private int priority;
     private String number;
+    private String phonebookId;
+
+    public String getPhonebookId() {
+        return phonebookId;
+    }
+
+    public void setPhonebookId(String phonebookId) {
+        this.phonebookId = phonebookId;
+    }
 
     public int getPriority() {
         return priority;

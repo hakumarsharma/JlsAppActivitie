@@ -30,11 +30,13 @@ public class GetAllSOSDetailRequest implements IRequest {
     private Response.Listener successListener;
     private Response.ErrorListener errorListener;
     private String userToken;
+    private String deviceId;
 
-    public GetAllSOSDetailRequest(Response.Listener successListener, Response.ErrorListener errorListener, String userToken) {
+    public GetAllSOSDetailRequest(Response.Listener successListener, Response.ErrorListener errorListener, String deviceId, String userToken) {
         this.successListener = successListener;
         this.errorListener = errorListener;
         this.userToken = userToken;
+        this.deviceId = deviceId;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class GetAllSOSDetailRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return Constant.DELETE_DEVICE_URL + "deviceId" + Constant.GETALL_SOS_DETAIL_URL + userToken;
+        return Constant.DELETE_DEVICE_URL + deviceId + Constant.GETALL_SOS_DETAIL_URL + userToken;
     }
 
     @Override

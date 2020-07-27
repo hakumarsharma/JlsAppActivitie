@@ -28,15 +28,17 @@ import com.jio.devicetracker.util.Constant;
 public class DeleteSOSContactRequest implements IRequest {
     private Response.Listener sucessListener;
     private Response.ErrorListener errorListener;
-    private String groupId;
-    private String userId;
+    private String phonebookId;
+    private String userToken;
+    private String deviceId;
 
-    public DeleteSOSContactRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, String phonebookId, String userToken)
+    public DeleteSOSContactRequest(Response.Listener sucessListener, Response.ErrorListener errorListener, String phonebookId, String deviceId, String userToken)
     {
         this.sucessListener = sucessListener;
         this.errorListener = errorListener;
-        this.groupId = groupId;
-        this.userId = userId;
+        this.deviceId = deviceId;
+        this.phonebookId = phonebookId;
+        this.userToken = userToken;
     }
     @Override
     public String getReqParams() {
@@ -50,7 +52,7 @@ public class DeleteSOSContactRequest implements IRequest {
 
     @Override
     public String getAction() {
-        return Constant.ACCOUNTS_API_USER_URL + userId + Constant.SESSION_GROUPS_URL + groupId;
+        return Constant.DELETE_DEVICE_URL + deviceId + Constant.DELETE_SOS_CONTACT_URL + phonebookId + "?" + "ugs_token="+userToken;
     }
 
     @Override

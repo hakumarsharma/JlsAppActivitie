@@ -45,12 +45,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.SOSContactData;
 import com.jio.devicetracker.database.pojo.SOSData;
 import com.jio.devicetracker.database.pojo.request.CreateSOSContactRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteSOSContactRequest;
 import com.jio.devicetracker.database.pojo.request.GetAllSOSDetailRequest;
+import com.jio.devicetracker.database.pojo.response.GetAllSOSDetailsResponse;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
@@ -60,7 +62,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SOSActivity extends Activity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
-
     private Spinner sosSpinner;
     private Spinner sosSpinner2;
     private Spinner sosSpinner3;
@@ -79,6 +80,9 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     private String userToken;
     private DBManager mDbManager;
     private String phoneNumber;
+    private String deviceId;
+    private List<SOSContactData> mSosDetailList;
+    private String phonebookId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,9 +122,16 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         sos3ContactNumber = findViewById(R.id.sos3ContactNumber);
         sosSaveButton = findViewById(R.id.sosSaveButton);
         sosSaveButton.setOnClickListener(this);
-        mList = new ArrayList<>();
+        mList = new ArrayList<>(3);
         mDbManager = new DBManager(this);
         userToken = mDbManager.getAdminLoginDetail().getUserToken();
+        List<GroupMemberDataList> groupMemberDataLists = mDbManager.getAllGroupMemberData();
+        for (GroupMemberDataList data : groupMemberDataLists) {
+            if (data.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())) {
+                deviceId = data.getDeviceId();
+                break;
+            }
+        }
         getAllSOSDetails();
     }
 
@@ -234,25 +245,40 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
             SOSContactData sosContactData = new SOSContactData();
             sosContactData.setNumber(contact1);
             sosContactData.setPriority(1);
-            mList.add(sosContactData);
+            mList.add(0, sosContactData);
         } else if (contact1.equalsIgnoreCase(Constant.EMPTY_STRING)) {
-            // Call Delete API
+            for(SOSContactData data : mSosDetailList) {
+                if(data.getPriority() == 1) {
+                    phonebookId = data.getPhonebookId();
+                    deleteSOSContact(phonebookId);
+                }
+            }
         }
         if (!contact2.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact2)) {
             SOSContactData sosContactData = new SOSContactData();
             sosContactData.setNumber(contact2);
             sosContactData.setPriority(2);
-            mList.add(sosContactData);
+            mList.add(1, sosContactData);
         } else if (contact2.equalsIgnoreCase(Constant.EMPTY_STRING)) {
-            // Call Delete API
+            for(SOSContactData data : mSosDetailList) {
+                if(data.getPriority() == 2) {
+                    phonebookId = data.getPhonebookId();
+                    deleteSOSContact(phonebookId);
+                }
+            }
         }
         if (!contact3.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact3)) {
             SOSContactData sosContactData = new SOSContactData();
             sosContactData.setNumber(contact3);
             sosContactData.setPriority(3);
-            mList.add(sosContactData);
+            mList.add(2, sosContactData);
         } else if (contact3.equalsIgnoreCase(Constant.EMPTY_STRING)) {
-            // Call Delete API
+            for(SOSContactData data : mSosDetailList) {
+                if(data.getPriority() == 3) {
+                    phonebookId = data.getPhonebookId();
+                    deleteSOSContact(phonebookId);
+                }
+            }
         }
         if (mList.isEmpty()) {
             showCustomAlertWithText(Constant.SOS_WARNINGS);
@@ -280,14 +306,6 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
             desired.setPhonebook(phonebook);
             sosData.setDesired(desired);
             apiCount++;
-            String deviceId = Constant.EMPTY_STRING;
-            List<GroupMemberDataList> groupMemberDataLists = mDbManager.getAllGroupMemberData();
-            for (GroupMemberDataList data : groupMemberDataLists) {
-                if (data.getNumber().equalsIgnoreCase(phoneNumber)) {
-                    deviceId = data.getDeviceId();
-                    break;
-                }
-            }
             Util.getInstance().showProgressBarDialog(this);
             RequestHandler.getInstance(this).handleRequest(new CreateSOSContactRequest(new CreateSOSSuccessListener(), new CreateSOSErrorListener(), sosData, userToken, deviceId));
         }
@@ -318,7 +336,16 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     // Get all SOS details API calls
     private void getAllSOSDetails() {
         Util.getInstance().showProgressBarDialog(this);
-        RequestHandler.getInstance(this).handleRequest(new GetAllSOSDetailRequest(new GetAllSOSDetailSuccessListener(), new GetAllSOSDetailErrorListener(), userToken));
+        AdminLoginData adminLoginData = mDbManager.getAdminLoginDetail();
+        List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberData();
+        String devideId = Constant.EMPTY_STRING;
+        for (GroupMemberDataList groupMemberDataList : mList) {
+            if (adminLoginData.getPhoneNumber().equalsIgnoreCase(groupMemberDataList.getNumber())) {
+                devideId = groupMemberDataList.getDeviceId();
+                break;
+            }
+        }
+        RequestHandler.getInstance(this).handleRequest(new GetAllSOSDetailRequest(new GetAllSOSDetailSuccessListener(), new GetAllSOSDetailErrorListener(), devideId, userToken));
     }
 
     /**
@@ -327,8 +354,22 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     public class GetAllSOSDetailSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            // Todo
-            // Insert into the DB
+            GetAllSOSDetailsResponse getAllSOSDetailsResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetAllSOSDetailsResponse.class);
+            List<GetAllSOSDetailsResponse.Data.Desired.Phonebooks> phonebooks = getAllSOSDetailsResponse.getData().getDesired().getmList();
+            getAllSOSDetailsResponse.getData().getDesired().getmList();
+            List<SOSContactData> mList = new ArrayList<>();
+            if (getAllSOSDetailsResponse.getCode() == 200 && !phonebooks.isEmpty()) {
+                for (GetAllSOSDetailsResponse.Data.Desired.Phonebooks mPhoneBooks : phonebooks) {
+                    SOSContactData sosContactData = new SOSContactData();
+                    sosContactData.setPriority(mPhoneBooks.getPriority());
+                    sosContactData.setNumber(mPhoneBooks.getNumber());
+                    sosContactData.setPhonebookId(mPhoneBooks.getId());
+                    mList.add(sosContactData);
+                }
+            }
+            mDbManager.insertIntoSOSTable(mList);
+            Util.progressDialog.dismiss();
+            displayDataInSOSActivity();
         }
     }
 
@@ -338,13 +379,27 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     private class GetAllSOSDetailErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            // Todo
+            Util.progressDialog.dismiss();
+        }
+    }
+
+    // Display data in SOS activity if data is already present
+    private void displayDataInSOSActivity() {
+        mSosDetailList = mDbManager.getAllSOStableData();
+        for (SOSContactData sosContactData : mSosDetailList) {
+            if (sosContactData.getPriority() == 1) {
+                sos1ContactNumber.setText(sosContactData.getNumber());
+            } else if (sosContactData.getPriority() == 2) {
+                sos2ContactNumber.setText(sosContactData.getNumber());
+            } else {
+                sos3ContactNumber.setText(sosContactData.getNumber());
+            }
         }
     }
 
     // Delete SOS contact API call
-    private void deleteSOSContact() {
-        RequestHandler.getInstance(this).handleRequest(new DeleteSOSContactRequest(new DeleteSOSContactSuccessListener(), new DeleteSOSContactErrorListener(), "phonebookId", userToken));
+    private void deleteSOSContact(String phonebookId) {
+        RequestHandler.getInstance(this).handleRequest(new DeleteSOSContactRequest(new DeleteSOSContactSuccessListener(), new DeleteSOSContactErrorListener(), phonebookId, deviceId, userToken));
     }
 
     /**
@@ -353,8 +408,8 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     public class DeleteSOSContactSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            // Todo
-            // Update DB
+            mDbManager.deleteSOSDetail(phonebookId);
+            displayDataInSOSActivity();
         }
     }
 
@@ -364,7 +419,7 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     private class DeleteSOSContactErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            // Todo
+            System.out.println(Constant.DELETE_SOS_ERROR);
         }
     }
 

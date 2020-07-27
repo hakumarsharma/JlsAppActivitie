@@ -35,6 +35,7 @@ import com.jio.devicetracker.database.pojo.DeviceTableData;
 import com.jio.devicetracker.database.pojo.GeofenceDetails;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.SOSContactData;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
@@ -620,6 +621,7 @@ public class DBManager {
         mDatabase.delete(DatabaseHelper.TABLE_USER_LOGIN, null, null);
         mDatabase.delete(DatabaseHelper.TABLE_GROUP_MEMBER, null, null);
         mDatabase.delete(DatabaseHelper.TABLE_GROUP, null, null);
+        mDatabase.delete(DatabaseHelper.TABLE_SOS, null, null);
     }
 
     public void insertIntoAlertHistoryTable(AlertHistoryData alertHistoryData) {
@@ -720,4 +722,42 @@ public class DBManager {
         return mlist;
     }
 
+    /**
+     * Inserts data into the SOS table
+     * @param mList
+     */
+    public void insertIntoSOSTable(List<SOSContactData> mList) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        for (SOSContactData sosContactData : mList) {
+            ContentValues contentValue = new ContentValues();
+            contentValue.put(DatabaseHelper.PHONEBOOK_ID, sosContactData.getPhonebookId());
+            contentValue.put(DatabaseHelper.PRIORITY, sosContactData.getPriority());
+            contentValue.put(DatabaseHelper.DEVICE_NUM, sosContactData.getNumber());
+            mDatabase.replace(DatabaseHelper.TABLE_SOS, null, contentValue);
+        }
+    }
+
+    //Returns all SOS table data
+    public List<SOSContactData> getAllSOStableData() {
+        List<SOSContactData> mList = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String[] column = {DatabaseHelper.PHONEBOOK_ID, DatabaseHelper.PRIORITY, DatabaseHelper.DEVICE_NUM};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_SOS, column, null, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                SOSContactData sosContactData = new SOSContactData();
+                sosContactData.setPhonebookId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.PHONEBOOK_ID)));
+                sosContactData.setNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                sosContactData.setPriority(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.PRIORITY)));
+                mList.add(sosContactData);
+            }
+        }
+        cursor.close();
+        return mList;
+    }
+
+    public void deleteSOSDetail(String phonebookId) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        mDatabase.delete(DatabaseHelper.TABLE_SOS, DatabaseHelper.PHONEBOOK_ID + "= '" + phonebookId + "';", null);
+    }
 }
