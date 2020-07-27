@@ -33,9 +33,6 @@
             android:name=".view.signinsignup.SigninSignupActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.dashboard.DashboardActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.group.CreateGroupActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -43,13 +40,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".view.group.GroupNameActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.menu.ActiveMemberActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.menu.RefreshIntervalSettingActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.menu.NotificationsAlertsActivity"
@@ -84,31 +75,9 @@
             android:name=".view.menu.settings.SOSActivity"
             android:screenOrientation="portrait" />
 
-        <service
-            android:name=".network.SendLocationService"
-            android:enabled="true"
-            android:exported="true" />
-
         <activity
             android:name=".view.menu.ProfileActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.signinsignup.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter android:label="@string/title_activity_maps">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "example://gizmos” -->
-                <data
-                    android:host="peopletracker"
-                    android:pathPrefix="/home"
-                    android:scheme="https" />
-            </intent-filter>
-        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -148,10 +117,6 @@
             android:label="@string/map_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.people.EditActivity"
-            android:label="@string/map_name"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.menu.HelpActivity"
             android:label="@string/map_name"
             android:screenOrientation="portrait" />
@@ -161,18 +126,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.device.QRCodeReaderActivity"
-            android:label="@string/map_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.signinsignup.RegistrationActivity"
-            android:label="@string/map_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.people.ContactDetailsActivity"
-            android:label="@string/map_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.group.GroupListActivity"
             android:label="@string/map_name"
             android:screenOrientation="portrait" />
         <activity

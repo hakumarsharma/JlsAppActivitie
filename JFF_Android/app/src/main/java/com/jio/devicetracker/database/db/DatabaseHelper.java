@@ -31,9 +31,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Table Name
     public static final String TABLE_NAME_BORQS = "BorqsDevicedata";
-    public static final String TABLE_NAME_DEVICE = "BorqsAddDevicedata";
-    public static final String TABLE_NAME_FMS = "FmsDevicedata";
-    public static final String TABLE_NAME_USER = "UserData";
     public static final String TABLE_USER_LOGIN = "UserloginData";
     public static final String TABLE_GROUP = "GroupData";
     public static final String TABLE_GROUP_MEMBER = "GroupMemberData";
@@ -97,15 +94,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_BORQS = "create table " + TABLE_NAME_BORQS + "(" + IMEI_NUM
             + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " + CONSENT_STATUS + " TEXT, " + DEVICE_ID + " TEXT ," + GROUP_NAME + " TEXT, " + DEVICE_TYPE + " TEXT, " + IS_GROUP_MEMBER + " INTEGER ," + IS_CREATED + " INTEGER ," + LAT + " DOUBLE ," + LON + " DOUBLE ," + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ," + "PRIMARY KEY" + "(" + DEVICE_NUM + "))";
 
-    private static final String CREATE_TABLE_DEVICE = "create table " + TABLE_NAME_DEVICE + "(" + IMEI_NUM
-            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " + CONSENT_STATUS + " TEXT, " + GROUP_NAME + " TEXT," + LAT + " DOUBLE ," + LON + " DOUBLE ," + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ," + IS_GROUP_MEMBER + " INTEGER ," + "PRIMARY KEY" + "(" + DEVICE_NUM + "))";
-
-
-    private static final String CREATE_TABLE_FMS = "create table " + TABLE_NAME_FMS + "(" + IMEI_NUM
-            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + RELATION + " TEXT, " + CONSENT_STATUS + " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ," + "PRIMARY KEY" + "(" + DEVICE_NUM + " ," + IMEI_NUM + "))";
-
-    private static final String CREATE_TABLE_USER = "create table " + TABLE_NAME_USER + "(" + NAME + " TEXT, " + EMAIL + " TEXT, " + DEVICE_NUM + " TEXT ," + DOB + " TEXT ," + PASS + " TEXT ," + USER_ID + " TEXT ," + "PRIMARY KEY" + "(" + DEVICE_NUM + " ," + EMAIL + "))";
-
     private static final String CREATE_TABLE_USER_LOGIN = "create table " + TABLE_USER_LOGIN + "(" + USER_TOKEN + " TEXT, " + TOKEN_EXPIRY_TIME + " TEXT, " + USER_NAME + " TEXT," + EMAIL + " TEXT," + USER_ID + " TEXT, " + DEVICE_NUM + " TEXT, " + PHONE_COUNTRY_CODE + " TEXT, " + "PRIMARY KEY" + "(" + USER_ID + "))";
 
     private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + CREATED_BY + " TEXT, " + UPDATED_BY + " TEXT, " + TIME_FROM + " DOUBLE ," + TIME_TO + " DOUBLE ," + PROFILE_IMAGE + " INTEGER ," + STATUS + " TEXT, " + GROUP_OWNER_NAME + " TEXT, " + GROUP_OWNER_PHONE_NUMBER + " TEXT, " + GROUP_OWNER_USER_ID + " TEXT, " + CONSENTS_COUNT + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID + "))";
@@ -135,9 +123,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_BORQS);
-        db.execSQL(CREATE_TABLE_DEVICE);
-        db.execSQL(CREATE_TABLE_FMS);
-        db.execSQL(CREATE_TABLE_USER);
         db.execSQL(CREATE_TABLE_USER_LOGIN);
         db.execSQL(CREATE_TABLE_GROUP);
         db.execSQL(CREATE_TABLE_GROUP_MEMBER);
@@ -156,9 +141,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_BORQS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_DEVICE);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_FMS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LOGIN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP_MEMBER);
