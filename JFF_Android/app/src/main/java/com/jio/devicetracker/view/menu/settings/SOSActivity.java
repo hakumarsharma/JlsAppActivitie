@@ -90,6 +90,7 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     private List<SOSContactData> updateList;
     private int updateAPICount;
     private List<SOSContactData> updateDataList;
+    private boolean isProgressbarDialog = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -380,6 +381,7 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         if (!mList.isEmpty()) {
             createSOSContactAPICall(mList);
         }
+
         if (!phonebookIdList.isEmpty()) {
             deleteSOSContact(phonebookIdList);
         }
@@ -396,6 +398,9 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
                 }
             }
             if (!isUpdateRequired) {
+                if (!phonebookIdList.isEmpty()) {
+                    isProgressbarDialog = false;
+                }
                 callUpdateAPI(updateList);
             }
         }
@@ -449,7 +454,9 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
 
     // Get all SOS details API calls
     private void getAllSOSDetails() {
-        Util.getInstance().showProgressBarDialog(this);
+        if(isProgressbarDialog) {
+            Util.getInstance().showProgressBarDialog(this);
+        }
         AdminLoginData adminLoginData = mDbManager.getAdminLoginDetail();
         List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberData();
         String devideId = Constant.EMPTY_STRING;
@@ -482,7 +489,9 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
                 }
             }
             mDbManager.insertIntoSOSTable(mList);
-            Util.progressDialog.dismiss();
+            if(isProgressbarDialog) {
+                Util.progressDialog.dismiss();
+            }
             displayDataInSOSActivity();
         }
     }
@@ -493,7 +502,9 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     private class GetAllSOSDetailErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            if(isProgressbarDialog) {
             Util.progressDialog.dismiss();
+            }
         }
     }
 
@@ -566,10 +577,14 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
             phonebook.setPriority(mList.get(updateAPICount).getPriority());
             desired.setPhonebook(phonebook);
             sosData.setDesired(desired);
-            Util.getInstance().showProgressBarDialog(this);
+            if (isProgressbarDialog) {
+                Util.getInstance().showProgressBarDialog(this);
+            }
             RequestHandler.getInstance(this).handleRequest(new UpdateSOSContactRequest(new UpdateSOSSuccessListener(), new UpdateSOSErrorListener(), sosData, mList.get(updateAPICount).getPhonebookId(), userToken, deviceId));
         } else if (updateAPICount == mList.size()) {
-            Util.progressDialog.dismiss();
+            if (isProgressbarDialog) {
+                Util.progressDialog.dismiss();
+            }
             mDbManager.updateSOSDatabase(updateDataList);
             Toast.makeText(this, Constant.DELETE_SOS_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
             updateAPICount = 0;
@@ -590,7 +605,9 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
             sosContactData.setNumber(updateSOSContactResponse.getData().getNumber());
             updateDataList.add(sosContactData);
             updateAPICount++;
-            Util.progressDialog.dismiss();
+            if (isProgressbarDialog) {
+                Util.progressDialog.dismiss();
+            }
             callUpdateAPI(updateList);
         }
     }
@@ -602,7 +619,9 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         @Override
         public void onErrorResponse(VolleyError error) {
             showCustomAlertWithText(Constant.UPDATE_SOS_ERROR);
-            Util.progressDialog.dismiss();
+            if (isProgressbarDialog) {
+                Util.progressDialog.dismiss();
+            }
         }
     }
 
