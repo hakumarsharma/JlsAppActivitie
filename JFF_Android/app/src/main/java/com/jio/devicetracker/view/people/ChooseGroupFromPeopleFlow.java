@@ -301,6 +301,9 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
             cardViewGroup.setVisibility(View.INVISIBLE);
             continueChooseGroup.setEnabled(false);
             continueChooseGroup.setBackground(getResources().getDrawable(R.drawable.selector));
+        }else {
+            continueChooseGroup.setEnabled(true);
+            continueChooseGroup.setBackground(getResources().getDrawable(R.drawable.login_selector));
         }
         GridLayoutManager mLayoutManager = new GridLayoutManager(this,4);
         RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);
