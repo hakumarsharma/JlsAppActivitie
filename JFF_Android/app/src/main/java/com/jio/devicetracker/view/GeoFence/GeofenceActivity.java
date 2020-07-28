@@ -171,7 +171,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         try {
             // May throw an IOException
             address = coder.getFromLocationName(strAddress, 10);
-            if (address == null) {
+            if (address == null || address.size()==0) {
                 return null;
             }
 
