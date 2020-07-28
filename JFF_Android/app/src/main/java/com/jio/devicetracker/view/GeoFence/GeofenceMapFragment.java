@@ -131,8 +131,10 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             if (editGeofenceRadius != 0) {
                 GEOFENCE_RADIUS_IN_METERS = editGeofenceRadius;
                 List<GeofenceDetails> geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
-                LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size()-1).getLat(),geofenceDetail.get(geofenceDetail.size()-1).getLng());
-                int updateStatus = mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber,latlngOld);
+                if(geofenceDetail != null && !(geofenceDetail.size() ==0)) {
+                    LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size() - 1).getLat(), geofenceDetail.get(geofenceDetail.size() - 1).getLng());
+                    int updateStatus = mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber, latlngOld);
+                }
             }
             geoFenceLatlng = new LatLng(lat, lang);
            /* List<GeofenceDetails> geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
@@ -203,10 +205,8 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             geoFenceLatlng = new LatLng(geofenceDetails.getLat(), geofenceDetails.getLng());
         } else {
             geoFenceLatlng = new LatLng(trackeeLatlng.latitude, trackeeLatlng.longitude);
-           // geoFenceLatlng = new LatLng(trackeeLatlng.latitude, trackeeLatlng.longitude);
+
         }
-        //markerOptions.position(geoFenceLatlng);
-        //mMap.addMarker(markerOptions);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(geoFenceLatlng, 12));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         addCircle(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS);

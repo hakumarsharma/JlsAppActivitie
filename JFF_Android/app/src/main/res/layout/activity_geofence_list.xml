@@ -35,6 +35,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_toRightOf="@+id/geofenceIcon"
                 android:text="Geofence"
+                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="17dp" />
 
@@ -65,7 +66,7 @@
                 android:textSize="12dp" />
 
             <ImageView
-                android:id="@+id/consentStatus"
+                android:id="@+id/menu_option"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignParentRight="true"
@@ -94,17 +95,38 @@
             android:src="@drawable/ic_close" />
 
         <TextView
-            android:id="@+id/edit"
-            android:layout_width="80dp"
+            android:id="@+id/share_location"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/margin_18"
+            android:text="Share Location"
+            android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp" />
+
+        <View
+            android:id="@+id/share_location_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/share_location"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/fourteen_dp"
+            android:background="@color/light_hash" />
+
+        <TextView
+            android:id="@+id/edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/share_location_line"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
             android:text="Edit"
             android:textColor="@color/white"
             android:textSize="@dimen/seventeen_dp" />
 
         <View
-            android:id="@+id/editLine"
+            android:id="@+id/edit_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/edit"
@@ -114,35 +136,14 @@
             android:background="@color/light_hash" />
 
         <TextView
-            android:id="@+id/remove_from_group"
+            android:id="@+id/delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editLine"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:text="Remove from group"
-            android:textColor="@color/white"
-            android:textSize="@dimen/seventeen_dp" />
-
-        <View
-            android:id="@+id/remove_from_group_line"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/remove_from_group"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:layout_marginRight="@dimen/fourteen_dp"
-            android:background="@color/light_hash" />
-
-        <TextView
-            android:id="@+id/share_invite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/remove_from_group_line"
+            android:layout_below="@+id/edit_line"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/ten_dp"
             android:paddingBottom="@dimen/sixteen_dp"
-            android:text="Send invite"
+            android:text="Delete"
             android:textColor="@color/white"
             android:textSize="@dimen/seventeen_dp" />
 
