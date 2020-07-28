@@ -229,7 +229,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     position = getAdapterPosition();
                     deleteAlertBox(position);
                     break;
-                case R.id.share_invite:
+                case R.id.peopleResendInvite:
                     position = getAdapterPosition();
                     layoutOps.setVisibility(View.GONE);
                     resendInviteAPICall(mList.get(position));

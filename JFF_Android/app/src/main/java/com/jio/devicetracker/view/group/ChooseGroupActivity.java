@@ -349,6 +349,9 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             continueBtn.setBackground(getResources().getDrawable(R.drawable.selector));
             continueBtn.setEnabled(false);
 
+        }else {
+            continueBtn.setBackground(getResources().getDrawable(R.drawable.login_selector));
+            continueBtn.setEnabled(true);
         }
         GridLayoutManager mLayoutManager = new GridLayoutManager(this, 4);
         RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);
