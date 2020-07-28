@@ -365,6 +365,7 @@ public class Constant {
     public static final String ADD_MEMBERS_TO_GROUP = "Please add members to group and track";
 
     public static final String DEVICE_NOT_FOUND = "Device not found, Please try again!";
+    public static final String RESEND_INVITE_FAILED = "Failed to resend invite, Please try again!";
     public static final String GROUP_LIMIT_EXCEED = "Group exceeded maximum consents count";
     public static final String USER_ALREADY_ADDED_ERROR = "Member is already present in the group";
     public static final String REMOVE = "Remove";

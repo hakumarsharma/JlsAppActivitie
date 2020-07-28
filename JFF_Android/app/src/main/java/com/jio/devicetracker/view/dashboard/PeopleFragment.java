@@ -184,7 +184,6 @@ public class PeopleFragment extends Fragment {
      * Get All Group info per user API Call
      */
     protected void makeGroupInfoPerUserRequestAPICall() {
-
         String userId = mDbManager.getAdminLoginDetail().getUserId();
         if(userId != null && !userId.isEmpty()) {
             GroupRequestHandler.getInstance(getActivity()).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserId()));

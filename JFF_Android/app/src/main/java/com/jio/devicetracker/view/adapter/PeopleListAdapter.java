@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -41,8 +42,12 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
 import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
+import com.jio.devicetracker.database.pojo.GenerateConsentTokenData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
+import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
+import com.jio.devicetracker.database.pojo.request.GenerateConsentTokenRequest;
+import com.jio.devicetracker.database.pojo.response.CommonAPIResponse;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -67,6 +72,8 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     private Context mContext;
     private DBManager mDbManager;
     private RelativeLayout layoutOps;
+    private GroupMemberDataList groupMemberList;
+    private int position;
 
     public PeopleListAdapter(List<GroupMemberDataList> mList, Context mContext) {
         this.mList = mList;
@@ -195,7 +202,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition();
+            //int position = getAdapterPosition();
             switch (v.getId()) {
                 case R.id.close:
                     layoutOps.setVisibility(View.GONE);
@@ -221,8 +228,9 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     deleteAlertBox(position);
                     break;
                 case R.id.share_invite:
-                    PeopleListAdapter.this.layoutOps = layoutOps;
-                    makeRemoveAPICall(mList.get(position), position, false);
+                    position = getAdapterPosition();
+                    layoutOps.setVisibility(View.GONE);
+                    resendInviteAPICall(mList.get(position));
                     break;
                 default:
                     // Todo
@@ -248,6 +256,67 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             adb.show();
         }
     }
+
+
+    /**
+     * Resend Invite API call
+     */
+
+    private void resendInviteAPICall(GroupMemberDataList groupMemberDataList){
+        GenerateConsentTokenData consentTokenData = new GenerateConsentTokenData();
+        GenerateConsentTokenData.Consent consent = new GenerateConsentTokenData().new Consent();
+        consent.setPhone(groupMemberDataList.getNumber());
+        consentTokenData.setConsent(consent);
+        Util.getInstance().showProgressBarDialog(mContext);
+        groupMemberList = groupMemberDataList;
+        GroupRequestHandler.getInstance(mContext).handleRequest(new GenerateConsentTokenRequest(new GenerateConsentTokenRequestSuccessListener(), new GenerateConsentTokenRequestErrorListener(), consentTokenData, groupMemberList.getGroupId(), mDbManager.getAdminLoginDetail().getUserId()));
+
+    }
+
+    /**
+     * Add Member in group Success Listener
+     */
+    private class GenerateConsentTokenRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
+            CommonAPIResponse apiResponse = Util.getInstance().getPojoObject(String.valueOf(response), CommonAPIResponse.class);
+            if (apiResponse.getCode() == Constant.SUCCESS_CODE_200){
+                removeItem(position);
+                Toast.makeText(mContext, Constant.INVITE_SENT, Toast.LENGTH_SHORT).show();
+                GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+                groupMemberDataList.setConsentId(groupMemberList.getConsentId());
+                groupMemberDataList.setNumber(groupMemberList.getNumber());
+                groupMemberDataList.setGroupId(groupMemberList.getGroupId());
+                groupMemberDataList.setConsentStatus(Constant.PENDING);
+                groupMemberDataList.setName(groupMemberList.getName());
+                groupMemberDataList.setUserId(groupMemberList.getUserId());
+                groupMemberDataList.setFrom(groupMemberList.getFrom());
+                groupMemberDataList.setTo(groupMemberList.getTo());
+                mList.add(groupMemberDataList);
+                notifyDataSetChanged();
+
+            }
+        }
+    }
+
+    /**
+     * Add Member in Group Error Listener
+     */
+    private class GenerateConsentTokenRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
+                // Make Verify and Assign call
+                Util.progressDialog.dismiss();
+                showCustomAlertWithText(Constant.DEVICE_NOT_FOUND);
+            } else {
+                Util.progressDialog.dismiss();
+                showCustomAlertWithText(Constant.RESEND_INVITE_FAILED);
+            }
+        }
+    }
+
 
 
     /**
