@@ -83,6 +83,9 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     private String deviceId;
     private List<SOSContactData> mSosDetailList;
     private String phonebookId;
+    private List<String> phonebookIdList;
+    private int deletePhonebookCount;
+    private List<SOSContactData> updateList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,6 +126,8 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         sosSaveButton = findViewById(R.id.sosSaveButton);
         sosSaveButton.setOnClickListener(this);
         mList = new ArrayList<>(3);
+        phonebookIdList = new ArrayList<>();
+        updateList = new ArrayList<>();
         mDbManager = new DBManager(this);
         userToken = mDbManager.getAdminLoginDetail().getUserToken();
         List<GroupMemberDataList> groupMemberDataLists = mDbManager.getAllGroupMemberData();
@@ -132,6 +137,11 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
                 break;
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         getAllSOSDetails();
     }
 
@@ -241,50 +251,136 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         String contact2 = sos2ContactNumber.getText().toString().trim();
         String contact3 = sos3ContactNumber.getText().toString().trim();
         mList.clear();
+        updateList.clear();
         if (!contact1.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact1)) {
-            SOSContactData sosContactData = new SOSContactData();
-            sosContactData.setNumber(contact1);
-            sosContactData.setPriority(1);
-            mList.add(0, sosContactData);
+            if (mSosDetailList.isEmpty()) { // For first time it is create SOS
+                SOSContactData sosContactData = new SOSContactData();
+                sosContactData.setNumber(contact1);
+                sosContactData.setPriority(1);
+                mList.add(sosContactData);
+            } else if (!mSosDetailList.isEmpty()) {  // If it is not empty and number is not the previous number then update
+                boolean isUpdate = false;
+                for (SOSContactData data : mSosDetailList) {
+                    if (data.getPriority() == 1 && !data.getNumber().equalsIgnoreCase(contact1)) {
+                        SOSContactData sosContactData = new SOSContactData();
+                        sosContactData.setNumber(contact1);
+                        sosContactData.setPriority(1);
+                        sosContactData.setPhonebookId(data.getPhonebookId());
+                        updateList.add(sosContactData);
+                        isUpdate = true;
+                    }
+                }
+                if (!isUpdate) {
+                    boolean isMatched = false;
+                    for (SOSContactData data : mSosDetailList) {
+                        if (data.getPriority() == 1 && data.getNumber().equalsIgnoreCase(contact1)) {
+                            isMatched = true;
+                        }
+                    }
+                    if (!isMatched) { // If data is already present then do nothing
+                        SOSContactData sosContactData = new SOSContactData();
+                        sosContactData.setNumber(contact1);
+                        sosContactData.setPriority(1);
+                        mList.add(sosContactData);
+                    }
+                }
+            }
         } else if (contact1.equalsIgnoreCase(Constant.EMPTY_STRING)) {
-            for(SOSContactData data : mSosDetailList) {
-                if(data.getPriority() == 1) {
-                    phonebookId = data.getPhonebookId();
-                    deleteSOSContact(phonebookId);
+            for (SOSContactData data : mSosDetailList) {
+                if (data.getPriority() == 1) {
+                    phonebookIdList.add(data.getPhonebookId());
                 }
             }
         }
         if (!contact2.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact2)) {
-            SOSContactData sosContactData = new SOSContactData();
-            sosContactData.setNumber(contact2);
-            sosContactData.setPriority(2);
-            mList.add(1, sosContactData);
+            if (mSosDetailList.isEmpty()) {
+                SOSContactData sosContactData = new SOSContactData();
+                sosContactData.setNumber(contact2);
+                sosContactData.setPriority(2);
+                mList.add(sosContactData);
+            } else if (!mSosDetailList.isEmpty()) {
+                boolean isUpdate = false;
+                for (SOSContactData data : mSosDetailList) {
+                    if (data.getPriority() == 2 && !data.getNumber().equalsIgnoreCase(contact2)) {
+                        SOSContactData sosContactData = new SOSContactData();
+                        sosContactData.setNumber(contact2);
+                        sosContactData.setPriority(2);
+                        sosContactData.setPhonebookId(data.getPhonebookId());
+                        updateList.add(sosContactData);
+                        isUpdate = true;
+                    }
+                }
+                if (!isUpdate) {
+                    boolean isMatched = false;
+                    for (SOSContactData data : mSosDetailList) {
+                        if (data.getPriority() == 2 && data.getNumber().equalsIgnoreCase(contact2)) {
+                            isMatched = true;
+                        }
+                    }
+                    if (!isMatched) { // If data is already present then do nothing
+                        SOSContactData sosContactData = new SOSContactData();
+                        sosContactData.setNumber(contact2);
+                        sosContactData.setPriority(2);
+                        mList.add(sosContactData);
+                    }
+                }
+            }
         } else if (contact2.equalsIgnoreCase(Constant.EMPTY_STRING)) {
-            for(SOSContactData data : mSosDetailList) {
-                if(data.getPriority() == 2) {
-                    phonebookId = data.getPhonebookId();
-                    deleteSOSContact(phonebookId);
+            for (SOSContactData data : mSosDetailList) {
+                if (data.getPriority() == 2) {
+                    phonebookIdList.add(data.getPhonebookId());
                 }
             }
         }
         if (!contact3.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact3)) {
-            SOSContactData sosContactData = new SOSContactData();
-            sosContactData.setNumber(contact3);
-            sosContactData.setPriority(3);
-            mList.add(2, sosContactData);
+            if (mSosDetailList.isEmpty()) {
+                SOSContactData sosContactData = new SOSContactData();
+                sosContactData.setNumber(contact3);
+                sosContactData.setPriority(3);
+                mList.add(sosContactData);
+            } else if (!mSosDetailList.isEmpty()) {
+                boolean isUpdate = false;
+                for (SOSContactData data : mSosDetailList) {
+                    if (data.getPriority() == 3 && !data.getNumber().equalsIgnoreCase(contact3)) {
+                        SOSContactData sosContactData = new SOSContactData();
+                        sosContactData.setNumber(contact3);
+                        sosContactData.setPriority(3);
+                        sosContactData.setPhonebookId(data.getPhonebookId());
+                        updateList.add(sosContactData);
+                        isUpdate = true;
+                    }
+                }
+                if (!isUpdate) {
+                    boolean isMatched = false;
+                    for (SOSContactData data : mSosDetailList) {
+                        if (data.getPriority() == 3 && data.getNumber().equalsIgnoreCase(contact3)) {
+                            isMatched = true;
+                        }
+                    }
+                    if (!isMatched) { // If data is already present then do nothing
+                        SOSContactData sosContactData = new SOSContactData();
+                        sosContactData.setNumber(contact3);
+                        sosContactData.setPriority(3);
+                        mList.add(sosContactData);
+                    }
+                }
+            }
         } else if (contact3.equalsIgnoreCase(Constant.EMPTY_STRING)) {
-            for(SOSContactData data : mSosDetailList) {
-                if(data.getPriority() == 3) {
-                    phonebookId = data.getPhonebookId();
-                    deleteSOSContact(phonebookId);
+            for (SOSContactData data : mSosDetailList) {
+                if (data.getPriority() == 3) {
+                    phonebookIdList.add(data.getPhonebookId());
                 }
             }
         }
-        if (mList.isEmpty()) {
-            showCustomAlertWithText(Constant.SOS_WARNINGS);
-            return;
+        if (!mList.isEmpty()) {
+            createSOSContactAPICall(mList);
         }
-        createSOSContactAPICall(mList);
+        if (!phonebookIdList.isEmpty()) {
+            deleteSOSContact(phonebookIdList);
+        }
+        if (!updateList.isEmpty()) {
+            // Todo
+        }
     }
 
     // Make SOS Contact API call
@@ -398,8 +494,18 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     }
 
     // Delete SOS contact API call
-    private void deleteSOSContact(String phonebookId) {
-        RequestHandler.getInstance(this).handleRequest(new DeleteSOSContactRequest(new DeleteSOSContactSuccessListener(), new DeleteSOSContactErrorListener(), phonebookId, deviceId, userToken));
+    private void deleteSOSContact(List<String> phonebookIdList) {
+        if (deletePhonebookCount != phonebookIdList.size()) {
+            phonebookId = phonebookIdList.get(deletePhonebookCount);
+            Util.getInstance().showProgressBarDialog(this);
+            RequestHandler.getInstance(this).handleRequest(new DeleteSOSContactRequest(new DeleteSOSContactSuccessListener(), new DeleteSOSContactErrorListener(), phonebookId, deviceId, userToken));
+        } else if (deletePhonebookCount == phonebookIdList.size()) {
+            Util.progressDialog.dismiss();
+            displayDataInSOSActivity();
+            phonebookIdList.clear();
+            deletePhonebookCount = 0;
+            Toast.makeText(this, Constant.DELETE_SOS_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -409,7 +515,9 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         @Override
         public void onResponse(Object response) {
             mDbManager.deleteSOSDetail(phonebookId);
-            displayDataInSOSActivity();
+            deletePhonebookCount++;
+            Util.progressDialog.dismiss();
+            deleteSOSContact(phonebookIdList);
         }
     }
 
@@ -420,6 +528,7 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         @Override
         public void onErrorResponse(VolleyError error) {
             System.out.println(Constant.DELETE_SOS_ERROR);
+            Util.progressDialog.dismiss();
         }
     }
 
