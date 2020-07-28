@@ -403,6 +403,8 @@ public class Constant {
     public static final String SOS_CREATION_SUCCESS_MSG = "SOS created successfully";
     public static final String DELETE_SOS_ERROR = "Unable to delete SOS cantact data";
     public static final String DELETE_SOS_SUCCESS_MSG = "SOS contact updated successfully";
+    public static final String ALREADY_SOS_EXIST = "This phone number already exists in SOS contacts, please delete the existing one or add new SOS contact.";
+    public static final String UPDATE_SOS_ERROR = "Unable to update the SOS contact, please try again.";
 
     public static final String LOWBATTERY = "Low Battery";
     public static final String POLLING_FREQUENCY = "Polling frequency";

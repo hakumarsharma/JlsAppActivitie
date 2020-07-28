@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -29,20 +27,22 @@ import com.jio.devicetracker.network.IRequest;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
-public class CreateSOSContactRequest implements IRequest {
+public class UpdateSOSContactRequest implements IRequest {
 
     private Response.Listener successListener;
     private Response.ErrorListener errorListener;
     private String userToken;
     private String deviceId;
     private SOSData sosData;
+    private String phonebookId;
 
-    public CreateSOSContactRequest(Response.Listener successListener, Response.ErrorListener errorListener, SOSData sosData, String userToken, String deviceId) {
+    public UpdateSOSContactRequest(Response.Listener successListener, Response.ErrorListener errorListener, SOSData sosData, String phonebookId, String userToken, String deviceId) {
         this.successListener = successListener;
         this.errorListener = errorListener;
         this.userToken = userToken;
         this.deviceId = deviceId;
         this.sosData = sosData;
+        this.phonebookId = phonebookId;
     }
 
     @Override
@@ -52,12 +52,12 @@ public class CreateSOSContactRequest implements IRequest {
 
     @Override
     public int getMethod() {
-        return Request.Method.POST;
+        return Request.Method.PUT;
     }
 
     @Override
     public String getAction() {
-        return Constant.DELETE_DEVICE_URL + deviceId + Constant.SOS_URL + userToken;
+        return Constant.DELETE_DEVICE_URL + deviceId + Constant.DELETE_SOS_CONTACT_URL + phonebookId + "?ugs_token=" + userToken;
     }
 
     @Override
@@ -81,3 +81,4 @@ public class CreateSOSContactRequest implements IRequest {
     }
 
 }
+

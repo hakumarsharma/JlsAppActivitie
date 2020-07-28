@@ -52,7 +52,9 @@ import com.jio.devicetracker.database.pojo.SOSData;
 import com.jio.devicetracker.database.pojo.request.CreateSOSContactRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteSOSContactRequest;
 import com.jio.devicetracker.database.pojo.request.GetAllSOSDetailRequest;
+import com.jio.devicetracker.database.pojo.request.UpdateSOSContactRequest;
 import com.jio.devicetracker.database.pojo.response.GetAllSOSDetailsResponse;
+import com.jio.devicetracker.database.pojo.response.UpdateSOSContactResponse;
 import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
@@ -86,6 +88,8 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     private List<String> phonebookIdList;
     private int deletePhonebookCount;
     private List<SOSContactData> updateList;
+    private int updateAPICount;
+    private List<SOSContactData> updateDataList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,6 +132,7 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         mList = new ArrayList<>(3);
         phonebookIdList = new ArrayList<>();
         updateList = new ArrayList<>();
+        updateDataList = new ArrayList<>();
         mDbManager = new DBManager(this);
         userToken = mDbManager.getAdminLoginDetail().getUserToken();
         List<GroupMemberDataList> groupMemberDataLists = mDbManager.getAllGroupMemberData();
@@ -378,8 +383,21 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         if (!phonebookIdList.isEmpty()) {
             deleteSOSContact(phonebookIdList);
         }
+        // If number is already added as a SOS Contact then display the alert
         if (!updateList.isEmpty()) {
-            // Todo
+            boolean isUpdateRequired = false;
+            for (SOSContactData mData : updateList) {
+                for (SOSContactData data : mSosDetailList) {
+                    if (mData.getNumber().equalsIgnoreCase(data.getNumber())) {
+                        showCustomAlertWithText(Constant.ALREADY_SOS_EXIST);
+                        isUpdateRequired = true;
+                        return;
+                    }
+                }
+            }
+            if (!isUpdateRequired) {
+                callUpdateAPI(updateList);
+            }
         }
     }
 
@@ -528,6 +546,62 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         @Override
         public void onErrorResponse(VolleyError error) {
             System.out.println(Constant.DELETE_SOS_ERROR);
+            Util.progressDialog.dismiss();
+        }
+    }
+
+    /**
+     * Make an update API call
+     *
+     * @param mList
+     */
+    private void callUpdateAPI(List<SOSContactData> mList) {
+        if (updateAPICount != mList.size()) {
+            SOSData sosData = new SOSData();
+            SOSData.Desired desired = sosData.new Desired();
+            SOSData.Desired.Phonebook phonebook = desired.new Phonebook();
+            phonebook.setName(Constant.EMERGENCY);
+            phonebook.setType(Constant.EMERGENCY);
+            phonebook.setNumber(mList.get(updateAPICount).getNumber());
+            phonebook.setPriority(mList.get(updateAPICount).getPriority());
+            desired.setPhonebook(phonebook);
+            sosData.setDesired(desired);
+            Util.getInstance().showProgressBarDialog(this);
+            RequestHandler.getInstance(this).handleRequest(new UpdateSOSContactRequest(new UpdateSOSSuccessListener(), new UpdateSOSErrorListener(), sosData, mList.get(updateAPICount).getPhonebookId(), userToken, deviceId));
+        } else if (updateAPICount == mList.size()) {
+            Util.progressDialog.dismiss();
+            mDbManager.updateSOSDatabase(updateDataList);
+            Toast.makeText(this, Constant.DELETE_SOS_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
+            updateAPICount = 0;
+            getAllSOSDetails();
+        }
+    }
+
+    /**
+     * Success Listener of Create SOS request
+     */
+    public class UpdateSOSSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            UpdateSOSContactResponse updateSOSContactResponse = Util.getInstance().getPojoObject(String.valueOf(response), UpdateSOSContactResponse.class);
+            SOSContactData sosContactData = new SOSContactData();
+            sosContactData.setPhonebookId(updateSOSContactResponse.getData().getId());
+            sosContactData.setPriority(updateSOSContactResponse.getData().getPriority());
+            sosContactData.setNumber(updateSOSContactResponse.getData().getNumber());
+            updateDataList.add(sosContactData);
+            updateAPICount++;
+            Util.progressDialog.dismiss();
+            callUpdateAPI(updateList);
+        }
+    }
+
+    /**
+     * Error Listener of Create SOS request
+     */
+    private class UpdateSOSErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            showCustomAlertWithText(Constant.UPDATE_SOS_ERROR);
             Util.progressDialog.dismiss();
         }
     }

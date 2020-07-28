@@ -724,6 +724,7 @@ public class DBManager {
 
     /**
      * Inserts data into the SOS table
+     *
      * @param mList
      */
     public void insertIntoSOSTable(List<SOSContactData> mList) {
@@ -756,8 +757,25 @@ public class DBManager {
         return mList;
     }
 
+    /**
+     * Delete the SOS contact based on PhoneId
+     *
+     * @param phonebookId
+     */
     public void deleteSOSDetail(String phonebookId) {
         mDatabase = mDBHelper.getWritableDatabase();
         mDatabase.delete(DatabaseHelper.TABLE_SOS, DatabaseHelper.PHONEBOOK_ID + "= '" + phonebookId + "';", null);
     }
+
+    // Update SOS database
+    public void updateSOSDatabase(List<SOSContactData> sosContactDataList) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        for (SOSContactData sosContactData : sosContactDataList) {
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.PRIORITY, sosContactData.getPriority());
+            values.put(DatabaseHelper.DEVICE_NUM, sosContactData.getNumber());
+            mDatabase.update(DatabaseHelper.TABLE_SOS, values, DatabaseHelper.PHONEBOOK_ID + "= '" + sosContactData.getPhonebookId() + "';", null);
+        }
+    }
+
 }
