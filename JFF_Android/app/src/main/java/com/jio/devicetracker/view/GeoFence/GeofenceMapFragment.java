@@ -90,7 +90,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     public static String TAG = "GeofenceMapFragment";
     public Toolbar toolbar;
     @SuppressWarnings("PMD.AvoidStringBufferField")
-    //private List<MapData> mapDataList;
     private DBManager mDbManager;
     private GeofenceHelper geofenceHelper;
     private int GEOFENCE_RADIUS_IN_METERS = 5000;
@@ -107,7 +106,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private String groupId;
     private double lat;
     private double lang;
-    //private GeofenceDetails geofenceDetails;
     private AlertHistoryData alertHistoryData;
     public static String consentId;
 
@@ -133,7 +131,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 List<GeofenceDetails> geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
                 if(geofenceDetail != null && !(geofenceDetail.size() ==0)) {
                     LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size() - 1).getLat(), geofenceDetail.get(geofenceDetail.size() - 1).getLng());
-                    int updateStatus = mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber, latlngOld);
+                    mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber, latlngOld);
                 }
             }
             geoFenceLatlng = new LatLng(lat, lang);
