@@ -47,7 +47,9 @@ import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.dashboard.DeviceFragment;
+import com.jio.devicetracker.view.people.ChooseGroupFromPeopleFlow;
 import com.jio.devicetracker.view.people.EditMemberDetailsActivity;
 
 import java.util.List;
@@ -168,6 +170,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         private ImageView devicesCloseOperation;
         private TextView editDevices;
         private TextView devicesDelete;
+        private TextView addToGroup;
         private TextView trackingDeviceName;
         private ImageView deviceMenubar;
         private ImageView deviceMemberIcon;
@@ -184,6 +187,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             devicesCloseOperation = itemView.findViewById(R.id.devicesCloseOperation);
             editDevices = itemView.findViewById(R.id.editDevices);
             devicesDelete = itemView.findViewById(R.id.devicesDelete);
+            addToGroup = itemView.findViewById(R.id.devicesAddToGroup);
             deviceMenubar = itemView.findViewById(R.id.deviceMenubar);
             devicesOperationLayout = itemView.findViewById(R.id.devicesOperationLayout);
             deviceMemberIcon = itemView.findViewById(R.id.deviceMemberIcon);
@@ -192,6 +196,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             editDevices.setOnClickListener(this);
             devicesDelete.setOnClickListener(this);
             devicesCloseOperation.setOnClickListener(this);
+            addToGroup.setOnClickListener(this);
         }
 
         @Override
@@ -202,6 +207,15 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
                     break;
                 case R.id.devicesCloseOperation:
                     devicesOperationLayout.setVisibility(View.GONE);
+                    break;
+                case R.id.devicesAddToGroup:
+                    devicesOperationLayout.setVisibility(View.GONE);
+                    DashboardMainActivity.flowFromDevice = true;
+                    Intent chooseGroupIntent = new Intent(mContext, ChooseGroupFromPeopleFlow.class);
+                    chooseGroupIntent.putExtra(Constant.TRACKEE_NAME, mList.get(getAdapterPosition()).getGroupName());
+                    chooseGroupIntent.putExtra(Constant.TRACKEE_NUMBER, mList.get(getAdapterPosition()).getPhoneNumber());
+                    chooseGroupIntent.putExtra(Constant.IS_DEVICE_ADD_TO_GROUP,true);
+                    mContext.startActivity(chooseGroupIntent);
                     break;
                 case R.id.devicesDelete:
                     //DeviceListAdapter.this.position = getAdapterPosition();

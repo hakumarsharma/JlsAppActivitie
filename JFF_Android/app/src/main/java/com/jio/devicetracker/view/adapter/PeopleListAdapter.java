@@ -125,9 +125,10 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)) {
             holder.memberStatus.setText(Constant.CONSENT_PENDING);
             holder.memberAddress.setText(Constant.CONSENT_PENDING_ADDRESS);
-            holder.shareInvite.setText(Constant.RE_SEND_INVITE);
             holder.memberIcon.setImageResource(R.drawable.pendinginvite);
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.pending_color));
+            holder.resendInvite.setVisibility(View.VISIBLE);
+            holder.resendInviteLine.setVisibility(View.VISIBLE);
         } else if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED)) {
             holder.memberStatus.setText(Constant.CONSENT_APPROVED_STATUS);
             holder.memberIcon.setImageResource(R.drawable.inviteaccepted);
@@ -142,7 +143,8 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.rejected_color));
             holder.memberAddress.setText(Constant.CONSENT_EXPIRED_ADDRESS);
             holder.memberIcon.setImageResource(R.drawable.invitetimeup);
-            holder.shareInvite.setText(Constant.RE_SEND_INVITE);
+            holder.resendInvite.setVisibility(View.VISIBLE);
+            holder.resendInviteLine.setVisibility(View.VISIBLE);
         }
     }
 
@@ -169,10 +171,10 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         private ImageView closeBtn;
         private TextView editText;
         private TextView removeFromGroupText;
-        private TextView shareInvite;
+        private TextView resendInvite;
         public RelativeLayout layoutOps;
         public CardView peoplAddressLayout;
-        private View removeFromGroupLine;
+        private View resendInviteLine;
 
         /**
          * Constructor where we find element from .xml file
@@ -191,13 +193,13 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             editText = itemView.findViewById(R.id.edit);
             layoutOps = itemView.findViewById(R.id.oprationLayout);
             removeFromGroupText = itemView.findViewById(R.id.remove_from_group);
-            shareInvite = itemView.findViewById(R.id.share_invite);
+            resendInvite = itemView.findViewById(R.id.peopleResendInvite);
             editText.setOnClickListener(this);
             removeFromGroupText.setOnClickListener(this);
-            shareInvite.setOnClickListener(this);
+            resendInvite.setOnClickListener(this);
             menuIcon.setOnClickListener(this);
             closeBtn.setOnClickListener(this);
-            removeFromGroupLine = itemView.findViewById(R.id.remove_from_group_line);
+            resendInviteLine = itemView.findViewById(R.id.peopleResendInviteLine);
         }
 
         @Override
@@ -208,11 +210,11 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
                     layoutOps.setVisibility(View.GONE);
                     break;
                 case R.id.consentStatus:
-                    if(mList.get(position).getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
-                        shareInvite.setVisibility(View.GONE);
-                        removeFromGroupLine.setVisibility(View.INVISIBLE);
-                        removeFromGroupText.setPadding(0,0,0,16);
-                    }
+//                    if(mList.get(position).getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
+//                        shareInvite.setVisibility(View.GONE);
+//                        removeFromGroupLine.setVisibility(View.INVISIBLE);
+//                        removeFromGroupText.setPadding(0,0,0,16);
+//                    }
                     layoutOps.setVisibility(View.VISIBLE);
                     break;
                 case R.id.edit:

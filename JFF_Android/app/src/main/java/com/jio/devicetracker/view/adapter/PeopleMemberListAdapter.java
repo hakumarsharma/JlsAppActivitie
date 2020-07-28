@@ -228,6 +228,7 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     Intent chooseGroupIntent = new Intent(mContext, ChooseGroupFromPeopleFlow.class);
                     chooseGroupIntent.putExtra(Constant.TRACKEE_NAME, mList.get(getAdapterPosition()).getGroupName());
                     chooseGroupIntent.putExtra(Constant.TRACKEE_NUMBER, mList.get(getAdapterPosition()).getPhoneNumber());
+                    chooseGroupIntent.putExtra(Constant.IS_PEOPLE_ADD_TO_GROUP,true);
                     mContext.startActivity(chooseGroupIntent);
                     break;
                 case R.id.deleteIndividualUser:

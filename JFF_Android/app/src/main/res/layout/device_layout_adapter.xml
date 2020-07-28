@@ -88,10 +88,31 @@
             android:background="@color/light_hash" />
 
         <TextView
-            android:id="@+id/devicesDelete"
+            android:id="@+id/devicesAddToGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/shareDevicesLine"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:text="Add to group"
+            android:textColor="@color/white"
+            android:textSize="@dimen/seventeen_dp"  />
+
+        <View
+            android:id="@+id/addToGroupLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/devicesAddToGroup"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/fourteen_dp"
+            android:background="@color/light_hash" />
+
+        <TextView
+            android:id="@+id/devicesDelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/addToGroupLine"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/ten_dp"
             android:text="Delete"
