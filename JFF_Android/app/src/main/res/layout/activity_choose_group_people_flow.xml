@@ -76,7 +76,7 @@
         android:layout_above="@+id/addLater"
         android:layout_marginBottom="@dimen/twenty_dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/login_selector"
+        android:background="@drawable/selector"
         android:text="Continue"/>
     <Button
         android:id="@+id/addLater"

@@ -48,6 +48,9 @@ import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.adapter.ChooseGroupListAdapter;
+import com.jio.devicetracker.view.adapter.DashboardAdapter;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
+import com.jio.devicetracker.view.group.ChooseGroupActivity;
 import com.jio.devicetracker.view.group.CreateGroupActivity;
 
 import java.util.ArrayList;
@@ -64,6 +67,8 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
     private TextView groupText;
     private List<HomeActivityListData> chooseGroupDataList;
     private Button continueChooseGroup;
+    private Boolean isFromPeopleAddToGroup;
+    private Boolean isFromDeviceAddToGroup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,6 +109,8 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         groupText = findViewById(R.id.group_detail_text);
         name = intent.getStringExtra(Constant.TRACKEE_NAME);
         phoneNumber = intent.getStringExtra(Constant.TRACKEE_NUMBER);
+        isFromPeopleAddToGroup = intent.getBooleanExtra(Constant.IS_PEOPLE_ADD_TO_GROUP,false);
+        isFromDeviceAddToGroup = intent.getBooleanExtra(Constant.IS_DEVICE_ADD_TO_GROUP,false);
         continueChooseGroup = findViewById(R.id.continueChooseGroup);
         continueChooseGroup.setOnClickListener(this);
         Button addLater = findViewById(R.id.addLater);
@@ -131,7 +138,19 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
                 addMemberToCreatedGroup(groupId);
                 break;
             case R.id.addLater:
-                createGroupAndAddContactDetails();
+                if (isFromPeopleAddToGroup){
+                    Intent intent = new Intent(this, DashboardMainActivity.class);
+                    intent.putExtra(Constant.Add_People, true);
+                    intent.putExtra(Constant.Add_Device, false);
+                    startActivity(intent);
+                } else if (isFromDeviceAddToGroup){
+                    Intent intent = new Intent(this, DashboardMainActivity.class);
+                    intent.putExtra(Constant.Add_People, false);
+                    intent.putExtra(Constant.Add_Device, true);
+                    startActivity(intent);
+                } else {
+                    createGroupAndAddContactDetails();
+                }
                 break;
             default:
                 // Todo
@@ -282,6 +301,9 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
             cardViewGroup.setVisibility(View.INVISIBLE);
             continueChooseGroup.setEnabled(false);
             continueChooseGroup.setBackground(getResources().getDrawable(R.drawable.selector));
+        }else {
+            continueChooseGroup.setEnabled(true);
+            continueChooseGroup.setBackground(getResources().getDrawable(R.drawable.login_selector));
         }
         GridLayoutManager mLayoutManager = new GridLayoutManager(this,4);
         RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);

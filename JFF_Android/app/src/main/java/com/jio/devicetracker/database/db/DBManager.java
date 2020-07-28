@@ -439,6 +439,14 @@ public class DBManager {
     }
 
     /**
+     * Delete the geofence data from geofence table
+     */
+    public void deleteGeofenceData(double latitude,double longnitude) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        mDatabase.delete(DatabaseHelper.TABLE_GEOFENCE, DatabaseHelper.LAT + "= " + latitude + " AND " + DatabaseHelper.LON+ "= "+longnitude, null);
+    }
+
+    /**
      * Insert into Group Member Table
      *
      * @param groupMemberResponse

@@ -171,12 +171,14 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         try {
             // May throw an IOException
             address = coder.getFromLocationName(strAddress, 10);
-            if (address == null || address.size()==0) {
+            if (address != null && !(address.size() ==0)) {
+                Address location = address.get(0);
+                p1 = new LatLng(location.getLatitude(), location.getLongitude());
+            } else {
                 return null;
             }
 
-            Address location = address.get(0);
-            p1 = new LatLng(location.getLatitude(), location.getLongitude());
+
 
         } catch (IOException ex) {
 
