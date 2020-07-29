@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -53,6 +54,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.view.BaseActivity;
 
 import java.io.IOException;
@@ -194,6 +196,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         bundle.putDouble(Constant.LONGNITUDE, latLng.longitude);
         bundle.putBoolean(Constant.CREATE_GEOFENCE, true);
         if (radius != 0) {
+            showCustomAlertWithText(Constant.EDIT_GEOFENCE_ALERT);
             bundle.putInt(Constant.GEOFENCE_RADIUS, radius);
         }
         fragmentMap.setArguments(bundle);
@@ -243,5 +246,14 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         if(requestCode==120){
             finish();
         }
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage) {
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        alertActivity.getWindow().setBackgroundDrawableResource(R.color.white);
+        alertActivity.alertWithOkButton(alertMessage);
     }
 }

@@ -379,6 +379,8 @@ public class Constant {
     public static final String MEDIA_TYPE = "text/plain";
     public static final String APPLICATION_JSON = "application/json";
     public static final String REMOVED = "removed";
+    public static final String CREATE_GEOFENCE_ALERT = "Created geofence on current location. Click 3 dots to edit created geofence.";
+    public static final String EDIT_GEOFENCE_ALERT = "Upated geofence successfully. ZoomIn or ZoomOut to see radius.";
     public static final String USER_ID = "userId";
     public static final String OK = "OK";
     public static final String CANCEL = "Cancel";

@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -69,6 +70,7 @@ import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
 import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
 import com.jio.devicetracker.view.menu.settings.GeofenceSettingsAcivity;
@@ -115,6 +117,9 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.locationOnMap);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
         groupId = getActivity().getIntent().getStringExtra(Constant.GROUP_ID);
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
@@ -150,10 +155,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.locationOnMap);
-        assert mapFragment != null;
-        mapFragment.getMapAsync(this);
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         MapsInitializer.initialize(getContext());
         mGeofencingClient = LocationServices.getGeofencingClient(getActivity());
@@ -202,6 +203,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         if (geofenceDetails != null && geofenceDetails.getLat() != 0 && geofenceDetails.getLng() != 0) {
             geoFenceLatlng = new LatLng(geofenceDetails.getLat(), geofenceDetails.getLng());
         } else {
+            showCustomAlertWithText(Constant.CREATE_GEOFENCE_ALERT);
             geoFenceLatlng = new LatLng(trackeeLatlng.latitude, trackeeLatlng.longitude);
 
         }
@@ -432,5 +434,13 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             }
             notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, memberName + Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
         }
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage) {
+        CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
+        alertActivity.show();
+        alertActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        alertActivity.alertWithOkButton(alertMessage);
     }
 }
