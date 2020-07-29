@@ -57,6 +57,8 @@ public class GeofenceMapViewFragment extends Fragment implements OnMapReadyCallb
     private static StringBuilder strAddress = null;
     private static Context context = null;
     List<GeofenceDetails> geofenceDetail;
+    private DBManager mDbManager;
+    private String deviceNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,8 +68,8 @@ public class GeofenceMapViewFragment extends Fragment implements OnMapReadyCallb
         context = getContext();
         strAddress = new StringBuilder();
         //List<MapData> mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
-        String deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
-        DBManager mDbManager = new DBManager(getActivity());
+        deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
+        mDbManager = new DBManager(getActivity());
         geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
 
 
@@ -125,5 +127,15 @@ public class GeofenceMapViewFragment extends Fragment implements OnMapReadyCallb
             circleOptions.strokeWidth(4);
             mMap.addCircle(circleOptions);
         }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onResume() {
+        super.onResume();
+        geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
+        if (mMap != null) {
+            onMapReady(mMap);
+        }
     }
+}
 

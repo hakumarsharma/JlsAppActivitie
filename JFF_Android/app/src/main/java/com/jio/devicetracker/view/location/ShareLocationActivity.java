@@ -20,6 +20,7 @@
 
 package com.jio.devicetracker.view.location;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -233,7 +234,15 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
             }
             intent.putExtra(Constant.GROUP_ID, groupId);
             intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
-            startActivity(intent);
+            startActivityForResult(intent,10);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 10){
+            finish();
         }
     }
 }

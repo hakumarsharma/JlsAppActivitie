@@ -379,6 +379,8 @@ public class Constant {
     public static final String MEDIA_TYPE = "text/plain";
     public static final String APPLICATION_JSON = "application/json";
     public static final String REMOVED = "removed";
+    public static final String CREATE_GEOFENCE_ALERT = "Created geofence on current location. Click 3 dots to edit created geofence.";
+    public static final String EDIT_GEOFENCE_ALERT = "Upated geofence successfully. ZoomIn or ZoomOut to see radius.";
     public static final String USER_ID = "userId";
     public static final String OK = "OK";
     public static final String CANCEL = "Cancel";
@@ -390,8 +392,9 @@ public class Constant {
     public static final String GEOFENCE_EDIT = "Edit Geofence";
     public static final String GEOFENCE_ENTRY_TITLE = "Geofence entry alert";
     public static final String GEOFENCE_EXIT_TITLE = "Geofence exit alert";
-    public static final String GEOFENCE_ENTRY_MESSAGE = " has entered into geofence limit";
-    public static final String GEOFENCE_EXIT_MESSAGE = " has moved out of geofence limit";
+    public static final String GEOFENCE_ENTRY_MESSAGE = " has entered into ";
+    public static final String GEOFENCE_EXIT_MESSAGE = " has moved out from geofence limit";
+    public static final String GEOFENCE_LIMIT = "geofence limit";
     public static final String GEOFENCE_Alert_Message = "Geofence can not be created. Please wait till consent is approved";
     public static final String GEOFENCE_PEOPLE_Alert_Message = "Geofence can not be created. Location is not available.";
     public static final String GEOFENCE_DEVICE_Alert_Message = "Geofence can not be created. Location is not available for this device";
