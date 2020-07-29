@@ -392,8 +392,9 @@ public class Constant {
     public static final String GEOFENCE_EDIT = "Edit Geofence";
     public static final String GEOFENCE_ENTRY_TITLE = "Geofence entry alert";
     public static final String GEOFENCE_EXIT_TITLE = "Geofence exit alert";
-    public static final String GEOFENCE_ENTRY_MESSAGE = " has entered into geofence limit";
-    public static final String GEOFENCE_EXIT_MESSAGE = " has moved out of geofence limit";
+    public static final String GEOFENCE_ENTRY_MESSAGE = " has entered into ";
+    public static final String GEOFENCE_EXIT_MESSAGE = " has moved out from geofence limit";
+    public static final String GEOFENCE_LIMIT = "geofence limit";
     public static final String GEOFENCE_Alert_Message = "Geofence can not be created. Please wait till consent is approved";
     public static final String GEOFENCE_PEOPLE_Alert_Message = "Geofence can not be created. Location is not available.";
     public static final String GEOFENCE_DEVICE_Alert_Message = "Geofence can not be created. Location is not available for this device";

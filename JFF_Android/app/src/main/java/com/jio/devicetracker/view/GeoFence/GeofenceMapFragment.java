@@ -211,9 +211,10 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         addCircle(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS);
         addGeofence(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS);
+        String address = Util.getAddressFromLocation(geoFenceLatlng.latitude,geoFenceLatlng.longitude,getActivity());
         float distance = distance((float) geoFenceLatlng.latitude, (float) geoFenceLatlng.longitude, (float) trackeeLatlng.latitude, (float) trackeeLatlng.longitude);
         int radiusDifference = (int) distance;
-        trackGeofenceTransition(radiusDifference);
+        trackGeofenceTransition(radiusDifference,address);
 
 
         //mMap.setMyLocationEnabled(true);
@@ -383,8 +384,9 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                             alertHistoryData.setNumber(grpMembers.getNumber());
                             trackeeLatlng = new LatLng(data.getLocation().getLat(), data.getLocation().getLng());
                             float distanceBetweenRadius = distance((float) geoFenceLatlng.latitude, (float) geoFenceLatlng.longitude, (float) trackeeLatlng.latitude, (float) trackeeLatlng.longitude);
+                            String address = Util.getAddressFromLocation(geoFenceLatlng.latitude,geoFenceLatlng.longitude,getActivity());
                             consentId = grpMembers.getConsentId();
-                            trackGeofenceTransition((int) distanceBetweenRadius);
+                            trackGeofenceTransition((int) distanceBetweenRadius,address);
                         }
                     }
                 }
@@ -417,7 +419,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void trackGeofenceTransition(int distance) {
+    public void trackGeofenceTransition(int distance,String address) {
         NotificationHelper notificationHelper = new NotificationHelper(getActivity());
         if (distance < GEOFENCE_RADIUS_IN_METERS && GeofenceSettingsAcivity.geoFenceEntryNotificationFlag) {
             geoFenceEntryExit = true;
@@ -425,7 +427,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 alertHistoryData.setState(Constant.ENTRY);
                 mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             }
-            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE, memberName + Constant.GEOFENCE_ENTRY_MESSAGE, NotificationsAlertsActivity.class);
+            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE, memberName + Constant.GEOFENCE_ENTRY_MESSAGE + address + Constant.GEOFENCE_LIMIT, NotificationsAlertsActivity.class);
         } else if (distance > GEOFENCE_RADIUS_IN_METERS && geoFenceEntryExit && GeofenceSettingsAcivity.geoFenceExitNotificationFlag) {
             geoFenceEntryExit = false;
             if (alertHistoryData != null) {
