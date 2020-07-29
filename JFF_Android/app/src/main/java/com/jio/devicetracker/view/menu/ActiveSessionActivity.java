@@ -286,10 +286,11 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
         for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
             HomeActivityListData data = new HomeActivityListData();
             if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
-                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                    && (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                        || mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME))
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(userId)
-                    && !groupMemberDataList.getUserId().equalsIgnoreCase(userId)
+                    && !groupMemberDataList.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())
                     && (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)
                     || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING))) {
                 data.setName(groupMemberDataList.getName());
@@ -301,6 +302,7 @@ public class ActiveSessionActivity extends AppCompatActivity implements View.OnC
                 data.setGroupId(groupMemberDataList.getGroupId());
                 data.setFrom(mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getFrom());
                 data.setTo(mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getTo());
+                data.setGroupName(mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName());
                 listOnActiveSession.add(data);
             }
         }

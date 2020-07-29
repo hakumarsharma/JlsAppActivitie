@@ -65,39 +65,9 @@
                         android:inputType="phone"
                         android:textAlignment="center"
                         android:textColor="@color/black"
+                        android:layout_centerHorizontal="true"
                         android:textColorHint="@color/hintColor"
                         android:textCursorDrawable="@color/black" />
-
-                    <View
-                        android:id="@+id/deviderLine"
-                        android:layout_width="2dp"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_toRightOf="@id/sos1ContactNumber"
-                        android:background="@android:color/darker_gray" />
-
-                    <TextView
-                        android:id="@+id/mTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="14dp"
-                        android:layout_toRightOf="@id/deviderLine"
-                        android:text="M"
-                        android:textColor="@color/black"
-                        android:textSize="17dp" />
-
-                    <Spinner
-                        android:id="@+id/sosSpinner"
-                        style="@style/SpinnerStyle"
-                        android:layout_width="25dp"
-                        android:layout_height="28dp"
-                        android:layout_marginTop="12dp"
-                        android:background="@drawable/ic_arrow_configure"
-                        android:popupBackground="@drawable/spinner_layout"
-                        android:layout_toRightOf="@id/mTextView" />
 
                 </RelativeLayout>
 
@@ -132,39 +102,9 @@
                         android:inputType="phone"
                         android:textAlignment="center"
                         android:textColor="@color/black"
+                        android:layout_centerHorizontal="true"
                         android:textColorHint="@color/hintColor"
                         android:textCursorDrawable="@color/black" />
-
-                    <View
-                        android:id="@+id/devider2Line"
-                        android:layout_width="2dp"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_toRightOf="@id/sos2ContactNumber"
-                        android:background="@android:color/darker_gray" />
-
-                    <TextView
-                        android:id="@+id/mTextView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="14dp"
-                        android:layout_toRightOf="@id/devider2Line"
-                        android:text="M"
-                        android:textColor="@color/black"
-                        android:textSize="17dp" />
-
-                    <Spinner
-                        android:id="@+id/sosSpinner2"
-                        style="@style/SpinnerStyle"
-                        android:layout_width="25dp"
-                        android:layout_height="28dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_toRightOf="@id/mTextView2"
-                        android:popupBackground="@drawable/spinner_layout"
-                        android:background="@drawable/ic_arrow_configure" />
 
                 </RelativeLayout>
 
@@ -200,38 +140,8 @@
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textColorHint="@color/hintColor"
-                        android:textCursorDrawable="@color/black" />
-
-                    <View
-                        android:id="@+id/devider3Line"
-                        android:layout_width="2dp"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_toRightOf="@id/sos3ContactNumber"
-                        android:background="@android:color/darker_gray" />
-
-                    <TextView
-                        android:id="@+id/mTextView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="14dp"
-                        android:layout_toRightOf="@id/devider3Line"
-                        android:text="M"
-                        android:textColor="@color/black"
-                        android:textSize="17dp" />
-
-                    <Spinner
-                        android:id="@+id/sosSpinner3"
-                        style="@android:style/Widget.Holo.Light.Spinner"
-                        android:layout_width="25dp"
-                        android:layout_height="28dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_toRightOf="@id/mTextView3"
-                        android:popupBackground="@drawable/spinner_layout"
-                        android:background="@drawable/ic_arrow_configure" />
+                        android:textCursorDrawable="@color/black" />
 
                 </RelativeLayout>
 

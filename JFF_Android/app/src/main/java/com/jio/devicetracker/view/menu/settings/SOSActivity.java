@@ -63,10 +63,7 @@ import com.jio.devicetracker.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SOSActivity extends Activity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
-    private Spinner sosSpinner;
-    private Spinner sosSpinner2;
-    private Spinner sosSpinner3;
+public class SOSActivity extends Activity implements View.OnClickListener {
     private ImageView contact1ImageView;
     private ImageView contact2ImageView;
     private ImageView contact3ImageView;
@@ -107,18 +104,9 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         backBtn.setOnClickListener(this);
-        sosSpinner = findViewById(R.id.sosSpinner);
-        sosSpinner2 = findViewById(R.id.sosSpinner2);
-        sosSpinner3 = findViewById(R.id.sosSpinner3);
-        sosSpinner.setOnItemSelectedListener(this);
-        sosSpinner2.setOnItemSelectedListener(this);
-        sosSpinner3.setOnItemSelectedListener(this);
         String[] items = {"Mobile", "Landline"};
         ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, items);
         aa.setDropDownViewResource(R.layout.sos_spinner);
-        sosSpinner.setAdapter(aa);
-        sosSpinner2.setAdapter(aa);
-        sosSpinner3.setAdapter(aa);
         contact1ImageView = findViewById(R.id.contact1ImageView);
         contact1ImageView.setOnClickListener(this);
         contact2ImageView = findViewById(R.id.contact2ImageView);
@@ -182,16 +170,6 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
                 // Todo
                 break;
         }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // Todo
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Todo
     }
 
     // Open Contact list of phone
@@ -454,7 +432,7 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
 
     // Get all SOS details API calls
     private void getAllSOSDetails() {
-        if(isProgressbarDialog) {
+        if (isProgressbarDialog) {
             Util.getInstance().showProgressBarDialog(this);
         }
         AdminLoginData adminLoginData = mDbManager.getAdminLoginDetail();
@@ -489,7 +467,7 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
                 }
             }
             mDbManager.insertIntoSOSTable(mList);
-            if(isProgressbarDialog) {
+            if (isProgressbarDialog) {
                 Util.progressDialog.dismiss();
             }
             displayDataInSOSActivity();
@@ -502,8 +480,8 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
     private class GetAllSOSDetailErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if(isProgressbarDialog) {
-            Util.progressDialog.dismiss();
+            if (isProgressbarDialog) {
+                Util.progressDialog.dismiss();
             }
         }
     }
@@ -534,6 +512,7 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
             phonebookIdList.clear();
             deletePhonebookCount = 0;
             Toast.makeText(this, Constant.DELETE_SOS_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, SOSDetailActivity.class));
         }
     }
 
@@ -589,6 +568,7 @@ public class SOSActivity extends Activity implements View.OnClickListener, Adapt
             Toast.makeText(this, Constant.DELETE_SOS_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
             updateAPICount = 0;
             getAllSOSDetails();
+            startActivity(new Intent(this, SOSDetailActivity.class));
         }
     }
 

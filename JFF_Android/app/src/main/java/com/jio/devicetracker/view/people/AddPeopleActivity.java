@@ -343,7 +343,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         setEditTextValues();
         addMemberInGroupAPICall();
         setButtonBackground(addContact_Continue, true);
-
     }
 
     public void getAllMembers(List<GroupMemberResponse.Data> memberList) {

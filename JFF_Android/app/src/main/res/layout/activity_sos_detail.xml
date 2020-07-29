@@ -53,7 +53,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="17dp"
                 android:layout_below="@id/sosContact1TextView"
-                android:text="Test"
                 android:layout_alignStart="@id/sosContact1TextView"
                 android:textColor="@color/alert_text_color"/>
 
@@ -74,7 +73,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="17dp"
                 android:layout_below="@id/sosContact2TextView"
-                android:text="Test"
                 android:layout_alignStart="@id/sosContact1TextView"
                 android:textColor="@color/alert_text_color"/>
 
@@ -95,7 +93,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="17dp"
                 android:layout_below="@id/sosContact3TextView"
-                android:text="Test"
                 android:layout_alignStart="@id/sosContact1TextView"
                 android:textColor="@color/alert_text_color"/>
 

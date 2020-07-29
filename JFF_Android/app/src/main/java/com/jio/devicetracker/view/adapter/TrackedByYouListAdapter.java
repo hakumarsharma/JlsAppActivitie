@@ -99,9 +99,12 @@ public class TrackedByYouListAdapter extends RecyclerView.Adapter<TrackedByYouLi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HomeActivityListData data = mList.get(position);
-        if (data.getConsentId() != null) {
+        if (data.getConsentId() != null && data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
             holder.name.setText(data.getName());
             holder.profile.setImageResource(R.drawable.default_user);
+        } else if(data.getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME)) {
+            holder.profile.setImageResource(R.drawable.device_default);
+            holder.name.setText(data.getName());
         } else {
             holder.profile.setImageResource(R.drawable.ic_family_group);
             holder.name.setText(data.getGroupName());

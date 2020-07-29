@@ -28,8 +28,18 @@ import java.util.List;
 public class GroupMemberResponse implements Serializable {
     @SerializedName("code")
     private int code;
+    @SerializedName("message")
+    private String message;
     @SerializedName("data")
     private List<Data> data;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public int getCode() {
         return code;

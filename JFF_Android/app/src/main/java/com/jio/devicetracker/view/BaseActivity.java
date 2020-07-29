@@ -34,6 +34,7 @@ import com.jio.devicetracker.database.pojo.DeviceTableData;
 import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
 import com.jio.devicetracker.database.pojo.request.CreateGroupRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupMemberRequest;
+import com.jio.devicetracker.database.pojo.response.AddMemberInGroupErrorListener;
 import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -46,6 +47,10 @@ import com.jio.devicetracker.view.device.DeviceNameActivity;
 import com.jio.devicetracker.view.group.CreateGroupActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,9 +157,9 @@ public class BaseActivity extends AppCompatActivity {
         List<String> mList = new ArrayList<>();
         mList.add(Constant.EVENTS);
         consents.setEntities(mList);
-        if (memberNumber.length() == 15){
+        if (memberNumber.length() == 15) {
             consents.setImei(memberNumber);
-        }else {
+        } else {
             consents.setPhone(memberNumber);
         }
         consents.setName(memberName);
@@ -174,9 +179,9 @@ public class BaseActivity extends AppCompatActivity {
         List<String> mList = new ArrayList<>();
         mList.add(Constant.EVENTS);
         consents.setEntities(mList);
-        if (memberNumber.length() == 15){
+        if (memberNumber.length() == 15) {
             consents.setImei(memberNumber);
-        }else {
+        } else {
             consents.setPhone(memberNumber);
         }
         consents.setName(memberName);
@@ -218,7 +223,7 @@ public class BaseActivity extends AppCompatActivity {
                         intent.putExtra(Constant.Add_Device, true);
                     }
                     startActivity(intent);
-                } else if(CreateGroupActivity.addMemberInGroup) {
+                } else if (CreateGroupActivity.addMemberInGroup) {
                     Util.progressDialog.dismiss();
                     Intent intent = new Intent(BaseActivity.this, DashboardMainActivity.class);
                     intent.putExtra(Constant.Add_People, false);
@@ -240,22 +245,25 @@ public class BaseActivity extends AppCompatActivity {
     private class AddMemberInGroupRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
+            try {
                 Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
-            } else if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
-                // Make Verify and Assign call
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.DEVICE_NOT_FOUND);
-            } else if(error.networkResponse.statusCode == Constant.STATUS_CODE_429){
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.GROUP_LIMIT_EXCEED);
-            } else if(error.networkResponse.statusCode == Constant.STATUS_CODE_401){
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.USER_ALREADY_ADDED_ERROR);
-            } else {
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
+                AddMemberInGroupErrorListener groupMemberResponse = Util.getInstance().getPojoObject(new String(error.networkResponse.data, "utf-8"), AddMemberInGroupErrorListener.class);
+                if (groupMemberResponse.getCode() == Constant.STATUS_CODE_409 && groupMemberResponse.getData().getmList().get(0).getMessage().equalsIgnoreCase(Constant.DEVICE_NOT_FOUND_ERROR)) {
+                    showCustomAlertWithText(Constant.DEVICE_NOT_FOUND_MESSAGE);
+                } else if(groupMemberResponse.getCode() == Constant.STATUS_CODE_409) {
+                    showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
+                } else if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
+                    // Make Verify and Assign call
+                    showCustomAlertWithText(Constant.DEVICE_NOT_FOUND);
+                } else if (error.networkResponse.statusCode == Constant.STATUS_CODE_429) {
+                    showCustomAlertWithText(Constant.GROUP_LIMIT_EXCEED);
+                } else if (error.networkResponse.statusCode == Constant.STATUS_CODE_401) {
+                    showCustomAlertWithText(Constant.USER_ALREADY_ADDED_ERROR);
+                } else {
+                    showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
         }
     }

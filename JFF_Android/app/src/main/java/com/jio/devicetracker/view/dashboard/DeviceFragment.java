@@ -206,6 +206,18 @@ public class DeviceFragment extends Fragment {
     }
 
     /**
+     * Search Event Request API Call Error listener
+     */
+    private class SearchEventRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
+            showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
+        }
+
+    }
+
+    /**
      * Navigates to the Map activity
      */
     private void goToMapActivity(List<MapData> mapDataList) {
@@ -218,19 +230,6 @@ public class DeviceFragment extends Fragment {
         intent.putExtra(Constant.DEVICE_LOCATION,true);
         intent.putExtra(Constant.GROUP_STATUS, homeActivityListData.getStatus());
         startActivity(intent);
-    }
-
-
-    /**
-     * Search Event Request API Call Error listener
-     */
-    private class SearchEventRequestErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Util.progressDialog.dismiss();
-            showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
-        }
-
     }
 
     /**

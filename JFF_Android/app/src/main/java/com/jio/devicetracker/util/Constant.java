@@ -445,6 +445,8 @@ public class Constant {
     public static final String ENTER_NAME = "Please enter contact name";
     public static final String ADD_GROUP = "Add to group";
     public static final String DEVICE_NOT_FOUND_QR = "Device not found";
+    public static final String DEVICE_NOT_FOUND_ERROR = "Device not found.";
+    public static final String DEVICE_NOT_FOUND_MESSAGE = "Device not found, please add a registered mobile number";
     public static final String MEMBER_NAME = "memberName";
     public static final String MEMBER_ADDRESS = "memberAddress";
     public static final String LAT = "lat";
@@ -512,6 +514,7 @@ public class Constant {
     // Settings Activity
     public static final String SETTINGS = "Settings";
     public static final String SOS_MODE = "SOS";
+    public static final String SOS_DETAILS = "SOS Contacts";
 
     // NavigateSupport Activity
     public static final String SUPPORT_TITLE = "Support";
