@@ -412,7 +412,7 @@ public class Constant {
     public static final String ALREADY_SOS_EXIST = "This phone number already exists in SOS contacts, please delete the existing one or add new SOS contact.";
     public static final String UPDATE_SOS_ERROR = "Unable to update the SOS contact, please try again.";
     public static final String NO_SOS_CONTACT_WARNING = "No SOS contact details are added, please add it first in setting.";
-    public static final String NO_SOS_PRIMARY_CONTACT = "No SOS primary contact is available to make a call, please add it in setting.";
+    public static final String NO_SOS_PRIMARY_CONTACT = "SOS primary contact is available to make a call, please add it in setting.";
 
     public static final String LOWBATTERY = "Low Battery";
     public static final String POLLING_FREQUENCY = "Polling frequency";

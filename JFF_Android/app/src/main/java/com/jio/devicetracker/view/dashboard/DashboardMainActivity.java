@@ -366,11 +366,13 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                 sos3PhoneNumber = mSosContactData.getNumber();
             }
         }
-        if(sos1PhoneNumber == null && sos2PhoneNumber == null && sos3PhoneNumber == null) {
+        if (sos1PhoneNumber == null && sos2PhoneNumber == null && sos3PhoneNumber == null) {
             showCustomAlertWithText(Constant.NO_SOS_CONTACT_WARNING);
             return;
         }
-        if (sos1PhoneNumber != null) {
+        if (sos1PhoneNumber == null) {
+            showCustomAlertWithText(Constant.NO_SOS_PRIMARY_CONTACT);
+        } else {
             makePhoneCall(sos1PhoneNumber);
         }
         if (sos2PhoneNumber != null) {
@@ -392,11 +394,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             showCustomAlertWithText(Constant.CALL_PERMISSION);
             return;
         }
-        if (phoneNumber == null) {
-            showCustomAlertWithText(Constant.NO_SOS_PRIMARY_CONTACT);
-        } else {
-            startActivity(callIntent);
-        }
+        startActivity(callIntent);
     }
 
     /**
