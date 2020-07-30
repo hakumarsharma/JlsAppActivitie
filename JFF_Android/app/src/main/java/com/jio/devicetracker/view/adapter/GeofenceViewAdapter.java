@@ -6,8 +6,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.jio.devicetracker.view.geofence.GeofenceListViewFragment;
 import com.jio.devicetracker.view.geofence.GeofenceMapViewFragment;
-import com.jio.devicetracker.view.location.MapFragment;
-import com.jio.devicetracker.view.location.MapPeopleListFragment;
 
 public class GeofenceViewAdapter extends FragmentPagerAdapter {
 

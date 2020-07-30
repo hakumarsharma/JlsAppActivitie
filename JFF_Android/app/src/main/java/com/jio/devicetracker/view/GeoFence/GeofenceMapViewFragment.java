@@ -53,9 +53,6 @@ public class GeofenceMapViewFragment extends Fragment implements OnMapReadyCallb
     public static GoogleMap mMap;
     public static final int MY_PERMISSIONS_REQUEST_MAPS = 101;
     public Toolbar toolbar;
-    @SuppressWarnings("PMD.AvoidStringBufferField")
-    private static StringBuilder strAddress = null;
-    private static Context context = null;
     List<GeofenceDetails> geofenceDetail;
     private DBManager mDbManager;
     private String deviceNumber;
@@ -65,9 +62,6 @@ public class GeofenceMapViewFragment extends Fragment implements OnMapReadyCallb
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
-        context = getContext();
-        strAddress = new StringBuilder();
-        //List<MapData> mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         mDbManager = new DBManager(getActivity());
         geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
