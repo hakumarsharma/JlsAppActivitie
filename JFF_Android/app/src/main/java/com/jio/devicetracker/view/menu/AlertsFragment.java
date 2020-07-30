@@ -79,9 +79,10 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
         for (GroupMemberDataList groupMemberDataList : groupMemberDataLists) {
             if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
-                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                    && (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
+                    || mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_DEVICE_GROUP_NAME))
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)
-                    && !groupMemberDataList.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
+                    && !groupMemberDataList.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())
                     && groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
                 AlertHistoryData mAlertHistoryData = new AlertHistoryData();
                 mAlertHistoryData.setName(groupMemberDataList.getName());

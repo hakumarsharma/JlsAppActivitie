@@ -373,7 +373,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 for (SearchEventResponse.Data data : mList) {
                     for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
                         if (grpMembers.getDeviceId() != null && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice())
-                                && !grpMembers.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
+                                && !grpMembers.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())
                                 && grpMembers.getUserId().equalsIgnoreCase(data.getUserId())) {
                             onMapReady(mMap);
                             SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");

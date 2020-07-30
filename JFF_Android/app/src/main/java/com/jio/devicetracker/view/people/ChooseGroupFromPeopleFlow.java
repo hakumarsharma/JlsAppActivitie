@@ -102,6 +102,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         title.setText(Constant.ADD_GROUP);
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
         ImageView add = findViewById(R.id.createGroup);
         add.setVisibility(View.VISIBLE);
         add.setOnClickListener(this);

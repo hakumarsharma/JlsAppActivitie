@@ -369,10 +369,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         if (sos1PhoneNumber != null) {
             makePhoneCall(sos1PhoneNumber);
         }
-        if(sos2PhoneNumber != null) {
+        if (sos2PhoneNumber != null) {
             sendCurrentLocationInSMS(sos2PhoneNumber);
         }
-        if(sos3PhoneNumber != null) {
+        if (sos3PhoneNumber != null) {
             sendCurrentLocationInSMS(sos3PhoneNumber);
         }
     }
@@ -391,13 +391,13 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
-     * Sends current in SMS
+     * Sends current location in SMS
      * @param phoneNumber
      */
     private void sendCurrentLocationInSMS(String phoneNumber) {
         Location location = getCurrentLocation();
         SmsManager smgr = SmsManager.getDefault();
-        smgr.sendTextMessage(phoneNumber,null, "http://maps.google.com/maps?q=loc:" + location.getLatitude() + "," + location.getLongitude(),null,null);
+        smgr.sendTextMessage(phoneNumber, null, "http://maps.google.com/maps?q=loc:" + location.getLatitude() + "," + location.getLongitude(), null, null);
     }
 
     /**
