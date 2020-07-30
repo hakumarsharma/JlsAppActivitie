@@ -366,6 +366,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
                 sos3PhoneNumber = mSosContactData.getNumber();
             }
         }
+        if(sos1PhoneNumber == null && sos2PhoneNumber == null && sos3PhoneNumber == null) {
+            showCustomAlertWithText(Constant.NO_SOS_CONTACT_WARNING);
+            return;
+        }
         if (sos1PhoneNumber != null) {
             makePhoneCall(sos1PhoneNumber);
         }
@@ -379,6 +383,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
 
     /**
      * Make SOS phone Call
+     *
      * @param phoneNumber
      */
     private void makePhoneCall(String phoneNumber) {
@@ -387,11 +392,14 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             showCustomAlertWithText(Constant.CALL_PERMISSION);
             return;
         }
-        startActivity(callIntent);
+        if (phoneNumber != null) {
+            startActivity(callIntent);
+        }
     }
 
     /**
      * Sends current location in SMS
+     *
      * @param phoneNumber
      */
     private void sendCurrentLocationInSMS(String phoneNumber) {

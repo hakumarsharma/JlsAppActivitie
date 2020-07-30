@@ -75,9 +75,9 @@
                     android:id="@+id/contact1ImageView"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
                     android:layout_marginTop="42dp"
-                    android:layout_toRightOf="@id/contact1_layout"
                     android:background="@drawable/ic_addfromcontact" />
             </RelativeLayout>
 
@@ -112,9 +112,9 @@
                     android:id="@+id/contact2ImageView"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
                     android:layout_marginTop="42dp"
-                    android:layout_toRightOf="@id/contact2_layout"
                     android:background="@drawable/ic_addfromcontact" />
             </RelativeLayout>
 
@@ -149,9 +149,9 @@
                     android:id="@+id/contact3ImageView"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
                     android:layout_marginTop="42dp"
-                    android:layout_toRightOf="@id/contact3_layout"
                     android:background="@drawable/ic_addfromcontact" />
 
                 <Button

@@ -402,7 +402,6 @@ public class SOSActivity extends Activity implements View.OnClickListener {
             phonebook.setPriority(sosDetailsList.get(apiCount).getPriority());
             desired.setPhonebook(phonebook);
             sosData.setDesired(desired);
-            apiCount++;
             Util.getInstance().showProgressBarDialog(this);
             RequestHandler.getInstance(this).handleRequest(new CreateSOSContactRequest(new CreateSOSSuccessListener(), new CreateSOSErrorListener(), sosData, userToken, deviceId));
         }
@@ -415,6 +414,7 @@ public class SOSActivity extends Activity implements View.OnClickListener {
         @Override
         public void onResponse(Object response) {
             Util.progressDialog.dismiss();
+            apiCount++;
             createSOSContactAPICall(mList);
         }
     }
