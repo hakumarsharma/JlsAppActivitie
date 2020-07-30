@@ -22,6 +22,7 @@ package com.jio.devicetracker.view.dashboard;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.Size;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,6 +53,7 @@ import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
+import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.view.Display;
@@ -80,11 +82,16 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ApproveRejectConsentData;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
+import com.jio.devicetracker.database.pojo.SOSContactData;
 import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
+import com.jio.devicetracker.database.pojo.request.GetAllSOSDetailRequest;
 import com.jio.devicetracker.database.pojo.request.RejectConsentRequest;
 import com.jio.devicetracker.database.pojo.response.ApproveRejectAPIResponse;
+import com.jio.devicetracker.database.pojo.response.GetAllSOSDetailsResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
+import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
@@ -128,6 +135,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     public static boolean flowFromPeople;
     public static boolean flowFromGroup;
     public static boolean flowFromDevice;
+    private static final int PERMIT_ALL = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +147,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         drawerLayout = findViewById(R.id.drawerLayout);
         title.setText(Constant.DASHBOARD_TITLE);
         title.setTypeface(Util.mTypeface(this, 5));
+        ImageView sosCall = findViewById(R.id.sosCall);
+        sosCall.setVisibility(View.VISIBLE);
+        sosCall.setOnClickListener(this);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.drawerOpen, R.string.drawerClose);
@@ -187,7 +198,16 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         } else {
             viewPager.setCurrentItem(0);
         }
+//        requestPermission();
     }
+
+    /*// Request for Phone Call Permissions
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMIT_ALL);
+        }
+    }*/
+
 
     // Blocking user to go back to login screen, after login
     @Override
@@ -252,57 +272,70 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.createGroup) {
-            switch (viewPager.getCurrentItem()) {
-                case 0:
-                    flowFromGroup = true;
-                    flowFromPeople = false;
-                    flowFromDevice = false;
-                    startActivity(new Intent(this, CreateGroupActivity.class));
-                    break;
-                case 1:
-                    flowFromPeople = true;
-                    flowFromGroup = false;
-                    flowFromDevice = false;
-                    startActivity(new Intent(this, AddPeopleActivity.class));
-                    break;
-                case 2:
-                    flowFromDevice = true;
-                    flowFromGroup = false;
-                    flowFromPeople = false;
-                    startActivity(new Intent(this, QRReaderInstruction.class));
-                    break;
-                default:
-                    // Todo
-                    break;
-            }
-        }
-        if (v.getId() == R.id.group_detail) {
-            viewPager.setCurrentItem(0);
-            groupTitle.setText(Constant.GROUP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
-            groupTitle.setTextColor(Color.WHITE);
-            peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
-            peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-            deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
-            deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-        }
-        if (v.getId() == R.id.people_detail) {
-            viewPager.setCurrentItem(1);
-            peopleTitle.setText(Constant.PEOPLE_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
-            peopleTitle.setTextColor(Color.WHITE);
-            groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
-            groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-            deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
-            deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-        }
-        if (v.getId() == R.id.device_detail) {
-            viewPager.setCurrentItem(2);
-            deviceTitle.setText(Constant.DEVICES_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
-            deviceTitle.setTextColor(Color.WHITE);
-            peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
-            peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-            groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
-            groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+        switch (v.getId()) {
+            case R.id.createGroup:
+                switch (viewPager.getCurrentItem()) {
+                    case 0:
+                        flowFromGroup = true;
+                        flowFromPeople = false;
+                        flowFromDevice = false;
+                        startActivity(new Intent(this, CreateGroupActivity.class));
+                        break;
+                    case 1:
+                        flowFromPeople = true;
+                        flowFromGroup = false;
+                        flowFromDevice = false;
+                        startActivity(new Intent(this, AddPeopleActivity.class));
+                        break;
+                    case 2:
+                        flowFromDevice = true;
+                        flowFromGroup = false;
+                        flowFromPeople = false;
+                        startActivity(new Intent(this, QRReaderInstruction.class));
+                        break;
+                    default:
+                        // Todo
+                        break;
+                }
+                break;
+
+            case R.id.group_detail:
+                viewPager.setCurrentItem(0);
+                groupTitle.setText(Constant.GROUP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                groupTitle.setTextColor(Color.WHITE);
+                peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
+                peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
+                deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                break;
+
+            case R.id.people_detail:
+                viewPager.setCurrentItem(1);
+                peopleTitle.setText(Constant.PEOPLE_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                peopleTitle.setTextColor(Color.WHITE);
+                groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
+                groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
+                deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                break;
+
+            case R.id.device_detail:
+                viewPager.setCurrentItem(2);
+                deviceTitle.setText(Constant.DEVICES_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                deviceTitle.setTextColor(Color.WHITE);
+                peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
+                peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
+                groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                break;
+
+            case R.id.sosCall:
+                makeSOSCall();
+                break;
+
+            default:
+                // Todo
+                break;
         }
     }
 
@@ -316,6 +349,55 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         if (data != null) {
             showDialog(data);
         }
+    }
+
+    // Make SOS call, this method makes call on primary SOS number and send current location on secondary and ternary numbers through SMS
+    private void makeSOSCall() {
+        List<SOSContactData> mData = mDbManager.getAllSOStableData();
+        String sos1PhoneNumber = null;
+        String sos2PhoneNumber = null;
+        String sos3PhoneNumber = null;
+        for (SOSContactData mSosContactData : mData) {
+            if (mSosContactData.getPriority() == 1) {
+                sos1PhoneNumber = mSosContactData.getNumber();
+            } else if (mSosContactData.getPriority() == 2) {
+                sos2PhoneNumber = mSosContactData.getNumber();
+            } else if (mSosContactData.getPriority() == 3) {
+                sos3PhoneNumber = mSosContactData.getNumber();
+            }
+        }
+        if (sos1PhoneNumber != null) {
+            makePhoneCall(sos1PhoneNumber);
+        }
+        if(sos2PhoneNumber != null) {
+            sendCurrentLocationInSMS(sos2PhoneNumber);
+        }
+        if(sos3PhoneNumber != null) {
+            sendCurrentLocationInSMS(sos3PhoneNumber);
+        }
+    }
+
+    /**
+     * Make SOS phone Call
+     * @param phoneNumber
+     */
+    private void makePhoneCall(String phoneNumber) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            showCustomAlertWithText(Constant.CALL_PERMISSION);
+            return;
+        }
+        startActivity(callIntent);
+    }
+
+    /**
+     * Sends current in SMS
+     * @param phoneNumber
+     */
+    private void sendCurrentLocationInSMS(String phoneNumber) {
+        Location location = getCurrentLocation();
+        SmsManager smgr = SmsManager.getDefault();
+        smgr.sendTextMessage(phoneNumber,null, "http://maps.google.com/maps?q=loc:" + location.getLatitude() + "," + location.getLongitude(),null,null);
     }
 
     /**
@@ -575,9 +657,16 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private void checkPermissions() {
         int permissionLocation = ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCall = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CALL_PHONE);
         List<String> listPermissionsNeeded = new ArrayList<>();
-        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionLocation != PackageManager.PERMISSION_GRANTED || permissionCall != PackageManager.PERMISSION_GRANTED) {
+            if (permissionCall != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.CALL_PHONE);
+            }
+            if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+            }
             if (!listPermissionsNeeded.isEmpty()) {
                 ActivityCompat.requestPermissions(this,
                         listPermissionsNeeded.toArray(new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
@@ -778,5 +867,4 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
     }
-
 }

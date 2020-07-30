@@ -40,15 +40,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
 import com.jio.devicetracker.database.pojo.MapData;
+import com.jio.devicetracker.database.pojo.SOSContactData;
 import com.jio.devicetracker.database.pojo.SearchEventData;
+import com.jio.devicetracker.database.pojo.request.GetAllSOSDetailRequest;
 import com.jio.devicetracker.database.pojo.request.GetGroupInfoPerUserRequest;
 import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
+import com.jio.devicetracker.database.pojo.response.GetAllSOSDetailsResponse;
 import com.jio.devicetracker.database.pojo.response.GetGroupInfoPerUserResponse;
 import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
+import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
@@ -123,6 +128,7 @@ public class GroupsFragment extends Fragment {
             parseResponseStoreInDatabase(getGroupInfoPerUserResponse);
             displayGroupDataInDashboard();
             adapterEventListener();
+            getAllSOSDetails();
         }
     }
 
@@ -328,5 +334,53 @@ public class GroupsFragment extends Fragment {
             instructionIcon.setVisibility(View.VISIBLE);
         }
     }
+
+    // Get all SOS details API calls
+    private void getAllSOSDetails() {
+        AdminLoginData adminLoginData = mDbManager.getAdminLoginDetail();
+        List<GroupMemberDataList> mList = mDbManager.getAllGroupMemberData();
+        String devideId = Constant.EMPTY_STRING;
+        for (GroupMemberDataList groupMemberDataList : mList) {
+            if (adminLoginData.getPhoneNumber().equalsIgnoreCase(groupMemberDataList.getNumber())) {
+                devideId = groupMemberDataList.getDeviceId();
+                break;
+            }
+        }
+        RequestHandler.getInstance(getActivity()).handleRequest(new GetAllSOSDetailRequest(new GetAllSOSDetailSuccessListener(), new GetAllSOSDetailErrorListener(), devideId, mDbManager.getAdminLoginDetail().getUserToken()));
+    }
+
+    /**
+     * Success Listener of Create SOS request
+     */
+    public class GetAllSOSDetailSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            GetAllSOSDetailsResponse getAllSOSDetailsResponse = Util.getInstance().getPojoObject(String.valueOf(response), GetAllSOSDetailsResponse.class);
+            List<GetAllSOSDetailsResponse.Data.Desired.Phonebooks> phonebooks = getAllSOSDetailsResponse.getData().getDesired().getmList();
+            getAllSOSDetailsResponse.getData().getDesired().getmList();
+            List<SOSContactData> mList = new ArrayList<>();
+            if (getAllSOSDetailsResponse.getCode() == 200 && !phonebooks.isEmpty()) {
+                for (GetAllSOSDetailsResponse.Data.Desired.Phonebooks mPhoneBooks : phonebooks) {
+                    SOSContactData sosContactData = new SOSContactData();
+                    sosContactData.setPriority(mPhoneBooks.getPriority());
+                    sosContactData.setNumber(mPhoneBooks.getNumber());
+                    sosContactData.setPhonebookId(mPhoneBooks.getId());
+                    mList.add(sosContactData);
+                }
+            }
+            mDbManager.insertIntoSOSTable(mList);
+        }
+    }
+
+    /**
+     * Error Listener of Create SOS request
+     */
+    private class GetAllSOSDetailErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            //Todo
+        }
+    }
+
 
 }

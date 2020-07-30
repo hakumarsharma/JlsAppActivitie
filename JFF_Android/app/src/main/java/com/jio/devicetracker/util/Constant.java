@@ -136,6 +136,7 @@ public class Constant {
     public static final String CAMERA_PERMISSION = "To scan device, enable camera permission through settings";
     public static final String LOCATION_PERMISSION = "To share your location with others, please enable location through setting.";
     public static final String SMS_PERMISSION = "To read OTP, enable SMS permission through settings.";
+    public static final String CALL_PERMISSION = "To make a phone call, please accept the permission.";
     public static final String GROUP_STATUS = "Group Status";
     public static final String GROUP_SELECTED = "groupSelected";
     public static final String TRACKEE_NAME = "TrackeeName";
