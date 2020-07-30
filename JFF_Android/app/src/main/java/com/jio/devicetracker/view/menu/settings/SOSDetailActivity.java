@@ -57,6 +57,9 @@ public class SOSDetailActivity extends AppCompatActivity implements View.OnClick
         title.setTypeface(Util.mTypeface(this, 5));
         Button sosEditButton = findViewById(R.id.sosEditButton);
         sosEditButton.setOnClickListener(this);
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
         TextView sosContact1TextView = findViewById(R.id.sosContact1TextView);
         TextView sosContact2TextView = findViewById(R.id.sosContact2TextView);
         TextView sosContact3TextView = findViewById(R.id.sosContact3TextView);
@@ -71,6 +74,8 @@ public class SOSDetailActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         if (v.getId() == R.id.sosEditButton) {
             startActivity(new Intent(this, SOSActivity.class));
+        } else if(v.getId() == R.id.back) {
+            finish();
         }
     }
 

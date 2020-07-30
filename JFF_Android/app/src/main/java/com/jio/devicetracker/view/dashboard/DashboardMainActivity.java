@@ -392,7 +392,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             showCustomAlertWithText(Constant.CALL_PERMISSION);
             return;
         }
-        if (phoneNumber != null) {
+        if (phoneNumber == null) {
+            showCustomAlertWithText(Constant.NO_SOS_PRIMARY_CONTACT);
+        } else {
             startActivity(callIntent);
         }
     }
