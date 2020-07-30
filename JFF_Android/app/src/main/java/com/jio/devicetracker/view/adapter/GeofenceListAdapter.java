@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +18,8 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GeofenceDetails;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.geofence.EditGeofenceActivity;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,16 +29,18 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
     private List<GeofenceDetails> mData;
     private Context mContext;
     private DBManager mDbManager;
+    private String deviceNumber;
 
     /**
      * Constructor to add geofence
      *
      * @param mData
      */
-    public GeofenceListAdapter(List mData, Context mContext) {
+    public GeofenceListAdapter(List mData, Context mContext,String deviceNumber) {
         this.mData = mData;
         this.mContext = mContext;
         mDbManager = new DBManager(mContext);
+        this.deviceNumber = deviceNumber;
 
     }
 
@@ -104,6 +107,15 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
                     oprationLayout.setVisibility(View.VISIBLE);
                     break;
                 case R.id.edit:
+                    GeofenceDetails editDetails = mData.get(getAdapterPosition());
+                    String addressGeofence = Util.getAddressFromLocation(editDetails.getLat(),editDetails.getLng(),mContext);
+                    Intent intent = new Intent(mContext, EditGeofenceActivity.class);
+                    intent.putExtra(Constant.MULTIPLE_GEOFENCE_LAT,editDetails.getLat());
+                    intent.putExtra(Constant.MULTIPLE_GEOFENCE_LNG,editDetails.getLng());
+                    intent.putExtra(Constant.MULTIPLE_GEOFENCE_EDIT,true);
+                    intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+                    intent.putExtra(Constant.GEOFENCE_ADDRESS,addressGeofence);
+                    mContext.startActivity(intent);
                     break;
                 case R.id.delete:
                     oprationLayout.setVisibility(View.GONE);
@@ -115,10 +127,7 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
                 case R.id.share_location:
                     oprationLayout.setVisibility(View.GONE);
                     GeofenceDetails detailsShare = mData.get(getAdapterPosition());
-                    String geoUri = null;
-
-                    geoUri = "http://maps.google.com/maps?q=loc:" + detailsShare.getLat() + "," + detailsShare.getLng();
-
+                    String geoUri = "http://maps.google.com/maps?q=loc:" + detailsShare.getLat() + "," + detailsShare.getLng();
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
                     shareIntent.putExtra(Intent.EXTRA_TEXT, geoUri);

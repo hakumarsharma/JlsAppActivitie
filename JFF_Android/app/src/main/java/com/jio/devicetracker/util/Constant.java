@@ -425,6 +425,9 @@ public class Constant {
     public static final String IS_COMING_FROM_CONTACT_LIST = "isComingFromContactList";
     public static final String GEOFENCE_RADIUS = "Geofence radius";
     public static final String GEOFENCE_ADDRESS = "Geofence address";
+    public static final String MULTIPLE_GEOFENCE_EDIT = "GeofenceEdit";
+    public static final String MULTIPLE_GEOFENCE_LAT = "geofencelat";
+    public static final String MULTIPLE_GEOFENCE_LNG = "geofencelng";
     public static final String CLOSED = "closed";
     public static final String INVITE_SENT = "Consent invite sent successfully.";
     // Add Device constants
