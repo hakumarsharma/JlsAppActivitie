@@ -135,7 +135,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             if (editGeofenceRadius != 0) {
                 GEOFENCE_RADIUS_IN_METERS = editGeofenceRadius;
                 geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
-                if (geofenceDetail != null && !(geofenceDetail.size() == 0)) {
+                if (geofenceDetail != null && !geofenceDetail.isEmpty()) {
                     LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size() - 1).getLat(), geofenceDetail.get(geofenceDetail.size() - 1).getLng());
                     mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber, latlngOld);
                 }
@@ -195,7 +195,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
 
         //GeofenceDetails geofenceDetails = mDbManager.getGeofenceDetails(deviceNumber);
         geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
-        if (geofenceDetail != null && !(geofenceDetail.size() == 0)) {
+        if (geofenceDetail != null && !geofenceDetail.isEmpty()) {
             for (GeofenceDetails details : geofenceDetail) {
                 geoFenceLatlng = new LatLng(details.getLat(), details.getLng());
                 mapSettings();
@@ -387,7 +387,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                             consentId = grpMembers.getConsentId();
                             trackeeLatlng = new LatLng(data.getLocation().getLat(), data.getLocation().getLng());
                             geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
-                            if (geofenceDetail != null && !(geofenceDetail.size() == 0)) {
+                            if (geofenceDetail != null && !geofenceDetail.isEmpty()) {
                                 for (GeofenceDetails details : geofenceDetail) {
                                     geoFenceLatlng = new LatLng(details.getLat(), details.getLng());
                                     float distanceBetweenRadius = distance((float) geoFenceLatlng.latitude, (float) geoFenceLatlng.longitude, (float) trackeeLatlng.latitude, (float) trackeeLatlng.longitude);

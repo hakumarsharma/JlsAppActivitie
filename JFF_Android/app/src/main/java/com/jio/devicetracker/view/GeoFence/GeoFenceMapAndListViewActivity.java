@@ -21,7 +21,6 @@
 package com.jio.devicetracker.view.geofence;
 
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;

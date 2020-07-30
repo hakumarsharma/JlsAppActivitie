@@ -482,7 +482,7 @@ public class DBManager {
             ContentValues contentValue = new ContentValues();
             if (!mList.isEmpty() && responseData.getDeviceId() == null) {
                 for (GroupMemberDataList groupMemberDataList : mList) {
-                    if (groupMemberDataList.getConsentId() != null && responseData.getConsentId() != null && (groupMemberDataList.getConsentId().equalsIgnoreCase(responseData.getConsentId()))) {
+                    if (groupMemberDataList.getConsentId() != null && responseData.getConsentId() != null && groupMemberDataList.getConsentId().equalsIgnoreCase(responseData.getConsentId())) {
                         contentValue.put(DatabaseHelper.DEVICE_ID, groupMemberDataList.getDeviceId());
                     }
                 }

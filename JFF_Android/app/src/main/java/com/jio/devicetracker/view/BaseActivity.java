@@ -47,9 +47,6 @@ import com.jio.devicetracker.view.device.DeviceNameActivity;
 import com.jio.devicetracker.view.group.CreateGroupActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
