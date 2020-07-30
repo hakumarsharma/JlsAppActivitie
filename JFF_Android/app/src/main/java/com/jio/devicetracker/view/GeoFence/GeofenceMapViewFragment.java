@@ -105,8 +105,6 @@ public class GeofenceMapViewFragment extends Fragment implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
-
-
         if (geofenceDetail != null && !geofenceDetail.isEmpty()) {
             for(GeofenceDetails details : geofenceDetail) {
                 LatLng latlng = new LatLng(details.getLat(),details.getLng());

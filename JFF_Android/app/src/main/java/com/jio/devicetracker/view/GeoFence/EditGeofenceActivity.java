@@ -38,6 +38,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -60,8 +61,11 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
     private String memberName;
     int progressChangedValue=0;
     int radiusValue = 0;
+    boolean multipleGeofenceEdit;
     private List<MapData> mapDataList;
+    private DBManager mDbManager;
     private static final String TAG = "EditGeofenceActivity";
+    Intent intent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,11 +87,13 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         kiloMetersRadioButton.setOnClickListener(this);
         Button updateBtn = findViewById(R.id.updateGeofence);
         updateBtn.setOnClickListener(this);
-        Intent intent = getIntent();
+        mDbManager = new DBManager(this);
+        intent = getIntent();
         mapDataList = intent.getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         memberName = intent.getStringExtra(Constant.MEMBER_NAME);
         geofenceAddress = intent.getStringExtra(Constant.GEOFENCE_ADDRESS);
+        multipleGeofenceEdit = intent.getBooleanExtra(Constant.MULTIPLE_GEOFENCE_EDIT,false);
         if(geofenceAddress != null){
             locationName.setText(geofenceAddress);
         }
@@ -143,21 +149,35 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             } else {
                 radiusValue = progressChangedValue;
             }
-            Intent intent = new Intent(this,GeofenceActivity.class);
-            intent.putExtra("Radius",radiusValue);
-            intent.putExtra(Constant.LATITUDE,latlang.latitude);
-            intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
-            intent.putExtra(Constant.MEMBER_NAME,memberName);
-            intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
-            intent.putExtra(Constant.LONGNITUDE,latlang.longitude);
 
-            intent.putExtra("EditGeofence",true);
-            startActivityForResult(intent,100);
+            if(multipleGeofenceEdit){
+                LatLng latlngOld = new LatLng(intent.getDoubleExtra(Constant.MULTIPLE_GEOFENCE_LAT,0.0d),intent.getDoubleExtra(Constant.MULTIPLE_GEOFENCE_LNG,0.0d));
+                mDbManager.updateGeofenceDetailInGeofenceTable(latlang, radiusValue, deviceNumber, latlngOld);
+                gotoGeofenceMapandListActivity();
+            } else {
+                Intent intent = new Intent(this,GeofenceActivity.class);
+                intent.putExtra("Radius",radiusValue);
+                intent.putExtra(Constant.LATITUDE,latlang.latitude);
+                intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+                intent.putExtra(Constant.MEMBER_NAME,memberName);
+                intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+                intent.putExtra(Constant.LONGNITUDE,latlang.longitude);
+
+                intent.putExtra("EditGeofence",true);
+                startActivityForResult(intent,100);
+            }
+
 
         } else {
             finish();
         }
 
+    }
+
+    private void gotoGeofenceMapandListActivity() {
+        Intent intent = new Intent(this,GeoFenceMapAndListViewActivity.class);
+        intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+        startActivityForResult(intent,200);
     }
 
     public LatLng getLocationFromAddress(String strAddress) {
@@ -187,6 +207,8 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==100){
+            finish();
+        } else if(requestCode == 200){
             finish();
         }
     }
