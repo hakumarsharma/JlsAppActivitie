@@ -39,14 +39,15 @@ public class CustomAlertActivity extends Dialog implements View.OnClickListener 
     public Context mContext;
     public TextView message;
 
-    public void CustomAlertActivity() {
-        //TODO
-    }
-
     public CustomAlertActivity(@NonNull Context context) {
         super(context);
         this.mContext = context;
     }
+
+    public CustomAlertActivity() {
+        super(null);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
