@@ -87,7 +87,6 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         mapDataList = intent.getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         boolean editGeofence = intent.getBooleanExtra("EditGeofence", false);
-
         ColorDrawable colorDrawable
                 = new ColorDrawable(Color.parseColor("#1C60AB"));
         actionBar.setBackgroundDrawable(colorDrawable);
@@ -196,7 +195,8 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         bundle.putDouble(Constant.LONGNITUDE, latLng.longitude);
         bundle.putBoolean(Constant.CREATE_GEOFENCE, true);
         if (radius != 0) {
-            showCustomAlertWithText(Constant.EDIT_GEOFENCE_ALERT);
+            Toast.makeText(GeofenceActivity.this, Constant.EDIT_GEOFENCE_ALERT, Toast.LENGTH_SHORT).show();
+            //showCustomAlertWithText(Constant.EDIT_GEOFENCE_ALERT);
             bundle.putInt(Constant.GEOFENCE_RADIUS, radius);
         }
         fragmentMap.setArguments(bundle);

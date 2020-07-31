@@ -102,7 +102,7 @@ public class GeofenceMapViewFragment extends Fragment implements OnMapReadyCallb
         if (geofenceDetail != null && !geofenceDetail.isEmpty()) {
             for(GeofenceDetails details : geofenceDetail) {
                 LatLng latlng = new LatLng(details.getLat(),details.getLng());
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 12));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 addCircle(latlng,details.getRadius());
             }
