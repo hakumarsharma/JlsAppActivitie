@@ -238,11 +238,18 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 10){
             finish();
         }
+    }*/
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        List<GeofenceDetails> geofenceList = mDbManager.getGeofenceDetailsList(deviceNumber);
+        geofenceCount.setText(String.valueOf(geofenceList.size()));
     }
 }

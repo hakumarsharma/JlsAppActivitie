@@ -53,6 +53,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -101,7 +102,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private LatLng geoFenceLatlng;
     private static boolean geoFenceEntryExit;
     private int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 1000;
-    private int editGeofenceRadius = 0;
     private List<MapData> mapDataList;
     private String memberName;
     private String deviceNumber;
@@ -118,9 +118,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.locationOnMap);
-        assert mapFragment != null;
-        mapFragment.getMapAsync(this);
         groupId = getActivity().getIntent().getStringExtra(Constant.GROUP_ID);
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
@@ -131,17 +128,19 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         if (getArguments() != null) {
             lat = getArguments().getDouble(Constant.LATITUDE);
             lang = getArguments().getDouble(Constant.LONGNITUDE);
-            editGeofenceRadius = getArguments().getInt(Constant.GEOFENCE_RADIUS);
-            if (editGeofenceRadius != 0) {
+            int editGeofenceRadius = getArguments().getInt(Constant.GEOFENCE_RADIUS);
+            if (!(editGeofenceRadius == 0)) {
                 GEOFENCE_RADIUS_IN_METERS = editGeofenceRadius;
                 geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
                 if (geofenceDetail != null && !geofenceDetail.isEmpty()) {
                     LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size() - 1).getLat(), geofenceDetail.get(geofenceDetail.size() - 1).getLng());
                     mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber, latlngOld);
                 }
+            } else {
+                GEOFENCE_RADIUS_IN_METERS = 5000;
+                geoFenceLatlng = new LatLng(lat, lang);
+                mDbManager.insertGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
             }
-            geoFenceLatlng = new LatLng(lat, lang);
-            mDbManager.insertGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
         }
         new Thread(new FetchLocation()).start();
 
@@ -160,6 +159,9 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                     MY_PERMISSIONS_REQUEST_MAPS);
         }
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.locationOnMap);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
         if (Build.VERSION.SDK_INT >= 29) {
             //We need background permission
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -198,7 +200,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         if (geofenceDetail != null && !geofenceDetail.isEmpty()) {
             for (GeofenceDetails details : geofenceDetail) {
                 geoFenceLatlng = new LatLng(details.getLat(), details.getLng());
-                mapSettings();
+                mapSettings(details.getRadius());
             }
 
         } else {
@@ -291,6 +293,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
 
     private void addMarker(LatLng latLng) {
         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.secondaryuser));
         mMap.addMarker(markerOptions);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -316,7 +319,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     /**
-     * Fetch trackee location after every 30 seconds
+     * Fetch trackee location after every 1 min
      */
     public class FetchLocation implements Runnable {
         public void run() {
@@ -455,11 +458,11 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void mapSettings() {
+    public void mapSettings(int radius) {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(geoFenceLatlng, 12));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        addCircle(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS);
-        addGeofence(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS);
+        addCircle(geoFenceLatlng, radius);
+        addGeofence(geoFenceLatlng, radius);
         String address = Util.getAddressFromLocation(geoFenceLatlng.latitude, geoFenceLatlng.longitude, getActivity());
         float distance = distance((float) geoFenceLatlng.latitude, (float) geoFenceLatlng.longitude, (float) trackeeLatlng.latitude, (float) trackeeLatlng.longitude);
         int radiusDifference = (int) distance;
