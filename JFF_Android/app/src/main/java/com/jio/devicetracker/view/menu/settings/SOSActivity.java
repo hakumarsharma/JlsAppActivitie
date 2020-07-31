@@ -245,10 +245,10 @@ public class SOSActivity extends Activity implements View.OnClickListener {
         } else if (!Util.getInstance().isValidMobileNumber(contact1)) {
             showCustomAlertWithText(Constant.CONTACT1_NUMBER_VALIDATION);
             return;
-        } else if (!Util.getInstance().isValidMobileNumber(contact2)) {
+        } else if (!Util.getInstance().isValidMobileNumber(contact2) && !contact2.equalsIgnoreCase(Constant.EMPTY_STRING)) {
             showCustomAlertWithText(Constant.CONTACT2_NUMBER_VALIDATION);
             return;
-        } else if (!Util.getInstance().isValidMobileNumber(contact3)) {
+        } else if (!Util.getInstance().isValidMobileNumber(contact3) && !contact3.equalsIgnoreCase(Constant.EMPTY_STRING)) {
             showCustomAlertWithText(Constant.CONTACT3_NUMBER_VALIDATION);
             return;
         }
