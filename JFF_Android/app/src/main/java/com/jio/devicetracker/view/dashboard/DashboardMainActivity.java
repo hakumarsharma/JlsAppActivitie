@@ -167,6 +167,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         });
         initUI();
         initializeDataMembers();
+        String isStartDraweRequired = getIntent().getStringExtra(Constant.START_DRAWER);
+        if (isStartDraweRequired != null && isStartDraweRequired.equalsIgnoreCase(Constant.YES)) {
+            drawerLayout.openDrawer(GravityCompat.START);
+        }
     }
 
     private void initUI() {

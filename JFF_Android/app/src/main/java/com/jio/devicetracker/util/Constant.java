@@ -414,6 +414,8 @@ public class Constant {
     public static final String NO_SOS_CONTACT_WARNING = "No SOS contact details are added, please add it first in setting.";
     public static final String NO_SOS_PRIMARY_CONTACT = "SOS primary contact is available to make a call, please add it in setting.";
     public static final String PRIMARY_SOS_MANDATORY = "Primary SOS contact is mandatory for SOS configuration.";
+    public static final String START_DRAWER = "start drawer";
+    public static final String YES = "Yes";
 
     public static final String LOWBATTERY = "Low Battery";
     public static final String POLLING_FREQUENCY = "Polling frequency";
