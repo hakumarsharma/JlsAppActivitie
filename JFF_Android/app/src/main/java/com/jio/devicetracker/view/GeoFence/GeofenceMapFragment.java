@@ -294,34 +294,12 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.secondaryuser));
         markerOptions.title(memberName);
-        markerOptions.snippet(Util.getAddressFromLocation(latLng.latitude, latLng.longitude, getActivity()));
+        markerOptions.snippet(Util.getAddressFromLocation(latLng.latitude, latLng.longitude, getContext()));
         markerOptions.position(latLng);
         mMap.addMarker(markerOptions);
         if (mMap != null) {
             mMap.setInfoWindowAdapter(new GeofenceMapFragment.MyInfoWindowAdapter(getContext()));
         }
-
-       /* mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-                List<Address> addresses = null; //1 num of possible location returned
-                try {
-                    addresses = geocoder.getFromLocation(trackeeLatlng.latitude, trackeeLatlng.longitude, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                String address = addresses.get(0).getAddressLine(0); //0 to obtain first possible address
-                String city = addresses.get(0).getLocality();
-                String state = addresses.get(0).getAdminArea();
-                //create your custom title
-                String title = address + "-" + city + "-" + state;
-                marker.setTitle(title);
-                marker.showInfoWindow();
-
-                return true;
-            }
-        });*/
     }
 
     /**

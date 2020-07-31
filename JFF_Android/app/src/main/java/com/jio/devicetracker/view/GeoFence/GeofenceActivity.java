@@ -147,6 +147,8 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search:
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 LatLng latlng = getLocationFromAddress(addressText.getText().toString());
                 if (latlng != null) {
                     addFragment(latlng, 0);
