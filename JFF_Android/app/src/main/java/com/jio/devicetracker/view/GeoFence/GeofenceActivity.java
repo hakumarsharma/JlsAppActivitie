@@ -33,7 +33,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -54,7 +53,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.view.BaseActivity;
 
 import java.io.IOException;
