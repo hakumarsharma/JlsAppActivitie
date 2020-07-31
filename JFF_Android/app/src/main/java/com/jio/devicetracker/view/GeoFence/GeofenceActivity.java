@@ -51,6 +51,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.GeofenceDetails;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.view.BaseActivity;
@@ -65,12 +67,15 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
     private String deviceNumber;
     private List<MapData> mapDataList;
     private String memberName;
+    private DBManager mDbManager;
+    List<GeofenceDetails> geofenceDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geofence);
         fragmentMap = new GeofenceMapFragment();
+        mDbManager = new DBManager(this);
         initUI();
     }
 
@@ -128,7 +133,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
                         Toast.makeText(GeofenceActivity.this, Constant.ADDRESS_MESSAGE, Toast.LENGTH_SHORT).show();
                     }
 
-                    InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     handled = true;
                 }
@@ -178,7 +183,6 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
             }
 
 
-
         } catch (IOException ex) {
 
             ex.printStackTrace();
@@ -216,14 +220,18 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_geofence:
+                geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
                 Intent intent = new Intent(this, EditGeofenceActivity.class);
                 if (!addressText.getText().toString().isEmpty()) {
                     intent.putExtra(Constant.GEOFENCE_ADDRESS, addressText.getText().toString());
                 }
+                if (geofenceDetail != null && !geofenceDetail.isEmpty()) {
+                    intent.putExtra(Constant.GEOFENCE_RADIUS, geofenceDetail.get(geofenceDetail.size() - 1).getRadius());
+                }
                 intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
                 intent.putExtra(Constant.MEMBER_NAME, memberName);
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
-                startActivityForResult(intent,120);
+                startActivityForResult(intent, 120);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -241,7 +249,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==120){
+        if (requestCode == 120) {
             finish();
         }
     }

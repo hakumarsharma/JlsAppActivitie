@@ -22,9 +22,8 @@ package com.jio.devicetracker.view.geofence;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -76,12 +76,10 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
 import com.jio.devicetracker.view.menu.settings.GeofenceSettingsAcivity;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -295,8 +293,15 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
     private void addMarker(LatLng latLng) {
         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.secondaryuser));
+        markerOptions.title(memberName);
+        markerOptions.snippet(Util.getAddressFromLocation(latLng.latitude, latLng.longitude, getActivity()));
+        markerOptions.position(latLng);
         mMap.addMarker(markerOptions);
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        if (mMap != null) {
+            mMap.setInfoWindowAdapter(new GeofenceMapFragment.MyInfoWindowAdapter(getContext()));
+        }
+
+       /* mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
@@ -316,7 +321,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
 
                 return true;
             }
-        });
+        });*/
     }
 
     /**
@@ -468,5 +473,33 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         float distance = distance((float) geoFenceLatlng.latitude, (float) geoFenceLatlng.longitude, (float) trackeeLatlng.latitude, (float) trackeeLatlng.longitude);
         int radiusDifference = (int) distance;
         trackGeofenceTransition(radiusDifference, address);
+    }
+
+    /**
+     * +     * Class to show address when you click on marker
+     * +
+     */
+    public class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        private final View myContentsView;
+
+        MyInfoWindowAdapter(Context context) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            myContentsView = inflater.inflate(R.layout.custom_info_contents, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            TextView tvTitle = myContentsView.findViewById(R.id.title);
+            tvTitle.setText(marker.getTitle());
+            TextView tvSnippet = myContentsView.findViewById(R.id.snippet);
+            tvSnippet.setText(marker.getSnippet());
+            return myContentsView;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+
     }
 }
