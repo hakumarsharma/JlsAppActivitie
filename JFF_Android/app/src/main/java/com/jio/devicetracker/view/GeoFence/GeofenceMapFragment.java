@@ -459,7 +459,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void mapSettings(int radius) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(geoFenceLatlng, 12));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(geoFenceLatlng, 15));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         addCircle(geoFenceLatlng, radius);
         addGeofence(geoFenceLatlng, radius);
