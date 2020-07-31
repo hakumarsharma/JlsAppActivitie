@@ -74,9 +74,9 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.GEOFENCE_EDIT);
         meterOrKiloMeter = " km";
-
         radiusText = findViewById(R.id.radiusText);
         radiusText.setTypeface(Util.mTypeface(this,5));
+        radiusSeekBar= findViewById(R.id.radiusSeekBar);
         locationName = findViewById(R.id.location_name);
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
@@ -97,14 +97,14 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         multipleGeofenceEdit = intent.getBooleanExtra(Constant.MULTIPLE_GEOFENCE_EDIT,false);
         if(multipleGeofenceEdit && radius != 0 ){
             radiusText.setText(String.valueOf(radius/1000));
+            radiusSeekBar.setProgress(radius/1000);
         } else if(radius != 0){
             radiusText.setText(String.valueOf(radius/1000));
+            radiusSeekBar.setProgress(radius/1000);
         }
         if(geofenceAddress != null){
             locationName.setText(geofenceAddress);
         }
-
-        radiusSeekBar=(SeekBar)findViewById(R.id.radiusSeekBar);
         radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -136,8 +136,8 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             metersRadioButton.setBackgroundResource(R.drawable.radiobutton_unselected);
             kiloMetersRadioButton.setBackgroundResource(R.drawable.radiobutton_selected);
             radiusSeekBar.setMax(20);
-            radiusSeekBar.setProgress(10);
-            radiusText.setText("10 km");
+            radiusSeekBar.setProgress(5);
+            radiusText.setText("5 km");
         }else if (v.getId() == R.id.updateGeofence){
             if(locationName.getText().toString().isEmpty()){
                 Toast.makeText(this,"Please enter the location name",Toast.LENGTH_SHORT).show();

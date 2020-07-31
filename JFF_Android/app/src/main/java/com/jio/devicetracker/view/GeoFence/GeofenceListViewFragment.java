@@ -20,7 +20,6 @@
 
 package com.jio.devicetracker.view.geofence;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,11 +46,10 @@ public class GeofenceListViewFragment extends Fragment {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_geofence_list, container, false);
         DBManager mDbManager =  new DBManager(getActivity());
-        Context context = container.getContext();
         String deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         RecyclerView geoFenceListView = view.findViewById(R.id.geofence_list);
         List<GeofenceDetails> list = mDbManager.getGeofenceDetailsList(deviceNumber);
-        GeofenceListAdapter adapter = new GeofenceListAdapter(list,context,deviceNumber);
+        GeofenceListAdapter adapter = new GeofenceListAdapter(list,getActivity(),deviceNumber);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         geoFenceListView.setLayoutManager(mLayoutManager);
         geoFenceListView.setAdapter(adapter);
