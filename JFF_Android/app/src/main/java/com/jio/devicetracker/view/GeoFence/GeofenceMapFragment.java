@@ -132,6 +132,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
             if (!(editGeofenceRadius == 0)) {
                 GEOFENCE_RADIUS_IN_METERS = editGeofenceRadius;
                 geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
+                geoFenceLatlng = new LatLng(lat, lang);
                 if (geofenceDetail != null && !geofenceDetail.isEmpty()) {
                     LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size() - 1).getLat(), geofenceDetail.get(geofenceDetail.size() - 1).getLng());
                     mDbManager.updateGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber, latlngOld);
