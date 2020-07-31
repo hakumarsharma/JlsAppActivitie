@@ -82,6 +82,7 @@ public class SOSActivity extends Activity implements View.OnClickListener {
     private int updateAPICount;
     private List<SOSContactData> updateDataList;
     private boolean isProgressbarDialog = true;
+    private static boolean isStartActivityRequired = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,13 +132,20 @@ public class SOSActivity extends Activity implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         getAllSOSDetails();
+        isStartActivityRequired = true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                finish();
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.contact1ImageView:
                 isContact1Selected = true;
@@ -230,6 +238,12 @@ public class SOSActivity extends Activity implements View.OnClickListener {
         String contact3 = sos3ContactNumber.getText().toString().trim();
         mList.clear();
         updateList.clear();
+
+        if (contact1.equalsIgnoreCase(Constant.EMPTY_STRING)) {
+            showCustomAlertWithText(Constant.PRIMARY_SOS_MANDATORY);
+            return;
+        }
+
         if (!contact1.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact1)) {
             if (mSosDetailList.isEmpty()) { // For first time it is create SOS
                 SOSContactData sosContactData = new SOSContactData();
@@ -384,7 +398,10 @@ public class SOSActivity extends Activity implements View.OnClickListener {
             Util.progressDialog.dismiss();
             Toast.makeText(this, Constant.SOS_CREATION_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
             apiCount = 0;
-            startActivity(new Intent(this, SOSDetailActivity.class));
+            if(isStartActivityRequired) {
+                isStartActivityRequired = false;
+                startActivity(new Intent(this, SOSDetailActivity.class));
+            }
         } else {
             phoneNumber = sosDetailsList.get(apiCount).getNumber();
             SOSData sosData = new SOSData();
@@ -506,7 +523,10 @@ public class SOSActivity extends Activity implements View.OnClickListener {
             phonebookIdList.clear();
             deletePhonebookCount = 0;
             Toast.makeText(this, Constant.DELETE_SOS_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, SOSDetailActivity.class));
+            if(isStartActivityRequired) {
+                isStartActivityRequired = false;
+                startActivity(new Intent(this, SOSDetailActivity.class));
+            }
         }
     }
 
@@ -562,7 +582,10 @@ public class SOSActivity extends Activity implements View.OnClickListener {
             Toast.makeText(this, Constant.DELETE_SOS_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
             updateAPICount = 0;
             getAllSOSDetails();
-            startActivity(new Intent(this, SOSDetailActivity.class));
+            if(isStartActivityRequired) {
+                isStartActivityRequired = false;
+                startActivity(new Intent(this, SOSDetailActivity.class));
+            }
         }
     }
 
