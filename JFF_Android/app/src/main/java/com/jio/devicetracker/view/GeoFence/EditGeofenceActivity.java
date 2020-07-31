@@ -60,10 +60,11 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
     private String deviceNumber;
     private String memberName;
     int progressChangedValue=0;
-    int radiusValue = 0;
+    int radiusValue;
     boolean multipleGeofenceEdit;
     private List<MapData> mapDataList;
     private DBManager mDbManager;
+    private int radius;
     private static final String TAG = "EditGeofenceActivity";
     Intent intent;
 
@@ -93,7 +94,13 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         memberName = intent.getStringExtra(Constant.MEMBER_NAME);
         geofenceAddress = intent.getStringExtra(Constant.GEOFENCE_ADDRESS);
+        radius = intent.getIntExtra(Constant.GEOFENCE_RADIUS,0);
         multipleGeofenceEdit = intent.getBooleanExtra(Constant.MULTIPLE_GEOFENCE_EDIT,false);
+        if(multipleGeofenceEdit && radius != 0 ){
+            radiusText.setText(String.valueOf(radius/1000));
+        } else if(radius != 0){
+            radiusText.setText(String.valueOf(radius/1000));
+        }
         if(geofenceAddress != null){
             locationName.setText(geofenceAddress);
         }
@@ -145,9 +152,20 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             }
             String radius = radiusText.getText().toString();
             if(radius.contains("km")){
-                radiusValue = progressChangedValue * 1000;
+                if(progressChangedValue ==0){
+                    radiusValue = 5000;
+                } else {
+                    radiusValue = progressChangedValue * 1000;
+                }
+            } else if(radius.contains("m")) {
+                if(progressChangedValue ==0){
+                    radiusValue = 100;
+                } else {
+                    radiusValue = progressChangedValue;
+                }
+
             } else {
-                radiusValue = progressChangedValue;
+                radiusValue = 5000;
             }
 
             if(multipleGeofenceEdit){

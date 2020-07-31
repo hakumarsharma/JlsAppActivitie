@@ -112,6 +112,7 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
                     Intent intent = new Intent(mContext, EditGeofenceActivity.class);
                     intent.putExtra(Constant.MULTIPLE_GEOFENCE_LAT,editDetails.getLat());
                     intent.putExtra(Constant.MULTIPLE_GEOFENCE_LNG,editDetails.getLng());
+                    intent.putExtra(Constant.GEOFENCE_RADIUS, editDetails.getRadius());
                     intent.putExtra(Constant.MULTIPLE_GEOFENCE_EDIT,true);
                     intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
                     intent.putExtra(Constant.GEOFENCE_ADDRESS,addressGeofence);
