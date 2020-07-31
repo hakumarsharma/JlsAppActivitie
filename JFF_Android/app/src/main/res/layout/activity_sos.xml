@@ -50,9 +50,10 @@
 
                 <RelativeLayout
                     android:id="@+id/contact1_layout"
-                    android:layout_width="280dp"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginLeft="20dp"
+                    android:layout_marginRight="60dp"
                     android:layout_marginTop="@dimen/margin_30"
                     android:background="@drawable/selector">
 
@@ -87,9 +88,10 @@
 
                 <RelativeLayout
                     android:id="@+id/contact2_layout"
-                    android:layout_width="280dp"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginLeft="20dp"
+                    android:layout_marginRight="60dp"
                     android:layout_marginTop="@dimen/margin_30"
                     android:background="@drawable/selector">
 
@@ -124,9 +126,10 @@
 
                 <RelativeLayout
                     android:id="@+id/contact3_layout"
-                    android:layout_width="280dp"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginLeft="20dp"
+                    android:layout_marginRight="60dp"
                     android:layout_marginTop="@dimen/margin_30"
                     android:background="@drawable/selector">
 
