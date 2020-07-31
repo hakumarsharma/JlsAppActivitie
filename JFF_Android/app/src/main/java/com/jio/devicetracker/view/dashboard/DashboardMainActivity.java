@@ -22,8 +22,6 @@ package com.jio.devicetracker.view.dashboard;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.annotation.Size;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -82,16 +80,12 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ApproveRejectConsentData;
-import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.SOSContactData;
 import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
-import com.jio.devicetracker.database.pojo.request.GetAllSOSDetailRequest;
 import com.jio.devicetracker.database.pojo.request.RejectConsentRequest;
 import com.jio.devicetracker.database.pojo.response.ApproveRejectAPIResponse;
-import com.jio.devicetracker.database.pojo.response.GetAllSOSDetailsResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.network.MQTTManager;
-import com.jio.devicetracker.network.RequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
@@ -135,7 +129,6 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     public static boolean flowFromPeople;
     public static boolean flowFromGroup;
     public static boolean flowFromDevice;
-    private static final int PERMIT_ALL = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

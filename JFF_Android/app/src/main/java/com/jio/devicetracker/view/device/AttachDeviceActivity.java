@@ -140,7 +140,7 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
         }
 
         if (deviceImei.getText().toString().isEmpty()){
-            Toast.makeText(AttachDeviceActivity.this, Constant.ENTER_PHONE_OR_IMEI, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Constant.ENTER_PHONE_OR_IMEI, Toast.LENGTH_LONG).show();
             return;
         }
 

@@ -27,19 +27,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.google.zxing.Result;
-import com.google.zxing.common.StringUtils;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -104,9 +101,9 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
       * Regex to fetch IMEI and EAN tags from QR code
     * */
     private static String getTagValues(final String str) {
-        final Pattern TAG_REGEX = Pattern.compile("<IMEI>(.+?)</IMEI>", Pattern.DOTALL);
+        final Pattern tagRegex = Pattern.compile("<IMEI>(.+?)</IMEI>", Pattern.DOTALL);
         final List<String> tagValues = new ArrayList<String>();
-        final Matcher matcher = TAG_REGEX.matcher(str);
+        final Matcher matcher = tagRegex.matcher(str);
         while (matcher.find()) {
             tagValues.add(matcher.group(1));
         }

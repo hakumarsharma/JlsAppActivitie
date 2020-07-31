@@ -20,7 +20,6 @@
 
 package com.jio.devicetracker.view.location;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -65,7 +64,6 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
     private boolean deviceLocationflag;
     private TextView memberName;
     private DBManager mDbManager;
-    private RelativeLayout geofenceAreaNumber;
     private TextView geofenceCount;
 
     @Override
@@ -89,7 +87,7 @@ public class ShareLocationActivity extends BaseActivity implements View.OnClickL
         closeOption.setOnClickListener(this);
         memberName = findViewById(R.id.member_name);
         memberAddrss = findViewById(R.id.member_address);
-        geofenceAreaNumber = findViewById(R.id.geofence_area_number);
+        RelativeLayout geofenceAreaNumber = findViewById(R.id.geofence_area_number);
         geofenceAreaNumber.setOnClickListener(this);
         TextView shareLocation = findViewById(R.id.share_location);
         shareLocation.setOnClickListener(this);

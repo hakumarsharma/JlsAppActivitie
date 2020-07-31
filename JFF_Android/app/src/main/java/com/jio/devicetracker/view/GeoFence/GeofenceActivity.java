@@ -195,7 +195,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         bundle.putDouble(Constant.LONGNITUDE, latLng.longitude);
         bundle.putBoolean(Constant.CREATE_GEOFENCE, true);
         if (radius != 0) {
-            Toast.makeText(GeofenceActivity.this, Constant.EDIT_GEOFENCE_ALERT, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Constant.EDIT_GEOFENCE_ALERT, Toast.LENGTH_SHORT).show();
             //showCustomAlertWithText(Constant.EDIT_GEOFENCE_ALERT);
             bundle.putInt(Constant.GEOFENCE_RADIUS, radius);
         }
@@ -248,12 +248,12 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    // Show custom alert with alert message
+   /* // Show custom alert with alert message
     private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(this);
         alertActivity.show();
         alertActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         alertActivity.getWindow().setBackgroundDrawableResource(R.color.white);
         alertActivity.alertWithOkButton(alertMessage);
-    }
+    }*/
 }
