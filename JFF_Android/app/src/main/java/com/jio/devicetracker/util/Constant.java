@@ -76,11 +76,6 @@ public class Constant {
     public static final String SMS_SEND_FAILED = "SMS failed, please try again.";
     public static final String OTP_SMS = "Hi, please use this OTP :";
     public static final String PHONE_VALIDATION = "Phone number cannot be left empty!";
-    public static final String MOBILE_NETWORKCHECK = "Please use your mobile data";
-    public static final String JIO_NUMBER = "Please use Jio number";
-    public static final String SIM_VALIDATION = "Jio number should be in SIM slot 1";
-    public static final String NUMBER_VALIDATION = "Entered phone number should be in SIM slot 1";
-    public static final String DEVICE_JIONUMBER = "Please use Jio number in SIM slot 1 to operate this application";
     public static final String REGISTRAION_ALERT_409 = "User is already registered";
     public static final String REGISTRAION_FAILED = "Register failed ,Please contact your admin";
     public static final String LOCATION_NOT_FOUND = "Location not found for the selected device.";
@@ -188,6 +183,9 @@ public class Constant {
     public static final String ADD_DEVICE_TITLE = "Add";
     public static final String IMEI_VALIDATION = "Enter the 15 digit IMEI number";
     public static final String MOBILENUMBER_VALIDATION = "Enter the valid mobile number";
+    public static final String CONTACT1_NUMBER_VALIDATION = "Please enter valid mobile number in contact1";
+    public static final String CONTACT2_NUMBER_VALIDATION = "Please enter valid mobile number in contact2";
+    public static final String CONTACT3_NUMBER_VALIDATION = "Please enter valid mobile number in contact3";
     public static final String PET_NUMBER_VALIDATION = "Please enter the valid device number of pet";
     public static final String PEOPLE_NUMBER_VALIDATION_PET_NUMBER_ENTERED = "Please enter the valid mobile number, Select Pet Tracker from drop down if you want to track any pet";
     public static final String PET_TRACKER_VALIDATION_PEOPLE_NUMBER_ENTERE = "Please enter the valid device number of pet, if you want to track people please select People Tracker from dropdown";

@@ -242,6 +242,15 @@ public class SOSActivity extends Activity implements View.OnClickListener {
         if (contact1.equalsIgnoreCase(Constant.EMPTY_STRING)) {
             showCustomAlertWithText(Constant.PRIMARY_SOS_MANDATORY);
             return;
+        } else if (!Util.getInstance().isValidMobileNumber(contact1)) {
+            showCustomAlertWithText(Constant.CONTACT1_NUMBER_VALIDATION);
+            return;
+        } else if (!Util.getInstance().isValidMobileNumber(contact2)) {
+            showCustomAlertWithText(Constant.CONTACT2_NUMBER_VALIDATION);
+            return;
+        } else if (!Util.getInstance().isValidMobileNumber(contact3)) {
+            showCustomAlertWithText(Constant.CONTACT3_NUMBER_VALIDATION);
+            return;
         }
 
         if (!contact1.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact1)) {
@@ -398,7 +407,7 @@ public class SOSActivity extends Activity implements View.OnClickListener {
             Util.progressDialog.dismiss();
             Toast.makeText(this, Constant.SOS_CREATION_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
             apiCount = 0;
-            if(isStartActivityRequired) {
+            if (isStartActivityRequired) {
                 isStartActivityRequired = false;
                 startActivity(new Intent(this, SOSDetailActivity.class));
             }
@@ -523,7 +532,7 @@ public class SOSActivity extends Activity implements View.OnClickListener {
             phonebookIdList.clear();
             deletePhonebookCount = 0;
             Toast.makeText(this, Constant.DELETE_SOS_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
-            if(isStartActivityRequired) {
+            if (isStartActivityRequired) {
                 isStartActivityRequired = false;
                 startActivity(new Intent(this, SOSDetailActivity.class));
             }
@@ -582,7 +591,7 @@ public class SOSActivity extends Activity implements View.OnClickListener {
             Toast.makeText(this, Constant.DELETE_SOS_SUCCESS_MSG, Toast.LENGTH_SHORT).show();
             updateAPICount = 0;
             getAllSOSDetails();
-            if(isStartActivityRequired) {
+            if (isStartActivityRequired) {
                 isStartActivityRequired = false;
                 startActivity(new Intent(this, SOSDetailActivity.class));
             }
