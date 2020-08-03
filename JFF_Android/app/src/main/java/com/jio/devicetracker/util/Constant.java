@@ -141,6 +141,7 @@ public class Constant {
     public static final String CONSENT_STATUS = "no";
     public static final String ADD_DETAILS_TO_TRACK = "Group is empty. Add devices or contacts to this group and track.";
     public static final String DEEPLINK_MESSAGE = "Respond YES to invitation, to track and to be tracked by requested user. Click NO to reject invitation.";
+    public static final String SMS_SENT_INFO = "Your current location has been sent to the configured SOS numbers";
 
     // Login Activity constants
     public static final String LOGIN_TITLE = "People Tracker";

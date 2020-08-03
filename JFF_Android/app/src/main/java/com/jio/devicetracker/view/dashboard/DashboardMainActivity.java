@@ -403,6 +403,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         Location location = getCurrentLocation();
         SmsManager smgr = SmsManager.getDefault();
         smgr.sendTextMessage(phoneNumber, null, "http://maps.google.com/maps?q=loc:" + location.getLatitude() + "," + location.getLongitude(), null, null);
+        Toast.makeText(this, Constant.SMS_SENT_INFO, Toast.LENGTH_SHORT).show();
     }
 
     /**
