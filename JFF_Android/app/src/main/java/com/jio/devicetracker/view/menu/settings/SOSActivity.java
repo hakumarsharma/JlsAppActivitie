@@ -254,12 +254,12 @@ public class SOSActivity extends Activity implements View.OnClickListener {
         }
 
         if (!contact1.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact1)) {
-            if (mSosDetailList.isEmpty()) { // For first time it is create SOS
+            if (mSosDetailList != null && mSosDetailList.isEmpty()) { // For first time it is create SOS
                 SOSContactData sosContactData = new SOSContactData();
                 sosContactData.setNumber(contact1);
                 sosContactData.setPriority(1);
                 mList.add(sosContactData);
-            } else if (!mSosDetailList.isEmpty()) {  // If it is not empty and number is not the previous number then update
+            } else if (mSosDetailList != null && !mSosDetailList.isEmpty()) {  // If it is not empty and number is not the previous number then update
                 boolean isUpdate = false;
                 for (SOSContactData data : mSosDetailList) {
                     if (data.getPriority() == 1 && !data.getNumber().equalsIgnoreCase(contact1)) {
@@ -294,12 +294,12 @@ public class SOSActivity extends Activity implements View.OnClickListener {
             }
         }
         if (!contact2.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact2)) {
-            if (mSosDetailList.isEmpty()) {
+            if (mSosDetailList != null && mSosDetailList.isEmpty()) {
                 SOSContactData sosContactData = new SOSContactData();
                 sosContactData.setNumber(contact2);
                 sosContactData.setPriority(2);
                 mList.add(sosContactData);
-            } else if (!mSosDetailList.isEmpty()) {
+            } else if (mSosDetailList != null && !mSosDetailList.isEmpty()) {
                 boolean isUpdate = false;
                 for (SOSContactData data : mSosDetailList) {
                     if (data.getPriority() == 2 && !data.getNumber().equalsIgnoreCase(contact2)) {
@@ -334,12 +334,12 @@ public class SOSActivity extends Activity implements View.OnClickListener {
             }
         }
         if (!contact3.equalsIgnoreCase(Constant.EMPTY_STRING) && Util.getInstance().isValidMobileNumber(contact3)) {
-            if (mSosDetailList.isEmpty()) {
+            if (mSosDetailList != null && mSosDetailList.isEmpty()) {
                 SOSContactData sosContactData = new SOSContactData();
                 sosContactData.setNumber(contact3);
                 sosContactData.setPriority(3);
                 mList.add(sosContactData);
-            } else if (!mSosDetailList.isEmpty()) {
+            } else if (mSosDetailList != null && !mSosDetailList.isEmpty()) {
                 boolean isUpdate = false;
                 for (SOSContactData data : mSosDetailList) {
                     if (data.getPriority() == 3 && !data.getNumber().equalsIgnoreCase(contact3)) {
