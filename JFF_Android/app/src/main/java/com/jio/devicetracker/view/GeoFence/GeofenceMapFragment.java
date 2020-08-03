@@ -121,8 +121,6 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         memberName = getActivity().getIntent().getStringExtra(Constant.MEMBER_NAME);
         mDbManager = new DBManager(getActivity());
-        /*List<GeofenceDetails> geofenceDetail = mDbManager.getGeofenceDetailsList(deviceNumber);
-        LatLng latlngOld = new LatLng(geofenceDetail.get(geofenceDetail.size()-1).getLat(),geofenceDetail.get(geofenceDetail.size()-1).getLng());*/
         if (getArguments() != null) {
             lat = getArguments().getDouble(Constant.LATITUDE);
             lang = getArguments().getDouble(Constant.LONGNITUDE);
