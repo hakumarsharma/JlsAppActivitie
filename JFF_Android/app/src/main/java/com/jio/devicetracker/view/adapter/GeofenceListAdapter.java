@@ -38,8 +38,6 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.GeofenceDetails;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.geofence.EditGeofenceActivity;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,6 +48,7 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
     private Context mContext;
     private DBManager mDbManager;
     private String deviceNumber;
+    private AdapterListner itemListener;
 
     /**
      * Constructor to add geofence
@@ -75,13 +74,31 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        GeofenceDetails details = mData.get(position);
         String address = getAddressFromLocation(mData.get(position).getLat(), mData.get(position).getLng());
         holder.address.setText(address);
         holder.radius.setText(Constant.AREA_COVERED + String.valueOf(mData.get(position).getRadius() / 1000) + " km");
         holder.geofenceName.setText("Geofence " + (position + 1));
+        holder.editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemListener.clickOnEdit(details);
+            }
+        });
+
+        holder.createGeofence.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemListener.createGeofence();
+            }
+        });
 
     }
 
+    public interface AdapterListner{
+        void clickOnEdit(GeofenceDetails details);
+        void createGeofence();
+    }
     @Override
     public int getItemCount() {
         return mData.size();
@@ -97,6 +114,7 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
         private TextView editText;
         private TextView shareLocation;
         private TextView deleteText;
+        private TextView createGeofence;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,6 +125,7 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
             close = itemView.findViewById(R.id.close);
             menuOption = itemView.findViewById(R.id.menu_option);
             editText = itemView.findViewById(R.id.edit);
+            createGeofence = itemView.findViewById(R.id.create_geofence);
             deleteText = itemView.findViewById(R.id.delete);
             shareLocation = itemView.findViewById(R.id.share_location);
             editText.setOnClickListener(this);
@@ -125,18 +144,6 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
                     break;
                 case R.id.menu_option:
                     oprationLayout.setVisibility(View.VISIBLE);
-                    break;
-                case R.id.edit:
-                    GeofenceDetails editDetails = mData.get(getAdapterPosition());
-                    String addressGeofence = Util.getAddressFromLocation(editDetails.getLat(),editDetails.getLng(),mContext);
-                    Intent intent = new Intent(mContext, EditGeofenceActivity.class);
-                    intent.putExtra(Constant.MULTIPLE_GEOFENCE_LAT,editDetails.getLat());
-                    intent.putExtra(Constant.MULTIPLE_GEOFENCE_LNG,editDetails.getLng());
-                    intent.putExtra(Constant.GEOFENCE_RADIUS, editDetails.getRadius());
-                    intent.putExtra(Constant.MULTIPLE_GEOFENCE_EDIT,true);
-                    intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
-                    intent.putExtra(Constant.GEOFENCE_ADDRESS,addressGeofence);
-                    mContext.startActivity(intent);
                     break;
                 case R.id.delete:
                     oprationLayout.setVisibility(View.GONE);
@@ -181,6 +188,14 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
             ex.printStackTrace();
         }
         return strAddress.toString();
+    }
+    /**
+     * Register the listener
+     *
+     * @param mItemClickListener
+     */
+    public void setOnItemClickPagerListener(AdapterListner mItemClickListener) {
+        this.itemListener = mItemClickListener;
     }
 
 }

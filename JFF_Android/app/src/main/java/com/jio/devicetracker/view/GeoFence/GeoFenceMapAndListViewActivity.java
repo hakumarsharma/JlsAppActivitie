@@ -21,6 +21,7 @@
 package com.jio.devicetracker.view.geofence;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
@@ -126,6 +127,12 @@ public class GeoFenceMapAndListViewActivity extends AppCompatActivity implements
         mapTab.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 110 || requestCode == 120){
+            finish();
+        }
+    }
 }
 

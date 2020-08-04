@@ -60,6 +60,9 @@
         <activity
             android:name=".view.geofence.GeoFenceMapAndListViewActivity"
             android:screenOrientation="portrait" />
+        <activity
+        android:name=".view.geofence.CreateGeofenceActivity"
+        android:screenOrientation="portrait" />
 
         <activity
             android:name=".view.menu.settings.SettingsActivity"

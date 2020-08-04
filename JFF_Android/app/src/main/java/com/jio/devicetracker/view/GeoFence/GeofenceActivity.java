@@ -90,6 +90,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         mapDataList = intent.getParcelableArrayListExtra(Constant.MAP_DATA);
         deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
         boolean editGeofence = intent.getBooleanExtra("EditGeofence", false);
+        boolean createGeofence = intent.getBooleanExtra(Constant.CREATE_GEOFENCE,false);
         ColorDrawable colorDrawable
                 = new ColorDrawable(Color.parseColor("#1C60AB"));
         actionBar.setBackgroundDrawable(colorDrawable);
@@ -118,6 +119,9 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         if (editGeofence) {
             LatLng latlang = new LatLng(intent.getDoubleExtra(Constant.LATITUDE, 0.0d), intent.getDoubleExtra(Constant.LONGNITUDE, 0.0d));
             addFragment(latlang, intent.getIntExtra("Radius", 0));
+        }
+        if(createGeofence){
+            addFragment(null, 0);
         }
 
         addressText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -195,8 +199,10 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
 
     private void addFragment(LatLng latLng, int radius) {
         Bundle bundle = new Bundle();
-        bundle.putDouble(Constant.LATITUDE, latLng.latitude);
-        bundle.putDouble(Constant.LONGNITUDE, latLng.longitude);
+        if(latLng != null){
+            bundle.putDouble(Constant.LATITUDE, latLng.latitude);
+            bundle.putDouble(Constant.LONGNITUDE, latLng.longitude);
+        }
         bundle.putBoolean(Constant.CREATE_GEOFENCE, true);
         if (radius != 0) {
             Toast.makeText(this, Constant.EDIT_GEOFENCE_ALERT, Toast.LENGTH_SHORT).show();
@@ -235,11 +241,22 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
                 startActivityForResult(intent, 120);
                 return true;
+
+            case R.id.create_geofence:
+                gotoCreateGeofenceActivity();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
         }
 
+    }
+
+    private void gotoCreateGeofenceActivity() {
+        Intent intent = new Intent(this,CreateGeofenceActivity.class);
+        intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+        intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+        startActivityForResult(intent,130);
     }
 
     @Override
@@ -251,7 +268,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 120) {
+        if (requestCode == 120 || requestCode == 130) {
             finish();
         }
     }

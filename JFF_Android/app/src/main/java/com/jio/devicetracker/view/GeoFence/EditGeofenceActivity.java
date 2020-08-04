@@ -152,7 +152,7 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             String radius = radiusText.getText().toString();
             if(radius.contains("km")){
                 if(progressChangedValue ==0){
-                    radiusValue = 5000;
+                    radiusValue = radiusSeekBar.getProgress();
                 } else {
                     radiusValue = progressChangedValue * 1000;
                 }

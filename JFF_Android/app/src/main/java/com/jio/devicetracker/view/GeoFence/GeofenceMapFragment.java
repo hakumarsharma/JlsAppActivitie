@@ -135,8 +135,10 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 }
             } else {
                 GEOFENCE_RADIUS_IN_METERS = 5000;
-                geoFenceLatlng = new LatLng(lat, lang);
-                mDbManager.insertGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+                if(lat != 0.0 && lang != 0.0) {
+                    geoFenceLatlng = new LatLng(lat, lang);
+                    mDbManager.insertGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+                }
             }
         }
         new Thread(new FetchLocation()).start();
@@ -197,7 +199,9 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         if (geofenceDetail != null && !geofenceDetail.isEmpty()) {
             for (GeofenceDetails details : geofenceDetail) {
                 geoFenceLatlng = new LatLng(details.getLat(), details.getLng());
-                mapSettings(details.getRadius());
+                if(geoFenceLatlng != null) {
+                    mapSettings(details.getRadius());
+                }
             }
 
         } else {
@@ -260,10 +264,10 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-
                         Log.d(TAG, Constant.GEOFENCE_SUCCESS_MESSAGE);
-
-                        mDbManager.insertGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+                        if(geoFenceLatlng != null && geoFenceLatlng.longitude != 0.0 && geoFenceLatlng.latitude != 0.0) {
+                            mDbManager.insertGeofenceDetailInGeofenceTable(geoFenceLatlng, GEOFENCE_RADIUS_IN_METERS, deviceNumber);
+                        }
 
                     }
                 })

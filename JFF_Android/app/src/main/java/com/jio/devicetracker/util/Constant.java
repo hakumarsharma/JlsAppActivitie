@@ -390,6 +390,7 @@ public class Constant {
     public static final String MANY_TO_MANY = "many_to_many";
 	public static final String GEOFENCE = "    Geofence";
     public static final String GEOFENCE_EDIT = "Edit Geofence";
+    public static final String GEOFENCE_CREATE = "Create Geofence";
     public static final String GEOFENCE_ENTRY_TITLE = "Geofence entry alert";
     public static final String GEOFENCE_EXIT_TITLE = "Geofence exit alert";
     public static final String GEOFENCE_ENTRY_MESSAGE = " has entered into ";
