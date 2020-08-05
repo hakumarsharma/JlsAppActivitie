@@ -6,28 +6,28 @@
     android:layout_height="wrap_content">
 
     <View
-        android:id="@+id/alertLine"
+        android:id="@+id/notificationAlertLine"
         android:layout_width="1dp"
         android:layout_height="30dp"
         android:layout_marginLeft="@dimen/margin_25"
         android:background="@android:color/darker_gray" />
 
     <TextView
-        android:id="@+id/dateTextView"
+        android:id="@+id/notificationDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/alertLine" />
+        android:layout_toRightOf="@id/notificationAlertLine" />
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/groupListLayout"
         android:layout_width="match_parent"
         android:layout_height="125dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="25dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="8dp"
+        card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="5dp">
 
@@ -35,51 +35,35 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/geofenceBreachIcon"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/ic_geofencebreach" />
-
             <TextView
-                android:id="@+id/geofenceBreachTextView"
+                android:id="@+id/notificationTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="85dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                android:text="Geofence breach"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/geofenceAddress"
+                android:id="@+id/notificationMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="52dp"
-                android:layout_toRightOf="@+id/geofenceBreachIcon"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/notificationTitle"
+                android:layout_alignStart="@id/notificationTitle"
                 android:textColor="#666666"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/time"
+                android:id="@+id/notificationTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@id/geofenceAddress"
+                android:layout_alignStart="@id/notificationMessage"
                 android:textColor="#666666"
                 android:textSize="10sp"
-                android:layout_below="@id/geofenceAddress"/>
-
-            <ImageView
-                android:id="@+id/operationStatus"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="@dimen/ten_dp"
-                android:src="@drawable/ic_more_black" />
+                android:layout_marginTop="8dp"
+                android:layout_below="@id/notificationMessage"/>
 
         </RelativeLayout>
 

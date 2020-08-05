@@ -35,6 +35,7 @@ import com.jio.devicetracker.database.pojo.DeviceTableData;
 import com.jio.devicetracker.database.pojo.GeofenceDetails;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
+import com.jio.devicetracker.database.pojo.NotificationData;
 import com.jio.devicetracker.database.pojo.SOSContactData;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
@@ -441,9 +442,9 @@ public class DBManager {
     /**
      * Delete the geofence data from geofence table
      */
-    public void deleteGeofenceData(double latitude,double longnitude) {
+    public void deleteGeofenceData(double latitude, double longnitude) {
         mDatabase = mDBHelper.getWritableDatabase();
-        mDatabase.delete(DatabaseHelper.TABLE_GEOFENCE, DatabaseHelper.LAT + "= " + latitude + " AND " + DatabaseHelper.LON+ "= "+longnitude, null);
+        mDatabase.delete(DatabaseHelper.TABLE_GEOFENCE, DatabaseHelper.LAT + "= " + latitude + " AND " + DatabaseHelper.LON + "= " + longnitude, null);
     }
 
     /**
@@ -784,6 +785,37 @@ public class DBManager {
             values.put(DatabaseHelper.DEVICE_NUM, sosContactData.getNumber());
             mDatabase.update(DatabaseHelper.TABLE_SOS, values, DatabaseHelper.PHONEBOOK_ID + "= '" + sosContactData.getPhonebookId() + "';", null);
         }
+    }
+
+    /**
+     * @param notificationData
+     */
+    public void insertIntoNotificationTable(NotificationData notificationData) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.NOTIFICATION_TITLE, notificationData.getNotificationTitle());
+        contentValue.put(DatabaseHelper.NOTIFICATION_MESSAGE, notificationData.getNotificationMessage());
+        contentValue.put(DatabaseHelper.NOTIFICATION_TIME, notificationData.getNotificationDate());
+        mDatabase.replace(DatabaseHelper.TABLE_NOTIFICATION, null, contentValue);
+    }
+
+    // Returns all Notification data from Notification table
+    public List<NotificationData> getAllNotificationData() {
+        List<NotificationData> mList = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String[] column = {DatabaseHelper.NOTIFICATION_TITLE, DatabaseHelper.NOTIFICATION_MESSAGE, DatabaseHelper.NOTIFICATION_TIME};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NOTIFICATION, column, null, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                NotificationData notificationData = new NotificationData();
+                notificationData.setNotificationTitle(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NOTIFICATION_TITLE)));
+                notificationData.setNotificationMessage(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NOTIFICATION_MESSAGE)));
+                notificationData.setNotificationDate(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NOTIFICATION_TIME)));
+                mList.add(notificationData);
+            }
+        }
+        cursor.close();
+        return mList;
     }
 
 }

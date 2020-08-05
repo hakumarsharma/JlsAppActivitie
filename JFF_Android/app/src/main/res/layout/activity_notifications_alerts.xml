@@ -45,6 +45,7 @@
         android:id="@+id/notoficationsViewPager"
         android:layout_width="match_parent"
         android:layout_below="@id/noticationAlertsTab"
+        android:background="@color/dull_text_color"
         android:layout_height="wrap_content" />
 
 

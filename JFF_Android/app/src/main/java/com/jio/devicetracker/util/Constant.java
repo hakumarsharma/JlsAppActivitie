@@ -311,6 +311,8 @@ public class Constant {
     public static final String DIALOG_TITLE = "Title...";
     public static final String NO_JIO_TRACKER = "No Jiotracker";
     public static final String ACCESS_COARSE_PERMISSION_ALERT = "Location permission is not granted, please grant it first";
+    public static final String GPS_OFF_NOTIFICATION = "Please turn on location of your phone to track your asset.";
+    public static final String JIO_TRACK_REMINDER = "JioTrack Reminder";
     public static final String IMEI_PERMISSION_NOT_GRANTED = "IMEI permission is not granted!";
     public static final String TERM_CONDITION_FLAG = "TermFlag";
     public static final String GROUP_ID_VALUE = "Group_ID_Value";
@@ -416,6 +418,7 @@ public class Constant {
     public static final String PRIMARY_SOS_MANDATORY = "Primary SOS contact is mandatory for SOS configuration.";
     public static final String START_DRAWER = "start drawer";
     public static final String YES = "Yes";
+    public static final String LOW_BATTERY_MSG = "Battery level is lower than set battery level, please charge it to continue services.";
 
     public static final String LOWBATTERY = "Low Battery";
     public static final String POLLING_FREQUENCY = "Polling frequency";

@@ -39,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_DEVICE = "DeviceTable";
     public static final String TABLE_GEOFENCE = "GeofenceTable";
     public static final String TABLE_SOS = "SOSTable";
+    public static final String TABLE_NOTIFICATION = "NotificationTable";
 
     //Table Columns
     public static final String IMEI_NUM = "imei";
@@ -84,7 +85,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String STATE = "state";
     public static final String PRIORITY = "priority";
     public static final String PHONEBOOK_ID = "phonebookId";
-
+    public static final String NOTIFICATION_TITLE = "notificationTitle";
+    public static final String NOTIFICATION_MESSAGE = "notificationMessage";
+    public static final String NOTIFICATION_TIME = "notificationTime";
 
     //DB Information
     public static final String DB_NAME = "AddDevice.db";
@@ -110,6 +113,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_SOS_TABLE = "create table " + TABLE_SOS + "(" + DEVICE_NUM + " TEXT ," + PRIORITY + " INTEGER ," + PHONEBOOK_ID + " TEXT ," + "PRIMARY KEY" + "(" + DEVICE_NUM + "))";
 
+    private static final String CREATE_NOTIFICATION_TABLE = "create table " + TABLE_NOTIFICATION + "(" + NOTIFICATION_TITLE + " TEXT ," + NOTIFICATION_MESSAGE + " TEXT ," + NOTIFICATION_TIME + " TEXT ," + "PRIMARY KEY" + "(" + NOTIFICATION_TIME + "))";
+
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -131,6 +136,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_DEVICE_TABLE);
         db.execSQL(CREATE_GEOFENCE_TABLE);
         db.execSQL(CREATE_SOS_TABLE);
+        db.execSQL(CREATE_NOTIFICATION_TABLE);
     }
 
     /**
@@ -149,6 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEVICE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GEOFENCE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SOS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATION);
         onCreate(db);
     }
 }

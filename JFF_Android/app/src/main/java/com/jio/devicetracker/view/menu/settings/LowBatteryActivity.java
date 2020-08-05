@@ -34,9 +34,10 @@ import androidx.annotation.Nullable;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 
-public class LowBatteryActivity extends Activity implements
-        AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class LowBatteryActivity extends Activity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+
     String[] bateryPercentage = {"5%", "10%", "15%", "20%", "25%", "30%", "35%", "40%", "45%", "50%"};
+    public static int setBatteryLevel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +63,8 @@ public class LowBatteryActivity extends Activity implements
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // Toast.makeText(getApplicationContext(),bateryPercentage[position] , Toast.LENGTH_LONG).show();
+        setBatteryLevel = Integer.parseInt(bateryPercentage[position].replace("%", ""));
+//        Toast.makeText(getApplicationContext(), bateryPercentage[position], Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -22,10 +22,13 @@ package com.jio.devicetracker.view.dashboard;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -33,6 +36,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +46,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -80,6 +85,7 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ApproveRejectConsentData;
+import com.jio.devicetracker.database.pojo.NotificationData;
 import com.jio.devicetracker.database.pojo.SOSContactData;
 import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
 import com.jio.devicetracker.database.pojo.request.RejectConsentRequest;
@@ -89,6 +95,7 @@ import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.geofence.NotificationHelper;
 import com.jio.devicetracker.view.menu.HowToUseActivity;
 import com.jio.devicetracker.view.adapter.DashboardAdapter;
 import com.jio.devicetracker.view.device.QRReaderInstruction;
@@ -98,11 +105,14 @@ import com.jio.devicetracker.view.menu.NavigateSupportActivity;
 import com.jio.devicetracker.view.menu.NavigateUserProfileActivity;
 import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
 import com.jio.devicetracker.view.menu.SilentModeActivity;
+import com.jio.devicetracker.view.menu.settings.LowBatteryActivity;
 import com.jio.devicetracker.view.menu.settings.SettingsActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 import com.jio.devicetracker.view.signinsignup.SigninSignupActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -195,16 +205,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         } else {
             viewPager.setCurrentItem(0);
         }
-//        requestPermission();
     }
-
-    /*// Request for Phone Call Permissions
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMIT_ALL);
-        }
-    }*/
-
 
     // Blocking user to go back to login screen, after login
     @Override
@@ -265,6 +266,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         setUpGClient();
         new Thread(new SendLocation()).start();
         userPhoneNumber = mDbManager.getAdminLoginDetail().getPhoneNumber();
+        registerReceiver(gpsBroadcastReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
     }
 
     @Override
@@ -777,13 +779,63 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
      * Broadcast receiver to calculate battery strength
      */
     private BroadcastReceiver broadcastreceiver = new BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onReceive(Context context, Intent intent) {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             batteryLevel = (int) (((float) level / (float) scale) * 100.0f);
+            if(batteryLevel < LowBatteryActivity.setBatteryLevel) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
+                NotificationData notificationData = new NotificationData();
+                notificationData.setNotificationTitle(Constant.LOWBATTERY);
+                notificationData.setNotificationMessage(Constant.LOW_BATTERY_MSG);
+                notificationData.setNotificationDate(dateFormat.format(new Date()));
+                mDbManager.insertIntoNotificationTable(notificationData);
+                showNotification(Constant.LOWBATTERY, Constant.LOW_BATTERY_MSG);
+            }
         }
     };
+
+    // Broadcast receiver for location turn on/off
+    private BroadcastReceiver gpsBroadcastReceiver = new BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
+                    NotificationData notificationData = new NotificationData();
+                    notificationData.setNotificationDate(dateFormat.format(new Date()));
+                    notificationData.setNotificationMessage(Constant.GPS_OFF_NOTIFICATION);
+                    notificationData.setNotificationTitle(Constant.JIO_TRACK_REMINDER);
+                    mDbManager.insertIntoNotificationTable(notificationData);
+                    showNotification(Constant.JIO_TRACK_REMINDER, Constant.GPS_OFF_NOTIFICATION);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    };
+
+    // Display notification
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void showNotification(String title, String body) {
+        new NotificationHelper(this);
+        Intent intent = new Intent(DashboardMainActivity.this, NotificationsAlertsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(DashboardMainActivity.this, 0, intent, 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(DashboardMainActivity.this, Constant.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.app_icon)
+                .setContentTitle(title)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(DashboardMainActivity.this);
+        notificationManager.notify(Constant.NOTIFICATION__ID, builder.build());
+    }
 
     /**
      * Connect to the MQTT server
