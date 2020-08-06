@@ -105,9 +105,6 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
         ImageView searchAddress = findViewById(R.id.search);
         addressText.setText(memberAddress);
         ImageView cancelAddress = findViewById(R.id.clear);
-       /* menuOption = findViewById(R.id.menu_option);
-        menuOption.setVisibility(View.VISIBLE);
-        menuOption.setOnClickListener(this);*/
         searchAddress.setOnClickListener(this);
         cancelAddress.setOnClickListener(this);
 
@@ -129,7 +126,13 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    /* Write your logic here that will be executed when user taps next button */
+                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    List<GeofenceDetails> details = mDbManager.getGeofenceDetailsList(deviceNumber);
+                    if(details.size()==10){
+                        Toast.makeText(GeofenceActivity.this,"Geofence limit is exceeded",Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
                     LatLng latlng = getLocationFromAddress(addressText.getText().toString());
                     if (latlng != null) {
                         addFragment(latlng, 0);
@@ -137,8 +140,6 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
                         Toast.makeText(GeofenceActivity.this, Constant.ADDRESS_MESSAGE, Toast.LENGTH_SHORT).show();
                     }
 
-                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     handled = true;
                 }
                 return handled;
@@ -153,6 +154,11 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
             case R.id.search:
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                List<GeofenceDetails> details = mDbManager.getGeofenceDetailsList(deviceNumber);
+                if(details.size()==10){
+                    Toast.makeText(GeofenceActivity.this,"Geofence limit is exceeded",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 LatLng latlng = getLocationFromAddress(addressText.getText().toString());
                 if (latlng != null) {
                     addFragment(latlng, 0);

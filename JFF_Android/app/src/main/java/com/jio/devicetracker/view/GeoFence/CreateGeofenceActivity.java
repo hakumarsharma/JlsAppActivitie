@@ -36,6 +36,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.GeofenceDetails;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
@@ -108,6 +109,11 @@ public class CreateGeofenceActivity extends Activity implements View.OnClickList
                 finish();
                 break;
             case R.id.updateGeofence:
+                List<GeofenceDetails> details = mDbManager.getGeofenceDetailsList(deviceNumber);
+                if(details.size()==10){
+                    Toast.makeText(CreateGeofenceActivity.this,"Geofence limit is exceeded",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(locationName.getText().toString().isEmpty()){
                     Toast.makeText(this,"Please enter the location name",Toast.LENGTH_SHORT).show();
                     return;
