@@ -296,7 +296,7 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.secondaryuser));
         markerOptions.title(memberName);
-        markerOptions.snippet(Util.getAddressFromLocation(latLng.latitude, latLng.longitude, getContext()));
+        markerOptions.snippet(Util.getAddressFromLocation(latLng.latitude, latLng.longitude, getActivity()));
         markerOptions.position(latLng);
         mMap.addMarker(markerOptions);
         if (mMap != null) {
