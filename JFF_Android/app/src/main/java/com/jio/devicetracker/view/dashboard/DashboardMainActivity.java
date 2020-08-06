@@ -785,7 +785,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             batteryLevel = (int) (((float) level / (float) scale) * 100.0f);
-            if(batteryLevel < LowBatteryActivity.setBatteryLevel) {
+            if(batteryLevel < LowBatteryActivity.setBatteryLevel && LowBatteryActivity.isSwitchChecked == true) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
                 NotificationData notificationData = new NotificationData();
                 notificationData.setNotificationTitle(Constant.LOWBATTERY);
@@ -910,6 +910,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         super.onDestroy();
         if (broadcastreceiver != null) {
             unregisterReceiver(broadcastreceiver);
+            unregisterReceiver(gpsBroadcastReceiver);
         }
     }
 

@@ -20,6 +20,7 @@
 
 package com.jio.devicetracker.view.menu;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
@@ -36,6 +37,8 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.NotificationAlertsAdapter;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
+import com.jio.devicetracker.view.menu.settings.SettingsActivity;
 
 public class NotificationsAlertsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -81,7 +84,9 @@ public class NotificationsAlertsActivity extends AppCompatActivity implements Vi
             RelativeLayout noticationAlertsTab = findViewById(R.id.noticationAlertsTab);
             noticationAlertsTab.setBackground(ContextCompat.getDrawable(this, R.drawable.layout_frame_without_radious));
         } else if (v.getId() == R.id.back) {
-            finish();
+            Intent dashboardIntent = new Intent(this, DashboardMainActivity.class);
+            dashboardIntent.putExtra(Constant.START_DRAWER, Constant.YES);
+            startActivity(dashboardIntent);
         }
     }
 
@@ -117,6 +122,14 @@ public class NotificationsAlertsActivity extends AppCompatActivity implements Vi
                 // To do
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent dashboardIntent = new Intent(this, DashboardMainActivity.class);
+        dashboardIntent.putExtra(Constant.START_DRAWER, Constant.YES);
+        startActivity(dashboardIntent);
     }
 
 }

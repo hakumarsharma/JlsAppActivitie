@@ -70,6 +70,7 @@
                 android:layout_alignStart="@id/geofenceAddress"
                 android:textColor="#666666"
                 android:textSize="10sp"
+                android:layout_marginTop="15dp"
                 android:layout_below="@id/geofenceAddress"/>
 
             <ImageView

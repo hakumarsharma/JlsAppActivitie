@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -29,6 +27,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.NotificationData;
 import com.jio.devicetracker.util.Constant;
@@ -40,7 +39,6 @@ import java.util.Locale;
 
 public class NotificationFragmentAdapter extends RecyclerView.Adapter<NotificationFragmentAdapter.ViewHolder> {
     private List<NotificationData> mNotificationsHistoryData;
-    private String currentDateValues = Constant.EMPTY_STRING;
 
     public NotificationFragmentAdapter(List<NotificationData> mAlertHistoryData) {
         this.mNotificationsHistoryData = mAlertHistoryData;
@@ -55,33 +53,11 @@ public class NotificationFragmentAdapter extends RecyclerView.Adapter<Notificati
 
     @Override
     public void onBindViewHolder(@NonNull NotificationFragmentAdapter.ViewHolder holder, int position) {
-        try {
-            NotificationData mNotificationHistoryData = mNotificationsHistoryData.get(position);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
-            Long oldDateLong = simpleDateFormat.parse(mNotificationHistoryData.getNotificationDate()).getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-            Long todayDateLong = sdf.parse(new Date().toString()).getTime();
-            long diffInMillies = todayDateLong - oldDateLong;
-            int diffDays = (int) (diffInMillies / (24 * 60 * 60 * 1000));
-            if (diffDays == 0) {
-                if(!currentDateValues.equalsIgnoreCase(Constant.TODAY)) {
-                    holder.notificationDateTextView.setText(Constant.TODAY);
-                    currentDateValues = Constant.TODAY;
-                }
-            } else if (diffDays == 1) {
-                if(!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY)) {
-                    holder.notificationDateTextView.setText(Constant.YESTERDAY);
-                    currentDateValues = Constant.YESTERDAY;
-                }
-            } else {
-                holder.notificationDateTextView.setText(mNotificationHistoryData.getNotificationDate());
-            }
-            holder.notificationTime.setText(mNotificationHistoryData.getNotificationDate());
-            holder.notificationTitle.setText(mNotificationHistoryData.getNotificationTitle());
-            holder.notificationMessage.setText(mNotificationHistoryData.getNotificationMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        NotificationData mNotificationHistoryData = mNotificationsHistoryData.get(position);
+        holder.notificationTime.setText(mNotificationHistoryData.getNotificationDate());
+        holder.notificationTitle.setText(mNotificationHistoryData.getNotificationTitle());
+        holder.notificationMessage.setText(mNotificationHistoryData.getNotificationMessage());
+        holder.notificationDateTextView.setText(mNotificationHistoryData.getDay());
     }
 
     @Override

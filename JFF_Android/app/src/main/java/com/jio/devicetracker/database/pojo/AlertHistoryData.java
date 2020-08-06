@@ -29,6 +29,15 @@ public class AlertHistoryData {
     private String date;
     private String address;
     private String state;
+    private String day;
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
 
     public String getState() {
         return state;

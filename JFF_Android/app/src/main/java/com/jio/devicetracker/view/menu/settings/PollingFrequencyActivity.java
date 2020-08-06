@@ -23,6 +23,7 @@
 package com.jio.devicetracker.view.menu.settings;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,23 +37,25 @@ import androidx.annotation.Nullable;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.view.location.MapFragment;
 
 public class PollingFrequencyActivity extends Activity implements AdapterView.OnItemSelectedListener,View.OnClickListener {
-    private String TAG = "PollingFrequencyActivity";
 
+    private String TAG = "PollingFrequencyActivity";
     String[] pollingFreq = { "5  |  min", "10  |  min", "15  |  min", "20  |  min", "25  |  min", "30  |  min", "35  |  min", "40  |  min", "45  |  min","50  |  min"};
+    public static int pullingFrequesncy = 5;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_polling_frequency);
-
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.POLLING_FREQUENCY);
         Button backBtn = findViewById(R.id.back);
         backBtn.setOnClickListener(this);
         backBtn.setVisibility(View.VISIBLE);
-
+        Button saveFreq = findViewById(R.id.save_freq);
+        saveFreq.setOnClickListener(this);
         //Getting the instance of Spinner and applying OnItemSelectedListener on it
         Spinner spin = (Spinner) findViewById(R.id.freq_spinner);
         spin.setOnItemSelectedListener(this);
@@ -62,18 +65,23 @@ public class PollingFrequencyActivity extends Activity implements AdapterView.On
         aa.setDropDownViewResource(R.layout.spinner_item);
         //Setting the ArrayAdapter data on the Spinner
         spin.setAdapter(aa);
-
     }
 
 
     @Override
     public void onClick(View v) {
-        Log.d(TAG,"provide clicklistner functionality");
+        if(v.getId() == R.id.back) {
+            finish();
+        } else if(v.getId() == R.id.save_freq) {
+            startActivity(new Intent(this, SettingsActivity.class));
+        }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG,"provide onItemSelected functionality");
+        pullingFrequesncy = Integer.parseInt(pollingFreq[position].replace("  |  min", ""));
+        MapFragment mapFragment = new MapFragment();
+        mapFragment.scheduleTimer();
     }
 
     @Override

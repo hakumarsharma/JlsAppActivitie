@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -42,8 +40,11 @@ import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.view.adapter.AlertsFragmentAdapter;
 import com.jio.devicetracker.view.geofence.GeofenceMapFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AlertsFragment extends Fragment implements View.OnClickListener {
 
@@ -55,6 +56,7 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
     private TextView alertNumbers;
     private List<AlertHistoryData> mAlertHistoryListData;
     private RecyclerView mRecyclerView;
+    private String currentDateValues = Constant.EMPTY_STRING;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,10 +100,12 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.alertBackButton) {
             if (position > 0) {
+                currentDateValues = Constant.EMPTY_STRING;
                 displayAlertHistory(alertHistoryData.get(--position).getConsentId());
             }
         } else if (v.getId() == R.id.alertNextButton) {
             if (position < alertHistoryData.size() - 1) {
+                currentDateValues = Constant.EMPTY_STRING;
                 displayAlertHistory(alertHistoryData.get(++position).getConsentId());
             }
         }
@@ -110,12 +114,55 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
     // Displays the name, address and alert count of user who breached the Geofence
     private void getAlertsHistoryAndDisplay(String consentId, View view) {
         mAlertHistoryListData = mDbManager.getHistoryTableData(consentId);
+        List<AlertHistoryData> setInAdapterList = new ArrayList<>();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView = view.findViewById(R.id.alertsList);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        AlertsFragmentAdapter alertsFragmentAdapter = new AlertsFragmentAdapter(mAlertHistoryListData);
+        try {
+            for (AlertHistoryData alertHistoryData : mAlertHistoryListData) {
+                AlertHistoryData mData = new AlertHistoryData();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
+                Long oldDateLong = simpleDateFormat.parse(alertHistoryData.getDate()).getTime();
+                SimpleDateFormat sdf = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+                Date parsedDate = sdf.parse(new Date().toString());
+                String todayDate = simpleDateFormat.format(parsedDate);
+                Long todayDateLong = simpleDateFormat.parse(todayDate).getTime();
+                long diffInMillies = todayDateLong - oldDateLong;
+                int diffhours = (int) (diffInMillies / (60 * 60 * 1000));
+                if (diffhours > 12) {
+                    if (!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY) && ((alertHistoryData.getDate().contains("pm") && todayDate.contains("pm"))
+                            || (alertHistoryData.getDate().contains("am") && todayDate.contains("am")))) {
+                        mData.setDay(Constant.YESTERDAY);
+                        currentDateValues = Constant.YESTERDAY;
+                    }
+                } else if (diffhours < 12) {
+                    if (!currentDateValues.equalsIgnoreCase(Constant.TODAY)) {
+                        mData.setDay(Constant.TODAY);
+                        currentDateValues = Constant.TODAY;
+                    }
+                } else if ((diffhours >= 24 && diffhours <= 48)) {
+                    if (!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY)) {
+                        mData.setDay(Constant.YESTERDAY);
+                        currentDateValues = Constant.YESTERDAY;
+                    }
+                } else {
+                    mData.setDay(alertHistoryData.getDate());
+                    currentDateValues = alertHistoryData.getDate();
+                }
+                mData.setName(alertHistoryData.getName());
+                mData.setAddress(alertHistoryData.getAddress());
+                mData.setNumber(alertHistoryData.getNumber());
+                mData.setDate(alertHistoryData.getDate());
+                mData.setState(alertHistoryData.getState());
+                setInAdapterList.add(mData);
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+        AlertsFragmentAdapter alertsFragmentAdapter = new AlertsFragmentAdapter(setInAdapterList);
         mRecyclerView.setAdapter(alertsFragmentAdapter);
-         if (mAlertHistoryListData.size() < 10) {
+        if (mAlertHistoryListData.size() < 10) {
             alertNumbers.setText("0" + mAlertHistoryListData.size());
         } else {
             alertNumbers.setText(mAlertHistoryListData.size());
@@ -130,22 +177,65 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
     // Displays the name, address and alert count of user after clicking on next/back button
     private void displayAlertHistory(String consentId) {
         mAlertHistoryListData = mDbManager.getHistoryTableData(consentId);
-        if(mAlertHistoryListData != null && mAlertHistoryListData.isEmpty()) {
+        List<AlertHistoryData> setInAdapterList = new ArrayList<>();
+        if (mAlertHistoryListData != null && mAlertHistoryListData.isEmpty()) {
             showCustomAlertWithText(Constant.ALERTS_ERRORS);
             return;
         } else {
             alertsMemberName.setText(mAlertHistoryListData.get(0).getName());
         }
-        if(mAlertHistoryListData != null && mAlertHistoryListData.isEmpty()) {
+        if (mAlertHistoryListData != null && mAlertHistoryListData.isEmpty()) {
             showCustomAlertWithText(Constant.ALERTS_ERRORS);
             return;
         } else {
             alertMemberAddress.setText(mAlertHistoryListData.get(0).getAddress());
         }
+        try {
+            for (AlertHistoryData alertHistoryData : mAlertHistoryListData) {
+                AlertHistoryData mData = new AlertHistoryData();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
+                Long oldDateLong = simpleDateFormat.parse(alertHistoryData.getDate()).getTime();
+                SimpleDateFormat sdf = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+                Date parsedDate = sdf.parse(new Date().toString());
+                String todayDate = simpleDateFormat.format(parsedDate);
+                Long todayDateLong = simpleDateFormat.parse(todayDate).getTime();
+                long diffInMillies = todayDateLong - oldDateLong;
+                int diffhours = (int) (diffInMillies / (60 * 60 * 1000));
+                if (diffhours > 12) {
+                    if (!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY) && ((alertHistoryData.getDate().contains("pm") && todayDate.contains("pm"))
+                            || (alertHistoryData.getDate().contains("am") && todayDate.contains("am")))) {
+                        mData.setDay(Constant.YESTERDAY);
+                        currentDateValues = Constant.YESTERDAY;
+                    }
+                } else if (diffhours < 12) {
+                    if (!currentDateValues.equalsIgnoreCase(Constant.TODAY)) {
+                        mData.setDay(Constant.TODAY);
+                        currentDateValues = Constant.TODAY;
+                    }
+                } else if ((diffhours >= 24 && diffhours <= 48)) {
+                    if (!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY)) {
+                        mData.setDay(Constant.YESTERDAY);
+                        currentDateValues = Constant.YESTERDAY;
+                    }
+                } else {
+                    mData.setDay(alertHistoryData.getDate());
+                    currentDateValues = alertHistoryData.getDate();
+                }
+                mData.setName(alertHistoryData.getName());
+                mData.setAddress(alertHistoryData.getAddress());
+                mData.setNumber(alertHistoryData.getNumber());
+                mData.setDate(alertHistoryData.getDate());
+                mData.setState(alertHistoryData.getState());
+                setInAdapterList.add(mData);
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.removeAllViewsInLayout();
         mRecyclerView.setLayoutManager(mLayoutManager);
-        AlertsFragmentAdapter alertsFragmentAdapter = new AlertsFragmentAdapter(mAlertHistoryListData);
+        AlertsFragmentAdapter alertsFragmentAdapter = new AlertsFragmentAdapter(setInAdapterList);
         mRecyclerView.setAdapter(alertsFragmentAdapter);
         alertNumbers.setText(String.valueOf(mAlertHistoryListData.size()));
     }

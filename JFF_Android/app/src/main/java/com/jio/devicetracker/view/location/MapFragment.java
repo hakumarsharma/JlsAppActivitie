@@ -41,6 +41,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
@@ -51,13 +53,25 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.MapData;
+import com.jio.devicetracker.database.pojo.SearchEventData;
+import com.jio.devicetracker.database.pojo.request.SearchEventRequest;
+import com.jio.devicetracker.database.pojo.response.SearchEventResponse;
+import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
+import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.menu.settings.PollingFrequencyActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -72,8 +86,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private static Context context = null;
     private List<MapData> mapDataList;
     private String groupStatus;
+    private String groupId;
     private boolean deviceLocation;
     private boolean peopleLocation;
+    final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+    ScheduledFuture schedulerFuture;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,10 +101,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         createNotificationChannel();
         context = getContext();
         strAddress = new StringBuilder();
-        deviceLocation = getActivity().getIntent().getBooleanExtra(Constant.DEVICE_LOCATION,false);
-        peopleLocation = getActivity().getIntent().getBooleanExtra(Constant.PEOPLE_LOCATION,false);
+        deviceLocation = getActivity().getIntent().getBooleanExtra(Constant.DEVICE_LOCATION, false);
+        peopleLocation = getActivity().getIntent().getBooleanExtra(Constant.PEOPLE_LOCATION, false);
         mapDataList = getActivity().getIntent().getParcelableArrayListExtra(Constant.MAP_DATA);
         groupStatus = getActivity().getIntent().getStringExtra(Constant.GROUP_STATUS);
+        groupId = getActivity().getIntent().getStringExtra(Constant.GROUP_ID);
         if (mMap != null) {
             mMap.setInfoWindowAdapter(new MapFragment.MyInfoWindowAdapter(getContext()));
         }
@@ -96,7 +114,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.locationOnMap);
         assert mapFragment != null;
@@ -109,8 +126,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_MAPS);
         }
-
-
+        scheduleTimer();
         return view;
     }
 
@@ -137,9 +153,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             showCustomAlertWithText(Constant.SESSION_COMPLETED);
         } else if (mapDataList.isEmpty() && peopleLocation) {
             showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
-        } else if(mapDataList.isEmpty() && deviceLocation){
+        } else if (mapDataList.isEmpty() && deviceLocation) {
             showCustomAlertWithText(Constant.FETCH_DEVICE_LOCATION_ERROR);
-        }else if(mapDataList.isEmpty()) {
+        } else if (mapDataList.isEmpty()) {
             showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
         if (mapDataList != null && !mapDataList.isEmpty() && strAddress != null && groupStatus.equalsIgnoreCase(Constant.ACTIVE)) {
@@ -159,27 +175,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             }
         }
     }
-
-    /**
-     * Adds 10 color in list, so that we could be able to display
-     * different marker with different color
-     *
-     * @return List of available colors
-     *//*
-    private List<Float> createColoredMapList() {
-        List<Float> mapColorList = new ArrayList<>();
-        mapColorList.add(BitmapDescriptorFactory.HUE_BLUE);
-        mapColorList.add(BitmapDescriptorFactory.HUE_GREEN);
-        mapColorList.add(BitmapDescriptorFactory.HUE_ORANGE);
-        mapColorList.add(BitmapDescriptorFactory.HUE_AZURE);
-        mapColorList.add(BitmapDescriptorFactory.HUE_ROSE);
-        mapColorList.add(BitmapDescriptorFactory.HUE_CYAN);
-        mapColorList.add(BitmapDescriptorFactory.HUE_MAGENTA);
-        mapColorList.add(BitmapDescriptorFactory.HUE_RED);
-        mapColorList.add(BitmapDescriptorFactory.HUE_VIOLET);
-        mapColorList.add(BitmapDescriptorFactory.HUE_YELLOW);
-        return mapColorList;
-    }*/
 
     /**
      * Returns real address based on Lat and Long(Geo Coding)
@@ -263,4 +258,64 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+    // Start the scheduler according to the user's set time
+    public void scheduleTimer() {
+        schedulerFuture = executor.scheduleWithFixedDelay(() -> getActivity().runOnUiThread(() -> makeGetLocationAPICall()), 0, PollingFrequencyActivity.pullingFrequesncy, TimeUnit.MINUTES);
+    }
+
+
+    /**
+     * find locations for group members
+     */
+    private void makeGetLocationAPICall() {
+        SearchEventData searchEventData = new SearchEventData();
+        List<String> mList = new ArrayList<>();
+        mList.add(Constant.LOCATION);
+        mList.add(Constant.SOS);
+        searchEventData.setTypes(mList);
+        GroupRequestHandler.getInstance(getActivity()).handleRequest(new SearchEventRequest(new SearchEventRequestSuccessListener(), new SearchEventRequestErrorListener(), searchEventData, new DBManager(getActivity()).getAdminLoginDetail().getUserId(), groupId, Constant.GET_LOCATION_URL));
+    }
+
+    /**
+     * Search Event Request API call Success Listener
+     */
+    private class SearchEventRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            mapDataList.clear();
+            SearchEventResponse searchEventResponse = Util.getInstance().getPojoObject(String.valueOf(response), SearchEventResponse.class);
+            List<SearchEventResponse.Data> mList = searchEventResponse.getData();
+            if (!mList.isEmpty()) {
+                List<GroupMemberDataList> grpMembersOfParticularGroupId = new DBManager(getActivity()).getAllGroupMemberDataBasedOnGroupId(groupId);
+                for (SearchEventResponse.Data data : mList) {
+                    for (GroupMemberDataList grpMembers : grpMembersOfParticularGroupId) {
+                        if (grpMembers.getDeviceId() != null
+                                && grpMembers.getDeviceId().equalsIgnoreCase(data.getDevice())
+                                && !grpMembers.getNumber().equalsIgnoreCase(new DBManager(getActivity()).getAdminLoginDetail().getPhoneNumber())
+                                && (grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || grpMembers.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                            MapData mapData = new MapData();
+                            mapData.setLatitude(data.getLocation().getLat());
+                            mapData.setLongitude(data.getLocation().getLng());
+                            mapData.setName(grpMembers.getName());
+                            mapData.setConsentId(grpMembers.getConsentId());
+                            mapDataList.add(mapData);
+                        }
+                    }
+                }
+            }
+            showMapOnTimeInterval();
+        }
+    }
+
+    /**
+     * Search Event Request API Call Error listener
+     */
+    private class SearchEventRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
+        }
+    }
+
 }

@@ -24,6 +24,15 @@ public class NotificationData {
     private String notificationTitle;
     private String notificationMessage;
     private String notificationDate;
+    private String day;
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
 
     public String getNotificationTitle() {
         return notificationTitle;

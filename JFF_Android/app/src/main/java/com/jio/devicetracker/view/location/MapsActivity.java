@@ -29,7 +29,6 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -54,8 +53,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.Util;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

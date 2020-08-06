@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -33,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AlertHistoryData;
 import com.jio.devicetracker.util.Constant;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -56,37 +55,14 @@ public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAd
 
     @Override
     public void onBindViewHolder(@NonNull AlertsFragmentAdapter.ViewHolder holder, int position) {
-        try {
-            AlertHistoryData mAlertHistroryData = mAlertHistoryData.get(position);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
-            Long oldDateLong = simpleDateFormat.parse(mAlertHistroryData.getDate()).getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-            Long todayDateLong = sdf.parse(new Date().toString()).getTime();
-            long diffInMillies = todayDateLong - oldDateLong;
-            int diffDays = (int) (diffInMillies / (24 * 60 * 60 * 1000));
-            if (diffDays == 0) {
-                if(!currentDateValues.equalsIgnoreCase(Constant.TODAY)) {
-                    holder.dateTextView.setText(Constant.TODAY);
-                    currentDateValues = Constant.TODAY;
-                }
-            } else if (diffDays == 1) {
-                if(!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY)) {
-                    holder.dateTextView.setText(Constant.YESTERDAY);
-                    currentDateValues = Constant.YESTERDAY;
-                }
-            } else {
-                holder.dateTextView.setText(mAlertHistroryData.getDate());
-            }
-            holder.time.setText(mAlertHistroryData.getDate());
-            holder.geofenceAddress.setText(mAlertHistroryData.getAddress());
-            if(mAlertHistroryData.getState().equalsIgnoreCase(Constant.ENTRY)) {
-                holder.geofenceBreachTextView.setText(Constant.GEOFENCE_ENTRY);
-            } else if(mAlertHistroryData.getState().equalsIgnoreCase(Constant.EXIT)) {
-                holder.geofenceBreachTextView.setText(Constant.GEOFENCE_EXIT);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        AlertHistoryData mAlertHistroryData = mAlertHistoryData.get(position);
+        holder.dateTextView.setText(mAlertHistroryData.getDay());
+        holder.time.setText(mAlertHistroryData.getDate());
+        holder.geofenceAddress.setText(mAlertHistroryData.getAddress());
+        if (mAlertHistroryData.getState().equalsIgnoreCase(Constant.ENTRY)) {
+            holder.geofenceBreachTextView.setText(Constant.GEOFENCE_ENTRY);
+        } else if (mAlertHistroryData.getState().equalsIgnoreCase(Constant.EXIT)) {
+            holder.geofenceBreachTextView.setText(Constant.GEOFENCE_EXIT);
         }
     }
 
