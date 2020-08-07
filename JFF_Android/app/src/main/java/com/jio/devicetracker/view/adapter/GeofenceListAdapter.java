@@ -86,18 +86,11 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
             }
         });
 
-        holder.createGeofence.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemListener.createGeofence();
-            }
-        });
 
     }
 
     public interface AdapterListner{
         void clickOnEdit(GeofenceDetails details);
-        void createGeofence();
     }
     @Override
     public int getItemCount() {
@@ -114,7 +107,6 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
         private TextView editText;
         private TextView shareLocation;
         private TextView deleteText;
-        private TextView createGeofence;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -125,7 +117,6 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
             close = itemView.findViewById(R.id.close);
             menuOption = itemView.findViewById(R.id.menu_option);
             editText = itemView.findViewById(R.id.edit);
-            createGeofence = itemView.findViewById(R.id.create_geofence);
             deleteText = itemView.findViewById(R.id.delete);
             shareLocation = itemView.findViewById(R.id.share_location);
             editText.setOnClickListener(this);

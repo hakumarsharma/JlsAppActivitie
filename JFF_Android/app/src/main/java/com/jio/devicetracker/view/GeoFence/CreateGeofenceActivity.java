@@ -175,13 +175,15 @@ public class CreateGeofenceActivity extends Activity implements View.OnClickList
     private void gotoGeofenceMapandListActivity() {
         Intent intent = new Intent(this,GeoFenceMapAndListViewActivity.class);
         intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
-        startActivityForResult(intent,150);
+        startActivityForResult(intent,210);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==150 || requestCode ==160){
+        if(requestCode==210 || requestCode ==160){
+            finish();
+        } else {
             finish();
         }
     }

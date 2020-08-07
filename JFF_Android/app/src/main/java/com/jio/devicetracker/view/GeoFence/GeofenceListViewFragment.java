@@ -70,14 +70,6 @@ public class GeofenceListViewFragment extends Fragment {
                 intent.putExtra(Constant.GEOFENCE_ADDRESS,addressGeofence);
                 getActivity().startActivityForResult(intent,110);
             }
-
-            @Override
-            public void createGeofence() {
-                Intent intent = new Intent(getActivity(), CreateGeofenceActivity.class);
-                intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
-                intent.putExtra(Constant.CREATE_GEOFENCE,true);
-                getActivity().startActivityForResult(intent,120);
-            }
         });
         return view;
     }

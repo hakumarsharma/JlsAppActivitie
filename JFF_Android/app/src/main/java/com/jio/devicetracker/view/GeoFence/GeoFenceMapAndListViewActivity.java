@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -44,6 +45,7 @@ public class GeoFenceMapAndListViewActivity extends AppCompatActivity implements
     private TextView mapTab;
     private TextView listTab;
     private ViewPager viewPager;
+    private String deviceNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,10 +55,14 @@ public class GeoFenceMapAndListViewActivity extends AppCompatActivity implements
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.GEOFENCE_AREA);
         title.setTypeface(Util.mTypeface(this, 5));
+        ImageView createGeofence = findViewById(R.id.createGroup);
+        createGeofence.setVisibility(View.VISIBLE);
+        createGeofence.setOnClickListener(this);
         mapTab = findViewById(R.id.map_view);
         listTab = findViewById(R.id.list_view);
         listTab.setOnClickListener(this);
         mapTab.setOnClickListener(this);
+        deviceNumber = getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         mapTab.setTypeface(Util.mTypeface(this, 5));
         listTab.setTypeface(Util.mTypeface(this, 5));
         mapTab.setText(Constant.MAP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
@@ -105,9 +111,17 @@ public class GeoFenceMapAndListViewActivity extends AppCompatActivity implements
         } else if(v.getId() == R.id.map_view) {
             viewPager.setCurrentItem(0);
             setMapTab();
+            return;
         } else if(v.getId() == R.id.list_view) {
             viewPager.setCurrentItem(1);
             setListTab();
+            return;
+        } else if(v.getId() == R.id.createGroup); {
+            Intent intent = new Intent(this, CreateGeofenceActivity.class);
+            intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+            intent.putExtra(Constant.CREATE_GEOFENCE,true);
+            startActivityForResult(intent,180);
+
         }
     }
 
@@ -130,7 +144,7 @@ public class GeoFenceMapAndListViewActivity extends AppCompatActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 110 || requestCode == 120){
+        if(requestCode == 110 || requestCode == 180){
             finish();
         }
     }

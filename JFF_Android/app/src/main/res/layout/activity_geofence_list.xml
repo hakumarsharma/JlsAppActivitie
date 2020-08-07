@@ -114,31 +114,10 @@
             android:background="@color/light_hash" />
 
         <TextView
-            android:id="@+id/create_geofence"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/share_location_line"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:text="Create Geofence"
-            android:textColor="@color/white"
-            android:textSize="@dimen/seventeen_dp" />
-
-        <View
-            android:id="@+id/create_geofence_line"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/create_geofence"
-            android:layout_marginLeft="@dimen/twenty_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:layout_marginRight="@dimen/fourteen_dp"
-            android:background="@color/light_hash" />
-
-        <TextView
             android:id="@+id/edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/create_geofence_line"
+            android:layout_below="@+id/share_location_line"
             android:layout_marginLeft="@dimen/twenty_dp"
             android:layout_marginTop="@dimen/ten_dp"
             android:text="Edit"
