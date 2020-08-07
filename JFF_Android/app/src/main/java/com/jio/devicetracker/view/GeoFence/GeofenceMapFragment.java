@@ -74,6 +74,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
+import com.jio.devicetracker.view.menu.SilentModeActivity;
 import com.jio.devicetracker.view.menu.settings.GeofenceSettingsAcivity;
 
 import java.text.SimpleDateFormat;
@@ -424,14 +425,18 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
                 alertHistoryData.setState(Constant.ENTRY);
                 mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             }
-            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE, memberName + Constant.GEOFENCE_ENTRY_MESSAGE + address + Constant.GEOFENCE_LIMIT, NotificationsAlertsActivity.class);
+            if(!SilentModeActivity.silentFeatureFlag) {
+                notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_ENTRY_TITLE, memberName + Constant.GEOFENCE_ENTRY_MESSAGE + address + Constant.GEOFENCE_LIMIT, NotificationsAlertsActivity.class);
+            }
         } else if (distance > GEOFENCE_RADIUS_IN_METERS && geoFenceEntryExit && GeofenceSettingsAcivity.geoFenceExitNotificationFlag) {
             geoFenceEntryExit = false;
             if (alertHistoryData != null) {
                 alertHistoryData.setState(Constant.EXIT);
                 mDbManager.insertIntoAlertHistoryTable(alertHistoryData);
             }
-            notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, memberName + Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
+            if(!SilentModeActivity.silentFeatureFlag) {
+                notificationHelper.sendHighPriorityNotification(Constant.GEOFENCE_EXIT_TITLE, memberName + Constant.GEOFENCE_EXIT_MESSAGE, NotificationsAlertsActivity.class);
+            }
         }
     }
 

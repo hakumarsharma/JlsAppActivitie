@@ -28,4 +28,5 @@
     <dimen name="eight_dp">8dp</dimen>
     <dimen name="seventeen_dp">17dp</dimen>
     <dimen name="sixteen_dp">16dp</dimen>
+    <dimen name="margin_260">260dp</dimen>
 </resources>

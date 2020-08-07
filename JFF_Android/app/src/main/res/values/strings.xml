@@ -187,5 +187,5 @@
     <string name="people_instruction_2">Attached device to any asset and \nsave the information to get it track.</string>
     <string name="device_instruction_1">No Devices yet !</string>
     <string name="device_instruction_2">You can start tracking your loved ones \nwith a device. Add the device by \ntapping on "+" sign above \nDon\'t have a device? \nVisit //http:www.jio.com </string>
-
+    <string name="slient_mode_text">Silent mode is that way to restrict all kind of notification, for particular time duration.</string>
 </resources>

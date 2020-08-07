@@ -25,6 +25,8 @@ package com.jio.devicetracker.view.menu;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +36,9 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 public class SilentModeActivity extends AppCompatActivity implements View.OnClickListener {
+    private Switch silentEntrySwitch;
+    public static boolean silentFeatureFlag;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,15 @@ public class SilentModeActivity extends AppCompatActivity implements View.OnClic
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         backBtn.setOnClickListener(this);
+        silentEntrySwitch = findViewById(R.id.entrySwitch);
+        silentEntrySwitch.setChecked(silentFeatureFlag);
+        silentEntrySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                silentFeatureFlag = isChecked;
+            }
+        });
+
     }
     @Override
     public void onClick(View v) {
