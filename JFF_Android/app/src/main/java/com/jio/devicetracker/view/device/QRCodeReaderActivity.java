@@ -73,7 +73,7 @@ public class QRCodeReaderActivity extends Activity implements ZXingScannerView.R
     }
 
     /**
-     * Call back method, which navigates us to the ContactDetailsActivity
+     * Call back method
      *
      * @param result
      */
