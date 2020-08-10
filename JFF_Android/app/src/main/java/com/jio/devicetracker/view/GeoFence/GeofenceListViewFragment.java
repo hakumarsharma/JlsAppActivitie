@@ -52,7 +52,7 @@ public class GeofenceListViewFragment extends Fragment {
         deviceNumber = getActivity().getIntent().getStringExtra(Constant.DEVICE_NUMBER);
         RecyclerView geoFenceListView = view.findViewById(R.id.geofence_list);
         List<GeofenceDetails> list = mDbManager.getGeofenceDetailsList(deviceNumber);
-        GeofenceListAdapter adapter = new GeofenceListAdapter(list,getActivity(),deviceNumber);
+        GeofenceListAdapter adapter = new GeofenceListAdapter(list,getActivity());
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         geoFenceListView.setLayoutManager(mLayoutManager);
         geoFenceListView.setAdapter(adapter);

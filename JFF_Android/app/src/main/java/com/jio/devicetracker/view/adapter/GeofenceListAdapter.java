@@ -54,7 +54,7 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
      *
      * @param mData
      */
-    public GeofenceListAdapter(List mData, Context mContext,String deviceNumber) {
+    public GeofenceListAdapter(List mData, Context mContext) {
         this.mData = mData;
         this.mContext = mContext;
         mDbManager = new DBManager(mContext);
