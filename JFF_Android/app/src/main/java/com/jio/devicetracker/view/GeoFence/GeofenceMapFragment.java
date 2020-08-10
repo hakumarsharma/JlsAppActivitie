@@ -24,6 +24,8 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -77,10 +79,12 @@ import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
 import com.jio.devicetracker.view.menu.SilentModeActivity;
 import com.jio.devicetracker.view.menu.settings.GeofenceSettingsAcivity;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -297,13 +301,37 @@ public class GeofenceMapFragment extends Fragment implements OnMapReadyCallback,
         MarkerOptions markerOptions = new MarkerOptions().position(latLng);
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.secondaryuser));
         markerOptions.title(memberName);
-        markerOptions.snippet(Util.getAddressFromLocation(latLng.latitude, latLng.longitude, getActivity()));
+        markerOptions.snippet(getAddressFromLocation(latLng.latitude, latLng.longitude));
         markerOptions.position(latLng);
         mMap.addMarker(markerOptions);
         if (mMap != null) {
             mMap.setInfoWindowAdapter(new GeofenceMapFragment.MyInfoWindowAdapter(getContext()));
         }
     }
+
+    /**
+     * Returns real address based on Lat and Long(Geo Coding)
+     *
+     * @param latitude
+     * @param longitude
+     * @return
+     */
+    public String getAddressFromLocation(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.ENGLISH);
+        StringBuilder strAddress = new StringBuilder();
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (!addresses.isEmpty()) {
+                Address fetchedAddress = addresses.get(0);
+                strAddress.setLength(0);
+                strAddress.append(fetchedAddress.getAddressLine(0)).append(" ");
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return strAddress.toString();
+    }
+
 
     /**
      * Fetch trackee location after every 1 min
