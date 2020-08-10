@@ -73,7 +73,7 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
                 int diffhours = (int) (diffInMillies / (60 * 60 * 1000));
                 if (diffhours > 12) {
                     if (!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY) && (notificationData.getNotificationDate().contains("pm") && todayDate.contains("pm"))
-                            || (notificationData.getNotificationDate().contains("am") && todayDate.contains("am"))) {
+                            || notificationData.getNotificationDate().contains("am") && todayDate.contains("am")) {
                         mData.setDay(Constant.YESTERDAY);
                         currentDateValues = Constant.YESTERDAY;
                     }
