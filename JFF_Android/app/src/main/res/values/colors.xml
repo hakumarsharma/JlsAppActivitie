@@ -54,5 +54,6 @@
     <color name="approved_color">#6AC642</color>
     <color name="pending_color">#FFD430</color>
 	<color name="geofence_background">#1C60AB</color>
+    <color name="shadow_black">#2E323C</color>
     <color name="geofence_background_fill_color">#87CEFA</color>
 </resources>

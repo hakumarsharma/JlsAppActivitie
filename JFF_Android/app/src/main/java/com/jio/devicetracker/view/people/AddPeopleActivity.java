@@ -132,6 +132,7 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             addContact.setTypeface(Util.mTypeface(this, 5));
             addContact.setOnClickListener(this);
             addContact_Continue.setText("Continue");
+            addToGroup.setVisibility(View.GONE);
         } else {
             addContact_Continue.setText("Add later");
             addContact_Continue.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_frame_white, null));
@@ -273,8 +274,8 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
             if (hasPerm == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(intent, 1);
-            }else {
-                Toast.makeText(this, Constant.CONTACTS_PERMISSION, Toast.LENGTH_LONG);
+            } else {
+                showCustomAlertWithText(Constant.CONTACTS_PERMISSION);
             }
 
         } else if (v.getId() == R.id.addContactDetail) {
@@ -342,7 +343,6 @@ public class AddPeopleActivity extends BaseActivity implements View.OnClickListe
         setEditTextValues();
         addMemberInGroupAPICall();
         setButtonBackground(addContact_Continue, true);
-
     }
 
     public void getAllMembers(List<GroupMemberResponse.Data> memberList) {

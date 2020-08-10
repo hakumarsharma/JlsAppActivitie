@@ -43,6 +43,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.ProfileTrackedByListAdapter;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +94,7 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                finish();
+                startActivity(new Intent(this, DashboardMainActivity.class));
                 break;
             case R.id.edit_btn:
                 gotoUpdateProfileActivity();
@@ -174,9 +175,9 @@ public class NavigateUserProfileActivity extends Activity implements View.OnClic
             GroupMemberDataList data = new GroupMemberDataList();
             if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName() != null
                     && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)
-                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)
-                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXITED)
-                    && !groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.REMOVED)) {
+                    && !groupMemberDataList.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
+                    && mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getStatus().equalsIgnoreCase(Constant.ACTIVE)) {
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());
                 data.setConsentStatus(groupMemberDataList.getConsentStatus());

@@ -19,16 +19,17 @@
  **************************************************************/
 package com.jio.devicetracker.view.adapter;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -36,34 +37,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
-import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
-import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
+
+import com.jio.devicetracker.database.pojo.GenerateConsentTokenData;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
-import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
 import com.jio.devicetracker.database.pojo.request.DeleteGroupRequest;
-import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
-import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
+import com.jio.devicetracker.database.pojo.request.GenerateConsentTokenRequest;
+import com.jio.devicetracker.database.pojo.response.CommonAPIResponse;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.dashboard.PeopleFragment;
 import com.jio.devicetracker.view.people.ChooseGroupFromPeopleFlow;
 import com.jio.devicetracker.view.people.EditMemberDetailsActivity;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberListAdapter.ViewHolder> {
     private List<HomeActivityListData> mList;
@@ -219,9 +209,11 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     individualMemberOperationLayout.setVisibility(View.GONE);
                     break;
                 case R.id.addPeopleToGroup:
+                    DashboardMainActivity.flowFromPeople = true;
                     Intent chooseGroupIntent = new Intent(mContext, ChooseGroupFromPeopleFlow.class);
                     chooseGroupIntent.putExtra(Constant.TRACKEE_NAME, mList.get(getAdapterPosition()).getGroupName());
-                    chooseGroupIntent.putExtra(Constant.TRACKEE_NUMBER,mList.get(getAdapterPosition()).getPhoneNumber());
+                    chooseGroupIntent.putExtra(Constant.TRACKEE_NUMBER, mList.get(getAdapterPosition()).getPhoneNumber());
+                    chooseGroupIntent.putExtra(Constant.IS_PEOPLE_ADD_TO_GROUP,true);
                     mContext.startActivity(chooseGroupIntent);
                     break;
                 case R.id.deleteIndividualUser:
@@ -229,8 +221,10 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
                     deleteAlertBox(position);
                     break;
                 case R.id.resendInvite:
+                    individualMemberOperationLayout.setVisibility(View.GONE);
                     position = getAdapterPosition();
-                    makeRemoveAPICall(mList.get(position));
+                    resendInviteAPICall(mList.get(position));
+                    //makeRemoveAPICall(mList.get(position));
                     //makeDeleteGroupAPICall(mList.get(position).getGroupId(),true);
                     break;
                 case R.id.editIndividualMember:
@@ -248,67 +242,62 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         }
 
         private void deleteAlertBox(int position) {
-            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
-            adb.setTitle(Constant.ALERT_TITLE);
-            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
-            adb.setIcon(android.R.drawable.ic_dialog_alert);
-            adb.setPositiveButton("OK", (dialog, which) -> {
+            final Dialog dialog = new Dialog(mContext);
+            dialog.setContentView(R.layout.number_display_dialog);
+            TextView mAlertMessage = dialog.findViewById(R.id.selectNumber);
+            mAlertMessage.setText(Constant.DELETE_PERSON_MESSAGE);
+            dialog.setTitle(Constant.ALERT_TITLE);
+            dialog.getWindow().setLayout(750, 500);
+            final Button yes = dialog.findViewById(R.id.positive);
+            final Button no = dialog.findViewById(R.id.negative);
+            yes.setOnClickListener(v -> {
                 PeopleMemberListAdapter.this.individualMemberOperationLayout = individualMemberOperationLayout;
                 makeDeleteGroupAPICall(mList.get(position).getGroupId());
+                dialog.dismiss();
+            });
 
+            no.setOnClickListener(v -> {
+                dialog.dismiss();
+                individualMemberOperationLayout.setVisibility(View.GONE);
             });
-            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            adb.show();
+            dialog.show();
         }
     }
 
-    /**
-     * Add Members in Group API Call, member will be part of group
-     */
-    private void addMemberInGroupAPICall(HomeActivityListData homeActivityListData) {
-        AddMemberInGroupData addMemberInGroupData = new AddMemberInGroupData();
-        AddMemberInGroupData.Consents consents = new AddMemberInGroupData().new Consents();
-        List<AddMemberInGroupData.Consents> consentList = new ArrayList<>();
-        List<String> mList = new ArrayList<>();
-        mList.add(Constant.EVENTS);
-        consents.setEntities(mList);
-        consents.setPhone(homeActivityListData.getPhoneNumber());
-        consents.setName(homeActivityListData.getGroupName());
-        consentList.add(consents);
-        addMemberInGroupData.setConsents(consentList);
+    private void resendInviteAPICall(HomeActivityListData homeActivityListData){
+        GenerateConsentTokenData consentTokenData = new GenerateConsentTokenData();
+        GenerateConsentTokenData.Consent consent = new GenerateConsentTokenData().new Consent();
+        consent.setPhone(homeActivityListData.getPhoneNumber());
+        consentTokenData.setConsent(consent);
         Util.getInstance().showProgressBarDialog(mContext);
         homeActivityList = homeActivityListData;
-        GroupRequestHandler.getInstance(mContext).handleRequest(new AddMemberInGroupRequest(new AddMemberInGroupRequestSuccessListener(), new AddMemberInGroupRequestErrorListener(), addMemberInGroupData, homeActivityListData.getGroupId(), mDbManager.getAdminLoginDetail().getUserId()));
+        GroupRequestHandler.getInstance(mContext).handleRequest(new GenerateConsentTokenRequest(new GenerateConsentTokenRequestSuccessListener(), new GenerateConsentTokenRequestErrorListener(), consentTokenData, homeActivityListData.getGroupId(), mDbManager.getAdminLoginDetail().getUserId()));
+
     }
 
     /**
      * Add Member in group Success Listener
      */
-    private class AddMemberInGroupRequestSuccessListener implements Response.Listener {
+    private class GenerateConsentTokenRequestSuccessListener implements Response.Listener {
         @Override
         public void onResponse(Object response) {
-            GroupMemberResponse groupMemberResponse = Util.getInstance().getPojoObject(String.valueOf(response), GroupMemberResponse.class);
             Util.progressDialog.dismiss();
-            if (groupMemberResponse.getCode() == Constant.SUCCESS_CODE_200) {
-                showCustomAlertWithText(Constant.INVITE_SENT);
-                for (GroupMemberResponse.Data data : groupMemberResponse.getData()) {
-                    HomeActivityListData groupMemberDataList = new HomeActivityListData();
-                    groupMemberDataList.setConsentId(data.getConsentId());
-                    groupMemberDataList.setPhoneNumber(data.getPhone());
-                    //groupMemberDataList.setGr(data.isGroupAdmin());
-                    groupMemberDataList.setGroupId(data.getGroupId());
-                    groupMemberDataList.setConsentStaus(data.getStatus());
-                    groupMemberDataList.setGroupName(data.getName());
-                    groupMemberDataList.setUserId(data.getUserId());
-                    groupMemberDataList.setFrom(homeActivityList.getFrom());
-                    groupMemberDataList.setTo(homeActivityList.getTo());
-                    mList.add(groupMemberDataList);
-                }
+            CommonAPIResponse apiResponse = Util.getInstance().getPojoObject(String.valueOf(response), CommonAPIResponse.class);
+            if (apiResponse.getCode() == Constant.SUCCESS_CODE_200){
+                removeItem(position);
+                Toast.makeText(mContext, Constant.INVITE_SENT, Toast.LENGTH_SHORT).show();
+                HomeActivityListData groupMemberDataList = new HomeActivityListData();
+                groupMemberDataList.setConsentId(homeActivityList.getConsentId());
+                groupMemberDataList.setPhoneNumber(homeActivityList.getPhoneNumber());
+                groupMemberDataList.setGroupId(homeActivityList.getGroupId());
+                groupMemberDataList.setConsentStaus(Constant.PENDING);
+                groupMemberDataList.setGroupName(homeActivityList.getGroupName());
+                groupMemberDataList.setUserId(homeActivityList.getUserId());
+                groupMemberDataList.setFrom(homeActivityList.getFrom());
+                groupMemberDataList.setTo(homeActivityList.getTo());
+                mList.add(groupMemberDataList);
                 notifyDataSetChanged();
+
             }
         }
     }
@@ -316,66 +305,18 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
     /**
      * Add Member in Group Error Listener
      */
-    private class AddMemberInGroupRequestErrorListener implements Response.ErrorListener {
+    private class GenerateConsentTokenRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            if (error.networkResponse.statusCode == Constant.STATUS_CODE_409) {
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
-            } else if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
+            if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
                 // Make Verify and Assign call
                 Util.progressDialog.dismiss();
                 showCustomAlertWithText(Constant.DEVICE_NOT_FOUND);
             } else {
                 Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.GROUP_MEMBER_ADDITION_FAILURE);
+                showCustomAlertWithText(Constant.RESEND_INVITE_FAILED);
             }
         }
-    }
-
-    /**
-     * Make a Remove API Call
-     *
-     *
-     */
-    private void makeRemoveAPICall(HomeActivityListData homeActivityListData) {
-        individualMemberOperationLayout.setVisibility(View.GONE);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ExitRemoveDeleteAPI.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
-        ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
-        ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
-        consent.setPhone(homeActivityListData.getPhoneNumber());
-        consent.setStatus(Constant.REMOVED);
-        exitRemovedGroupData.setConsent(consent);
-        RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
-        Call<ResponseBody> call = api.deleteGroupDetails(Constant.BEARER + mDbManager.getAdminLoginDetail().getUserToken(),
-                Constant.APPLICATION_JSON, mDbManager.getAdminLoginDetail().getUserId(), Constant.SESSION_GROUPS, homeActivityListData.getGroupId(), body);
-        Util.getInstance().showProgressBarDialog(mContext);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.code() == 200) {
-                    Util.progressDialog.dismiss();
-                    mDbManager.deleteSelectedDataFromGroupMember(homeActivityListData.getConsentId());
-                    removeItem(position);
-                    //if (!isRemoveFromGroup) {
-                        addMemberInGroupAPICall(homeActivityListData);
-                    //}
-                } else {
-                    Util.progressDialog.dismiss();
-                    showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Util.progressDialog.dismiss();
-                showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
-            }
-        });
     }
 
     /**
@@ -399,11 +340,6 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
             individualMemberOperationLayout.setVisibility(View.GONE);
             removeItem(position);
             PeopleFragment.checkMemberPresent();
-           // if(resendInvite){
-                //HomeActivityListData homeActivityListData = mList.get(position);
-                    //addMemberInGroupAPICall(homeActivityListData);
-                //}
-           // }
 
         }
     }
@@ -429,7 +365,6 @@ public class PeopleMemberListAdapter extends RecyclerView.Adapter<PeopleMemberLi
         notifyItemRemoved(adapterPosition);
         notifyDataSetChanged();
     }
-
 
 
 }

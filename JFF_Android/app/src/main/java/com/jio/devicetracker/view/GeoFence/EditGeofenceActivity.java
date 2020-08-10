@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,10 +38,13 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jio.devicetracker.R;
+import com.jio.devicetracker.database.db.DBManager;
+import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EditGeofenceActivity  extends Activity implements View.OnClickListener {
@@ -53,8 +57,15 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
     private TextView radiusText;
     String geofenceAddress;
     private LatLng latlang;
+    private String deviceNumber;
+    private String memberName;
     int progressChangedValue=0;
+    int radiusValue;
+    boolean multipleGeofenceEdit;
+    private List<MapData> mapDataList;
+    private DBManager mDbManager;
     private static final String TAG = "EditGeofenceActivity";
+    Intent intent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,24 +74,37 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.GEOFENCE_EDIT);
         meterOrKiloMeter = " km";
-
         radiusText = findViewById(R.id.radiusText);
         radiusText.setTypeface(Util.mTypeface(this,5));
+        radiusSeekBar= findViewById(R.id.radiusSeekBar);
         locationName = findViewById(R.id.location_name);
-
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
         metersRadioButton = findViewById(R.id.metersButton);
         metersRadioButton.setOnClickListener(this);
         kiloMetersRadioButton = findViewById(R.id.kiloMetersButton);
         kiloMetersRadioButton.setOnClickListener(this);
         Button updateBtn = findViewById(R.id.updateGeofence);
         updateBtn.setOnClickListener(this);
-        Intent intent = getIntent();
+        mDbManager = new DBManager(this);
+        intent = getIntent();
+        mapDataList = intent.getParcelableArrayListExtra(Constant.MAP_DATA);
+        deviceNumber = intent.getStringExtra(Constant.DEVICE_NUMBER);
+        memberName = intent.getStringExtra(Constant.MEMBER_NAME);
         geofenceAddress = intent.getStringExtra(Constant.GEOFENCE_ADDRESS);
-        if(!geofenceAddress.isEmpty()){
+        int radius = intent.getIntExtra(Constant.GEOFENCE_RADIUS,0);
+        multipleGeofenceEdit = intent.getBooleanExtra(Constant.MULTIPLE_GEOFENCE_EDIT,false);
+        if(multipleGeofenceEdit && radius != 0 ){
+            radiusText.setText(String.valueOf(radius/1000));
+            radiusSeekBar.setProgress(radius/1000);
+        } else if(radius != 0){
+            radiusText.setText(String.valueOf(radius/1000));
+            radiusSeekBar.setProgress(radius/1000);
+        }
+        if(geofenceAddress != null){
             locationName.setText(geofenceAddress);
         }
-
-        radiusSeekBar=(SeekBar)findViewById(R.id.radiusSeekBar);
         radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -112,8 +136,8 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             metersRadioButton.setBackgroundResource(R.drawable.radiobutton_unselected);
             kiloMetersRadioButton.setBackgroundResource(R.drawable.radiobutton_selected);
             radiusSeekBar.setMax(20);
-            radiusSeekBar.setProgress(10);
-            radiusText.setText("10 km");
+            radiusSeekBar.setProgress(5);
+            radiusText.setText("5 km");
         }else if (v.getId() == R.id.updateGeofence){
             if(locationName.getText().toString().isEmpty()){
                 Toast.makeText(this,"Please enter the location name",Toast.LENGTH_SHORT).show();
@@ -127,17 +151,51 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
             }
             String radius = radiusText.getText().toString();
             if(radius.contains("km")){
-                progressChangedValue = progressChangedValue * 1000;
-            }
-            Intent intent = new Intent(this,GeofenceActivity.class);
-            intent.putExtra("Radius",progressChangedValue);
-            intent.putExtra(Constant.LATITUDE,latlang.latitude);
-            intent.putExtra(Constant.LONGNITUDE,latlang.longitude);
-            intent.putExtra("EditGeofence",true);
-            startActivity(intent);
+                if(progressChangedValue ==0){
+                    radiusValue = radiusSeekBar.getProgress();
+                } else {
+                    radiusValue = progressChangedValue * 1000;
+                }
+            } else if(radius.contains("m")) {
+                if(progressChangedValue ==0){
+                    radiusValue = 100;
+                } else {
+                    radiusValue = progressChangedValue;
+                }
 
+            } else {
+                radiusValue = 5000;
+            }
+
+            if(multipleGeofenceEdit){
+                LatLng latlngOld = new LatLng(intent.getDoubleExtra(Constant.MULTIPLE_GEOFENCE_LAT,0.0d),intent.getDoubleExtra(Constant.MULTIPLE_GEOFENCE_LNG,0.0d));
+                mDbManager.updateGeofenceDetailInGeofenceTable(latlang, radiusValue, deviceNumber, latlngOld);
+                gotoGeofenceMapandListActivity();
+            } else {
+                Intent intent = new Intent(this,GeofenceActivity.class);
+                intent.putExtra("Radius",radiusValue);
+                intent.putExtra(Constant.LATITUDE,latlang.latitude);
+                intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+                intent.putExtra(Constant.MEMBER_NAME,memberName);
+                intent.putExtra(Constant.MEMBER_ADDRESS,locationName.getText().toString());
+                intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+                intent.putExtra(Constant.LONGNITUDE,latlang.longitude);
+
+                intent.putExtra("EditGeofence",true);
+                startActivityForResult(intent,100);
+            }
+
+
+        } else {
+            finish();
         }
 
+    }
+
+    private void gotoGeofenceMapandListActivity() {
+        Intent intent = new Intent(this,GeoFenceMapAndListViewActivity.class);
+        intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+        startActivityForResult(intent,200);
     }
 
     public LatLng getLocationFromAddress(String strAddress) {
@@ -163,4 +221,13 @@ public class EditGeofenceActivity  extends Activity implements View.OnClickListe
         return p1;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100){
+            finish();
+        } else if(requestCode == 200){
+            finish();
+        }
+    }
 }

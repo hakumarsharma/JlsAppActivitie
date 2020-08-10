@@ -73,6 +73,7 @@ public class PeopleFragment extends Fragment {
     private String deviceNumber;
     private String consentStatus;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -115,10 +116,10 @@ public class PeopleFragment extends Fragment {
         for (HomeActivityListData data : groupDetailList) {
             if (data.getCreatedBy() != null
                     && data.getCreatedBy().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())
-                    && data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                    && data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME)&& data.getGroupName().equals(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
                 List<GroupMemberDataList> memberDataList = mDbManager.getAllGroupMemberDataBasedOnGroupId(data.getGroupId());
                 for (GroupMemberDataList memberData : memberDataList) {
-                    if (!memberData.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId())) {
+                    if (!memberData.getUserId().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getUserId()) && !memberData.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_REMOVED)) {
                         HomeActivityListData homeActivityListData = new HomeActivityListData();
                         homeActivityListData.setGroupName(memberData.getName());
                         homeActivityListData.setPhoneNumber(memberData.getNumber());
@@ -183,7 +184,10 @@ public class PeopleFragment extends Fragment {
      * Get All Group info per user API Call
      */
     protected void makeGroupInfoPerUserRequestAPICall() {
-        GroupRequestHandler.getInstance(getActivity()).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserId()));
+        String userId = mDbManager.getAdminLoginDetail().getUserId();
+        if(userId != null && !userId.isEmpty()) {
+            GroupRequestHandler.getInstance(getActivity()).handleRequest(new GetGroupInfoPerUserRequest(new GetGroupInfoPerUserRequestSuccessListener(), new GetGroupInfoPerUserRequestErrorListener(), mDbManager.getAdminLoginDetail().getUserId()));
+        }
     }
 
     /**
@@ -262,6 +266,7 @@ public class PeopleFragment extends Fragment {
         intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
         intent.putExtra(Constant.GROUP_STATUS, groupStatus);
         intent.putExtra(Constant.MEMBER_NAME, memberName);
+        intent.putExtra(Constant.PEOPLE_LOCATION, true);
         intent.putExtra(Constant.GROUP_ID, groupId);
         intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
         intent.putExtra(Constant.CONSENT_STATUS, consentStatus);
@@ -284,6 +289,15 @@ public class PeopleFragment extends Fragment {
                 homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                 homeActivityListData.setFrom(data.getSession().getFrom());
                 homeActivityListData.setTo(data.getSession().getTo());
+                int count = 0;
+                for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
+                    if (!consentData.getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber()) && (consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED)
+                            || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)
+                            || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                        count = count + 1;
+                        homeActivityListData.setConsentsCount(count);
+                    }
+                }
                 if (!(data.getGroupOwner().isEmpty())) {
                     homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
                     homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());

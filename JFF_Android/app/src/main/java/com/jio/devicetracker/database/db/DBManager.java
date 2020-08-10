@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -35,10 +33,10 @@ import com.jio.devicetracker.database.pojo.AlertHistoryData;
 import com.jio.devicetracker.database.pojo.ConsentTimeupdateData;
 import com.jio.devicetracker.database.pojo.DeviceTableData;
 import com.jio.devicetracker.database.pojo.GeofenceDetails;
-import com.jio.devicetracker.database.pojo.GetDeviceLocationData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.HomeActivityListData;
-import com.jio.devicetracker.database.pojo.MultipleselectData;
+import com.jio.devicetracker.database.pojo.NotificationData;
+import com.jio.devicetracker.database.pojo.SOSContactData;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.database.pojo.response.CreateGroupResponse;
 import com.jio.devicetracker.database.pojo.response.LogindetailResponse;
@@ -60,62 +58,6 @@ public class DBManager {
     }
 
     /**
-     * Insert data into the TABLE_NAME_BORQS table, It is a main table to store device data
-     *
-     * @param deviceData
-     * @param email
-     * @return long
-     */
-    public long insertInBorqsDB(HomeActivityListData deviceData, String email) {
-        mDatabase = mDBHelper.getWritableDatabase();
-        ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.NAME, deviceData.getName());
-        contentValue.put(DatabaseHelper.EMAIL, email);
-        contentValue.put(DatabaseHelper.IMEI_NUM, deviceData.getImeiNumber());
-        contentValue.put(DatabaseHelper.DEVICE_NUM, deviceData.getPhoneNumber());
-        contentValue.put(DatabaseHelper.DEVICE_TYPE, deviceData.getDeviceType());
-        contentValue.put(DatabaseHelper.GROUP_NAME, deviceData.getGroupName());
-        if (deviceData.getConsentStaus() != null) {
-            contentValue.put(DatabaseHelper.CONSENT_STATUS, deviceData.getConsentStaus());
-        } else {
-            contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
-        }
-        contentValue.put(DatabaseHelper.CONSENT_TIME, "");
-        contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
-        return mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
-
-    }
-
-    /**
-     * Insert data into the TABLE_NAME_BORQS table, It is a main table to store device data, stores by by taking value from list
-     *
-     * @param deviceData
-     * @param email
-     */
-    public void insertInBorqsDB(List<HomeActivityListData> deviceData, String email) {
-        mDatabase = mDBHelper.getWritableDatabase();
-        for (HomeActivityListData addData : deviceData) {
-            ContentValues contentValue = new ContentValues();
-            contentValue.put(DatabaseHelper.NAME, addData.getName());
-            contentValue.put(DatabaseHelper.EMAIL, email);
-            contentValue.put(DatabaseHelper.IMEI_NUM, addData.getImeiNumber());
-            contentValue.put(DatabaseHelper.DEVICE_NUM, addData.getPhoneNumber());
-            if (addData.getConsentStaus() != null) {
-                contentValue.put(DatabaseHelper.CONSENT_STATUS, addData.getConsentStaus());
-            } else {
-                contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
-            }
-            //contentValue.put(DatabaseHelper.CONSENT_STATUS, "Consent not sent");
-            contentValue.put(DatabaseHelper.CONSENT_TIME, "");
-            contentValue.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, 1234);
-            contentValue.put(DatabaseHelper.LAT, addData.getLat());
-            contentValue.put(DatabaseHelper.LON, addData.getLng());
-            contentValue.put(DatabaseHelper.DEVICE_ID, addData.getDeviceId());
-            mDatabase.insert(DatabaseHelper.TABLE_NAME_BORQS, null, contentValue);
-        }
-    }
-
-    /**
      * Inserts Login data into the login(TABLE_USER_LOGIN) table
      *
      * @param data
@@ -134,101 +76,39 @@ public class DBManager {
     }
 
     /**
-     * Returns all data from TABLE_NAME_BORQS table in the form of list
-     *
-     * @param email
-     * @return all the data available inside the table TABLE_NAME_BORQS
-     */
-    public List<HomeActivityListData> getAlldata(String email) {
-        List<HomeActivityListData> mlist = new ArrayList<>();
-        mDatabase = mDBHelper.getWritableDatabase();
-        if (email != null) {
-            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM, DatabaseHelper.DEVICE_TYPE, DatabaseHelper.GROUP_NAME, DatabaseHelper.IS_GROUP_MEMBER, DatabaseHelper.IS_CREATED};
-            String[] arg = {email};
-            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.EMAIL + " = ? ", arg, null, null, null);
-            if (cursor != null && cursor.getCount() > 0) {
-                while (cursor.moveToNext()) {
-                    if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IS_CREATED)) > 0) {
-                        HomeActivityListData data = new HomeActivityListData();
-                        data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
-                        data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
-                        data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)).trim());
-                        data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
-                        data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
-                        data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
-                        data.setDeviceType(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_TYPE)));
-                        data.setGroupName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_NAME)));
-                        mlist.add(data);
-                    }
-                }
-                cursor.close();
-            }
-        }
-        return mlist;
-    }
-
-    /**
-     * Returns all Borqs data in the form of list from the table TABLE_NAME_BORQS
-     *
-     * @param email
-     * @return all the data available inside the table TABLE_NAME_BORQS
-     */
-    public List<HomeActivityListData> getAllBorqsData(String email) {
-        List<HomeActivityListData> mlist = new ArrayList<>();
-        mDatabase = mDBHelper.getWritableDatabase();
-        if (email != null) {
-            String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_STATUS, DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.IMEI_NUM, DatabaseHelper.DEVICE_TYPE, DatabaseHelper.GROUP_NAME, DatabaseHelper.IS_GROUP_MEMBER, DatabaseHelper.IS_CREATED, DatabaseHelper.DEVICE_ID};
-            String[] arg = {email};
-            Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.EMAIL + " = ? ", arg, null, null, null);
-            if (cursor != null && cursor.getCount() > 0) {
-                while (cursor.moveToNext()) {
-                    HomeActivityListData data = new HomeActivityListData();
-                    data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
-                    data.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)));
-                    data.setConsentStaus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS)).trim());
-                    data.setLat(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAT)));
-                    data.setLng(cursor.getString(cursor.getColumnIndex(DatabaseHelper.LON)));
-                    data.setImeiNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMEI_NUM)));
-                    data.setDeviceType(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_TYPE)));
-                    data.setGroupName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_NAME)));
-                    data.setDeviceId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_ID)));
-                    mlist.add(data);
-                }
-            }
-            cursor.close();
-        }
-        return mlist;
-    }
-
-    /**
      * Update lat and long in to the TABLE_NAME_BORQS table
      *
-     * @param deviceId
-     * @param mData
+     * @param latLngNew
+     * @param radius
      */
-    public void updateLatLangInBorqsDB(String deviceId, GetDeviceLocationData mData) {
+    public int updateGeofenceDetailInGeofenceTable(LatLng latLngNew, int radius, String deviceNumber, LatLng latLngOld) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.LAT, mData.getLat());
-        values.put(DatabaseHelper.LON, mData.getLang());
-        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + deviceId, null);
+        if (latLngNew != null) {
+            values.put(DatabaseHelper.LAT, latLngNew.latitude);
+            values.put(DatabaseHelper.LON, latLngNew.longitude);
+        }
+        values.put(DatabaseHelper.RADIUS, radius);
 
+        return mDatabase.update(DatabaseHelper.TABLE_GEOFENCE, values, DatabaseHelper.LAT + "= " + latLngOld.latitude + " AND " + DatabaseHelper.LON + "= " + latLngOld.longitude, null);
     }
 
     /**
-     * Update lat and long in to the TABLE_NAME_BORQS table
+     * Insert lat and long in to the TABLE_GEOFENCE table
      *
      * @param latLng
      * @param radius
      */
-    public void updateGeofenceDetailInGroupMemberTable(LatLng latLng, int radius, String deviceNumber) {
+    public void insertGeofenceDetailInGeofenceTable(LatLng latLng, int radius, String deviceNumber) {
         mDatabase = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.LAT, latLng.latitude);
         values.put(DatabaseHelper.LON, latLng.longitude);
         values.put(DatabaseHelper.RADIUS, radius);
-        mDatabase.update(DatabaseHelper.TABLE_GROUP_MEMBER, values, DatabaseHelper.DEVICE_NUM + "= " + deviceNumber, null);
+        values.put(DatabaseHelper.DEVICE_NUM, deviceNumber);
+        mDatabase.insert(DatabaseHelper.TABLE_GEOFENCE, null, values);
     }
+
 
     /**
      * Update User details in Login table
@@ -267,99 +147,6 @@ public class DBManager {
         mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
     }
 
-    /**
-     * Update Pending Consent in TABLE_NAME_BORQS table
-     *
-     * @param phoneNumber
-     */
-    public void updatependingConsent(String phoneNumber) {
-        mDatabase = mDBHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.CONSENT_STATUS, Constant.CONSENT_PENDING);
-        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
-    }
-
-    /**
-     * Update device type and device name in TABLE_NAME_BORQS table
-     *
-     * @param deviceType
-     * @param groupName
-     * @param imeiNumber
-     * @param mName
-     * @param isGroupMember
-     */
-    public void updateDeviceTypeAndGroupName(String deviceType, String groupName, String imeiNumber, String mName, int isGroupMember) {
-        mDatabase = mDBHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.DEVICE_TYPE, deviceType);
-        values.put(DatabaseHelper.GROUP_NAME, groupName);
-        values.put(DatabaseHelper.NAME, mName);
-        values.put(DatabaseHelper.IS_CREATED, 1);
-        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.IMEI_NUM + "= " + imeiNumber, null);
-    }
-
-    /**
-     * Update Group name and is group member in TABLE_NAME_BORQS table
-     *
-     * @param isGroupMember
-     * @param imeiNumber
-     * @param groupName
-     */
-    public void updateIsGroupMember(int isGroupMember, String imeiNumber, String groupName) {
-        mDatabase = mDBHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.IS_GROUP_MEMBER, isGroupMember);
-        values.put(DatabaseHelper.GROUP_NAME, groupName);
-        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.IMEI_NUM + "= " + imeiNumber, null);
-    }
-
-    /**
-     * Update profile information in Database
-     *
-     * @param priviousNumber
-     * @param name
-     * @param newNumber
-     */
-    public void updateProfile(String priviousNumber, String name, String newNumber) {
-        mDatabase = mDBHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.DEVICE_NUM, newNumber);
-        values.put(DatabaseHelper.GROUP_NAME, name);
-        //values.put(DatabaseHelper.IMEI_NUM, imei);
-        if (!priviousNumber.equals(newNumber)) {
-            values.put(DatabaseHelper.CONSENT_STATUS, Constant.REQUEST_CONSENT);
-        }
-        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= '" + priviousNumber + "';", null);
-    }
-
-    /**
-     * Delete the selected data from the table TABLE_NAME_BORQS
-     *
-     * @param phoneNumber
-     */
-    public void deleteSelectedData(String phoneNumber) {
-        mDatabase = mDBHelper.getWritableDatabase();
-        mDatabase.delete(DatabaseHelper.TABLE_NAME_BORQS, DatabaseHelper.DEVICE_NUM + "= '" + phoneNumber + "';", null);
-    }
-
-    /**
-     * Returns User name from the table TABLE_USER_LOGIN
-     *
-     * @return user name
-     */
-    public String getAdminDetail() {
-        mDatabase = mDBHelper.getWritableDatabase();
-        String userName = "";
-        String[] column = {DatabaseHelper.NAME};
-        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_USER_LOGIN, column, null, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                userName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME));
-            }
-            cursor.close();
-        }
-        return userName;
-    }
 
     /**
      * Returns user Login detail
@@ -367,7 +154,6 @@ public class DBManager {
      * @return user Login data
      */
     public AdminLoginData getAdminLoginDetail() {
-        mDatabase = mDBHelper.getWritableDatabase();
         mDatabase = mDBHelper.getWritableDatabase();
         AdminLoginData adminData = null;
         String[] column = {DatabaseHelper.USER_TOKEN, DatabaseHelper.USER_ID, DatabaseHelper.TOKEN_EXPIRY_TIME, DatabaseHelper.USER_NAME, DatabaseHelper.PHONE_COUNTRY_CODE, DatabaseHelper.DEVICE_NUM, DatabaseHelper.EMAIL};
@@ -397,7 +183,7 @@ public class DBManager {
         mDatabase = mDBHelper.getWritableDatabase();
         GeofenceDetails geofenceDetails = null;
         String[] column = {DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.RADIUS};
-        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP_MEMBER, column, DatabaseHelper.DEVICE_NUM + " = " + deviceNumber, null, null, null, null);
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GEOFENCE, column, DatabaseHelper.DEVICE_NUM + " = " + deviceNumber, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 geofenceDetails = new GeofenceDetails();
@@ -412,57 +198,28 @@ public class DBManager {
     }
 
     /**
-     * Returns user phone number
+     * Returns geofence detail list
      *
-     * @return User phone number
+     * @return geofence details
      */
-    public String getAdminphoneNumber() {
+    public List<GeofenceDetails> getGeofenceDetailsList(String deviceNumber) {
+        List<GeofenceDetails> geofenceList = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
-        String phoneNumber = "";
-        String[] column = {DatabaseHelper.DEVICE_NUM};
-        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_USER, column, null, null, null, null, null);
+        GeofenceDetails geofenceDetails = null;
+        String[] column = {DatabaseHelper.LAT, DatabaseHelper.LON, DatabaseHelper.RADIUS};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GEOFENCE, column, DatabaseHelper.DEVICE_NUM + " = " + deviceNumber, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                phoneNumber = cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM));
+                geofenceDetails = new GeofenceDetails();
+                geofenceDetails.setLat(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LAT)));
+                geofenceDetails.setLng(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LON)));
+                geofenceDetails.setRadius(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.RADIUS)));
+                geofenceList.add(geofenceDetails);
+
             }
             cursor.close();
         }
-        return phoneNumber;
-    }
-
-    /**
-     * Returns consent status for the particular device
-     *
-     * @param phoneNumber
-     * @return
-     */
-    public String getConsentStatusBorqs(String phoneNumber) {
-        mDatabase = mDBHelper.getWritableDatabase();
-        String consentStatus = "";
-        String[] column = {DatabaseHelper.CONSENT_STATUS};
-        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_BORQS, column, DatabaseHelper.DEVICE_NUM + " = " + phoneNumber, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                consentStatus = cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_STATUS));
-            }
-            cursor.close();
-        }
-        return consentStatus;
-    }
-
-    /**
-     * Update Consent time and approval time for the particular device in the table TABLE_NAME_BORQS
-     *
-     * @param phoneNumber
-     * @param consentTime
-     * @param approvalTime
-     */
-    public void updateConsentTime(String phoneNumber, String consentTime, int approvalTime) {
-        mDatabase = mDBHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.CONSENT_TIME, consentTime);
-        values.put(DatabaseHelper.CONSENT_TIME_APPROVAL_LIMIT, approvalTime);
-        mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + phoneNumber, null);
+        return geofenceList;
     }
 
     /**
@@ -504,62 +261,6 @@ public class DBManager {
             values.put(DatabaseHelper.CONSENT_STATUS, consentData.getConsentStatus());
             mDatabase.update(DatabaseHelper.TABLE_NAME_BORQS, values, DatabaseHelper.DEVICE_NUM + "= " + consentData.getPhoneNumber(), null);
         }
-    }
-
-    /**
-     * Returns Group data from the table TABLE_NAME_DEVICE
-     *
-     * @param groupName
-     * @return
-     */
-    public List<HomeActivityListData> getGroupdata(String groupName) {
-        List<HomeActivityListData> mlist = new ArrayList<>();
-        mDatabase = mDBHelper.getWritableDatabase();
-        String query = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_DEVICE + " WHERE " + DatabaseHelper.GROUP_NAME + " = ?";
-        if (groupName != null) {
-            String[] column = {DatabaseHelper.DEVICE_NUM};
-            String[] arg = {groupName};
-            //Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.GROUP_NAME + " = "  + groupName  , null, null, null, null);
-            Cursor cursor = mDatabase.rawQuery(query, new String[]{groupName});
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    HomeActivityListData data = new HomeActivityListData();
-                    data.setPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
-                    mlist.add(data);
-                }
-                cursor.close();
-            }
-        }
-        return mlist;
-    }
-
-    /**
-     * Returns lat and long for the particular Group name
-     *
-     * @param groupName
-     * @return
-     */
-    public List<MultipleselectData> getGroupLatLongdata(String groupName) {
-        List<MultipleselectData> mlist = new ArrayList<>();
-        mDatabase = mDBHelper.getWritableDatabase();
-        String query = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_DEVICE + " WHERE " + DatabaseHelper.GROUP_NAME + " = ?  AND " + DatabaseHelper.CONSENT_STATUS + " = ?";
-        if (groupName != null) {
-            String[] column = {DatabaseHelper.DEVICE_NUM};
-            String[] arg = {groupName};
-            //Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NAME_DEVICE, column, DatabaseHelper.GROUP_NAME + " = "  + groupName  , null, null, null, null);
-            Cursor cursor = mDatabase.rawQuery(query, new String[]{groupName, Constant.CONSENT_STATUS_MSG});
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    MultipleselectData data = new MultipleselectData();
-                    data.setPhone(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
-                    data.setLat(String.valueOf(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LAT))));
-                    data.setLng(String.valueOf(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.LON))));
-                    mlist.add(data);
-                }
-                cursor.close();
-            }
-        }
-        return mlist;
     }
 
     /**
@@ -689,7 +390,7 @@ public class DBManager {
         if (groupId != null) {
             String[] column = {DatabaseHelper.GROUP_NAME, DatabaseHelper.GROUPID, DatabaseHelper.STATUS, DatabaseHelper.CREATED_BY, DatabaseHelper.UPDATED_BY,
                     DatabaseHelper.PROFILE_IMAGE, DatabaseHelper.TIME_FROM, DatabaseHelper.TIME_TO, DatabaseHelper.GROUP_OWNER_NAME,
-                    DatabaseHelper.GROUP_OWNER_PHONE_NUMBER, DatabaseHelper.GROUP_OWNER_USER_ID};
+                    DatabaseHelper.GROUP_OWNER_PHONE_NUMBER, DatabaseHelper.GROUP_OWNER_USER_ID, DatabaseHelper.CONSENTS_COUNT};
             String[] arg = {groupId};
             Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_GROUP, column, DatabaseHelper.GROUPID + " = ? ", arg, null, null, null);
             if (cursor != null && cursor.getCount() > 0) {
@@ -705,6 +406,7 @@ public class DBManager {
                     data.setGroupOwnerUserId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_OWNER_USER_ID)));
                     data.setGroupOwnerName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_OWNER_NAME)));
                     data.setGroupOwnerPhoneNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GROUP_OWNER_PHONE_NUMBER)));
+                    data.setConsentsCount(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CONSENTS_COUNT)));
                 }
                 cursor.close();
             }
@@ -735,6 +437,14 @@ public class DBManager {
     public void deleteSelectedDataFromGroup(String groupId) {
         mDatabase = mDBHelper.getWritableDatabase();
         mDatabase.delete(DatabaseHelper.TABLE_GROUP, DatabaseHelper.GROUPID + "= '" + groupId + "';", null);
+    }
+
+    /**
+     * Delete the geofence data from geofence table
+     */
+    public void deleteGeofenceData(double latitude, double longnitude) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        mDatabase.delete(DatabaseHelper.TABLE_GEOFENCE, DatabaseHelper.LAT + "= " + latitude + " AND " + DatabaseHelper.LON + "= " + longnitude, null);
     }
 
     /**
@@ -771,12 +481,17 @@ public class DBManager {
         List<GroupMemberDataList> mList = getAllGroupMemberData();
         for (GroupMemberDataList responseData : mGroupMemberDataLists) {
             ContentValues contentValue = new ContentValues();
-            if (!mList.isEmpty()) {
+            if (!mList.isEmpty() && responseData.getDeviceId() == null) {
                 for (GroupMemberDataList groupMemberDataList : mList) {
-                    if (groupMemberDataList.getConsentId().equalsIgnoreCase(responseData.getConsentId()) && responseData.getDeviceId() == null) {
+                    if (groupMemberDataList.getConsentId() != null && responseData.getConsentId() != null && groupMemberDataList.getConsentId().equalsIgnoreCase(responseData.getConsentId())) {
                         contentValue.put(DatabaseHelper.DEVICE_ID, groupMemberDataList.getDeviceId());
                     }
                 }
+            } else {
+                contentValue.put(DatabaseHelper.DEVICE_ID, responseData.getDeviceId());
+            }
+            if (!contentValue.containsKey(DatabaseHelper.DEVICE_ID)) {
+                contentValue.put(DatabaseHelper.DEVICE_ID, responseData.getDeviceId());
             }
             contentValue.put(DatabaseHelper.CONSENT_ID, responseData.getConsentId());
             contentValue.put(DatabaseHelper.DEVICE_NUM, responseData.getNumber());
@@ -786,7 +501,6 @@ public class DBManager {
             contentValue.put(DatabaseHelper.USER_ID, responseData.getUserId());
             contentValue.put(DatabaseHelper.NAME, responseData.getName());
             contentValue.put(DatabaseHelper.PROFILE_IMAGE, R.drawable.ic_user);
-            contentValue.put(DatabaseHelper.DEVICE_ID, responseData.getDeviceId());
             mDatabase.replace(DatabaseHelper.TABLE_GROUP_MEMBER, null, contentValue);
         }
     }
@@ -916,6 +630,7 @@ public class DBManager {
         mDatabase.delete(DatabaseHelper.TABLE_USER_LOGIN, null, null);
         mDatabase.delete(DatabaseHelper.TABLE_GROUP_MEMBER, null, null);
         mDatabase.delete(DatabaseHelper.TABLE_GROUP, null, null);
+        mDatabase.delete(DatabaseHelper.TABLE_SOS, null, null);
     }
 
     public void insertIntoAlertHistoryTable(AlertHistoryData alertHistoryData) {
@@ -925,13 +640,15 @@ public class DBManager {
         contentValue.put(DatabaseHelper.DEVICE_NUM, alertHistoryData.getNumber());
         contentValue.put(DatabaseHelper.CONSENT_ID, alertHistoryData.getConsentId());
         contentValue.put(DatabaseHelper.ALERT_TIME, alertHistoryData.getDate());
+        contentValue.put(DatabaseHelper.ADDRESS, alertHistoryData.getAddress());
+        contentValue.put(DatabaseHelper.STATE, alertHistoryData.getState());
         mDatabase.replace(DatabaseHelper.TABLE_ALERTS_HOSTORY, null, contentValue);
     }
 
     public List<AlertHistoryData> getHistoryTableData(String consentId) {
         List<AlertHistoryData> mlist = new ArrayList<>();
         mDatabase = mDBHelper.getWritableDatabase();
-        String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_ID, DatabaseHelper.ALERT_TIME};
+        String[] column = {DatabaseHelper.NAME, DatabaseHelper.DEVICE_NUM, DatabaseHelper.CONSENT_ID, DatabaseHelper.ALERT_TIME, DatabaseHelper.ADDRESS, DatabaseHelper.STATE};
         Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_ALERTS_HOSTORY, column, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -941,6 +658,9 @@ public class DBManager {
                     mAlertHistoryData.setNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
                     mAlertHistoryData.setConsentId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.CONSENT_ID)));
                     mAlertHistoryData.setDate(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALERT_TIME)));
+                    mAlertHistoryData.setAddress(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ADDRESS)));
+                    mAlertHistoryData.setState(cursor.getString(cursor.getColumnIndex(DatabaseHelper.STATE)));
+                    mlist.add(mAlertHistoryData);
                 }
             }
         }
@@ -1009,6 +729,93 @@ public class DBManager {
         }
         cursor.close();
         return mlist;
+    }
+
+    /**
+     * Inserts data into the SOS table
+     *
+     * @param mList
+     */
+    public void insertIntoSOSTable(List<SOSContactData> mList) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        for (SOSContactData sosContactData : mList) {
+            ContentValues contentValue = new ContentValues();
+            contentValue.put(DatabaseHelper.PHONEBOOK_ID, sosContactData.getPhonebookId());
+            contentValue.put(DatabaseHelper.PRIORITY, sosContactData.getPriority());
+            contentValue.put(DatabaseHelper.DEVICE_NUM, sosContactData.getNumber());
+            mDatabase.replace(DatabaseHelper.TABLE_SOS, null, contentValue);
+        }
+    }
+
+    //Returns all SOS table data
+    public List<SOSContactData> getAllSOStableData() {
+        List<SOSContactData> mList = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String[] column = {DatabaseHelper.PHONEBOOK_ID, DatabaseHelper.PRIORITY, DatabaseHelper.DEVICE_NUM};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_SOS, column, null, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                SOSContactData sosContactData = new SOSContactData();
+                sosContactData.setPhonebookId(cursor.getString(cursor.getColumnIndex(DatabaseHelper.PHONEBOOK_ID)));
+                sosContactData.setNumber(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEVICE_NUM)));
+                sosContactData.setPriority(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.PRIORITY)));
+                mList.add(sosContactData);
+            }
+        }
+        cursor.close();
+        return mList;
+    }
+
+    /**
+     * Delete the SOS contact based on PhoneId
+     *
+     * @param phonebookId
+     */
+    public void deleteSOSDetail(String phonebookId) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        mDatabase.delete(DatabaseHelper.TABLE_SOS, DatabaseHelper.PHONEBOOK_ID + "= '" + phonebookId + "';", null);
+    }
+
+    // Update SOS database
+    public void updateSOSDatabase(List<SOSContactData> sosContactDataList) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        for (SOSContactData sosContactData : sosContactDataList) {
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.PRIORITY, sosContactData.getPriority());
+            values.put(DatabaseHelper.DEVICE_NUM, sosContactData.getNumber());
+            mDatabase.update(DatabaseHelper.TABLE_SOS, values, DatabaseHelper.PHONEBOOK_ID + "= '" + sosContactData.getPhonebookId() + "';", null);
+        }
+    }
+
+    /**
+     * @param notificationData
+     */
+    public void insertIntoNotificationTable(NotificationData notificationData) {
+        mDatabase = mDBHelper.getWritableDatabase();
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.NOTIFICATION_TITLE, notificationData.getNotificationTitle());
+        contentValue.put(DatabaseHelper.NOTIFICATION_MESSAGE, notificationData.getNotificationMessage());
+        contentValue.put(DatabaseHelper.NOTIFICATION_TIME, notificationData.getNotificationDate());
+        mDatabase.replace(DatabaseHelper.TABLE_NOTIFICATION, null, contentValue);
+    }
+
+    // Returns all Notification data from Notification table
+    public List<NotificationData> getAllNotificationData() {
+        List<NotificationData> mList = new ArrayList<>();
+        mDatabase = mDBHelper.getWritableDatabase();
+        String[] column = {DatabaseHelper.NOTIFICATION_TITLE, DatabaseHelper.NOTIFICATION_MESSAGE, DatabaseHelper.NOTIFICATION_TIME};
+        Cursor cursor = mDatabase.query(DatabaseHelper.TABLE_NOTIFICATION, column, null, null, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                NotificationData notificationData = new NotificationData();
+                notificationData.setNotificationTitle(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NOTIFICATION_TITLE)));
+                notificationData.setNotificationMessage(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NOTIFICATION_MESSAGE)));
+                notificationData.setNotificationDate(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NOTIFICATION_TIME)));
+                mList.add(notificationData);
+            }
+        }
+        cursor.close();
+        return mList;
     }
 
 }

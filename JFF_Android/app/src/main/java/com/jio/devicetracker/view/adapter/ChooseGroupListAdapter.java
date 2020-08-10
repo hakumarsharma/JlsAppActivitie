@@ -68,7 +68,7 @@ public class ChooseGroupListAdapter extends RecyclerView.Adapter<ChooseGroupList
             Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
             holder.groupIcon.setImageDrawable(drawable);
         } else {
-            holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.home_group));
+            holder.groupIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.default_group));
         }
         holder.groupName.setText(mData.get(position).getGroupName());
         holder.groupIcon.setOnClickListener(new View.OnClickListener() {

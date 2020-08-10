@@ -31,6 +31,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -59,6 +60,10 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
         errorText = findViewById(R.id.number_validation_text);
         deviceNumber = findViewById(R.id.device_edit_name);
         underLine = findViewById(R.id.number_edit_line);
+
+        Button backBtn = findViewById(R.id.back);
+        backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
 
         imeiErrorText = findViewById(R.id.imei_validation_text);
         deviceImei = findViewById(R.id.device_edit_imei);
@@ -94,11 +99,11 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
             public void afterTextChanged(Editable s) {
                 if(!s.toString().isEmpty()){
                     deviceTitle.setVisibility(View.VISIBLE);
-                    if (deviceImei != null && !deviceImei.getText().toString().isEmpty()){
-                        connectBtn.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
-                    }
+
                 } else {
                     deviceTitle.setVisibility(View.INVISIBLE);
+                    errorText.setVisibility(View.INVISIBLE);
+                    underLine.setBackgroundColor(getResources().getColor(R.color.timerColor));
                 }
             }
         });
@@ -118,11 +123,11 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
             public void afterTextChanged(Editable s) {
                 if(!s.toString().isEmpty()){
                     deviceImeiTitle.setVisibility(View.VISIBLE);
-                    if (deviceImei != null && !deviceImei.getText().toString().isEmpty()){
-                        connectBtn.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
-                    }
+                    connectBtn.setBackground(getResources().getDrawable(R.drawable.button_frame_blue));
                 } else {
                     deviceImeiTitle.setVisibility(View.INVISIBLE);
+                    imeiErrorText.setVisibility(View.INVISIBLE);
+                    imeiUnderLine.setBackgroundColor(getResources().getColor(R.color.timerColor));
                 }
             }
         });
@@ -130,23 +135,24 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
     @Override
     public void onClick(View v) {
 
-        if((deviceNumber.getText().toString().isEmpty() || !Util.isValidMobileNumberForPet(deviceNumber.getText().toString())) && (deviceImei.getText().toString().isEmpty() || !Util.isValidIMEINumber(deviceImei.getText().toString()))){
-            errorText.setVisibility(View.VISIBLE);
-            underLine.setBackgroundColor(getResources().getColor(R.color.errorColor));
-            imeiErrorText.setVisibility(View.VISIBLE);
-            imeiUnderLine.setBackgroundColor(getResources().getColor(R.color.errorColor));
+        if (v.getId() == R.id.back){
+            finish();
+        }
+
+        if (deviceImei.getText().toString().isEmpty()){
+            Toast.makeText(this, Constant.ENTER_PHONE_OR_IMEI, Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(deviceNumber.getText().toString().isEmpty() || !Util.isValidMobileNumberForPet(deviceNumber.getText().toString())){
-            errorText.setVisibility(View.VISIBLE);
-            underLine.setBackgroundColor(getResources().getColor(R.color.errorColor));
-            imeiErrorText.setVisibility(View.INVISIBLE);
-            imeiUnderLine.setBackgroundColor(getResources().getColor(R.color.timerColor));
-            return;
+        if (!deviceNumber.getText().toString().isEmpty() && !Util.isValidMobileNumberForPet(deviceNumber.getText().toString())){
+                errorText.setVisibility(View.VISIBLE);
+                underLine.setBackgroundColor(getResources().getColor(R.color.errorColor));
+                imeiErrorText.setVisibility(View.INVISIBLE);
+                imeiUnderLine.setBackgroundColor(getResources().getColor(R.color.timerColor));
+                return;
         }
 
-        if(deviceImei.getText().toString().isEmpty() || !Util.isValidIMEINumber(deviceImei.getText().toString())){
+        if(!deviceImei.getText().toString().isEmpty() && !Util.isValidIMEINumber(deviceImei.getText().toString())){
             errorText.setVisibility(View.INVISIBLE);
             underLine.setBackgroundColor(getResources().getColor(R.color.timerColor));
             imeiErrorText.setVisibility(View.VISIBLE);
@@ -161,7 +167,7 @@ public class AttachDeviceActivity extends Activity implements View.OnClickListen
 
         Intent intent = new Intent(this,DeviceNameActivity.class);
         intent.putExtra(Constant.GROUP_ID, groupId);
-        intent.putExtra(Constant.DEVICE_PHONE_NUMBER,deviceNumber.getText().toString());
+        intent.putExtra(Constant.DEVICE_PHONE_NUMBER,deviceImei.getText().toString());
         intent.putExtra(Constant.DEVICE_IMEI_NUMBER,deviceImei.getText().toString());
         startActivity(intent);
     }

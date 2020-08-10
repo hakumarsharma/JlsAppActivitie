@@ -37,6 +37,8 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 public class GeofenceSettingsAcivity extends Activity implements View.OnClickListener {
+    public static boolean geoFenceEntryNotificationFlag = true;
+    public static boolean geoFenceExitNotificationFlag = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,15 +64,19 @@ public class GeofenceSettingsAcivity extends Activity implements View.OnClickLis
         geofenceExitDesc.setTypeface(Util.mTypeface(this, 3));
 
         Switch geoentry = findViewById(R.id.entrySwitch);
+        geoentry.setChecked(geoFenceEntryNotificationFlag);
         Switch geoexit = findViewById(R.id.exitSwitch);
+        geoexit.setChecked(geoFenceExitNotificationFlag);
         geoentry.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                geoFenceEntryNotificationFlag = isChecked;
                 // do something, the isChecked will be
                 // true if the switch is in the On position
             }
         });
         geoexit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                geoFenceExitNotificationFlag = isChecked;
                 // do something, the isChecked will be
                 // true if the switch is in the On position
             }

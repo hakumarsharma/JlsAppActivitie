@@ -45,7 +45,7 @@
     <string name="foreground_service_channel">Foreground Service Channel</string>
     <string name="notification_subtitle">Track friends and family</string>
     <string name="customintent">custom-intent</string>
-    <string name="approveURI">https://sit.dm.cats.jvts.net/fms-consent-status?consentId</string>
+    <string name="approveURI">https://stg.borqs.io/fms-consent-status?consentId</string>
     <string name="channel_name">channel_name</string>
     <string name="channel_description">channel_description</string>
     <string name="device_imei">IMEI*</string>
@@ -158,7 +158,7 @@
     <string name="device">Device phone number</string>
     <string name="device_number_text">Device phone number</string>
     <string name="device_imei_text">Device IMEI</string>
-    <string name="device_number_content">Please enter your device phone number and device IMEI \nwhich is unique for device. You can find \nit at back side of device package.</string>
+    <string name="device_number_content">Please enter your device phone number or device IMEI \nwhich is unique for device. You can find \nit at back side of device package.</string>
     <string name="about_app">About app</string>
     <string name="term_policy">Terms &amp; privacy policies</string>
     <string name="term_condition">Terms &amp; Conditions</string>
@@ -173,7 +173,7 @@
     <string name="group_text">GROUPS</string>
     <string name="detailsForGroup">A Group is a personal circle created by you to quickly track your loved ones collectively. You can track people and devices in the same group. Create a group by clicking on +" sign above" </string>
     <string name="app_version">Version : v2.33.0003 </string>
-    <string name="contact_us_content">We are here to help and \nanswer your quireis </string>
+    <string name="contact_us_content">We are here to help and \nanswer your queries </string>
     <string name="contact_us_email">care@jio.com</string>
     <string name="how_to_use_qrcode_1">When you clicks on "+" OR [Add Device] button, application to turn on camera with a QR code bracket.</string>
     <string name="how_to_use_qrcode_2">You need to place QR code within \nthe bracket for the phone to scan \nthe code \nScanning of QR code would allow \napp to identify MAC ID of the \ndevice, and on verifying it will add \nthe device.</string>
@@ -187,5 +187,5 @@
     <string name="people_instruction_2">Attached device to any asset and \nsave the information to get it track.</string>
     <string name="device_instruction_1">No Devices yet !</string>
     <string name="device_instruction_2">You can start tracking your loved ones \nwith a device. Add the device by \ntapping on "+" sign above \nDon\'t have a device? \nVisit //http:www.jio.com </string>
-
+    <string name="slient_mode_text">Silent mode is that way to restrict all kind of notification, for particular time duration.</string>
 </resources>

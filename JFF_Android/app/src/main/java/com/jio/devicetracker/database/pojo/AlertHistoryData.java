@@ -28,6 +28,24 @@ public class AlertHistoryData {
     private String consentId;
     private String date;
     private String address;
+    private String state;
+    private String day;
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getAddress() {
         return address;

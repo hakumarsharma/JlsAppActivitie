@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -32,10 +30,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AlertHistoryData;
+import com.jio.devicetracker.util.Constant;
 
 import java.util.List;
 
-public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAdapter.ViewHolder>{
+public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAdapter.ViewHolder> {
 
     private List<AlertHistoryData> mAlertHistoryData;
 
@@ -52,8 +51,15 @@ public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAd
 
     @Override
     public void onBindViewHolder(@NonNull AlertsFragmentAdapter.ViewHolder holder, int position) {
-        holder.dateTextView.setText(mAlertHistoryData.get(position).getDate());
-        holder.geofenceAddress.setText(mAlertHistoryData.get(position).getAddress());
+        AlertHistoryData mAlertHistroryData = mAlertHistoryData.get(position);
+        holder.dateTextView.setText(mAlertHistroryData.getDay());
+        holder.time.setText(mAlertHistroryData.getDate());
+        holder.geofenceAddress.setText(mAlertHistroryData.getAddress());
+        if (mAlertHistroryData.getState().equalsIgnoreCase(Constant.ENTRY)) {
+            holder.geofenceBreachTextView.setText(Constant.GEOFENCE_ENTRY);
+        } else if (mAlertHistroryData.getState().equalsIgnoreCase(Constant.EXIT)) {
+            holder.geofenceBreachTextView.setText(Constant.GEOFENCE_EXIT);
+        }
     }
 
     @Override
@@ -65,11 +71,15 @@ public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAd
 
         private TextView dateTextView;
         private TextView geofenceAddress;
+        private TextView geofenceBreachTextView;
+        private TextView time;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             dateTextView = itemView.findViewById(R.id.dateTextView);
             geofenceAddress = itemView.findViewById(R.id.geofenceAddress);
+            geofenceBreachTextView = itemView.findViewById(R.id.geofenceBreachTextView);
+            time = itemView.findViewById(R.id.time);
         }
     }
 }

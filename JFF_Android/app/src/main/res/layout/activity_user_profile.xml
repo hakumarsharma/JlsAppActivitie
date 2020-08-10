@@ -91,7 +91,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tracked_list"
-        android:layout_below="@+id/tracked_text" />
+        android:layout_below="@+id/tracked_text"
+        android:layout_above="@+id/edit_btn"/>
     <Button
         android:id="@+id/edit_btn"
         android:layout_width="@dimen/adddevice_button_width"

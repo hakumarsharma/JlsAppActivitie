@@ -159,7 +159,11 @@ public class EditMemberActivity extends Activity implements View.OnClickListener
         ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
         ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
         ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
-        consent.setPhone(groupMemberDataList.getNumber());
+        if (groupMemberDataList.getNumber().length() == 15){
+            consent.setImei(groupMemberDataList.getNumber());
+        }else {
+            consent.setPhone(groupMemberDataList.getNumber());
+        }
         consent.setStatus(Constant.REMOVED);
         exitRemovedGroupData.setConsent(consent);
         RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
@@ -204,8 +208,10 @@ public class EditMemberActivity extends Activity implements View.OnClickListener
         List<GroupMemberDataList> mList = new ArrayList<>();
         List<GroupMemberDataList> listData = mDbManager.getAllGroupMemberDataBasedOnGroupId(groupId);
         for (GroupMemberDataList groupMemberDataList : listData) {
-            if (groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING) || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)
-                    || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXITED)) {
+            if ((groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.PENDING)
+                    || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)
+                    || groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.EXPIRED))
+                    && !groupMemberDataList.getNumber().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber())) {
                 GroupMemberDataList data = new GroupMemberDataList();
                 data.setName(groupMemberDataList.getName());
                 data.setNumber(groupMemberDataList.getNumber());

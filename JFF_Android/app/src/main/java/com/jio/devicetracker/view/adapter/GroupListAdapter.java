@@ -20,15 +20,15 @@
 
 package com.jio.devicetracker.view.adapter;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -118,11 +118,17 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
             Drawable drawable = ContextCompat.getDrawable(mContext, iconId);
             holder.groupListmemberIcon.setImageDrawable(drawable);
         } else {
-            holder.groupListmemberIcon.setBackgroundResource(R.drawable.ic_family_group);
+            holder.groupListmemberIcon.setBackgroundResource(R.drawable.default_group);
         }
         holder.mListlayout.setOnClickListener(v -> itemListener.clickonListLayout(data));
-        if (mList != null && !mList.isEmpty() && data.getConsentsCount() <= 5) {
-            switch (data.getConsentsCount() - 1) {
+        if (mList != null && !mList.isEmpty() && data.getConsentsCount() <= 4) {
+            switch (data.getConsentsCount()) {
+                case 0:
+                    holder.icon1.setVisibility(View.INVISIBLE);
+                    holder.icon2.setVisibility(View.INVISIBLE);
+                    holder.icon3.setVisibility(View.INVISIBLE);
+                    holder.icon4.setVisibility(View.INVISIBLE);
+                    break;
                 case 1:
                     holder.icon1.setVisibility(View.VISIBLE);
                     holder.icon2.setVisibility(View.INVISIBLE);
@@ -245,7 +251,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                         showCustomAlertWithText(Constant.ADD_DETAILS_TO_TRACK);
                         return;
                     }
-                    gotoEditMemberActivity(mList.get(position));
+                    gotoEditMemberActivity(mList.get(getAdapterPosition()));
                     break;
                 case R.id.close:
                     groupOptLayout.setVisibility(View.GONE);
@@ -273,20 +279,25 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         }
 
         private void deleteAlertBox(int position) {
-            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
-            adb.setTitle(Constant.ALERT_TITLE);
-            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
-            adb.setIcon(android.R.drawable.ic_dialog_alert);
-            adb.setPositiveButton("OK", (dialog, which) -> {
+            final Dialog dialog = new Dialog(mContext);
+            dialog.setContentView(R.layout.number_display_dialog);
+            dialog.setTitle(Constant.ALERT_TITLE);
+            TextView alertMessage = dialog.findViewById(R.id.selectNumber);
+            alertMessage.setText(Constant.DELETE_GROUP_MESSAGE);
+            dialog.getWindow().setLayout(750, 500);
+            final Button yes = dialog.findViewById(R.id.positive);
+            final Button no = dialog.findViewById(R.id.negative);
+            yes.setOnClickListener(v -> {
                 GroupListAdapter.this.groupOptLayout = groupOptLayout;
                 deleteGroupAPICall(mList.get(position));
+                dialog.dismiss();
             });
-            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
+
+            no.setOnClickListener(v -> {
+                dialog.dismiss();
+                groupOptLayout.setVisibility(View.GONE);
             });
-            adb.show();
+            dialog.show();
         }
     }
 
@@ -378,6 +389,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public void onErrorResponse(VolleyError error) {
             System.out.println("Error in deleting device from user account");
         }
+
     }
 
     /**

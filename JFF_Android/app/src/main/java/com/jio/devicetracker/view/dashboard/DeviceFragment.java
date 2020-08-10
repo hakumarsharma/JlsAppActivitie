@@ -52,8 +52,7 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.DeviceListAdapter;
-import com.jio.devicetracker.view.location.LocationActivity;
-
+import com.jio.devicetracker.view.location.ShareLocationActivity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +68,9 @@ public class DeviceFragment extends Fragment {
     private String groupId;
     private HomeActivityListData homeActivityListData;
     private String userId;
+    private String memberName;
+    private String deviceNumber;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -163,6 +165,8 @@ public class DeviceFragment extends Fragment {
     private void makeGetLocationAPICall(HomeActivityListData homeActivityListData) {
         this.groupId = homeActivityListData.getGroupId();
         this.homeActivityListData = homeActivityListData;
+        memberName = homeActivityListData.getGroupName();
+        deviceNumber = homeActivityListData.getPhoneNumber();
         SearchEventData searchEventData = new SearchEventData();
         List<String> mList = new ArrayList<>();
         mList.add(Constant.LOCATION);
@@ -202,18 +206,6 @@ public class DeviceFragment extends Fragment {
     }
 
     /**
-     * Navigates to the Map activity
-     */
-    private void goToMapActivity(List<MapData> mapDataList) {
-        Intent intent = new Intent(getContext(), LocationActivity.class);
-        intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
-        intent.putExtra(Constant.GROUP_ID, groupId);
-        intent.putExtra(Constant.GROUP_STATUS, homeActivityListData.getStatus());
-        startActivity(intent);
-    }
-
-
-    /**
      * Search Event Request API Call Error listener
      */
     private class SearchEventRequestErrorListener implements Response.ErrorListener {
@@ -223,6 +215,21 @@ public class DeviceFragment extends Fragment {
             showCustomAlertWithText(Constant.FETCH_LOCATION_ERROR);
         }
 
+    }
+
+    /**
+     * Navigates to the Map activity
+     */
+    private void goToMapActivity(List<MapData> mapDataList) {
+        Intent intent = new Intent(getContext(), ShareLocationActivity.class);
+        intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
+        intent.putExtra(Constant.GROUP_ID, groupId);
+        intent.putExtra(Constant.DEVICE_LOCATION_FLAG,true);
+        intent.putExtra(Constant.MEMBER_NAME, memberName);
+        intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
+        intent.putExtra(Constant.DEVICE_LOCATION,true);
+        intent.putExtra(Constant.GROUP_STATUS, homeActivityListData.getStatus());
+        startActivity(intent);
     }
 
     /**
@@ -285,6 +292,13 @@ public class DeviceFragment extends Fragment {
                     homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                     homeActivityListData.setFrom(data.getSession().getFrom());
                     homeActivityListData.setTo(data.getSession().getTo());
+                    int count = 0;
+                    for (GetGroupInfoPerUserResponse.Consents consentData : data.getConsents()) {
+                        if (!consentData.getPhone().equalsIgnoreCase(mDbManager.getAdminLoginDetail().getPhoneNumber()) && (consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING) || consentData.getStatus().equalsIgnoreCase(Constant.CONSET_STATUS_EXPIRED))) {
+                            count = count + 1;
+                            homeActivityListData.setConsentsCount(count);
+                        }
+                    }
                     if(!data.getGroupOwner().isEmpty()) {
                         homeActivityListData.setGroupOwnerName(data.getGroupOwner().get(0).getName());
                         homeActivityListData.setGroupOwnerPhoneNumber(data.getGroupOwner().get(0).getPhone());

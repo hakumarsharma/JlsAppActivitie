@@ -23,7 +23,7 @@
                 android:layout_height="75dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/ic_family_group" />
+                android:background="@drawable/default_group" />
 
             <TextView
                 android:id="@+id/groupName"
@@ -91,7 +91,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="52dp"
                 android:layout_toRightOf="@+id/group_dogIcon"
-                android:text="+ 1 invited"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 

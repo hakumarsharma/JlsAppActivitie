@@ -20,7 +20,9 @@
 
 package com.jio.devicetracker.view.signinsignup;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -83,6 +85,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
         View view = inflater.inflate(R.layout.fragment_otp_entry, container, false);
         setLayoutData(view);
         startTimer(60000, 1000);
+        checkPermission();
         return view;
     }
 
@@ -109,7 +112,7 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     }
 
     // Show custom alert with alert message
-    private void showCustomAlertWithText(String alertMessage){
+    private void showCustomAlertWithText(String alertMessage) {
         CustomAlertActivity alertActivity = new CustomAlertActivity(getContext());
         alertActivity.show();
         alertActivity.alertWithOkButton(alertMessage);
@@ -223,23 +226,21 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void makeSafetyNetCall() {
-        if (Util.getInstance().isGoogleTokenExpired()) {
-            SafetyNet.getClient(getActivity()).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
-                    .addOnSuccessListener(getActivity(), response -> {
-                        if (!response.getTokenResult().isEmpty()) {
-                            Util.getInstance().setExpiryTime();
-                            Util.getInstance().updateGoogleToken(response.getTokenResult());
-                            if (isComingFromRequestOTP) {
-                                generateLoginTokenAPICall();
-                                isComingFromRequestOTP = false;
-                            } else if (isComingFromLogin) {
-                                onLoginButtonClick();
-                                isComingFromLogin = false;
-                            }
+        SafetyNet.getClient(getActivity()).verifyWithRecaptcha(Constant.GOOGLE_RECAPCHA_KEY)
+                .addOnSuccessListener(getActivity(), response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        Util.getInstance().setExpiryTime();
+                        Util.getInstance().updateGoogleToken(response.getTokenResult());
+                        if (isComingFromRequestOTP) {
+                            generateLoginTokenAPICall();
+                            isComingFromRequestOTP = false;
+                        } else if (isComingFromLogin) {
+                            onLoginButtonClick();
+                            isComingFromLogin = false;
                         }
-                    })
-                    .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());
-        }
+                    }
+                })
+                .addOnFailureListener(getActivity(), e -> Toast.makeText(getActivity(), Constant.GOOGLE_RECAPTCHA_ERROR, Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -354,6 +355,19 @@ public class OTPEntryFragment extends Fragment implements View.OnClickListener, 
         public void onErrorResponse(VolleyError error) {
             isDeviceAdditionRequired = false;
             System.out.println("Error in Device Addition");
+        }
+    }
+
+    // Check the SMS read pemission
+    private void checkPermission() {
+        PackageManager pm = getActivity().getPackageManager();
+        int hasPerm = pm.checkPermission(
+                Manifest.permission.READ_SMS,
+                getActivity().getPackageName());
+        if (hasPerm == PackageManager.PERMISSION_GRANTED) {
+            System.out.println("Permission is already granted");
+        } else {
+            showCustomAlertWithText(Constant.SMS_PERMISSION);
         }
     }
 }

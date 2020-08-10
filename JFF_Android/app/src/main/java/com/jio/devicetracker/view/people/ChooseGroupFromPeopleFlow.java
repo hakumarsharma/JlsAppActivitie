@@ -48,6 +48,7 @@ import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.BaseActivity;
 import com.jio.devicetracker.view.adapter.ChooseGroupListAdapter;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.group.CreateGroupActivity;
 
 import java.util.ArrayList;
@@ -64,6 +65,8 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
     private TextView groupText;
     private List<HomeActivityListData> chooseGroupDataList;
     private Button continueChooseGroup;
+    private Boolean isFromPeopleAddToGroup;
+    private Boolean isFromDeviceAddToGroup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,6 +100,7 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         title.setText(Constant.ADD_GROUP);
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
+        backBtn.setOnClickListener(this);
         ImageView add = findViewById(R.id.createGroup);
         add.setVisibility(View.VISIBLE);
         add.setOnClickListener(this);
@@ -104,6 +108,8 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
         groupText = findViewById(R.id.group_detail_text);
         name = intent.getStringExtra(Constant.TRACKEE_NAME);
         phoneNumber = intent.getStringExtra(Constant.TRACKEE_NUMBER);
+        isFromPeopleAddToGroup = intent.getBooleanExtra(Constant.IS_PEOPLE_ADD_TO_GROUP,false);
+        isFromDeviceAddToGroup = intent.getBooleanExtra(Constant.IS_DEVICE_ADD_TO_GROUP,false);
         continueChooseGroup = findViewById(R.id.continueChooseGroup);
         continueChooseGroup.setOnClickListener(this);
         Button addLater = findViewById(R.id.addLater);
@@ -131,7 +137,19 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
                 addMemberToCreatedGroup(groupId);
                 break;
             case R.id.addLater:
-                createGroupAndAddContactDetails();
+                if (isFromPeopleAddToGroup){
+                    Intent intent = new Intent(this, DashboardMainActivity.class);
+                    intent.putExtra(Constant.Add_People, true);
+                    intent.putExtra(Constant.Add_Device, false);
+                    startActivity(intent);
+                } else if (isFromDeviceAddToGroup){
+                    Intent intent = new Intent(this, DashboardMainActivity.class);
+                    intent.putExtra(Constant.Add_People, false);
+                    intent.putExtra(Constant.Add_Device, true);
+                    startActivity(intent);
+                } else {
+                    createGroupAndAddContactDetails();
+                }
                 break;
             default:
                 // Todo
@@ -257,10 +275,20 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
                     homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                     homeActivityListData.setFrom(data.getFrom());
                     homeActivityListData.setTo(data.getTo());
-                    for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
-                        if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
-                            homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                    if (mGroupIconList.toArray().length > 0) {
+                        for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
+                            if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+                                homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                            }
                         }
+                    }else {
+                        homeActivityListData.setGroupIcon("default_group");
+                    }
+
+                    // If user uninstalls and installs app, and creates a group then groupiconlist will not be empty
+                    // so in that case groupicon will icon be null as our groupid is captured based on selection this condition is placed
+                    if (homeActivityListData.getGroupIcon() == null){
+                        homeActivityListData.setGroupIcon("default_group");
                     }
                     chooseGroupDataList.add(homeActivityListData);
                 }
@@ -272,6 +300,9 @@ public class ChooseGroupFromPeopleFlow extends BaseActivity implements View.OnCl
             cardViewGroup.setVisibility(View.INVISIBLE);
             continueChooseGroup.setEnabled(false);
             continueChooseGroup.setBackground(getResources().getDrawable(R.drawable.selector));
+        }else {
+            continueChooseGroup.setEnabled(true);
+            continueChooseGroup.setBackground(getResources().getDrawable(R.drawable.login_selector));
         }
         GridLayoutManager mLayoutManager = new GridLayoutManager(this,4);
         RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);

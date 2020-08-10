@@ -20,7 +20,9 @@
 
 package com.jio.devicetracker.view.device;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +35,7 @@ import androidx.core.content.ContextCompat;
 
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 
 public class QRReaderInstruction extends AppCompatActivity implements View.OnClickListener {
@@ -45,9 +48,9 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrscan_instruction);
         TextView qrScanHelpTitle = findViewById(R.id.qrcode_scan_help_title);
-        qrScanHelpTitle.setTypeface(Util.mTypeface(this,3));
+        qrScanHelpTitle.setTypeface(Util.mTypeface(this, 3));
         RelativeLayout toolbarLayout = findViewById(R.id.toolbarlayout);
-        toolbarLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.cardviewlayout_device_background_color));
+        toolbarLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.cardviewlayout_device_background_color));
         Button scanBtn = findViewById(R.id.scan_btn);
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(Constant.SCAN_QR_CODE_TITLE);
@@ -70,18 +73,28 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.scan_btn:
-                gotoQRReaderScreen();
+                checkPermission();
                 break;
-
             case R.id.manual_add:
                 gotoAttachDeviceActivity();
                 break;
-
             case R.id.back:
                 finish();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void checkPermission() {
+        PackageManager pm = this.getPackageManager();
+        int hasPerm = pm.checkPermission(
+                Manifest.permission.CAMERA,
+                this.getPackageName());
+        if (hasPerm == PackageManager.PERMISSION_GRANTED) {
+            gotoQRReaderScreen();
+        } else {
+            showCustomAlertWithText(Constant.CAMERA_PERMISSION);
         }
     }
 
@@ -96,5 +109,12 @@ public class QRReaderInstruction extends AppCompatActivity implements View.OnCli
         intent.putExtra(Constant.GROUP_ID, groupId);
         intent.putExtra(Constant.GROUP_NAME, groupName);
         startActivity(intent);
+    }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage) {
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
     }
 }

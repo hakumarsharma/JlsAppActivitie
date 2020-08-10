@@ -20,6 +20,8 @@
 
 package com.jio.devicetracker.network;
 
+import com.jio.devicetracker.util.Constant;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -29,7 +31,7 @@ import retrofit2.http.Header;
 import retrofit2.http.Path;
 
 public interface ExitRemoveDeleteAPI {
-    String BASE_URL = "https://sit.boapi.cats.jvts.net/accounts/api/users/";
+    String BASE_URL = Constant.STG_URL +"/accounts/api/users/";
     @HTTP(method = "DELETE", path = "{userId}/{sessiongroups}/{groupId}/sessiongroupconsents/status", hasBody = true)
     Call<ResponseBody> deleteGroupDetails(@Header("Authorization") String token, @Header("Content-Type") String type, @Path("userId") String userId,
                                @Path("sessiongroups") String sessiongroups, @Path("groupId") String groupId, @Body RequestBody jsonObject);

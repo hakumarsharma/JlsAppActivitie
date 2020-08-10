@@ -37,6 +37,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
@@ -612,6 +613,29 @@ public final class Util extends AppCompatActivity {
             ex.printStackTrace();
         }
         return strAddress.toString();
+    }
+
+    public static LatLng getLocationFromAddress(String strAddress , Context context) {
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 10);
+            if (address == null) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
     }
 
 }

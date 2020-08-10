@@ -53,6 +53,7 @@ import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.location.LocationActivity;
 import com.jio.devicetracker.view.location.ShareLocationActivity;
 import com.jio.devicetracker.view.menu.ActiveMemberActivity;
+import com.jio.devicetracker.view.menu.ActiveSessionActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,12 +105,18 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         HomeActivityListData trackingYou = mList.get(position);
         holder.trackingYouGroupOwnerName.setText(trackingYou.getGroupName());
         if (trackingYou.getConsentId() != null) {
-            holder.trackingYouGroupMemberIcon.setImageResource(R.drawable.secondaryuser);
+            holder.trackingYouGroupMemberIcon.setImageResource(R.drawable.default_user);
         } else {
             holder.trackingYouGroupMemberIcon.setImageResource(R.drawable.ic_family_group);
         }
         if (mList != null && !mList.isEmpty() && trackingYou.getConsentsCount() <= 4) {
             switch (trackingYou.getConsentsCount()) {
+                case 0:
+                    holder.motherIcon.setVisibility(View.INVISIBLE);
+                    holder.fatherIcon.setVisibility(View.INVISIBLE);
+                    holder.kidIcon.setVisibility(View.INVISIBLE);
+                    holder.dogIcon.setVisibility(View.INVISIBLE);
+                    break;
                 case 1:
                     holder.motherIcon.setVisibility(View.VISIBLE);
                     holder.fatherIcon.setVisibility(View.INVISIBLE);
@@ -210,7 +217,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                     if (mList.get(position).getConsentId() != null) {
                         viewMembers.setVisibility(View.GONE);
                         reverseTrack.setPadding(0, 0, 0, 16);
-                        reverseTrackLine.setVisibility(View.GONE);
+                        reverseTrackLine.setVisibility(View.INVISIBLE);
                     }
                     trackingYouOprationLayout.setVisibility(View.VISIBLE);
                     break;
@@ -227,7 +234,7 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                 case R.id.reverseTrack:
                     TrackingYouListAdapter.this.trackingYouOprationLayout = trackingYouOprationLayout;
                     HomeActivityListData mData = mList.get(position);
-                    if(mData.getConsentId() != null) {
+                    if (mData.getConsentId() != null) {
                         gotoSharedLocation = true;
                     }
                     memberName = mData.getName();
@@ -290,14 +297,14 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                     }
                 }
             }
-            if(gotoSharedLocation) {
+            if (gotoSharedLocation) {
                 gotoSharedLocation = false;
                 Intent intent = new Intent(mContext, ShareLocationActivity.class);
                 intent.putParcelableArrayListExtra(Constant.MAP_DATA, (ArrayList<? extends Parcelable>) mapDataList);
                 intent.putExtra(Constant.GROUP_STATUS, Constant.ACTIVE);
                 intent.putExtra(Constant.MEMBER_NAME, memberName);
                 intent.putExtra(Constant.GROUP_ID, groupId);
-                intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
+                intent.putExtra(Constant.DEVICE_NUMBER, deviceNumber);
                 intent.putExtra(Constant.CONSENT_STATUS, Constant.APPROVED);
                 mContext.startActivity(intent);
             } else {
@@ -345,7 +352,11 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
         ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
         ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
-        consent.setPhone(phoneNumber);
+        if (phoneNumber.length() == 15){
+            consent.setImei(phoneNumber);
+        }else {
+            consent.setPhone(phoneNumber);
+        }
         consent.setStatus(Constant.EXITED);
         exitRemovedGroupData.setConsent(consent);
         RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));
@@ -359,8 +370,10 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
                     Util.progressDialog.dismiss();
                     Toast.makeText(mContext, Constant.EXIT_FROM_GROUP_SUCCESS, Toast.LENGTH_SHORT).show();
                     mDbManager.deleteSelectedDataFromGroupMember(groupId);
+                    mDbManager.deleteSelectedDataFromGroup(groupId);
                     removeItem(position);
                     trackingYouOprationLayout.setVisibility(View.GONE);
+                    checkAfterDeletion();
                 } else {
                     Util.progressDialog.dismiss();
                     showCustomAlertWithText(Constant.REMOVE_FROM_GROUP_FAILURE);
@@ -397,4 +410,51 @@ public class TrackingYouListAdapter extends RecyclerView.Adapter<TrackingYouList
         notifyDataSetChanged();
     }
 
+    /**
+     * checks data in List
+     */
+    private void checkAfterDeletion() {
+        DBManager mDbManager = new DBManager(mContext);
+        String userId = mDbManager.getAdminLoginDetail().getUserId();
+        List<HomeActivityListData> groupDetailList = mDbManager.getAllGroupDetail();
+        List<GroupMemberDataList> mGroupMemberList = mDbManager.getAllGroupMemberData();
+
+        /// Add Tracking you in list of Active session
+        List<HomeActivityListData> trackingYouList = new ArrayList<>();
+        for (HomeActivityListData data : groupDetailList) {
+            for (GroupMemberDataList groupMemberDataList : mGroupMemberList) {
+                if (!userId.equalsIgnoreCase(data.getGroupOwnerUserId())
+                        && data.getStatus().equalsIgnoreCase(Constant.ACTIVE)
+                        && data.getGroupId().equalsIgnoreCase(groupMemberDataList.getGroupId())
+                        && groupMemberDataList.getUserId().equalsIgnoreCase(userId)
+                        && groupMemberDataList.getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
+                    HomeActivityListData trackingYou = new HomeActivityListData();
+                    if (mDbManager.getGroupDetail(groupMemberDataList.getGroupId()).getGroupName().equalsIgnoreCase(Constant.INDIVIDUAL_USER_GROUP_NAME)) {
+                        trackingYou.setGroupOwnerName(data.getGroupOwnerName());
+                        trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
+                        trackingYou.setGroupOwnerUserId(data.getGroupOwnerUserId());
+                        trackingYou.setGroupId(data.getGroupId());
+                        trackingYou.setGroupName(data.getGroupOwnerName());
+                        trackingYou.setConsentId(groupMemberDataList.getConsentId());
+                        trackingYou.setConsentsCount(0);
+                        trackingYouList.add(trackingYou);
+                    } else {
+                        trackingYou.setGroupOwnerName(data.getGroupOwnerName());
+                        trackingYou.setGroupOwnerPhoneNumber(data.getGroupOwnerPhoneNumber());
+                        trackingYou.setGroupOwnerUserId(data.getGroupOwnerUserId());
+                        trackingYou.setGroupId(data.getGroupId());
+                        trackingYou.setGroupName(data.getGroupName());
+                        trackingYou.setConsentsCount(data.getConsentsCount());
+                        trackingYouList.add(trackingYou);
+                    }
+                }
+            }
+        }
+
+        if (trackingYouList.isEmpty()) {
+            ActiveSessionActivity.trackingCardInstruction.setVisibility(View.VISIBLE);
+        } else {
+            ActiveSessionActivity.trackingCardInstruction.setVisibility(View.INVISIBLE);
+        }
+    }
 }

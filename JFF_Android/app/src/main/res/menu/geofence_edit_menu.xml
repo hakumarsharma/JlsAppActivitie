@@ -5,4 +5,8 @@
         android:title="Edit Geofence"
         android:id="@+id/edit_geofence"
         />
+    <item
+        android:title="Create Geofence"
+        android:id="@+id/create_geofence"
+        />
 </menu>

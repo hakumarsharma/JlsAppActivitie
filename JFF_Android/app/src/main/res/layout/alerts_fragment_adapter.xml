@@ -2,6 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/dull_text_color"
     android:layout_height="wrap_content">
 
     <View
@@ -22,14 +23,13 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/groupListLayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="125dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="25dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="8dp"
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="5dp">
-
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -60,9 +60,18 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="52dp"
                 android:layout_toRightOf="@+id/geofenceBreachIcon"
-                android:text="+ 1 invited"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textColor="#666666"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/geofenceAddress"
+                android:textColor="#666666"
+                android:textSize="10sp"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/geofenceAddress"/>
 
             <ImageView
                 android:id="@+id/operationStatus"

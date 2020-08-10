@@ -20,13 +20,13 @@
 
 package com.jio.devicetracker.view.adapter;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,7 +47,9 @@ import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
 import com.jio.devicetracker.view.dashboard.DeviceFragment;
+import com.jio.devicetracker.view.people.ChooseGroupFromPeopleFlow;
 import com.jio.devicetracker.view.people.EditMemberDetailsActivity;
 
 import java.util.List;
@@ -123,7 +125,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         } else if (data.getGroupIcon() != null && data.getGroupIcon().equalsIgnoreCase("OtherPet")) {
             holder.deviceMemberIcon.setBackgroundResource(R.drawable.other_pet);
         } else {
-            holder.deviceMemberIcon.setBackgroundResource(R.drawable.ic_family_group);
+            holder.deviceMemberIcon.setBackgroundResource(R.drawable.device_default);
         }
         holder.deviceListLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +170,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         private ImageView devicesCloseOperation;
         private TextView editDevices;
         private TextView devicesDelete;
+        private TextView addToGroup;
         private TextView trackingDeviceName;
         private ImageView deviceMenubar;
         private ImageView deviceMemberIcon;
@@ -184,6 +187,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             devicesCloseOperation = itemView.findViewById(R.id.devicesCloseOperation);
             editDevices = itemView.findViewById(R.id.editDevices);
             devicesDelete = itemView.findViewById(R.id.devicesDelete);
+            addToGroup = itemView.findViewById(R.id.devicesAddToGroup);
             deviceMenubar = itemView.findViewById(R.id.deviceMenubar);
             devicesOperationLayout = itemView.findViewById(R.id.devicesOperationLayout);
             deviceMemberIcon = itemView.findViewById(R.id.deviceMemberIcon);
@@ -192,6 +196,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             editDevices.setOnClickListener(this);
             devicesDelete.setOnClickListener(this);
             devicesCloseOperation.setOnClickListener(this);
+            addToGroup.setOnClickListener(this);
         }
 
         @Override
@@ -202,6 +207,15 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
                     break;
                 case R.id.devicesCloseOperation:
                     devicesOperationLayout.setVisibility(View.GONE);
+                    break;
+                case R.id.devicesAddToGroup:
+                    devicesOperationLayout.setVisibility(View.GONE);
+                    DashboardMainActivity.flowFromDevice = true;
+                    Intent chooseGroupIntent = new Intent(mContext, ChooseGroupFromPeopleFlow.class);
+                    chooseGroupIntent.putExtra(Constant.TRACKEE_NAME, mList.get(getAdapterPosition()).getGroupName());
+                    chooseGroupIntent.putExtra(Constant.TRACKEE_NUMBER, mList.get(getAdapterPosition()).getPhoneNumber());
+                    chooseGroupIntent.putExtra(Constant.IS_DEVICE_ADD_TO_GROUP,true);
+                    mContext.startActivity(chooseGroupIntent);
                     break;
                 case R.id.devicesDelete:
                     //DeviceListAdapter.this.position = getAdapterPosition();
@@ -223,22 +237,27 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         }
 
         private void deleteAlertBox() {
-            AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
-            adb.setTitle(Constant.ALERT_TITLE);
-            adb.setMessage(Constant.DELETE_CONFIRMATION_MESSAGE);
-            adb.setIcon(android.R.drawable.ic_dialog_alert);
-            adb.setPositiveButton("OK", (dialog, which) -> {
+            final Dialog dialog = new Dialog(mContext);
+            dialog.setContentView(R.layout.number_display_dialog);
+            dialog.setTitle(Constant.ALERT_TITLE);
+            TextView alertMessage = dialog.findViewById(R.id.selectNumber);
+            alertMessage.setText(Constant.DELETE_DEVICE_MESSAGE);
+            dialog.getWindow().setLayout(750, 500);
+            final Button yes = dialog.findViewById(R.id.positive);
+            final Button no = dialog.findViewById(R.id.negative);
+            yes.setOnClickListener(v -> {
                 DeviceListAdapter.this.devicesOperationLayout = devicesOperationLayout;
                 phoneNumber = mList.get(getAdapterPosition()).getPhoneNumber();
                 deviceId = mDbManager.getGroupMemberDetailByConsentId(mList.get(getAdapterPosition()).getConsentId()).getDeviceId();
                 makeDeleteGroupAPICall(mList.get(getAdapterPosition()).getGroupId());
+                dialog.dismiss();
             });
-            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
+
+            no.setOnClickListener(v -> {
+                dialog.dismiss();
+                devicesOperationLayout.setVisibility(View.GONE);
             });
-            adb.show();
+            dialog.show();
         }
     }
 
@@ -289,7 +308,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     // Make a delete device API call if it is the last delete from app
     private void checkToDeleteDeviceAPICall() {
         if (mDbManager.getDeviceTableData(phoneNumber) != null
-                && mDbManager.getDeviceTableData(phoneNumber).getAdditionCount() == 0) {
+                && mDbManager.getDeviceTableData(phoneNumber).getAdditionCount() == 0 && deviceId != null) {
             GroupRequestHandler.getInstance(mContext).handleRequest(new DeleteDeviceRequest(new DeleteDeviceRequestSuccessListener(), new DeleteDeviceRequestErrorListener(), deviceId));
         }
     }

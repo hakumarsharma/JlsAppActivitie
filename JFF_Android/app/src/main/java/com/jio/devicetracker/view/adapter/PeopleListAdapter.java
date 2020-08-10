@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -41,8 +42,11 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AddMemberInGroupData;
 import com.jio.devicetracker.database.pojo.ExitRemovedGroupData;
+import com.jio.devicetracker.database.pojo.GenerateConsentTokenData;
 import com.jio.devicetracker.database.pojo.GroupMemberDataList;
 import com.jio.devicetracker.database.pojo.request.AddMemberInGroupRequest;
+import com.jio.devicetracker.database.pojo.request.GenerateConsentTokenRequest;
+import com.jio.devicetracker.database.pojo.response.CommonAPIResponse;
 import com.jio.devicetracker.database.pojo.response.GroupMemberResponse;
 import com.jio.devicetracker.network.ExitRemoveDeleteAPI;
 import com.jio.devicetracker.network.GroupRequestHandler;
@@ -67,6 +71,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     private Context mContext;
     private DBManager mDbManager;
     private RelativeLayout layoutOps;
+    private GroupMemberDataList groupMemberList;
     private int position;
 
     public PeopleListAdapter(List<GroupMemberDataList> mList, Context mContext) {
@@ -119,9 +124,10 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_PENDING)) {
             holder.memberStatus.setText(Constant.CONSENT_PENDING);
             holder.memberAddress.setText(Constant.CONSENT_PENDING_ADDRESS);
-            holder.shareInvite.setText(Constant.RE_SEND_INVITE);
             holder.memberIcon.setImageResource(R.drawable.pendinginvite);
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.pending_color));
+            holder.resendInvite.setVisibility(View.VISIBLE);
+            holder.resendInviteLine.setVisibility(View.VISIBLE);
         } else if (data.getConsentStatus().equalsIgnoreCase(Constant.CONSET_STATUS_APPROVED)) {
             holder.memberStatus.setText(Constant.CONSENT_APPROVED_STATUS);
             holder.memberIcon.setImageResource(R.drawable.inviteaccepted);
@@ -136,7 +142,8 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             holder.memberStatus.setTextColor(mContext.getResources().getColor(R.color.rejected_color));
             holder.memberAddress.setText(Constant.CONSENT_EXPIRED_ADDRESS);
             holder.memberIcon.setImageResource(R.drawable.invitetimeup);
-            holder.shareInvite.setText(Constant.RE_SEND_INVITE);
+            holder.resendInvite.setVisibility(View.VISIBLE);
+            holder.resendInviteLine.setVisibility(View.VISIBLE);
         }
     }
 
@@ -163,9 +170,10 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         private ImageView closeBtn;
         private TextView editText;
         private TextView removeFromGroupText;
-        private TextView shareInvite;
+        private TextView resendInvite;
         public RelativeLayout layoutOps;
         public CardView peoplAddressLayout;
+        private View resendInviteLine;
 
         /**
          * Constructor where we find element from .xml file
@@ -184,38 +192,46 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
             editText = itemView.findViewById(R.id.edit);
             layoutOps = itemView.findViewById(R.id.oprationLayout);
             removeFromGroupText = itemView.findViewById(R.id.remove_from_group);
-            shareInvite = itemView.findViewById(R.id.share_invite);
+            resendInvite = itemView.findViewById(R.id.peopleResendInvite);
             editText.setOnClickListener(this);
             removeFromGroupText.setOnClickListener(this);
-            shareInvite.setOnClickListener(this);
+            resendInvite.setOnClickListener(this);
             menuIcon.setOnClickListener(this);
             closeBtn.setOnClickListener(this);
+            resendInviteLine = itemView.findViewById(R.id.peopleResendInviteLine);
         }
 
         @Override
         public void onClick(View v) {
+            //int position = getAdapterPosition();
             switch (v.getId()) {
                 case R.id.close:
                     layoutOps.setVisibility(View.GONE);
                     break;
                 case R.id.consentStatus:
+//                    if(mList.get(position).getConsentStatus().equalsIgnoreCase(Constant.APPROVED)) {
+//                        shareInvite.setVisibility(View.GONE);
+//                        removeFromGroupLine.setVisibility(View.INVISIBLE);
+//                        removeFromGroupText.setPadding(0,0,0,16);
+//                    }
                     layoutOps.setVisibility(View.VISIBLE);
                     break;
                 case R.id.edit:
                     Intent intent = new Intent(mContext, EditMemberDetailsActivity.class);
                     intent.putExtra("isFromMap",true);
-                    intent.putExtra(Constant.GROUP_ID, mList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(Constant.GROUPNAME, mList.get(getAdapterPosition()).getName());
-                    intent.putExtra(Constant.CONSENT_ID, mList.get(getAdapterPosition()).getConsentId());
+                    intent.putExtra(Constant.GROUP_ID, mList.get(position).getGroupId());
+                    intent.putExtra(Constant.GROUPNAME, mList.get(position).getName());
+                    intent.putExtra(Constant.CONSENT_ID, mList.get(position).getConsentId());
                     mContext.startActivity(intent);
                     break;
                 case R.id.remove_from_group:
                     position = getAdapterPosition();
                     deleteAlertBox(position);
                     break;
-                case R.id.share_invite:
-                    PeopleListAdapter.this.layoutOps = layoutOps;
-                    makeRemoveAPICall(mList.get(getAdapterPosition()), getAdapterPosition(), false);
+                case R.id.peopleResendInvite:
+                    position = getAdapterPosition();
+                    layoutOps.setVisibility(View.GONE);
+                    resendInviteAPICall(mList.get(position));
                     break;
                 default:
                     // Todo
@@ -244,6 +260,67 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
 
 
     /**
+     * Resend Invite API call
+     */
+
+    private void resendInviteAPICall(GroupMemberDataList groupMemberDataList){
+        GenerateConsentTokenData consentTokenData = new GenerateConsentTokenData();
+        GenerateConsentTokenData.Consent consent = new GenerateConsentTokenData().new Consent();
+        consent.setPhone(groupMemberDataList.getNumber());
+        consentTokenData.setConsent(consent);
+        Util.getInstance().showProgressBarDialog(mContext);
+        groupMemberList = groupMemberDataList;
+        GroupRequestHandler.getInstance(mContext).handleRequest(new GenerateConsentTokenRequest(new GenerateConsentTokenRequestSuccessListener(), new GenerateConsentTokenRequestErrorListener(), consentTokenData, groupMemberList.getGroupId(), mDbManager.getAdminLoginDetail().getUserId()));
+
+    }
+
+    /**
+     * Add Member in group Success Listener
+     */
+    private class GenerateConsentTokenRequestSuccessListener implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            Util.progressDialog.dismiss();
+            CommonAPIResponse apiResponse = Util.getInstance().getPojoObject(String.valueOf(response), CommonAPIResponse.class);
+            if (apiResponse.getCode() == Constant.SUCCESS_CODE_200){
+                removeItem(position);
+                Toast.makeText(mContext, Constant.INVITE_SENT, Toast.LENGTH_SHORT).show();
+                GroupMemberDataList groupMemberDataList = new GroupMemberDataList();
+                groupMemberDataList.setConsentId(groupMemberList.getConsentId());
+                groupMemberDataList.setNumber(groupMemberList.getNumber());
+                groupMemberDataList.setGroupId(groupMemberList.getGroupId());
+                groupMemberDataList.setConsentStatus(Constant.PENDING);
+                groupMemberDataList.setName(groupMemberList.getName());
+                groupMemberDataList.setUserId(groupMemberList.getUserId());
+                groupMemberDataList.setFrom(groupMemberList.getFrom());
+                groupMemberDataList.setTo(groupMemberList.getTo());
+                mList.add(groupMemberDataList);
+                notifyDataSetChanged();
+
+            }
+        }
+    }
+
+    /**
+     * Add Member in Group Error Listener
+     */
+    private class GenerateConsentTokenRequestErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error.networkResponse.statusCode == Constant.STATUS_CODE_404) {
+                // Make Verify and Assign call
+                Util.progressDialog.dismiss();
+                showCustomAlertWithText(Constant.DEVICE_NOT_FOUND);
+            } else {
+                Util.progressDialog.dismiss();
+                showCustomAlertWithText(Constant.RESEND_INVITE_FAILED);
+            }
+        }
+    }
+
+
+
+    /**
      * Make a Remove API Call
      *
      * @param groupMemberDataList
@@ -257,7 +334,11 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
         ExitRemoveDeleteAPI api = retrofit.create(ExitRemoveDeleteAPI.class);
         ExitRemovedGroupData exitRemovedGroupData = new ExitRemovedGroupData();
         ExitRemovedGroupData.Consent consent = new ExitRemovedGroupData().new Consent();
-        consent.setPhone(groupMemberDataList.getNumber());
+        if (groupMemberDataList.getNumber().length() == 15){
+           consent.setImei(groupMemberDataList.getNumber());
+        }else {
+            consent.setPhone(groupMemberDataList.getNumber());
+        }
         consent.setStatus(Constant.REMOVED);
         exitRemovedGroupData.setConsent(consent);
         RequestBody body = RequestBody.create(MediaType.parse(Constant.MEDIA_TYPE), new Gson().toJson(exitRemovedGroupData));

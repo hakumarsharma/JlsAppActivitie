@@ -94,6 +94,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         Intent intent = getIntent();
         deviceNumber = intent.getStringExtra(Constant.DEVICE_PHONE_NUMBER);
         deviceImei = intent.getStringExtra(Constant.DEVICE_IMEI_NUMBER);
+
         groupId = intent.getStringExtra(Constant.GROUP_ID);
         title.setTypeface(Util.mTypeface(this, 5));
         TextView iconSelectionText = findViewById(R.id.icon_selection);
@@ -362,6 +363,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
         this.isFromCreateGroup = true;
         this.isGroupMember = false;
         this.isFromDevice = true;
+        Util.progressDialog.dismiss();
         addMemberInGroupAPICall();
     }
 
@@ -387,6 +389,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
             SearchDeviceStatusData.Device device = searchDeviceStatusData.new Device();
             device.setUsersAssigned(data);
             searchDeviceStatusData.setDevice(device);
+            Util.getInstance().showProgressBarDialog(this);
             GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new GetUserDevicesListRequest(new GetDeviceRequestSuccessListener(), new GetDeviceRequestErrorListener(), searchDeviceStatusData));
         }
     }
@@ -401,13 +404,12 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
             if (getDeviceResponse.getCode() == 200) {
                 boolean isNumberExists = false;
                 for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData()) {
-                    // for (GetUserDevicesListResponse.Devices devices : data.getDevices()){
-                    if (data.getDevices().getImei().equalsIgnoreCase(deviceImei)) {
+                    if (data.getDevices().getImei().equalsIgnoreCase(deviceImei)){
                         isNumberExists = true;
                         break;
                     }
-                    // }
                 }
+
                 if (isNumberExists) {
                     addMemberToCreatedGroup();
                 } else {
@@ -423,6 +425,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     private class GetDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
             Toast.makeText(DeviceNameActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADD, Toast.LENGTH_SHORT).show();
         }
     }
@@ -473,6 +476,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
                     mDeviceTableData.setAdditionCount(++count);
                     mDbManager.updateIntoDeviceTable(mDeviceTableData);
                 }
+                Util.progressDialog.dismiss();
                 addMemberToCreatedGroup();
                 //Toast.makeText(ChooseGroupActivity.this, Constant.SUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
             }
@@ -485,6 +489,7 @@ public class DeviceNameActivity extends BaseActivity implements View.OnClickList
     private class AddDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
             Toast.makeText(DeviceNameActivity.this, Constant.UNSUCCESSFULL_DEVICE_ADDITION, Toast.LENGTH_SHORT).show();
         }
     }

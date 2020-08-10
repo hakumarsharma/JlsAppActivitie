@@ -26,7 +26,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -34,9 +36,11 @@ import androidx.annotation.Nullable;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.util.Constant;
 
-public class LowBatteryActivity extends Activity implements
-        AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class LowBatteryActivity extends Activity implements AdapterView.OnItemSelectedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
     String[] bateryPercentage = {"5%", "10%", "15%", "20%", "25%", "30%", "35%", "40%", "45%", "50%"};
+    public static int setBatteryLevel;
+    public static boolean isSwitchChecked = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,11 +62,15 @@ public class LowBatteryActivity extends Activity implements
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         spin.setAdapter(aa);
+
+        Switch exitSwitch = findViewById(R.id.exitSwitch);
+        exitSwitch.setOnCheckedChangeListener(this);
+
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // Toast.makeText(getApplicationContext(),bateryPercentage[position] , Toast.LENGTH_LONG).show();
+        setBatteryLevel = Integer.parseInt(bateryPercentage[position].replace("%", ""));
     }
 
     @Override
@@ -72,6 +80,13 @@ public class LowBatteryActivity extends Activity implements
 
     @Override
     public void onClick(View v) {
-        // Todo
+        if(v.getId() == R.id.back) {
+            finish();
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        isSwitchChecked = isChecked;
     }
 }

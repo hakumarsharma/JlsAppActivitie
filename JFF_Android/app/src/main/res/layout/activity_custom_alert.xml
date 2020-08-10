@@ -9,10 +9,11 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/alert_cardView"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="190dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        card_view:cardCornerRadius="8dp">
+        card_view:cardBackgroundColor="@color/white"
+        android:elevation="@dimen/ten_dp">
 
         <RelativeLayout
             android:layout_width="match_parent"

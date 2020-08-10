@@ -29,7 +29,6 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -54,9 +53,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.MapData;
 import com.jio.devicetracker.util.Constant;
-import com.jio.devicetracker.util.Util;
-import com.jio.devicetracker.view.dashboard.DashboardActivity;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -233,15 +229,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mMap != null) {
             onMapReady(mMap);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Util.clearLocationFlagstatus(this);
-//        Util.setAutologinStatus(this, true);
-        Intent intent = new Intent(this, DashboardActivity.class);
-        startActivity(intent);
     }
 
     /**

@@ -88,6 +88,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         phoneNumber = intent.getStringExtra(Constant.DEVICE_PHONE_NUMBER);
         imeiNumber = intent.getStringExtra(Constant.DEVICE_IMEI_NUMBER);
         devicename = intent.getStringExtra(Constant.TITLE_NAME);
+
         initUI();
         setMemberIcon(label);
         initDataMember();
@@ -322,10 +323,20 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                     homeActivityListData.setUpdatedBy(data.getUpdatedBy());
                     homeActivityListData.setFrom(data.getFrom());
                     homeActivityListData.setTo(data.getTo());
-                    for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
-                        if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
-                            homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                    if (mGroupIconList.toArray().length > 0) {
+                        for (HomeActivityListData mHomeActivityListData : mGroupIconList) {
+                            if (mHomeActivityListData.getGroupId().equalsIgnoreCase(data.getGroupId())) {
+                                    homeActivityListData.setGroupIcon(mHomeActivityListData.getGroupIcon());
+                            }
                         }
+                    }else {
+                        homeActivityListData.setGroupIcon("default_group");
+                    }
+
+                    // If user uninstalls and installs app, and creates a group then groupiconlist will not be empty
+                    // so in that case groupicon will icon be null as our groupid is captured based on selection this condition is placed
+                    if (homeActivityListData.getGroupIcon() == null){
+                        homeActivityListData.setGroupIcon("default_group");
                     }
                     chooseGroupDataList.add(homeActivityListData);
                 }
@@ -338,6 +349,9 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             continueBtn.setBackground(getResources().getDrawable(R.drawable.selector));
             continueBtn.setEnabled(false);
 
+        }else {
+            continueBtn.setBackground(getResources().getDrawable(R.drawable.login_selector));
+            continueBtn.setEnabled(true);
         }
         GridLayoutManager mLayoutManager = new GridLayoutManager(this, 4);
         RecyclerView mRecyclerView = findViewById(R.id.chooseGroupRecyclerViewWithInfo);
@@ -362,6 +376,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         this.isGroupMember = false;
         this.isFromDevice = true;
         this.isNavigateToGroupsFragment = true;
+        Util.progressDialog.dismiss();
         addMemberInGroupAPICall();
     }
 
@@ -373,6 +388,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
         this.isFromDevice = true;
         isNavigateToGroupsFragment = false;
         setUserIcon(label);
+        Util.progressDialog.dismiss();
         createGroupAndAddContactAPICall(Constant.INDIVIDUAL_DEVICE_GROUP_NAME);
     }
 
@@ -451,6 +467,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
                     mDbManager.updateIntoDeviceTable(mDeviceTableData);
                 }
                 if (isNavigateToCreateGroup) {
+                    Util.progressDialog.dismiss();
                     gotoCreateGroupActivity();
                 } else if (isAddLater) {
                     createGroupAndAddContactDetails();
@@ -468,6 +485,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private class AddDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
             showCustomAlertWithText(Constant.UNSUCCESSFULL_DEVICE_ADD);
 
         }
@@ -490,6 +508,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             SearchDeviceStatusData.Device device = searchDeviceStatusData.new Device();
             device.setUsersAssigned(data);
             searchDeviceStatusData.setDevice(device);
+            Util.getInstance().showProgressBarDialog(this);
             GroupRequestHandler.getInstance(getApplicationContext()).handleRequest(new GetUserDevicesListRequest(new GetDeviceRequestSuccessListener(), new GetDeviceRequestErrorListener(), searchDeviceStatusData));
         }
     }
@@ -504,17 +523,14 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
             if (getDeviceResponse.getCode() == 200) {
                 boolean isNumberExists = false;
                 for (GetUserDevicesListResponse.Data data : getDeviceResponse.getData()) {
-
-                    // for (GetUserDevicesListResponse.Devices devices : data.getDevices()){
-                    if (data.getDevices().getImei().equalsIgnoreCase(imeiNumber)) {
+                    if (data.getDevices().getImei().equalsIgnoreCase(imeiNumber)){
                         isNumberExists = true;
                         break;
                     }
-                    // }
-
                 }
                 if (isNumberExists) {
                     if (isNavigateToCreateGroup) {
+                        Util.progressDialog.dismiss();
                         gotoCreateGroupActivity();
                     } else if (isAddLater) {
                         createGroupAndAddContactDetails();
@@ -534,6 +550,7 @@ public class ChooseGroupActivity extends BaseActivity implements View.OnClickLis
     private class GetDeviceRequestErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Util.progressDialog.dismiss();
             showCustomAlertWithText(Constant.UNSUCCESSFULL_DEVICE_ADD);
         }
     }

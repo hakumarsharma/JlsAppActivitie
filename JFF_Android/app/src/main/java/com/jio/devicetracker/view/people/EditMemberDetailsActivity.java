@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +44,7 @@ import com.jio.devicetracker.database.pojo.EditMemberDetailsData;
 import com.jio.devicetracker.database.pojo.request.EditMemberDetailsRequest;
 import com.jio.devicetracker.network.GroupRequestHandler;
 import com.jio.devicetracker.util.Constant;
+import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.DeviceListAdapter;
 import com.jio.devicetracker.view.adapter.PeopleMemberListAdapter;
@@ -73,7 +75,11 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         userName.setText(intent.getStringExtra(Constant.GROUPNAME));
         Button updateBtn = findViewById(R.id.updateName);
         updateBtn.setOnClickListener(this);
+        ImageView userIconCreateGroup = findViewById(R.id.userIconCreateGroup);
         mDbmanager = new DBManager(this);
+        if (DeviceListAdapter.deviceEditFlag) {
+            userIconCreateGroup.setImageResource(R.drawable.device_default);
+        }
         if(!userName.getText().toString().isEmpty()){
             updateBtn.setBackground(getResources().getDrawable(R.drawable.login_selector));
         }
@@ -122,13 +128,15 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         @Override
         public void onResponse(Object response) {
             Util.progressDialog.dismiss();
-            Log.d("respone","Checking response value"+response);
+            Log.d("respone","Checking response value" + response);
             Intent intent = new Intent(EditMemberDetailsActivity.this, DashboardMainActivity.class);
-            if(PeopleMemberListAdapter.peopleEditFlag && !isFromMap){
+            if(!isFromMap && PeopleMemberListAdapter.peopleEditFlag) {
                 intent.putExtra(Constant.Add_People, true);
-            } else if (DeviceListAdapter.deviceEditFlag){
+                PeopleMemberListAdapter.peopleEditFlag = false;
+            } else if (DeviceListAdapter.deviceEditFlag) {
                 intent.putExtra(Constant.Add_People, false);
                 intent.putExtra(Constant.Add_Device, true);
+                DeviceListAdapter.deviceEditFlag = false;
             } else {
                 intent.putExtra(Constant.Add_People, false);
                 intent.putExtra(Constant.Add_Device, false);
@@ -141,7 +149,16 @@ public class EditMemberDetailsActivity extends AppCompatActivity implements View
         @Override
         public void onErrorResponse(VolleyError error) {
             Util.progressDialog.dismiss();
+            showCustomAlertWithText(Constant.INDIVIDUAL_USER_EDIT_FAILURE);
             Log.d("respone","Checking response value"+error);
         }
     }
+
+    // Show custom alert with alert message
+    private void showCustomAlertWithText(String alertMessage){
+        CustomAlertActivity alertActivity = new CustomAlertActivity(this);
+        alertActivity.show();
+        alertActivity.alertWithOkButton(alertMessage);
+    }
+
 }

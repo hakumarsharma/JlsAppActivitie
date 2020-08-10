@@ -35,6 +35,7 @@ public class AddMemberInGroupData {
 
     public class Consents {
         private String phone;
+        private String imei;
         private List<String> entities;
         private String name;
 
@@ -53,6 +54,9 @@ public class AddMemberInGroupData {
         public void setPhone(String phone) {
             this.phone = phone;
         }
+
+        public void setImei(String imei) { this.imei = imei; }
+        public String getImei(){return imei;}
 
         public List<String> getEntities() {
             return entities;

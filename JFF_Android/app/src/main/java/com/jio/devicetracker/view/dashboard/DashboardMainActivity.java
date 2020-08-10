@@ -22,27 +22,31 @@ package com.jio.devicetracker.view.dashboard;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -52,8 +56,10 @@ import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
+import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -79,6 +85,8 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.db.DBManager;
 import com.jio.devicetracker.database.pojo.AdminLoginData;
 import com.jio.devicetracker.database.pojo.ApproveRejectConsentData;
+import com.jio.devicetracker.database.pojo.NotificationData;
+import com.jio.devicetracker.database.pojo.SOSContactData;
 import com.jio.devicetracker.database.pojo.request.ApproveConsentRequest;
 import com.jio.devicetracker.database.pojo.request.RejectConsentRequest;
 import com.jio.devicetracker.database.pojo.response.ApproveRejectAPIResponse;
@@ -87,6 +95,7 @@ import com.jio.devicetracker.network.MQTTManager;
 import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.CustomAlertActivity;
 import com.jio.devicetracker.util.Util;
+import com.jio.devicetracker.view.geofence.NotificationHelper;
 import com.jio.devicetracker.view.menu.HowToUseActivity;
 import com.jio.devicetracker.view.adapter.DashboardAdapter;
 import com.jio.devicetracker.view.device.QRReaderInstruction;
@@ -96,11 +105,14 @@ import com.jio.devicetracker.view.menu.NavigateSupportActivity;
 import com.jio.devicetracker.view.menu.NavigateUserProfileActivity;
 import com.jio.devicetracker.view.menu.NotificationsAlertsActivity;
 import com.jio.devicetracker.view.menu.SilentModeActivity;
+import com.jio.devicetracker.view.menu.settings.LowBatteryActivity;
 import com.jio.devicetracker.view.menu.settings.SettingsActivity;
 import com.jio.devicetracker.view.people.AddPeopleActivity;
 import com.jio.devicetracker.view.signinsignup.SigninSignupActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -138,6 +150,9 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         drawerLayout = findViewById(R.id.drawerLayout);
         title.setText(Constant.DASHBOARD_TITLE);
         title.setTypeface(Util.mTypeface(this, 5));
+        ImageView sosCall = findViewById(R.id.sosCall);
+        sosCall.setVisibility(View.VISIBLE);
+        sosCall.setOnClickListener(this);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.drawerOpen, R.string.drawerClose);
@@ -155,7 +170,10 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         });
         initUI();
         initializeDataMembers();
-
+        String isStartDraweRequired = getIntent().getStringExtra(Constant.START_DRAWER);
+        if (isStartDraweRequired != null && isStartDraweRequired.equalsIgnoreCase(Constant.YES)) {
+            drawerLayout.openDrawer(GravityCompat.START);
+        }
     }
 
     private void initUI() {
@@ -177,7 +195,6 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         viewPager.setAdapter(dashboardAdapter);
         pageChangeListener();
         deepLinkingURICheck();
-
         Intent intent = getIntent();
         Boolean isAddPeople = intent.getBooleanExtra(Constant.Add_People, false);
         Boolean isAddDevice = intent.getBooleanExtra(Constant.Add_Device, false);
@@ -249,61 +266,75 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         setUpGClient();
         new Thread(new SendLocation()).start();
         userPhoneNumber = mDbManager.getAdminLoginDetail().getPhoneNumber();
+        registerReceiver(gpsBroadcastReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.createGroup) {
-            switch (viewPager.getCurrentItem()) {
-                case 0:
-                    flowFromGroup = true;
-                    flowFromPeople = false;
-                    flowFromDevice = false;
-                    startActivity(new Intent(this, CreateGroupActivity.class));
-                    break;
-                case 1:
-                    flowFromPeople = true;
-                    flowFromGroup = false;
-                    flowFromDevice = false;
-                    startActivity(new Intent(this, AddPeopleActivity.class));
-                    break;
-                case 2:
-                    flowFromDevice = true;
-                    flowFromGroup = false;
-                    flowFromPeople = false;
-                    startActivity(new Intent(this, QRReaderInstruction.class));
-                    break;
-                default:
-                    // Todo
-                    break;
-            }
-        }
-        if (v.getId() == R.id.group_detail) {
-            viewPager.setCurrentItem(0);
-            groupTitle.setText(Constant.GROUP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
-            groupTitle.setTextColor(Color.WHITE);
-            peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
-            peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-            deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
-            deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-        }
-        if (v.getId() == R.id.people_detail) {
-            viewPager.setCurrentItem(1);
-            peopleTitle.setText(Constant.PEOPLE_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
-            peopleTitle.setTextColor(Color.WHITE);
-            groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
-            groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-            deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
-            deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-        }
-        if (v.getId() == R.id.device_detail) {
-            viewPager.setCurrentItem(2);
-            deviceTitle.setText(Constant.DEVICES_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
-            deviceTitle.setTextColor(Color.WHITE);
-            peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
-            peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
-            groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
-            groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+        switch (v.getId()) {
+            case R.id.createGroup:
+                switch (viewPager.getCurrentItem()) {
+                    case 0:
+                        flowFromGroup = true;
+                        flowFromPeople = false;
+                        flowFromDevice = false;
+                        startActivity(new Intent(this, CreateGroupActivity.class));
+                        break;
+                    case 1:
+                        flowFromPeople = true;
+                        flowFromGroup = false;
+                        flowFromDevice = false;
+                        startActivity(new Intent(this, AddPeopleActivity.class));
+                        break;
+                    case 2:
+                        flowFromDevice = true;
+                        flowFromGroup = false;
+                        flowFromPeople = false;
+                        startActivity(new Intent(this, QRReaderInstruction.class));
+                        break;
+                    default:
+                        // Todo
+                        break;
+                }
+                break;
+
+            case R.id.group_detail:
+                viewPager.setCurrentItem(0);
+                groupTitle.setText(Constant.GROUP_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                groupTitle.setTextColor(Color.WHITE);
+                peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
+                peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
+                deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                break;
+
+            case R.id.people_detail:
+                viewPager.setCurrentItem(1);
+                peopleTitle.setText(Constant.PEOPLE_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                peopleTitle.setTextColor(Color.WHITE);
+                groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
+                groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                deviceTitle.setText(Constant.DEVICES_WITHOUT_NEXT_LINE);
+                deviceTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                break;
+
+            case R.id.device_detail:
+                viewPager.setCurrentItem(2);
+                deviceTitle.setText(Constant.DEVICES_TAB + Html.fromHtml(getResources().getString(R.string.white_indicater)));
+                deviceTitle.setTextColor(Color.WHITE);
+                peopleTitle.setText(Constant.PEOPLE_WITHOUT_NEXT_LINE);
+                peopleTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                groupTitle.setText(Constant.GROUP_WITHOUT_NEXT_LINE);
+                groupTitle.setTextColor(getResources().getColor(R.color.tabBarUnselectedColor));
+                break;
+
+            case R.id.sosCall:
+                makeSOSCall();
+                break;
+
+            default:
+                // Todo
+                break;
         }
     }
 
@@ -319,14 +350,77 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    // Make SOS call, this method makes call on primary SOS number and send current location on secondary and ternary numbers through SMS
+    private void makeSOSCall() {
+        List<SOSContactData> mData = mDbManager.getAllSOStableData();
+        String sos1PhoneNumber = null;
+        String sos2PhoneNumber = null;
+        String sos3PhoneNumber = null;
+        for (SOSContactData mSosContactData : mData) {
+            if (mSosContactData.getPriority() == 1) {
+                sos1PhoneNumber = mSosContactData.getNumber();
+            } else if (mSosContactData.getPriority() == 2) {
+                sos2PhoneNumber = mSosContactData.getNumber();
+            } else if (mSosContactData.getPriority() == 3) {
+                sos3PhoneNumber = mSosContactData.getNumber();
+            }
+        }
+        if (sos1PhoneNumber == null && sos2PhoneNumber == null && sos3PhoneNumber == null) {
+            showCustomAlertWithText(Constant.NO_SOS_CONTACT_WARNING);
+            return;
+        }
+        if (sos1PhoneNumber == null) {
+            showCustomAlertWithText(Constant.NO_SOS_PRIMARY_CONTACT);
+        } else {
+            makePhoneCall(sos1PhoneNumber);
+        }
+        if (sos2PhoneNumber != null) {
+            sendCurrentLocationInSMS(sos2PhoneNumber);
+        }
+        if (sos3PhoneNumber != null) {
+            sendCurrentLocationInSMS(sos3PhoneNumber);
+        }
+    }
+
+    /**
+     * Make SOS phone Call
+     *
+     * @param phoneNumber
+     */
+    private void makePhoneCall(String phoneNumber) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            showCustomAlertWithText(Constant.CALL_PERMISSION);
+            return;
+        }
+        startActivity(callIntent);
+    }
+
+    /**
+     * Sends current location in SMS
+     *
+     * @param phoneNumber
+     */
+    private void sendCurrentLocationInSMS(String phoneNumber) {
+        Location location = getCurrentLocation();
+        SmsManager smgr = SmsManager.getDefault();
+        smgr.sendTextMessage(phoneNumber, null, "http://maps.google.com/maps?q=loc:" + location.getLatitude() + "," + location.getLongitude(), null, null);
+        Toast.makeText(this, Constant.SMS_SENT_INFO, Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * Display Dialog when you click on Deep link URI
      */
     public void showDialog(Uri data) {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.number_display_dialog);
+        TextView mAlertDialogMessage = dialog.findViewById(R.id.selectNumber);
+        mAlertDialogMessage.setText(Constant.DEEPLINK_MESSAGE);
         dialog.setTitle(Constant.TITLE);
-        dialog.getWindow().setLayout(750, 500);
+        dialog.getWindow().setLayout(size.x, 500);
         final Button yes = dialog.findViewById(R.id.positive);
         final Button no = dialog.findViewById(R.id.negative);
         yes.setOnClickListener(v -> {
@@ -517,22 +611,27 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         startActivity(intent);
     }
 
+    // Called at the time of logout and update the database
     private void updateLogoutData() {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        adb.setTitle(Constant.ALERT_TITLE);
-        adb.setMessage(Constant.LOGOUT_CONFIRMATION_MESSAGE);
-        adb.setIcon(android.R.drawable.ic_dialog_alert);
-        adb.setPositiveButton("OK", (dialog, which) -> {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.number_display_dialog);
+        dialog.setTitle(Constant.ALERT_TITLE);
+        TextView alertMessage = dialog.findViewById(R.id.selectNumber);
+        alertMessage.setText(Constant.LOGOUT_CONFIRMATION_MESSAGE);
+        dialog.getWindow().setLayout(750, 500);
+        final Button yes = dialog.findViewById(R.id.positive);
+        final Button no = dialog.findViewById(R.id.negative);
+        yes.setOnClickListener(v -> {
             Util.clearAutologinstatus(this);
             mDbManager.updateLogoutData();
             goToLoginActivity();
+            dialog.dismiss();
         });
-        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
+
+        no.setOnClickListener(v -> {
+            dialog.dismiss();
         });
-        adb.show();
+        dialog.show();
     }
 
     /**
@@ -566,9 +665,16 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     private void checkPermissions() {
         int permissionLocation = ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCall = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CALL_PHONE);
         List<String> listPermissionsNeeded = new ArrayList<>();
-        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionLocation != PackageManager.PERMISSION_GRANTED || permissionCall != PackageManager.PERMISSION_GRANTED) {
+            if (permissionCall != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.CALL_PHONE);
+            }
+            if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+            }
             if (!listPermissionsNeeded.isEmpty()) {
                 ActivityCompat.requestPermissions(this,
                         listPermissionsNeeded.toArray(new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
@@ -590,6 +696,8 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
             MyPhoneStateListener myPhoneStateListener = new MyPhoneStateListener();
             TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             mTelephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        } else {
+            showCustomAlertWithText(Constant.LOCATION_PERMISSION);
         }
     }
 
@@ -654,13 +762,13 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     public void publishMessage() {
         if (getCurrentLocation() != null) {
             Location location = getCurrentLocation();
-            if(location != null) {
+            if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
             }
             String message = "{\"did\":\"" + userPhoneNumber + "\",\"evt\":\"GPS\",\"dvt\":\"JioDevice_g\",\"alc\":\"0\",\"lat\":\"" + latitude + "\",\"lon\":\"" + longitude + "\",\"ltd\":\"0\",\n" +
                     "\"lnd\":\"0\",\"dir\":\"0\",\"pos\":\"A\",\"spd\":\"" + 12 + "\",\"tms\":\"" + Util.getInstance().getMQTTTimeFormat() + "\",\"odo\":\"0\",\"ios\":\"0\",\"bat\":\"" + batteryLevel + "\",\"sig\":\"" + signalStrengthValue + "\"}";
-            String topic = "jioiot/svcd/tracker/" + userPhoneNumber + "/uc/fwd/locinfo";
+            String topic = "jioiot/svcdd/tracker/" + userPhoneNumber + "/uc/fwd/locinfo";
             System.out.println("Message --> " + message);
             System.out.println("Topic -->" + topic);
             new MQTTManager().publishMessage(topic, message);
@@ -671,13 +779,63 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
      * Broadcast receiver to calculate battery strength
      */
     private BroadcastReceiver broadcastreceiver = new BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onReceive(Context context, Intent intent) {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             batteryLevel = (int) (((float) level / (float) scale) * 100.0f);
+            if(batteryLevel < LowBatteryActivity.setBatteryLevel && LowBatteryActivity.isSwitchChecked == true) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
+                NotificationData notificationData = new NotificationData();
+                notificationData.setNotificationTitle(Constant.LOWBATTERY);
+                notificationData.setNotificationMessage(Constant.LOW_BATTERY_MSG);
+                notificationData.setNotificationDate(dateFormat.format(new Date()));
+                mDbManager.insertIntoNotificationTable(notificationData);
+                showNotification(Constant.LOWBATTERY, Constant.LOW_BATTERY_MSG);
+            }
         }
     };
+
+    // Broadcast receiver for location turn on/off
+    private BroadcastReceiver gpsBroadcastReceiver = new BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
+                    NotificationData notificationData = new NotificationData();
+                    notificationData.setNotificationDate(dateFormat.format(new Date()));
+                    notificationData.setNotificationMessage(Constant.GPS_OFF_NOTIFICATION);
+                    notificationData.setNotificationTitle(Constant.JIO_TRACK_REMINDER);
+                    mDbManager.insertIntoNotificationTable(notificationData);
+                    showNotification(Constant.JIO_TRACK_REMINDER, Constant.GPS_OFF_NOTIFICATION);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    };
+
+    // Display notification
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void showNotification(String title, String body) {
+        new NotificationHelper(this);
+        Intent intent = new Intent(this, NotificationsAlertsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constant.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.app_icon)
+                .setContentTitle(title)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(Constant.NOTIFICATION__ID, builder.build());
+    }
 
     /**
      * Connect to the MQTT server
@@ -752,6 +910,7 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
         super.onDestroy();
         if (broadcastreceiver != null) {
             unregisterReceiver(broadcastreceiver);
+            unregisterReceiver(gpsBroadcastReceiver);
         }
     }
 

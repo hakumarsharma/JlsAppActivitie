@@ -1,7 +1,6 @@
 /*************************************************************
  *
  * Reliance Digital Platform & Product Services Ltd.
-
  * CONFIDENTIAL
  * __________________
  *
@@ -14,7 +13,6 @@
  * intellectual and technical concepts contained herein are
  * proprietary to Reliance Digital Platform & Product Services Ltd. and are protected by
  * copyright law or as trade secret under confidentiality obligations.
-
  * Dissemination, storage, transmission or reproduction of this information
  * in any part or full is strictly forbidden unless prior written
  * permission along with agreement for any usage right is obtained from Reliance Digital Platform & *Product Services Ltd.
@@ -33,22 +31,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Table Name
     public static final String TABLE_NAME_BORQS = "BorqsDevicedata";
-    public static final String TABLE_NAME_DEVICE = "BorqsAddDevicedata";
-    public static final String TABLE_NAME_FMS = "FmsDevicedata";
-    public static final String TABLE_NAME_USER = "UserData";
     public static final String TABLE_USER_LOGIN = "UserloginData";
     public static final String TABLE_GROUP = "GroupData";
     public static final String TABLE_GROUP_MEMBER = "GroupMemberData";
     public static final String TABLE_GROUP_ICON = "GroupIconTable";
     public static final String TABLE_ALERTS_HOSTORY = "AlertsHistoryTable";
     public static final String TABLE_DEVICE = "DeviceTable";
+    public static final String TABLE_GEOFENCE = "GeofenceTable";
+    public static final String TABLE_SOS = "SOSTable";
+    public static final String TABLE_NOTIFICATION = "NotificationTable";
 
     //Table Columns
     public static final String IMEI_NUM = "imei";
     public static final String DEVICE_NUM = "deviceNumber";
     public static final String NAME = "name";
     public static final String RELATION = "relation";
-    public static  final String CONSENT_STATUS = "consentStatus";
+    public static final String CONSENT_STATUS = "consentStatus";
     public static final String GROUP_NAME = "groupName";
     public static final String DEVICE_TYPE = "deviceType";
     public static final String LAT = "latitude";
@@ -84,7 +82,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String ALERT_TIME = "alertTime";
     public static final String ADDRESS = "address";
     public static final String COUNT = "count";
-
+    public static final String STATE = "state";
+    public static final String PRIORITY = "priority";
+    public static final String PHONEBOOK_ID = "phonebookId";
+    public static final String NOTIFICATION_TITLE = "notificationTitle";
+    public static final String NOTIFICATION_MESSAGE = "notificationMessage";
+    public static final String NOTIFICATION_TIME = "notificationTime";
 
     //DB Information
     public static final String DB_NAME = "AddDevice.db";
@@ -92,28 +95,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String CREATE_TABLE_BORQS = "create table " + TABLE_NAME_BORQS + "(" + IMEI_NUM
-            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " + CONSENT_STATUS + " TEXT, " + DEVICE_ID + " TEXT ," + GROUP_NAME + " TEXT, " + DEVICE_TYPE + " TEXT, " + IS_GROUP_MEMBER + " INTEGER ," + IS_CREATED + " INTEGER ," + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
+            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " + CONSENT_STATUS + " TEXT, " + DEVICE_ID + " TEXT ," + GROUP_NAME + " TEXT, " + DEVICE_TYPE + " TEXT, " + IS_GROUP_MEMBER + " INTEGER ," + IS_CREATED + " INTEGER ," + LAT + " DOUBLE ," + LON + " DOUBLE ," + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ," + "PRIMARY KEY" + "(" + DEVICE_NUM + "))";
 
-    private static final String CREATE_TABLE_DEVICE = "create table " + TABLE_NAME_DEVICE + "(" + IMEI_NUM
-            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + EMAIL + " TEXT, " + CONSENT_STATUS + " TEXT, "+ GROUP_NAME + " TEXT," + LAT + " DOUBLE ," + LON + " DOUBLE ,"  + CONSENT_TIME + " TEXT ," + CONSENT_TIME_APPROVAL_LIMIT + " INTEGER ," + IS_GROUP_MEMBER + " INTEGER ,"  +"PRIMARY KEY" +"("+DEVICE_NUM +"))";
+    private static final String CREATE_TABLE_USER_LOGIN = "create table " + TABLE_USER_LOGIN + "(" + USER_TOKEN + " TEXT, " + TOKEN_EXPIRY_TIME + " TEXT, " + USER_NAME + " TEXT," + EMAIL + " TEXT," + USER_ID + " TEXT, " + DEVICE_NUM + " TEXT, " + PHONE_COUNTRY_CODE + " TEXT, " + "PRIMARY KEY" + "(" + USER_ID + "))";
 
+    private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + CREATED_BY + " TEXT, " + UPDATED_BY + " TEXT, " + TIME_FROM + " DOUBLE ," + TIME_TO + " DOUBLE ," + PROFILE_IMAGE + " INTEGER ," + STATUS + " TEXT, " + GROUP_OWNER_NAME + " TEXT, " + GROUP_OWNER_PHONE_NUMBER + " TEXT, " + GROUP_OWNER_USER_ID + " TEXT, " + CONSENTS_COUNT + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID + "))";
 
-    private static final String CREATE_TABLE_FMS = "create table " + TABLE_NAME_FMS + "(" + IMEI_NUM
-            + " TEXT, " + DEVICE_NUM + " TEXT, " + NAME + " TEXT, " + RELATION + " TEXT, " +CONSENT_STATUS+ " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ," +"PRIMARY KEY" +"(" +DEVICE_NUM +" ," + IMEI_NUM +"))";
+    private static final String CREATE_TABLE_GROUP_MEMBER = "create table " + TABLE_GROUP_MEMBER + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + GROUPID + " TEXT, " + IS_GROUP_ADMIN + " INTEGER, " + DEVICE_NUM + " TEXT ," + PROFILE_IMAGE + " INTEGER ," + USER_ID + " TEXT ," + DEVICE_ID + " TEXT ," + STATUS + " TEXT, " + LAT + " DOUBLE ," + LON + " DOUBLE ," + RADIUS + " INTEGER ," + "PRIMARY KEY" + "(" + CONSENT_ID + "))";
 
-    private static final String CREATE_TABLE_USER = "create table " + TABLE_NAME_USER + "("+ NAME + " TEXT, " + EMAIL + " TEXT, " + DEVICE_NUM + " TEXT ," + DOB + " TEXT ," + PASS + " TEXT ," + USER_ID + " TEXT ,"+"PRIMARY KEY" +"("+DEVICE_NUM +" ," +EMAIL +"))";
+    private static final String CREATE_GROUP_ICON_TABLE = "create table " + TABLE_GROUP_ICON + "(" + GROUPID + " TEXT, " + GROUP_ICON + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID + "))";
 
-    private static final String CREATE_TABLE_USER_LOGIN = "create table " + TABLE_USER_LOGIN + "("+ USER_TOKEN + " TEXT, " + TOKEN_EXPIRY_TIME + " TEXT, " + USER_NAME + " TEXT," + EMAIL + " TEXT,"+ USER_ID + " TEXT, " + DEVICE_NUM + " TEXT, " + PHONE_COUNTRY_CODE + " TEXT, " + "PRIMARY KEY" +"(" + USER_ID+"))";
+    private static final String CREATE_ALERTS_HISTORY_TABLE = "create table " + TABLE_ALERTS_HOSTORY + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + DEVICE_NUM + " TEXT, " + ALERT_TIME + " TEXT ," + STATE + " TEXT ," + ADDRESS + " TEXT, " + "PRIMARY KEY" + "(" + ALERT_TIME + "))";
 
-    private static final String CREATE_TABLE_GROUP = "create table " + TABLE_GROUP + "(" + GROUPID + " TEXT, " + GROUP_NAME + " TEXT, " + CREATED_BY + " TEXT, " + UPDATED_BY + " TEXT, " + TIME_FROM + " DOUBLE ," + TIME_TO + " DOUBLE ,"  + PROFILE_IMAGE + " INTEGER ," + STATUS + " TEXT, " + GROUP_OWNER_NAME + " TEXT, " +  GROUP_OWNER_PHONE_NUMBER + " TEXT, " + GROUP_OWNER_USER_ID + " TEXT, " + CONSENTS_COUNT + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
+    private static final String CREATE_DEVICE_TABLE = "create table " + TABLE_DEVICE + "(" + DEVICE_NUM + " TEXT ," + IMEI_NUM + " TEXT, " + COUNT + " INTEGER ," + "PRIMARY KEY" + "(" + IMEI_NUM + "))";
 
-    private static final String CREATE_TABLE_GROUP_MEMBER = "create table " + TABLE_GROUP_MEMBER + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + GROUPID + " TEXT, " + IS_GROUP_ADMIN + " INTEGER, " + DEVICE_NUM + " TEXT ," + PROFILE_IMAGE + " INTEGER ," + USER_ID + " TEXT ," + DEVICE_ID + " TEXT ," + STATUS + " TEXT, "+ LAT + " DOUBLE ," + LON + " DOUBLE ,"+ RADIUS + " INTEGER ," + "PRIMARY KEY" +"("+ CONSENT_ID +"))";
+    private static final String CREATE_GEOFENCE_TABLE = "create table " + TABLE_GEOFENCE + "(" + DEVICE_NUM + " TEXT ," + LAT + " DOUBLE ," + LON + " DOUBLE ," + RADIUS + " INTEGER ," + "PRIMARY KEY" + "("  + LAT +","+ LON+ "))";
 
-    private static final String CREATE_GROUP_ICON_TABLE = "create table " + TABLE_GROUP_ICON + "(" + GROUPID + " TEXT, " + GROUP_ICON + " TEXT, " + "PRIMARY KEY" + "(" + GROUPID +"))";
+    private static final String CREATE_SOS_TABLE = "create table " + TABLE_SOS + "(" + DEVICE_NUM + " TEXT ," + PRIORITY + " INTEGER ," + PHONEBOOK_ID + " TEXT ," + "PRIMARY KEY" + "(" + DEVICE_NUM + "))";
 
-    private static final String CREATE_ALERTS_HISTORY_TABLE = "create table " + TABLE_ALERTS_HOSTORY + "(" + CONSENT_ID + " TEXT, " + NAME + " TEXT, " + DEVICE_NUM + " TEXT, " + ALERT_TIME + " TEXT ," + ADDRESS + " TEXT, " + "PRIMARY KEY" + "(" + ALERT_TIME +"))";
-
-    private static final String CREATE_DEVICE_TABLE = "create table " + TABLE_DEVICE + "(" + DEVICE_NUM + " TEXT ," + IMEI_NUM + " TEXT, "  + COUNT + " INTEGER ," + "PRIMARY KEY" + "(" + IMEI_NUM +"))";
+    private static final String CREATE_NOTIFICATION_TABLE = "create table " + TABLE_NOTIFICATION + "(" + NOTIFICATION_TITLE + " TEXT ," + NOTIFICATION_MESSAGE + " TEXT ," + NOTIFICATION_TIME + " TEXT ," + "PRIMARY KEY" + "(" + NOTIFICATION_TIME + "))";
 
 
     public DatabaseHelper(Context context) {
@@ -122,38 +122,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Called automatically when we install the application
+     *
      * @param db
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_BORQS);
-        db.execSQL(CREATE_TABLE_DEVICE);
-        db.execSQL(CREATE_TABLE_FMS);
-        db.execSQL(CREATE_TABLE_USER);
         db.execSQL(CREATE_TABLE_USER_LOGIN);
         db.execSQL(CREATE_TABLE_GROUP);
         db.execSQL(CREATE_TABLE_GROUP_MEMBER);
         db.execSQL(CREATE_GROUP_ICON_TABLE);
         db.execSQL(CREATE_ALERTS_HISTORY_TABLE);
         db.execSQL(CREATE_DEVICE_TABLE);
+        db.execSQL(CREATE_GEOFENCE_TABLE);
+        db.execSQL(CREATE_SOS_TABLE);
+        db.execSQL(CREATE_NOTIFICATION_TABLE);
     }
 
     /**
      * Called automatically when we install the application
+     *
      * @param db
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_BORQS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_DEVICE);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_FMS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LOGIN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP_MEMBER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUP_ICON);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALERTS_HOSTORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEVICE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GEOFENCE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SOS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATION);
         onCreate(db);
     }
 }

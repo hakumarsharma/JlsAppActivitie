@@ -57,8 +57,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/profile_layout"
+        android:background="@color/dull_text_color"
         android:id="@+id/map_fragment"
         />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/geofence_area_number"
+        android:layout_below="@+id/profile_layout"
+        android:layout_marginLeft="@dimen/sixteen_dp"
+        android:layout_marginTop="@dimen/margin_33"
+        android:layout_marginRight="@dimen/sixteen_dp"
+        android:elevation="@dimen/fifteen_dp"
+        android:background="@drawable/geofence_area_text_background"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your geofence areas"
+            android:textColor="@color/shadow_black"
+            android:layout_marginLeft="@dimen/sixteen_dp"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/seventeen_dp"
+            />
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="11"
+            android:id="@+id/geofence_count"
+            android:gravity="center"
+            android:layout_marginRight="@dimen/sixteen_dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/geofence_background"
+            android:textSize="@dimen/twenty_dp"
+            />
+    </RelativeLayout>
     <RelativeLayout
         android:id="@+id/menuOptionLayout"
         android:layout_width="match_parent"
