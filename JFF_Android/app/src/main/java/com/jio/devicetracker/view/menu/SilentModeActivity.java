@@ -36,7 +36,6 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 
 public class SilentModeActivity extends AppCompatActivity implements View.OnClickListener {
-    private Switch silentEntrySwitch;
     public static boolean silentFeatureFlag;
 
 
@@ -50,7 +49,7 @@ public class SilentModeActivity extends AppCompatActivity implements View.OnClic
         Button backBtn = findViewById(R.id.back);
         backBtn.setVisibility(View.VISIBLE);
         backBtn.setOnClickListener(this);
-        silentEntrySwitch = findViewById(R.id.entrySwitch);
+        Switch silentEntrySwitch = findViewById(R.id.entrySwitch);
         silentEntrySwitch.setChecked(silentFeatureFlag);
         silentEntrySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

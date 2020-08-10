@@ -823,17 +823,17 @@ public class DashboardMainActivity extends AppCompatActivity implements View.OnC
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showNotification(String title, String body) {
         new NotificationHelper(this);
-        Intent intent = new Intent(DashboardMainActivity.this, NotificationsAlertsActivity.class);
+        Intent intent = new Intent(this, NotificationsAlertsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(DashboardMainActivity.this, 0, intent, 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(DashboardMainActivity.this, Constant.NOTIFICATION_CHANNEL_ID)
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constant.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.app_icon)
                 .setContentTitle(title)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(DashboardMainActivity.this);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(Constant.NOTIFICATION__ID, builder.build());
     }
 

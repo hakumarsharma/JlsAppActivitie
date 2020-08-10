@@ -45,7 +45,6 @@ import java.util.Locale;
 public class NotificationFragment extends Fragment implements View.OnClickListener {
 
     private DBManager mDbManager;
-    private RecyclerView mRecyclerView;
     private String currentDateValues = Constant.EMPTY_STRING;
 
     @Override
@@ -83,7 +82,7 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
                         mData.setDay(Constant.TODAY);
                         currentDateValues = Constant.TODAY;
                     }
-                } else if ((diffhours >= 24 && diffhours <= 48)) {
+                } else if (diffhours >= 24 && diffhours <= 48) {
                     if (!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY)) {
                         mData.setDay(Constant.YESTERDAY);
                         currentDateValues = Constant.YESTERDAY;
@@ -102,7 +101,7 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
         }
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView = view.findViewById(R.id.notificationsList);
+        RecyclerView mRecyclerView = view.findViewById(R.id.notificationsList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         NotificationFragmentAdapter alertsFragmentAdapter = new NotificationFragmentAdapter(setInAdapterList);
         mRecyclerView.setAdapter(alertsFragmentAdapter);

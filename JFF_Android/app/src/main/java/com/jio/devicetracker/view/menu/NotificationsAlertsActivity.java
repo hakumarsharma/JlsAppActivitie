@@ -38,7 +38,6 @@ import com.jio.devicetracker.util.Constant;
 import com.jio.devicetracker.util.Util;
 import com.jio.devicetracker.view.adapter.NotificationAlertsAdapter;
 import com.jio.devicetracker.view.dashboard.DashboardMainActivity;
-import com.jio.devicetracker.view.menu.settings.SettingsActivity;
 
 public class NotificationsAlertsActivity extends AppCompatActivity implements View.OnClickListener {
 

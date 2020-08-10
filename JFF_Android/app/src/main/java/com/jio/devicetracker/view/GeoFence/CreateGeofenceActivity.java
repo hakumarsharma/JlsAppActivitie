@@ -111,7 +111,7 @@ public class CreateGeofenceActivity extends Activity implements View.OnClickList
             case R.id.updateGeofence:
                 List<GeofenceDetails> details = mDbManager.getGeofenceDetailsList(deviceNumber);
                 if(details.size()==10){
-                    Toast.makeText(CreateGeofenceActivity.this,"Geofence limit is exceeded",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Geofence limit is exceeded",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(locationName.getText().toString().isEmpty()){
@@ -158,6 +158,9 @@ public class CreateGeofenceActivity extends Activity implements View.OnClickList
                 radiusSeekBar.setMax(100);
                 radiusSeekBar.setProgress(50);
                 radiusText.setText("50");
+                break;
+
+            default:
                 break;
 
         }

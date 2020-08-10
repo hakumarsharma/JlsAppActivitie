@@ -32,15 +32,11 @@ import com.jio.devicetracker.R;
 import com.jio.devicetracker.database.pojo.AlertHistoryData;
 import com.jio.devicetracker.util.Constant;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class AlertsFragmentAdapter extends RecyclerView.Adapter<AlertsFragmentAdapter.ViewHolder> {
 
     private List<AlertHistoryData> mAlertHistoryData;
-    private String currentDateValues = Constant.EMPTY_STRING;
 
     public AlertsFragmentAdapter(List<AlertHistoryData> mAlertHistoryData) {
         this.mAlertHistoryData = mAlertHistoryData;

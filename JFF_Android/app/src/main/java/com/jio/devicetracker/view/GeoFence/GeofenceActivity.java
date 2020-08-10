@@ -156,7 +156,7 @@ public class GeofenceActivity extends BaseActivity implements View.OnClickListen
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 List<GeofenceDetails> details = mDbManager.getGeofenceDetailsList(deviceNumber);
                 if(details.size()==10){
-                    Toast.makeText(GeofenceActivity.this,"Geofence limit is exceeded",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Geofence limit is exceeded",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 LatLng latlng = getLocationFromAddress(addressText.getText().toString());

@@ -140,7 +140,7 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
                         mData.setDay(Constant.TODAY);
                         currentDateValues = Constant.TODAY;
                     }
-                } else if ((diffhours >= 24 && diffhours <= 48)) {
+                } else if (diffhours >= 24 && diffhours <= 48) {
                     if (!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY)) {
                         mData.setDay(Constant.YESTERDAY);
                         currentDateValues = Constant.YESTERDAY;
@@ -212,7 +212,7 @@ public class AlertsFragment extends Fragment implements View.OnClickListener {
                         mData.setDay(Constant.TODAY);
                         currentDateValues = Constant.TODAY;
                     }
-                } else if ((diffhours >= 24 && diffhours <= 48)) {
+                } else if (diffhours >= 24 && diffhours <= 48) {
                     if (!currentDateValues.equalsIgnoreCase(Constant.YESTERDAY)) {
                         mData.setDay(Constant.YESTERDAY);
                         currentDateValues = Constant.YESTERDAY;

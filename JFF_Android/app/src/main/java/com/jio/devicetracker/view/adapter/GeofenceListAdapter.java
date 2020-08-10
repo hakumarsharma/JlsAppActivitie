@@ -47,7 +47,6 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
     private List<GeofenceDetails> mData;
     private Context mContext;
     private DBManager mDbManager;
-    private String deviceNumber;
     private AdapterListner itemListener;
 
     /**
@@ -59,7 +58,6 @@ public class GeofenceListAdapter extends RecyclerView.Adapter<GeofenceListAdapte
         this.mData = mData;
         this.mContext = mContext;
         mDbManager = new DBManager(mContext);
-        this.deviceNumber = deviceNumber;
 
     }
 

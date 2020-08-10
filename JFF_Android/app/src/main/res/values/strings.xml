@@ -173,7 +173,7 @@
     <string name="group_text">GROUPS</string>
     <string name="detailsForGroup">A Group is a personal circle created by you to quickly track your loved ones collectively. You can track people and devices in the same group. Create a group by clicking on +" sign above" </string>
     <string name="app_version">Version : v2.33.0003 </string>
-    <string name="contact_us_content">We are here to help and \nanswer your quireis </string>
+    <string name="contact_us_content">We are here to help and \nanswer your queries </string>
     <string name="contact_us_email">care@jio.com</string>
     <string name="how_to_use_qrcode_1">When you clicks on "+" OR [Add Device] button, application to turn on camera with a QR code bracket.</string>
     <string name="how_to_use_qrcode_2">You need to place QR code within \nthe bracket for the phone to scan \nthe code \nScanning of QR code would allow \napp to identify MAC ID of the \ndevice, and on verifying it will add \nthe device.</string>

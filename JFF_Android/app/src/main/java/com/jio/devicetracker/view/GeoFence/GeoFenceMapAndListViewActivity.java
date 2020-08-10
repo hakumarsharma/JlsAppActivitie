@@ -116,7 +116,7 @@ public class GeoFenceMapAndListViewActivity extends AppCompatActivity implements
             viewPager.setCurrentItem(1);
             setListTab();
             return;
-        } else if(v.getId() == R.id.createGroup); {
+        } else if(v.getId() == R.id.createGroup) {
             Intent intent = new Intent(this, CreateGeofenceActivity.class);
             intent.putExtra(Constant.DEVICE_NUMBER,deviceNumber);
             intent.putExtra(Constant.CREATE_GEOFENCE,true);
