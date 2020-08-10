@@ -286,7 +286,7 @@ public class SOSActivity extends Activity implements View.OnClickListener {
                     }
                 }
             }
-        } else if (contact1.equalsIgnoreCase(Constant.EMPTY_STRING)) {
+        } else if (mSosDetailList != null && contact1.equalsIgnoreCase(Constant.EMPTY_STRING)) {
             for (SOSContactData data : mSosDetailList) {
                 if (data.getPriority() == 1) {
                     phonebookIdList.add(data.getPhonebookId());
@@ -326,7 +326,7 @@ public class SOSActivity extends Activity implements View.OnClickListener {
                     }
                 }
             }
-        } else if (contact2.equalsIgnoreCase(Constant.EMPTY_STRING)) {
+        } else if (mSosDetailList!= null && contact2.equalsIgnoreCase(Constant.EMPTY_STRING)) {
             for (SOSContactData data : mSosDetailList) {
                 if (data.getPriority() == 2) {
                     phonebookIdList.add(data.getPhonebookId());
@@ -366,7 +366,7 @@ public class SOSActivity extends Activity implements View.OnClickListener {
                     }
                 }
             }
-        } else if (contact3.equalsIgnoreCase(Constant.EMPTY_STRING)) {
+        } else if (mSosDetailList != null && contact3.equalsIgnoreCase(Constant.EMPTY_STRING)) {
             for (SOSContactData data : mSosDetailList) {
                 if (data.getPriority() == 3) {
                     phonebookIdList.add(data.getPhonebookId());
