@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#E8E8E8"
+    android:fillViewport="false">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.main.JiotAccuracy">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/header_google"
+        android:background="@android:color/holo_blue_dark"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_column="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ten_dp"
+            android:text="@string/google_rtls_ind"
+            android:gravity="left"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:padding="@dimen/three_dp" />
+
+    </RelativeLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rtlsHeader"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:layout_below="@+id/header_google"
+        android:stretchColumns="1,2,3,4">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/ten_dp"
+            android:background="@drawable/accuracy_header">
+            <TextView
+                android:layout_column="1"
+                android:text="@string/header_cellid"
+                android:gravity="left"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:padding="@dimen/three_dp" />
+            <TextView
+                android:layout_column="2"
+                android:text="@string/header_lat"
+                android:gravity="left"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:padding="@dimen/three_dp" />
+            <TextView
+                android:layout_column="3"
+                android:text="@string/header_lng"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:padding="@dimen/three_dp" />
+            <TextView
+                android:layout_column="4"
+                android:text="@string/header_acc"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:padding="@dimen/three_dp" />
+        </TableRow>
+    </TableLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rtlsRecords"
+        android:layout_below="@+id/rtlsHeader"
+        android:stretchColumns="1,2,3,4">
+    </TableLayout>
+</RelativeLayout>
+</ScrollView>

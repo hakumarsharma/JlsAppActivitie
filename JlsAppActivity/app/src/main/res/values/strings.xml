@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">JioLocate</string>
+    <string name="tab_text_1">Cell Info</string>
+    <string name="tab_text_2">Maps</string>
+    <string name="tab_text_3">Submit Cell</string>
+    <string name="splash_name">JioLocate</string>
+    <string name="userid_name">Enter Mobile Number</string>
+    <string name="userid_enter_id">IMEI*</string>
+    <string name="userid_enter_id_hint">Please enter IMEI</string>
+    <string name="userid_submit">Submit</string>
+    <string name="userid_length">IMEI must be of 15 characters!!!!</string>
+    <string name="user_phone_length">Incorrect Phone number</string>
+    <string name="header_lat">LAT</string>
+    <string name="header_lng">LNG</string>
+    <string name="header_acc">ACC</string>
+    <string name="header_cellid">CELLID</string>
+    <string name="google_rtls_ind">White Row: Google Location using GPS \nGray Row : RTLS location using cellid</string>
+    <string name="noble_support">Ble not supported closing the app!!!</string>
+    <string name="ble_wait_msg">Please wait refreshing data!!!</string>
+    <string name="network_msg">Please Enable Network And Location For App to proceed!!!</string>
+    <string name="start_msg">Please Enable Network And Location For App to proceed!!!</string>
+    <string name="perm_error">You have to accept all the permissions else the app will close!!!</string>
+    <string name="jiopermissions_next_text">Next</string>
+    <string name="jiopermissions_turnon_location_details_enable_text">Enable</string>
+    <string name="jiopermissions_turnon_location_details_text">Please enable Location if not done already!!</string>
+    <string name="jiopermissions_turnon_location_text">Turn on Location</string>
+    <string name="jiopermissions_turnon_bt_details_enable_text">Enable</string>
+    <string name="jiopermissions_turnon_bt_details_text">Please Enable Bluetooth if not done already!!</string>
+    <string name="jiopermissions_turnon_bt_text">Turn on Bluetooth</string>
+    <string name="jiopermissions_before_activate_text">Before Proceeding!!!</string>
+    <string name="jiopermissions_app_header_str">Settings</string>
+    <string name="jiopermissions_turnon_network">Turn on Internet</string>
+    <string name="jiopermissions_turnon_network_details">Please enable internet Connectivity</string>
+    <string name="jiopermissions_main_block">Location/Network is not enabled pls click enable to proceed!!</string>
+    <string name="jiousername_email">Phone Number</string>
+    <string name="jiousername_email_hint">Please enter your Jio mobile number</string>
+    <string name="jiousername_imei">IMEI</string>
+    <string name="jiousername_imei_hint">Please enter your IMEI</string>
+    <string name="jiousername_ok">OK</string>
+    <string name="jiousername_net_alert">Network Alert!!</string>
+    <string name="server_detail">Select the server</string>
+    <string name="display_error_logs">Display error logs</string>
+    <string name="request_interval">Request interval</string>
+    <string name="enable_automatic_submit_api">Enable Automatic Submit\nApi call</string>
+    <string name="marker_number">Marker number(1-500)</string>
+    <string name="error">Error</string>
+    <string name="about_app">About app</string>
+    <string name="about_app_content">Thank you for installing this app. This app will contribute to the improvement and testing of JioLocate service. This app collects your location information periodically and it is stored on JioLocate server for analysis purpose. \n\nParticipation in this test program is purely voluntary. If you do not wish to contribute, you can uninstall the app anytime. \n\nThis application requires <b>Location permission</b> to be enabled all the time. It also requires <b>Phone permission</b> to be enabled. </string>
+    <string name="okay">Okay</string>
+    <string-array name="server_array">
+        <item>Prod</item>
+        <item>Preprod</item>
+        <item>Sit</item>
+        <item>Dev</item>
+    </string-array>
+    <string-array name="time_array">
+        <item>3 sec</item>
+        <item>3 min</item>
+        <item>5 min</item>
+        <item>10 min</item>
+        <item>15 min</item>
+        <item>1 hour</item>
+        <item>4 hour</item>
+    </string-array>
+    <string-array name="error_details_concent">
+        <item>No</item>
+        <item>Yes</item>
+    </string-array>
+</resources>

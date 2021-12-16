@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colordialogbackground"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:background="@drawable/asset_dialog_round_bkgd">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="16dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tell us more about yourself!!"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/twenty_sp"
+                android:layout_weight="0.3"
+                android:id="@+id/detail_hdr_text"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/SkipBtn"
+                android:text="SKIP"
+                android:textSize="16sp"
+                android:textColor="@color/colordialogbackground"
+                android:clickable="true"
+                />
+
+        </LinearLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/house_num"
+                    android:hint="House Number"
+                    android:background="@android:color/transparent"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"
+                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/eigh_dp"
+                    android:background="@color/colordialogbackground"
+                    android:layout_height="3dp"
+                    android:layout_margin="8dp"/>
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/room_num"
+                    android:hint="Room Number"
+                    android:background="@android:color/transparent"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"
+                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/eigh_dp"
+                    android:background="@color/colordialogbackground"
+                    android:layout_height="3dp"
+                    android:layout_margin="8dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/floor_num"
+                    android:hint="Floor Number"
+                    android:background="@android:color/transparent"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/eigh_dp"
+                    android:background="@color/colordialogbackground"
+                    android:layout_height="3dp"
+                    android:layout_margin="8dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/street"
+                    android:hint="Street"
+                    android:background="@android:color/transparent"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/eigh_dp"
+                    android:background="@color/colordialogbackground"
+                    android:layout_height="3dp"
+                    android:layout_margin="8dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/city"
+                    android:hint="City"
+                    android:background="@android:color/transparent"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/eigh_dp"
+                    android:background="@color/colordialogbackground"
+                    android:layout_height="3dp"
+                    android:layout_margin="8dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/state"
+                    android:hint="State"
+                    android:background="@android:color/transparent"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/eigh_dp"
+                    android:background="@color/colordialogbackground"
+                    android:layout_height="3dp"
+                    android:layout_margin="8dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pincode"
+                    android:inputType="number"
+                    android:hint="pincode"
+                    android:background="@android:color/transparent"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/eigh_dp"
+                    android:background="@color/colordialogbackground"
+                    android:layout_height="3dp"
+                    android:layout_margin="8dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/landmark"
+                    android:hint="Landmark"
+                    android:background="@android:color/transparent"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/eigh_dp"
+                    android:background="@color/colordialogbackground"
+                    android:layout_height="3dp"
+                    android:layout_margin="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="WiFi usage"
+                        android:layout_weight="0.3"
+                        android:layout_margin="8dp"
+                        android:textSize="16sp"
+                        android:id="@+id/wifi_usage_text"/>
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:id="@+id/wifi_usage_grp">
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/residence_btn"
+                            android:text="Residential"
+                            android:textSize="12sp"
+                            />
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/commercial_btn"
+                            android:text="Commercial"
+                            android:textSize="12sp"/>
+                    </RadioGroup>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/eigh_dp"
+                    android:background="@color/colordialogbackground"
+                    android:layout_height="3dp"
+                    android:layout_margin="8dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/owner"
+                    android:hint="WiFi Owner"
+                    android:background="@android:color/transparent"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/eigh_dp"
+                    android:background="@color/colordialogbackground"
+                    android:layout_height="3dp"
+                    android:layout_margin="8dp"/>
+
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:id="@+id/next_btn"
+                    android:text="Next"
+                    android:textColor="@color/design_default_color_background"
+                    android:background="@drawable/button_frame_blue"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:background="@drawable/marker_bkgd"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/info_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/marker_img"
+        android:foregroundGravity="center"
+        android:layout_marginTop="@dimen/ten_dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RTLS Details"
+        android:gravity="center"
+        android:layout_below="@+id/info_pic"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:id="@+id/info_heading">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_heading"
+        android:text="LAT: 0.0"
+        android:gravity="left"
+        android:visibility="gone"
+        android:textColor="@color/colordialogbackground"
+        android:id="@+id/info_lat">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_lat"
+        android:text="LNG: 0.0"
+        android:textColor="@color/colordialogbackground"
+        android:gravity="left"
+        android:visibility="gone"
+        android:id="@+id/info_lng">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_lng"
+        android:text="ACC: 0.0"
+        android:gravity="left"
+        android:textColor="@color/colordialogbackground"
+        android:id="@+id/info_acc">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DELTA: 0.0"
+        android:gravity="left"
+        android:textColor="@color/colordialogbackground"
+        android:layout_below="@+id/info_acc"
+        android:visibility="gone"
+        android:id="@+id/info_delta">
+    </TextView>
+    <TextView
+        android:layout_width="@dimen/margin_300"
+        android:layout_height="wrap_content"
+        android:text="Tag: Accurate"
+        android:gravity="left"
+        android:textColor="@color/colordialogbackground"
+        android:layout_below="@+id/info_delta"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:id="@+id/info_tag">
+    </TextView>
+</RelativeLayout>
