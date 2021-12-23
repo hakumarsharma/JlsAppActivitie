@@ -1,11 +1,8 @@
 package com.jio.rtlsappfull.log;
 
-import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.util.Log;
-
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import static com.jio.rtlsappfull.config.Config.logEnable;
