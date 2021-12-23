@@ -250,13 +250,15 @@ public class JiotFetchCustomLatLng {
                 return;
             }
             final JSONObject jsonMainBody = createV2JsonObject(m_CustomCellDataAll);
-            saveMarkerDetail();
+//            saveMarkerDetail();
             if (!jsonMainBody.toString().equalsIgnoreCase("{}")) {
                 RequestQueue queue = Volley.newRequestQueue(m_context);
+                Log.d("URL --> ", url);
                 JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, response -> {
                     try {
                         mRtlsFetchTimeEndInMs = Calendar.getInstance().getTimeInMillis();
                         String message = response.optString("msg");
+                        Log.d("Success Respnse --> ", message);
                         if (message != null && !message.isEmpty()) {
                             Log.d("Error ", message);
                             return;
@@ -286,11 +288,7 @@ public class JiotFetchCustomLatLng {
                         HashMap headers = new HashMap();
                         headers.put("Content-Type", "application/json");
                         headers.put("token", JiotUtils.jiotgetRtlsToken(m_context));
-                        SharedPreferences sharedPreferences = m_context.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-                        String number = sharedPreferences.getString("mob", null);
-                        if (number != null) {
-                            headers.put("msisdn", number);
-                        }
+                        headers.put("msisdn", JiotUtils.getMobileNumber(m_context));
                         return headers;
                     }
                 };
@@ -301,7 +299,6 @@ public class JiotFetchCustomLatLng {
             e.printStackTrace();
         }
     }
-
 
 
     public void getCellInfo() {

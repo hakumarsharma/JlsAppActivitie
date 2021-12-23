@@ -139,10 +139,11 @@ public class SubmitCellMapsFragment extends Fragment implements GoogleMap.OnMark
             Toast.makeText(getActivity(), "Cell info submission failed " + errorMsg, Toast.LENGTH_SHORT).show();
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap headers = new HashMap();
                 headers.put("Content-Type", "application/json");
                 headers.put("token", JiotUtils.jiotgetRtlsToken(getActivity()));
+                headers.put("msisdn", JiotUtils.getMobileNumber(getActivity()));
                 return headers;
             }
         };

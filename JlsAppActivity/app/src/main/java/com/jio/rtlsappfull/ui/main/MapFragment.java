@@ -99,15 +99,23 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public static void setRtlsLatestMarkers() {
         if (m_rtlsSkyLatLngFlag)
             getRtlsSkyMarker();
-        if (m_rtlsTriLatLngFlag)
+        else if (m_rtlsTriLatLngFlag)
             getRtlsTriMarker();
-        if (m_rtlsMlsMozLatLngFlag)
+        else if (m_rtlsMlsMozLatLngFlag)
             getRtlsMlsMozMarker();
+        float zoom = 15;
+        if (m_rtlsSkyLatLngFlag)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(m_rtlsSkyLatLng, zoom));
+        else if (m_rtlsTriLatLngFlag)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(m_rtlsTriLatLng, zoom));
+        else if (m_rtlsMlsMozLatLngFlag)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(m_rtlsMlsMozLatLng, zoom));
         sendRecordsRefreshIntent();
     }
 
     public static void setGoogleLatestMarker(LatLng googleLatLng) {
         mMap.addMarker(new MarkerOptions().position(googleLatLng).title("Google latest location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(googleLatLng, 15));
     }
 
     public void parseLatLngAll() {

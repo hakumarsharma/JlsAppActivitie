@@ -10,18 +10,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.telephony.CellIdentityLte;
-import android.telephony.CellInfo;
-import android.telephony.CellInfoLte;
-import android.telephony.CellSignalStrengthLte;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,25 +23,20 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.gson.Gson;
 import com.jio.rtlsappfull.R;
 import com.jio.rtlsappfull.config.Config;
 import com.jio.rtlsappfull.log.JiotSdkFileLogger;
-import com.jio.rtlsappfull.model.SubmitAPIData;
 import com.jio.rtlsappfull.utils.JiotUtils;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -83,19 +72,13 @@ public class LocationFetchService extends Service {
     private String id1;
     private String id2;
     private static ScheduledExecutorService scheduler;
-    private String isSubmitApiEnabled;
     private static final int PERMISSION_REQUEST_CODE = 100;
 
     BroadcastReceiver mTokenRefreshReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equalsIgnoreCase("com.rtls.token_error")) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        fetchRtlsKey(JiotUtils.jiotgetRtlsDid(LocationFetchService.this));
-                    }
-                });
+                handler.post(() -> fetchRtlsKey(JiotUtils.IMEI_NUMBER));
             }
         }
     };
@@ -117,21 +100,8 @@ public class LocationFetchService extends Service {
             JSONObject jsonUserIdObj = new JSONObject();
             JSONObject jsonServiceId = new JSONObject();
             JSONObject jsonIDType = new JSONObject();
-            SharedPreferences sharedPreferences = this.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-            String serverName = sharedPreferences.getString("server_name", null);
-            if (serverName.equalsIgnoreCase("Prod")) {
-                id1 = Config.PROD_ID1;
-                id2 = Config.PROD_ID2;
-            } else if (serverName.equalsIgnoreCase("Sit")) {
-                id1 = Config.SIT_ID1;
-                id2 = Config.SIT_ID2;
-            } else if (serverName.equalsIgnoreCase("Dev")) {
-                id1 = Config.DEV_ID1;
-                id2 = Config.DEV_ID2;
-            } else if (serverName.equalsIgnoreCase("Preprod")) {
-                id1 = Config.PREPROD_ID1;
-                id2 = Config.PREPROD_ID2;
-            }
+            id1 = Config.PREPROD_ID1;
+            id2 = Config.PREPROD_ID2;
             StringBuffer buffer = new StringBuffer();
 
             for (int index = 0; index < name.length(); index++) {
@@ -177,71 +147,42 @@ public class LocationFetchService extends Service {
 
     public void fetchRtlsKey(String publickey) {
         if (JiotUtils.jiotisLocationEnabled(this) == true && JiotUtils.jiotisNetworkEnabled(this)) {
-            Log.d("RTLSKEY", "Request Key From server::" + publickey);
-            String url = "";
-            try {
-                if (isJioVm) {
-                    SharedPreferences sharedPreferences = this.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-                    String serverName = sharedPreferences.getString("server_name", null);
-                    if (serverName.equalsIgnoreCase("Prod")) {
-                        url = SERVER_PROD_API_KEY_URL;
-                    } else if (serverName.equalsIgnoreCase("Sit")) {
-                        url = SERVER_SIT_API_KEY_URL;
-                    } else if (serverName.equalsIgnoreCase("Dev")) {
-                        url = SERVER_DEV_API_KEY_URL;
-                    } else if (serverName.equalsIgnoreCase("Preprod")) {
-                        url = SERVER_PREPROD_API_KEY_URL;
-                    }
-                } else {
-                    url = SERVER_GET_TOKEN_URL;
-                }
-                Log.d("GETTOKEN = ", url);
-                JSONObject jsonMainBody = createV2UserIdObject(publickey);
-                Log.d("TOKENREQ", jsonMainBody.toString());
-                RequestQueue queue = Volley.newRequestQueue(this);
-                JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Toast.makeText(getApplicationContext(), "RTLS TOKEN FETCHED Successfully!!!! ", Toast.LENGTH_SHORT).show();
-//                            m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile("RTLSTOKEN" + " $ " + JiotUtils.getDateTime() + " $ " + response.toString());
-                            if (response.has("data")) {
-                                JSONObject dataObject = response.getJSONObject("data");
-                                if (dataObject.has("apikey")) {
-                                    m_api_key = dataObject.get("apikey").toString();
-                                    JiotUtils.jiotwriteRtlsToken(getApplicationContext(), m_api_key);
-                                    Log.d("RTLSTOKEN", m_api_key);
-                                    JiotUtils.isTokenExpired = false;
-                                }
+            JSONObject jsonMainBody = createV2UserIdObject(publickey);
+            RequestQueue queue = Volley.newRequestQueue(this);
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, SERVER_PREPROD_API_KEY_URL, jsonMainBody, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        Toast.makeText(getApplicationContext(), "RTLS TOKEN FETCHED Successfully!!!! ", Toast.LENGTH_SHORT).show();
+                        if (response.has("data")) {
+                            JSONObject dataObject = response.getJSONObject("data");
+                            if (dataObject.has("apikey")) {
+                                m_api_key = dataObject.get("apikey").toString();
+                                JiotUtils.jiotwriteRtlsToken(getApplicationContext(), m_api_key);
+                                Log.d("RTLSTOKEN", m_api_key);
+                                JiotUtils.isTokenExpired = false;
                             }
-                        } catch (Exception e) {
-                            Log.d("RTLSTOKEN", "EXCEPTION");
-                            e.printStackTrace();
                         }
+                    } catch (Exception e) {
+                        Log.d("RTLSTOKEN", "EXCEPTION");
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String errorMsg = JiotUtils.getVolleyError(error);
-                        Log.e("RTLSTOKEN", "FAILURE " + errorMsg);
-                        JiotUtils.showErrorToast(getApplicationContext(), errorMsg);
-                        if (error != null) {
-//                            m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile("RTLSTOKENFAILURE" + " $ " + JiotUtils.getDateTime() + " $ " + errorMsg);
-                        }
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap headers = new HashMap();
-                        headers.put("Content-Type", "application/json");
-                        return headers;
-                    }
-                };
-                queue.add(req);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+                }
+            }, error -> {
+                String errorMsg = JiotUtils.getVolleyError(error);
+                Log.e("RTLSTOKEN", "FAILURE " + errorMsg);
+                Toast.makeText(getApplicationContext(), "RTLS TOKEN FETCH Failed!!!! ", Toast.LENGTH_SHORT).show();
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap headers = new HashMap();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+            queue.add(req);
+        } else
+            Toast.makeText(getApplicationContext(), "App requires location to be enabled and internet to be enabled", Toast.LENGTH_SHORT).show();
     }
 
     public LocationFetchService() {
@@ -272,12 +213,9 @@ public class LocationFetchService extends Service {
             showNotification();
         IntentFilter filter = new IntentFilter("com.rtls.token_error");
         registerReceiver(mTokenRefreshReceiver, filter);
-        SharedPreferences sharedPreferences = this.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-        String requestInterval = sharedPreferences.getString("fetch_interval", "5 min");
-        isSubmitApiEnabled = sharedPreferences.getString("enable_disable_submit", "No");
         if (scheduler == null) {
             scheduler = Executors.newSingleThreadScheduledExecutor();
-            executeTask(requestInterval);
+            executeTask();
         } else {
             scheduler.shutdownNow();
             try {
@@ -288,7 +226,7 @@ public class LocationFetchService extends Service {
                 scheduler.shutdownNow();
             }
             scheduler = Executors.newSingleThreadScheduledExecutor();
-            executeTask(requestInterval);
+            executeTask();
         }
         return START_STICKY;
     }
@@ -345,99 +283,14 @@ public class LocationFetchService extends Service {
         startForeground(101, builder.build());
     }
 
-    private void executeTask(String requestInterval) {
-        if (requestInterval.equalsIgnoreCase("5 min")) {
-            scheduler.scheduleAtFixedRate
-                    (new Runnable() {
-                        @Override
-                        public void run() {
-                            fetchServerLocation();
-                            if (isSubmitApiEnabled.equalsIgnoreCase("Yes"))
-                                makeAPICall();
-                        }
-                    }, 0, 5, TimeUnit.MINUTES);
-        } else if (requestInterval.equalsIgnoreCase("15 min")) {
-            scheduler.scheduleAtFixedRate
-                    (new Runnable() {
-                        @Override
-                        public void run() {
-                            fetchServerLocation();
-                            if (isSubmitApiEnabled.equalsIgnoreCase("Yes"))
-                                makeAPICall();
-                        }
-                    }, 0, 15, TimeUnit.MINUTES);
-        } else if (requestInterval.equalsIgnoreCase("3 sec")) {
-            scheduler.scheduleAtFixedRate
-                    (new Runnable() {
-                        @Override
-                        public void run() {
-                            fetchServerLocation();
-                            if (isSubmitApiEnabled.equalsIgnoreCase("Yes"))
-                                makeAPICall();
-                        }
-                    }, 0, 3, TimeUnit.SECONDS);
-        } else if (requestInterval.equalsIgnoreCase("3 min")) {
-            scheduler.scheduleAtFixedRate
-                    (new Runnable() {
-                        @Override
-                        public void run() {
-                            fetchServerLocation();
-                            if (isSubmitApiEnabled.equalsIgnoreCase("Yes"))
-                                makeAPICall();
-                        }
-                    }, 0, 3, TimeUnit.MINUTES);
-        } else if (requestInterval.equalsIgnoreCase("10 min")) {
-            scheduler.scheduleAtFixedRate
-                    (new Runnable() {
-                        @Override
-                        public void run() {
-                            fetchServerLocation();
-                            if (isSubmitApiEnabled.equalsIgnoreCase("Yes"))
-                                makeAPICall();
-                        }
-                    }, 0, 10, TimeUnit.MINUTES);
-        } else if (requestInterval.equalsIgnoreCase("1 hour")) {
-            scheduler.scheduleAtFixedRate
-                    (new Runnable() {
-                        @Override
-                        public void run() {
-                            fetchServerLocation();
-                            if (isSubmitApiEnabled.equalsIgnoreCase("Yes"))
-                                makeAPICall();
-                        }
-                    }, 0, 1, TimeUnit.HOURS);
-        } else if (requestInterval.equalsIgnoreCase("4 hour")) {
-            scheduler.scheduleAtFixedRate
-                    (new Runnable() {
-                        @Override
-                        public void run() {
-                            fetchServerLocation();
-                            if (isSubmitApiEnabled.equalsIgnoreCase("Yes"))
-                                makeAPICall();
-                        }
-                    }, 0, 4, TimeUnit.HOURS);
-        }
+    private void executeTask() {
+        scheduler.scheduleAtFixedRate
+                (() -> fetchServerLocation(), 0, 5, TimeUnit.MINUTES);
     }
 
     public void fetchServerLocation() {
-        String url = "";
-        if (isJioVm) {
-            SharedPreferences sharedPreferences = this.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-            String serverName = sharedPreferences.getString("server_name", null);
-            if (serverName.equalsIgnoreCase("Prod")) {
-                url = LOCATION_PROD_URL;
-            } else if (serverName.equalsIgnoreCase("Sit")) {
-                url = LOCATION_SIT_URL;
-            } else if (serverName.equalsIgnoreCase("Dev")) {
-                url = LOCATION_DEV_URL;
-            } else if (serverName.equalsIgnoreCase("Preprod")) {
-                url = LOCATION_PREPROD_URL;
-            }
-        } else {
-            url = RADISYS_GEOLOCATE_API_URL_ALL + JiotUtils.jiotgetRtlsToken(getApplicationContext());
-        }
         m_jiotSdkFileLoggerInstance = JiotSdkFileLogger.JiotGetFileLoggerInstance(getApplicationContext());
-        new JiotFetchCustomLatLng(getApplicationContext(), url);
+        new JiotFetchCustomLatLng(getApplicationContext(), LOCATION_PREPROD_URL);
     }
 
     private void makeLocationRequest() {
@@ -449,98 +302,6 @@ public class LocationFetchService extends Service {
             return;
         }
         LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-    }
-
-    private void makeAPICall() {
-        try {
-            SubmitAPIData submitAPIData = new SubmitAPIData();
-            TelephonyManager m_telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-            List<SubmitAPIData.LteCells> mList = new ArrayList<>();
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            List<CellInfo> cellLocation = m_telephonyManager.getAllCellInfo();
-            for (CellInfo info : cellLocation) {
-                if (info instanceof CellInfoLte) {
-                    CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
-                    CellIdentityLte identityLte = ((CellInfoLte) info).getCellIdentity();
-                    int mnc = identityLte.getMnc();
-                    int rssi = lte.getDbm();
-                    int tac = identityLte.getTac();
-                    int cellId = identityLte.getCi();
-                    int mcc = identityLte.getMcc();
-                    int frequency = identityLte.getEarfcn();
-                    if ((rssi >= -150 && rssi <= 0)
-                            && (mnc > 9 && mnc < 1000)
-                            && (tac >= 0 && tac <= 65536)
-                            && (cellId > 0)
-                            && (mcc > 9 & mcc < 1000)
-                            && (frequency >= 1 && frequency <= 99999999)) {
-                        SubmitAPIData.LteCells cell = new SubmitAPIData().new LteCells();
-                        cell.setCellid(cellId);
-                        cell.setFrequency(frequency);
-                        cell.setMcc(mcc);
-                        cell.setRssi(rssi);
-                        cell.setTac(tac);
-                        cell.setMnc(mnc);
-                        mList.add(cell);
-                    }
-                }
-            }
-            SubmitAPIData.GpsLoc gpsLoc = new SubmitAPIData().new GpsLoc();
-            gpsLoc.setLat(JiotUtils.sLang);
-            gpsLoc.setLng(JiotUtils.slon);
-            submitAPIData.setLtecells(mList);
-            submitAPIData.setGpsloc(gpsLoc);
-            String jsonInString = new Gson().toJson(submitAPIData);
-            JSONObject jsonMainBody = new JSONObject(jsonInString);
-            String url = "";
-            SharedPreferences sharedPreferences = this.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-            String serverName = sharedPreferences.getString("server_name", null);
-            if (serverName.equalsIgnoreCase("Prod")) {
-                url = SUBMIT_API_URL_PROD;
-            } else if (serverName.equalsIgnoreCase("Sit")) {
-                url = SUBMIT_API_URL_SIT;
-            } else if (serverName.equalsIgnoreCase("Dev")) {
-                url = SUBMIT_API_URL_DEV;
-            } else if (serverName.equalsIgnoreCase("Preprod")) {
-                url = SUBMIT_API_URL_PRE_PROD;
-            }
-            if (!jsonMainBody.toString().equalsIgnoreCase("{}")) {
-                RequestQueue queue = Volley.newRequestQueue(this);
-                JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, response -> {
-                    try {
-//                        SubmitApiDataResponse generateLoginTokenResponse = new Gson().fromJson(String.valueOf(response), SubmitApiDataResponse.class);
-                        Log.i("TAG", "Submit api called successfully");
-                    } catch (Exception e) {
-                        Log.d("EXCEPTION", "exce");
-                        e.printStackTrace();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String errorMsg = JiotUtils.getVolleyError(error);
-                        Log.d("TAG", errorMsg);
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap headers = new HashMap();
-                        headers.put("Content-Type", "application/json");
-                        headers.put("token", JiotUtils.jiotgetRtlsToken(LocationFetchService.this));
-                        SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-                        String number = sharedPreferences.getString("mob", null);
-                        if (number != null) {
-                            headers.put("msisdn", number);
-                        }
-                        return headers;
-                    }
-                };
-                queue.add(req);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }

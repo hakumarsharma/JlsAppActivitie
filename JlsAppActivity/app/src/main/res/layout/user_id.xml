@@ -7,33 +7,16 @@
     android:background="@color/colordialogbackground"
     android:paddingBottom="@dimen/adddevice_heading_height"
     app:ignore="NamespaceTypo">
-    <!-- Header aligned to top -->
-    <RelativeLayout
-        android:id="@+id/login_appheader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/colordialogbackground"
-        android:gravity="center">
 
-        <TextView
-            android:id="@+id/userid_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:layout_marginBottom="@dimen/twenty_dp"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:text="@string/userid_name"
-            android:textColor="#FFFFFF"
-            android:textSize="@dimen/twenty_sp" />
-    </RelativeLayout>
+    <include
+        android:id="@+id/toolbarlayout"
+        layout="@layout/toolbar" />
 
     <RelativeLayout
         android:id="@+id/login_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/login_appheader"
+        android:layout_below="@id/toolbarlayout"
         android:layout_marginLeft="@dimen/adddevice_heading_height"
         android:layout_marginRight="@dimen/adddevice_heading_height"
         android:background="@drawable/asset_dialog_round_bkgd"

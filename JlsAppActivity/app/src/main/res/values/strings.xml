@@ -9,6 +9,7 @@
     <string name="userid_enter_id_hint">Please enter IMEI</string>
     <string name="userid_submit">Submit</string>
     <string name="userid_length">IMEI must be of 15 characters!!!!</string>
+    <string name="mobile_number_length">Mobile number must be of 10 digit</string>
     <string name="user_phone_length">Incorrect Phone number</string>
     <string name="header_lat">LAT</string>
     <string name="header_lng">LNG</string>
@@ -19,7 +20,7 @@
     <string name="ble_wait_msg">Please wait refreshing data!!!</string>
     <string name="network_msg">Please Enable Network And Location For App to proceed!!!</string>
     <string name="start_msg">Please Enable Network And Location For App to proceed!!!</string>
-    <string name="perm_error">You have to accept all the permissions else the app will close!!!</string>
+    <string name="perm_error">You have to accept location permissions else app will close in </string>
     <string name="jiopermissions_next_text">Next</string>
     <string name="jiopermissions_turnon_location_details_enable_text">Enable</string>
     <string name="jiopermissions_turnon_location_details_text">Please enable Location if not done already!!</string>
@@ -45,8 +46,9 @@
     <string name="marker_number">Marker number(1-500)</string>
     <string name="error">Error</string>
     <string name="about_app">About app</string>
-    <string name="about_app_content">Thank you for installing this app. This app will contribute to the improvement and testing of JioLocate service. This app collects your location information periodically and it is stored on JioLocate server for analysis purpose. \n\nParticipation in this test program is purely voluntary. If you do not wish to contribute, you can uninstall the app anytime. \n\nThis application requires <b>Location permission</b> to be enabled all the time. It also requires <b>Phone permission</b> to be enabled. </string>
+    <string name="about_app_content">Thank you for installing this app. This app will contribute to the improvement and testing of JioLocate service. This app collects your location information periodically and it is stored on JioLocate server for analysis purpose. \n\nParticipation in this test program is purely voluntary. If you do not wish to contribute, you can uninstall the app anytime. \n\nThis application requires: \n <b>1. Location permission</b> to be enabled all the time. \n 2. Please permit this app to run in background. </string>
     <string name="okay">Okay</string>
+    <string name="mobile_number">Enter Mobile Number</string>
     <string-array name="server_array">
         <item>Prod</item>
         <item>Preprod</item>

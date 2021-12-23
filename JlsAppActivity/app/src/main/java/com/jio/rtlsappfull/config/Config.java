@@ -42,6 +42,7 @@ public class Config {
     public static String SUBMIT_CELL_LOCATION_SIT;
     public static String SUBMIT_CELL_LOCATION_PROD;
     public static String SUBMIT_CELL_LOCATION_PREPROD;
+    public static String VERSION_NAME;
 
     static {
         logEnable=BuildConfig.logEnable;
@@ -82,5 +83,6 @@ public class Config {
         SUBMIT_CELL_LOCATION_SIT = SIT_URL + BuildConfig.SUBMIT_CELL_LOCATION;
         SUBMIT_CELL_LOCATION_PROD = PROD_URL + BuildConfig.SUBMIT_CELL_LOCATION;
         SUBMIT_CELL_LOCATION_PREPROD = PREPROD_URL + BuildConfig.SUBMIT_CELL_LOCATION;
+        VERSION_NAME = BuildConfig.VERSION_NAME;
     }
 }

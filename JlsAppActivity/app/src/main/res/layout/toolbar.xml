@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/cardviewlayout_device_background_color"
+    android:background="@color/colordialogbackground"
     app:contentInsetStart="0dp"
     app:contentInsetEnd="0dp"
     app:contentInsetLeft="0dp"

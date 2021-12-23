@@ -295,6 +295,16 @@
                 android:padding="10dp"
                 android:text="Signal Strength: None " />
 
+            <TextView
+                android:id="@+id/serialId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ten_dp"
+                android:background="@drawable/blue_header_frame"
+                android:padding="@dimen/ten_dp"
+                android:layout_below="@+id/neigh4_signal_id"
+                android:text="Serial Id: " />
+
         </RelativeLayout>
 
     </RelativeLayout>

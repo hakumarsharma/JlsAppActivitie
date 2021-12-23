@@ -1,28 +1,31 @@
 package com.jio.rtlsappfull.internal;
 
-import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_DEV;
-import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_PRE_PROD;
-import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_PROD;
-import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_SIT;
-
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
@@ -33,11 +36,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.telephony.CellIdentityLte;
-import android.telephony.CellInfo;
-import android.telephony.CellInfoLte;
-import android.telephony.CellSignalStrengthLte;
-import android.telephony.TelephonyManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,21 +44,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jio.rtlsappfull.R;
 import com.jio.rtlsappfull.database.db.DBManager;
-import com.jio.rtlsappfull.model.SubmitAPIData;
-import com.jio.rtlsappfull.model.SubmitApiDataResponse;
 import com.jio.rtlsappfull.ui.main.SectionsPagerAdapter;
 import com.jio.rtlsappfull.utils.JiotUtils;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 @RequiresApi(api = Build.VERSION_CODES.R)
@@ -67,8 +57,8 @@ public class JiotMainActivity extends AppCompatActivity {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 110;
     public static boolean m_first_fetch = true;
-    private static final int PERMISSION_REQUEST_CODE = 100;
-    private DBManager mDbManager;
+    private static final int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 1000;
+    public static final int REQUEST_CHECK_SETTINGS = 1;
 
     @Override
     protected void onDestroy() {
@@ -80,9 +70,51 @@ public class JiotMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mDbManager = new DBManager(this);
-        checkLocationPermission();
-        Log.d("MAINACTONCREATE", "onCreate Main activity");
+        if (!JiotUtils.jiotisLocationEnabled(this)) {
+            showGPS();
+        } else {
+            checkLocationPermission();
+            SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = getSharedPreferences("shared_prefs", MODE_PRIVATE).edit();
+            int counter = sharedPreferences.getInt("counter", 2);
+            if (counter != -1) {
+                counter--;
+                editor.putInt("counter", counter);
+                editor.commit();
+            }
+        }
+    }
+
+    /**
+     * Following broadcast receiver is to listen the Location button toggle state in Android.
+     */
+    private BroadcastReceiver mGpsSwitchStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().matches("android.location.PROVIDERS_CHANGED")) {
+                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                if (isGpsEnabled || isNetworkEnabled) {
+                    checkLocationPermission();
+                    SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = getSharedPreferences("shared_prefs", MODE_PRIVATE).edit();
+                    int counter = sharedPreferences.getInt("counter", 2);
+                    if (counter != -1) {
+                        counter--;
+                        editor.putInt("counter", counter);
+                        editor.commit();
+                    }
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isPermissionAlreadyGrantedInMain())
+            setupView();
     }
 
     @Override
@@ -93,6 +125,18 @@ public class JiotMainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mGpsSwitchStateReceiver);
     }
 
     @Override
@@ -111,11 +155,7 @@ public class JiotMainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (isPermissionAlreadyGrantedInMain() == false) {
                 Log.d("ENTERPERM", "checkLocationPermission");
-                requestPermissions(
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            } else {
-                setupView();
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
             }
         }
     }
@@ -123,32 +163,46 @@ public class JiotMainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
-        Log.d("onRequest", "onRequestPermissionsResult");
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
-                Log.d("INRESULT", "MY_PERMISSIONS_REQUEST_LOCATION" + permissions.toString());
-                // If request is cancelled, the result arrays are empty.
                 for (int result : grantResults) {
                     if (result == PackageManager.PERMISSION_DENIED) {
-                        // permission denied, boo! Disable the
-                        // functionality that depends on this permission.
-                        Log.d("NOPERM", "NOT Granted");
-                        Toast.makeText(this, getResources().getString(R.string.perm_error), Toast.LENGTH_LONG).show();
-                        finishAffinity();
+                        SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
+                        int counter = sharedPreferences.getInt("counter", 2);
+                        if (counter == 0) {
+                            Toast.makeText(this, "You have consumed all the attempts, now you have to manually give permission.", Toast.LENGTH_LONG).show();
+                            finishAffinity();
+                        } else if (counter == 1) {
+                            Toast.makeText(this, "Please accept the location permission, last attempt remaining", Toast.LENGTH_LONG).show();
+                            finishAffinity();
+                        } else if (counter == -1) {
+                            showDialogue();
+                        }
                         return;
+                    } else if (result == PackageManager.PERMISSION_GRANTED) {
+                        if (Build.VERSION.SDK_INT >= 29) {
+                            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                                Log.d("JiotMainActivity", "Location backgroung permission granted");
+                            } else {
+                                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+                                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
+                                } else {
+                                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
+                                }
+                            }
+                        }
                     }
                 }
-                Log.d("INRESULT", "MY_PERMISSIONS_REQUEST_LOCATION GRANTED");
-                setupView();
             }
-            case PERMISSION_REQUEST_CODE:
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
-                        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) !=
-                                PackageManager.PERMISSION_GRANTED) {
-                    return;
+            case BACKGROUND_LOCATION_ACCESS_REQUEST_CODE: {
+                if (requestCode == BACKGROUND_LOCATION_ACCESS_REQUEST_CODE) {
+                    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        Log.d("JiotMainActivity", "Backgroung location permission granted");
+                    } else {
+                        Log.d("JiotMainActivity", "Backgroung location permission not granted");
+                    }
                 }
+            }
         }
 
     }
@@ -157,7 +211,9 @@ public class JiotMainActivity extends AppCompatActivity {
         Log.d("ENTERP", "isPermissionAlreadyGrantedInMain");
         int fineLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int coarseLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if ((coarseLocation != PackageManager.PERMISSION_GRANTED) || (fineLocation != PackageManager.PERMISSION_GRANTED)) {
+        int backgroundLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        if ((coarseLocation != PackageManager.PERMISSION_GRANTED || fineLocation != PackageManager.PERMISSION_GRANTED)
+                && (backgroundLocation != PackageManager.PERMISSION_GRANTED)) {
             return false;
         } else {
             return true;
@@ -192,32 +248,17 @@ public class JiotMainActivity extends AppCompatActivity {
                     tabs.getTabAt(i).setIcon(R.drawable.cell_acc);
                 }
             }
-
-            Button m_refresh = (Button) findViewById(R.id.refresh_maps);
-            m_refresh.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startFetchAlarmMain();
-                }
-            });
-
+            Button m_refresh = findViewById(R.id.refresh_maps);
+            m_refresh.setOnClickListener(v -> startFetchAlarmMain());
             FloatingActionButton m_refresh_float = findViewById(R.id.float_refresh);
             m_refresh_float.setOnClickListener(v -> {
                 startFetchAlarmMain();
                 JiotUtils.isRefreshed = true;
             });
-
-            FloatingActionButton mSubmitApi = findViewById(R.id.float_submit);
-            mSubmitApi.setOnClickListener(v -> {
-                makeAPICall();
-            });
-
             stopService();
             bindService(this);
         } else {
-            Toast.makeText(this, getResources().getString(R.string.start_msg), Toast.LENGTH_LONG).show();
-            finishAffinity();
-            return;
+            showGPS();
         }
     }
 
@@ -251,107 +292,49 @@ public class JiotMainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void makeAPICall() {
-        try {
-            SubmitAPIData submitAPIData = new SubmitAPIData();
-            TelephonyManager m_telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-            List<SubmitAPIData.LteCells> mList = new ArrayList<>();
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.READ_PHONE_NUMBERS, Manifest.permission.READ_PHONE_STATE}, PERMISSION_REQUEST_CODE);
-                return;
-            }
-            List<CellInfo> cellLocation = m_telephonyManager.getAllCellInfo();
-            for (CellInfo info : cellLocation) {
-                if (info instanceof CellInfoLte) {
-                    CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
-                    CellIdentityLte identityLte = ((CellInfoLte) info).getCellIdentity();
-                    int mnc = identityLte.getMnc();
-                    int rssi = lte.getDbm();
-                    int tac = identityLte.getTac();
-                    int cellId = identityLte.getCi();
-                    int mcc = identityLte.getMcc();
-                    int frequency = identityLte.getEarfcn();
-                    if ((rssi >= -150 && rssi <= 0)
-                            && (mnc > 9 && mnc < 1000)
-                            && (tac >= 0 && tac <= 65536)
-                            && (cellId > 0)
-                            && (mcc > 9 & mcc < 1000)
-                            && (frequency >= 1 && frequency <= 99999999)) {
-                        SubmitAPIData.LteCells cell = new SubmitAPIData().new LteCells();
-                        cell.setCellid(cellId);
-                        cell.setFrequency(frequency);
-                        cell.setMcc(mcc);
-                        cell.setRssi(rssi);
-                        cell.setTac(tac);
-                        cell.setMnc(mnc);
-                        mList.add(cell);
-                    }
-                }
-            }
-            SubmitAPIData.GpsLoc gpsLoc = new SubmitAPIData().new GpsLoc();
-            gpsLoc.setLat(JiotUtils.sLang);
-            gpsLoc.setLng(JiotUtils.slon);
-            submitAPIData.setLtecells(mList);
-            submitAPIData.setGpsloc(gpsLoc);
-            String jsonInString = new Gson().toJson(submitAPIData);
-            JSONObject jsonMainBody = new JSONObject(jsonInString);
-            Log.i("Submit API body", jsonInString);
-            String url = "";
-            SharedPreferences sharedPreferences = this.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-            String serverName = sharedPreferences.getString("server_name", null);
-            if (serverName.equalsIgnoreCase("Prod")) {
-                url = SUBMIT_API_URL_PROD;
-            } else if (serverName.equalsIgnoreCase("Sit")) {
-                url = SUBMIT_API_URL_SIT;
-            } else if (serverName.equalsIgnoreCase("Dev")) {
-                url = SUBMIT_API_URL_DEV;
-            } else if (serverName.equalsIgnoreCase("Preprod")) {
-                url = SUBMIT_API_URL_PRE_PROD;
-            }
-            Log.i("Submit API Url ", url);
-            if (!jsonMainBody.toString().equalsIgnoreCase("{}")) {
-                RequestQueue queue = Volley.newRequestQueue(this);
-                JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, response -> {
-                    try {
-                        SubmitApiDataResponse submitApiDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
-//                        SubmitApiDataResponse generateLoginTokenResponse = new Gson().fromJson(String.valueOf(response), SubmitApiDataResponse.class);
-                        if (submitApiDataResponse.getDetails() != null && submitApiDataResponse.getDetails().getSuccess() != null && submitApiDataResponse.getDetails().getSuccess().getCode() == 200)
-                            Toast.makeText(JiotMainActivity.this, "Submit API called succesfully", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        Log.d("EXCEPTION", "exce");
-                        e.printStackTrace();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String errorMsg = JiotUtils.getVolleyError(error);
-                        Log.i("Submit API failed", errorMsg);
-                        Toast.makeText(JiotMainActivity.this, "Submit API call failed " + errorMsg, Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap headers = new HashMap();
-                        headers.put("Content-Type", "application/json");
-                        headers.put("token", JiotUtils.jiotgetRtlsToken(JiotMainActivity.this));
-                        SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-                        String number = sharedPreferences.getString("mob", null);
-                        if (number != null) {
-                            headers.put("msisdn", number);
-                        }
-                        return headers;
-                    }
-                };
-                queue.add(req);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void showDialogue() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Permission alert");
+        builder.setMessage("Please enable the location permission all the time from setting");
+        builder.setPositiveButton("OK",
+                (dialog, which) -> {
+                    final Intent i = new Intent();
+                    i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    i.addCategory(Intent.CATEGORY_DEFAULT);
+                    i.setData(Uri.parse("package:" + getPackageName()));
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                    startActivity(i);
+                });
+        builder.show();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(this, JioPermissions.class));
+    public void showGPS() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(LocationRequest.create());
+        builder.setNeedBle(true);
+        Task<LocationSettingsResponse> result =
+                LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
+        result.addOnCompleteListener(task -> {
+            try {
+                LocationSettingsResponse response = task.getResult(ApiException.class);
+            } catch (ApiException exception) {
+                switch (exception.getStatusCode()) {
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        try {
+                            ResolvableApiException resolvable = (ResolvableApiException) exception;
+                            resolvable.startResolutionForResult(JiotMainActivity.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                        } catch (ClassCastException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        break;
+                }
+            }
+        });
     }
 }

@@ -1,14 +1,11 @@
 package com.jio.rtlsappfull.ui.main;
 
 import android.Manifest;
-import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.PendingIntent;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,9 +13,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,7 +32,6 @@ import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthNr;
 import android.telephony.CellSignalStrengthWcdma;
-import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,50 +46,36 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.jio.rtlsappfull.R;
 import com.jio.rtlsappfull.database.db.DBManager;
 import com.jio.rtlsappfull.internal.JiotFetchCustomLatLng;
-import com.jio.rtlsappfull.internal.JiotFetchReceiver;
 import com.jio.rtlsappfull.internal.JiotMainActivity;
 import com.jio.rtlsappfull.log.JiotSdkFileLogger;
-import com.jio.rtlsappfull.model.GetLocationAPIResponse;
 import com.jio.rtlsappfull.model.JiotCustomCellData;
 import com.jio.rtlsappfull.model.JiotRtlsBleRecord;
 import com.jio.rtlsappfull.model.JiotRtlsWifiData;
 import com.jio.rtlsappfull.utils.JiotUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.jio.rtlsappfull.config.Config.LOCATION_DEV_URL;
 import static com.jio.rtlsappfull.config.Config.LOCATION_PREPROD_URL;
 import static com.jio.rtlsappfull.config.Config.LOCATION_PROD_URL;
-import static com.jio.rtlsappfull.config.Config.LOCATION_SIT_URL;
-import static com.jio.rtlsappfull.config.Config.isJioVm;
-import static com.jio.rtlsappfull.config.Config.RADISYS_GEOLOCATE_API_URL_ALL;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -146,55 +125,36 @@ public class PlaceholderFragment extends Fragment {
     private int FREQUENCY;
 
     public static JiotSdkFileLogger m_jiotSdkFileLoggerInstance = null;
-    List<JiotRtlsWifiData> m_jiotRtlsWifiDataList;
-    JiotRtlsWifiData mSelfWifi;
-    public BluetoothAdapter m_bluetoothAdapter;
-    public BluetoothManager m_bluetoothManager;
-    public BluetoothLeScanner m_bluetoothLeScanner;
-    public List<JiotRtlsBleRecord> m_jiotRtlsBleRecordList;
     public Handler m_handler;
-    public static boolean m_isScanning = false;
-    public static final String BLETAG = "BLEOP";
-    public static ProgressDialog m_progressDialogWait;
+    public ProgressDialog m_progressDialogWait;
     public Handler m_waitDailogHandler;
     public MaterialAlertDialogBuilder m_alertDialog = null;
-    private long mRtlsFetchTimeStartInMs = 0;
-    private long mRtlsFetchTimeEndInMs = 0;
     private HashMap<String, LatLng> m_servIdLocation;
-    private DBManager mDbManager;
+    private static FragmentActivity context;
 
     public void showProgressWaitDialog() {
-        m_progressDialogWait.setMessage(getResources().getString(R.string.ble_wait_msg));
+        m_progressDialogWait.setMessage(context.getResources().getString(R.string.ble_wait_msg));
         m_progressDialogWait.setIndeterminate(true);
         m_progressDialogWait.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         m_progressDialogWait.show();
     }
 
     public void dimissProgressWaitDialog() {
-        m_progressDialogWait.dismiss();
+        if (m_progressDialogWait != null) {
+            m_progressDialogWait.dismiss();
+        }
     }
 
-    public void handleBleScan() {
-        ((JiotMainActivity) getActivity()).m_first_fetch = false;
-//        handleProgressWaitDialog();
-        if (m_bluetoothAdapter.isEnabled()) {
-            Log.d(BLETAG, "start handleBleScan");
-            m_handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-//                    stopScan();
-                    getMainData();
-                }
-            }, JiotUtils.RTLS_SCAN_PERIOD);
-//            startScan();
-        } else {
-            Log.d(BLETAG, "BT OFF handleBleScan");
-            getMainData();
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (m_progressDialogWait != null) {
+            m_progressDialogWait.dismiss();
         }
     }
 
     public void refreshView() {
-        pageViewModel.getText().observe(getActivity(), new Observer<String>() {
+        pageViewModel.getText().observe(context, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 Log.d("REFRESHVIEW", "refreshView");
@@ -211,15 +171,19 @@ public class PlaceholderFragment extends Fragment {
     }
 
     public void createAlertDialog() {
-        m_alertDialog = new MaterialAlertDialogBuilder(getContext(), R.style.AlertDialogTheme)
-                .setTitle(getResources().getString(R.string.jiousername_net_alert))
-                .setMessage(getResources().getString(R.string.jiopermissions_main_block))
-                .setPositiveButton(getResources().getString(R.string.jiousername_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+        if (context != null) {
+            m_alertDialog = new MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme)
+                    .setTitle(getResources().getString(R.string.jiousername_net_alert))
+                    .setMessage(getResources().getString(R.string.jiopermissions_main_block))
+                    .setPositiveButton(getResources().getString(R.string.jiousername_ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dialog != null) {
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+        }
     }
 
     public void showAlertDialog() {
@@ -228,8 +192,7 @@ public class PlaceholderFragment extends Fragment {
 
     public void getMainData() {
         getCellInfo();
-        if (JiotUtils.jiotisNetworkEnabled(getContext()) == true) {
-            getWifiInfo();
+        if (JiotUtils.jiotisNetworkEnabled(context) == true) {
             fetchServerLocation();
         } else {
             createAlertDialog();
@@ -242,9 +205,8 @@ public class PlaceholderFragment extends Fragment {
     public BroadcastReceiver m_fetchLocationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            m_jiotRtlsBleRecordList.clear();
             Log.d("m_fetchLocationReceiver", " m_fetchLocationReceiver");
-            handleBleScan();
+            getMainData();
         }
     };
 
@@ -262,7 +224,10 @@ public class PlaceholderFragment extends Fragment {
         Log.d("CELLID", "onDestroy");
         super.onDestroy();
         try {
-            getContext().unregisterReceiver(m_fetchLocationReceiver);
+            context.unregisterReceiver(m_fetchLocationReceiver);
+            if (m_progressDialogWait != null) {
+                m_progressDialogWait.dismiss();
+            }
             m_fetchLocationReceiver = null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -272,25 +237,20 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (context == null)
+            context = getActivity();
         pageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
         pageViewModel.setIndex(index);
         m_CustomCellDataAll = new ArrayList();
-
-        m_jiotRtlsWifiDataList = new ArrayList();
-        m_bluetoothManager =
-                (BluetoothManager) getContext().getSystemService(Context.BLUETOOTH_SERVICE);
-        m_bluetoothAdapter = m_bluetoothManager.getAdapter();
-        m_bluetoothLeScanner = m_bluetoothAdapter.getBluetoothLeScanner();
-        m_jiotRtlsBleRecordList = new ArrayList();
         m_handler = new Handler();
         m_waitDailogHandler = new Handler();
-        m_progressDialogWait = new ProgressDialog(getContext());
-        m_jiotSdkFileLoggerInstance = JiotSdkFileLogger.JiotGetFileLoggerInstance(getContext());
+        m_progressDialogWait = new ProgressDialog(context);
+        m_jiotSdkFileLoggerInstance = JiotSdkFileLogger.JiotGetFileLoggerInstance(context);
         IntentFilter locationFetchFilter = new IntentFilter("com.jio.fetchLocation");
-        getContext().registerReceiver(m_fetchLocationReceiver, locationFetchFilter);
+        context.registerReceiver(m_fetchLocationReceiver, locationFetchFilter);
     }
 
     @Override
@@ -325,7 +285,8 @@ public class PlaceholderFragment extends Fragment {
             neigh4_cellinfo_id = root.findViewById(R.id.neigh4_cellinfo_id);
             neigh4_radiotype_id = root.findViewById(R.id.neigh4_radiotype_id);
             neigh4_signal_id = root.findViewById(R.id.neigh4_signal_id);
-            refreshView();
+            TextView serialId = root.findViewById(R.id.serialId);
+            serialId.setText("Serial Id: " + JiotUtils.getMobileNumber(getActivity()));
             m_servIdLocation = new HashMap();
         }
         return root;
@@ -339,38 +300,16 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) == false) {
-            Log.d("NOBLE", "NOBLE QUIT");
-            Toast.makeText(getContext(), getResources().getString(R.string.noble_support).toString(), Toast.LENGTH_LONG).show();
-            getActivity().finishAffinity();
-        } else {
-            m_jiotRtlsBleRecordList.clear();
-            Log.d("BLETHERE", "BLE SUPPORTED");
+        if (context != null) {
+            context = getActivity();
+            if (JiotUtils.isTokenExpired)
+                sendRefreshToken();
+            getMainData();
         }
-        mDbManager = new DBManager(getActivity());
-        handleBleScan();
     }
 
     public void fetchServerLocation() {
-        String url = "";
-        if (isJioVm) {
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-            String serverName = sharedPreferences.getString("server_name", null);
-            if (serverName.equalsIgnoreCase("Prod")) {
-                url = LOCATION_PROD_URL;
-            } else if (serverName.equalsIgnoreCase("Sit")) {
-                url = LOCATION_SIT_URL;
-            } else if (serverName.equalsIgnoreCase("Dev")) {
-                url = LOCATION_DEV_URL;
-            } else if (serverName.equalsIgnoreCase("Preprod")) {
-                url = LOCATION_PREPROD_URL;
-            }
-        } else {
-            url = RADISYS_GEOLOCATE_API_URL_ALL + JiotUtils.jiotgetRtlsToken(getContext());
-        }
-
-        Log.d("COMPLETEURL = ", url);
-        makeAPICall(url);
+        makeAPICall(LOCATION_PREPROD_URL);
     }
 
     public void getMccMnc(String networkOperator) {
@@ -450,7 +389,8 @@ public class PlaceholderFragment extends Fragment {
         }
     }
 
-    public void setGsmScannedCells(boolean isGsmPrim, final CellSignalStrengthGsm gsm, final CellIdentityGsm identityGsm) {
+    public void setGsmScannedCells(boolean isGsmPrim, final CellSignalStrengthGsm gsm,
+                                   final CellIdentityGsm identityGsm) {
         JiotCustomCellData localCellData = new JiotCustomCellData();
         localCellData.setM_radioType("gsm");
         localCellData.setM_signalStrength(gsm.getDbm());
@@ -469,7 +409,8 @@ public class PlaceholderFragment extends Fragment {
         m_CustomCellDataAll.add(localCellData);
     }
 
-    public void setCdmaScannedCells(boolean isCdmaPrim, final CellSignalStrengthCdma cdma, final CellIdentityCdma identityCdma) {
+    public void setCdmaScannedCells(boolean isCdmaPrim, final CellSignalStrengthCdma cdma,
+                                    final CellIdentityCdma identityCdma) {
         JiotCustomCellData localCellData = new JiotCustomCellData();
         localCellData.setM_cellId(identityCdma.getBasestationId());
         localCellData.setM_mobileNetworkCode(identityCdma.getNetworkId());
@@ -486,7 +427,8 @@ public class PlaceholderFragment extends Fragment {
         m_CustomCellDataAll.add(localCellData);
     }
 
-    public void setLteScannedCells(boolean isLtePrim, final CellSignalStrengthLte lte, final CellIdentityLte identityLte) {
+    public void setLteScannedCells(boolean isLtePrim, final CellSignalStrengthLte lte,
+                                   final CellIdentityLte identityLte) {
         JiotCustomCellData localCellData = new JiotCustomCellData();
         boolean salt = false;
 
@@ -516,7 +458,8 @@ public class PlaceholderFragment extends Fragment {
         m_CustomCellDataAll.add(localCellData);
     }
 
-    public void setWcdmaScannedCells(boolean isWcdmaPrim, final CellSignalStrengthWcdma wcdma, final CellIdentityWcdma identityWcdma) {
+    public void setWcdmaScannedCells(boolean isWcdmaPrim, final CellSignalStrengthWcdma wcdma,
+                                     final CellIdentityWcdma identityWcdma) {
         JiotCustomCellData localCellData = new JiotCustomCellData();
         localCellData.setM_cellId(identityWcdma.getCid());
         localCellData.setM_locationAreaCode(identityWcdma.getLac());
@@ -530,7 +473,8 @@ public class PlaceholderFragment extends Fragment {
         m_CustomCellDataAll.add(localCellData);
     }
 
-    public void setNrScannedCells(boolean isNrPrimary, final CellSignalStrengthNr nrSignal, final CellIdentityNr nrIdentity) {
+    public void setNrScannedCells(boolean isNrPrimary, final CellSignalStrengthNr nrSignal,
+                                  final CellIdentityNr nrIdentity) {
         JiotCustomCellData localCellData = new JiotCustomCellData();
         if (android.os.Build.VERSION.SDK_INT >= 29) {
             localCellData.setM_cellId(nrIdentity.getNci());
@@ -546,155 +490,105 @@ public class PlaceholderFragment extends Fragment {
         }
     }
 
-
-    public void getWifiInfo() {
-        Log.d("WIFI", "getWifiInfo");
-        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        List<ScanResult> apList = wifiManager.getScanResults();
-        JiotRtlsWifiData selfWifi = null;
-//        if (wifiManager.isWifiEnabled()) {
-//            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-//            if (wifiInfo.getNetworkId() != -1) {
-//                selfWifi = new JiotRtlsWifiData();
-//                selfWifi.setM_BSSID(wifiInfo.getBSSID());
-//                selfWifi.setM_frequency(wifiInfo.getFrequency());
-//                selfWifi.setM_SSID(wifiInfo.getSSID());
-//                selfWifi.setM_level(wifiInfo.getRssi());
-//                mSelfWifi = selfWifi;
-//            }
-//        }
-
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Shared_prefs", Context.MODE_PRIVATE);
-        String bssid = sharedPreferences.getString("bss", null);
-        String ssid = sharedPreferences.getString("ss", null);
-        int rssi = sharedPreferences.getInt("rs", 0);
-        if (bssid != null && rssi != 0) {
-            selfWifi = new JiotRtlsWifiData();
-            selfWifi.setM_BSSID(bssid);
-            selfWifi.setM_SSID(ssid);
-            selfWifi.setM_level(rssi);
-            selfWifi.setM_frequency(0);
-            mSelfWifi = selfWifi;
-        }
-
-        for (ScanResult wifiItem : apList) {
-            if (null != selfWifi && selfWifi.getM_BSSID().equalsIgnoreCase(wifiItem.BSSID)) {
-                continue;
-            }
-            JiotRtlsWifiData m_jiotRtlsWifiData = new JiotRtlsWifiData();
-            Log.d("WIFIMAC", wifiItem.BSSID);
-            m_jiotRtlsWifiData.setM_BSSID(wifiItem.BSSID);
-            Log.d("WIFISSID", wifiItem.SSID);
-            m_jiotRtlsWifiData.setM_SSID(wifiItem.SSID);
-            Log.d("WIFISIGNAL", wifiItem.level + "");
-            m_jiotRtlsWifiData.setM_level(wifiItem.level);
-            Log.d("WIFIFREQ", wifiItem.frequency + "");
-            m_jiotRtlsWifiData.setM_frequency(wifiItem.frequency);
-            Log.d("WIFIFCHAN", wifiItem.channelWidth + "");
-            m_jiotRtlsWifiData.setM_channelWidth(wifiItem.channelWidth);
-            Log.d("WIFIFOPER", wifiItem.operatorFriendlyName + "");
-            m_jiotRtlsWifiDataList.add(m_jiotRtlsWifiData);
-        }
-    }
-
     public void getCellInfo() {
         Log.d("getCellInfo", "getCellInfo called");
         m_CustomCellDataAll.clear();
-        TelephonyManager m_telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        String networkOperator = m_telephonyManager.getNetworkOperator();
-        getMccMnc(networkOperator);
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        List<CellInfo> cellLocation = m_telephonyManager.getAllCellInfo();
-        //List<NeighboringCellInfo> neighbours = m_telephonyManager.getNeighboringCellInfo();
-        if (cellLocation != null) {
-            Log.d("SIZECELL", cellLocation.size() + "");
-            //  if (neighbours != null)
-            //    Log.d("NEIGBOURS ", neighbours.size() + "");
-            for (CellInfo info : cellLocation) {
+        if (context != null) {
+            TelephonyManager m_telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String networkOperator = m_telephonyManager.getNetworkOperator();
+            getMccMnc(networkOperator);
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            List<CellInfo> cellLocation = m_telephonyManager.getAllCellInfo();
+            //List<NeighboringCellInfo> neighbours = m_telephonyManager.getNeighboringCellInfo();
+            if (cellLocation != null) {
+                Log.d("SIZECELL", cellLocation.size() + "");
+                //  if (neighbours != null)
+                //    Log.d("NEIGBOURS ", neighbours.size() + "");
+                for (CellInfo info : cellLocation) {
 
-                if (info instanceof CellInfoGsm) {
-                    final CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
-                    final CellIdentityGsm identityGsm = ((CellInfoGsm) info).getCellIdentity();
-                    boolean isGsmPrim = info.isRegistered();
-                    if (isGsmPrim) {
-                        JiotUtils.isGsmPrimary = true;
-                    }
+                    if (info instanceof CellInfoGsm) {
+                        final CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
+                        final CellIdentityGsm identityGsm = ((CellInfoGsm) info).getCellIdentity();
+                        boolean isGsmPrim = info.isRegistered();
+                        if (isGsmPrim) {
+                            JiotUtils.isGsmPrimary = true;
+                        }
 //                    String mcc = String.valueOf(identityGsm.getMcc());
-                    Log.d("V2RTLS", "LTE MCC, MNC, cell id " + identityGsm.getMcc() + " " + identityGsm.getMnc());
+                        Log.d("V2RTLS", "LTE MCC, MNC, cell id " + identityGsm.getMcc() + " " + identityGsm.getMnc());
 //                    if (mcc != null && mcc.length() <= 3) {
-                    setGsmScannedCells(isGsmPrim, gsm, identityGsm);
+                        setGsmScannedCells(isGsmPrim, gsm, identityGsm);
 //                    }
-                }
-                if (info instanceof CellInfoLte) {
-                    final CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
-                    final CellIdentityLte identityLte = ((CellInfoLte) info).getCellIdentity();
-                    boolean isLtePrim = info.isRegistered();
-                    if (isLtePrim) {
-                        JiotUtils.isLtePrimary = true;
                     }
+                    if (info instanceof CellInfoLte) {
+                        final CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
+                        final CellIdentityLte identityLte = ((CellInfoLte) info).getCellIdentity();
+                        boolean isLtePrim = info.isRegistered();
+                        if (isLtePrim) {
+                            JiotUtils.isLtePrimary = true;
+                        }
 //                    String mcc = String.valueOf(identityLte.getMcc());
 //                    if (mcc != null && mcc.length() <=3 ) {
-                    setLteScannedCells(isLtePrim, lte, identityLte);
+                        setLteScannedCells(isLtePrim, lte, identityLte);
 //                    }
-                    Log.d("LTECELLID", CELLID + "");
-                }
-                if (info instanceof CellInfoCdma) {
-                    final CellSignalStrengthCdma cdma = ((CellInfoCdma) info).getCellSignalStrength();
-                    final CellIdentityCdma identityCdma = ((CellInfoCdma) info).getCellIdentity();
-                    boolean isCdmaPrim = info.isRegistered();
-                    if (isCdmaPrim) {
-                        JiotUtils.isCdmaPrimary = true;
+                        Log.d("LTECELLID", CELLID + "");
                     }
-                    setCdmaScannedCells(isCdmaPrim, cdma, identityCdma);
-                }
-                if (info instanceof CellInfoWcdma) {
-                    final CellSignalStrengthWcdma wcdmaSignal = ((CellInfoWcdma) info).getCellSignalStrength();
-                    final CellIdentityWcdma wcdmaIdentity = ((CellInfoWcdma) info).getCellIdentity();
-                    boolean isWcdmaPrim = info.isRegistered();
-                    if (isWcdmaPrim) {
-                        JiotUtils.isWcdmaPrimary = true;
+                    if (info instanceof CellInfoCdma) {
+                        final CellSignalStrengthCdma cdma = ((CellInfoCdma) info).getCellSignalStrength();
+                        final CellIdentityCdma identityCdma = ((CellInfoCdma) info).getCellIdentity();
+                        boolean isCdmaPrim = info.isRegistered();
+                        if (isCdmaPrim) {
+                            JiotUtils.isCdmaPrimary = true;
+                        }
+                        setCdmaScannedCells(isCdmaPrim, cdma, identityCdma);
                     }
+                    if (info instanceof CellInfoWcdma) {
+                        final CellSignalStrengthWcdma wcdmaSignal = ((CellInfoWcdma) info).getCellSignalStrength();
+                        final CellIdentityWcdma wcdmaIdentity = ((CellInfoWcdma) info).getCellIdentity();
+                        boolean isWcdmaPrim = info.isRegistered();
+                        if (isWcdmaPrim) {
+                            JiotUtils.isWcdmaPrimary = true;
+                        }
 //                    String mcc = String.valueOf(wcdmaIdentity.getMcc());
-                    Log.d("V2RTLS", "LTE MCC, MNC, cell id " + wcdmaIdentity.getMcc() + " " + wcdmaIdentity.getMnc());
+                        Log.d("V2RTLS", "LTE MCC, MNC, cell id " + wcdmaIdentity.getMcc() + " " + wcdmaIdentity.getMnc());
 //                    if (mcc != null && mcc.length() <=3 ) {
-                    setWcdmaScannedCells(isWcdmaPrim, wcdmaSignal, wcdmaIdentity);
+                        setWcdmaScannedCells(isWcdmaPrim, wcdmaSignal, wcdmaIdentity);
 //                    }
-                }
+                    }
 
-                if (android.os.Build.VERSION.SDK_INT >= 29) {
-                    if (info instanceof CellInfoNr) {
-                        final CellSignalStrengthNr nrSignal = (CellSignalStrengthNr) ((CellInfoNr) info).getCellSignalStrength();
-                        final CellIdentityNr nrIdentity = (CellIdentityNr) ((CellInfoNr) info).getCellIdentity();
-                        boolean isNrPrim = info.isRegistered();
+                    if (android.os.Build.VERSION.SDK_INT >= 29) {
+                        if (info instanceof CellInfoNr) {
+                            final CellSignalStrengthNr nrSignal = (CellSignalStrengthNr) ((CellInfoNr) info).getCellSignalStrength();
+                            final CellIdentityNr nrIdentity = (CellIdentityNr) ((CellInfoNr) info).getCellIdentity();
+                            boolean isNrPrim = info.isRegistered();
 //                        String mcc = String.valueOf(nrIdentity.getMccString());
-                        Log.d("V2RTLS", "LTE MCC, MNC, cell id " + nrIdentity.getMccString() + " " + nrIdentity.getMncString());
+                            Log.d("V2RTLS", "LTE MCC, MNC, cell id " + nrIdentity.getMccString() + " " + nrIdentity.getMncString());
 //                        if (mcc != null && mcc.length() <=3 ) {
-                        setNrScannedCells(isNrPrim, nrSignal, nrIdentity);
+                            setNrScannedCells(isNrPrim, nrSignal, nrIdentity);
 //                        }
 
+                        }
                     }
-                }
 
+                }
+                setPrimaryCellIds();
+            } else {
+                Log.d("NOCELL", "NO CELLS FOUND");
             }
-            setPrimaryCellIds();
-        } else {
-            Log.d("NOCELL", "NO CELLS FOUND");
         }
     }
 
     private void makeAPICall(String url) {
         final JSONObject jsonMainBody = createV2JsonObject();
         Log.d("JSONRTLSV3", jsonMainBody.toString());
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        showProgressWaitDialog();
+        RequestQueue queue = Volley.newRequestQueue(context);
+//        showDialog();
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                dimissProgressWaitDialog();
+//                dismissDialog();
                 try {
-                    mRtlsFetchTimeEndInMs = Calendar.getInstance().getTimeInMillis();
                     Log.d("MSGFROMSERVERV3", "Location Fetch SUCCESS: " + response);
                     String message = response.optString("msg");
                     if (message != null && !message.isEmpty()) {
@@ -709,38 +603,43 @@ public class PlaceholderFragment extends Fragment {
             }
         }, error -> {
             String errorMsg = JiotUtils.getVolleyError(error);
-            dimissProgressWaitDialog();
+//            dismissDialog();
             if (error.networkResponse != null && error.networkResponse.statusCode == 401
                     && !JiotUtils.isTokenExpired) {
                 JiotUtils.isTokenExpired = true;
                 sendRefreshToken();
             }
-            GetLocationAPIResponse getLocationAPIResponse = JiotUtils.getInstance().getPojoObject(errorMsg, GetLocationAPIResponse.class);
-            if (getLocationAPIResponse.getError() != null && getLocationAPIResponse.getError().getCode() == 404
-                    && getLocationAPIResponse.getError().getMessage().equalsIgnoreCase("Location Not Found")) {
-                mDbManager.insertCellInfoInDB(jsonMainBody);
-            }
-            JiotUtils.showErrorToast(getActivity(), errorMsg);
-            Log.e("MSGFROMSERVER", "FAILURE " + errorMsg);
-            if (error != null) {
-//                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile("RTLSFAILRESPONSE" + " $ " + errorMsg);
-            }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap headers = new HashMap();
                 headers.put("Content-Type", "application/json");
-                headers.put("token", JiotUtils.jiotgetRtlsToken(getActivity()));
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-                String number = sharedPreferences.getString("mob", null);
-                if (number != null) {
-                    headers.put("msisdn", number);
-                }
+                headers.put("token", JiotUtils.jiotgetRtlsToken(context));
+                headers.put("msisdn", JiotUtils.getMobileNumber(context));
                 return headers;
             }
         };
-        mRtlsFetchTimeStartInMs = Calendar.getInstance().getTimeInMillis();
         queue.add(req);
+    }
+
+    private void showDialog() {
+        if (!((Activity) context).isFinishing()) {
+            try {
+                showProgressWaitDialog();
+            } catch (WindowManager.BadTokenException e) {
+                Log.e("WindowManagerBad ", e.toString());
+            }
+        }
+    }
+
+    private void dismissDialog() {
+        if (!((Activity) context).isFinishing()) {
+            try {
+                dimissProgressWaitDialog();
+            } catch (WindowManager.BadTokenException e) {
+                Log.e("WindowManagerBad ", e.toString());
+            }
+        }
     }
 
     public JSONObject createV2JsonObject() {
@@ -848,7 +747,7 @@ public class PlaceholderFragment extends Fragment {
             intent.setAction("com.rtls.location_all");
             intent.putExtra("CELLID", CELLID);
             intent.putExtra("ALLPINS", m_servIdLocation);
-            getActivity().sendBroadcast(intent);
+            context.sendBroadcast(intent);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -857,7 +756,7 @@ public class PlaceholderFragment extends Fragment {
     private void sendRefreshToken() {
         Intent intent = new Intent();
         intent.setAction("com.rtls.token_error");
-        getActivity().sendBroadcast(intent);
+        context.sendBroadcast(intent);
     }
 
 }

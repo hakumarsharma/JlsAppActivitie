@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,14 +23,20 @@ public class JiotSplashScreenActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         new Handler().postDelayed(() -> {
-            if(checkSharedPreferences()) {
-                Intent i = new Intent(JiotSplashScreenActivity.this, JioPermissions.class);
+            if (checkAboutApp() && checkRtlsKey()) {
+                Intent i = new Intent(JiotSplashScreenActivity.this, JiotMainActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
                 finish();
-            } else {
+            } else if (!checkAboutApp()) {
                 Intent i = new Intent(JiotSplashScreenActivity.this, AboutAppActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(i);
+                finish();
+            } else if (!checkRtlsKey()) {
+                Intent i = new Intent(JiotSplashScreenActivity.this, JiotUserName.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
@@ -38,18 +45,20 @@ public class JiotSplashScreenActivity extends AppCompatActivity {
         }, JiotUtils.SPLASH_TIME_OUT);
     }
 
-    private boolean checkSharedPreferences() {
+    private boolean checkRtlsKey() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-        String aboutApp = sharedPreferences.getString("about_app", null);
-        if(aboutApp != null && aboutApp.equalsIgnoreCase("yes")) {
+        String fetchRtlsKey = sharedPreferences.getString("fetch_rtls_key", null);
+        if (fetchRtlsKey != null && fetchRtlsKey.equalsIgnoreCase("success"))
             return true;
-        } else {
-            SharedPreferences.Editor editor = getSharedPreferences("shared_prefs", MODE_PRIVATE).edit();
-            editor.putString("about_app", "yes");
-            editor.commit();
-            return false;
-        }
+        return false;
     }
 
+    private boolean checkAboutApp() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
+        String aboutApp = sharedPreferences.getString("about_app", null);
+        if (aboutApp != null && aboutApp.equalsIgnoreCase("yes"))
+            return true;
+        return false;
+    }
 }
 
