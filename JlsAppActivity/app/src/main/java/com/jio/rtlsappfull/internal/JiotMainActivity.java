@@ -56,7 +56,6 @@ import java.util.Calendar;
 public class JiotMainActivity extends AppCompatActivity {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 110;
-    public static boolean m_first_fetch = true;
     private static final int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 1000;
     public static final int REQUEST_CHECK_SETTINGS = 1;
 

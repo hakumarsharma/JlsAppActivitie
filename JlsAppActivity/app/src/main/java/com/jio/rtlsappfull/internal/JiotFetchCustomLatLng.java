@@ -16,11 +16,8 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
@@ -33,16 +30,12 @@ import com.jio.rtlsappfull.utils.JiotUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class JiotFetchCustomLatLng {
@@ -258,6 +251,7 @@ public class JiotFetchCustomLatLng {
                     try {
                         mRtlsFetchTimeEndInMs = Calendar.getInstance().getTimeInMillis();
                         String message = response.optString("msg");
+                        m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile("RTLSAPILATENCY" + " $ " + JiotUtils.getDateTime() + " $ " + "Success response --> " + response.toString() + " ms ");
                         Log.d("Success Respnse --> ", message);
                         if (message != null && !message.isEmpty()) {
                             Log.d("Error ", message);
@@ -270,6 +264,7 @@ public class JiotFetchCustomLatLng {
                     }
                 }, error -> {
                     String errorMsg = JiotUtils.getVolleyError(error);
+                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile("RTLSAPILATENCY" + " $ " + JiotUtils.getDateTime() + " $ " + "Success response --> " + error.toString() + " ms ");
                     if (error.networkResponse != null && error.networkResponse.statusCode == 401
                             && !JiotUtils.isTokenExpired) {
                         JiotUtils.isTokenExpired = true;

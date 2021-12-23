@@ -102,7 +102,6 @@ public class PlaceholderFragment extends Fragment {
     long CELLID = 1;
     String RADIOTYPE = "gsm";
     int LAC;
-    JiotFetchCustomLatLng m_JiotFetchCustomLatLng;
     List<JiotCustomCellData> m_CustomCellDataAll;
 
     TextView m_secondary_radiotype_id;

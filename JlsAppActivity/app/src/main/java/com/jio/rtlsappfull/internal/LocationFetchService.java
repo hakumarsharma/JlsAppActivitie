@@ -72,7 +72,6 @@ public class LocationFetchService extends Service {
     private String id1;
     private String id2;
     private static ScheduledExecutorService scheduler;
-    private static final int PERMISSION_REQUEST_CODE = 100;
 
     BroadcastReceiver mTokenRefreshReceiver = new BroadcastReceiver() {
         @Override

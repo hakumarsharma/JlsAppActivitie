@@ -19,6 +19,9 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 
 public class JiotUtils {
 
@@ -117,13 +120,6 @@ public class JiotUtils {
         prefEditor.commit();
     }
 
-    public static String jiotgetRtlsDid(Context ctx) {
-        preferences = ctx.getSharedPreferences(RTLS_MYPREFERENCES, MODE_PRIVATE);
-        String rtls_token = preferences.getString(RTLS_MYPREFERENCES_DID, RTLS_MYPREFERENCES_NONE);
-        Log.d("RTLSDID = ", rtls_token);
-        return rtls_token;
-    }
-
     public static Typeface mTypeface(Context ctx, int typeface) {
         Typeface font1 = null;
         if (typeface == 1) {
@@ -179,6 +175,14 @@ public class JiotUtils {
             mobileNumber = sharedPreferences.getString("mob", "1234567890");
         }
         return mobileNumber;
+    }
+
+    public static String getDateTime() {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss aa");
+        String datetime = dateformat.format(c.getTime());
+        System.out.println(datetime);
+        return datetime;
     }
 
     public static void saveMobileNumber(Context context, String mobileNumber) {
