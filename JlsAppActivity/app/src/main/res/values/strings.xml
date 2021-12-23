@@ -34,7 +34,7 @@
     <string name="jiopermissions_turnon_network_details">Please enable internet Connectivity</string>
     <string name="jiopermissions_main_block">Location/Network is not enabled pls click enable to proceed!!</string>
     <string name="jiousername_email">Phone Number</string>
-    <string name="jiousername_email_hint">Please enter your Jio mobile number</string>
+    <string name="jiousername_email_hint">Please enter your mobile number</string>
     <string name="jiousername_imei">IMEI</string>
     <string name="jiousername_imei_hint">Please enter your IMEI</string>
     <string name="jiousername_ok">OK</string>
