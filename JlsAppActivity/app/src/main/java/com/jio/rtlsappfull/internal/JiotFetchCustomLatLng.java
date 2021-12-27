@@ -251,7 +251,7 @@ public class JiotFetchCustomLatLng {
                     try {
                         mRtlsFetchTimeEndInMs = Calendar.getInstance().getTimeInMillis();
                         String message = response.optString("msg");
-                        m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile("RTLSAPILATENCY" + " $ " + JiotUtils.getDateTime() + " $ " + "Success response --> " + response.toString() + " ms ");
+                        m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Success response --> " + response.toString());
                         Log.d("Success Respnse --> ", message);
                         if (message != null && !message.isEmpty()) {
                             Log.d("Error ", message);
@@ -264,7 +264,8 @@ public class JiotFetchCustomLatLng {
                     }
                 }, error -> {
                     String errorMsg = JiotUtils.getVolleyError(error);
-                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile("RTLSAPILATENCY" + " $ " + JiotUtils.getDateTime() + " $ " + "Success response --> " + error.toString() + " ms ");
+                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error response --> " + error.toString());
+                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error Message --> " + errorMsg);
                     if (error.networkResponse != null && error.networkResponse.statusCode == 401
                             && !JiotUtils.isTokenExpired) {
                         JiotUtils.isTokenExpired = true;

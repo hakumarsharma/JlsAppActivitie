@@ -578,6 +578,7 @@ public class PlaceholderFragment extends Fragment {
             public void onResponse(JSONObject response) {
 //                dismissDialog();
                 try {
+                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Success response --> " + response.toString());
                     Log.d("MSGFROMSERVERV3", "Location Fetch SUCCESS: " + response);
                     String message = response.optString("msg");
                     if (message != null && !message.isEmpty()) {
@@ -592,6 +593,8 @@ public class PlaceholderFragment extends Fragment {
             }
         }, error -> {
             String errorMsg = JiotUtils.getVolleyError(error);
+            m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error response --> " + error.toString());
+            m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error Message --> " + errorMsg);
 //            dismissDialog();
             if (error.networkResponse != null && error.networkResponse.statusCode == 401
                     && !JiotUtils.isTokenExpired) {
