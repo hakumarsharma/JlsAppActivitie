@@ -321,18 +321,18 @@ public class PlaceholderFragment extends Fragment {
             if (cellData.isM_isPrimary() == false) {
                 if (secondaryDone1 == false) {
                     m_secondary_radiotype_id.setText("Radio Type: " + cellData.getM_radioType());
-                    neighbor_cellinfo_id.setText("Neighbour CellId: " + String.valueOf(cellData.getM_cellId()));
-                    m_secondary_signal_id.setText("Signal Strength: " + String.valueOf(cellData.getM_signalStrength()));
+                    neighbor_cellinfo_id.setText("Neighbour CellId: " + cellData.getM_cellId());
+                    m_secondary_signal_id.setText("Signal Strength: " + cellData.getM_signalStrength());
                     secondaryDone1 = true;
                 } else if (secondaryDone2 == false) {
-                    ter_cellinfo_id.setText("Neighbour CellId: " + String.valueOf(cellData.getM_cellId()));
+                    ter_cellinfo_id.setText("Neighbour CellId: " + cellData.getM_cellId());
                     m_ter_radiotype_id.setText("Radio Type: " + cellData.getM_radioType());
-                    m_ter_signal_id.setText("Signal Strength: " + String.valueOf(cellData.getM_signalStrength()));
+                    m_ter_signal_id.setText("Signal Strength: " + cellData.getM_signalStrength());
                     secondaryDone2 = true;
                 } else if (secondaryDone3 == false) {
-                    neigh3_cellinfo_id.setText("Neighbour CellId: " + String.valueOf(cellData.getM_cellId()));
+                    neigh3_cellinfo_id.setText("Neighbour CellId: " + cellData.getM_cellId());
                     neigh3_radiotype_id.setText("Radio Type: " + cellData.getM_radioType());
-                    neigh3_signal_id.setText("Signal Strength: " + String.valueOf(cellData.getM_signalStrength()));
+                    neigh3_signal_id.setText("Signal Strength: " + cellData.getM_signalStrength());
                     secondaryDone3 = true;
                 } else if (secondaryDone4 == false) {
                     neigh4_cellinfo_id.setText("Neighbour CellId: " + String.valueOf(cellData.getM_cellId()));
