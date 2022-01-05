@@ -154,7 +154,7 @@ public class DBManager {
      *
      * @return all the data available inside the table cell_info
      */
-    public List<CellLocationData> getAllCellInfoata() {
+    public List<CellLocationData> getAllCellInfoData() {
         mDatabase = mDBHelper.getWritableDatabase();
         List<CellLocationData> mList = new ArrayList<>();
         String[] column = {DatabaseHelper.TIME_STAMP, DatabaseHelper.LAT,

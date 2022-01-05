@@ -1,9 +1,11 @@
 package com.jio.rtlsappfull.ui.main;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,6 +17,7 @@ import com.jio.rtlsappfull.R;
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
+@RequiresApi(api = Build.VERSION_CODES.R)
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
@@ -31,10 +34,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         Log.d("getItem", "getItem = " + position);
         if (position == 0) {
             return PlaceholderFragment.newInstance(position + 1);
-        } else if (position == 1) {
-            return new MapFragment();
         } else {
-            return new SubmitCellMapsFragment();
+            return new MapFragment();
         }
     }
 

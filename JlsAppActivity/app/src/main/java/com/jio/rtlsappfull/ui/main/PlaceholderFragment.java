@@ -1,7 +1,6 @@
 package com.jio.rtlsappfull.ui.main;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +45,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -53,8 +54,11 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.jio.rtlsappfull.R;
+import com.jio.rtlsappfull.database.db.DBManager;
 import com.jio.rtlsappfull.log.JiotSdkFileLogger;
+import com.jio.rtlsappfull.model.CellLocationData;
 import com.jio.rtlsappfull.model.JiotCustomCellData;
+import com.jio.rtlsappfull.model.SubmitApiDataResponse;
 import com.jio.rtlsappfull.utils.JiotUtils;
 
 import java.util.ArrayList;
@@ -63,7 +67,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jio.rtlsappfull.config.Config.LOCATION_PREPROD_URL;
-import static com.jio.rtlsappfull.config.Config.LOCATION_PROD_URL;
+import static com.jio.rtlsappfull.config.Config.SUBMIT_CELL_LOCATION_PREPROD;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -120,6 +124,7 @@ public class PlaceholderFragment extends Fragment {
     public MaterialAlertDialogBuilder m_alertDialog = null;
     private HashMap<String, LatLng> m_servIdLocation;
     private static FragmentActivity context;
+    private DBManager mDbManager;
 
     public void showProgressWaitDialog() {
         m_progressDialogWait.setMessage(context.getResources().getString(R.string.ble_wait_msg));
@@ -237,6 +242,7 @@ public class PlaceholderFragment extends Fragment {
         m_handler = new Handler();
         m_waitDailogHandler = new Handler();
         m_progressDialogWait = new ProgressDialog(context);
+        mDbManager = new DBManager(context);
         m_jiotSdkFileLoggerInstance = JiotSdkFileLogger.JiotGetFileLoggerInstance(context);
         IntentFilter locationFetchFilter = new IntentFilter("com.jio.fetchLocation");
         context.registerReceiver(m_fetchLocationReceiver, locationFetchFilter);
@@ -572,11 +578,9 @@ public class PlaceholderFragment extends Fragment {
         final JSONObject jsonMainBody = createV2JsonObject();
         Log.d("JSONRTLSV3", jsonMainBody.toString());
         RequestQueue queue = Volley.newRequestQueue(context);
-//        showDialog();
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-//                dismissDialog();
                 try {
                     m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Success response --> " + response.toString());
                     Log.d("MSGFROMSERVERV3", "Location Fetch SUCCESS: " + response);
@@ -595,11 +599,13 @@ public class PlaceholderFragment extends Fragment {
             String errorMsg = JiotUtils.getVolleyError(error);
             m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error response --> " + error.toString());
             m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error Message --> " + errorMsg);
-//            dismissDialog();
-            if (error.networkResponse != null && error.networkResponse.statusCode == 401
-                    && !JiotUtils.isTokenExpired) {
+            if (error.networkResponse != null && error.networkResponse.statusCode == 401 && !JiotUtils.isTokenExpired) {
                 JiotUtils.isTokenExpired = true;
                 sendRefreshToken();
+            }
+            if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
+                mDbManager.insertCellInfoInDB(jsonMainBody);
+                makeSubmitCellLocationApiCall();
             }
         }) {
             @Override
@@ -612,26 +618,6 @@ public class PlaceholderFragment extends Fragment {
             }
         };
         queue.add(req);
-    }
-
-    private void showDialog() {
-        if (!((Activity) context).isFinishing()) {
-            try {
-                showProgressWaitDialog();
-            } catch (WindowManager.BadTokenException e) {
-                Log.e("WindowManagerBad ", e.toString());
-            }
-        }
-    }
-
-    private void dismissDialog() {
-        if (!((Activity) context).isFinishing()) {
-            try {
-                dimissProgressWaitDialog();
-            } catch (WindowManager.BadTokenException e) {
-                Log.e("WindowManagerBad ", e.toString());
-            }
-        }
     }
 
     public JSONObject createV2JsonObject() {
@@ -749,6 +735,72 @@ public class PlaceholderFragment extends Fragment {
         Intent intent = new Intent();
         intent.setAction("com.rtls.token_error");
         context.sendBroadcast(intent);
+    }
+
+    private void makeSubmitCellLocationApiCall() {
+        List<CellLocationData> cellLocationDataList = mDbManager.getAllCellInfoData();
+        if (cellLocationDataList.size() > 0) {
+            for (CellLocationData cellLocationData : cellLocationDataList) {
+                String cellData = cellLocationData.getCellId()
+                        + " " + cellLocationData.getLat()
+                        + " " + cellLocationData.getLng()
+                        + " " + cellLocationData.getTimestamp()
+                        + " " + cellLocationData.getMcc()
+                        + " " + cellLocationData.getMnc()
+                        + " " + cellLocationData.getRssi()
+                        + " " + cellLocationData.getTac();
+                JSONObject jsonObject = makeJsonObject(cellData);
+                RequestQueue queue = Volley.newRequestQueue(context);
+                String[] arr = cellData.split(" ");
+                int cellId = Integer.parseInt(arr[0]);
+                JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, SUBMIT_CELL_LOCATION_PREPROD, jsonObject, response -> {
+                    try {
+                        SubmitApiDataResponse submitApiDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
+                        if (submitApiDataResponse.getDetails() != null && submitApiDataResponse.getDetails().getSuccess() != null && submitApiDataResponse.getDetails().getSuccess().getCode() == 200) {
+                            Toast.makeText(context, "Submit cell location API called succesfully", Toast.LENGTH_SHORT).show();
+                            mDbManager.deleteDataFromCellInfo(cellId);
+                        }
+                    } catch (Exception e) {
+                        Log.d("EXCEPTION", "exce");
+                        e.printStackTrace();
+                    }
+                }, error -> {
+                    String errorMsg = JiotUtils.getVolleyError(error);
+                    Toast.makeText(context, "Submit cell location API call failed " + errorMsg, Toast.LENGTH_SHORT).show();
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap headers = new HashMap();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("token", JiotUtils.jiotgetRtlsToken(context));
+                        return headers;
+                    }
+                };
+                queue.add(req);
+            }
+        }
+    }
+
+    private JSONObject makeJsonObject(String cellData) {
+        String[] markerDetailArray = cellData.split(" ");
+        JSONObject lteCellsObject = new JSONObject();
+        try {
+            JSONArray lteCellsArray = new JSONArray();
+            JSONObject gpsJsonObject = new JSONObject();
+            JSONObject cellInfoObject = new JSONObject();
+            cellInfoObject.put("mcc", Integer.parseInt(markerDetailArray[4]));
+            cellInfoObject.put("mnc", Integer.parseInt(markerDetailArray[5]));
+            cellInfoObject.put("tac", Integer.parseInt(markerDetailArray[7]));
+            cellInfoObject.put("cellid", Integer.parseInt(markerDetailArray[0]));
+            gpsJsonObject.put("lat", Double.valueOf(markerDetailArray[1]));
+            gpsJsonObject.put("lng", Double.valueOf(markerDetailArray[2]));
+            cellInfoObject.put("gpsloc", gpsJsonObject);
+            lteCellsArray.put(cellInfoObject);
+            lteCellsObject.put("ltecells", lteCellsArray);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return lteCellsObject;
     }
 
 }

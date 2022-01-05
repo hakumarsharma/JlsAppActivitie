@@ -1,5 +1,7 @@
 package com.jio.rtlsappfull.internal;
 
+import static com.jio.rtlsappfull.config.Config.SUBMIT_CELL_LOCATION_PREPROD;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -12,10 +14,12 @@ import android.telephony.CellInfoLte;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -23,19 +27,20 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
 import com.jio.rtlsappfull.database.db.DBManager;
 import com.jio.rtlsappfull.log.JiotSdkFileLogger;
-import com.jio.rtlsappfull.model.GetLocationAPIResponse;
+import com.jio.rtlsappfull.model.CellLocationData;
 import com.jio.rtlsappfull.model.JiotCustomCellData;
 import com.jio.rtlsappfull.model.MarkerDetail;
+import com.jio.rtlsappfull.model.SubmitApiDataResponse;
 import com.jio.rtlsappfull.utils.JiotUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class JiotFetchCustomLatLng {
@@ -52,7 +57,6 @@ public class JiotFetchCustomLatLng {
     private int LAC;
     private HashMap<String, LatLng> m_servIdLocation;
     private HashMap<String, Double> m_servIdAccuracy;
-    private static ScheduledExecutorService scheduler;
     private JiotCustomCellData localCellData;
     private DBManager mDbManager;
     private int markerNumber;
@@ -269,12 +273,11 @@ public class JiotFetchCustomLatLng {
                     if (error.networkResponse != null && error.networkResponse.statusCode == 401
                             && !JiotUtils.isTokenExpired) {
                         JiotUtils.isTokenExpired = true;
-                        GetLocationAPIResponse getLocationAPIResponse = JiotUtils.getInstance().getPojoObject(errorMsg, GetLocationAPIResponse.class);
-                        if (getLocationAPIResponse.getError() != null && getLocationAPIResponse.getError().getCode() == 404
-                                && getLocationAPIResponse.getError().getMessage().equalsIgnoreCase("Location Not Found")) {
-                            mDbManager.insertCellInfoInDB(jsonMainBody);
-                        }
                         sendRefreshToken();
+                    }
+                    if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
+                        mDbManager.insertCellInfoInDB(jsonMainBody);
+                        makeSubmitCellLocationApiCall();
                     }
                     Log.e("MSGFROMSERVER", "FAILURE " + errorMsg);
                     sendEmptyLocationsToMaps();
@@ -347,6 +350,72 @@ public class JiotFetchCustomLatLng {
         localCellData.setM_frequency(identityLte.getEarfcn());
         Log.d("V2RTLS", "LTE MCC, MNC, cell id " + identityLte.getMcc() + " " + identityLte.getMnc() + " " + identityLte.getCi());
         m_CustomCellDataAll.add(localCellData);
+    }
+
+    private void makeSubmitCellLocationApiCall() {
+        List<CellLocationData> cellLocationDataList = mDbManager.getAllCellInfoData();
+        if (cellLocationDataList.size() > 0) {
+            for (CellLocationData cellLocationData : cellLocationDataList) {
+                String cellData = cellLocationData.getCellId()
+                        + " " + cellLocationData.getLat()
+                        + " " + cellLocationData.getLng()
+                        + " " + cellLocationData.getTimestamp()
+                        + " " + cellLocationData.getMcc()
+                        + " " + cellLocationData.getMnc()
+                        + " " + cellLocationData.getRssi()
+                        + " " + cellLocationData.getTac();
+                JSONObject jsonObject = makeJsonObject(cellData);
+                RequestQueue queue = Volley.newRequestQueue(m_context);
+                String[] arr = cellData.split(" ");
+                int cellId = Integer.parseInt(arr[0]);
+                JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, SUBMIT_CELL_LOCATION_PREPROD, jsonObject, response -> {
+                    try {
+                        SubmitApiDataResponse submitApiDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
+                        if (submitApiDataResponse.getDetails() != null && submitApiDataResponse.getDetails().getSuccess() != null && submitApiDataResponse.getDetails().getSuccess().getCode() == 200) {
+                            Toast.makeText(m_context, "Submit cell location API called succesfully", Toast.LENGTH_SHORT).show();
+                            mDbManager.deleteDataFromCellInfo(cellId);
+                        }
+                    } catch (Exception e) {
+                        Log.d("EXCEPTION", "exce");
+                        e.printStackTrace();
+                    }
+                }, error -> {
+                    String errorMsg = JiotUtils.getVolleyError(error);
+                    Toast.makeText(m_context, "Submit cell location API call failed " + errorMsg, Toast.LENGTH_SHORT).show();
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap headers = new HashMap();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("token", JiotUtils.jiotgetRtlsToken(m_context));
+                        return headers;
+                    }
+                };
+                queue.add(req);
+            }
+        }
+    }
+
+    private JSONObject makeJsonObject(String cellData) {
+        String[] markerDetailArray = cellData.split(" ");
+        JSONObject lteCellsObject = new JSONObject();
+        try {
+            JSONArray lteCellsArray = new JSONArray();
+            JSONObject gpsJsonObject = new JSONObject();
+            JSONObject cellInfoObject = new JSONObject();
+            cellInfoObject.put("mcc", Integer.parseInt(markerDetailArray[4]));
+            cellInfoObject.put("mnc", Integer.parseInt(markerDetailArray[5]));
+            cellInfoObject.put("tac", Integer.parseInt(markerDetailArray[7]));
+            cellInfoObject.put("cellid", Integer.parseInt(markerDetailArray[0]));
+            gpsJsonObject.put("lat", Double.valueOf(markerDetailArray[1]));
+            gpsJsonObject.put("lng", Double.valueOf(markerDetailArray[2]));
+            cellInfoObject.put("gpsloc", gpsJsonObject);
+            lteCellsArray.put(cellInfoObject);
+            lteCellsObject.put("ltecells", lteCellsArray);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return lteCellsObject;
     }
 
 }

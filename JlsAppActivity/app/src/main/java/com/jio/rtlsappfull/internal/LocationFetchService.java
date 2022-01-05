@@ -10,12 +10,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.telephony.CellIdentityLte;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoLte;
+import android.telephony.CellSignalStrengthLte;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,14 +35,19 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
 import com.jio.rtlsappfull.R;
 import com.jio.rtlsappfull.config.Config;
 import com.jio.rtlsappfull.log.JiotSdkFileLogger;
+import com.jio.rtlsappfull.model.SubmitAPIData;
+import com.jio.rtlsappfull.model.SubmitApiDataResponse;
 import com.jio.rtlsappfull.utils.JiotUtils;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -46,21 +57,9 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
-import static com.jio.rtlsappfull.config.Config.LOCATION_DEV_URL;
 import static com.jio.rtlsappfull.config.Config.LOCATION_PREPROD_URL;
-import static com.jio.rtlsappfull.config.Config.LOCATION_PROD_URL;
-import static com.jio.rtlsappfull.config.Config.LOCATION_SIT_URL;
-import static com.jio.rtlsappfull.config.Config.RADISYS_GEOLOCATE_API_URL_ALL;
-import static com.jio.rtlsappfull.config.Config.SERVER_DEV_API_KEY_URL;
-import static com.jio.rtlsappfull.config.Config.SERVER_GET_TOKEN_URL;
 import static com.jio.rtlsappfull.config.Config.SERVER_PREPROD_API_KEY_URL;
-import static com.jio.rtlsappfull.config.Config.SERVER_PROD_API_KEY_URL;
-import static com.jio.rtlsappfull.config.Config.SERVER_SIT_API_KEY_URL;
-import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_DEV;
 import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_PRE_PROD;
-import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_PROD;
-import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_SIT;
-import static com.jio.rtlsappfull.config.Config.isJioVm;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class LocationFetchService extends Service {
@@ -72,6 +71,7 @@ public class LocationFetchService extends Service {
     private String id1;
     private String id2;
     private static ScheduledExecutorService scheduler;
+    private static final int PERMISSION_REQUEST_CODE = 100;
 
     BroadcastReceiver mTokenRefreshReceiver = new BroadcastReceiver() {
         @Override
@@ -284,7 +284,10 @@ public class LocationFetchService extends Service {
 
     private void executeTask() {
         scheduler.scheduleAtFixedRate
-                (() -> fetchServerLocation(), 0, 5, TimeUnit.MINUTES);
+                (() -> {
+                    fetchServerLocation();
+                    makeApiCall();
+                }, 0, 5, TimeUnit.MINUTES);
     }
 
     public void fetchServerLocation() {
@@ -301,6 +304,88 @@ public class LocationFetchService extends Service {
             return;
         }
         LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+    }
+
+    private void makeApiCall() {
+        try {
+            SubmitAPIData submitAPIData = new SubmitAPIData();
+            TelephonyManager m_telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+            List<SubmitAPIData.LteCells> mList = new ArrayList();
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            List<CellInfo> cellLocation = m_telephonyManager.getAllCellInfo();
+            for (CellInfo info : cellLocation) {
+                if (info instanceof CellInfoLte) {
+                    CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
+                    CellIdentityLte identityLte = ((CellInfoLte) info).getCellIdentity();
+                    int mnc = identityLte.getMnc();
+                    int rssi = lte.getDbm();
+                    int tac = identityLte.getTac();
+                    int cellId = identityLte.getCi();
+                    int mcc = identityLte.getMcc();
+                    int frequency = identityLte.getEarfcn();
+                    if ((rssi >= -150 && rssi <= 0)
+                            && (mnc > 9 && mnc < 1000)
+                            && (tac >= 0 && tac <= 65536)
+                            && (cellId > 0)
+                            && (mcc > 9 & mcc < 1000)
+                            && (frequency >= 1 && frequency <= 99999999)) {
+                        SubmitAPIData.LteCells cell = new SubmitAPIData().new LteCells();
+                        cell.setCellid(cellId);
+                        cell.setFrequency(frequency);
+                        cell.setMcc(mcc);
+                        cell.setRssi(rssi);
+                        cell.setTac(tac);
+                        cell.setMnc(mnc);
+                        mList.add(cell);
+                    }
+                }
+            }
+            SubmitAPIData.GpsLoc gpsLoc = new SubmitAPIData().new GpsLoc();
+            gpsLoc.setLat(JiotUtils.sLang);
+            gpsLoc.setLng(JiotUtils.slon);
+            submitAPIData.setLtecells(mList);
+            submitAPIData.setGpsloc(gpsLoc);
+            String jsonInString = new Gson().toJson(submitAPIData);
+            JSONObject jsonMainBody = new JSONObject(jsonInString);
+            Log.i("Submit API body", jsonInString);
+            String url = SUBMIT_API_URL_PRE_PROD;
+            Log.i("Submit API Url ", url);
+            if (!jsonMainBody.toString().equalsIgnoreCase("{}")) {
+                RequestQueue queue = Volley.newRequestQueue(this);
+                JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, response -> {
+                    try {
+                        SubmitApiDataResponse submitApiDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
+                        if (submitApiDataResponse.getDetails() != null && submitApiDataResponse.getDetails().getSuccess() != null && submitApiDataResponse.getDetails().getSuccess().getCode() == 200)
+                            Toast.makeText(getApplicationContext(), "Submit API called succesfully", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Log.d("EXCEPTION", "exce");
+                        e.printStackTrace();
+                    }
+                }, error -> {
+                    String errorMsg = JiotUtils.getVolleyError(error);
+                    Log.i("Submit API failed", errorMsg);
+                    Toast.makeText(getApplicationContext(), "Submit API call failed " + errorMsg, Toast.LENGTH_SHORT).show();
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap headers = new HashMap();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("token", JiotUtils.jiotgetRtlsToken(getApplicationContext()));
+                        SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
+                        String number = sharedPreferences.getString("mob", null);
+                        if (number != null) {
+                            headers.put("msisdn", number);
+                        }
+                        return headers;
+                    }
+                };
+                queue.add(req);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
