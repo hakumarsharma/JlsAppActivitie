@@ -231,7 +231,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             locationArrayList.add(latLng);
         }
         for (int i = 0; i < locationArrayList.size() - 1; i++)
-            mMap.addMarker(new MarkerOptions().position(locationArrayList.get(i)).title("Google historical location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+            mMap.addMarker(new MarkerOptions().position(locationArrayList.get(i)).title("Google historical location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).alpha(0.7f));
     }
 
     private static void setJioMarkers() {
@@ -242,7 +242,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             locationArrayList.add(latLng);
         }
         for (int i = 0; i < locationArrayList.size() - 1; i++)
-            mMap.addMarker(new MarkerOptions().position(locationArrayList.get(i)).title("Jio historical location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+            mMap.addMarker(new MarkerOptions().position(locationArrayList.get(i)).title("Jio historical location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).alpha(0.7f));
     }
 
     @Override
