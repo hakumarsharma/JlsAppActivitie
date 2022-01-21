@@ -54,7 +54,6 @@ public class JiotFetchCustomLatLng {
     long CELLID = 0;
     private int MCC;
     private int MNC;
-    private int LAC;
     private HashMap<String, LatLng> m_servIdLocation;
     private HashMap<String, Double> m_servIdAccuracy;
     private JiotCustomCellData localCellData;

@@ -101,7 +101,7 @@ public class JiotUserName extends AppCompatActivity {
             jsonIDType.put("value", id2 + didVal);
             jsonIDType.put("type", "100");
             jsonUserIdObj.put("id", jsonIDType);
-            jsonServiceId.put("id", "100");
+            jsonServiceId.put("id", "101");
             jsonServiceId.put("name", "rtls");
             jsonUserIdObj.put("service", jsonServiceId);
             Log.d("USERIDJSON", jsonUserIdObj.toString());
