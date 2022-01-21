@@ -75,8 +75,8 @@ android {
             buildConfigField "String", "PROD_URL", '"https://rtls.jio.com:8443/"'
             buildConfigField "String", "PRE_PROD_URL", '"https://rtls.replica.jio.com:8443/"'
 
-            buildConfigField "String", "SUBMIT_API_APPENDED", '"apirouter/v7/submit-api"'
-            buildConfigField "String", "SUBMIT_CELL_LOCATION", '"/apirouter/v7/submit-cell-location"'
+            buildConfigField "String", "SUBMIT_API_APPENDED", '"apirouter/v7/ltecells/addsample"'
+            buildConfigField "String", "SUBMIT_CELL_LOCATION", '"apirouter/v7/ltecells/addcell"'
         }
     }
 }

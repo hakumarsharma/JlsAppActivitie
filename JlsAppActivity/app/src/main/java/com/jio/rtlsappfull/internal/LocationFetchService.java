@@ -343,6 +343,9 @@ public class LocationFetchService extends Service {
                 }
             }
             SubmitAPIData.GpsLoc gpsLoc = new SubmitAPIData().new GpsLoc();
+            if(JiotUtils.sLang == 0.0 && JiotUtils.slon == 0.0) {
+                return;
+            }
             gpsLoc.setLat(JiotUtils.sLang);
             gpsLoc.setLng(JiotUtils.slon);
             submitAPIData.setLtecells(mList);
@@ -356,9 +359,14 @@ public class LocationFetchService extends Service {
                 RequestQueue queue = Volley.newRequestQueue(this);
                 JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, response -> {
                     try {
-                        SubmitApiDataResponse submitApiDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
-                        if (submitApiDataResponse.getDetails() != null && submitApiDataResponse.getDetails().getSuccess() != null && submitApiDataResponse.getDetails().getSuccess().getCode() == 200)
-                            Toast.makeText(getApplicationContext(), "Submit API called succesfully", Toast.LENGTH_SHORT).show();
+                        SubmitApiDataResponse submitCellDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
+                        List<SubmitApiDataResponse.LteCellsInfo> ltecells = submitCellDataResponse.getLtecells();
+                        if (ltecells.get(0) != null && ltecells.get(0).getMessage() != null
+                                && ltecells.get(0).getMessage().getDetails().getSuccess().getCode() == 200
+                                && (ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("A new cell tower location submitted")
+                                || ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("Cell tower location updated"))) {
+                            Toast.makeText(this, "Cell Info submitted", Toast.LENGTH_SHORT).show();
+                        }
                     } catch (Exception e) {
                         Log.d("EXCEPTION", "exce");
                         e.printStackTrace();

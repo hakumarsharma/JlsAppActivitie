@@ -5,7 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class SubmitApiDataResponse implements Serializable {
+public class SubmitCellDataResponse implements Serializable {
+
 
     @SerializedName("ltecells")
     private List<SubmitApiDataResponse.LteCellsInfo> ltecells;
@@ -92,4 +93,5 @@ public class SubmitApiDataResponse implements Serializable {
         }
 
     }
+
 }

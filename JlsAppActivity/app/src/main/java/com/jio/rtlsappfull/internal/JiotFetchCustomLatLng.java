@@ -369,9 +369,13 @@ public class JiotFetchCustomLatLng {
                 int cellId = Integer.parseInt(arr[0]);
                 JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, SUBMIT_CELL_LOCATION_PREPROD, jsonObject, response -> {
                     try {
-                        SubmitApiDataResponse submitApiDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
-                        if (submitApiDataResponse.getDetails() != null && submitApiDataResponse.getDetails().getSuccess() != null && submitApiDataResponse.getDetails().getSuccess().getCode() == 200) {
-                            Toast.makeText(m_context, "Submit cell location API called succesfully", Toast.LENGTH_SHORT).show();
+                        SubmitApiDataResponse submitCellDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
+                        List<SubmitApiDataResponse.LteCellsInfo> ltecells = submitCellDataResponse.getLtecells();
+                        if(ltecells.get(0) != null && ltecells.get(0).getMessage() != null
+                                && ltecells.get(0).getMessage().getDetails().getSuccess().getCode() == 200
+                                && (ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("A new cell tower location submitted")
+                                || ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("Cell tower location updated"))) {
+                            Toast.makeText(m_context, "Cell info " + cellId + "submitted/updated", Toast.LENGTH_SHORT).show();
                             mDbManager.deleteDataFromCellInfo(cellId);
                         }
                     } catch (Exception e) {
