@@ -170,6 +170,7 @@ public class LocationFetchService extends Service {
             }, error -> {
                 String errorMsg = JiotUtils.getVolleyError(error);
                 Log.e("RTLSTOKEN", "FAILURE " + errorMsg);
+                JiotUtils.isTokenExpired = true;
                 Toast.makeText(getApplicationContext(), "RTLS TOKEN FETCH Failed!!!! ", Toast.LENGTH_SHORT).show();
             }) {
                 @Override

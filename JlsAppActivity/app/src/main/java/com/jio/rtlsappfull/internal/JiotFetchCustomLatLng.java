@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.jio.rtlsappfull.database.db.DBManager;
 import com.jio.rtlsappfull.log.JiotSdkFileLogger;
 import com.jio.rtlsappfull.model.CellLocationData;
+import com.jio.rtlsappfull.model.GetLocationAPIResponse;
 import com.jio.rtlsappfull.model.JiotCustomCellData;
 import com.jio.rtlsappfull.model.MarkerDetail;
 import com.jio.rtlsappfull.model.SubmitApiDataResponse;
@@ -55,7 +56,6 @@ public class JiotFetchCustomLatLng {
     private int MCC;
     private int MNC;
     private HashMap<String, LatLng> m_servIdLocation;
-    private HashMap<String, Double> m_servIdAccuracy;
     private JiotCustomCellData localCellData;
     private DBManager mDbManager;
     private int markerNumber;
@@ -65,7 +65,6 @@ public class JiotFetchCustomLatLng {
         m_url = url;
         m_jiotSdkFileLoggerInstance = JiotSdkFileLogger.JiotGetFileLoggerInstance(m_context);
         m_servIdLocation = new HashMap();
-        m_servIdAccuracy = new HashMap();
         mDbManager = new DBManager(context);
         SharedPreferences sharedPreferences = context.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
         markerNumber = sharedPreferences.getInt("marker_number", 1);
@@ -224,11 +223,9 @@ public class JiotFetchCustomLatLng {
 
     private void sendEmptyLocationsToMaps() {
         m_servIdLocation.clear();
-        m_servIdAccuracy.clear();
         Intent intent = new Intent();
         intent.setAction("com.rtls.location_all");
         intent.putExtra("ALLPINS", m_servIdLocation);
-        intent.putExtra("ALLACC", m_servIdAccuracy);
         m_context.sendBroadcast(intent);
     }
 
@@ -269,14 +266,12 @@ public class JiotFetchCustomLatLng {
                     String errorMsg = JiotUtils.getVolleyError(error);
                     m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error response --> " + error.toString());
                     m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error Message --> " + errorMsg);
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 401
-                            && !JiotUtils.isTokenExpired) {
-                        JiotUtils.isTokenExpired = true;
-                        sendRefreshToken();
-                    }
                     if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
                         mDbManager.insertCellInfoInDB(jsonMainBody);
-                        makeSubmitCellLocationApiCall();
+                    }
+                    if (error.networkResponse != null && error.networkResponse.statusCode == 401 && JiotUtils.isTokenExpired) {
+                        JiotUtils.isTokenExpired = false;
+                        sendRefreshToken();
                     }
                     Log.e("MSGFROMSERVER", "FAILURE " + errorMsg);
                     sendEmptyLocationsToMaps();

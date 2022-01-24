@@ -11,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import com.jio.rtlsappfull.database.db.DBManager;
+import com.jio.rtlsappfull.model.GetLocationAPIResponse;
 import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
@@ -599,14 +601,13 @@ public class PlaceholderFragment extends Fragment {
             String errorMsg = JiotUtils.getVolleyError(error);
             m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error response --> " + error.toString());
             m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error Message --> " + errorMsg);
-            if (error.networkResponse != null && error.networkResponse.statusCode == 401 && !JiotUtils.isTokenExpired) {
-                JiotUtils.isTokenExpired = true;
+            if (error.networkResponse != null && error.networkResponse.statusCode == 401 && JiotUtils.isTokenExpired) {
                 sendRefreshToken();
             }
             if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
                 mDbManager.insertCellInfoInDB(jsonMainBody);
-                makeSubmitCellLocationApiCall();
             }
+            sendEmptyLocationsToMaps();
         }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -622,7 +623,6 @@ public class PlaceholderFragment extends Fragment {
 
     public JSONObject createV2JsonObject() {
         JSONObject jsonCellsBody = new JSONObject();
-        boolean salt = false;
         try {
             JSONArray jsonGsmArray = new JSONArray();
             JSONArray jsonLteArray = new JSONArray();
@@ -650,7 +650,7 @@ public class PlaceholderFragment extends Fragment {
                     else
                         continue;
                     //TAC
-                    if (cellData.getM_radioType().equalsIgnoreCase("lte") || (!salt)) {
+                    if (cellData.getM_radioType().equalsIgnoreCase("lte")) {
                         int tac = cellData.getM_locationAreaCode();
                         TAC = tac;
                         if (tac >= 0 && tac <= 65536) {
@@ -665,7 +665,6 @@ public class PlaceholderFragment extends Fragment {
                         jsonPlainCellTowerData.put("cellId", cellId);
                     else
                         continue;
-                    if (!salt) {
                         int rssi = cellData.getM_signalStrength();
                         if (rssi >= -150 && rssi <= 0)
                             jsonPlainCellTowerData.put("rssi", cellData.getM_signalStrength());
@@ -679,7 +678,6 @@ public class PlaceholderFragment extends Fragment {
                             else
                                 continue;
                         }
-                    }
                     if (cellData.getM_radioType().equalsIgnoreCase("gsm")) {
                         jsonGsmArray.put(jsonPlainCellTowerData);
                     } else if (cellData.getM_radioType().equalsIgnoreCase("wcdma")) {
@@ -729,6 +727,14 @@ public class PlaceholderFragment extends Fragment {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+    }
+
+    private void sendEmptyLocationsToMaps() {
+        m_servIdLocation.clear();
+        Intent intent = new Intent();
+        intent.setAction("com.rtls.location_all");
+        intent.putExtra("ALLPINS", m_servIdLocation);
+        getActivity().sendBroadcast(intent);
     }
 
     private void sendRefreshToken() {
