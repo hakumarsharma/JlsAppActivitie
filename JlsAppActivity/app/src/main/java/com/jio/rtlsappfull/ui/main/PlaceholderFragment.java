@@ -601,7 +601,8 @@ public class PlaceholderFragment extends Fragment {
             String errorMsg = JiotUtils.getVolleyError(error);
             m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error response --> " + error.toString());
             m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error Message --> " + errorMsg);
-            if (error.networkResponse != null && error.networkResponse.statusCode == 401 && JiotUtils.isTokenExpired) {
+            if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
+                JiotUtils.isTokenExpired = true;
                 sendRefreshToken();
             }
             if (error.networkResponse != null && error.networkResponse.statusCode == 404) {

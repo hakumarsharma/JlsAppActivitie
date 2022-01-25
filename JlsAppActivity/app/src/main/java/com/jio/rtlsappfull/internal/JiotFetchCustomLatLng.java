@@ -269,8 +269,8 @@ public class JiotFetchCustomLatLng {
                     if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
                         mDbManager.insertCellInfoInDB(jsonMainBody);
                     }
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 401 && JiotUtils.isTokenExpired) {
-                        JiotUtils.isTokenExpired = false;
+                    if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
+                        JiotUtils.isTokenExpired = true;
                         sendRefreshToken();
                     }
                     Log.e("MSGFROMSERVER", "FAILURE " + errorMsg);
