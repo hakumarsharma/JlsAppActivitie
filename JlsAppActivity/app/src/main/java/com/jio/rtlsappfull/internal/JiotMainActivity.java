@@ -193,6 +193,8 @@ public class JiotMainActivity extends AppCompatActivity {
                 if (requestCode == BACKGROUND_LOCATION_ACCESS_REQUEST_CODE) {
                     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         Log.d("JiotMainActivity", "Backgroung location permission granted");
+                        stopService();
+                        bindService(this);
                     } else {
                         Log.d("JiotMainActivity", "Backgroung location permission not granted");
                     }
@@ -250,8 +252,6 @@ public class JiotMainActivity extends AppCompatActivity {
                 startFetchAlarmMain();
                 JiotUtils.isRefreshed = true;
             });
-            stopService();
-            bindService(this);
         } else {
             showGPS();
         }

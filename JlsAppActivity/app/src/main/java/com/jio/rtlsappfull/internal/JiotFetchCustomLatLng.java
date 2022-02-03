@@ -1,5 +1,6 @@
 package com.jio.rtlsappfull.internal;
 
+import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_PRE_PROD;
 import static com.jio.rtlsappfull.config.Config.SUBMIT_CELL_LOCATION_PREPROD;
 
 import android.Manifest;
@@ -25,12 +26,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.jio.rtlsappfull.database.db.DBManager;
 import com.jio.rtlsappfull.log.JiotSdkFileLogger;
 import com.jio.rtlsappfull.model.CellLocationData;
 import com.jio.rtlsappfull.model.GetLocationAPIResponse;
 import com.jio.rtlsappfull.model.JiotCustomCellData;
 import com.jio.rtlsappfull.model.MarkerDetail;
+import com.jio.rtlsappfull.model.SubmitAPIData;
 import com.jio.rtlsappfull.model.SubmitApiDataResponse;
 import com.jio.rtlsappfull.utils.JiotUtils;
 
@@ -257,6 +260,7 @@ public class JiotFetchCustomLatLng {
                             Log.d("Error ", message);
                             return;
                         }
+                        makeApiCall();
                         sendAllLocationsToMaps(response);
                     } catch (Exception e) {
                         Log.d("EXCEPTION", "exce");
@@ -268,6 +272,7 @@ public class JiotFetchCustomLatLng {
                     m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error Message --> " + errorMsg);
                     if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
                         mDbManager.insertCellInfoInDB(jsonMainBody);
+                        makeSubmitCellLocationApiCall();
                     }
                     if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
                         JiotUtils.isTokenExpired = true;
@@ -366,7 +371,7 @@ public class JiotFetchCustomLatLng {
                     try {
                         SubmitApiDataResponse submitCellDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
                         List<SubmitApiDataResponse.LteCellsInfo> ltecells = submitCellDataResponse.getLtecells();
-                        if(ltecells.get(0) != null && ltecells.get(0).getMessage() != null
+                        if (ltecells.get(0) != null && ltecells.get(0).getMessage() != null
                                 && ltecells.get(0).getMessage().getDetails().getSuccess().getCode() == 200
                                 && (ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("A new cell tower location submitted")
                                 || ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("Cell tower location updated"))) {
@@ -415,5 +420,96 @@ public class JiotFetchCustomLatLng {
         }
         return lteCellsObject;
     }
+
+    private void makeApiCall() {
+        try {
+            SubmitAPIData submitAPIData = new SubmitAPIData();
+            TelephonyManager m_telephonyManager = (TelephonyManager) m_context.getSystemService(Context.TELEPHONY_SERVICE);
+            List<SubmitAPIData.LteCells> mList = new ArrayList();
+            if (ActivityCompat.checkSelfPermission(m_context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            List<CellInfo> cellLocation = m_telephonyManager.getAllCellInfo();
+            for (CellInfo info : cellLocation) {
+                if (info instanceof CellInfoLte) {
+                    CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
+                    CellIdentityLte identityLte = ((CellInfoLte) info).getCellIdentity();
+                    int mnc = identityLte.getMnc();
+                    int rssi = lte.getDbm();
+                    int tac = identityLte.getTac();
+                    int cellId = identityLte.getCi();
+                    int mcc = identityLte.getMcc();
+                    int frequency = identityLte.getEarfcn();
+                    if ((rssi >= -150 && rssi <= 0)
+                            && (mnc > 9 && mnc < 1000)
+                            && (tac >= 0 && tac <= 65536)
+                            && (cellId > 0)
+                            && (mcc > 9 & mcc < 1000)
+                            && (frequency >= 1 && frequency <= 99999999)) {
+                        SubmitAPIData.LteCells cell = new SubmitAPIData().new LteCells();
+                        cell.setCellid(cellId);
+                        cell.setFrequency(frequency);
+                        cell.setMcc(mcc);
+                        cell.setRssi(rssi);
+                        cell.setTac(tac);
+                        cell.setMnc(mnc);
+                        mList.add(cell);
+                    }
+                }
+            }
+            SubmitAPIData.GpsLoc gpsLoc = new SubmitAPIData().new GpsLoc();
+            if (JiotUtils.sLang == 0.0 && JiotUtils.slon == 0.0) {
+                return;
+            }
+            gpsLoc.setLat(JiotUtils.sLang);
+            gpsLoc.setLng(JiotUtils.slon);
+            submitAPIData.setLtecells(mList);
+            submitAPIData.setGpsloc(gpsLoc);
+            String jsonInString = new Gson().toJson(submitAPIData);
+            JSONObject jsonMainBody = new JSONObject(jsonInString);
+            Log.i("Submit API body", jsonInString);
+            String url = SUBMIT_API_URL_PRE_PROD;
+            Log.i("Submit API Url ", url);
+            if (!jsonMainBody.toString().equalsIgnoreCase("{}")) {
+                RequestQueue queue = Volley.newRequestQueue(m_context);
+                JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, response -> {
+                    try {
+                        SubmitApiDataResponse submitCellDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
+                        List<SubmitApiDataResponse.LteCellsInfo> ltecells = submitCellDataResponse.getLtecells();
+                        if (ltecells.get(0) != null && ltecells.get(0).getMessage() != null
+                                && ltecells.get(0).getMessage().getDetails().getSuccess().getCode() == 200
+                                && (ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("A new cell tower location submitted")
+                                || ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("Cell tower location updated"))) {
+                            Toast.makeText(m_context, "Cell Info submitted", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Log.d("EXCEPTION", "exce");
+                        e.printStackTrace();
+                    }
+                }, error -> {
+                    String errorMsg = JiotUtils.getVolleyError(error);
+                    Log.i("Submit API failed", errorMsg);
+//                    Toast.makeText(getApplicationContext(), "Submit API call failed " + errorMsg, Toast.LENGTH_SHORT).show();
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap headers = new HashMap();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("token", JiotUtils.jiotgetRtlsToken(m_context));
+                        SharedPreferences sharedPreferences = m_context.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
+                        String number = sharedPreferences.getString("mob", null);
+                        if (number != null) {
+                            headers.put("msisdn", number);
+                        }
+                        return headers;
+                    }
+                };
+                queue.add(req);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

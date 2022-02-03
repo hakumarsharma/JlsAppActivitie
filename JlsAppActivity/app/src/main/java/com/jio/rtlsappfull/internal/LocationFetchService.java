@@ -10,18 +10,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.telephony.CellIdentityLte;
-import android.telephony.CellInfo;
-import android.telephony.CellInfoLte;
-import android.telephony.CellSignalStrengthLte;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,19 +29,14 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.gson.Gson;
 import com.jio.rtlsappfull.R;
 import com.jio.rtlsappfull.config.Config;
 import com.jio.rtlsappfull.log.JiotSdkFileLogger;
-import com.jio.rtlsappfull.model.SubmitAPIData;
-import com.jio.rtlsappfull.model.SubmitApiDataResponse;
 import com.jio.rtlsappfull.utils.JiotUtils;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -77,7 +66,7 @@ public class LocationFetchService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equalsIgnoreCase("com.rtls.token_error")) {
-                handler.post(() -> fetchRtlsKey(JiotUtils.IMEI_NUMBER));
+                handler.post(() -> fetchRtlsKey(JiotUtils.getMobileNumber(context)));
             }
         }
     };
@@ -101,34 +90,17 @@ public class LocationFetchService extends Service {
             JSONObject jsonIDType = new JSONObject();
             id1 = Config.PREPROD_ID1;
             id2 = Config.PREPROD_ID2;
-            StringBuffer buffer = new StringBuffer();
 
-            for (int index = 0; index < name.length(); index++) {
-                int id1char = id1.charAt(index) - '0';
-                int uniqueidchar = 0;
-                if (name.charAt(index) >= '0' && name.charAt(index) <= '9') {
-                    uniqueidchar = name.charAt(index) - '0';
-                } else {
-                    if (name.charAt(index) == 'a' || name.charAt(index) == 'A') {
-                        uniqueidchar = 0xA;
-                    } else if (name.charAt(index) == 'b' || name.charAt(index) == 'B') {
-                        uniqueidchar = 0xb;
-                    } else if (name.charAt(index) == 'c' || name.charAt(index) == 'C') {
-                        uniqueidchar = 0xc;
-                    } else if (name.charAt(index) == 'd' || name.charAt(index) == 'D') {
-                        uniqueidchar = 0xd;
-                    } else if (name.charAt(index) == 'e' || name.charAt(index) == 'E') {
-                        uniqueidchar = 0xe;
-                    } else if (name.charAt(index) == 'f' || name.charAt(index) == 'F') {
-                        uniqueidchar = 0xf;
-                    }
-                }
-                buffer.append(Integer.toHexString(id1char ^ uniqueidchar));
+            String number = "00000" + name;
+            char[] chars = new char[number.length()];
+            for (int i = 0; i < chars.length; i++) {
+                chars[i] = toHex(
+                        fromHex(number.charAt(i)) ^
+                                fromHex(id1.charAt(i)));
             }
+            String encode_msisdn = String.valueOf(chars);
 
-            String didVal = buffer.toString();
-
-            jsonIDType.put("value", id2 + didVal);
+            jsonIDType.put("value", id2 + encode_msisdn);
             jsonIDType.put("type", "100");
             jsonUserIdObj.put("id", jsonIDType);
 
@@ -144,6 +116,26 @@ public class LocationFetchService extends Service {
         return null;
     }
 
+    public static int fromHex(char c) {
+        if (c >= '0' && c <= '9') {
+            return c - '0';
+        }
+        if (c >= 'A' && c <= 'F') {
+            return c - 'A' + 10;
+        }
+        if (c >= 'a' && c <= 'f') {
+            return c - 'a' + 10;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public static char toHex(int nybble) {
+        if (nybble < 0 || nybble > 15) {
+            throw new IllegalArgumentException();
+        }
+        return "0123456789abcdef".charAt(nybble);
+    }
+
     public void fetchRtlsKey(String publickey) {
         if (JiotUtils.jiotisLocationEnabled(this) == true && JiotUtils.jiotisNetworkEnabled(this)) {
             JSONObject jsonMainBody = createV2UserIdObject(publickey);
@@ -152,7 +144,7 @@ public class LocationFetchService extends Service {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        Toast.makeText(getApplicationContext(), "RTLS TOKEN FETCHED Successfully!!!! ", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "RTLS TOKEN FETCHED Successfully!!!! ", Toast.LENGTH_SHORT).show();
                         if (response.has("data")) {
                             JSONObject dataObject = response.getJSONObject("data");
                             if (dataObject.has("apikey")) {
@@ -160,6 +152,7 @@ public class LocationFetchService extends Service {
                                 JiotUtils.jiotwriteRtlsToken(getApplicationContext(), m_api_key);
                                 Log.d("RTLSTOKEN", m_api_key);
                                 JiotUtils.isTokenExpired = false;
+                                new JiotFetchCustomLatLng(getApplicationContext(), LOCATION_PREPROD_URL);
                             }
                         }
                     } catch (Exception e) {
@@ -189,6 +182,15 @@ public class LocationFetchService extends Service {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            startMyOwnForeground();
+        else
+            showNotification();
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
@@ -207,10 +209,6 @@ public class LocationFetchService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("JLS", "Location fetch service started");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            startMyOwnForeground();
-        else
-            showNotification();
         IntentFilter filter = new IntentFilter("com.rtls.token_error");
         registerReceiver(mTokenRefreshReceiver, filter);
         if (scheduler == null) {
@@ -287,7 +285,6 @@ public class LocationFetchService extends Service {
         scheduler.scheduleAtFixedRate
                 (() -> {
                     fetchServerLocation();
-                    makeApiCall();
                 }, 0, 5, TimeUnit.MINUTES);
     }
 
@@ -306,95 +303,4 @@ public class LocationFetchService extends Service {
         }
         LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
-
-    private void makeApiCall() {
-        try {
-            SubmitAPIData submitAPIData = new SubmitAPIData();
-            TelephonyManager m_telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-            List<SubmitAPIData.LteCells> mList = new ArrayList();
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            List<CellInfo> cellLocation = m_telephonyManager.getAllCellInfo();
-            for (CellInfo info : cellLocation) {
-                if (info instanceof CellInfoLte) {
-                    CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
-                    CellIdentityLte identityLte = ((CellInfoLte) info).getCellIdentity();
-                    int mnc = identityLte.getMnc();
-                    int rssi = lte.getDbm();
-                    int tac = identityLte.getTac();
-                    int cellId = identityLte.getCi();
-                    int mcc = identityLte.getMcc();
-                    int frequency = identityLte.getEarfcn();
-                    if ((rssi >= -150 && rssi <= 0)
-                            && (mnc > 9 && mnc < 1000)
-                            && (tac >= 0 && tac <= 65536)
-                            && (cellId > 0)
-                            && (mcc > 9 & mcc < 1000)
-                            && (frequency >= 1 && frequency <= 99999999)) {
-                        SubmitAPIData.LteCells cell = new SubmitAPIData().new LteCells();
-                        cell.setCellid(cellId);
-                        cell.setFrequency(frequency);
-                        cell.setMcc(mcc);
-                        cell.setRssi(rssi);
-                        cell.setTac(tac);
-                        cell.setMnc(mnc);
-                        mList.add(cell);
-                    }
-                }
-            }
-            SubmitAPIData.GpsLoc gpsLoc = new SubmitAPIData().new GpsLoc();
-            if(JiotUtils.sLang == 0.0 && JiotUtils.slon == 0.0) {
-                return;
-            }
-            gpsLoc.setLat(JiotUtils.sLang);
-            gpsLoc.setLng(JiotUtils.slon);
-            submitAPIData.setLtecells(mList);
-            submitAPIData.setGpsloc(gpsLoc);
-            String jsonInString = new Gson().toJson(submitAPIData);
-            JSONObject jsonMainBody = new JSONObject(jsonInString);
-            Log.i("Submit API body", jsonInString);
-            String url = SUBMIT_API_URL_PRE_PROD;
-            Log.i("Submit API Url ", url);
-            if (!jsonMainBody.toString().equalsIgnoreCase("{}")) {
-                RequestQueue queue = Volley.newRequestQueue(this);
-                JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, response -> {
-                    try {
-                        SubmitApiDataResponse submitCellDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
-                        List<SubmitApiDataResponse.LteCellsInfo> ltecells = submitCellDataResponse.getLtecells();
-                        if (ltecells.get(0) != null && ltecells.get(0).getMessage() != null
-                                && ltecells.get(0).getMessage().getDetails().getSuccess().getCode() == 200
-                                && (ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("A new cell tower location submitted")
-                                || ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("Cell tower location updated"))) {
-                            Toast.makeText(this, "Cell Info submitted", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        Log.d("EXCEPTION", "exce");
-                        e.printStackTrace();
-                    }
-                }, error -> {
-                    String errorMsg = JiotUtils.getVolleyError(error);
-                    Log.i("Submit API failed", errorMsg);
-                    Toast.makeText(getApplicationContext(), "Submit API call failed " + errorMsg, Toast.LENGTH_SHORT).show();
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap headers = new HashMap();
-                        headers.put("Content-Type", "application/json");
-                        headers.put("token", JiotUtils.jiotgetRtlsToken(getApplicationContext()));
-                        SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-                        String number = sharedPreferences.getString("mob", null);
-                        if (number != null) {
-                            headers.put("msisdn", number);
-                        }
-                        return headers;
-                    }
-                };
-                queue.add(req);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }

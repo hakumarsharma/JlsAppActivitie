@@ -49,7 +49,7 @@ public class JiotUserName extends AppCompatActivity {
         m_userid_edit_number = (EditText) findViewById(R.id.userid_edit_email_number);
         m_user_id_submit = (Button) findViewById(R.id.user_id_submit);
         m_user_id_submit.setOnClickListener(v -> {
-            if(JiotUtils.jiotisNetworkEnabled(this)) {
+            if (JiotUtils.jiotisNetworkEnabled(this)) {
                 Log.d("SUBMIT", "submit button clicked");
                 String userNumber = m_userid_edit_number.getText().toString();
                 Log.d("User phone", userNumber);
@@ -58,9 +58,9 @@ public class JiotUserName extends AppCompatActivity {
                 } else {
                     JiotUtils.jiotwriteRtlsDid(JiotUserName.this, userNumber);
                     JiotUtils.saveMobileNumber(JiotUserName.this, userNumber);
-                    fetchRtlsKey(JiotUtils.IMEI_NUMBER);
+                    fetchRtlsKey(userNumber);
                 }
-            }  else {
+            } else {
                 Toast.makeText(this, "Please enable your internet connection, before proceeding", Toast.LENGTH_SHORT).show();
             }
         });
@@ -73,32 +73,15 @@ public class JiotUserName extends AppCompatActivity {
             JSONObject jsonIDType = new JSONObject();
             String id1 = Config.PREPROD_ID1;
             String id2 = Config.PREPROD_ID2;
-            StringBuffer buffer = new StringBuffer();
-
-            for (int index = 0; index < name.length(); index++) {
-                int id1char = id1.charAt(index) - '0';
-                int uniqueidchar = 0;
-                if (name.charAt(index) >= '0' && name.charAt(index) <= '9') {
-                    uniqueidchar = name.charAt(index) - '0';
-                } else {
-                    if (name.charAt(index) == 'a' || name.charAt(index) == 'A') {
-                        uniqueidchar = 0xA;
-                    } else if (name.charAt(index) == 'b' || name.charAt(index) == 'B') {
-                        uniqueidchar = 0xb;
-                    } else if (name.charAt(index) == 'c' || name.charAt(index) == 'C') {
-                        uniqueidchar = 0xc;
-                    } else if (name.charAt(index) == 'd' || name.charAt(index) == 'D') {
-                        uniqueidchar = 0xd;
-                    } else if (name.charAt(index) == 'e' || name.charAt(index) == 'E') {
-                        uniqueidchar = 0xe;
-                    } else if (name.charAt(index) == 'f' || name.charAt(index) == 'F') {
-                        uniqueidchar = 0xf;
-                    }
-                }
-                buffer.append(Integer.toHexString(id1char ^ uniqueidchar));
+            String number = "00000" + name;
+            char[] chars = new char[number.length()];
+            for (int i = 0; i < chars.length; i++) {
+                chars[i] = toHex(
+                        fromHex(number.charAt(i)) ^
+                                fromHex(id1.charAt(i)));
             }
-            String didVal = buffer.toString();
-            jsonIDType.put("value", id2 + didVal);
+            String encode_msisdn = String.valueOf(chars);
+            jsonIDType.put("value", id2 + encode_msisdn);
             jsonIDType.put("type", "100");
             jsonUserIdObj.put("id", jsonIDType);
             jsonServiceId.put("id", "101");
@@ -112,46 +95,67 @@ public class JiotUserName extends AppCompatActivity {
         return null;
     }
 
-    public void fetchRtlsKey(String publickey) {
-            JSONObject jsonMainBody = createV2UserIdObject(publickey);
-            RequestQueue queue = Volley.newRequestQueue(this);
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, SERVER_PREPROD_API_KEY_URL, jsonMainBody, response -> {
-                try {
-                    Toast.makeText(getApplicationContext(), "RTLS TOKEN FETCHED Successfully!!!! ", Toast.LENGTH_SHORT).show();
-                    if (response.has("data")) {
-                        JSONObject dataObject = response.getJSONObject("data");
-                        if (dataObject.has("apikey")) {
-                            String m_api_key = dataObject.get("apikey").toString();
-                            JiotUtils.jiotwriteRtlsToken(getApplicationContext(), m_api_key);
-                            Log.d("RTLSTOKEN", m_api_key);
-                            JiotUtils.isTokenExpired = false;
-                            SharedPreferences.Editor editor = getSharedPreferences("shared_prefs", MODE_PRIVATE).edit();
-                            editor.putString("fetch_rtls_key", "success");
-                            editor.commit();
-                            Intent i = new Intent(JiotUserName.this, JiotMainActivity.class);
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startActivity(i);
-                            finish();
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.d("RTLSTOKEN", "EXCEPTION");
-                    e.printStackTrace();
-                }
-            }, error -> {
-                String errorMsg = JiotUtils.getVolleyError(error);
-                Log.e("RTLSTOKEN", "FAILURE " + errorMsg);
-                JiotUtils.isTokenExpired = true;
-                Toast.makeText(getApplicationContext(), "RTLS TOKEN FETCH Failed!!!! ", Toast.LENGTH_SHORT).show();
-            }) {
-                @Override
-                public Map<String, String> getHeaders() {
-                    HashMap headers = new HashMap();
-                    headers.put("Content-Type", "application/json");
-                    return headers;
-                }
-            };
-            queue.add(req);
+    public static int fromHex(char c) {
+        if (c >= '0' && c <= '9') {
+            return c - '0';
         }
+        if (c >= 'A' && c <= 'F') {
+            return c - 'A' + 10;
+        }
+        if (c >= 'a' && c <= 'f') {
+            return c - 'a' + 10;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public static char toHex(int nybble) {
+        if (nybble < 0 || nybble > 15) {
+            throw new IllegalArgumentException();
+        }
+        return "0123456789abcdef".charAt(nybble);
+    }
+
+
+    public void fetchRtlsKey(String publickey) {
+        JSONObject jsonMainBody = createV2UserIdObject(publickey);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, SERVER_PREPROD_API_KEY_URL, jsonMainBody, response -> {
+            try {
+                Toast.makeText(getApplicationContext(), "RTLS TOKEN FETCHED Successfully!!!! ", Toast.LENGTH_SHORT).show();
+                if (response.has("data")) {
+                    JSONObject dataObject = response.getJSONObject("data");
+                    if (dataObject.has("apikey")) {
+                        String m_api_key = dataObject.get("apikey").toString();
+                        JiotUtils.jiotwriteRtlsToken(getApplicationContext(), m_api_key);
+                        Log.d("RTLSTOKEN", m_api_key);
+                        JiotUtils.isTokenExpired = false;
+                        SharedPreferences.Editor editor = getSharedPreferences("shared_prefs", MODE_PRIVATE).edit();
+                        editor.putString("fetch_rtls_key", "success");
+                        editor.commit();
+                        Intent i = new Intent(JiotUserName.this, JiotMainActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(i);
+                        finish();
+                    }
+                }
+            } catch (Exception e) {
+                Log.d("RTLSTOKEN", "EXCEPTION");
+                e.printStackTrace();
+            }
+        }, error -> {
+            String errorMsg = JiotUtils.getVolleyError(error);
+            Log.e("RTLSTOKEN", "FAILURE " + errorMsg);
+            JiotUtils.isTokenExpired = true;
+            Toast.makeText(getApplicationContext(), "RTLS TOKEN FETCH Failed!!!! ", Toast.LENGTH_SHORT).show();
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap headers = new HashMap();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+        queue.add(req);
+    }
 }

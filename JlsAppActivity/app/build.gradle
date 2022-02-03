@@ -9,8 +9,8 @@ android {
         applicationId "com.jio.rtlsappfull"
         minSdk 21
         targetSdk 30
-        versionCode 11
-        versionName "2.12.2"
+        versionCode 18
+        versionName "2.18"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -67,8 +67,8 @@ android {
             buildConfigField "String", "PROD_ID1", '"583541014975470"'
             buildConfigField "String", "PROD_ID2", '"10074579410145385"'
 
-            buildConfigField "String", "PREPROD_ID1", '"02080013d7f2abf"'
-            buildConfigField "String", "PREPROD_ID2", '"0203273f019878e3e"'
+            buildConfigField "String", "PREPROD_ID1", '"01080013d7f68bf"'
+            buildConfigField "String", "PREPROD_ID2", '"0201c54f0478f6e6e"'
 
             buildConfigField "String", "SIT_URL", '"https://rtls.sit.jio.com:8443/"'
             buildConfigField "String", "DEV_URL", '"https://rtls.dev.jio.com:8443/"'
