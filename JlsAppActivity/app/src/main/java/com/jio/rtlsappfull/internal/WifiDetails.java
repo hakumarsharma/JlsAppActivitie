@@ -113,8 +113,8 @@ public class WifiDetails extends AppCompatActivity {
             JSONArray gsmCells = new JSONArray();
             JSONArray wifiAps = new JSONArray();
             JSONObject locationObj = new JSONObject();
-            locationObj.put("lat", JiotUtils.sLang);
-            locationObj.put("lng", JiotUtils.slon);
+            /*locationObj.put("lat", JiotUtils.sLang);
+            locationObj.put("lng", JiotUtils.slon);*/
             JSONObject itemObject = new JSONObject();
             itemObject.put("position", locationObj);
 

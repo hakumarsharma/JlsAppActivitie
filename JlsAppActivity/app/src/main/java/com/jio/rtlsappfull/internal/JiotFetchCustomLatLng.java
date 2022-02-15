@@ -1,3 +1,4 @@
+/*
 package com.jio.rtlsappfull.internal;
 
 import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_PRE_PROD;
@@ -254,7 +255,7 @@ public class JiotFetchCustomLatLng {
                     try {
                         mRtlsFetchTimeEndInMs = Calendar.getInstance().getTimeInMillis();
                         String message = response.optString("msg");
-                        m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Success response --> " + response.toString());
+//                        m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Success response --> " + response.toString());
                         Log.d("Success Respnse --> ", message);
                         if (message != null && !message.isEmpty()) {
                             Log.d("Error ", message);
@@ -268,8 +269,8 @@ public class JiotFetchCustomLatLng {
                     }
                 }, error -> {
                     String errorMsg = JiotUtils.getVolleyError(error);
-                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error response --> " + error.toString());
-                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error Message --> " + errorMsg);
+//                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error response --> " + error.toString());
+//                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error Message --> " + errorMsg);
                     if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
                         mDbManager.insertCellInfoInDB(jsonMainBody);
                         makeSubmitCellLocationApiCall();
@@ -513,3 +514,4 @@ public class JiotFetchCustomLatLng {
 
 
 }
+*/

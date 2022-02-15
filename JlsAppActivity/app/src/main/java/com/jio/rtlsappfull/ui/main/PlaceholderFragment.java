@@ -1,21 +1,19 @@
 package com.jio.rtlsappfull.ui.main;
 
 import android.Manifest;
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
+import com.jio.rtlsappfull.config.Config;
 import com.jio.rtlsappfull.database.db.DBManager;
-import com.jio.rtlsappfull.model.GetLocationAPIResponse;
 import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
@@ -37,7 +35,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +56,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.jio.rtlsappfull.R;
-import com.jio.rtlsappfull.database.db.DBManager;
 import com.jio.rtlsappfull.log.JiotSdkFileLogger;
 import com.jio.rtlsappfull.model.CellLocationData;
 import com.jio.rtlsappfull.model.JiotCustomCellData;
@@ -73,6 +69,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jio.rtlsappfull.config.Config.LOCATION_PREPROD_URL;
+import static com.jio.rtlsappfull.config.Config.SERVER_PREPROD_API_KEY_URL;
 import static com.jio.rtlsappfull.config.Config.SUBMIT_API_URL_PRE_PROD;
 import static com.jio.rtlsappfull.config.Config.SUBMIT_CELL_LOCATION_PREPROD;
 
@@ -126,20 +123,12 @@ public class PlaceholderFragment extends Fragment {
 
     public static JiotSdkFileLogger m_jiotSdkFileLoggerInstance = null;
     public Handler m_handler;
-    public ProgressDialog m_progressDialogWait;
     public Handler m_waitDailogHandler;
     public MaterialAlertDialogBuilder m_alertDialog = null;
     private HashMap<String, LatLng> m_servIdLocation;
     private static FragmentActivity context;
     private DBManager mDbManager;
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (m_progressDialogWait != null) {
-            m_progressDialogWait.dismiss();
-        }
-    }
+    private String TAG = "PlaceholderFragment";
 
     public void refreshView() {
         pageViewModel.getText().observe(context, new Observer<String>() {
@@ -163,12 +152,9 @@ public class PlaceholderFragment extends Fragment {
             m_alertDialog = new MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme)
                     .setTitle(getResources().getString(R.string.jiousername_net_alert))
                     .setMessage(getResources().getString(R.string.jiopermissions_main_block))
-                    .setPositiveButton(getResources().getString(R.string.jiousername_ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (dialog != null) {
-                                dialog.dismiss();
-                            }
+                    .setPositiveButton(getResources().getString(R.string.jiousername_ok), (dialog, which) -> {
+                        if (dialog != null) {
+                            dialog.dismiss();
                         }
                     });
         }
@@ -178,10 +164,21 @@ public class PlaceholderFragment extends Fragment {
         m_alertDialog.show();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (context != null) {
+            context = getActivity();
+            if (JiotUtils.isTokenExpired)
+                sendRefreshToken();
+            getMainData();
+        }
+    }
+
     public void getMainData() {
         getCellInfo();
         if (JiotUtils.jiotisNetworkEnabled(context) == true) {
-            fetchServerLocation();
+            makeAPICall(LOCATION_PREPROD_URL);
         } else {
             createAlertDialog();
             showAlertDialog();
@@ -189,37 +186,12 @@ public class PlaceholderFragment extends Fragment {
         refreshView();
     }
 
-
-    public BroadcastReceiver m_fetchLocationReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d("m_fetchLocationReceiver", " m_fetchLocationReceiver");
-            getMainData();
-        }
-    };
-
-
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d("CELLID", "onDestroy");
-        super.onDestroy();
-        try {
-            context.unregisterReceiver(m_fetchLocationReceiver);
-            if (m_progressDialogWait != null) {
-                m_progressDialogWait.dismiss();
-            }
-            m_fetchLocationReceiver = null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -235,11 +207,8 @@ public class PlaceholderFragment extends Fragment {
         m_CustomCellDataAll = new ArrayList();
         m_handler = new Handler();
         m_waitDailogHandler = new Handler();
-        m_progressDialogWait = new ProgressDialog(context);
         mDbManager = new DBManager(context);
         m_jiotSdkFileLoggerInstance = JiotSdkFileLogger.JiotGetFileLoggerInstance(context);
-        IntentFilter locationFetchFilter = new IntentFilter("com.jio.fetchLocation");
-        context.registerReceiver(m_fetchLocationReceiver, locationFetchFilter);
     }
 
     @Override
@@ -279,26 +248,6 @@ public class PlaceholderFragment extends Fragment {
             m_servIdLocation = new HashMap();
         }
         return root;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (context != null) {
-            context = getActivity();
-            if (JiotUtils.isTokenExpired)
-                sendRefreshToken();
-            getMainData();
-        }
-    }
-
-    public void fetchServerLocation() {
-        makeAPICall(LOCATION_PREPROD_URL);
     }
 
     public void getMccMnc(String networkOperator) {
@@ -570,14 +519,15 @@ public class PlaceholderFragment extends Fragment {
 
     private void makeAPICall(String url) {
         final JSONObject jsonMainBody = createV2JsonObject();
-        Log.d("JSONRTLSV3", jsonMainBody.toString());
+        Log.d(TAG, url);
+        Log.d(TAG, jsonMainBody.toString());
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Success response --> " + response.toString());
-                    Log.d("MSGFROMSERVERV3", "Location Fetch SUCCESS: " + response);
+                    Log.d(TAG, url + " Location Fetch SUCCESS: " + response);
+                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + TAG + url + " API called succesfully");
                     String message = response.optString("msg");
                     if (message != null && !message.isEmpty()) {
                         Log.d("Error ", message);
@@ -591,9 +541,8 @@ public class PlaceholderFragment extends Fragment {
                 }
             }
         }, error -> {
-            String errorMsg = JiotUtils.getVolleyError(error);
-            m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error response --> " + error.toString());
-            m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + " Error Message --> " + errorMsg);
+            Log.d(TAG, url + " Location Fetch failed" + error.getMessage());
+            m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + TAG + url + " API call failed");
             if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
                 JiotUtils.isTokenExpired = true;
                 sendRefreshToken();
@@ -660,19 +609,19 @@ public class PlaceholderFragment extends Fragment {
                         jsonPlainCellTowerData.put("cellId", cellId);
                     else
                         continue;
-                        int rssi = cellData.getM_signalStrength();
-                        if (rssi >= -150 && rssi <= 0)
-                            jsonPlainCellTowerData.put("rssi", cellData.getM_signalStrength());
+                    int rssi = cellData.getM_signalStrength();
+                    if (rssi >= -150 && rssi <= 0)
+                        jsonPlainCellTowerData.put("rssi", cellData.getM_signalStrength());
+                    else
+                        continue;
+                    if (cellData.getM_radioType().equalsIgnoreCase("lte")) {
+                        int frequency = cellData.getFrequency();
+                        FREQUENCY = frequency;
+                        if (frequency >= 1 && frequency <= 99999999)
+                            jsonPlainCellTowerData.put("frequency", frequency);
                         else
                             continue;
-                        if (cellData.getM_radioType().equalsIgnoreCase("lte")) {
-                            int frequency = cellData.getFrequency();
-                            FREQUENCY = frequency;
-                            if (frequency >= 1 && frequency <= 99999999)
-                                jsonPlainCellTowerData.put("frequency", frequency);
-                            else
-                                continue;
-                        }
+                    }
                     if (cellData.getM_radioType().equalsIgnoreCase("gsm")) {
                         jsonGsmArray.put(jsonPlainCellTowerData);
                     } else if (cellData.getM_radioType().equalsIgnoreCase("wcdma")) {
@@ -733,9 +682,94 @@ public class PlaceholderFragment extends Fragment {
     }
 
     private void sendRefreshToken() {
-        Intent intent = new Intent();
-        intent.setAction("com.rtls.token_error");
-        context.sendBroadcast(intent);
+        if (JiotUtils.jiotisLocationEnabled(context) == true && JiotUtils.jiotisNetworkEnabled(context)) {
+            JSONObject jsonMainBody = createV2UserIdObject(JiotUtils.getMobileNumber(context));
+            RequestQueue queue = Volley.newRequestQueue(context);
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, SERVER_PREPROD_API_KEY_URL, jsonMainBody, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + TAG + SERVER_PREPROD_API_KEY_URL + " API called successfully");
+                    try {
+                        if (response.has("data")) {
+                            JSONObject dataObject = response.getJSONObject("data");
+                            if (dataObject.has("apikey")) {
+                                JiotUtils.jiotwriteRtlsToken(context, dataObject.get("apikey").toString());
+                                JiotUtils.isTokenExpired = false;
+                                makeAPICall(LOCATION_PREPROD_URL);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.d("RTLSTOKEN", "EXCEPTION");
+                        e.printStackTrace();
+                    }
+                }
+            }, error -> {
+                String errorMsg = JiotUtils.getVolleyError(error);
+                m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + TAG + SERVER_PREPROD_API_KEY_URL + " API call failed");
+                Log.e("RTLSTOKEN", "FAILURE " + errorMsg);
+                JiotUtils.isTokenExpired = true;
+                Toast.makeText(context, "RTLS TOKEN FETCH Failed!!!! ", Toast.LENGTH_SHORT).show();
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap headers = new HashMap();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+            queue.add(req);
+        } else
+            Toast.makeText(context, "App requires location to be enabled and internet to be enabled", Toast.LENGTH_SHORT).show();
+    }
+
+    public JSONObject createV2UserIdObject(String name) {
+        try {
+            JSONObject jsonUserIdObj = new JSONObject();
+            JSONObject jsonServiceId = new JSONObject();
+            JSONObject jsonIDType = new JSONObject();
+            String number = "00000" + name;
+            char[] chars = new char[number.length()];
+            for (int i = 0; i < chars.length; i++) {
+                chars[i] = toHex(
+                        fromHex(number.charAt(i)) ^
+                                fromHex(Config.PREPROD_ID1.charAt(i)));
+            }
+            String encode_msisdn = String.valueOf(chars);
+
+            jsonIDType.put("value", Config.PREPROD_ID2 + encode_msisdn);
+            jsonIDType.put("type", "100");
+            jsonUserIdObj.put("id", jsonIDType);
+
+            jsonServiceId.put("id", "101");
+            jsonServiceId.put("name", "rtls");
+            jsonUserIdObj.put("service", jsonServiceId);
+
+            Log.d("USERIDJSON", jsonUserIdObj.toString());
+            return jsonUserIdObj;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static int fromHex(char c) {
+        if (c >= '0' && c <= '9') {
+            return c - '0';
+        }
+        if (c >= 'A' && c <= 'F') {
+            return c - 'A' + 10;
+        }
+        if (c >= 'a' && c <= 'f') {
+            return c - 'a' + 10;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public static char toHex(int nybble) {
+        if (nybble < 0 || nybble > 15) {
+            throw new IllegalArgumentException();
+        }
+        return "0123456789abcdef".charAt(nybble);
     }
 
     private void makeSubmitCellLocationApiCall() {
@@ -755,10 +789,11 @@ public class PlaceholderFragment extends Fragment {
                 String[] arr = cellData.split(" ");
                 int cellId = Integer.parseInt(arr[0]);
                 JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, SUBMIT_CELL_LOCATION_PREPROD, jsonObject, response -> {
+                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + TAG + SUBMIT_CELL_LOCATION_PREPROD + " API called successfully");
                     try {
                         SubmitApiDataResponse submitCellDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
                         List<SubmitApiDataResponse.LteCellsInfo> ltecells = submitCellDataResponse.getLtecells();
-                        if(ltecells.get(0) != null && ltecells.get(0).getMessage() != null
+                        if (ltecells.get(0) != null && ltecells.get(0).getMessage() != null
                                 && ltecells.get(0).getMessage().getDetails().getSuccess().getCode() == 200
                                 && (ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("A new cell tower location submitted")
                                 || ltecells.get(0).getMessage().getDetails().getSuccess().getMessage().equalsIgnoreCase("Cell tower location updated"))) {
@@ -771,6 +806,7 @@ public class PlaceholderFragment extends Fragment {
                     }
                 }, error -> {
                     String errorMsg = JiotUtils.getVolleyError(error);
+                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + TAG + SUBMIT_CELL_LOCATION_PREPROD + " API call failed");
                     Toast.makeText(context, "Submit cell location API call failed " + errorMsg, Toast.LENGTH_SHORT).show();
                 }) {
                     @Override
@@ -817,6 +853,8 @@ public class PlaceholderFragment extends Fragment {
                 return;
             }
             List<CellInfo> cellLocation = m_telephonyManager.getAllCellInfo();
+            List<Integer> mncList = new ArrayList<>();
+            addMncList(mncList);
             for (CellInfo info : cellLocation) {
                 if (info instanceof CellInfoLte) {
                     CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
@@ -840,26 +878,26 @@ public class PlaceholderFragment extends Fragment {
                         cell.setRssi(rssi);
                         cell.setTac(tac);
                         cell.setMnc(mnc);
-                        mList.add(cell);
+                        if (mcc == 405 && mncList.contains(mnc)) {
+                            mList.add(cell);
+                        }
                     }
                 }
             }
             SubmitAPIData.GpsLoc gpsLoc = new SubmitAPIData().new GpsLoc();
-            if (JiotUtils.sLang == 0.0 && JiotUtils.slon == 0.0) {
-                return;
-            }
             gpsLoc.setLat(JiotUtils.sLang);
             gpsLoc.setLng(JiotUtils.slon);
             submitAPIData.setLtecells(mList);
             submitAPIData.setGpsloc(gpsLoc);
             String jsonInString = new Gson().toJson(submitAPIData);
             JSONObject jsonMainBody = new JSONObject(jsonInString);
-            Log.i("Submit API body", jsonInString);
+            Log.i(TAG, " Submit API body " + jsonInString);
             String url = SUBMIT_API_URL_PRE_PROD;
-            Log.i("Submit API Url ", url);
+            Log.i(TAG, url);
             if (!jsonMainBody.toString().equalsIgnoreCase("{}")) {
                 RequestQueue queue = Volley.newRequestQueue(context);
                 JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonMainBody, response -> {
+                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + TAG + url + " API called successfully");
                     try {
                         SubmitApiDataResponse submitCellDataResponse = JiotUtils.getInstance().getPojoObject(String.valueOf(response), SubmitApiDataResponse.class);
                         List<SubmitApiDataResponse.LteCellsInfo> ltecells = submitCellDataResponse.getLtecells();
@@ -875,8 +913,8 @@ public class PlaceholderFragment extends Fragment {
                     }
                 }, error -> {
                     String errorMsg = JiotUtils.getVolleyError(error);
+                    m_jiotSdkFileLoggerInstance.JiotWriteLogDataToFile(JiotUtils.getDateTime() + TAG + url + " API call failed");
                     Log.i("Submit API failed", errorMsg);
-//                    Toast.makeText(getApplicationContext(), "Submit API call failed " + errorMsg, Toast.LENGTH_SHORT).show();
                 }) {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
@@ -898,4 +936,10 @@ public class PlaceholderFragment extends Fragment {
         }
     }
 
+    private void addMncList(List<Integer> mncList) {
+        mncList.add(840);
+        for (int i = 854; i <= 874; i++) {
+            mncList.add(i);
+        }
+    }
 }

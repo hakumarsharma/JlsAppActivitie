@@ -19,7 +19,9 @@ import android.os.Bundle;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
@@ -34,7 +36,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
+import android.os.Looper;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -45,72 +54,69 @@ import android.widget.Toast;
 import com.jio.rtlsappfull.R;
 import com.jio.rtlsappfull.ui.main.SectionsPagerAdapter;
 import com.jio.rtlsappfull.utils.JiotUtils;
+import com.jio.rtlsappfull.worker.JioLocateWorker;
+
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 
 @RequiresApi(api = Build.VERSION_CODES.R)
 public class JiotMainActivity extends AppCompatActivity {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 110;
-    private static final int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 1000;
     public static final int REQUEST_CHECK_SETTINGS = 1;
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("onDestroyMain", "onDestroy");
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        scheduleTask();
+        turnOffDozeMode();
         if (!JiotUtils.jiotisLocationEnabled(this)) {
             showGPS();
         } else {
             checkLocationPermission();
-            SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = getSharedPreferences("shared_prefs", MODE_PRIVATE).edit();
-            int counter = sharedPreferences.getInt("counter", 2);
-            if (counter != -1) {
-                counter--;
-                editor.putInt("counter", counter);
-                editor.commit();
-            }
         }
     }
 
-    /**
-     * Following broadcast receiver is to listen the Location button toggle state in Android.
-     */
-    private BroadcastReceiver mGpsSwitchStateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().matches("android.location.PROVIDERS_CHANGED")) {
-                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-                boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-                if (isGpsEnabled || isNetworkEnabled) {
-                    checkLocationPermission();
-                    SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = getSharedPreferences("shared_prefs", MODE_PRIVATE).edit();
-                    int counter = sharedPreferences.getInt("counter", 2);
-                    if (counter != -1) {
-                        counter--;
-                        editor.putInt("counter", counter);
-                        editor.commit();
-                    }
-                }
-            }
-        }
-    };
+    private void scheduleTask() {
+        Constraints constraints = new Constraints.Builder().setRequiresDeviceIdle(false).setRequiresCharging(false)
+                .setRequiredNetworkType(NetworkType.CONNECTED).setRequiresBatteryNotLow(false).build();
+        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(JioLocateWorker.class, 15, TimeUnit.MINUTES).setConstraints(constraints).build();
+        WorkManager.getInstance().enqueueUniquePeriodicWork("JioLocate", ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest);
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (isPermissionAlreadyGrantedInMain())
             setupView();
+        getCurrentLocation();
     }
+
+    private void getCurrentLocation() {
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(4000);
+        locationRequest.setFastestInterval(2000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+    }
+
+    private LocationCallback locationCallback = new LocationCallback() {
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            if (locationResult != null && locationResult.getLastLocation() != null) {
+                JiotUtils.sLang = locationResult.getLastLocation().getLatitude();
+                JiotUtils.slon = locationResult.getLastLocation().getLongitude();
+                Intent intent = new Intent();
+                intent.setAction("com.rtls.google_location");
+                sendBroadcast(intent);
+            }
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -123,27 +129,9 @@ public class JiotMainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterReceiver(mGpsSwitchStateReceiver);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.WiFiProfile:
-                startActivity(new Intent(this, WifiProfileActivity.class));
-                break;
-            default:
-                break;
-        }
-        return true;
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("onDestroyMain", "onDestroy");
     }
 
     private void checkLocationPermission() {
@@ -155,53 +143,19 @@ public class JiotMainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                for (int result : grantResults) {
-                    if (result == PackageManager.PERMISSION_DENIED) {
-                        SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-                        int counter = sharedPreferences.getInt("counter", 2);
-                        if (counter == 0) {
-                            Toast.makeText(this, "You have consumed all the attempts, now you have to manually give permission.", Toast.LENGTH_LONG).show();
-                            finishAffinity();
-                        } else if (counter == 1) {
-                            Toast.makeText(this, "Please accept the location permission, last attempt remaining", Toast.LENGTH_LONG).show();
-                            finishAffinity();
-                        } else if (counter == -1) {
-                            showDialogue();
-                        }
-                        return;
-                    } else if (result == PackageManager.PERMISSION_GRANTED) {
-                        if (Build.VERSION.SDK_INT >= 29) {
-                            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                                Log.d("JiotMainActivity", "Location backgroung permission granted");
-                            } else {
-                                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
-                                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
-                                } else {
-                                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
-                                }
-                            }
-                        }
-                    }
-                }
+    public void turnOffDozeMode(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = getPackageName();
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            if (pm.isIgnoringBatteryOptimizations(packageName))
+                intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+            else {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
             }
-            case BACKGROUND_LOCATION_ACCESS_REQUEST_CODE: {
-                if (requestCode == BACKGROUND_LOCATION_ACCESS_REQUEST_CODE) {
-                    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        Log.d("JiotMainActivity", "Backgroung location permission granted");
-                        stopService();
-                        bindService(this);
-                    } else {
-                        Log.d("JiotMainActivity", "Backgroung location permission not granted");
-                    }
-                }
-            }
+            startActivity(intent);
         }
-
     }
 
     public boolean isPermissionAlreadyGrantedInMain() {
@@ -255,54 +209,6 @@ public class JiotMainActivity extends AppCompatActivity {
         } else {
             showGPS();
         }
-    }
-
-    public static void bindService(Context context) {
-        Log.d("JLS", "service status=" + isMyServiceRunning(LocationFetchService.class, context));
-        if (!isMyServiceRunning(LocationFetchService.class, context)) {
-            Log.d("JLS", "Service  started");
-            Intent startIntent = new Intent(context, LocationFetchService.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                ContextCompat.startForegroundService(context, startIntent);
-            } else {
-                context.startService(startIntent);
-            }
-        }
-    }
-
-    public void stopService() {
-        if (isMyServiceRunning(LocationFetchService.class, this)) {
-            Intent myService = new Intent(this, LocationFetchService.class);
-            stopService(myService);
-        }
-    }
-
-    public static boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void showDialogue() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Permission alert");
-        builder.setMessage("Please enable the location permission all the time from setting");
-        builder.setPositiveButton("OK",
-                (dialog, which) -> {
-                    final Intent i = new Intent();
-                    i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    i.addCategory(Intent.CATEGORY_DEFAULT);
-                    i.setData(Uri.parse("package:" + getPackageName()));
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                    startActivity(i);
-                });
-        builder.show();
     }
 
     public void showGPS() {

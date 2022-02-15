@@ -45,33 +45,23 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public static LatLng m_rtlsSkyLatLng = null;
     public static LatLng m_rtlsTriLatLng = null;
 
-    public static Double m_rtlsMlsMozAcc = 0.0;
-    public static Double m_rtlsMlsJioAcc = 0.0;
-    public static Double m_rtlsCombainAcc = 0.0;
-    public static Double m_rtlsSkyAcc = 0.0;
-    public static Double m_rtlsTriAcc = 0.0;
-
     public static LatLng m_currentLatLng = null;
     public static LatLng m_mozillaLatLng;
     public static Double m_RtlsLatitude = 12.8;
     public static Double m_RtlsLongitude = 77.4;
-    public static Double m_RtlsAccuracy = 55.2;
     public static JiotSdkFileLogger m_jiotSdkFileLoggerInst = null;
-    public static Circle m_accuracyCircle = null;
     public static long m_primaryCellId = 0;
     public static Context m_context = null;
-    public static JSONObject m_jsonRequest = null;
     public static JiotRtlsLocationRecord m_currentLocationRecord;
     public static Handler m_readLocHandler = null;
     HashMap<String, LatLng> m_serviceIdLocation;
-    HashMap<String, Double> m_serviceIdAcc;
 
     private static boolean m_rtlsMlsMozLatLngFlag = false;
     private static boolean m_rtlsMlsJioLatLngFlag = false;
     private static boolean m_rtlsCombainLatLngFlag = false;
     private static boolean m_rtlsSkyLatLngFlag = false;
     private static boolean m_rtlsTriLatLngFlag = false;
-
+    private static Marker marker;
     private static DBManager mDbManager;
 
     public static void sendRecordsRefreshIntent() {
@@ -113,8 +103,12 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         sendRecordsRefreshIntent();
     }
 
-    public static void setGoogleLatestMarker(LatLng googleLatLng) {
-        mMap.addMarker(new MarkerOptions().position(googleLatLng).title("Google latest location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+    public static void setGoogleLatestMarker() {
+        if(marker != null) {
+            marker.remove();
+        }
+        LatLng googleLatLng = new LatLng(JiotUtils.sLang, JiotUtils.slon);
+        marker = mMap.addMarker(new MarkerOptions().position(googleLatLng).title("Google latest location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(googleLatLng, 15));
     }
 
@@ -176,11 +170,12 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public BroadcastReceiver m_MozillaReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("MAPSRE", "onReceive MAPS");
             if (intent.getAction().equalsIgnoreCase("com.rtls.location_all")) {
                 m_primaryCellId = intent.getLongExtra("CELLID", 0);
-                Log.d("m_primaryCellId = ", m_primaryCellId + "");
                 parseAllLocationPins(intent);
+            }
+            if (intent.getAction().equalsIgnoreCase("com.rtls.google_location")) {
+                setGoogleLatestMarker();
             }
         }
     };
@@ -193,6 +188,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         super.onActivityCreated(savedInstanceState);
         IntentFilter intentFilterLocation = new IntentFilter("com.rtls.location");
         intentFilterLocation.addAction("com.rtls.location_all");
+        intentFilterLocation.addAction("com.rtls.google_location");
         getActivity().registerReceiver(m_MozillaReceiver, intentFilterLocation);
         m_context = getContext();
         m_currentLocationRecord = new JiotRtlsLocationRecord();
@@ -214,14 +210,10 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         m_jiotSdkFileLoggerInst = JiotSdkFileLogger.JiotGetFileLoggerInstance(getContext());
     }
 
-    public static LatLng jiotreadLocationDetails() {
+    public static void jiotreadLocationDetails() {
         mMap.clear();
-        m_currentLatLng = new LatLng(JiotUtils.sLang, JiotUtils.slon);
-        setGoogleLatestMarker(m_currentLatLng);
+        setGoogleLatestMarker();
         setRtlsLatestMarkers();
-        setGoogleMarkers();
-        setJioMarkers();
-        return m_currentLatLng;
     }
 
     private static void setGoogleMarkers() {

@@ -1,3 +1,4 @@
+/*
 package com.jio.rtlsappfull.internal;
 
 import android.Manifest;
@@ -56,7 +57,7 @@ public class LocationFetchService extends Service {
     private static final String CHANNEL_ID = "111";
     private String m_api_key;
     public static JiotSdkFileLogger m_jiotSdkFileLoggerInstance = null;
-    Handler handler = new Handler();
+    private Handler handler = new Handler();
     private String id1;
     private String id2;
     private static ScheduledExecutorService scheduler;
@@ -77,8 +78,8 @@ public class LocationFetchService extends Service {
             if (locationResult != null && locationResult.getLastLocation() != null) {
                 double latitude = locationResult.getLastLocation().getLatitude();
                 double longitude = locationResult.getLastLocation().getLongitude();
-                JiotUtils.sLang = latitude;
-                JiotUtils.slon = longitude;
+//                JiotUtils.sLang = latitude;
+//                JiotUtils.slon = longitude;
             }
         }
     };
@@ -259,7 +260,6 @@ public class LocationFetchService extends Service {
     }
 
     private int getNotificationIcon() {
-//        boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
         return R.drawable.splash_icon;
     }
 
@@ -304,3 +304,4 @@ public class LocationFetchService extends Service {
         LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 }
+*/
